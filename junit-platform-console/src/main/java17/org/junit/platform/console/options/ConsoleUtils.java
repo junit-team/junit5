@@ -16,6 +16,7 @@ import java.io.Console;
 import java.nio.charset.Charset;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * Collection of utilities for working with {@code java.io.Console}
@@ -37,6 +38,17 @@ public class ConsoleUtils {
 	 */
 	public static Charset charset() {
 		Console console = System.console();
-		return console != null ? console.charset() : Charset.defaultCharset();
+		return console != null && isTerminal() ? console.charset() : Charset.defaultCharset();
+	}
+
+	private static boolean isTerminal() {
+		try {
+			//noinspection JavaReflectionMemberAccess
+			return (boolean) Console.class.getDeclaredMethod("isTerminal").invoke(null);
+		} catch (NoSuchMethodException exception) {
+			return false; // Console.isTerminal() was introduced in Java 22
+		} catch (ReflectiveOperationException exception) {
+			throw new JUnitException("Failed to call Console.isTerminal()", exception);
+		}
 	}
 }
