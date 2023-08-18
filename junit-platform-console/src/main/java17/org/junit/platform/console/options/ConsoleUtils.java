@@ -38,16 +38,16 @@ public class ConsoleUtils {
 	 */
 	public static Charset charset() {
 		Console console = System.console();
-		return console != null && isTerminal() ? console.charset() : Charset.defaultCharset();
+		return console != null && isTerminal(console) ? console.charset() : Charset.defaultCharset();
 	}
 
-	private static boolean isTerminal() {
+	private static boolean isTerminal(Console console) {
 		try {
 			//noinspection JavaReflectionMemberAccess
-			return (boolean) Console.class.getDeclaredMethod("isTerminal").invoke(null);
+			return (boolean) Console.class.getDeclaredMethod("isTerminal").invoke(console);
 		}
 		catch (NoSuchMethodException exception) {
-			return false; // Console.isTerminal() was introduced in Java 22
+			return false; // Console::isTerminal was introduced in Java 22
 		}
 		catch (ReflectiveOperationException exception) {
 			throw new JUnitException("Failed to call Console.isTerminal()", exception);
