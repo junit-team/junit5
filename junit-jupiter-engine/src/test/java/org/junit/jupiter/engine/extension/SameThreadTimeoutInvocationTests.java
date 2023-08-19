@@ -34,7 +34,8 @@ class SameThreadTimeoutInvocationTests {
 		var exception = assertThrows(TimeoutException.class, () -> withExecutor(executor -> {
 			var delegate = new EventuallyInterruptibleInvocation();
 			var duration = new TimeoutDuration(1, NANOSECONDS);
-			var timeoutInvocation = new SameThreadTimeoutInvocation<>(delegate, duration, executor, () -> "execution");
+			var timeoutInvocation = new SameThreadTimeoutInvocation<>(delegate, duration, executor, () -> "execution",
+				PreInterruptCallbackInvocation.NOOP);
 			timeoutInvocation.proceed();
 		}));
 		assertFalse(Thread.currentThread().isInterrupted());

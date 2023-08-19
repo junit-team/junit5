@@ -39,7 +39,7 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Added `PreInterruptCallback`
 
 
 [[release-notes-5.11.0-M1-junit-vintage]]

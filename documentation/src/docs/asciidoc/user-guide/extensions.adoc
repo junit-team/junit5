@@ -599,6 +599,21 @@ test methods.
 include::{testDir}/example/exception/MultipleHandlersTestCase.java[tags=user_guide]
 ----
 
+[[extensions-preinterrupt-callback]]
+=== PreInterrupt Callback
+
+`{PreInterruptCallback}` defines the API for `Extensions` that wish to react on
+`Thread.interrupt()` calls issued by Jupiter before the `Thread.interrupt()` is executed.
+
+This can be used to dump stacks for diagnostics, when the `Timeout` extension
+interrupts tests.
+
+There is also a default implementation available, which will dump the stacks of all
+`Threads` to `System.out`.
+This default implementation need to be enabled with the
+<<running-tests-config-params,configuration parameter>>:
+`junit.jupiter.extensions.preinterruptcallback.default.enabled`
+
 [[extensions-intercepting-invocations]]
 === Intercepting Invocations
 

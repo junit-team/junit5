@@ -68,6 +68,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isExtensionDefaultPreInterruptCallbackEnabled() {
+		return (boolean) cache.computeIfAbsent(EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME,
+			key -> delegate.isExtensionDefaultPreInterruptCallbackEnabled());
+	}
+
+	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			key -> delegate.getDefaultExecutionMode());
