@@ -276,7 +276,6 @@
 581f453aa456a0b72b0a3a5d3ce684e8  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TimeoutConfiguration.java
 585f0b72b70976837b8b83ca704166fa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassDescriptor.java
 58871474bbe927809f2dde7ed9801c49  junit-platform-console/src/main/java/org/junit/platform/console/tasks/DiscoveryRequestCreator.java
-58f7a58825f71a3a4db7ffb22578c7fc  documentation/src/test/java/example/extensions/RandomNumberExtension.java
 58fca51a5f799a2d033982725860853a  junit-platform-reporting/src/main/java/org/junit/platform/reporting/open/xml/JUnitFactory.java
 594db60bea5b42f583f65d5aa02ad745  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/NullEnum.java
 59c5d6700f32bf93b73a4c612d6fd4ee  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.java
@@ -825,4 +824,5 @@ fdd3416b4725930466c2b96a636e225c  documentation/src/test/java/example/timing/Tim
 fddd0e3bd36a1c1af9c1c4063ab61b1b  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/SelectClasspathResource.java
 ff1e6856f7f2d3803b6bfa5629af894b  junit-jupiter-api/src/main/java/org/junit/jupiter/api/parallel/ResourceAccessMode.java
 ff628e8eb5ceed9b61c9d0251d7b6da8  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/JavaTimeArgumentConverter.java
+ff63a3a9c3b59784644e1eb4c1a300a8  documentation/src/test/java/example/extensions/RandomNumberExtension.java
 ffa364324084f917babf3ccb2af9d130  junit-platform-suite-engine/src/main/java/org/junit/platform/suite/engine/SuiteTestDescriptor.java

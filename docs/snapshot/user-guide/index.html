@@ -8960,7 +8960,7 @@ important to note which extension APIs are implemented and for what reasons.</p>
     <span class="o">}</span>
 
     <span class="kd">private</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">isInteger</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">type</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">isAssignableFrom</span><span class="o">(</span><span class="n">type</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">type</span> <span class="o">==</span> <span class="nc">Integer</span><span class="o">.</span><span class="na">class</span> <span class="o">||</span> <span class="n">type</span> <span class="o">==</span> <span class="kt">int</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
     <span class="o">}</span>
 
 <span class="o">}</span></code></pre>
@@ -12634,7 +12634,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.11.0-SNAPSHOT<br>
-Last updated 2023-08-06 11:30:26 UTC
+Last updated 2023-08-25 08:57:49 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
