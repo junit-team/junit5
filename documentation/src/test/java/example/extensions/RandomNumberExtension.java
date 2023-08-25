@@ -86,7 +86,7 @@ class RandomNumberExtension
 	}
 
 	private static boolean isInteger(Class<?> type) {
-		return int.class.isAssignableFrom(type);
+		return type == Integer.class || type == int.class;
 	}
 
 }
