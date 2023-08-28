@@ -67,7 +67,7 @@ class StandaloneTests {
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("engines", "--disable-banner").build() //
+				.addArguments("engines", "--disable-ansi-colors", "--disable-banner").build() //
 				.run(false);
 
 		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
