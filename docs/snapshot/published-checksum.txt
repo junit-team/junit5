@@ -197,6 +197,7 @@
 40b817d34272d61df516894e4931b30e  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/rules/adapter/ExternalResourceAdapter.java
 40f1b13059c10d6a29d13b0cec61f431  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandResult.java
 41c5c383977cc6a8ace242955ff0ceef  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsNestedTestClass.java
+41e2c907e42eb0750b00008f376dd2eb  junit-platform-console/src/main/java/org/junit/platform/console/options/MainCommand.java
 41f7df6ac5493bb6ed2e9479bd50018b  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/discovery/predicates/IsTestClassWithTests.java
 4255f3a9e3d7f3945c3cc043c8b186b0  junit-jupiter-migrationsupport/src/main/java/org/junit/jupiter/migrationsupport/package-info.java
 42b5e153dd8006915071b62f53ad6130  documentation/src/test/java/example/session/GlobalSetupTeardownListener.java
@@ -778,7 +779,6 @@ ef3b688543dc6c7c80e8febacaeacf5e  junit-platform-commons/src/main/java/org/junit
 efa817b68328110fe7db1ea8f10b1ca7  documentation/src/test/java/example/ExampleTestCase.java
 efa854ea5daf85c7e7b104ee55648e6f  junit-platform-console/src/main/java/org/junit/platform/console/options/CommandFacade.java
 efb8cac73d45dc2af134fab81fd65ebc  junit-jupiter-api/src/main/java/org/junit/jupiter/api/ClassOrdererContext.java
-efbd442d65a26677317215e0edc40288  junit-platform-console/src/main/java/org/junit/platform/console/options/MainCommand.java
 eff90a7cb1dfa7206dca42ea0e986f7c  junit-platform-testkit/src/main/java/org/junit/platform/testkit/package-info.java
 f02b067dd26ff65062706c42c2aff2c6  junit-platform-testkit/src/main/java/org/junit/platform/testkit/engine/package-info.java
 f08dcb4e9b644b0b989873c901d98ef2  junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ExecutionCondition.java
