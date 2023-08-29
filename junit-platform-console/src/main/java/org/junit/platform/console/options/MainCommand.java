@@ -33,7 +33,7 @@ import picocli.CommandLine.Unmatched;
 		sortOptions = false, //
 		usageHelpWidth = 95, //
 		showAtFileInUsageHelp = true, //
-		usageHelpAutoWidth = false, // https://github.com/remkop/picocli/issues/1104
+		usageHelpAutoWidth = true, //
 		description = "Launches the JUnit Platform for test discovery and execution.", //
 		footerHeading = "%n", //
 		footer = "For more information, please refer to the JUnit User Guide at%n" //
