@@ -9,9 +9,5 @@ runs:
         java-version: 8
     - shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - uses: oracle-actions/setup-java@v1
-      with:
-        website: jdk.java.net
-        release: 21
     - shell: bash
       run: echo "JDK21=$JAVA_HOME" >> $GITHUB_ENV
