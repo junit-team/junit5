@@ -10,8 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
 
+@API(status = EXPERIMENTAL, since = "1.10.1")
 public class VirtualThreadHierarchicalTestExecutorServiceFactory {
 
 	public static HierarchicalTestExecutorService create(

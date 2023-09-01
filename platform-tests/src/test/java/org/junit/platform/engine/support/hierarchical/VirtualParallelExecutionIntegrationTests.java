@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.junit.jupiter.api.condition.JRE.JAVA_19;
+import static org.junit.jupiter.api.condition.JRE.JAVA_21;
 
 import org.junit.jupiter.api.condition.EnabledOnJre;
 

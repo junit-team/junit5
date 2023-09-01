@@ -63,7 +63,7 @@ tasks {
 		useJUnitPlatform {
 			excludeTags("exclude")
 		}
-		jvmArgs("-Xmx1g", "--enable-preview")
+		jvmArgs("-Xmx1g")
 		distribution {
 			// Retry in a new JVM on Windows to improve chances of successful retries when
 			// cached resources are used (e.g. in ClasspathScannerTests)
