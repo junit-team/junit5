@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 
 import org.junit.jupiter.api.condition.EnabledOnJre;
 
-@EnabledOnJre(value = JAVA_19, disabledReason = "Use Java 19 preview features")
+@EnabledOnJre(value = JAVA_21, disabledReason = "Use Java 21 features")
 public class VirtualParallelExecutionIntegrationTests extends ParallelExecutionIntegrationTests {
 
 	@Override
