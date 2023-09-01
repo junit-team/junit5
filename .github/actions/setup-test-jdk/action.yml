@@ -9,5 +9,3 @@ runs:
         java-version: 8
     - shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
-    - shell: bash
-      run: echo "JDK21=$JAVA_HOME" >> $GITHUB_ENV
