@@ -287,3 +287,23 @@ fun <R> assertTimeoutPreemptively(timeout: Duration, message: String, executable
 @API(status = EXPERIMENTAL, since = "5.5")
 fun <R> assertTimeoutPreemptively(timeout: Duration, message: () -> String, executable: () -> R): R =
     Assertions.assertTimeoutPreemptively(timeout, executable, message)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertInstanceOf<RandomAccess>(list, "List should support fast random access")
+ * ```
+ * @see Assertions.assertInstanceOf
+ * @since 5.10.1
+ */
+@API(status = EXPERIMENTAL, since = "5.10.1")
+inline fun <reified T : Any> assertInstanceOf(actualValue: Any?, message: String? = null): T =
+    Assertions.assertInstanceOf(T::class.java, actualValue, message)
+
+/*
+ * @see Assertions.assertInstanceOf
+ * @since 5.10.1
+ */
+@API(status = EXPERIMENTAL, since = "5.10.1")
+inline fun <reified T : Any> assertInstanceOf(actualValue: Any?, noinline message: () -> String): T =
+    Assertions.assertInstanceOf(T::class.java, actualValue, message)

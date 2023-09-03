@@ -50,7 +50,8 @@ JUnit repository on GitHub.
 * Improved Javadoc for `Assertions.assertTimeoutPreemptively` regarding thread interrupt.
 * Documentation for `@Disabled` and conditional annotations now explicitly explains that
   such annotations are not inherited by subclasses.
-
+* New `assertInstanceOf` methods added for Kotlin following up with similar Java
+  `assertInstanceOf` methods introduced in `5.8` version.
 
 [[release-notes-5.10.1-junit-vintage]]
 === JUnit Vintage
