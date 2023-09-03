@@ -211,6 +211,29 @@ class KotlinAssertionsTests {
         assertMessageStartsWith(error, assertionMessage)
     }
 
+    @Test
+    fun assertInstanceOf() {
+        assertInstanceOf<RandomAccess>(listOf("whatever"))
+        assertInstanceOf<RandomAccess>(listOf("whatever"), "No random access")
+        assertInstanceOf<RandomAccess>(listOf("whatever")) { "No random access" }
+    }
+
+    @Test
+    fun `assertInstanceOf fails wrong type value`() {
+        val result = assertThrows<AssertionError> {
+            assertInstanceOf<String>(StringBuilder(), "Should be a String")
+        }
+        assertMessageStartsWith(result, "Should be a String")
+    }
+
+    @Test
+    fun `assertInstanceOf fails null value`() {
+        val result = assertThrows<AssertionError> {
+            assertInstanceOf<String>(null, "Should be a String")
+        }
+        assertMessageStartsWith(result, "Should be a String")
+    }
+
     companion object {
         fun assertExpectedExceptionTypes(
             multipleFailuresError: MultipleFailuresError,
