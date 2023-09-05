@@ -26,7 +26,6 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 import org.junit.runner.Runner;
-import org.junit.runners.model.RunnerBuilder;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 
 /**
@@ -34,7 +33,7 @@ import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
  */
 class ClassSelectorResolver implements SelectorResolver {
 
-	private static final RunnerBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
+	private static final DefensiveAllDefaultPossibilitiesBuilder RUNNER_BUILDER = new DefensiveAllDefaultPossibilitiesBuilder();
 
 	private final ClassFilter classFilter;
 
@@ -76,7 +75,7 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	private RunnerTestDescriptor createRunnerTestDescriptor(TestDescriptor parent, Class<?> testClass, Runner runner) {
 		UniqueId uniqueId = parent.getUniqueId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		return new RunnerTestDescriptor(uniqueId, testClass, runner);
+		return new RunnerTestDescriptor(uniqueId, testClass, runner, RUNNER_BUILDER.isIgnored(runner));
 	}
 
 }
