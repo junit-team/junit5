@@ -21,7 +21,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 
 import org.apiguardian.api.API;
-import org.junit.Ignore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -44,14 +43,14 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	private final Set<Description> rejectedExclusions = new HashSet<>();
 	private Runner runner;
-	private final Optional<String> skipReason;
+	private final boolean ignored;
 	private boolean wasFiltered;
 	private List<Filter> filters = new ArrayList<>();
 
-	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner) {
+	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner, boolean ignored) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
 		this.runner = runner;
-		this.skipReason = Optional.ofNullable(testClass.getAnnotation(Ignore.class)).map(Ignore::value);
+		this.ignored = ignored;
 	}
 
 	@Override
@@ -158,8 +157,8 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 		return (runner instanceof RunnerDecorator) ? ((RunnerDecorator) runner).getDecoratedRunner() : runner;
 	}
 
-	public Optional<String> getSkipReason() {
-		return skipReason;
+	public boolean isIgnored() {
+		return ignored;
 	}
 
 	private static class ExcludeDescriptionFilter extends Filter {
