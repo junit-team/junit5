@@ -55,12 +55,11 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	@Override
 	public Runner runnerForClass(Class<?> testClass) throws Throwable {
 		Runner runner = super.runnerForClass(testClass);
-		Ignore ignoreAnnotation = testClass.getAnnotation(Ignore.class);
-		if (ignoreAnnotation != null) {
+		if (testClass.getAnnotation(Ignore.class) != null) {
 			if (runner == null) {
 				return new IgnoredClassRunner(testClass);
 			}
-			return decorateIgnoredTestClass(runner, ignoreAnnotation);
+			return decorateIgnoredTestClass(runner);
 		}
 		return runner;
 	}
@@ -73,11 +72,11 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 * override its runtime behavior (i.e. skip execution) but return its
 	 * regular {@link org.junit.runner.Description}.
 	 */
-	private Runner decorateIgnoredTestClass(Runner runner, Ignore ignoreAnnotation) {
+	private Runner decorateIgnoredTestClass(Runner runner) {
 		if (runner instanceof Filterable) {
-			return new FilterableIgnoringRunnerDecorator(runner, ignoreAnnotation);
+			return new FilterableIgnoringRunnerDecorator(runner);
 		}
-		return new IgnoringRunnerDecorator(runner, ignoreAnnotation);
+		return new IgnoringRunnerDecorator(runner);
 	}
 
 	@Override

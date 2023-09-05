@@ -10,7 +10,6 @@
 
 package org.junit.vintage.engine.discovery;
 
-import org.junit.Ignore;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
@@ -24,8 +23,8 @@ import org.junit.runner.manipulation.NoTestsRemainException;
  */
 class FilterableIgnoringRunnerDecorator extends IgnoringRunnerDecorator implements Filterable {
 
-	FilterableIgnoringRunnerDecorator(Runner runner, Ignore ignoreAnnotation) {
-		super(runner, ignoreAnnotation);
+	FilterableIgnoringRunnerDecorator(Runner runner) {
+		super(runner);
 		Preconditions.condition(runner instanceof Filterable,
 			() -> "Runner must be an instance of Filterable: " + runner.getClass().getName());
 	}

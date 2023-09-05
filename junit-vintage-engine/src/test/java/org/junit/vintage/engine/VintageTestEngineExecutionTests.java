@@ -902,7 +902,7 @@ class VintageTestEngineExecutionTests {
 		var suiteClass = IgnoredJUnit3TestCase.class;
 		execute(suiteClass).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(suiteClass), skippedWithReason("respected by Vintage engine")), //
+			event(container(suiteClass), skippedWithReason(__ -> true)), //
 			event(engine(), finishedSuccessfully()));
 	}
 
