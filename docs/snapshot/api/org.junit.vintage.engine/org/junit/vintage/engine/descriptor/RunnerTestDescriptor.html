@@ -129,9 +129,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.runner.Runner)" class="member-name-link">RunnerTestDescriptor</a><wbr>(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.runner.Runner,boolean)" class="member-name-link">RunnerTestDescriptor</a><wbr>(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;testClass,
- <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a>&nbsp;runner)</code></div>
+ <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a>&nbsp;runner,
+ boolean&nbsp;ignored)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -166,18 +167,21 @@ loadScripts(document, 'script');</script>
  reporting infrastructure &mdash; for example, for reporting systems built
  on the Ant-based XML reporting format for JUnit 4.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prune()" class="member-name-link">prune</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isIgnored()" class="member-name-link">isIgnored</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#prune()" class="member-name-link">prune</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove this descriptor from the hierarchy unless it is a root or contains
  tests.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Request.html" title="class or interface in org.junit.runner" class="external-link">Request</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toRequest()" class="member-name-link">toRequest</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tryToExcludeFromRunner(org.junit.runner.Description)" class="member-name-link">tryToExcludeFromRunner</a><wbr>(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Description.html" title="class or interface in org.junit.runner" class="external-link">Description</a>&nbsp;description)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Request.html" title="class or interface in org.junit.runner" class="external-link">Request</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toRequest()" class="member-name-link">toRequest</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tryToExcludeFromRunner(org.junit.runner.Description)" class="member-name-link">tryToExcludeFromRunner</a><wbr>(<a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Description.html" title="class or interface in org.junit.runner" class="external-link">Description</a>&nbsp;description)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -205,11 +209,12 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.runner.Runner)">
+<section class="detail" id="&lt;init&gt;(org.junit.platform.engine.UniqueId,java.lang.Class,org.junit.runner.Runner,boolean)">
 <h3>RunnerTestDescriptor</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">RunnerTestDescriptor</span><wbr><span class="parameters">(<a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/UniqueId.html" title="class in org.junit.platform.engine">UniqueId</a>&nbsp;uniqueId,
  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;testClass,
- <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a>&nbsp;runner)</span></div>
+ <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/runner/Runner.html" title="class or interface in org.junit.runner" class="external-link">Runner</a>&nbsp;runner,
+ boolean&nbsp;ignored)</span></div>
 </section>
 </li>
 </ul>
@@ -304,6 +309,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="applyFilters(java.util.function.Consumer)">
 <h3>applyFilters</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyFilters</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="RunnerTestDescriptor.html" title="class in org.junit.vintage.engine.descriptor">RunnerTestDescriptor</a>&gt;&nbsp;childrenCreator)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isIgnored()">
+<h3>isIgnored</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isIgnored</span>()</div>
 </section>
 </li>
 </ul>
