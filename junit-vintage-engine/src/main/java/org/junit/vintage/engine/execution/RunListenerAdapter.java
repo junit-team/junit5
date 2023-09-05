@@ -49,7 +49,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testRunStarted(Description description) {
-		if (description.isSuite() && description.getAnnotation(Ignore.class) == null) {
+		if (description.isSuite() && !testRun.getRunnerTestDescriptor().getSkipReason().isPresent()) {
 			fireExecutionStarted(testRun.getRunnerTestDescriptor(), EventType.REPORTED);
 		}
 	}
@@ -65,7 +65,8 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		testIgnored(lookupOrRegisterNextTestDescriptor(description), determineReasonForIgnoredTest(description));
+		TestDescriptor testDescriptor = lookupOrRegisterNextTestDescriptor(description);
+		testIgnored(testDescriptor, determineReasonForIgnoredTest(description).orElse("<unknown>"));
 	}
 
 	@Override
@@ -176,9 +177,9 @@ class RunListenerAdapter extends RunListener {
 		fireExecutionSkipped(testDescriptor, reason);
 	}
 
-	private String determineReasonForIgnoredTest(Description description) {
-		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
-		return Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
+	private Optional<String> determineReasonForIgnoredTest(Description description) {
+		Optional<String> reason = Optional.ofNullable(description.getAnnotation(Ignore.class)).map(Ignore::value);
+		return reason.isPresent() ? reason : testRun.getRunnerTestDescriptor().getSkipReason();
 	}
 
 	private void dynamicTestRegistered(TestDescriptor testDescriptor) {
