@@ -21,6 +21,7 @@ import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -88,6 +89,7 @@ class TreePrinter {
 		node.reason().ifPresent(reason -> printMessage(Style.SKIPPED, tabbed, reason));
 		node.reports.forEach(e -> printReportEntry(tabbed, e));
 		out.println();
+		node.files.forEach(e -> printFileEntry(tabbed, e));
 	}
 
 	private String tab(TreeNode node, boolean continuous) {
@@ -150,6 +152,14 @@ class TreePrinter {
 		out.print(" = `");
 		out.print(color(Style.SUCCESSFUL, mapEntry.getValue()));
 		out.print("`");
+	}
+
+	private void printFileEntry(String indent, FileEntry fileEntry) {
+		out.print(indent);
+		out.print(fileEntry.getTimestamp());
+		out.print(" ");
+		out.print(color(Style.SUCCESSFUL, fileEntry.getFile().toUri().toString()));
+		out.println();
 	}
 
 	private void printMessage(Style style, String indent, String message) {

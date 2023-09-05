@@ -20,6 +20,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -51,15 +52,19 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Listener for test discovery that may abort on errors.
 	private final LauncherDiscoveryListener discoveryListener;
 
+	private final OutputDirProvider outputDirProvider;
+
 	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener) {
+			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener,
+			OutputDirProvider outputDirProvider) {
 		this.selectors = selectors;
 		this.engineFilters = engineFilters;
 		this.discoveryFilters = discoveryFilters;
 		this.postDiscoveryFilters = postDiscoveryFilters;
 		this.configurationParameters = configurationParameters;
 		this.discoveryListener = discoveryListener;
+		this.outputDirProvider = outputDirProvider;
 	}
 
 	@Override
@@ -94,4 +99,8 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 		return discoveryListener;
 	}
 
+	@Override
+	public OutputDirProvider getOutputDirProvider() {
+		return outputDirProvider;
+	}
 }

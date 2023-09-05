@@ -27,6 +27,8 @@ import org.junit.platform.commons.util.StringUtils;
 @API(status = INTERNAL, since = "1.9")
 public class OutputDir {
 
+	private SecureRandom random = new SecureRandom();
+
 	public static OutputDir create(Optional<String> customDir) {
 		try {
 			return createSafely(customDir, () -> Paths.get(".").toAbsolutePath());
@@ -60,7 +62,7 @@ public class OutputDir {
 			Files.createDirectories(outputDir);
 		}
 
-		return new OutputDir(outputDir);
+		return new OutputDir(outputDir.normalize());
 	}
 
 	private final Path path;
@@ -73,8 +75,20 @@ public class OutputDir {
 		return path;
 	}
 
+	public Path createDir(String prefix) throws UncheckedIOException {
+		String filename = String.format("%s-%d", prefix, Math.abs(random.nextLong()));
+		Path outputFile = path.resolve(filename);
+
+		try {
+			return Files.createDirectory(outputFile);
+		}
+		catch (IOException e) {
+			throw new UncheckedIOException("Failed to create output directory: " + outputFile, e);
+		}
+	}
+
 	public Path createFile(String prefix, String extension) throws UncheckedIOException {
-		String filename = String.format("%s-%d.%s", prefix, Math.abs(new SecureRandom().nextLong()), extension);
+		String filename = String.format("%s-%d.%s", prefix, Math.abs(random.nextLong()), extension);
 		Path outputFile = path.resolve(filename);
 
 		try {

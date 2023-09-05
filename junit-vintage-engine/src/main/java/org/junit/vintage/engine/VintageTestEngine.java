@@ -75,7 +75,8 @@ public final class VintageTestEngine implements TestEngine {
 
 	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener) {
-		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener,
+			engineDescriptor.getOutputDirProvider());
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
 			iterator.remove();

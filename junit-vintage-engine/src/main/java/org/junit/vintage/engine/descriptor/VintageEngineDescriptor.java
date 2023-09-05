@@ -17,6 +17,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
 /**
@@ -25,12 +26,19 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 @API(status = INTERNAL, since = "5.6")
 public class VintageEngineDescriptor extends EngineDescriptor {
 
-	public VintageEngineDescriptor(UniqueId uniqueId) {
+	private final OutputDirProvider outputDirProvider;
+
+	public VintageEngineDescriptor(UniqueId uniqueId, OutputDirProvider outputDirProvider) {
 		super(uniqueId, "JUnit Vintage");
+		this.outputDirProvider = outputDirProvider;
 	}
 
 	public Set<TestDescriptor> getModifiableChildren() {
 		return children;
+	}
+
+	public OutputDirProvider getOutputDirProvider() {
+		return outputDirProvider;
 	}
 
 }

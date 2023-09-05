@@ -31,9 +31,7 @@ import org.apiguardian.api.API;
 public class ExecutionRequest {
 
 	private final TestDescriptor rootTestDescriptor;
-
 	private final EngineExecutionListener engineExecutionListener;
-
 	private final ConfigurationParameters configurationParameters;
 
 	@API(status = INTERNAL, since = "1.0")

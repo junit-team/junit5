@@ -12,14 +12,21 @@ package org.junit.vintage.engine.execution;
 
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_DYNAMIC;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 import java.util.function.Function;
 
 import org.junit.Ignore;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -29,22 +36,29 @@ import org.junit.vintage.engine.descriptor.TestSourceProvider;
 import org.junit.vintage.engine.descriptor.VintageTestDescriptor;
 import org.junit.vintage.engine.support.UniqueIdReader;
 import org.junit.vintage.engine.support.UniqueIdStringifier;
+import org.junit.vintage.reporting.VintageReportingService;
 
 /**
  * @since 4.12
  */
-class RunListenerAdapter extends RunListener {
+class RunListenerAdapter extends RunListener implements VintageReportingService {
+
+	static final InheritableThreadLocal<RunListenerAdapter> CURRENT = new InheritableThreadLocal<>();
 
 	private final TestRun testRun;
 	private final EngineExecutionListener listener;
 	private final TestSourceProvider testSourceProvider;
+	private final OutputDirProvider outputDirProvider;
 	private final Function<Description, String> uniqueIdExtractor;
 
-	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener, TestSourceProvider testSourceProvider) {
+	RunListenerAdapter(TestRun testRun, EngineExecutionListener listener, TestSourceProvider testSourceProvider,
+			OutputDirProvider outputDirProvider) {
 		this.testRun = testRun;
 		this.listener = listener;
 		this.testSourceProvider = testSourceProvider;
+		this.outputDirProvider = outputDirProvider;
 		this.uniqueIdExtractor = new UniqueIdReader().andThen(new UniqueIdStringifier());
+		CURRENT.set(this);
 	}
 
 	@Override
@@ -248,4 +262,23 @@ class RunListenerAdapter extends RunListener {
 		listener.executionFinished(testDescriptor, testRun.getStoredResultOrSuccessful(testDescriptor));
 	}
 
+	@Override
+	public void publishFile(Description description, Path file) {
+		try {
+			TestDescriptor testDescriptor = lookupOrRegisterCurrentTestDescriptor(description);
+			outputDirProvider.createOutputDirectory(testDescriptor).ifPresent(outputDir -> {
+				try {
+					Path targetFile = outputDir.resolve(file.getFileName());
+					Files.move(file, targetFile, StandardCopyOption.REPLACE_EXISTING);
+					listener.fileEntryPublished(testDescriptor, FileEntry.from(targetFile));
+				}
+				catch (IOException e) {
+					throw new JUnitException("Failed to publish file", e);
+				}
+			});
+		}
+		catch (IOException e) {
+			throw new JUnitException("Failed to create output directory", e);
+		}
+	}
 }

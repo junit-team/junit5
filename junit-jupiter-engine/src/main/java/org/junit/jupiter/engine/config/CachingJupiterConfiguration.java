@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 
 /**
  * Caching implementation of the {@link JupiterConfiguration} API.
@@ -125,4 +126,8 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 			key -> delegate.getDefaultTempDirFactorySupplier());
 	}
 
+	@Override
+	public OutputDirProvider getOutputDirProvider() {
+		return delegate.getOutputDirProvider();
+	}
 }

@@ -36,6 +36,7 @@ import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.CustomDisplayNameGenerator;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 
 class DefaultJupiterConfigurationTests {
 
@@ -44,20 +45,20 @@ class DefaultJupiterConfigurationTests {
 	@Test
 	void getDefaultTestInstanceLifecyclePreconditions() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-			() -> new DefaultJupiterConfiguration(null));
+			() -> new DefaultJupiterConfiguration(null, OutputDirProvider.NOOP));
 		assertThat(exception).hasMessage("ConfigurationParameters must not be null");
 	}
 
 	@Test
 	void getDefaultTestInstanceLifecycleWithNoConfigParamSet() {
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock());
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(), OutputDirProvider.NOOP);
 		Lifecycle lifecycle = configuration.getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(PER_METHOD);
 	}
 
 	@Test
 	void getDefaultTempDirCleanupModeWithNoConfigParamSet() {
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock());
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(mock(), OutputDirProvider.NOOP);
 		CleanupMode cleanupMode = configuration.getDefaultTempDirCleanupMode();
 		assertThat(cleanupMode).isEqualTo(ALWAYS);
 	}
@@ -82,7 +83,7 @@ class DefaultJupiterConfigurationTests {
 		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.of(CustomDisplayNameGenerator.class.getName()));
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters, OutputDirProvider.NOOP);
 
 		DisplayNameGenerator defaultDisplayNameGenerator = configuration.getDefaultDisplayNameGenerator();
 
@@ -94,7 +95,7 @@ class DefaultJupiterConfigurationTests {
 		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.empty());
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters, OutputDirProvider.NOOP);
 
 		DisplayNameGenerator defaultDisplayNameGenerator = configuration.getDefaultDisplayNameGenerator();
 
@@ -106,7 +107,7 @@ class DefaultJupiterConfigurationTests {
 		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.empty());
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters, OutputDirProvider.NOOP);
 
 		final Optional<MethodOrderer> defaultTestMethodOrder = configuration.getDefaultTestMethodOrderer();
 
@@ -118,7 +119,7 @@ class DefaultJupiterConfigurationTests {
 		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.of(CustomFactory.class.getName()));
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters, OutputDirProvider.NOOP);
 
 		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
 
@@ -138,7 +139,7 @@ class DefaultJupiterConfigurationTests {
 		ConfigurationParameters parameters = mock();
 		String key = Constants.DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME;
 		when(parameters.get(key)).thenReturn(Optional.empty());
-		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters);
+		JupiterConfiguration configuration = new DefaultJupiterConfiguration(parameters, OutputDirProvider.NOOP);
 
 		Supplier<TempDirFactory> supplier = configuration.getDefaultTempDirFactorySupplier();
 
@@ -148,7 +149,8 @@ class DefaultJupiterConfigurationTests {
 	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
 		ConfigurationParameters configParams = mock();
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
-		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams).getDefaultTestInstanceLifecycle();
+		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams,
+			OutputDirProvider.NOOP).getDefaultTestInstanceLifecycle();
 		assertThat(lifecycle).isEqualTo(expected);
 	}
 

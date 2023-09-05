@@ -45,7 +45,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -393,14 +392,6 @@ class VintageTestEngineExecutionTests {
 			public void executionSkipped(TestDescriptor testDescriptor, String reason) {
 				PlainJUnit4TestCaseWithLifecycleMethods.EVENTS.add(
 					"executionSkipped:" + testDescriptor.getDisplayName());
-			}
-
-			@Override
-			public void dynamicTestRegistered(TestDescriptor testDescriptor) {
-			}
-
-			@Override
-			public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 			}
 		};
 
@@ -909,7 +900,7 @@ class VintageTestEngineExecutionTests {
 		var discoveryRequest = request(testClass);
 		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
 		testEngine.execute(
-			new ExecutionRequest(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
+			ExecutionRequest.create(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters()));
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {

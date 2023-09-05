@@ -19,6 +19,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -80,6 +81,14 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		this.events.add(Event.reportingEntryPublished(testDescriptor, entry));
+	}
+
+	/**
+	 * Record an {@link Event} for a published {@link FileEntry}.
+	 */
+	@Override
+	public void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+		this.events.add(Event.fileEntryPublished(testDescriptor, file));
 	}
 
 	/**

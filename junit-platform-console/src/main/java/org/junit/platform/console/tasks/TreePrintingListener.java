@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -71,6 +72,11 @@ class TreePrintingListener implements DetailsPrintingListener {
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 		getNode(testIdentifier).addReportEntry(entry);
+	}
+
+	@Override
+	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
+		getNode(testIdentifier).addFileEntry(file);
 	}
 
 	@Override

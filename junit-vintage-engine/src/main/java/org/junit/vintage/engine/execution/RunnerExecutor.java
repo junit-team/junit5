@@ -17,6 +17,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.runner.JUnitCore;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.TestSourceProvider;
@@ -28,16 +29,19 @@ import org.junit.vintage.engine.descriptor.TestSourceProvider;
 public class RunnerExecutor {
 
 	private final EngineExecutionListener engineExecutionListener;
+	private final OutputDirProvider outputDirProvider;
 	private final TestSourceProvider testSourceProvider = new TestSourceProvider();
 
-	public RunnerExecutor(EngineExecutionListener engineExecutionListener) {
+	public RunnerExecutor(EngineExecutionListener engineExecutionListener, OutputDirProvider outputDirProvider) {
 		this.engineExecutionListener = engineExecutionListener;
+		this.outputDirProvider = outputDirProvider;
 	}
 
 	public void execute(RunnerTestDescriptor runnerTestDescriptor) {
 		TestRun testRun = new TestRun(runnerTestDescriptor);
 		JUnitCore core = new JUnitCore();
-		core.addListener(new RunListenerAdapter(testRun, engineExecutionListener, testSourceProvider));
+		core.addListener(
+			new RunListenerAdapter(testRun, engineExecutionListener, testSourceProvider, outputDirProvider));
 		try {
 			core.run(runnerTestDescriptor.toRequest());
 		}

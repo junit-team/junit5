@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -23,14 +25,17 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.Node;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -100,6 +105,26 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public void publishReportEntry(Map<String, String> values) {
 		this.engineExecutionListener.reportingEntryPublished(this.testDescriptor, ReportEntry.from(values));
+	}
+
+	@Override
+	public void publishFile(String fileName, ThrowingConsumer<Path> action) {
+		try {
+			configuration.getOutputDirProvider().createOutputDirectory(this.testDescriptor).ifPresent(dir -> {
+				try {
+					Path file = dir.resolve(fileName);
+					action.accept(file);
+					this.engineExecutionListener.fileEntryPublished(this.testDescriptor, FileEntry.from(file));
+				}
+				catch (Throwable t) {
+					UnrecoverableExceptions.rethrowIfUnrecoverable(t);
+					throw new JUnitException("Failed to publish file", t);
+				}
+			});
+		}
+		catch (IOException e) {
+			throw new JUnitException("Failed to create output directory", e);
+		}
 	}
 
 	@Override

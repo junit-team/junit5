@@ -43,6 +43,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
@@ -54,8 +55,8 @@ import org.mockito.Mockito;
  * {@link JupiterEngineExtensionContext}, {@link ClassExtensionContext}, and
  * {@link MethodExtensionContext}.
  *
- * @since 5.0
  * @see org.junit.jupiter.engine.execution.ExtensionValuesStoreTests
+ * @since 5.0
  */
 public class ExtensionContextTests {
 
@@ -258,7 +259,7 @@ public class ExtensionContextTests {
 
 	@TestFactory
 	Stream<DynamicTest> configurationParameter() throws Exception {
-		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters());
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(), OutputDirProvider.NOOP);
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 

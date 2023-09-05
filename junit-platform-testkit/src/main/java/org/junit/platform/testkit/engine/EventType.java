@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -60,6 +61,13 @@ public enum EventType {
 	 *
 	 * @see org.junit.platform.engine.EngineExecutionListener#reportingEntryPublished(TestDescriptor, ReportEntry)
 	 */
-	REPORTING_ENTRY_PUBLISHED;
+	REPORTING_ENTRY_PUBLISHED,
+
+	/**
+	 * Signals that a {@link TestDescriptor} published a file entry.
+	 *
+	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished(TestDescriptor, FileEntry)
+	 */
+	FILE_ENTRY_PUBLISHED
 
 }

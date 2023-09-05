@@ -77,7 +77,7 @@ class HierarchicalTestExecutorTests {
 
 	private HierarchicalTestExecutor<MyEngineExecutionContext> createExecutor(
 			HierarchicalTestExecutorService executorService) {
-		var request = new ExecutionRequest(root, listener, null);
+		var request = ExecutionRequest.create(root, listener, null);
 		return new HierarchicalTestExecutor<>(request, rootContext, executorService,
 			OpenTest4JAwareThrowableCollector::new);
 	}
