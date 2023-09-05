@@ -10,19 +10,11 @@
 
 package org.junit.vintage.engine.samples.junit3;
 
-import junit.framework.TestCase;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
 
-import org.junit.Assert;
-import org.junit.Ignore;
-
-/**
- * @since 4.12
- */
-@Ignore("testing")
-public class IgnoredJUnit3TestCase extends TestCase {
-
-	public void test() {
-		Assert.fail("this test should be ignored");
-	}
-
+@RunWith(Suite.class)
+@SuiteClasses({ IgnoredJUnit3TestCase.class })
+public class JUnit4SuiteWithIgnoredJUnit3TestCase {
 }
