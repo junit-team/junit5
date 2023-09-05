@@ -33,6 +33,7 @@
 0a4c9b51f1c98ca9d3be1a8f144b5324  junit-platform-launcher/src/main/java/org/junit/platform/launcher/tagexpression/Stack.java
 0a7a6a467cf245dda1296741a0421a2c  junit-jupiter-params/src/main/java/org/junit/jupiter/params/converter/ConvertWith.java
 0a8f41a95e04314a9507b51766098d15  junit-vintage-engine/src/main/java/org/junit/vintage/engine/discovery/ClassSelectorResolver.java
+0ab05cd194de11f5c37e319cd35c1bb0  documentation/src/docs/asciidoc/release-notes/index.adoc
 0abb8110e64d8700654c7b94b931986c  junit-platform-console/src/main/java/org/junit/platform/console/package-info.java
 0afc32300a30016cc539c35a8862d357  junit-platform-console/src/main/java17/org/junit/platform/console/options/ConsoleUtils.java
 0b34933deb333f3229a679f738bff811  junit-platform-launcher/src/main/java/org/junit/platform/launcher/core/DefaultLauncherConfig.java
@@ -660,7 +661,6 @@ cef7678cc6390aafb2075fffc910397d  junit-jupiter-api/src/main/java/org/junit/jupi
 cf253e3d5f9c42f498d51d7aa807214d  documentation/src/test/java/example/registration/WebServerDemo.java
 cf33dfccd0dfe89c1e6416754477eab0  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertNotSame.java
 cf7e2f9996ce27692e2124d6fee0fbaa  junit-jupiter-api/src/main/java/org/junit/jupiter/api/AssertIterableEquals.java
-d03502d7fbb3a62337a9a0fb93216804  documentation/src/docs/asciidoc/release-notes/index.adoc
 d0515272c2e52c47461bd47f6a53221b  documentation/src/test/java/example/MethodSourceParameterResolutionDemo.java
 d1252556b84c400343de0ef81213e81b  junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/EmptyArgumentsProvider.java
 d1d1526042673217009af6f65473fa36  junit-platform-engine/src/main/java/org/junit/platform/engine/discovery/MethodSelector.java
@@ -702,6 +702,7 @@ d9c4b2ecfd40ab714e5f249ab1d1641a  documentation/src/docs/asciidoc/user-guide/adv
 d9d5c16c9edfc6011816243e3099211b  junit-platform-launcher/src/main/java/org/junit/platform/launcher/package-info.java
 da369510c5511b2e45b273e801ebfb7e  junit-platform-commons/src/main/java/org/junit/platform/commons/logging/LogRecordListener.java
 da3c11f05b4ff820a370b533f787a5ad  documentation/src/test/java/example/callbacks/BrokenLifecycleMethodConfigDemo.java
+da91d7ae02e3bc78192bcb3e71899849  documentation/src/docs/asciidoc/release-notes/release-notes-5.10.1.adoc
 dab29fdd48d5d8a283c0cceacc8b63a7  junit-platform-commons/src/main/java/org/junit/platform/commons/util/Preconditions.java
 dab60c4e524ed48f61e354e81002fa13  junit-platform-suite-api/src/main/java/org/junit/platform/suite/api/DisableParentConfigurationParameters.java
 dae04d37880594d73c06fe14d666116a  junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/descriptor/ExtensionUtils.java
