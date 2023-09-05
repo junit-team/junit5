@@ -64,6 +64,10 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 		return runner;
 	}
 
+	boolean isIgnored(Runner runner) {
+		return runner instanceof IgnoredClassRunner || runner instanceof IgnoringRunnerDecorator;
+	}
+
 	/**
 	 * Instead of checking for the {@link Ignore} annotation and returning an
 	 * {@link IgnoredClassRunner} from {@link IgnoredBuilder}, we've let the
@@ -72,7 +76,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 * override its runtime behavior (i.e. skip execution) but return its
 	 * regular {@link org.junit.runner.Description}.
 	 */
-	private Runner decorateIgnoredTestClass(Runner runner) {
+	private IgnoringRunnerDecorator decorateIgnoredTestClass(Runner runner) {
 		if (runner instanceof Filterable) {
 			return new FilterableIgnoringRunnerDecorator(runner);
 		}

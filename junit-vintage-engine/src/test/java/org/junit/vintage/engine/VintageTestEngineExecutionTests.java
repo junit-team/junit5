@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine;
 
+import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -56,8 +57,10 @@ import org.junit.runner.Runner;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
+import org.junit.vintage.engine.samples.junit3.IgnoredJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit3.JUnit3ParallelSuiteWithSubsuites;
 import org.junit.vintage.engine.samples.junit3.JUnit3SuiteWithSubsuites;
+import org.junit.vintage.engine.samples.junit3.JUnit4SuiteWithIgnoredJUnit3TestCase;
 import org.junit.vintage.engine.samples.junit3.PlainJUnit3TestCaseWithSingleTestWhichFails;
 import org.junit.vintage.engine.samples.junit4.CompletelyDynamicTestCase;
 import org.junit.vintage.engine.samples.junit4.EmptyIgnoredTestCase;
@@ -893,6 +896,27 @@ class VintageTestEngineExecutionTests {
 			event(test("regular"), started()), //
 			event(test("regular"), finishedSuccessfully()), //
 			event(container(testClass), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesIgnoredJUnit3TestCase() {
+		var suiteClass = IgnoredJUnit3TestCase.class;
+		execute(suiteClass).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(suiteClass), skippedWithReason(isEqual("testing"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesJUnit4SuiteWithIgnoredJUnit3TestCase() {
+		var suiteClass = JUnit4SuiteWithIgnoredJUnit3TestCase.class;
+		var testClass = IgnoredJUnit3TestCase.class;
+		execute(suiteClass).allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(suiteClass), started()), //
+			event(container(testClass), skippedWithReason(isEqual("testing"))), //
+			event(container(suiteClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
