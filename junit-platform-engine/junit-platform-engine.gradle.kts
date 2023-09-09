@@ -1,6 +1,7 @@
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.java-repackage-jars")
 	`java-test-fixtures`
 }
 
