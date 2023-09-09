@@ -2,7 +2,6 @@ plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.java-multi-release-sources")
-	id("junitbuild.java-repackage-jars")
 }
 
 description = "JUnit Platform Console"
@@ -40,11 +39,9 @@ tasks {
 			into("META-INF")
 		}
 		from(sourceSets.mainRelease9.get().output.classesDirs)
-		doLast(objects.newInstance(junitbuild.java.ExecJarAction::class).apply {
+		doLast(objects.newInstance(junitbuild.java.UpdateJarAction::class).apply {
 			javaLauncher = project.javaToolchains.launcherFor(java.toolchain)
 			args.addAll(
-				"--update",
-				"--file", archiveFile.get().asFile.absolutePath,
 				"--main-class", "org.junit.platform.console.ConsoleLauncher",
 				"--release", "17",
 				"-C", release17ClassesDir.absolutePath, "."
