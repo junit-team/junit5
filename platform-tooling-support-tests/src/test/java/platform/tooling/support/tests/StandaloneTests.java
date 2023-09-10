@@ -21,6 +21,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.jdk.Jar;
@@ -390,8 +391,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -427,8 +428,8 @@ class StandaloneTests {
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out-java8.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err-java8.txt"));
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -438,6 +439,13 @@ class StandaloneTests {
 				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
 		assertTrue(result.getOutput("err").contains("junit-vintage"
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	private static List<String> getExpectedErrLinesOnJava8(Path workspace) throws IOException {
+		var expectedErrLines = new ArrayList<String>();
+		expectedErrLines.add(">> JAVA VERSION >>");
+		expectedErrLines.addAll(Files.readAllLines(workspace.resolve("expected-err.txt")));
+		return expectedErrLines;
 	}
 
 	@Test
