@@ -8,7 +8,7 @@ bnd = "6.4.0"
 checkstyle = "10.12.3"
 gradleVersionsPlugin = "0.47.0"
 jacoco = "0.8.7"
-jmh = "1.36"
+jmh = "1.37"
 junit4 = "4.13.2"
 junit4Osgi = "4.13.2_1"
 junit4Min = "4.12"
@@ -32,8 +32,8 @@ checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checks
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.161" }
 commons-io = { module = "commons-io:commons-io", version = "2.13.0" }
 gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.11.1" }
-gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.6.0" }
-gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.14" }
+gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.7.0" }
+gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.14.1" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
 gradle-shadow = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.20.0" }
@@ -47,10 +47,10 @@ jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.0" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.2" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.3" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
-maven = { module = "org.apache.maven:apache-maven", version = "3.9.3" }
+maven = { module = "org.apache.maven:apache-maven", version = "3.9.4" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.6.1" }
 mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.4.0" }
