@@ -8,5 +8,5 @@ import java.util.stream.Stream;
 public interface SelectorParser {
     String getPrefix();
 
-    Stream<DiscoverySelector> parse(URI selector);
+    Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context);
 }

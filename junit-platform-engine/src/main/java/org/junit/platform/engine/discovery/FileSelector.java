@@ -141,7 +141,7 @@ public class FileSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			// Problem: the real file url, e.g. `file:///` does not support relative paths.
 			// if we use just the schemeSpecificPart and omit the `///` we can support `file:relative/path` and `file:/absolute/path`
 			// however it won't parse the Query part of the URI anymore, which is used to specify the line and column.

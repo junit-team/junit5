@@ -121,7 +121,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			String part = selector.getSchemeSpecificPart();
 
 			// Unfortunately, URI only parses the query if you have scheme://something?query

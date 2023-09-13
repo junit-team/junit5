@@ -175,7 +175,7 @@ public class NestedClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/")) //
                 .map(CodingUtil::urlDecode) //
                 .collect(toList());

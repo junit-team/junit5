@@ -939,7 +939,6 @@ public final class DiscoverySelectors {
 	}
 
 	public static Stream<DiscoverySelector> parse(String selector) {
-		// TODO should we hold a static reference to the parser either here or in the parser itself?
 		return new SelectorParsers().parse(selector);
 	}
 }
