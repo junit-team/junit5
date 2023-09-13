@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-class SelectorParsers {
+class SelectorParsers  implements SelectorParserContext{
 
     private final Map<String, SelectorParser> parsers = loadParsers();
 
@@ -30,6 +30,7 @@ class SelectorParsers {
         return parsers;
     }
 
+    @Override
     public Stream<DiscoverySelector> parse(String selector) {
         URI uri = URI.create(selector);
         String scheme = uri.getScheme();
@@ -38,7 +39,7 @@ class SelectorParsers {
         SelectorParser parser = parsers.get(scheme);
         Preconditions.notNull(parser, "No parser for scheme: " + scheme);
 
-        return parser.parse(uri);
+        return parser.parse(uri, this);
     }
 
 }

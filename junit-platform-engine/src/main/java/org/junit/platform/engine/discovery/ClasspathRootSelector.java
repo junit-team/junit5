@@ -106,7 +106,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			try {
 				String rootSelector = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
 				return DiscoverySelectors.selectClasspathRoots(Collections.singleton(Paths.get(rootSelector)))

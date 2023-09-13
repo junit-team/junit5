@@ -129,7 +129,7 @@ public class ClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			return Stream.of(DiscoverySelectors.selectClass(selector.getSchemeSpecificPart()));
 		}
 	}

@@ -112,10 +112,10 @@ public class IterationSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector) {
+		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
             int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(Integer::parseInt).toArray();
             String parentSelector = CodingUtil.urlDecode(selector.getSchemeSpecificPart());
-            return DiscoverySelectors.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
+            return context.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
 		}
 	}
 }
