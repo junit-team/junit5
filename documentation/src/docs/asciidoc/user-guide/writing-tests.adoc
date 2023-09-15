@@ -371,12 +371,22 @@ And here's a test class that contains a `@Disabled` test method.
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
-NOTE: `@Disabled` may be declared without providing a _reason_; however, the JUnit team
+[TIP]
+====
+`@Disabled` may be declared without providing a _reason_; however, the JUnit team
 recommends that developers provide a short explanation for why a test class or test
 method has been disabled. Consequently, the above examples both show the use of a reason
 -- for example, `@Disabled("Disabled until bug #42 has been resolved")`. Some development
 teams even require the presence of issue tracking numbers in the _reason_ for automated
 traceability, etc.
+====
+
+[NOTE]
+====
+`@Disabled` is not `@Inherited`. Consequently, if you wish to disable a class whose
+superclass is `@Disabled`, you must redeclare `@Disabled` on the subclass.
+====
+
 
 [[writing-tests-conditional-execution]]
 === Conditional Test Execution
@@ -404,6 +414,13 @@ be used as a meta-annotation in order to create a custom _composed annotation_. 
 example, the `@TestOnMac` annotation in the
 <<writing-tests-conditional-execution-os-demo, @EnabledOnOs demo>> shows how you can
 combine `@Test` and `@EnabledOnOs` in a single, reusable annotation.
+====
+
+[NOTE]
+====
+_Conditional_ annotations in JUnit Jupiter are not `@Inherited`. Consequently, if you wish
+to apply the same semantics to subclasses, each conditional annotation must be redeclared
+on each subclass.
 ====
 
 [WARNING]

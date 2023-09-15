@@ -28,6 +28,10 @@ import org.apiguardian.api.API;
  * is completely optional since {@code @EnabledIfSystemProperty} is a {@linkplain
  * java.lang.annotation.Repeatable repeatable} annotation.
  *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
+ *
  * @since 5.6
  * @see EnabledIfSystemProperty
  * @see java.lang.annotation.Repeatable
