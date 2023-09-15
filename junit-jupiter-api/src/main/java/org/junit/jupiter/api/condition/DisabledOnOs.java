@@ -34,6 +34,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * will be disabled on the same specified operating systems, architectures, or
  * the specified combinations of both.
  *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
+ *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
  * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}

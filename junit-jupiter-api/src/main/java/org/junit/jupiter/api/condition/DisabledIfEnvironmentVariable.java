@@ -31,6 +31,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * <p>When declared at the class level, the result will apply to all test methods
  * within that class as well.
  *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
+ *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
  * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
