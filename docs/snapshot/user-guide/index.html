@@ -2108,6 +2108,24 @@ annotation, via one of the annotations discussed in
 <span class="o">}</span></code></pre>
 </div>
 </div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><code>@Disabled</code> may be declared without providing a <em>reason</em>; however, the JUnit team
+recommends that developers provide a short explanation for why a test class or test
+method has been disabled. Consequently, the above examples both show the use of a reason&#8201;&#8212;&#8201;for example, <code>@Disabled("Disabled until bug #42 has been resolved")</code>. Some development
+teams even require the presence of issue tracking numbers in the <em>reason</em> for automated
+traceability, etc.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -2115,11 +2133,10 @@ annotation, via one of the annotations discussed in
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-<code>@Disabled</code> may be declared without providing a <em>reason</em>; however, the JUnit team
-recommends that developers provide a short explanation for why a test class or test
-method has been disabled. Consequently, the above examples both show the use of a reason&#8201;&#8212;&#8201;for example, <code>@Disabled("Disabled until bug #42 has been resolved")</code>. Some development
-teams even require the presence of issue tracking numbers in the <em>reason</em> for automated
-traceability, etc.
+<div class="paragraph">
+<p><code>@Disabled</code> is not <code>@Inherited</code>. Consequently, if you wish to disable a class whose
+superclass is <code>@Disabled</code>, you must redeclare <code>@Disabled</code> on the subclass.</p>
+</div>
 </td>
 </tr>
 </table>
@@ -2158,6 +2175,22 @@ be used as a meta-annotation in order to create a custom <em>composed annotation
 example, the <code>@TestOnMac</code> annotation in the
 <a href="#writing-tests-conditional-execution-os-demo">@EnabledOnOs demo</a> shows how you can
 combine <code>@Test</code> and <code>@EnabledOnOs</code> in a single, reusable annotation.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p><em>Conditional</em> annotations in JUnit Jupiter are not <code>@Inherited</code>. Consequently, if you wish
+to apply the same semantics to subclasses, each conditional annotation must be redeclared
+on each subclass.</p>
 </div>
 </td>
 </tr>
@@ -12634,7 +12667,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.11.0-SNAPSHOT<br>
-Last updated 2023-09-05 13:26:45 UTC
+Last updated 2023-09-15 08:18:21 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>

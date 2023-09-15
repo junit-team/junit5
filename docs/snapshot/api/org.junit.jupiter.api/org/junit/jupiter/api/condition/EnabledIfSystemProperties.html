@@ -82,7 +82,11 @@ loadScripts(document, 'script');</script>
  <a href="EnabledIfSystemProperty.html" title="annotation interface in org.junit.jupiter.api.condition"><code>@EnabledIfSystemProperty</code></a> declarations.
 
  <p>Note, however, that use of the <code>@EnabledIfSystemProperties</code> container
- is completely optional since <code>@EnabledIfSystemProperty</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a> annotation.</div>
+ is completely optional since <code>@EnabledIfSystemProperty</code> is a <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Repeatable.html" title="class or interface in java.lang.annotation" class="external-link">repeatable</a> annotation.
+
+ <p>This annotation is not <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/annotation/Inherited.html" title="class or interface in java.lang.annotation" class="external-link"><code>@Inherited</code></a>.
+ Consequently, if you wish to apply the same semantics to a subclass, this
+ annotation must be redeclared on the subclass.</div>
 <dl class="notes">
 <dt>Since:</dt>
 <dd>5.6</dd>
