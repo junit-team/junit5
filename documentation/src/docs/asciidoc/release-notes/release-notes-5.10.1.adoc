@@ -49,7 +49,7 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* Fix reporting of JUnit 3 test classes with `@Ignored` annotation
+* Fixed reporting for JUnit 3 test classes that use JUnit 4's `@Ignored` annotation.
 
 ==== Deprecations and Breaking Changes
 
