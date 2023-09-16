@@ -31,7 +31,9 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `RandomNumberExtension` example in the
+  <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
+  updated to properly support `Integer` types as well as non-static field injection.
 
 ==== Deprecations and Breaking Changes
 
