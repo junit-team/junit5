@@ -99,7 +99,7 @@ public @interface DatabaseAndWebServerExtension {
 The above examples demonstrate how `@ExtendWith` can be applied at the class level or at
 the method level; however, for certain use cases it makes sense for an extension to be
 registered declaratively at the field or parameter level. Consider a
-`RandomNumberExtension` that generates random numbers that can be injected into a field or
+`RandomNumberExtension` which generates random numbers that can be injected into a field or
 via a parameter in a constructor, test method, or lifecycle method. If the extension
 provides a `@Random` annotation that is meta-annotated with
 `@ExtendWith(RandomNumberExtension.class)` (see listing below), the extension can be used
@@ -118,16 +118,28 @@ include::{testDir}/example/extensions/RandomNumberDemo.java[tags=user_guide]
 [[extensions-RandomNumberExtension]]
 The following code listing provides an example of how one might choose to implement such a
 `RandomNumberExtension`. This implementation works for the use cases in
-`RandomNumberDemo`; however, it may not prove robust enough to cover all use cases – for
-example, the random number generation support is limited to integers, it uses
-`java.util.Random` instead of `java.security.SecureRandom`, etc. In any case, it is
+`RandomNumberDemo`; however, it may not prove robust enough to cover all use cases -- for
+example, the random number generation support is limited to integers; it uses
+`java.util.Random` instead of `java.security.SecureRandom`; etc. In any case, it is
 important to note which extension APIs are implemented and for what reasons.
 
 Specifically, `RandomNumberExtension` implements the following extension APIs:
 
 - `BeforeAllCallback`: to support static field injection
-- `TestInstancePostProcessor`: to support non-static field injection
+- `BeforeEachCallback`: to support non-static field injection
 - `ParameterResolver`: to support constructor and method injection
+
+[NOTE]
+====
+Ideally, the `RandomNumberExtension` would implement `TestInstancePostProcessor` instead
+of `BeforeEachCallback` in order to support non-static field injection immediately after
+the test class has been instantiated.
+
+However, JUnit Jupiter currently does not allow a `TestInstancePostProcessor` to be
+registered via `@ExtendWith` on a non-static field (see
+link:{junit5-repo}/issues/3437[issue 3437]). In light of that, the `RandomNumberExtension`
+implements `BeforeEachCallback` as an alternative approach.
+====
 
 [source,java,indent=0]
 ----
