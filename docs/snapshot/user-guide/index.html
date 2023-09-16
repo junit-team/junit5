@@ -8850,7 +8850,7 @@ can be used in place of <code>@ExtendWith({ DatabaseExtension.class, WebServerEx
 <p>The above examples demonstrate how <code>@ExtendWith</code> can be applied at the class level or at
 the method level; however, for certain use cases it makes sense for an extension to be
 registered declaratively at the field or parameter level. Consider a
-<code>RandomNumberExtension</code> that generates random numbers that can be injected into a field or
+<code>RandomNumberExtension</code> which generates random numbers that can be injected into a field or
 via a parameter in a constructor, test method, or lifecycle method. If the extension
 provides a <code>@Random</code> annotation that is meta-annotated with
 <code>@ExtendWith(RandomNumberExtension.class)</code> (see listing below), the extension can be used
@@ -8880,7 +8880,7 @@ transparently as in the following <code>RandomNumberDemo</code> example.</p>
     <span class="kd">private</span> <span class="kt">int</span> <span class="n">randomNumber1</span><span class="o">;</span>
 
     <span class="nc">RandomNumberDemo</span><span class="o">(</span><span class="nd">@Random</span> <span class="kt">int</span> <span class="n">randomNumber2</span><span class="o">)</span> <span class="o">{</span>
-        <span class="c1">// Use randomNumber2 in constructor</span>
+        <span class="c1">// Use randomNumber2 in constructor.</span>
     <span class="o">}</span>
 
     <span class="nd">@BeforeEach</span>
@@ -8899,9 +8899,9 @@ transparently as in the following <code>RandomNumberDemo</code> example.</p>
 <div id="extensions-RandomNumberExtension" class="paragraph">
 <p>The following code listing provides an example of how one might choose to implement such a
 <code>RandomNumberExtension</code>. This implementation works for the use cases in
-<code>RandomNumberDemo</code>; however, it may not prove robust enough to cover all use cases – for
-example, the random number generation support is limited to integers, it uses
-<code>java.util.Random</code> instead of <code>java.security.SecureRandom</code>, etc. In any case, it is
+<code>RandomNumberDemo</code>; however, it may not prove robust enough to cover all use cases&#8201;&#8212;&#8201;for
+example, the random number generation support is limited to integers; it uses
+<code>java.util.Random</code> instead of <code>java.security.SecureRandom</code>; etc. In any case, it is
 important to note which extension APIs are implemented and for what reasons.</p>
 </div>
 <div class="paragraph">
@@ -8913,12 +8913,34 @@ important to note which extension APIs are implemented and for what reasons.</p>
 <p><code>BeforeAllCallback</code>: to support static field injection</p>
 </li>
 <li>
-<p><code>TestInstancePostProcessor</code>: to support non-static field injection</p>
+<p><code>BeforeEachCallback</code>: to support non-static field injection</p>
 </li>
 <li>
 <p><code>ParameterResolver</code>: to support constructor and method injection</p>
 </li>
 </ul>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Ideally, the <code>RandomNumberExtension</code> would implement <code>TestInstancePostProcessor</code> instead
+of <code>BeforeEachCallback</code> in order to support non-static field injection immediately after
+the test class has been instantiated.</p>
+</div>
+<div class="paragraph">
+<p>However, JUnit Jupiter currently does not allow a <code>TestInstancePostProcessor</code> to be
+registered via <code>@ExtendWith</code> on a non-static field (see
+<a href="https://github.com/junit-team/junit5/issues/3437">issue 3437</a>). In light of that, the <code>RandomNumberExtension</code>
+implements <code>BeforeEachCallback</code> as an alternative approach.</p>
+</div>
+</td>
+</tr>
+</table>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -8928,14 +8950,14 @@ important to note which extension APIs are implemented and for what reasons.</p>
 <span class="kn">import</span> <span class="nn">java.util.function.Predicate</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.BeforeAllCallback</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.BeforeEachCallback</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ExtensionContext</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ParameterContext</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ParameterResolver</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.TestInstancePostProcessor</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.commons.support.ModifierSupport</span><span class="o">;</span>
 
 <span class="kd">class</span> <span class="nc">RandomNumberExtension</span>
-        <span class="kd">implements</span> <span class="nc">BeforeAllCallback</span><span class="o">,</span> <span class="nc">TestInstancePostProcessor</span><span class="o">,</span> <span class="nc">ParameterResolver</span> <span class="o">{</span>
+        <span class="kd">implements</span> <span class="nc">BeforeAllCallback</span><span class="o">,</span> <span class="nc">BeforeEachCallback</span><span class="o">,</span> <span class="nc">ParameterResolver</span> <span class="o">{</span>
 
     <span class="kd">private</span> <span class="kd">final</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Random</span> <span class="n">random</span> <span class="o">=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Random</span><span class="o">(</span><span class="nc">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">());</span>
 
@@ -8954,8 +8976,9 @@ important to note which extension APIs are implemented and for what reasons.</p>
      * {@code @Random} and can be assigned an integer value.
      */</span>
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">postProcessTestInstance</span><span class="o">(</span><span class="nc">Object</span> <span class="n">testInstance</span><span class="o">,</span> <span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">beforeEach</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
         <span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">testClass</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestClass</span><span class="o">();</span>
+        <span class="nc">Object</span> <span class="n">testInstance</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestInstance</span><span class="o">();</span>
         <span class="n">injectFields</span><span class="o">(</span><span class="n">testClass</span><span class="o">,</span> <span class="n">testInstance</span><span class="o">,</span> <span class="nl">ModifierSupport:</span><span class="o">:</span><span class="n">isNotStatic</span><span class="o">);</span>
     <span class="o">}</span>
 
@@ -12667,7 +12690,7 @@ following <em>OpenTest4J</em> JAR.</p>
 <div id="footer">
 <div id="footer-text">
 Version 5.11.0-SNAPSHOT<br>
-Last updated 2023-09-15 08:18:21 UTC
+Last updated 2023-09-16 13:04:56 UTC
 </div>
 </div>
 <script src="../tocbot-3.0.2/tocbot.min.js"></script>
