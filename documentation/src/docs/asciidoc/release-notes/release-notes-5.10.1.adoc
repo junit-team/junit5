@@ -41,7 +41,9 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* Improved Javadoc for `Assertions.assertTimeoutPreemptively` regarding thread interrupt.
+* Documentation for `@Disabled` and conditional annotations now explicitly explains that
+  such annotations are not inherited by subclasses.
 
 
 [[release-notes-5.10.1-junit-vintage]]
