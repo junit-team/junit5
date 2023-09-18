@@ -226,3 +226,5 @@ Your donations will help to make that a reality!
 - Rajesh Aadi
 - Jun Nakamura
 - Sebastian Staack
+- Paul Schaub
+
