@@ -47,6 +47,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -61,11 +63,13 @@ class DefaultArgumentConverterTests {
 	void isAwareOfNull() {
 		assertConverts(null, Object.class, null);
 		assertConverts(null, String.class, null);
+		assertConverts(null, Boolean.class, null);
 	}
 
 	@Test
 	void isAwareOfWrapperTypesForPrimitiveTypes() {
 		assertConverts(true, boolean.class, true);
+		assertConverts(false, boolean.class, false);
 		assertConverts((byte) 1, byte.class, (byte) 1);
 		assertConverts('o', char.class, 'o');
 		assertConverts((short) 1, short.class, (short) 1);
@@ -91,6 +95,7 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringsToPrimitiveTypes() {
 		assertConverts("true", boolean.class, true);
+		assertConverts("false", boolean.class, false);
 		assertConverts("o", char.class, 'o');
 		assertConverts("1", byte.class, (byte) 1);
 		assertConverts("1_0", byte.class, (byte) 10);
@@ -104,6 +109,54 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
 		assertConverts("42.2_3", double.class, 42.23);
+	}
+
+	@Test
+	void convertsStringsToPrimitiveWrapperTypes() {
+		assertConverts("true", Boolean.class, true);
+		assertConverts("false", Boolean.class, false);
+		assertConverts("o", Character.class, 'o');
+		assertConverts("1", Byte.class, (byte) 1);
+		assertConverts("1_0", Byte.class, (byte) 10);
+		assertConverts("1", Short.class, (short) 1);
+		assertConverts("1_2", Short.class, (short) 12);
+		assertConverts("42", Integer.class, 42);
+		assertConverts("700_050_000", Integer.class, 700_050_000);
+		assertConverts("42", Long.class, 42L);
+		assertConverts("4_2", Long.class, 42L);
+		assertConverts("42.23", Float.class, 42.23f);
+		assertConverts("42.2_3", Float.class, 42.23f);
+		assertConverts("42.23", Double.class, 42.23);
+		assertConverts("42.2_3", Double.class, 42.23);
+	}
+
+	@Test
+	void convertsTheWordNullToBooleanFalse() {
+		assertConverts("null", boolean.class, false);
+		assertConverts("NULL", boolean.class, false);
+		assertConverts("null", Boolean.class, false);
+		assertConverts("NULL", Boolean.class, false);
+	}
+
+	@ParameterizedTest(name = "[{index}] {0}")
+	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
+			double.class })
+	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(null, type)) //
+				.withMessage("Cannot convert null to primitive value of type " + type.getCanonicalName());
+	}
+
+	@ParameterizedTest(name = "[{index}] {0}")
+	// NOTE: everything except Boolean.class and Character.class.
+	@ValueSource(classes = { Short.class, Byte.class, Integer.class, Long.class, Float.class, Double.class })
+	void throwsExceptionWhenConvertingTheWordNullToPrimitiveWrapperType(Class<?> type) {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("null", type)) //
+				.withMessage("Failed to convert String \"null\" to type " + type.getCanonicalName());
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("NULL", type)) //
+				.withMessage("Failed to convert String \"NULL\" to type " + type.getCanonicalName());
 	}
 
 	@Test
