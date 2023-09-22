@@ -116,14 +116,14 @@ class ParameterizedTestIntegrationTests {
 			apple,   True
 			banana,  true
 			lemon,   false
-			kumquat, null
+			kumquat, FALSE
 			""")
 	void sweetFruit(String fruit, Boolean sweet) {
 		switch (fruit) {
 			case "apple" -> assertThat(sweet).isTrue();
 			case "banana" -> assertThat(sweet).isTrue();
 			case "lemon" -> assertThat(sweet).isFalse();
-			case "kumquat" -> assertThat(sweet).isFalse(); // "null" --> false
+			case "kumquat" -> assertThat(sweet).isFalse();
 			default -> fail("Unexpected fruit : " + fruit);
 		}
 	}
