@@ -103,6 +103,40 @@ import org.opentest4j.TestAbortedException;
 class ParameterizedTestIntegrationTests {
 
 	@ParameterizedTest
+	@CsvSource(textBlock = """
+			apple,   True
+			banana,  true
+			lemon,   false
+			kumquat, null
+			""")
+	void sweetFruit(String fruit, Boolean sweet) {
+		switch (fruit) {
+			case "apple" -> assertThat(sweet).isTrue();
+			case "banana" -> assertThat(sweet).isTrue();
+			case "lemon" -> assertThat(sweet).isFalse();
+			case "kumquat" -> assertThat(sweet).isFalse(); // "null" --> false
+			default -> fail("Unexpected fruit : " + fruit);
+		}
+	}
+
+	@ParameterizedTest
+	@CsvSource(nullValues = "null", textBlock = """
+			apple,   True
+			banana,  true
+			lemon,   false
+			kumquat, null
+			""")
+	void sweetFruitWithNullableBoolean(String fruit, Boolean sweet) {
+		switch (fruit) {
+			case "apple" -> assertThat(sweet).isTrue();
+			case "banana" -> assertThat(sweet).isTrue();
+			case "lemon" -> assertThat(sweet).isFalse();
+			case "kumquat" -> assertThat(sweet).isNull(); // null --> null
+			default -> fail("Unexpected fruit : " + fruit);
+		}
+	}
+
+	@ParameterizedTest
 	@CsvSource(quoteCharacter = '"', textBlock = """
 
 
