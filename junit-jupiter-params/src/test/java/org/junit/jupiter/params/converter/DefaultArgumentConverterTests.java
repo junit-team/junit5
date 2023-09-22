@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.File;
 import java.lang.Thread.State;
@@ -97,6 +98,40 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.2_3", float.class, 42.23f);
 		assertConverts("42.23", double.class, 42.23);
 		assertConverts("42.2_3", double.class, 42.23);
+	}
+
+	@Test
+	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("ab", char.class)) //
+				.withMessage("Failed to convert String \"ab\" to type java.lang.Character") //
+				.havingCause() //
+				.withMessage("String must have length of 1: ab");
+	}
+
+	@Test
+	void throwsExceptionWhenImplicitConverstionIsUnsupported() {
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("foo", Enigma.class)) //
+				.withMessage("No implicit conversion to convert object of type java.lang.String to type %s",
+					Enigma.class.getName());
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new Enigma(), int[].class)) //
+				.withMessage("No implicit conversion to convert object of type %s to type [I", Enigma.class.getName());
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new long[] {}, int[].class)) //
+				.withMessage("No implicit conversion to convert object of type [J to type [I");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(new String[] {}, boolean.class)) //
+				.withMessage(
+					"No implicit conversion to convert object of type [Ljava.lang.String; to type java.lang.Boolean");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert(Class.class, int[].class)) //
+				.withMessage("No implicit conversion to convert object of type java.lang.Class to type [I");
 	}
 
 	/**
@@ -232,11 +267,18 @@ class DefaultArgumentConverterTests {
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		var result = DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+		var result = convert(input, targetClass);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
+	}
+
+	private Object convert(Object input, Class<?> targetClass) {
+		return DefaultArgumentConverter.INSTANCE.convert(input, targetClass);
+	}
+
+	private static class Enigma {
 	}
 
 }
