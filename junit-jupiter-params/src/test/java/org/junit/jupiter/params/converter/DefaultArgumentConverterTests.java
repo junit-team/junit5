@@ -130,14 +130,6 @@ class DefaultArgumentConverterTests {
 		assertConverts("42.2_3", Double.class, 42.23);
 	}
 
-	@Test
-	void convertsTheWordNullToBooleanFalse() {
-		assertConverts("null", boolean.class, false);
-		assertConverts("NULL", boolean.class, false);
-		assertConverts("null", Boolean.class, false);
-		assertConverts("NULL", Boolean.class, false);
-	}
-
 	@ParameterizedTest(name = "[{index}] {0}")
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
 			double.class })
@@ -148,8 +140,8 @@ class DefaultArgumentConverterTests {
 	}
 
 	@ParameterizedTest(name = "[{index}] {0}")
-	// NOTE: everything except Boolean.class and Character.class.
-	@ValueSource(classes = { Short.class, Byte.class, Integer.class, Long.class, Float.class, Double.class })
+	@ValueSource(classes = { Boolean.class, Character.class, Short.class, Byte.class, Integer.class, Long.class,
+			Float.class, Double.class })
 	void throwsExceptionWhenConvertingTheWordNullToPrimitiveWrapperType(Class<?> type) {
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert("null", type)) //
@@ -172,6 +164,18 @@ class DefaultArgumentConverterTests {
 				.withMessage("Failed to convert String \"tru\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): tru");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("null", boolean.class)) //
+				.withMessage("Failed to convert String \"null\" to type boolean") //
+				.havingCause() //
+				.withMessage("String must be 'true' or 'false' (ignoring case): null");
+
+		assertThatExceptionOfType(ArgumentConversionException.class) //
+				.isThrownBy(() -> convert("NULL", boolean.class)) //
+				.withMessage("Failed to convert String \"NULL\" to type boolean") //
+				.havingCause() //
+				.withMessage("String must be 'true' or 'false' (ignoring case): NULL");
 	}
 
 	@Test
