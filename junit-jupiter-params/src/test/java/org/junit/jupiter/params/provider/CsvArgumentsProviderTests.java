@@ -248,11 +248,12 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void customNullValues() {
-		var annotation = csvSource().nullValues("N/A", "NIL").lines("apple, , NIL, '', N/A, banana").build();
+		var annotation = csvSource().nullValues("N/A", "NIL", "null")//
+				.lines("apple, , NIL, '', N/A, banana, null").build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("apple", null, null, "", null, "banana"));
+		assertThat(arguments).containsExactly(array("apple", null, null, "", null, "banana", null));
 	}
 
 	@Test
