@@ -5,6 +5,10 @@ plugins {
 	kotlin("jvm")
 }
 
+tasks.named("kotlinSourcesJar") {
+	enabled = false
+}
+
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
 		apiVersion = "1.3"
