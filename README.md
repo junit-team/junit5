@@ -46,11 +46,14 @@ A code coverage report can also be generated locally via the [Gradle Wrapper] by
 executing `./gradlew -Ptesting.enableJaCoCo clean jacocoRootReport`. The results will be available
 in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
-## Gradle Enterprise
+## Develocity
 
-[![Revved up by Gradle Enterprise](https://img.shields.io/badge/Revved%20up%20by-Gradle%20Enterprise-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
+[![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
 
-JUnit 5 utilizes [Gradle Enterprise](https://gradle.com/) for _Build Scans_, _Build Cache_, and _Test Distribution_.
+JUnit 5 utilizes [Develocity](https://gradle.com/) for [Build Scans](https://scans.gradle.com/),
+[Build Cache](https://docs.gradle.org/current/userguide/build_cache.html),
+[Predictive Test Selection](https://docs.gradle.com/enterprise/predictive-test-selection/), and
+[Test Distribution](https://docs.gradle.com/enterprise/test-distribution/).
 
 The latest Build Scans are available on [ge.junit.org](https://ge.junit.org/). Currently,
 only core team members can publish Build Scans and use Test Distribution on that server.
