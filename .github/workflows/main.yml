@@ -104,3 +104,5 @@ jobs:
       uses: ./.github/actions/run-gradle
       with:
         arguments: gitPublishPush -Dscan.tag.Documentation
+      env:
+        GRGIT_USER: ${{ secrets.GH_TOKEN }}
