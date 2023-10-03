@@ -100,10 +100,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
-    - name: Restore Gradle cache and display toolchains
-      uses: ./.github/actions/run-gradle
-      with:
-        arguments: --quiet
     - name: Upload Documentation
       uses: ./.github/actions/run-gradle
       with:
