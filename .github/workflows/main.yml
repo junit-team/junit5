@@ -105,6 +105,6 @@ jobs:
       with:
         arguments: --quiet
     - name: Upload Documentation
-      env:
-        GRGIT_USER: ${{ secrets.GH_TOKEN }}
-      run: ./gradle/scripts/publishDocumentationSnapshotOnlyIfNecessary.sh
+      uses: ./.github/actions/run-gradle
+      with:
+        arguments: gitPublishPush -Dscan.tag.Documentation
