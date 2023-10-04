@@ -297,11 +297,10 @@ tasks {
 				"userGuidePdfFileName" to userGuidePdfFileName,
 				"releaseNotesUrl" to "../release-notes/index.html#release-notes"
 		))
-		outputs.cacheIf { false } // disable caching to diagnose issue with component-diagram, see https://github.com/junit-team/junit5/issues/3430
 		doLast {
 			val componentDiagramSvg = outputDirProperty.file("user-guide/images/component-diagram.svg").get().asFile
 			require(componentDiagramSvg.exists()) {
-				"Component diagram was not generated at ${componentDiagramSvg}"
+				"Component diagram was not generated at $componentDiagramSvg"
 			}
 		}
 	}
