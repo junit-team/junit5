@@ -63,8 +63,8 @@ dependencies {
 
 asciidoctorj {
 	modules {
-		diagram.use()
-		pdf.version(libs.versions.asciidoctor.pdf)
+		diagram.version(libs.versions.asciidoctorj.diagram)
+		pdf.version(libs.versions.asciidoctorj.pdf)
 	}
 	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
 }
@@ -297,6 +297,12 @@ tasks {
 				"userGuidePdfFileName" to userGuidePdfFileName,
 				"releaseNotesUrl" to "../release-notes/index.html#release-notes"
 		))
+		doLast {
+			val componentDiagramSvg = outputDirProperty.file("user-guide/images/component-diagram.svg").get().asFile
+			require(componentDiagramSvg.exists()) {
+				"Component diagram was not generated at $componentDiagramSvg"
+			}
+		}
 	}
 
 	asciidoctorPdf {
