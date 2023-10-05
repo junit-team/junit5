@@ -6,6 +6,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juli
 :docinfodir: {includedir}/docinfos
 :docinfo2:
 :numbered!:
+:last-update-label!:
 //
 
 This document contains the _change log_ for all JUnit 5 releases since 5.9 GA.

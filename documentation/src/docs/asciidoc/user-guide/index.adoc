@@ -16,6 +16,7 @@ ifdef::backend-pdf[:imagesdir: {imagesoutdir}]
 //
 :sectnums:
 :toclevels: 4
+:last-update-label!:
 //
 
 include::{includedir}/link-attributes.adoc[]
