@@ -30,25 +30,6 @@ Your donations will help to make that a reality!
         </div>
       </a>
     </li>
-    <li>
-      <a class="cardgold" href="https://octopus.com">
-        <div class="cardgold-image">
-          <img style="height:80%" src="assets/img/sponsor-logo-Octopus.svg" alt="Octopus Deploy">
-        </div>
-        <div class="cardgold-center">
-          <h3>Octopus Deploy</h3>
-          <p>
-            Continuous Delivery,<br>
-            Deployment and<br>
-            DevOps platform
-          </p>
-        </div>
-        <div class="cardgold-bottom">
-          <h4>Gold Sponsor</h4>
-          <p>Since September 2020</p>
-        </div>
-      </a>
-    </li>
   </ul>
 </div>
 
