@@ -56,15 +56,15 @@ class EngineIdValidator {
 		if (!engineId.startsWith("junit-")) {
 			return true;
 		}
-		if (engineId.equals("junit-jupiter")) {
+		if ("junit-jupiter".equals(engineId)) {
 			validateWellKnownClassName(testEngine, "org.junit.jupiter.engine.JupiterTestEngine");
 			return true;
 		}
-		if (engineId.equals("junit-vintage")) {
+		if ("junit-vintage".equals(engineId)) {
 			validateWellKnownClassName(testEngine, "org.junit.vintage.engine.VintageTestEngine");
 			return true;
 		}
-		if (engineId.equals("junit-platform-suite")) {
+		if ("junit-platform-suite".equals(engineId)) {
 			validateWellKnownClassName(testEngine, "org.junit.platform.suite.engine.SuiteTestEngine");
 			return true;
 		}

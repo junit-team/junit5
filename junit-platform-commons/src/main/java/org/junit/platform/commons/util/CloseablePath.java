@@ -59,7 +59,7 @@ final class CloseablePath implements Closeable {
 			return createForJarFileSystem(new URI(jarUri), fileSystem -> fileSystem.getPath(jarEntry),
 				fileSystemProvider);
 		}
-		if (uri.getScheme().equals(FILE_URI_SCHEME) && uri.getPath().endsWith(JAR_FILE_EXTENSION)) {
+		if (FILE_URI_SCHEME.equals(uri.getScheme()) && uri.getPath().endsWith(JAR_FILE_EXTENSION)) {
 			return createForJarFileSystem(new URI(JAR_URI_SCHEME + ':' + uri),
 				fileSystem -> fileSystem.getRootDirectories().iterator().next(), fileSystemProvider);
 		}

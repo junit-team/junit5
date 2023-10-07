@@ -118,7 +118,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * @see #forEngine(String)
 	 */
 	public final Optional<String> getEngineId() {
-		return getRoot().filter(segment -> segment.getType().equals(ENGINE_SEGMENT_TYPE)).map(Segment::getValue);
+		return getRoot().filter(segment -> ENGINE_SEGMENT_TYPE.equals(segment.getType())).map(Segment::getValue);
 	}
 
 	/**
