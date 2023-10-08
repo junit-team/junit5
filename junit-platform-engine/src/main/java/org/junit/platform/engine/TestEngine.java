@@ -54,6 +54,8 @@ public interface TestEngine {
 	 * and JUnit Jupiter use {@code "junit-vintage"} and {@code "junit-jupiter"},
 	 * respectively. When in doubt, you may use the fully qualified name of your
 	 * custom {@code TestEngine} implementation class.
+	 *
+	 * @return the ID of this test engine; never {@code null} or blank
 	 */
 	String getId();
 
