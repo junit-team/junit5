@@ -15,7 +15,10 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Method predicates are now applied while searching the type hierarchy. This fixes bugs
+  in `findMethods(...)` and `streamMethods(...)` in `ReflectionSupport` as well as
+  `findAnnotatedMethods(...)` in `AnnotationSupport`.
+  - See link:https://github.com/junit-team/junit5/issues/3498[issue 3498] for details.
 
 
 [[release-notes-5.10.1-junit-jupiter]]
@@ -23,6 +26,11 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
+* A package-private class-level lifecycle method annotated with `@BeforeAll` or
+  `@AfterAll` is no longer _shadowed_ by a method-level lifecycle method annotated with
+  `@BeforeEach` or `@AfterEach` when the method-level lifecycle method resides in a
+  different package and has the same name as the class-level lifecycle method.
+  - See link:https://github.com/junit-team/junit5/issues/3498[issue 3498] for details.
 * The `RandomNumberExtension` example in the
   <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
   updated to properly support `Integer` types as well as non-static field injection.

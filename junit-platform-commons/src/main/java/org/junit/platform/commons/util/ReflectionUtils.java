@@ -1489,29 +1489,27 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		// @formatter:off
-		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
-				.filter(predicate)
-				.distinct();
-		// @formatter:on
+		return findAllMethodsInHierarchy(clazz, predicate, traversalMode).stream().distinct();
 	}
 
 	/**
 	 * Find all non-synthetic methods in the superclass and interface hierarchy,
-	 * excluding Object.
+	 * excluding Object, that match the specified {@code predicate}.
 	 */
-	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
 		List<Method> localMethods = getDeclaredMethods(clazz, traversalMode).stream()
-				.filter(method -> !method.isSynthetic())
+				.filter(predicate.and(method -> !method.isSynthetic()))
 				.collect(toList());
-		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
+		List<Method> superclassMethods = getSuperclassMethods(clazz, predicate, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
+		List<Method> interfaceMethods = getInterfaceMethods(clazz, predicate, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
@@ -1647,16 +1645,18 @@ public final class ReflectionUtils {
 		return comparison;
 	}
 
-	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+	private static List<Method> getInterfaceMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			// @formatter:off
 			List<Method> localInterfaceMethods = getMethods(ifc).stream()
-					.filter(m -> !isAbstract(m))
+					.filter(predicate.and(method -> !isAbstract(method)))
 					.collect(toList());
 
-			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
+			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, predicate, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
@@ -1706,12 +1706,14 @@ public final class ReflectionUtils {
 		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
 	}
 
-	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
+	private static List<Method> getSuperclassMethods(Class<?> clazz, Predicate<Method> predicate,
+			HierarchyTraversalMode traversalMode) {
+
 		Class<?> superclass = clazz.getSuperclass();
 		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
-		return findAllMethodsInHierarchy(superclass, traversalMode);
+		return findAllMethodsInHierarchy(superclass, predicate, traversalMode);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {

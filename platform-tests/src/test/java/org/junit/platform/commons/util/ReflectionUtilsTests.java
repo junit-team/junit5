@@ -72,6 +72,8 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNes
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedSiblingClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
 import org.junit.platform.commons.util.classes.CustomType;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateBeforeMethod;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -1342,6 +1344,28 @@ class ReflectionUtilsTests {
 		var signatures = signaturesOf(methods);
 		assertThat(signatures).containsOnly("method1()", "method2()", "method3()", "otherMethod1()", "otherMethod2()");
 		assertEquals(0, methods.stream().filter(Method::isBridge).count());
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3498
+	 */
+	@Test
+	void findMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String BEFORE = "before";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
+		Method staticMethod = superclass.getDeclaredMethod(BEFORE);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateBeforeMethod.class;
+		Method nonStaticMethod = subclass.getDeclaredMethod(BEFORE);
+
+		// Prerequisite
+		var methods = findMethods(superclass, ReflectionUtils::isStatic);
+		assertThat(methods).containsExactly(staticMethod);
+
+		// Actual use cases for this test
+		methods = findMethods(subclass, ReflectionUtils::isStatic);
+		assertThat(methods).containsExactly(staticMethod);
+		methods = findMethods(subclass, ReflectionUtils::isNotStatic);
+		assertThat(methods).containsExactly(nonStaticMethod);
 	}
 
 	@Test

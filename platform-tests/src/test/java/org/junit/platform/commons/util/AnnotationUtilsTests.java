@@ -36,13 +36,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateBeforeMethod;
 
 /**
  * Unit tests for {@link AnnotationUtils}.
@@ -378,6 +383,28 @@ class AnnotationUtilsTests {
 		assertEquals(3, methods.size());
 		assertEquals(superMethod, methods.get(0));
 		assertThat(methods.subList(1, 3)).containsOnly(method1, method3);
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3498
+	 */
+	@Test
+	void findAnnotatedMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String BEFORE = "before";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
+		Method beforeAllMethod = superclass.getDeclaredMethod(BEFORE);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateBeforeMethod.class;
+		Method beforeEachMethod = subclass.getDeclaredMethod(BEFORE);
+
+		// Prerequisite
+		var methods = findAnnotatedMethods(superclass, BeforeAll.class, TOP_DOWN);
+		assertThat(methods).containsExactly(beforeAllMethod);
+
+		// Actual use cases for this test
+		methods = findAnnotatedMethods(subclass, BeforeAll.class, TOP_DOWN);
+		assertThat(methods).containsExactly(beforeAllMethod);
+		methods = findAnnotatedMethods(subclass, BeforeEach.class, TOP_DOWN);
+		assertThat(methods).containsExactly(beforeEachMethod);
 	}
 
 	@Test
