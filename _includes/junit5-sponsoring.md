@@ -115,20 +115,6 @@ Your donations will help to make that a reality!
   </ul>
   <ul class="list-inline">
     <li>
-      <a class="cardbronze" href="https://ubiehealth.com">
-        <div class="cardbronze-image">
-          <img style="height:100%" src="assets/img/sponsor-logo-ubie.png" alt="ubie">
-        </div>
-        <div class="cardbronze-center">
-          <h4>Ubie</h4>
-        </div>
-        <div class="cardbronze-bottom">
-          <h4>Bronze Sponsor</h4>
-          <p>Since February 2022</p>
-        </div>
-      </a>
-    </li>
-    <li>
       <a class="cardbronze" href="https://www.infosupport.com">
         <div class="cardbronze-image">
           <img style="width:80%; padding-top:10px" src="assets/img/sponsor-logo-InfoSupport.svg" alt="Info Support">
