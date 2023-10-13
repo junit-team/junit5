@@ -17,15 +17,10 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.withSettings;
 
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
-import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineExecutionListener;
 
 /**
@@ -89,12 +84,11 @@ class JupiterEngineExecutionContextTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void closeAttemptExceptionWillBeThrownDownTheCallStack(LogRecordListener logRecordListener) throws Exception {
+	void closeAttemptExceptionWillBeThrownDownTheCallStack() throws Exception {
 		ExtensionContext failingExtensionContext = mock(ExtensionContext.class,
 			withSettings().extraInterfaces(AutoCloseable.class));
-		Exception expectedException = new Exception("test message");
-		doThrow(expectedException).when(((AutoCloseable) failingExtensionContext)).close();
+		Exception expectedCause = new Exception("test message");
+		doThrow(expectedCause).when(((AutoCloseable) failingExtensionContext)).close();
 
 		JupiterEngineExecutionContext newContext = originalContext.extend() //
 				.withExtensionContext(failingExtensionContext) //
@@ -102,10 +96,9 @@ class JupiterEngineExecutionContextTests {
 
 		Exception actualException = assertThrows(Exception.class, newContext::close);
 
-		assertSame(expectedException, actualException);
-		assertThat(logRecordListener.stream(JupiterEngineExecutionContext.class, Level.SEVERE)) //
-				.extracting(LogRecord::getMessage) //
-				.containsOnly("Caught exception while closing extension context: " + failingExtensionContext);
+		assertThat(actualException) //
+				.hasMessage("Failed to close extension context") //
+				.hasCauseReference(expectedCause);
 	}
 
 }

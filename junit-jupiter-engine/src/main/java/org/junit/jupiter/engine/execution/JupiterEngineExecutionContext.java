@@ -53,8 +53,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 				((AutoCloseable) extensionContext).close();
 			}
 			catch (Exception e) {
-				logger.error(e, () -> "Caught exception while closing extension context: " + extensionContext);
-				throw e;
+				throw new JUnitException("Failed to close extension context", e);
 			}
 		}
 	}
