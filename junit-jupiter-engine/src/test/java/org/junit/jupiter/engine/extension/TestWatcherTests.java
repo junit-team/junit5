@@ -107,8 +107,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void testWatcherExceptionsAreLoggedAndSwallowed(LogRecordListener logRecordListener) {
+	void testWatcherExceptionsAreLoggedAndSwallowed(@TrackLogRecords LogRecordListener logRecordListener) {
 		assertCommonStatistics(executeTestsForClass(ExceptionThrowingTestWatcherTestCase.class));
 
 		// @formatter:off

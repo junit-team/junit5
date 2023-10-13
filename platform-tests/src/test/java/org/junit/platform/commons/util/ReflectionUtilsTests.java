@@ -838,8 +838,7 @@ class ReflectionUtilsTests {
 	 * @since 1.3
 	 */
 	@Test
-	@TrackLogRecords
-	void findNestedClassesWithInvalidNestedClassFile(LogRecordListener listener) throws Exception {
+	void findNestedClassesWithInvalidNestedClassFile(@TrackLogRecords LogRecordListener listener) throws Exception {
 		var jarUrl = getClass().getResource("/gh-1436-invalid-nested-class-file.jar");
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarUrl })) {

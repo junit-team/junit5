@@ -597,8 +597,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
+	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(@TrackLogRecords LogRecordListener listener) {
 		var id = "junit-using-reserved-prefix";
 		var launcher = createLauncher(new TestEngineStub(id));
 		launcher.discover(request().build());

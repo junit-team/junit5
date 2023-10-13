@@ -47,9 +47,8 @@ class DisplayNameUtilsTests {
 		}
 
 		@Test
-		@TrackLogRecords
 		void shouldGetDisplayNameFromSupplierIfNoDisplayNameAnnotationWithBlankStringPresent(
-				LogRecordListener listener) {
+				@TrackLogRecords LogRecordListener listener) {
 
 			String displayName = DisplayNameUtils.determineDisplayName(BlankDisplayNameTestCase.class,
 				() -> "default-name");

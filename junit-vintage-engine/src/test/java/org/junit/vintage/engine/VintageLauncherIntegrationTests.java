@@ -151,9 +151,8 @@ class VintageLauncherIntegrationTests {
 				.containsExactly("JUnit Vintage");
 	}
 
-	@TrackLogRecords
 	@Test
-	void executesAllTestsForNotFilterableRunner(LogRecordListener logRecordListener) {
+	void executesAllTestsForNotFilterableRunner(@TrackLogRecords LogRecordListener logRecordListener) {
 		Class<?> testClass = JUnit4TestCaseWithNotFilterableRunner.class;
 		var request = request() //
 				.selectors(selectClass(testClass)) //
@@ -172,9 +171,8 @@ class VintageLauncherIntegrationTests {
 							+ " does not support filtering and will therefore be run completely.");
 	}
 
-	@TrackLogRecords
 	@Test
-	void executesAllTestsForNotFilterableChildRunnerOfSuite(LogRecordListener logRecordListener) {
+	void executesAllTestsForNotFilterableChildRunnerOfSuite(@TrackLogRecords LogRecordListener logRecordListener) {
 		Class<?> suiteClass = JUnit4SuiteOfSuiteWithFilterableChildRunner.class;
 		Class<?> testClass = JUnit4TestCaseWithNotFilterableRunner.class;
 		var request = request() //
@@ -194,9 +192,9 @@ class VintageLauncherIntegrationTests {
 						+ " was not able to satisfy all filter requests.");
 	}
 
-	@TrackLogRecords
 	@Test
-	void executesAllTestsWhenFilterDidNotExcludeTestForJUnit3Suite(LogRecordListener logRecordListener) {
+	void executesAllTestsWhenFilterDidNotExcludeTestForJUnit3Suite(
+			@TrackLogRecords LogRecordListener logRecordListener) {
 		Class<?> suiteClass = JUnit3SuiteWithSingleTestCaseWithSingleTestWhichFails.class;
 		Class<?> testClass = PlainJUnit3TestCaseWithSingleTestWhichFails.class;
 		var request = request() //

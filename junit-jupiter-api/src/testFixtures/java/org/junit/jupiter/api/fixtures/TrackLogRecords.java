@@ -41,7 +41,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
  * @see LoggerFactory
  * @see LogRecordListener
  */
-@Target({ ElementType.TYPE, ElementType.METHOD })
+@Target({ ElementType.TYPE, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
 @ExtendWith(TrackLogRecords.Extension.class)
 public @interface TrackLogRecords {

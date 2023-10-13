@@ -148,8 +148,7 @@ class DefaultLauncherEngineFilterTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter(LogRecordListener log) {
+	void launcherThrowsExceptionWhenNoEngineMatchesIncludeEngineFilter(@TrackLogRecords LogRecordListener log) {
 		var engine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test1 = engine.addTest("test1", noOp);
 		LauncherDiscoveryRequest request = request() //
@@ -169,8 +168,7 @@ class DefaultLauncherEngineFilterTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void launcherWillLogWarningWhenAllEnginesWereExcluded(LogRecordListener log) {
+	void launcherWillLogWarningWhenAllEnginesWereExcluded(@TrackLogRecords LogRecordListener log) {
 		var engine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test = engine.addTest("test1", noOp);
 

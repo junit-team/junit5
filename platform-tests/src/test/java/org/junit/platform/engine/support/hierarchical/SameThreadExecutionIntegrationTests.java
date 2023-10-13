@@ -32,8 +32,7 @@ class SameThreadExecutionIntegrationTests {
 	 * @see <a href="https://github.com/junit-team/junit5/issues/1688">gh-1688</a>
 	 */
 	@Test
-	@TrackLogRecords
-	void threadInterruptedByUserCode(LogRecordListener listener) {
+	void threadInterruptedByUserCode(@TrackLogRecords LogRecordListener listener) {
 		EngineTestKit.engine("junit-jupiter")//
 				.selectors(selectClass(InterruptedThreadTestCase.class))//
 				.execute()//

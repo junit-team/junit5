@@ -179,8 +179,7 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void randomWithBogusSeedRepeatedly(LogRecordListener listener) {
+	void randomWithBogusSeedRepeatedly(@TrackLogRecords LogRecordListener listener) {
 		var seed = "explode";
 		var expectedMessagePattern = Pattern.compile(
 			"Failed to convert configuration parameter \\[" + Pattern.quote(Random.RANDOM_SEED_PROPERTY_NAME)
@@ -209,8 +208,7 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void randomWithDifferentSeedConsecutively(LogRecordListener listener) {
+	void randomWithDifferentSeedConsecutively(@TrackLogRecords LogRecordListener listener) {
 		Set<String> uniqueSequences = new HashSet<>();
 
 		for (var i = 0; i < 10; i++) {
@@ -240,8 +238,7 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void randomWithCustomSeed(LogRecordListener listener) {
+	void randomWithCustomSeed(@TrackLogRecords LogRecordListener listener) {
 		var seed = "42";
 		var expectedMessage = "Using custom seed for configuration parameter [" + Random.RANDOM_SEED_PROPERTY_NAME
 				+ "] with value [" + seed + "].";
@@ -268,8 +265,7 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void misbehavingMethodOrdererThatAddsElements(LogRecordListener listener) {
+	void misbehavingMethodOrdererThatAddsElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByAddingTestCase.class;
 
 		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
@@ -283,8 +279,7 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void misbehavingMethodOrdererThatRemovesElements(LogRecordListener listener) {
+	void misbehavingMethodOrdererThatRemovesElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByRemovingTestCase.class;
 
 		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(3));
