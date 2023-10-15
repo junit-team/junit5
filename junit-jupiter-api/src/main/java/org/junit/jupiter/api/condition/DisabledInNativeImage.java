@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @DisabledInNativeImage} is used to signal that the annotated test class
- * or test method is only <em>disabled</em> when executing within a GraalVM native
+ * or test method is <em>disabled</em> when executing within a GraalVM native
  * image.
  *
  * <p>When applied at the class level, all test methods within that class will

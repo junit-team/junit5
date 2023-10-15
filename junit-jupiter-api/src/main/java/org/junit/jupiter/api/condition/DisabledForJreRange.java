@@ -22,8 +22,8 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * {@code @DisabledForJreRange} is used to signal that the annotated test class or
- * test method is only <em>disabled</em> for a specific range of Java Runtime
+ * {@code @DisabledForJreRange} is used to signal that the annotated test class
+ * or test method is <em>disabled</em> for a specific range of Java Runtime
  * Environment (JRE) versions from {@link #min} to {@link #max}.
  *
  * <p>When applied at the class level, all test methods within that class will

@@ -23,8 +23,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * {@code @DisabledIf} is used to signal that the annotated test class or test
- * method is <em>disabled</em> only if the provided
- * {@linkplain #value() condition} evaluates to {@code true}.
+ * method is <em>disabled</em> if the provided {@linkplain #value() condition}
+ * evaluates to {@code true}.
  *
  * <p>When applied at the class level, all test methods within that class will
  * be disabled on the same condition.
