@@ -157,11 +157,13 @@ class DefaultArgumentConverterTests {
 				.isThrownBy(() -> convert("ab", char.class)) //
 				.withMessage("Failed to convert String \"ab\" to type char") //
 				.havingCause() //
+				.havingCause() //
 				.withMessage("String must have length of 1: ab");
 
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert("tru", boolean.class)) //
 				.withMessage("Failed to convert String \"tru\" to type boolean") //
+				.havingCause() //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): tru");
 
@@ -169,11 +171,13 @@ class DefaultArgumentConverterTests {
 				.isThrownBy(() -> convert("null", boolean.class)) //
 				.withMessage("Failed to convert String \"null\" to type boolean") //
 				.havingCause() //
+				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): null");
 
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert("NULL", boolean.class)) //
 				.withMessage("Failed to convert String \"NULL\" to type boolean") //
+				.havingCause() //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): NULL");
 	}
