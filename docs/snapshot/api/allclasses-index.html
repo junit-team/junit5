@@ -510,15 +510,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledForJreRange</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab7">
-<div class="block"><code>@DisabledForJreRange</code> is used to signal that the annotated test class or
- test method is only <em>disabled</em> for a specific range of Java Runtime
+<div class="block"><code>@DisabledForJreRange</code> is used to signal that the annotated test class
+ or test method is <em>disabled</em> for a specific range of Java Runtime
  Environment (JRE) versions from <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html#min()"><code>DisabledForJreRange.min()</code></a> to <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html#max()"><code>DisabledForJreRange.max()</code></a>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledIf</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisabledIf</code> is used to signal that the annotated test class or test
- method is <em>disabled</em> only if the provided
- <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html#value()">condition</a> evaluates to <code>true</code>.</div>
+ method is <em>disabled</em> if the provided <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html#value()">condition</a>
+ evaluates to <code>true</code>.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledIfEnvironmentVariable</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab7">
@@ -547,14 +547,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledInNativeImage.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledInNativeImage</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisabledInNativeImage</code> is used to signal that the annotated test class
- or test method is only <em>disabled</em> when executing within a GraalVM native
+ or test method is <em>disabled</em> when executing within a GraalVM native
  image.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@DisabledOnJre</code> is used to signal that the annotated test class or
- test method is <em>disabled</em> on one or more specified Java
- Runtime Environment (JRE) <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html#value()">versions</a>.</div>
+ test method is <em>disabled</em> on one or more specified Java Runtime
+ Environment (JRE) <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html#value()">versions</a>.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab7">
@@ -658,8 +658,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIf</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab7">
 <div class="block"><code>@EnabledIf</code> is used to signal that the annotated test class or test
- method is <em>enabled</em> only if the provided
- <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html#value()">condition</a> evaluates to <code>true</code>.</div>
+ method is only <em>enabled</em> if the provided <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIf.html#value()">condition</a>
+ evaluates to <code>true</code>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab7"><a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/EnabledIfEnvironmentVariable.html" title="annotation interface in org.junit.jupiter.api.condition">EnabledIfEnvironmentVariable</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab7">
@@ -813,7 +813,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Collection of AssertJ conditions for <a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>.</div>
+<div class="block">Collection of AssertJ <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.24.2/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">conditions</a> for <a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/Events.html" title="class in org.junit.platform.testkit.engine">Events</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
@@ -1907,7 +1907,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="org.junit.platform.testkit/org/junit/platform/testkit/engine/TestExecutionResultConditions.html" title="class in org.junit.platform.testkit.engine">TestExecutionResultConditions</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Collection of AssertJ conditions for
+<div class="block">Collection of AssertJ <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.24.2/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link">conditions</a> for
  <a href="org.junit.platform.engine/org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine"><code>TestExecutionResult</code></a>.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab1"><a href="org.junit.platform.launcher/org/junit/platform/launcher/listeners/TestExecutionSummary.html" title="interface in org.junit.platform.launcher.listeners">TestExecutionSummary</a></div>

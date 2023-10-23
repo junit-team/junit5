@@ -420,15 +420,15 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledForJreRange</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
-<div class="block"><code>@DisabledForJreRange</code> is used to signal that the annotated test class or
- test method is only <em>disabled</em> for a specific range of Java Runtime
+<div class="block"><code>@DisabledForJreRange</code> is used to signal that the annotated test class
+ or test method is <em>disabled</em> for a specific range of Java Runtime
  Environment (JRE) versions from <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html#min()"><code>DisabledForJreRange.min()</code></a> to <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html#max()"><code>DisabledForJreRange.max()</code></a>.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledIf</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
 <div class="block"><code>@DisabledIf</code> is used to signal that the annotated test class or test
- method is <em>disabled</em> only if the provided
- <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html#value()">condition</a> evaluates to <code>true</code>.</div>
+ method is <em>disabled</em> if the provided <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html#value()">condition</a>
+ evaluates to <code>true</code>.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIfEnvironmentVariable.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledIfEnvironmentVariable</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
@@ -457,14 +457,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledInNativeImage.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledInNativeImage</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
 <div class="block"><code>@DisabledInNativeImage</code> is used to signal that the annotated test class
- or test method is only <em>disabled</em> when executing within a GraalVM native
+ or test method is <em>disabled</em> when executing within a GraalVM native
  image.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnJre</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
 <div class="block"><code>@DisabledOnJre</code> is used to signal that the annotated test class or
- test method is <em>disabled</em> on one or more specified Java
- Runtime Environment (JRE) <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html#value()">versions</a>.</div>
+ test method is <em>disabled</em> on one or more specified Java Runtime
+ Environment (JRE) <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnJre.html#value()">versions</a>.</div>
 </dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledOnOs.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.condition">DisabledOnOs</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/condition/package-summary.html">org.junit.jupiter.api.condition</a></dt>
 <dd>
@@ -592,7 +592,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html#displayName(java.lang.String)" class="member-name-link">displayName(String)</a> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>
-<div class="block">Create a new <code>Condition</code> that matches if and only if the
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.24.2/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if the
  <a href="../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getDisplayName()">display name</a> of an
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#getTestDescriptor()">test descriptor</a>
  is equal to the supplied <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link"><code>String</code></a>.</div>
@@ -730,7 +730,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html#dynamicTestRegistered(java.lang.String)" class="member-name-link">dynamicTestRegistered(String)</a> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>
-<div class="block">Create a new <code>Condition</code> that matches if and only if an
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.24.2/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#getType()">type</a> is
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventType.html#DYNAMIC_TEST_REGISTERED"><code>EventType.DYNAMIC_TEST_REGISTERED</code></a> and its
  <a href="../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html#getUniqueId()">unique id</a> contains the
@@ -738,7 +738,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html#dynamicTestRegistered(org.assertj.core.api.Condition)" class="member-name-link">dynamicTestRegistered(Condition&lt;Event&gt;)</a> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>
-<div class="block">Create a new <code>Condition</code> that matches if and only if an
+<div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.24.2/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a>'s <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#getType()">type</a> is
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventType.html#DYNAMIC_TEST_REGISTERED"><code>EventType.DYNAMIC_TEST_REGISTERED</code></a> and it matches the supplied
  <code>Condition</code>.</div>
