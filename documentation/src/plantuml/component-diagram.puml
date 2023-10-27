@@ -1,0 +1,98 @@
+@startuml
+
+skinparam {
+    defaultFontName sans-serif
+}
+
+package org.junit.jupiter {
+    [junit-jupiter] as jupiter
+    [junit-jupiter-api] as jupiter_api
+    [junit-jupiter-engine] as jupiter_engine
+    [junit-jupiter-params] as jupiter_params
+    [junit-jupiter-migrationsupport] as jupiter_migration_support
+}
+
+package org.junit.vintage {
+    [junit-vintage-engine] as vintage_engine
+}
+
+package org.junit.platform {
+    [junit-platform-commons] as commons
+    [junit-platform-console] as console
+    [junit-platform-engine] as engine
+    [junit-platform-jfr] as jfr
+    [junit-platform-launcher] as launcher
+    [junit-platform-reporting] as reporting
+    [junit-platform-runner] as runner
+    [junit-platform-suite] as suite
+    [junit-platform-suite-api] as suite_api
+    [junit-platform-suite-commons] as suite_commons
+    [junit-platform-suite-engine] as suite_engine
+    [junit-platform-testkit] as testkit
+}
+
+package "JUnit 4" {
+    [junit:junit] as junit4
+}
+
+package org.opentest4j {
+    [opentest4j]
+}
+
+package org.apiguardian {
+    [apiguardian-api] as apiguardian
+    note bottom of apiguardian #white
+        All artifacts except
+        opentest4j and junit:junit
+        have a dependency on this
+        artifact. The edges have
+        been omitted from this
+        diagram for the sake of
+        readability.
+    endnote
+}
+
+jupiter ..> jupiter_api
+jupiter ..> jupiter_params
+jupiter ..> jupiter_engine
+
+jupiter_api ....> opentest4j
+jupiter_api ...> commons
+
+jupiter_engine ...> engine
+jupiter_engine ..> jupiter_api
+
+jupiter_params ..> jupiter_api
+jupiter_migration_support ..> jupiter_api
+jupiter_migration_support ...> junit4
+
+console ..> launcher
+console ..> reporting
+
+launcher ..> engine
+
+jfr ..> launcher
+
+engine ....> opentest4j
+engine ..> commons
+
+reporting ..> launcher
+
+runner ..> suite_commons
+runner ...> junit4
+
+suite ..> suite_api
+suite ..> suite_engine
+
+suite_engine ..> suite_commons
+
+suite_commons ..> launcher
+suite_commons ..> suite_api
+
+testkit ....> opentest4j
+testkit ..> launcher
+
+vintage_engine ...> engine
+vintage_engine ..> junit4
+
+@enduml

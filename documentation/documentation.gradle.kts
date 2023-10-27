@@ -11,6 +11,7 @@ plugins {
 	alias(libs.plugins.asciidoctorConvert)
 	alias(libs.plugins.asciidoctorPdf)
 	alias(libs.plugins.gitPublish)
+	alias(libs.plugins.plantuml)
 	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
@@ -207,6 +208,13 @@ tasks {
 		outputFile = standaloneConsoleLauncherShadowedArtifactsFile
 	}
 
+	plantUml {
+		fileFormat = "SVG"
+		outputs.cacheIf { true }
+	}
+
+	val componentDiagram = plantUml.flatMap { it.outputDirectory.file("component-diagram.svg") }
+
 	withType<AbstractAsciidoctorTask>().configureEach {
 		inputs.files(
 			generateConsoleLauncherOptions,
@@ -215,7 +223,8 @@ tasks {
 			generateConsoleLauncherEnginesOptions,
 			generateExperimentalApisTable,
 			generateDeprecatedApisTable,
-			generateStandaloneConsoleLauncherShadowedArtifactsFile
+			generateStandaloneConsoleLauncherShadowedArtifactsFile,
+			componentDiagram
 		)
 
 		resources {
@@ -248,6 +257,7 @@ tasks {
 				"experimentalApisTableFile" to experimentalApisTableFile.get(),
 				"deprecatedApisTableFile" to deprecatedApisTableFile.get(),
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
+				"componentDiagramFile" to componentDiagram.get(),
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
 				"rouge-style" to "junit",
@@ -297,12 +307,6 @@ tasks {
 				"userGuidePdfFileName" to userGuidePdfFileName,
 				"releaseNotesUrl" to "../release-notes/index.html#release-notes"
 		))
-		doLast {
-			val componentDiagramSvg = outputDirProperty.file("user-guide/images/component-diagram.svg").get().asFile
-			require(componentDiagramSvg.exists()) {
-				"Component diagram was not generated at $componentDiagramSvg"
-			}
-		}
 	}
 
 	asciidoctorPdf {
