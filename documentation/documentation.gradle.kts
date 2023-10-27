@@ -64,7 +64,6 @@ dependencies {
 
 asciidoctorj {
 	modules {
-		diagram.version(libs.versions.asciidoctorj.diagram)
 		pdf.version(libs.versions.asciidoctorj.pdf)
 	}
 	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
