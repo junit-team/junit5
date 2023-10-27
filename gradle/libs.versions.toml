@@ -1,7 +1,6 @@
 [versions]
 ant = "1.10.14"
 apiguardian = "1.1.2"
-asciidoctorj-diagram = "2.2.9"
 asciidoctorj-pdf = "2.3.9"
 asciidoctor-plugins = "4.0.0-alpha.1" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.24.2"
@@ -66,8 +65,7 @@ xmlunit-assertj = { module = "org.xmlunit:xmlunit-assertj3", version.ref = "xmlu
 xmlunit-placeholders = { module = "org.xmlunit:xmlunit-placeholders", version.ref = "xmlunit" }
 testingAnnotations = { module = "com.gradle:gradle-enterprise-testing-annotations", version = "1.1.2" }
 
-# These are only declared here so Dependabot knows when to update the referenced versions
-asciidoctorj-diagram = { module = "org.asciidoctor:asciidoctorj-diagram", version.ref = "asciidoctorj-diagram" }
+# Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
 
 [bundles]
