@@ -639,7 +639,16 @@ JUnit repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>Method predicates are now applied while searching the type hierarchy. This fixes bugs
+in <code>findMethods(&#8230;&#8203;)</code> and <code>streamMethods(&#8230;&#8203;)</code> in <code>ReflectionSupport</code> as well as
+<code>findAnnotatedMethods(&#8230;&#8203;)</code> in <code>AnnotationSupport</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="https://github.com/junit-team/junit5/issues/3498">issue 3498</a> for details.</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
@@ -651,6 +660,19 @@ JUnit repository on GitHub.</p>
 <h4 id="bug-fixes-5"><a class="anchor" href="#bug-fixes-5"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
+<li>
+<p>A package-private class-level lifecycle method annotated with <code>@BeforeAll</code> or
+<code>@AfterAll</code> is no longer <em>shadowed</em> by a method-level lifecycle method annotated with
+<code>@BeforeEach</code> or <code>@AfterEach</code> when the method-level lifecycle method resides in a
+different package and has the same name as the class-level lifecycle method.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="https://github.com/junit-team/junit5/issues/3498">issue 3498</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>The <code>RandomNumberExtension</code> example in the
 <a href="../user-guide/index.html#extensions-RandomNumberExtension">User Guide</a> has been
