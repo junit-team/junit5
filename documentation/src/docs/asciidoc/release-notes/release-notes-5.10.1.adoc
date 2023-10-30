@@ -3,7 +3,7 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:* minor bug fixes and improvements since 5.10.0.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/72?closed=1+[5.10.1] milestone page in the
@@ -17,14 +17,6 @@ JUnit repository on GitHub.
 
 * ❓
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.10.1-junit-jupiter]]
 === JUnit Jupiter
@@ -34,10 +26,6 @@ JUnit repository on GitHub.
 * The `RandomNumberExtension` example in the
   <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
   updated to properly support `Integer` types as well as non-static field injection.
-
-==== Deprecations and Breaking Changes
-
-* ❓
 
 ==== New Features and Improvements
 
@@ -52,11 +40,3 @@ JUnit repository on GitHub.
 ==== Bug Fixes
 
 * Fixed reporting for JUnit 3 test classes that use JUnit 4's `@Ignored` annotation.
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
