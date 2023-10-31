@@ -79,6 +79,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	private static final String KEY = "temp.dir";
+	private static final String FAILURE_TRACKER = "failure.tracker";
+	private static final String CHILD_FAILED = "child.failed";
 
 	// for testing purposes
 	static final String FILE_OPERATIONS_KEY = "file.operations";
@@ -96,6 +98,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public void beforeAll(ExtensionContext context) {
+		installFailureTracker(context);
 		injectStaticFields(context, context.getRequiredTestClass());
 	}
 
@@ -106,8 +109,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public void beforeEach(ExtensionContext context) {
+		installFailureTracker(context);
 		context.getRequiredTestInstances().getAllInstances() //
 				.forEach(instance -> injectInstanceFields(context, instance));
+	}
+
+	private static void installFailureTracker(ExtensionContext context) {
+		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (CloseableResource) () -> context.getParent() //
+				.ifPresent(it -> it.getStore(NAMESPACE).put(CHILD_FAILED, selfOrChildFailed(context))));
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
@@ -257,6 +266,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
+	private static boolean selfOrChildFailed(ExtensionContext context) {
+		return context.getExecutionException().isPresent() //
+				|| Boolean.TRUE.equals(context.getStore(NAMESPACE).get(CHILD_FAILED));
+	}
+
 	static class CloseablePath implements CloseableResource {
 
 		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
@@ -281,8 +295,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		@Override
 		public void close() throws IOException {
 			try {
-				if (cleanupMode == NEVER
-						|| (cleanupMode == ON_SUCCESS && extensionContext.getExecutionException().isPresent())) {
+				if (cleanupMode == NEVER || (cleanupMode == ON_SUCCESS && selfOrChildFailed(extensionContext))) {
 					logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
 					return;
 				}
