@@ -174,11 +174,17 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 		@AfterAll
 		static void afterAll() throws IOException {
-			deleteIfExists(defaultFieldDir);
-			deleteIfExists(neverFieldDir);
-			deleteIfExists(alwaysFieldDir);
-			deleteIfExists(onSuccessFailingFieldDir);
-			deleteIfExists(onSuccessPassingFieldDir);
+			deleteIfNotNullAndExists(defaultFieldDir);
+			deleteIfNotNullAndExists(neverFieldDir);
+			deleteIfNotNullAndExists(alwaysFieldDir);
+			deleteIfNotNullAndExists(onSuccessFailingFieldDir);
+			deleteIfNotNullAndExists(onSuccessPassingFieldDir);
+		}
+
+		static void deleteIfNotNullAndExists(Path dir) throws IOException {
+			if (dir != null) {
+				deleteIfExists(dir);
+			}
 		}
 
 		// -------------------------------------------------------------------
@@ -373,11 +379,11 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 		@AfterAll
 		static void afterAll() throws IOException {
-			deleteIfExists(defaultParameterDir);
-			deleteIfExists(neverParameterDir);
-			deleteIfExists(alwaysParameterDir);
-			deleteIfExists(onSuccessFailingParameterDir);
-			deleteIfExists(onSuccessPassingParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(defaultParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(neverParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(alwaysParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(onSuccessFailingParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(onSuccessPassingParameterDir);
 		}
 
 		// -------------------------------------------------------------------
