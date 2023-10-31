@@ -678,6 +678,10 @@ different package and has the same name as the class-level lifecycle method.</p>
 <a href="../user-guide/index.html#extensions-RandomNumberExtension">User Guide</a> has been
 updated to properly support <code>Integer</code> types as well as non-static field injection.</p>
 </li>
+<li>
+<p>The <code>ON_SUCCESS</code> cleanup mode of <code>@TempDir</code> now takes into account failures of test
+methods and nested tests when it&#8217;s declared on the class level, e.g. as a static field.</p>
+</li>
 </ul>
 </div>
 </div>
