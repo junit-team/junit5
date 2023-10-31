@@ -34,6 +34,8 @@ JUnit repository on GitHub.
 * The `RandomNumberExtension` example in the
   <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
   updated to properly support `Integer` types as well as non-static field injection.
+* The `ON_SUCCESS` cleanup mode of `@TempDir` now takes into account failures of test
+  methods and nested tests when it's declared on the class level, e.g. as a static field.
 
 ==== New Features and Improvements
 

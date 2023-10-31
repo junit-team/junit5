@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -141,6 +142,36 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			assertThat(onSuccessFailingFieldDir).exists();
 		}
 
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for static fields when tests are failing.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void cleanupModeOnSuccessFailingStaticField() {
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectClass(OnSuccessFailingStaticFieldCase.class))//
+					.build();
+			executeTests(request);
+
+			assertThat(onSuccessFailingFieldDir).exists();
+		}
+
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for static fields when nested tests are failing.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void cleanupModeOnSuccessFailingStaticFieldWithNesting() {
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectClass(OnSuccessFailingStaticFieldWithNestingCase.class))//
+					.build();
+			executeTests(request);
+
+			assertThat(onSuccessFailingFieldDir).exists();
+		}
+
 		@AfterAll
 		static void afterAll() throws IOException {
 			deleteIfExists(defaultFieldDir);
@@ -205,6 +236,34 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			void testOnSuccessFailingField() {
 				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
 				fail();
+			}
+		}
+
+		static class OnSuccessFailingStaticFieldCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			static Path onSuccessFailingFieldDir;
+
+			@Test
+			void test() {
+				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
+				fail();
+			}
+		}
+
+		static class OnSuccessFailingStaticFieldWithNestingCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			static Path onSuccessFailingFieldDir;
+
+			@Nested
+			class NestedTestCase {
+
+				@Test
+				void test() {
+					TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
+					fail();
+				}
 			}
 		}
 
