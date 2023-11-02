@@ -24,8 +24,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -245,15 +248,22 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 		static class OnSuccessFailingStaticFieldCase {
 
 			@TempDir(cleanup = ON_SUCCESS)
 			static Path onSuccessFailingFieldDir;
 
 			@Test
-			void test() {
+			@Order(1)
+			void failing() {
 				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
 				fail();
+			}
+
+			@Test
+			@Order(2)
+			void passing() {
 			}
 		}
 
