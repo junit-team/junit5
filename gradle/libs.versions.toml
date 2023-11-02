@@ -31,7 +31,7 @@ bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.163" }
 commons-io = { module = "commons-io:commons-io", version = "2.15.0" }
-gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.11.3" }
+gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.12" }
 gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.7.0" }
 gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.15.1" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
