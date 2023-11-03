@@ -46,8 +46,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.pkg1.ClassLevelDir;
+import org.junit.platform.commons.util.pkg1.InstanceLevelDir;
 import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateTempDirField;
 import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateTempDirField;
 
 /**
  * Unit tests for {@link AnnotationUtils}.
@@ -502,6 +506,28 @@ class AnnotationUtilsTests {
 
 	private List<Field> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {
 		return findAnnotatedFields(ClassWithShadowedAnnotatedFields.class, annotationType, isStringField);
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3532
+	 */
+	@Test
+	void findAnnotatedFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String TEMP_DIR = "tempDir";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
+		Field staticField = superclass.getDeclaredField(TEMP_DIR);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateTempDirField.class;
+		Field nonStaticField = subclass.getDeclaredField(TEMP_DIR);
+
+		// Prerequisite
+		var fields = findAnnotatedFields(superclass, ClassLevelDir.class, field -> true);
+		assertThat(fields).containsExactly(staticField);
+
+		// Actual use cases for this test
+		fields = findAnnotatedFields(subclass, ClassLevelDir.class, field -> true);
+		assertThat(fields).containsExactly(staticField);
+		fields = findAnnotatedFields(subclass, InstanceLevelDir.class, field -> true);
+		assertThat(fields).containsExactly(nonStaticField);
 	}
 
 	// === findPublicAnnotatedFields() =========================================
