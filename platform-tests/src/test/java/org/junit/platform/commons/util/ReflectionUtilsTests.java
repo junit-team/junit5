@@ -74,7 +74,9 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNes
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
 import org.junit.platform.commons.util.classes.CustomType;
 import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateTempDirField;
 import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateTempDirField;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -1378,6 +1380,28 @@ class ReflectionUtilsTests {
 		for (var method : PublicClass.class.getMethods()) {
 			assertFalse(ReflectionUtils.isGeneric(method));
 		}
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3532
+	 */
+	@Test
+	void findFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String TEMP_DIR = "tempDir";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
+		Field staticField = superclass.getDeclaredField(TEMP_DIR);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateTempDirField.class;
+		Field nonStaticField = subclass.getDeclaredField(TEMP_DIR);
+
+		// Prerequisite
+		var fields = findFields(superclass, ReflectionUtils::isStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(staticField);
+
+		// Actual use cases for this test
+		fields = findFields(subclass, ReflectionUtils::isStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(staticField);
+		fields = findFields(subclass, ReflectionUtils::isNotStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(nonStaticField);
 	}
 
 	@Test

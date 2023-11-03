@@ -15,6 +15,10 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
+* Field predicates are now applied while searching the type hierarchy. This fixes bugs in
+  `findFields(...)` and `streamFields(...)` in `ReflectionSupport` as well as
+  `findAnnotatedFields(...)` and `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
+  - See link:https://github.com/junit-team/junit5/issues/3532[issue 3532] for details.
 * Method predicates are now applied while searching the type hierarchy. This fixes bugs
   in `findMethods(...)` and `streamMethods(...)` in `ReflectionSupport` as well as
   `findAnnotatedMethods(...)` in `AnnotationSupport`.
@@ -26,16 +30,20 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
+* A package-private static field annotated with `@TempDir` is no longer _shadowed_ by a
+  non-static field annotated with `@TempDir` when the non-static field resides in a
+  different package and has the same name as the static field.
+  - See link:https://github.com/junit-team/junit5/issues/3532[issue 3532] for details.
 * A package-private class-level lifecycle method annotated with `@BeforeAll` or
   `@AfterAll` is no longer _shadowed_ by a method-level lifecycle method annotated with
   `@BeforeEach` or `@AfterEach` when the method-level lifecycle method resides in a
   different package and has the same name as the class-level lifecycle method.
   - See link:https://github.com/junit-team/junit5/issues/3498[issue 3498] for details.
+* The `ON_SUCCESS` cleanup mode of `@TempDir` now takes into account failures of test
+  methods and nested tests when it's declared on the class level, e.g. as a static field.
 * The `RandomNumberExtension` example in the
   <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
   updated to properly support `Integer` types as well as non-static field injection.
-* The `ON_SUCCESS` cleanup mode of `@TempDir` now takes into account failures of test
-  methods and nested tests when it's declared on the class level, e.g. as a static field.
 
 ==== New Features and Improvements
 
