@@ -639,6 +639,18 @@ JUnit repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
+<p>Field predicates are now applied while searching the type hierarchy. This fixes bugs in
+<code>findFields(&#8230;&#8203;)</code> and <code>streamFields(&#8230;&#8203;)</code> in <code>ReflectionSupport</code> as well as
+<code>findAnnotatedFields(&#8230;&#8203;)</code> and <code>findAnnotatedFieldValues(&#8230;&#8203;)</code> in <code>AnnotationSupport</code>.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="https://github.com/junit-team/junit5/issues/3532">issue 3532</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Method predicates are now applied while searching the type hierarchy. This fixes bugs
 in <code>findMethods(&#8230;&#8203;)</code> and <code>streamMethods(&#8230;&#8203;)</code> in <code>ReflectionSupport</code> as well as
 <code>findAnnotatedMethods(&#8230;&#8203;)</code> in <code>AnnotationSupport</code>.</p>
@@ -661,6 +673,18 @@ in <code>findMethods(&#8230;&#8203;)</code> and <code>streamMethods(&#8230;&#820
 <div class="ulist">
 <ul>
 <li>
+<p>A package-private static field annotated with <code>@TempDir</code> is no longer <em>shadowed</em> by a
+non-static field annotated with <code>@TempDir</code> when the non-static field resides in a
+different package and has the same name as the static field.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>See <a href="https://github.com/junit-team/junit5/issues/3532">issue 3532</a> for details.</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>A package-private class-level lifecycle method annotated with <code>@BeforeAll</code> or
 <code>@AfterAll</code> is no longer <em>shadowed</em> by a method-level lifecycle method annotated with
 <code>@BeforeEach</code> or <code>@AfterEach</code> when the method-level lifecycle method resides in a
@@ -674,13 +698,13 @@ different package and has the same name as the class-level lifecycle method.</p>
 </div>
 </li>
 <li>
+<p>The <code>ON_SUCCESS</code> cleanup mode of <code>@TempDir</code> now takes into account failures of test
+methods and nested tests when it&#8217;s declared on the class level, e.g. as a static field.</p>
+</li>
+<li>
 <p>The <code>RandomNumberExtension</code> example in the
 <a href="../user-guide/index.html#extensions-RandomNumberExtension">User Guide</a> has been
 updated to properly support <code>Integer</code> types as well as non-static field injection.</p>
-</li>
-<li>
-<p>The <code>ON_SUCCESS</code> cleanup mode of <code>@TempDir</code> now takes into account failures of test
-methods and nested tests when it&#8217;s declared on the class level, e.g. as a static field.</p>
 </li>
 </ul>
 </div>
