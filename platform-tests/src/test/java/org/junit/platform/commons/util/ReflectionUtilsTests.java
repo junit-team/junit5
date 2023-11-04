@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.function.Try.success;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.util.ReflectionUtils.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
@@ -1387,7 +1388,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstance() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, f -> true, TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields());
 
@@ -1396,7 +1397,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClass() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null);
 
@@ -1405,7 +1406,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForString() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(String.class));
 
@@ -1414,8 +1415,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForString() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic),
-			TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(String.class));
 
@@ -1424,7 +1424,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForInteger() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(int.class));
 
@@ -1433,8 +1433,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForInteger() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class,
-			isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(Integer.class));
 
@@ -1443,7 +1442,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForDouble() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(double.class));
 
@@ -1452,8 +1451,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForDouble() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic),
-			TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(Double.class));
 
