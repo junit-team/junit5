@@ -40,7 +40,7 @@ import org.apiguardian.api.API;
  * methods may optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <p>Using {@code private} visibility for {@code @BeforeAll} methods is
+ * <p>Using {@code private} visibility for {@code @AfterAll} methods is
  * strongly discouraged and will be disallowed in a future release.
  *
  * <h2>Inheritance and Execution Order</h2>
