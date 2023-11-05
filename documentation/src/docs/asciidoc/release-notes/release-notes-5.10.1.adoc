@@ -1,7 +1,7 @@
 [[release-notes-5.10.1]]
 == 5.10.1
 
-*Date of Release:* ❓
+*Date of Release:* November 5, 2023
 
 *Scope:* minor bug fixes and improvements since 5.10.0.
 
