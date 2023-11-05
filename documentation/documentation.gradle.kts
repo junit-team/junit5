@@ -231,6 +231,9 @@ tasks {
 				include("**/images/**/*.png")
 				include("**/images/**/*.svg")
 			}
+			from(componentDiagram) {
+				into("user-guide/images")
+			}
 		}
 
 		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
@@ -256,7 +259,6 @@ tasks {
 				"experimentalApisTableFile" to experimentalApisTableFile.get(),
 				"deprecatedApisTableFile" to deprecatedApisTableFile.get(),
 				"standaloneConsoleLauncherShadowedArtifactsFile" to standaloneConsoleLauncherShadowedArtifactsFile.get(),
-				"componentDiagramFile" to componentDiagram.get(),
 				"outdir" to outputDir.absolutePath,
 				"source-highlighter" to "rouge",
 				"rouge-style" to "junit",

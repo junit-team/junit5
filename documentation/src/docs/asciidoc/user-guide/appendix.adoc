@@ -133,4 +133,4 @@ following _OpenTest4J_ JAR.
 [[dependency-diagram]]
 === Dependency Diagram
 
-image::{componentDiagramFile}[]
+image::component-diagram.svg[]
