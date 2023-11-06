@@ -24,7 +24,7 @@ ant = { module = "org.apache.ant:ant", version.ref = "ant" }
 ant-junit = { module = "org.apache.ant:ant-junit", version.ref = "ant" }
 ant-junitlauncher = { module = "org.apache.ant:ant-junitlauncher", version.ref = "ant" }
 apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
-archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.1.0" }
+archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.2.0" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
