@@ -39,6 +39,8 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  *
  * <p>If the target type is {@code String} the source {@code String} will not
  * be modified.
+ *
+ * @since 1.11
  */
 @API(status = EXPERIMENTAL, since = "1.11")
 public final class StringConversionSupport {
@@ -58,6 +60,23 @@ public final class StringConversionSupport {
 		/* no-op */
 	}
 
+	/**
+	 * Convert a {@code String} into an object of the supplied type.
+	 *
+	 * <p>Some underlying converters can require a {@code ClassLoader}.
+	 * If none is provided, the default one given by
+	 * {@link ClassLoaderUtils#getDefaultClassLoader()} will be used.
+	 *
+	 * @param source the source {@code String} to convert; may be {@code null}
+	 * @param targetType the target type the source should be converted into;
+	 * never {@code null}
+	 * @param classLoader the {@code ClassLoader} to use; may be {@code null}
+	 * @param <T> the type of the target
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type
+	 *
+	 * @since 1.11
+	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T convert(String source, Class<T> targetType, ClassLoader classLoader) {
 		if (source == null) {
@@ -77,8 +96,8 @@ public final class StringConversionSupport {
 			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
 			try {
-				ClassLoader classLoaderToUse = Optional.ofNullable(classLoader) //
-						.orElseGet(ClassLoaderUtils::getDefaultClassLoader);
+				ClassLoader classLoaderToUse = classLoader != null ? classLoader
+						: ClassLoaderUtils.getDefaultClassLoader();
 				return (T) converter.get().convert(source, targetTypeToUse, classLoaderToUse);
 			}
 			catch (Exception ex) {
