@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.support.ConversionException;
 import org.junit.platform.commons.support.StringConversionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DefaultArgumentConverter} is the default implementation of the
@@ -61,15 +62,32 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	}
 
 	public final Object convert(Object source, Class<?> targetType, ParameterContext context) {
-		Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
-		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
+		if (source == null) {
+			if (targetType.isPrimitive()) {
+				throw new ArgumentConversionException(
+					"Cannot convert null to primitive value of type " + targetType.getTypeName());
+			}
+			return null;
+		}
 
-		try {
-			return StringConversionSupport.convert(source, targetType, classLoader);
+		if (ReflectionUtils.isAssignableTo(source, targetType)) {
+			return source;
 		}
-		catch (ConversionException ex) {
-			throw new ArgumentConversionException(ex.getMessage(), ex);
+
+		if (source instanceof String) {
+			Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
+			ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
+			try {
+				return StringConversionSupport.convert((String) source, targetType, classLoader);
+			}
+			catch (ConversionException ex) {
+				throw new ArgumentConversionException(ex.getMessage(), ex);
+			}
 		}
+
+		throw new ArgumentConversionException(
+			String.format("No built-in converter for source type %s and target type %s",
+				source.getClass().getTypeName(), targetType.getTypeName()));
 	}
 
 }

@@ -28,7 +28,6 @@ import java.util.UUID;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code StringConversionSupport} is able to convert from strings to a number
@@ -60,7 +59,7 @@ public final class StringConversionSupport {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> T convert(Object source, Class<T> targetType, ClassLoader classLoader) {
+	public static <T> T convert(String source, Class<T> targetType, ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(
@@ -69,33 +68,32 @@ public final class StringConversionSupport {
 			return null;
 		}
 
-		if (ReflectionUtils.isAssignableTo(source, targetType)) {
+		if (String.class.equals(targetType)) {
 			return (T) source;
 		}
 
-		if (source instanceof String) {
-			Class<?> targetTypeToUse = toWrapperType(targetType);
-			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-				candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
-			if (converter.isPresent()) {
-				try {
-					ClassLoader classLoaderToUse = Optional.ofNullable(classLoader) //
-							.orElseGet(ClassLoaderUtils::getDefaultClassLoader);
-					return (T) converter.get().convert((String) source, targetTypeToUse, classLoaderToUse);
+		Class<?> targetTypeToUse = toWrapperType(targetType);
+		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
+			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
+		if (converter.isPresent()) {
+			try {
+				ClassLoader classLoaderToUse = Optional.ofNullable(classLoader) //
+						.orElseGet(ClassLoaderUtils::getDefaultClassLoader);
+				return (T) converter.get().convert(source, targetTypeToUse, classLoaderToUse);
+			}
+			catch (Exception ex) {
+				if (ex instanceof ConversionException) {
+					// simply rethrow it
+					throw (ConversionException) ex;
 				}
-				catch (Exception ex) {
-					if (ex instanceof ConversionException) {
-						// simply rethrow it
-						throw (ConversionException) ex;
-					}
-					// else
-					throw new ConversionException(
-						"Failed to convert String \"" + source + "\" to type " + targetType.getTypeName(), ex);
-				}
+				// else
+				throw new ConversionException(
+					String.format("Failed to convert String \"%s\" to type %s", source, targetType.getTypeName()), ex);
 			}
 		}
-		throw new ConversionException(String.format("No built-in converter for source type %s and target type %s",
-			source.getClass().getTypeName(), targetType.getTypeName()));
+
+		throw new ConversionException(
+			"No built-in converter for source type java.lang.String and target type " + targetType.getTypeName());
 	}
 
 	private static Class<?> toWrapperType(Class<?> targetType) {
