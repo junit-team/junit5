@@ -31,14 +31,14 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * The {@code DefaultArgumentConverter} is able to convert from strings to a
- * number of primitive types and their corresponding wrapper types (Byte, Short,
+ * {@code StringConversionSupport} is able to convert from strings to a number
+ * of primitive types and their corresponding wrapper types (Byte, Short,
  * Integer, Long, Float, and Double), date and time types from the
  * {@code java.time} package, and some additional common Java types such as
  * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
  * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
  *
- * <p>If the source and target types are identical the source object will not
+ * <p>If the target type is {@code String} the source {@code String} will not
  * be modified.
  */
 @API(status = EXPERIMENTAL, since = "1.11")

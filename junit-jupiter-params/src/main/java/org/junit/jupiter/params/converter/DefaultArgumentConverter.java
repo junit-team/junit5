@@ -67,8 +67,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		try {
 			return StringConversionSupport.convert(source, targetType, classLoader);
 		}
-		catch (ConversionException e) {
-			throw new ArgumentConversionException(e.getMessage(), e);
+		catch (ConversionException ex) {
+			throw new ArgumentConversionException(ex.getMessage(), ex);
 		}
 	}
 
