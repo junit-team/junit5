@@ -708,31 +708,6 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
-	void getOutermostInstancePreconditions() {
-		// @formatter:off
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, Object.class));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(new Object(), null));
-		// @formatter:on
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void getOutermostInstance() {
-		var firstClass = new FirstClass();
-		var secondClass = firstClass.new SecondClass();
-		var thirdClass = secondClass.new ThirdClass();
-
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class))//
-				.contains(thirdClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.class))//
-				.contains(secondClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.class)).contains(firstClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, String.class)).isEmpty();
-	}
-
-	@Test
 	void getAllClasspathRootDirectories(@TempDir Path tempDirectory) throws Exception {
 		var root1 = tempDirectory.resolve("root1").toAbsolutePath();
 		var root2 = tempDirectory.resolve("root2").toAbsolutePath();

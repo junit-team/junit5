@@ -927,57 +927,6 @@ public final class ReflectionUtils {
 		return new String[] { className, methodName, methodParameters };
 	}
 
-	/**
-	 * Get the outermost instance of the required type, searching recursively
-	 * through enclosing instances.
-	 *
-	 * <p>If the supplied inner object is of the required type, it will be
-	 * returned.
-	 *
-	 * @param inner the inner object from which to begin the search; never {@code null}
-	 * @param requiredType the required type of the outermost instance; never {@code null}
-	 * @return an {@code Optional} containing the outermost instance; never {@code null}
-	 * but potentially empty
-	 * @deprecated Please discontinue use of this method since it relies on internal
-	 * implementation details of the JDK that may not work in the future.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Object> getOutermostInstance(Object inner, Class<?> requiredType) {
-		Preconditions.notNull(inner, "inner object must not be null");
-		Preconditions.notNull(requiredType, "requiredType must not be null");
-
-		if (requiredType.isInstance(inner)) {
-			return Optional.of(inner);
-		}
-
-		Optional<Object> candidate = getOuterInstance(inner);
-		if (candidate.isPresent()) {
-			return getOutermostInstance(candidate.get(), requiredType);
-		}
-
-		return Optional.empty();
-	}
-
-	private static Optional<Object> getOuterInstance(Object inner) {
-		// This is risky since it depends on the name of the field which is nowhere guaranteed
-		// but has been stable so far in all JDKs
-
-		// @formatter:off
-		return Arrays.stream(inner.getClass().getDeclaredFields())
-				.filter(field -> field.getName().startsWith("this$"))
-				.findFirst()
-				.map(field -> {
-					try {
-						return makeAccessible(field).get(inner);
-					}
-					catch (Throwable t) {
-						throw ExceptionUtils.throwAsUncheckedException(t);
-					}
-				});
-		// @formatter:on
-	}
-
 	public static Set<Path> getAllClasspathRootDirectories() {
 		// This is quite a hack, since sometimes the classpath is quite different
 		String fullClassPath = System.getProperty("java.class.path");
