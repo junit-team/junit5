@@ -194,4 +194,5 @@ Your donations will help to make that a reality!
 - Jun Nakamura
 - Sebastian Staack
 - Paul Schaub
+- Tadeas Kriz
 
