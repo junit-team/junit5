@@ -116,7 +116,7 @@ class LockManagerTests {
 	}
 
 	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
-		var lock = lockManager.getLockForResources(resources);
+		var lock = lockManager.getLockForResources(resources, null);
 		assertThat(lock).isInstanceOf(type);
 		return ResourceLockSupport.getLocks(lock);
 	}

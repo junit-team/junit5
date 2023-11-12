@@ -28,6 +28,8 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.junit.platform.engine.UniqueId;
+
 /**
  * @since 1.3
  */
@@ -43,19 +45,19 @@ class LockManager {
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
-	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
+	ResourceLock getLockForResources(Collection<ExclusiveResource> resources, UniqueId owner) {
 		if (resources.size() == 1) {
-			return getLockForResource(getOnlyElement(resources));
+			return getLockForResource(getOnlyElement(resources), owner);
 		}
-		List<Lock> locks = getDistinctSortedLocks(resources);
+		List<Lock> locks = getDistinctSortedLocks(resources, owner);
 		return toResourceLock(locks);
 	}
 
-	ResourceLock getLockForResource(ExclusiveResource resource) {
-		return new SingleLock(toLock(resource));
+	ResourceLock getLockForResource(ExclusiveResource resource, UniqueId owner) {
+		return new SingleLock(toLock(resource, owner));
 	}
 
-	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {
+	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources, UniqueId owner) {
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
 				.sorted(COMPARATOR)
@@ -64,14 +66,15 @@ class LockManager {
 
 		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
-				.map(this::toLock)
+				.map(resource -> toLock(resource, owner))
 				.collect(toList());
 		// @formatter:on
 	}
 
-	private Lock toLock(ExclusiveResource resource) {
+	private Lock toLock(ExclusiveResource resource, UniqueId owner) {
 		ReadWriteLock lock = this.locksByKey.computeIfAbsent(resource.getKey(), key -> new ReentrantReadWriteLock());
-		return resource.getLockMode() == READ ? lock.readLock() : lock.writeLock();
+		return new JfrReportingLock(resource.getLockMode() == READ ? lock.readLock() : lock.writeLock(),
+			resource.getKey(), resource.getLockMode(), owner);
 	}
 
 	private ResourceLock toResourceLock(List<Lock> locks) {

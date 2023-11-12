@@ -183,7 +183,7 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	private Lock getLock(ExclusiveResource exclusiveResource) {
-		return getOnlyElement(ResourceLockSupport.getLocks(lockManager.getLockForResource(exclusiveResource)));
+		return getOnlyElement(ResourceLockSupport.getLocks(lockManager.getLockForResource(exclusiveResource, owner)));
 	}
 
 	private TestDescriptor discover(Class<?> testClass) {

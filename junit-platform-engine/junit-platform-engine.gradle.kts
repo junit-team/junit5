@@ -9,6 +9,7 @@ dependencies {
 	api(platform(projects.junitBom))
 	api(libs.opentest4j)
 	api(projects.junitPlatformCommons)
+	api(libs.jfrpolyfill)
 
 	compileOnlyApi(libs.apiguardian)
 

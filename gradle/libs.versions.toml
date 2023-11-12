@@ -38,6 +38,7 @@ jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-d
 jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 jfrPolyfill = { module = "org.gradle.jfr.polyfill:jfr-polyfill", version = "1.0.2" }
 jfrunit = { module = "org.moditect.jfrunit:jfrunit-core", version = "1.0.0.Alpha2" }
+jfrpolyfill = { module = "org.gradle.jfr.polyfill:jfr-polyfill", version = "1.0.2" }
 jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
