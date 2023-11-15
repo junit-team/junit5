@@ -147,9 +147,8 @@ val allMainClasses by tasks.registering {
 
 val prepareModuleSourceDir by tasks.registering(Sync::class) {
     from(moduleSourceDir)
-    from(sourceSets.matching { it.name.startsWith("main") }.map { it.allJava })
+    from(sourceSets.main.map { it.allJava })
     into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 val compileModule by tasks.registering(JavaCompile::class) {

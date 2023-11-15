@@ -124,6 +124,8 @@ public final class Constants {
 	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
+	public static final String PARALLEL_EXECUTOR_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTOR_PROPERTY_NAME;
+
 	/**
 	 * Property name used to set the default test execution mode: {@value}
 	 *

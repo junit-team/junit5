@@ -1,9 +1,6 @@
-import junitbuild.java.ExecJarAction
-
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.java-multi-release-sources")
-	id("junitbuild.java-repackage-jars")
 	`java-test-fixtures`
 }
 
@@ -18,11 +15,9 @@ dependencies {
 tasks.jar {
 	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
-	doLast(objects.newInstance(ExecJarAction::class).apply {
+	doLast(objects.newInstance(junitbuild.java.UpdateJarAction::class).apply {
 		javaLauncher = javaToolchains.launcherFor(java.toolchain)
 		args.addAll(
-			"--update",
-			"--file", archiveFile.get().asFile.absolutePath,
 			"--release", "9",
 			"-C", release9ClassesDir.absolutePath, "."
 		)

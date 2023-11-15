@@ -23,6 +23,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTOR_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -74,7 +75,9 @@ import org.junit.platform.testkit.engine.Event;
 /**
  * @since 1.3
  */
-class ParallelExecutionIntegrationTests {
+abstract class ParallelExecutionIntegrationTests {
+
+	protected abstract String getParallelExecutor();
 
 	@Test
 	void successfulParallelTest(TestReporter reporter) {
@@ -89,7 +92,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(finishedTimestamps).hasSize(3);
 		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().noneMatch(
 			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThreadNamesCount(events, 3);
 	}
 
 	@Test
@@ -103,7 +106,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
+		assertThreadNamesCount(events, 3);
 	}
 
 	@Test
@@ -111,7 +114,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, SuccessfulWithClassLockTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThreadNamesCount(events, 1);
 	}
 
 	@Test
@@ -119,7 +122,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, TestCaseWithTestFactory.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThreadNamesCount(events, 1);
 	}
 
 	@Test
@@ -132,8 +135,8 @@ class ParallelExecutionIntegrationTests {
 			var events = executeConcurrently(3, SuccessfulWithMethodLockTestCase.class);
 
 			assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(3);
-			assertThat(ThreadReporter.getThreadNames(events)).hasSize(3);
 			assertThat(ThreadReporter.getLoaderNames(events)).containsExactly("(-:");
+			assertThreadNamesCount(events, 3);
 		}
 		finally {
 			currentThread.setContextClassLoader(currentLoader);
@@ -153,7 +156,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(3, TestCaseWithNestedLocks.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(6);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThreadNamesCount(events, 1);
 	}
 
 	@Test
@@ -181,7 +184,7 @@ class ParallelExecutionIntegrationTests {
 		var events = executeConcurrently(2, ConcurrentTemplateTestCase.class);
 
 		assertThat(events.stream().filter(event(test(), finishedSuccessfully())::matches)).hasSize(10);
-		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
+		assertThreadNamesCount(events, 1);
 	}
 
 	@Test
@@ -193,13 +196,13 @@ class ParallelExecutionIntegrationTests {
 			ParallelClassesTestCaseB.class, ParallelClassesTestCaseC.class);
 
 		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
-		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSize(3);
+		assertThreadNamesCount(results.allEvents().list(), 3);
 		var testClassA = findFirstTestDescriptor(results, container(ParallelClassesTestCaseA.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(1);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassA), 1);
 		var testClassB = findFirstTestDescriptor(results, container(ParallelClassesTestCaseB.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(1);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassB), 1);
 		var testClassC = findFirstTestDescriptor(results, container(ParallelClassesTestCaseC.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(1);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassC), 1);
 	}
 
 	@Test
@@ -215,11 +218,11 @@ class ParallelExecutionIntegrationTests {
 		results.testEvents().assertStatistics(stats -> stats.succeeded(9));
 		assertThat(ThreadReporter.getThreadNames(results.allEvents().list())).hasSizeGreaterThanOrEqualTo(3);
 		var testClassA = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseA.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassA))).hasSize(3);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassA), 3);
 		var testClassB = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseB.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassB))).hasSize(3);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassB), 3);
 		var testClassC = findFirstTestDescriptor(results, container(ParallelMethodsTestCaseC.class));
-		assertThat(ThreadReporter.getThreadNames(getEventsOfChildren(results, testClassC))).hasSize(3);
+		assertThreadNamesCount(getEventsOfChildren(results, testClassC), 3);
 	}
 
 	@Test
@@ -394,12 +397,17 @@ class ParallelExecutionIntegrationTests {
 		var discoveryRequest = request()
 				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
+				.configurationParameter(PARALLEL_EXECUTOR_PROPERTY_NAME, getParallelExecutor())
 				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
 				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
 				.configurationParameters(configParams)
 				.build();
 		// @formatter:on
 		return EngineTestKit.execute("junit-jupiter", discoveryRequest);
+	}
+
+	protected void assertThreadNamesCount(List<Event> events, int expectedCount) {
+		assertThat(ThreadReporter.getThreadNames(events)).hasSize(expectedCount);
 	}
 
 	// -------------------------------------------------------------------------

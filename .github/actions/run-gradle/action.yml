@@ -13,6 +13,12 @@ runs:
       with:
         distribution: temurin
         java-version: 17
+    - uses: oracle-actions/setup-java@v1
+      with:
+        website: jdk.java.net
+        release: 21
+    - shell: bash
+      run: echo "JDK21=$JAVA_HOME" >> $GITHUB_ENV
     - uses: gradle/gradle-build-action@v2
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}

@@ -26,6 +26,8 @@ jobs:
       with:
         arguments: --quiet
     - name: Build and compare checksums
+      env:
+        JAVA_HOME: ${{env.JAVA_HOME_17_X64}}
       shell: bash
       run: |
         ./gradle/scripts/checkBuildReproducibility.sh

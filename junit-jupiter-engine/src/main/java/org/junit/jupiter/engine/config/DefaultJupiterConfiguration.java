@@ -41,6 +41,9 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(status = INTERNAL, since = "5.4")
 public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
+	private static final EnumConfigurationParameterConverter<ParallelExecutor> parallelExecutorConverter = //
+		new EnumConfigurationParameterConverter<>(ParallelExecutor.class, "parallel executor");
+
 	private static final EnumConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
 		new EnumConfigurationParameterConverter<>(ExecutionMode.class, "parallel execution mode");
 
@@ -87,6 +90,12 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return configurationParameters.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(false);
+	}
+
+	@Override
+	public ParallelExecutor getParallelExecutor() {
+		return parallelExecutorConverter.get(configurationParameters, PARALLEL_EXECUTOR_PROPERTY_NAME,
+			ParallelExecutor.FORK_JOIN_POOL);
 	}
 
 	@Override
