@@ -100,7 +100,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 21]: https://foojay.io/almanac/java-21/
+[JDK 21]: https://javaalmanac.io/jdk/21/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5
