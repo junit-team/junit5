@@ -40,17 +40,16 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 	dependsOn(tasks.build)
 }
 
+val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(isSnapshot || buildParameters.ci))
+
 signing {
 	useGpgCmd()
 	sign(publishing.publications)
-	isRequired = !(isSnapshot || buildParameters.ci)
+	isRequired = signArtifacts
 }
 
 tasks.withType<Sign>().configureEach {
-	val isSnapshot = project.version.toString().contains("SNAPSHOT")
-	onlyIf {
-		!isSnapshot // Gradle Module Metadata currently does not support signing snapshots
-	}
+	enabled = signArtifacts
 }
 
 publishing {

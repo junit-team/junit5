@@ -63,4 +63,9 @@ buildParameters {
 			description = "Configures the number of times failing test are retried"
 		}
 	}
+	group("publishing") {
+		bool("signArtifacts") {
+			description = "Sign artifacts before publishing them to Maven repos"
+		}
+	}
 }
