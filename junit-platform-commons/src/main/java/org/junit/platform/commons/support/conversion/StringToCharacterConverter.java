@@ -8,23 +8,21 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.support;
+package org.junit.platform.commons.support.conversion;
 
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToBooleanConverter implements StringToObjectConverter {
+class StringToCharacterConverter implements StringToObjectConverter {
 
 	@Override
 	public boolean canConvert(Class<?> targetType) {
-		return targetType == Boolean.class;
+		return targetType == Character.class;
 	}
 
 	@Override
 	public Object convert(String source, Class<?> targetType) {
-		boolean isTrue = "true".equalsIgnoreCase(source);
-		Preconditions.condition(isTrue || "false".equalsIgnoreCase(source),
-			() -> "String must be 'true' or 'false' (ignoring case): " + source);
-		return isTrue;
+		Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
+		return source.charAt(0);
 	}
 
 }

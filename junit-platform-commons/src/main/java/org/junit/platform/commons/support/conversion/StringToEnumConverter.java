@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.support;
+package org.junit.platform.commons.support.conversion;
 
 class StringToEnumConverter implements StringToObjectConverter {
 

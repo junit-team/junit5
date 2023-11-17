@@ -3,6 +3,7 @@ exports org.junit.platform.commons
 exports org.junit.platform.commons.annotation
 exports org.junit.platform.commons.function
 exports org.junit.platform.commons.support
+exports org.junit.platform.commons.support.conversion
 requires java.base mandated
 requires java.logging
 requires java.management
