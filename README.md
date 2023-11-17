@@ -65,7 +65,7 @@ task outputs from previous CI builds.
 
 ## Building from Source
 
-You need [JDK 17] to build JUnit 5. [Gradle toolchains] are used to detect and
+You need [JDK 21] to build JUnit 5. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
 All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command.
@@ -100,7 +100,7 @@ See also <https://repo1.maven.org/maven2/org/junit/> for releases and
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
 [Javadoc]: https://junit.org/junit5/docs/current/api/
-[JDK 17]: https://foojay.io/almanac/java-17/
+[JDK 21]: https://foojay.io/almanac/java-21/
 [Release Notes]: https://junit.org/junit5/docs/current/release-notes/
 [Samples]: https://github.com/junit-team/junit5-samples
 [StackOverflow]: https://stackoverflow.com/questions/tagged/junit5

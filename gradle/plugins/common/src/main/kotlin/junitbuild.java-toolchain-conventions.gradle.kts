@@ -5,7 +5,7 @@ plugins {
 }
 
 project.pluginManager.withPlugin("java") {
-	val defaultLanguageVersion = JavaLanguageVersion.of(17)
+	val defaultLanguageVersion = JavaLanguageVersion.of(21)
 	val javaLanguageVersion = buildParameters.javaToolchainVersion.map { JavaLanguageVersion.of(it) }.getOrElse(defaultLanguageVersion)
 
 	val extension = the<JavaPluginExtension>()

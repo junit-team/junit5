@@ -338,6 +338,7 @@ class DefaultArgumentConverterTests {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	void convertsStringToLocale() {
 		assertConverts("en", Locale.class, Locale.ENGLISH);
 		assertConverts("en_us", Locale.class, new Locale(Locale.US.toString()));
