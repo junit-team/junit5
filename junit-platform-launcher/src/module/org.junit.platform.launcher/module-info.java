@@ -16,6 +16,8 @@
  * @since 1.0
  * @uses org.junit.platform.engine.TestEngine
  * @uses org.junit.platform.launcher.LauncherDiscoveryListener
+ * @uses org.junit.platform.launcher.LauncherInterceptor
+ * @uses org.junit.platform.launcher.LauncherSessionListener
  * @uses org.junit.platform.launcher.PostDiscoveryFilter
  * @uses org.junit.platform.launcher.TestExecutionListener
  */
@@ -32,6 +34,7 @@ module org.junit.platform.launcher {
 
 	uses org.junit.platform.engine.TestEngine;
 	uses org.junit.platform.launcher.LauncherDiscoveryListener;
+	uses org.junit.platform.launcher.LauncherInterceptor;
 	uses org.junit.platform.launcher.LauncherSessionListener;
 	uses org.junit.platform.launcher.PostDiscoveryFilter;
 	uses org.junit.platform.launcher.TestExecutionListener;

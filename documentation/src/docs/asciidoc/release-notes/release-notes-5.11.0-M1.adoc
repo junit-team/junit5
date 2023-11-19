@@ -16,6 +16,8 @@ JUnit repository on GitHub.
 ==== Bug Fixes
 
 * ❓
+* Fixes use of the launcher as a Java module when `junit.platform.launcher.interceptors.enabled` is enabled
+  - See link:https://github.com/junit-team/junit5/issues/3561[issue 3561] for details.
 
 ==== Deprecations and Breaking Changes
 
