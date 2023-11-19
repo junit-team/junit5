@@ -10,6 +10,7 @@ requires org.junit.platform.commons transitive
 requires org.junit.platform.engine transitive
 uses org.junit.platform.engine.TestEngine
 uses org.junit.platform.launcher.LauncherDiscoveryListener
+uses org.junit.platform.launcher.LauncherInterceptor
 uses org.junit.platform.launcher.LauncherSessionListener
 uses org.junit.platform.launcher.PostDiscoveryFilter
 uses org.junit.platform.launcher.TestExecutionListener
