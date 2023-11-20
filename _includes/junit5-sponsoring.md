@@ -143,20 +143,6 @@ Your donations will help to make that a reality!
       </a>
     </li>
     <li>
-      <a class="cardbronze" href="https://www.code-intelligence.com">
-        <div class="cardbronze-image">
-          <img style="width:95%" src="assets/img/sponsor-logo-CodeIntelligence.png" alt="Code Intelligence">
-        </div>
-        <div class="cardbronze-center">
-          <h4>Code Intelligence</h4>
-        </div>
-        <div class="cardbronze-bottom">
-          <h4>Bronze Sponsor</h4>
-          <p>Since November 2022</p>
-        </div>
-      </a>
-    </li>
-    <li>
       <a class="cardbronze" href="https://www.practitest.com/?utm_medium=referral&utm_source=junit&utm_campaign=sponsorship">
         <div class="cardbronze-image">
           <img style="width:95%" src="assets/img/sponsor-logo-PractiTest.svg" alt="PractiTest">
