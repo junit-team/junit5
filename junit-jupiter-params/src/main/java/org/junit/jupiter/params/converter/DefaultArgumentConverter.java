@@ -10,10 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -21,13 +18,13 @@ import java.math.BigInteger;
 import java.net.URI;
 import java.net.URL;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.support.conversion.ConversionException;
+import org.junit.platform.commons.support.conversion.StringConversionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -47,22 +44,12 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
+ * @see org.junit.platform.commons.support.conversion.StringConversionSupport
  */
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
 	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
-
-	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
-		new StringToBooleanConverter(), //
-		new StringToCharacterConverter(), //
-		new StringToNumberConverter(), //
-		new StringToClassConverter(), //
-		new StringToEnumConverter(), //
-		new StringToJavaTimeConverter(), //
-		new StringToCommonJavaTypesConverter(), //
-		new FallbackStringToObjectConverter() //
-	));
 
 	private DefaultArgumentConverter() {
 		// nothing to initialize
@@ -88,34 +75,19 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String) {
-			Class<?> targetTypeToUse = toWrapperType(targetType);
-			Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-				candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
-			if (converter.isPresent()) {
-				Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
-				ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
-				try {
-					return converter.get().convert((String) source, targetTypeToUse, classLoader);
-				}
-				catch (Exception ex) {
-					if (ex instanceof ArgumentConversionException) {
-						// simply rethrow it
-						throw (ArgumentConversionException) ex;
-					}
-					// else
-					throw new ArgumentConversionException(
-						"Failed to convert String \"" + source + "\" to type " + targetType.getTypeName(), ex);
-				}
+			Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
+			ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
+			try {
+				return StringConversionSupport.convert((String) source, targetType, classLoader);
+			}
+			catch (ConversionException ex) {
+				throw new ArgumentConversionException(ex.getMessage(), ex);
 			}
 		}
+
 		throw new ArgumentConversionException(
 			String.format("No built-in converter for source type %s and target type %s",
 				source.getClass().getTypeName(), targetType.getTypeName()));
-	}
-
-	private static Class<?> toWrapperType(Class<?> targetType) {
-		Class<?> wrapperType = getWrapperType(targetType);
-		return wrapperType != null ? wrapperType : targetType;
 	}
 
 }

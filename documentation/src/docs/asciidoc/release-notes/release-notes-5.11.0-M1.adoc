@@ -25,7 +25,8 @@ JUnit repository on GitHub.
 
 ==== New Features and Improvements
 
-* ❓
+* New `StringConversionSupport` in `junit-platform-commons` to expose
+  internal conversion logic used by Jupiter's `DefaultArgumentConverter`
 
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
