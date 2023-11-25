@@ -687,11 +687,11 @@ method in the inverse order they were added in.
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
-The `junit-platform-commons` artifact exposes a package named
-`{junit-platform-support-package}` that contains _maintained_ utility methods for working
-with annotations, classes, reflection, and classpath scanning tasks. `TestEngine` and
-`Extension` authors are encouraged to use these supported methods in order to align with
-the behavior of the JUnit Platform.
+The `junit-platform-commons` artifact provides _maintained_ utilities for working with
+annotations, classes, reflection, classpath scanning, and conversion tasks. These
+utilities can be found in the `{junit-platform-support-package}` and its subpackages.
+`TestEngine` and `Extension` authors are encouraged to use these supported utilities in
+order to align with the behavior of the JUnit Platform and JUnit Jupiter.
 
 [[extensions-supported-utilities-annotations]]
 ==== Annotation Support
@@ -726,6 +726,16 @@ details.
 `ModifierSupport` provides static utility methods for working with member and class
 modifiers -- for example, to determine if a member is declared as `public`, `private`,
 `abstract`, `static`, etc. Consult the Javadoc for `{ModifierSupport}` for further
+details.
+
+[[extensions-supported-utilities-conversion]]
+==== Conversion Support
+
+`StringConversionSupport` (in the `org.junit.platform.commons.support.conversion` package)
+provides support for converting from strings to primitive types and their corresponding
+wrapper types, date and time types from the `java.time package`, and some additional
+common Java types such as `File`, `BigDecimal`, `BigInteger`, `Currency`, `Locale`, `URI`,
+`URL`, `UUID`, etc. Consult the Javadoc for `{StringConversionSupport}` for further
 details.
 
 

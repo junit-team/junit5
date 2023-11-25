@@ -14,6 +14,7 @@ endif::[]
 :ClassSupport:                               {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/ClassSupport.html[ClassSupport]
 :ModifierSupport:                            {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/ModifierSupport.html[ModifierSupport]
 :ReflectionSupport:                          {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html[ReflectionSupport]
+:StringConversionSupport:                    {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/support/conversion/StringConversionSupport.html[StringConversionSupport]
 :Testable:                                   {javadoc-root}/org.junit.platform.commons/org/junit/platform/commons/annotation/Testable.html[@Testable]
 // Platform Console Launcher
 :junit-platform-console:                     {javadoc-root}/org.junit.platform.console/org/junit/platform/console/package-summary.html[junit-platform-console]
