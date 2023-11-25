@@ -867,6 +867,7 @@ pre.rouge .gs {
 <li><a href="#extensions-supported-utilities-classes">5.15.2. Class Support</a></li>
 <li><a href="#extensions-supported-utilities-reflection">5.15.3. Reflection Support</a></li>
 <li><a href="#extensions-supported-utilities-modifier">5.15.4. Modifier Support</a></li>
+<li><a href="#extensions-supported-utilities-conversion">5.15.5. Conversion Support</a></li>
 </ul>
 </li>
 <li><a href="#extensions-execution-order">5.16. Relative Execution Order of User Code and Extensions</a>
@@ -9994,11 +9995,11 @@ method in the inverse order they were added in.
 <div class="sect2">
 <h3 id="extensions-supported-utilities"><a class="anchor" href="#extensions-supported-utilities"></a>5.15. Supported Utilities in Extensions</h3>
 <div class="paragraph">
-<p>The <code>junit-platform-commons</code> artifact exposes a package named
-<code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> that contains <em>maintained</em> utility methods for working
-with annotations, classes, reflection, and classpath scanning tasks. <code>TestEngine</code> and
-<code>Extension</code> authors are encouraged to use these supported methods in order to align with
-the behavior of the JUnit Platform.</p>
+<p>The <code>junit-platform-commons</code> artifact provides <em>maintained</em> utilities for working with
+annotations, classes, reflection, classpath scanning, and conversion tasks. These
+utilities can be found in the <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/package-summary.html">org.junit.platform.commons.support</a></code> and its subpackages.
+<code>TestEngine</code> and <code>Extension</code> authors are encouraged to use these supported utilities in
+order to align with the behavior of the JUnit Platform and JUnit Jupiter.</p>
 </div>
 <div class="sect3">
 <h4 id="extensions-supported-utilities-annotations"><a class="anchor" href="#extensions-supported-utilities-annotations"></a>5.15.1. Annotation Support</h4>
@@ -10036,6 +10037,17 @@ details.</p>
 <p><code>ModifierSupport</code> provides static utility methods for working with member and class
 modifiers&#8201;&#8212;&#8201;for example, to determine if a member is declared as <code>public</code>, <code>private</code>,
 <code>abstract</code>, <code>static</code>, etc. Consult the Javadoc for <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/ModifierSupport.html">ModifierSupport</a></code> for further
+details.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="extensions-supported-utilities-conversion"><a class="anchor" href="#extensions-supported-utilities-conversion"></a>5.15.5. Conversion Support</h4>
+<div class="paragraph">
+<p><code>StringConversionSupport</code> (in the <code>org.junit.platform.commons.support.conversion</code> package)
+provides support for converting from strings to primitive types and their corresponding
+wrapper types, date and time types from the <code>java.time package</code>, and some additional
+common Java types such as <code>File</code>, <code>BigDecimal</code>, <code>BigInteger</code>, <code>Currency</code>, <code>Locale</code>, <code>URI</code>,
+<code>URL</code>, <code>UUID</code>, etc. Consult the Javadoc for <code><a href="../api/org.junit.platform.commons/org/junit/platform/commons/support/conversion/StringConversionSupport.html">StringConversionSupport</a></code> for further
 details.</p>
 </div>
 </div>
