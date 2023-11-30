@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @ArgumentsSource} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain ArgumentsProvider argument providers}
+ * that is used to register {@linkplain ArgumentsProvider arguments providers}
  * for the annotated test method.
  *
  * <p>{@code @ArgumentsSource} may also be used as a meta-annotation in order to
