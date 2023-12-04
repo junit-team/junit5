@@ -73,6 +73,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		DEFAULT_STATELESS_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		extensionRegistry.registerDefaultExtension(new TempDirectory(configuration));
+		extensionRegistry.registerDefaultExtension(new AutoClose());
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
