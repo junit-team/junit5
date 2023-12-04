@@ -40,17 +40,16 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 	dependsOn(tasks.build)
 }
 
+val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(isSnapshot || buildParameters.ci))
+
 signing {
 	useGpgCmd()
 	sign(publishing.publications)
-	isRequired = !(isSnapshot || buildParameters.ci)
+	isRequired = signArtifacts
 }
 
 tasks.withType<Sign>().configureEach {
-	val isSnapshot = project.version.toString().contains("SNAPSHOT")
-	onlyIf {
-		!isSnapshot // Gradle Module Metadata currently does not support signing snapshots
-	}
+	enabled = signArtifacts
 }
 
 publishing {
@@ -60,54 +59,54 @@ publishing {
 				name.set(provider {
 					project.description ?: "${project.group}:${project.name}"
 				})
-				url.set("https://junit.org/junit5/")
+				url = "https://junit.org/junit5/"
 				scm {
-					connection.set("scm:git:git://github.com/junit-team/junit5.git")
-					developerConnection.set("scm:git:git://github.com/junit-team/junit5.git")
-					url.set("https://github.com/junit-team/junit5")
+					connection = "scm:git:git://github.com/junit-team/junit5.git"
+					developerConnection = "scm:git:git://github.com/junit-team/junit5.git"
+					url = "https://github.com/junit-team/junit5"
 				}
 				licenses {
 					license {
 						val license: License by rootProject.extra
-						name.set(license.name)
-						url.set(license.url.toString())
+						name = license.name
+						url = license.url.toString()
 					}
 				}
 				developers {
 					developer {
-						id.set("bechte")
-						name.set("Stefan Bechtold")
-						email.set("stefan.bechtold@me.com")
+						id = "bechte"
+						name = "Stefan Bechtold"
+						email = "stefan.bechtold@me.com"
 					}
 					developer {
-						id.set("jlink")
-						name.set("Johannes Link")
-						email.set("business@johanneslink.net")
+						id = "jlink"
+						name = "Johannes Link"
+						email = "business@johanneslink.net"
 					}
 					developer {
-						id.set("marcphilipp")
-						name.set("Marc Philipp")
-						email.set("mail@marcphilipp.de")
+						id = "marcphilipp"
+						name = "Marc Philipp"
+						email = "mail@marcphilipp.de"
 					}
 					developer {
-						id.set("mmerdes")
-						name.set("Matthias Merdes")
-						email.set("matthias.merdes@heidelpay.com")
+						id = "mmerdes"
+						name = "Matthias Merdes"
+						email = "matthias.merdes@heidelpay.com"
 					}
 					developer {
-						id.set("sbrannen")
-						name.set("Sam Brannen")
-						email.set("sam@sambrannen.com")
+						id = "sbrannen"
+						name = "Sam Brannen"
+						email = "sam@sambrannen.com"
 					}
 					developer {
-						id.set("sormuras")
-						name.set("Christian Stein")
-						email.set("sormuras@gmail.com")
+						id = "sormuras"
+						name = "Christian Stein"
+						email = "sormuras@gmail.com"
 					}
 					developer {
-						id.set("juliette-derancourt")
-						name.set("Juliette de Rancourt")
-						email.set("derancourt.juliette@gmail.com")
+						id = "juliette-derancourt"
+						name = "Juliette de Rancourt"
+						email = "derancourt.juliette@gmail.com"
 					}
 				}
 			}

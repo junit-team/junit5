@@ -51,6 +51,7 @@ import org.junit.platform.engine.support.hierarchical.DemoHierarchicalContainerD
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestEngine;
 import org.junit.platform.fakes.TestDescriptorStub;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.opentest4j.AssertionFailedError;
@@ -429,7 +430,8 @@ class LegacyXmlReportGeneratingListenerTests {
 		var reportListener = new LegacyXmlReportGeneratingListener(tempDirectory.toString(), out, clock);
 		var launcher = createLauncher(engine);
 		launcher.registerTestExecutionListeners(reportListener);
-		launcher.execute(request().selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
+		launcher.execute(request().configurationParameter(LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME,
+			"false").selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))).build());
 	}
 
 	private Match readValidXmlFile(Path xmlFile) throws Exception {

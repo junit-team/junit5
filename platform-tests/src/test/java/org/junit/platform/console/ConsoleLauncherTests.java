@@ -12,6 +12,7 @@ package org.junit.platform.console;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -33,27 +34,26 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayHelp(String command) {
-		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
-		assertThat(stringWriter.toString()).contains("--help");
+		assertThat(stringWriter.toString()).contains("--help", "--disable-banner" /* ... */);
 	}
 
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayBanner(String command) {
-		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
 		consoleLauncher.run(command);
 
-		assertThat(stringWriter.toString()).contains(
-			"Thanks for using JUnit! Support its development at https://junit.org/sponsoring");
+		assertThat(stringWriter.toString()).contains("Thanks for using JUnit!");
 	}
 
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void disableBanner(String command, int expectedExitCode) {
-		var consoleLauncher = new ConsoleLauncher((__, ___) -> null, printSink, printSink);
+		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--disable-banner").getExitCode();
 
 		assertEquals(expectedExitCode, exitCode);
@@ -81,9 +81,9 @@ class ConsoleLauncherTests {
 
 	static Stream<Arguments> commandsWithEmptyOptionExitCodes() {
 		return Stream.of( //
-			Arguments.of("execute", -1), //
-			Arguments.of("discover", -1), //
-			Arguments.of("engines", 0) //
+			arguments("execute", -1), //
+			arguments("discover", -1), //
+			arguments("engines", 0) //
 		);
 	}
 

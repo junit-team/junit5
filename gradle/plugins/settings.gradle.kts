@@ -1,4 +1,4 @@
-val expectedJavaVersion = JavaVersion.VERSION_17
+val expectedJavaVersion = JavaVersion.VERSION_21
 val actualJavaVersion = JavaVersion.current()
 require(actualJavaVersion == expectedJavaVersion) {
 	"The JUnit 5 build must be executed with Java ${expectedJavaVersion.majorVersion}. Currently executing with Java ${actualJavaVersion.majorVersion}."

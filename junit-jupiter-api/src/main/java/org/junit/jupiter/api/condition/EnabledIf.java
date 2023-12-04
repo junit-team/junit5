@@ -23,11 +23,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * {@code @EnabledIf} is used to signal that the annotated test class or test
- * method is <em>enabled</em> only if the provided
- * {@linkplain #value() condition} evaluates to {@code true}.
+ * method is only <em>enabled</em> if the provided {@linkplain #value() condition}
+ * evaluates to {@code true}.
  *
  * <p>When applied at the class level, all test methods within that class will
  * be enabled on the same condition.
+ *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of

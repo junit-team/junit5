@@ -99,7 +99,7 @@ public @interface DatabaseAndWebServerExtension {
 The above examples demonstrate how `@ExtendWith` can be applied at the class level or at
 the method level; however, for certain use cases it makes sense for an extension to be
 registered declaratively at the field or parameter level. Consider a
-`RandomNumberExtension` that generates random numbers that can be injected into a field or
+`RandomNumberExtension` which generates random numbers that can be injected into a field or
 via a parameter in a constructor, test method, or lifecycle method. If the extension
 provides a `@Random` annotation that is meta-annotated with
 `@ExtendWith(RandomNumberExtension.class)` (see listing below), the extension can be used
@@ -118,16 +118,28 @@ include::{testDir}/example/extensions/RandomNumberDemo.java[tags=user_guide]
 [[extensions-RandomNumberExtension]]
 The following code listing provides an example of how one might choose to implement such a
 `RandomNumberExtension`. This implementation works for the use cases in
-`RandomNumberDemo`; however, it may not prove robust enough to cover all use cases – for
-example, the random number generation support is limited to integers, it uses
-`java.util.Random` instead of `java.security.SecureRandom`, etc. In any case, it is
+`RandomNumberDemo`; however, it may not prove robust enough to cover all use cases -- for
+example, the random number generation support is limited to integers; it uses
+`java.util.Random` instead of `java.security.SecureRandom`; etc. In any case, it is
 important to note which extension APIs are implemented and for what reasons.
 
 Specifically, `RandomNumberExtension` implements the following extension APIs:
 
 - `BeforeAllCallback`: to support static field injection
-- `TestInstancePostProcessor`: to support non-static field injection
+- `BeforeEachCallback`: to support non-static field injection
 - `ParameterResolver`: to support constructor and method injection
+
+[NOTE]
+====
+Ideally, the `RandomNumberExtension` would implement `TestInstancePostProcessor` instead
+of `BeforeEachCallback` in order to support non-static field injection immediately after
+the test class has been instantiated.
+
+However, JUnit Jupiter currently does not allow a `TestInstancePostProcessor` to be
+registered via `@ExtendWith` on a non-static field (see
+link:{junit5-repo}/issues/3437[issue 3437]). In light of that, the `RandomNumberExtension`
+implements `BeforeEachCallback` as an alternative approach.
+====
 
 [source,java,indent=0]
 ----
@@ -675,11 +687,11 @@ method in the inverse order they were added in.
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
-The `junit-platform-commons` artifact exposes a package named
-`{junit-platform-support-package}` that contains _maintained_ utility methods for working
-with annotations, classes, reflection, and classpath scanning tasks. `TestEngine` and
-`Extension` authors are encouraged to use these supported methods in order to align with
-the behavior of the JUnit Platform.
+The `junit-platform-commons` artifact provides _maintained_ utilities for working with
+annotations, classes, reflection, classpath scanning, and conversion tasks. These
+utilities can be found in the `{junit-platform-support-package}` and its subpackages.
+`TestEngine` and `Extension` authors are encouraged to use these supported utilities in
+order to align with the behavior of the JUnit Platform and JUnit Jupiter.
 
 [[extensions-supported-utilities-annotations]]
 ==== Annotation Support
@@ -714,6 +726,16 @@ details.
 `ModifierSupport` provides static utility methods for working with member and class
 modifiers -- for example, to determine if a member is declared as `public`, `private`,
 `abstract`, `static`, etc. Consult the Javadoc for `{ModifierSupport}` for further
+details.
+
+[[extensions-supported-utilities-conversion]]
+==== Conversion Support
+
+`StringConversionSupport` (in the `org.junit.platform.commons.support.conversion` package)
+provides support for converting from strings to primitive types and their corresponding
+wrapper types, date and time types from the `java.time package`, and some additional
+common Java types such as `File`, `BigDecimal`, `BigInteger`, `Currency`, `Locale`, `URI`,
+`URL`, `UUID`, etc. Consult the Javadoc for `{StringConversionSupport}` for further
 details.
 
 

@@ -1132,26 +1132,17 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 <<api-evolution, promote>> this feature.
 
 [[stacktrace-pruning]]
-=== Stack trace pruning
+=== Stack Trace Pruning
 
 Since version 1.10, the JUnit Platform provides built-in support for pruning stack traces
-produced by failing tests. This feature can be enabled or disabled via the
-`junit.platform.stacktrace.pruning.enabled` _configuration parameter_.
+produced by failing tests. This feature is enabled by default but can be disabled by
+setting the `junit.platform.stacktrace.pruning.enabled` _configuration parameter_ to
+`false`.
 
-By default, all calls from the `org.junit`, `java`, and `jdk` packages are removed from the
-stack trace. You can also configure the JUnit Platform to exclude different or additional
-calls. To do this, provide a pattern for the `junit.platform.stacktrace.pruning.pattern`
-_configuration parameter_ to specify which fully qualified class names should be excluded
-from the stack traces.
+When enabled, all calls from the `org.junit`, `jdk.internal.reflect`, and `sun.reflect`
+packages are removed from the stack trace, unless the calls occur after the test itself
+or any of its ancestors. For that reason, calls to `{Assertions}` or `{Assumptions}` will
+never be excluded.
 
-In addition, and independently of the provided pattern, all elements prior to and
-including the first call from the JUnit Platform Launcher will be removed.
-
-NOTE: Since they provide necessary insights to understand a test failure, calls to
-`{Assertions}` or `{Assumptions}` will never be excluded from stack traces even though
-they are part of the `org.junit` package.
-
-[[stacktrace-pruning-pattern]]
-==== Pattern Matching Syntax
-
-Refer to <<running-tests-config-params-deactivation-pattern>> for details.
+In addition, all elements prior to and including the first call from the JUnit Platform
+Launcher will be removed.

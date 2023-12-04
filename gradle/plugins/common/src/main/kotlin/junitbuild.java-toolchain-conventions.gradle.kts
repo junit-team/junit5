@@ -5,24 +5,24 @@ plugins {
 }
 
 project.pluginManager.withPlugin("java") {
-	val defaultLanguageVersion = JavaLanguageVersion.of(17)
+	val defaultLanguageVersion = JavaLanguageVersion.of(21)
 	val javaLanguageVersion = buildParameters.javaToolchainVersion.map { JavaLanguageVersion.of(it) }.getOrElse(defaultLanguageVersion)
 
 	val extension = the<JavaPluginExtension>()
 	val javaToolchainService = the<JavaToolchainService>()
 
-	extension.toolchain.languageVersion.set(javaLanguageVersion)
+	extension.toolchain.languageVersion = javaLanguageVersion
 
 	pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
 		configure<KotlinJvmProjectExtension> {
 			jvmToolchain {
-				languageVersion.set(javaLanguageVersion)
+				languageVersion = javaLanguageVersion
 			}
 		}
 	}
 
 	tasks.withType<JavaExec>().configureEach {
-		javaLauncher.set(javaToolchainService.launcherFor(extension.toolchain))
+		javaLauncher = javaToolchainService.launcherFor(extension.toolchain)
 	}
 
 	tasks.withType<JavaCompile>().configureEach {
@@ -39,7 +39,7 @@ project.pluginManager.withPlugin("java") {
 	tasks.withType<GroovyCompile>().configureEach {
 		javaLauncher.set(javaToolchainService.launcherFor {
 			// Groovy does not yet support JDK 19, see https://issues.apache.org/jira/browse/GROOVY-10569
-			languageVersion.set(defaultLanguageVersion)
+			languageVersion = defaultLanguageVersion
 		})
 	}
 }

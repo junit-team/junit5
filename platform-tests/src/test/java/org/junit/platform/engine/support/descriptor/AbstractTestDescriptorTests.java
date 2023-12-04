@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -34,15 +35,18 @@ import org.junit.platform.engine.UniqueId;
 class AbstractTestDescriptorTests {
 
 	private EngineDescriptor engineDescriptor;
+	private GroupDescriptor group1;
+	private GroupDescriptor group11;
+	private LeafDescriptor leaf111;
 
 	@BeforeEach
 	void initTree() {
 		engineDescriptor = new EngineDescriptor(UniqueId.forEngine("testEngine"), "testEngine");
-		var group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
+		group1 = new GroupDescriptor(UniqueId.root("group", "group1"));
 		engineDescriptor.addChild(group1);
 		var group2 = new GroupDescriptor(UniqueId.root("group", "group2"));
 		engineDescriptor.addChild(group2);
-		var group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
+		group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
 		group1.addChild(group11);
 
 		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-1")));
@@ -50,7 +54,8 @@ class AbstractTestDescriptorTests {
 
 		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
-		group11.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf11-1")));
+		leaf111 = new LeafDescriptor(UniqueId.root("leaf", "leaf11-1"));
+		group11.addChild(leaf111);
 	}
 
 	@Test
@@ -131,6 +136,27 @@ class AbstractTestDescriptorTests {
 
 		assertEquals(3, visited.size());
 		assertFalse(visited.contains(UniqueId.root("group", "group1")));
+	}
+
+	@Test
+	void getAncestors() {
+		assertThat(getAncestorsUniqueIds(engineDescriptor)).isEmpty();
+
+		assertThat(getAncestorsUniqueIds(group1)).containsExactly( //
+			UniqueId.forEngine("testEngine"));
+
+		assertThat(getAncestorsUniqueIds(group11)).containsExactly( //
+			UniqueId.root("group", "group1"), //
+			UniqueId.forEngine("testEngine"));
+
+		assertThat(getAncestorsUniqueIds(leaf111)).containsExactly( //
+			UniqueId.root("group", "group1-1"), //
+			UniqueId.root("group", "group1"), //
+			UniqueId.forEngine("testEngine"));
+	}
+
+	private List<UniqueId> getAncestorsUniqueIds(TestDescriptor descriptor) {
+		return descriptor.getAncestors().stream().map(TestDescriptor::getUniqueId).toList();
 	}
 
 }

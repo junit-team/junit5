@@ -597,8 +597,7 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(LogRecordListener listener) {
+	void thirdPartyEngineUsingReservedEngineIdPrefixEmitsWarning(@TrackLogRecords LogRecordListener listener) {
 		var id = "junit-using-reserved-prefix";
 		var launcher = createLauncher(new TestEngineStub(id));
 		launcher.discover(request().build());
@@ -646,8 +645,7 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).testPlanExecutionStarted(any());
 		inOrder.verify(listener).executionStarted(TestIdentifier.from(engine.getEngineDescriptor()));
 		inOrder.verify(listener).executionStarted(TestIdentifier.from(container));
-		inOrder.verify(listener).executionStarted(TestIdentifier.from(test));
-		inOrder.verify(listener).executionFinished(TestIdentifier.from(test), successful());
+		inOrder.verify(listener).executionSkipped(TestIdentifier.from(test), "JUnit Platform dry-run mode is enabled");
 		inOrder.verify(listener).executionFinished(TestIdentifier.from(container), successful());
 		inOrder.verify(listener).executionFinished(TestIdentifier.from(engine.getEngineDescriptor()), successful());
 		inOrder.verify(listener).testPlanExecutionFinished(any());

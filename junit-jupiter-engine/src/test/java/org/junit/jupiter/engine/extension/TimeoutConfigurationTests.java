@@ -124,8 +124,7 @@ class TimeoutConfigurationTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void logsInvalidValues(LogRecordListener logRecordListener) {
+	void logsInvalidValues(@TrackLogRecords LogRecordListener logRecordListener) {
 		when(extensionContext.getConfigurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME)).thenReturn(
 			Optional.of("invalid"));
 
@@ -143,8 +142,7 @@ class TimeoutConfigurationTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void logsInvalidThreadModeValueAndReturnEmpty(LogRecordListener logRecordListener) {
+	void logsInvalidThreadModeValueAndReturnEmpty(@TrackLogRecords LogRecordListener logRecordListener) {
 		when(extensionContext.getConfigurationParameter(DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME)).thenReturn(
 			Optional.of("invalid"));
 

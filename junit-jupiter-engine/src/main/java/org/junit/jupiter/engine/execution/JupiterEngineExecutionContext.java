@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.EngineExecutionContext;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
@@ -28,8 +26,6 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  */
 @API(status = INTERNAL, since = "5.0")
 public class JupiterEngineExecutionContext implements EngineExecutionContext {
-
-	private static final Logger logger = LoggerFactory.getLogger(JupiterEngineExecutionContext.class);
 
 	private final State state;
 
@@ -53,8 +49,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 				((AutoCloseable) extensionContext).close();
 			}
 			catch (Exception e) {
-				logger.error(e, () -> "Caught exception while closing extension context: " + extensionContext);
-				throw e;
+				throw new JUnitException("Failed to close extension context", e);
 			}
 		}
 	}

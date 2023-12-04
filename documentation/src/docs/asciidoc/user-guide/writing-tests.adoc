@@ -372,12 +372,22 @@ And here's a test class that contains a `@Disabled` test method.
 include::{testDir}/example/DisabledTestsDemo.java[tags=user_guide]
 ----
 
-NOTE: `@Disabled` may be declared without providing a _reason_; however, the JUnit team
+[TIP]
+====
+`@Disabled` may be declared without providing a _reason_; however, the JUnit team
 recommends that developers provide a short explanation for why a test class or test
 method has been disabled. Consequently, the above examples both show the use of a reason
 -- for example, `@Disabled("Disabled until bug #42 has been resolved")`. Some development
 teams even require the presence of issue tracking numbers in the _reason_ for automated
 traceability, etc.
+====
+
+[NOTE]
+====
+`@Disabled` is not `@Inherited`. Consequently, if you wish to disable a class whose
+superclass is `@Disabled`, you must redeclare `@Disabled` on the subclass.
+====
+
 
 [[writing-tests-conditional-execution]]
 === Conditional Test Execution
@@ -405,6 +415,13 @@ be used as a meta-annotation in order to create a custom _composed annotation_. 
 example, the `@TestOnMac` annotation in the
 <<writing-tests-conditional-execution-os-demo, @EnabledOnOs demo>> shows how you can
 combine `@Test` and `@EnabledOnOs` in a single, reusable annotation.
+====
+
+[NOTE]
+====
+_Conditional_ annotations in JUnit Jupiter are not `@Inherited`. Consequently, if you wish
+to apply the same semantics to subclasses, each conditional annotation must be redeclared
+on each subclass.
 ====
 
 [WARNING]
@@ -665,8 +682,8 @@ dependencies between test classes, or you may wish to order test classes to opti
 time as outlined in the following scenarios.
 
 * Run previously failing tests and faster tests first: "fail fast" mode
-* With parallel execution enabled, run longer tests first: "shortest test plan execution
-  duration" mode
+* With parallel execution enabled, schedule longer tests first: "shortest test plan
+  execution duration" mode
 * Various other use cases
 
 To configure test class execution order _globally_ for the entire test suite, use the
@@ -2303,6 +2320,12 @@ might conflict with the configured execution order. Thus, in both cases, test me
 such test classes are only executed concurrently if the `@Execution(CONCURRENT)`
 annotation is present on the test class or method.
 
+When parallel execution is enabled and a default `{ClassOrderer}` is registered (see
+<<writing-tests-test-execution-order-classes>> for details), top-level test classes will
+initially be sorted accordingly and scheduled in that order. However, they are not
+guaranteed to be started in exactly that order since the threads they are executed on are
+not controlled directly by JUnit.
+
 All nodes of the test tree that are configured with the `CONCURRENT` execution mode will
 be executed fully in parallel according to the provided
 <<writing-tests-parallel-execution-config, configuration>> while observing the
@@ -2666,6 +2689,11 @@ The following example demonstrates how to use the custom `@JimfsTempDir` annotat
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_composed_annotation_usage]
 ----
+
+Meta-annotations or additional annotations on the field or parameter the `TempDir`
+annotation is declared on might expose additional attributes to configure the factory.
+Such annotations and related attributes can be accessed via the `AnnotatedElementContext`
+parameter of `createTempDirectory`.
 
 You can use the `junit.jupiter.tempdir.factory.default`
 <<running-tests-config-params, configuration parameter>> to specify the fully qualified

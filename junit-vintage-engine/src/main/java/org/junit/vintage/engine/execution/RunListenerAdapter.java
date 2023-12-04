@@ -20,6 +20,7 @@ import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -49,7 +50,7 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testRunStarted(Description description) {
-		if (description.isSuite() && description.getAnnotation(Ignore.class) == null) {
+		if (description.isSuite() && !testRun.getRunnerTestDescriptor().isIgnored()) {
 			fireExecutionStarted(testRun.getRunnerTestDescriptor(), EventType.REPORTED);
 		}
 	}
@@ -65,7 +66,9 @@ class RunListenerAdapter extends RunListener {
 
 	@Override
 	public void testIgnored(Description description) {
-		testIgnored(lookupOrRegisterNextTestDescriptor(description), determineReasonForIgnoredTest(description));
+		TestDescriptor testDescriptor = lookupOrRegisterNextTestDescriptor(description);
+		String reason = determineReasonForIgnoredTest(testDescriptor, description).orElse("<unknown>");
+		testIgnored(testDescriptor, reason);
 	}
 
 	@Override
@@ -176,9 +179,21 @@ class RunListenerAdapter extends RunListener {
 		fireExecutionSkipped(testDescriptor, reason);
 	}
 
-	private String determineReasonForIgnoredTest(Description description) {
-		Ignore ignoreAnnotation = description.getAnnotation(Ignore.class);
-		return Optional.ofNullable(ignoreAnnotation).map(Ignore::value).orElse("<unknown>");
+	private Optional<String> determineReasonForIgnoredTest(TestDescriptor testDescriptor, Description description) {
+		Optional<String> reason = getReason(description.getAnnotation(Ignore.class));
+		if (reason.isPresent()) {
+			return reason;
+		}
+		// Workaround for some runners (e.g. JUnit38ClassRunner) don't include the @Ignore annotation
+		// in the description, so we read it from the test class directly
+		return testDescriptor.getSource() //
+				.filter(ClassSource.class::isInstance) //
+				.map(source -> ((ClassSource) source).getJavaClass()) //
+				.flatMap(testClass -> getReason(testClass.getAnnotation(Ignore.class)));
+	}
+
+	private static Optional<String> getReason(Ignore annotation) {
+		return Optional.ofNullable(annotation).map(Ignore::value);
 	}
 
 	private void dynamicTestRegistered(TestDescriptor testDescriptor) {

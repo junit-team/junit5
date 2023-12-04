@@ -77,7 +77,7 @@ tasks.withType<Jar>().matching { task: Jar ->
 // task writes out the properties necessary for it to verify the OSGi
 // metadata.
 val osgiProperties by tasks.registering(WriteProperties::class) {
-	destinationFile.set(layout.buildDirectory.file("verifyOSGiProperties.bndrun"))
+	destinationFile = layout.buildDirectory.file("verifyOSGiProperties.bndrun")
 	property("-standalone", true)
 	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
 		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
@@ -97,8 +97,8 @@ val osgiVerification by configurations.creatingResolvable {
 // that its metadata is valid. If the metadata is invalid this task will
 // fail.
 val verifyOSGi by tasks.registering(Resolve::class) {
-	bndrun.set(osgiProperties.flatMap { it.destinationFile })
-	outputBndrun.set(layout.buildDirectory.file("resolvedOSGiProperties.bndrun"))
+	bndrun = osgiProperties.flatMap { it.destinationFile }
+	outputBndrun = layout.buildDirectory.file("resolvedOSGiProperties.bndrun")
 	isReportOptional = false
 	// By default bnd will use jars found in:
 	// 1. project.sourceSets.main.runtimeClasspath

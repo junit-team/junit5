@@ -18,8 +18,11 @@ import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -64,44 +67,38 @@ class ExceptionUtilsTests {
 		}
 	}
 
-	@Test
-	void pruneStackTraceOfCallsFromSpecificPackage() {
-		try {
-			throw new JUnitException("expected");
-		}
-		catch (JUnitException e) {
-			pruneStackTrace(e, element -> !element.startsWith("org.junit."));
-			assertThat(e.getStackTrace()) //
-					.noneMatch(element -> element.toString().contains("org.junit."));
-		}
+	@ParameterizedTest
+	@ValueSource(strings = { "org.junit.", "jdk.internal.reflect.", "sun.reflect." })
+	void pruneStackTraceOfCallsFromSpecificPackage(String shouldBePruned) {
+		JUnitException exception = new JUnitException("expected");
+
+		pruneStackTrace(exception, List.of());
+
+		assertThat(exception.getStackTrace()) //
+				.noneMatch(element -> element.toString().contains(shouldBePruned));
 	}
 
 	@Test
 	void pruneStackTraceOfAllLauncherCalls() {
-		try {
-			throw new JUnitException("expected");
-		}
-		catch (JUnitException e) {
-			pruneStackTrace(e, element -> true);
-			assertThat(e.getStackTrace()) //
-					.noneMatch(element -> element.toString().contains("org.junit.platform.launcher."));
-		}
+		JUnitException exception = new JUnitException("expected");
+
+		pruneStackTrace(exception, List.of());
+
+		assertThat(exception.getStackTrace()) //
+				.noneMatch(element -> element.toString().contains("org.junit.platform.launcher."));
 	}
 
 	@Test
 	void pruneStackTraceOfEverythingPriorToFirstLauncherCall() {
-		try {
-			throw new JUnitException("expected");
-		}
-		catch (JUnitException e) {
-			StackTraceElement[] stackTrace = e.getStackTrace();
-			stackTrace[stackTrace.length - 1] = new StackTraceElement("org.example.Class", "method", "file", 123);
-			e.setStackTrace(stackTrace);
+		JUnitException exception = new JUnitException("expected");
+		StackTraceElement[] stackTrace = exception.getStackTrace();
+		stackTrace[stackTrace.length - 1] = new StackTraceElement("org.example.Class", "method", "file", 123);
+		exception.setStackTrace(stackTrace);
 
-			pruneStackTrace(e, element -> true);
-			assertThat(e.getStackTrace()) //
-					.noneMatch(element -> element.toString().contains("org.example.Class.method(file:123)"));
-		}
+		pruneStackTrace(exception, List.of());
+
+		assertThat(exception.getStackTrace()) //
+				.noneMatch(element -> element.toString().contains("org.example.Class.method(file:123)"));
 	}
 
 	@Test

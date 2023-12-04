@@ -1,0 +1,60 @@
+[[release-notes-5.10.1]]
+== 5.10.1
+
+*Date of Release:* November 5, 2023
+
+*Scope:* minor bug fixes and improvements since 5.10.0.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/72?closed=1+[5.10.1] milestone page in the
+JUnit repository on GitHub.
+
+
+[[release-notes-5.10.1-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Field predicates are now applied while searching the type hierarchy. This fixes bugs in
+  `findFields(...)` and `streamFields(...)` in `ReflectionSupport` as well as
+  `findAnnotatedFields(...)` and `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
+  - See link:https://github.com/junit-team/junit5/issues/3532[issue 3532] for details.
+* Method predicates are now applied while searching the type hierarchy. This fixes bugs
+  in `findMethods(...)` and `streamMethods(...)` in `ReflectionSupport` as well as
+  `findAnnotatedMethods(...)` in `AnnotationSupport`.
+  - See link:https://github.com/junit-team/junit5/issues/3498[issue 3498] for details.
+
+
+[[release-notes-5.10.1-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* A package-private static field annotated with `@TempDir` is no longer _shadowed_ by a
+  non-static field annotated with `@TempDir` when the non-static field resides in a
+  different package and has the same name as the static field.
+  - See link:https://github.com/junit-team/junit5/issues/3532[issue 3532] for details.
+* A package-private class-level lifecycle method annotated with `@BeforeAll` or
+  `@AfterAll` is no longer _shadowed_ by a method-level lifecycle method annotated with
+  `@BeforeEach` or `@AfterEach` when the method-level lifecycle method resides in a
+  different package and has the same name as the class-level lifecycle method.
+  - See link:https://github.com/junit-team/junit5/issues/3498[issue 3498] for details.
+* The `ON_SUCCESS` cleanup mode of `@TempDir` now takes into account failures of test
+  methods and nested tests when it's declared on the class level, e.g. as a static field.
+* The `RandomNumberExtension` example in the
+  <<../user-guide/index.adoc#extensions-RandomNumberExtension, User Guide>> has been
+  updated to properly support `Integer` types as well as non-static field injection.
+
+==== New Features and Improvements
+
+* Improved Javadoc for `Assertions.assertTimeoutPreemptively` regarding thread interrupt.
+* Documentation for `@Disabled` and conditional annotations now explicitly explains that
+  such annotations are not inherited by subclasses.
+
+
+[[release-notes-5.10.1-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* Fixed reporting for JUnit 3 test classes that use JUnit 4's `@Ignored` annotation.

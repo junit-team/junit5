@@ -11,6 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: combine-prs
-        uses: github/combine-prs@v3.1.1
+        uses: github/combine-prs@v5.0.0
         with:
           github_token: ${{ secrets.GH_TOKEN }}

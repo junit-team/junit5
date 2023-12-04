@@ -7,69 +7,74 @@ group = "junitbuild"
 buildParameters {
 	pluginId("junitbuild.build-parameters")
 	bool("ci") {
-		description.set("Whether or not this build is running in a CI environment")
-		defaultValue.set(false)
+		description = "Whether or not this build is running in a CI environment"
+		defaultValue = false
 		fromEnvironment()
 	}
 	integer("javaToolchainVersion") {
-		description.set("Defines the Java toolchain version to use for compiling code")
+		description = "Defines the Java toolchain version to use for compiling code"
 	}
 	group("buildCache") {
 		string("username") {
-			description.set("Username to authenticate with the remote build cache")
+			description = "Username to authenticate with the remote build cache"
 			fromEnvironment()
 		}
 		string("password") {
-			description.set("Password to authenticate with the remote build cache")
+			description = "Password to authenticate with the remote build cache"
 			fromEnvironment()
 		}
 		string("url") {
-			description.set("URL to the remote build cache")
+			description = "URL to the remote build cache"
 			fromEnvironment()
 		}
 	}
 	group("documentation") {
-		description.set("Parameters controlling how the documentation is built")
+		description = "Parameters controlling how the documentation is built"
 		bool("replaceCurrentDocs") {
-			description.set("The documentation that is being deployed will replace what's currently deployed as 'current'")
-			defaultValue.set(false)
+			description = "The documentation that is being deployed will replace what's currently deployed as 'current'"
+			defaultValue = false
 		}
 	}
 	group("enterprise") {
-		description.set("Parameters controlling Gradle Enterprise features")
+		description = "Parameters controlling Gradle Enterprise features"
 		group("predictiveTestSelection") {
 			bool("enabled") {
-				description.set("Whether or not to use Predictive Test Selection for selecting tests to execute")
-				defaultValue.set(true)
+				description = "Whether or not to use Predictive Test Selection for selecting tests to execute"
+				defaultValue = true
 			}
 		}
 		group("testDistribution") {
 			bool("enabled") {
-				description.set("Whether or not to use Test Distribution for executing tests")
-				defaultValue.set(false)
+				description = "Whether or not to use Test Distribution for executing tests"
+				defaultValue = false
 				fromEnvironment()
 			}
 			integer("maxLocalExecutors") {
-				description.set("How many local executors to use for executing tests")
-				defaultValue.set(1)
+				description = "How many local executors to use for executing tests"
+				defaultValue = 1
 			}
 			integer("maxRemoteExecutors") {
-				description.set("How many remote executors to request for executing tests")
+				description = "How many remote executors to request for executing tests"
 			}
 		}
 	}
 	group("testing") {
-		description.set("Testing related parameters")
+		description = "Testing related parameters"
 		bool("enableJaCoCo") {
-			description.set("Enables JaCoCo test coverage reporting")
-			defaultValue.set(false)
+			description = "Enables JaCoCo test coverage reporting"
+			defaultValue = false
 		}
 		bool("enableJFR") {
-			description.set("Enables Java Flight Recorder functionality")
-			defaultValue.set(false)
+			description = "Enables Java Flight Recorder functionality"
+			defaultValue = false
 		}
 		integer("retries") {
-			description.set("Configures the number of times failing test are retried")
+			description = "Configures the number of times failing test are retried"
+		}
+	}
+	group("publishing") {
+		bool("signArtifacts") {
+			description = "Sign artifacts before publishing them to Maven repos"
 		}
 	}
 }

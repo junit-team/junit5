@@ -12,9 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
-import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_DEFAULT_PATTERN;
 import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
 import java.util.Optional;
@@ -112,8 +110,7 @@ public class EngineExecutionOrchestrator {
 			@Override
 			public void visit(TestIdentifier testIdentifier) {
 				if (!testIdentifier.isContainer()) {
-					listener.executionStarted(testIdentifier);
-					listener.executionFinished(testIdentifier, TestExecutionResult.successful());
+					listener.executionSkipped(testIdentifier, "JUnit Platform dry-run mode is enabled");
 				}
 			}
 
@@ -179,9 +176,7 @@ public class EngineExecutionOrchestrator {
 		boolean stackTracePruningEnabled = configurationParameters.getBoolean(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME) //
 				.orElse(true);
 		if (stackTracePruningEnabled) {
-			String pruningPattern = configurationParameters.get(STACKTRACE_PRUNING_PATTERN_PROPERTY_NAME) //
-					.orElse(STACKTRACE_PRUNING_DEFAULT_PATTERN);
-			return new StackTracePruningEngineExecutionListener(engineExecutionListener, pruningPattern);
+			return new StackTracePruningEngineExecutionListener(engineExecutionListener);
 		}
 		return engineExecutionListener;
 	}

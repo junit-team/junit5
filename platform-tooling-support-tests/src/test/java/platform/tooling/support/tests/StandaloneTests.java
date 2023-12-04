@@ -21,6 +21,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.jdk.Jar;
@@ -66,10 +67,10 @@ class StandaloneTests {
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("engines", "--disable-banner").build() //
+				.addArguments("engines", "--disable-ansi-colors", "--disable-banner").build() //
 				.run(false);
 
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var suiteVersion = Helper.version("junit-platform-suite-engine");
@@ -89,6 +90,9 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(new Javac()) //
 				.setProject("standalone") //
+				.addArguments("-Xlint:-options") //
+				.addArguments("--release", "8") //
+				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin")) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java")) //
@@ -97,7 +101,7 @@ class StandaloneTests {
 				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java")).build() //
 				.run();
 
-		assertEquals(0, result.getExitCode(), result.getOutput("out") + result.getOutput("err"));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 		assertTrue(result.getOutput("out").isEmpty());
 		assertTrue(result.getOutput("err").isEmpty());
 
@@ -326,7 +330,7 @@ class StandaloneTests {
 				.build() //
 				.run(false);
 
-		assertEquals(0, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
 		return result;
 	}
 
@@ -348,13 +352,13 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
-		assertLinesMatch(expectedOutLines, result.getOutputLines("out"), result.getOutput("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"), result.getOutput("err"));
+		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
+		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
@@ -367,11 +371,12 @@ class StandaloneTests {
 	@Test
 	@Order(4)
 	void executeOnJava8() throws IOException {
+		Java java8 = getJava8();
 		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setTool(java8) //
+				.setJavaHome(java8.getHome()) //
 				.setProject("standalone") //
-				.addArguments("--show-version") //
+				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
@@ -383,11 +388,11 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -403,11 +408,12 @@ class StandaloneTests {
 	@Order(5)
 	// https://github.com/junit-team/junit5/issues/2600
 	void executeOnJava8SelectPackage() throws IOException {
+		Java java8 = getJava8();
 		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.setTool(java8) //
+				.setJavaHome(java8.getHome()) //
 				.setProject("standalone") //
-				.addArguments("--show-version") //
+				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
@@ -419,11 +425,11 @@ class StandaloneTests {
 				.addArguments("--classpath", "bin").build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
 		var workspace = Request.WORKSPACE.resolve("standalone");
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
 		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
 
@@ -433,6 +439,13 @@ class StandaloneTests {
 				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
 		assertTrue(result.getOutput("err").contains("junit-vintage"
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+	}
+
+	private static List<String> getExpectedErrLinesOnJava8(Path workspace) throws IOException {
+		var expectedErrLines = new ArrayList<String>();
+		expectedErrLines.add(">> JAVA VERSION >>");
+		expectedErrLines.addAll(Files.readAllLines(workspace.resolve("expected-err.txt")));
+		return expectedErrLines;
 	}
 
 	@Test
@@ -460,6 +473,29 @@ class StandaloneTests {
 				.build() //
 				.run(false);
 
-		assertEquals(1, result.getExitCode(), String.join("\n", result.getOutputLines("out")));
+		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
+	}
+
+	private static String getExitCodeMessage(Result result) {
+		return "Exit codes don't match. Stdout:\n" + result.getOutput("out") + //
+				"\n\nStderr:\n" + result.getOutput("err") + "\n";
+	}
+
+	/**
+	 * Special override of class {@link Java} to resolve against a different {@code JAVA_HOME}.
+	 */
+	private static Java getJava8() {
+		Path java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		return new Java() {
+			@Override
+			public Path getHome() {
+				return java8Home;
+			}
+
+			@Override
+			public String getVersion() {
+				return "8";
+			}
+		};
 	}
 }

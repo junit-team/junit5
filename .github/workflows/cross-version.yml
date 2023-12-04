@@ -20,12 +20,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [19, 20, 21]
+        jdk: [22]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
       - name: Set up Test JDK

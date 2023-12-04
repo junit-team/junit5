@@ -15,6 +15,7 @@ import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.reportEntry;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
@@ -57,7 +58,10 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 					test(), //
 					finishedWithFailure( //
 						message("Exception in test"), //
-						suppressed(0, message("Exception in onClose")))));
+						suppressed(0, //
+							message("Failed to close extension context"), //
+							cause(message("Exception in onClose")) //
+						))));
 	}
 
 	@ExtendWith(ThrowingOnCloseExtension.class)

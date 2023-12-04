@@ -11,6 +11,7 @@ plugins {
 	alias(libs.plugins.asciidoctorConvert)
 	alias(libs.plugins.asciidoctorPdf)
 	alias(libs.plugins.gitPublish)
+	alias(libs.plugins.plantuml)
 	id("junitbuild.build-parameters")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
@@ -63,8 +64,7 @@ dependencies {
 
 asciidoctorj {
 	modules {
-		diagram.use()
-		pdf.version(libs.versions.asciidoctor.pdf)
+		pdf.version(libs.versions.asciidoctorj.pdf)
 	}
 	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
 }
@@ -72,7 +72,7 @@ asciidoctorj {
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
-val docsDir = file("$buildDir/ghpages-docs")
+val docsDir = layout.buildDirectory.dir("ghpages-docs")
 val replaceCurrentDocs = buildParameters.documentation.replaceCurrentDocs
 val uploadPdfs = !snapshot
 val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
@@ -80,10 +80,10 @@ val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "
 val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSHOT")) "snapshot" else libs.versions.apiguardian.get()
 
 gitPublish {
-	repoUri.set("https://github.com/junit-team/junit5.git")
-	branch.set("gh-pages")
-	sign.set(false)
-	fetchDepth.set(1)
+	repoUri = "https://github.com/junit-team/junit5.git"
+	branch = "gh-pages"
+	sign = false
+	fetchDepth = 1
 
 	contents {
 		from(docsDir)
@@ -109,7 +109,7 @@ val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-ap
 val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
 
 val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
-val elementListsDir = file("$buildDir/elementLists")
+val elementListsDir = layout.buildDirectory.dir("elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
 		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
@@ -142,7 +142,7 @@ tasks {
 	}
 
 	register<RunConsoleLauncher>("consoleLauncher") {
-		hideOutput.set(false)
+		hideOutput = false
 		outputs.upToDateWhen { false }
 	}
 
@@ -160,52 +160,59 @@ tasks {
 
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("--help", "--disable-banner")
-		outputFile.set(consoleLauncherOptionsFile)
+		outputFile = consoleLauncherOptionsFile
 	}
 
 	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("discover", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherDiscoverOptionsFile)
+		outputFile = consoleLauncherDiscoverOptionsFile
 	}
 
 	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("execute", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherExecuteOptionsFile)
+		outputFile = consoleLauncherExecuteOptionsFile
 	}
 
 	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.platform.console.ConsoleLauncher")
+		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("engines", "--help", "--disable-banner")
-		outputFile.set(consoleLauncherEnginesOptionsFile)
+		outputFile = consoleLauncherEnginesOptionsFile
 	}
 
 	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.api.tools.ApiReportGenerator")
+		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("EXPERIMENTAL")
-		outputFile.set(experimentalApisTableFile)
+		outputFile = experimentalApisTableFile
 	}
 
 	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
 		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass.set("org.junit.api.tools.ApiReportGenerator")
+		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
 		args.add("DEPRECATED")
-		outputFile.set(deprecatedApisTableFile)
+		outputFile = deprecatedApisTableFile
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
 		inputJar.fileProvider(standaloneConsoleLauncher.elements.map { it.single().asFile })
-		outputFile.set(standaloneConsoleLauncherShadowedArtifactsFile)
+		outputFile = standaloneConsoleLauncherShadowedArtifactsFile
 	}
+
+	plantUml {
+		fileFormat = "SVG"
+		outputs.cacheIf { true }
+	}
+
+	val componentDiagram = plantUml.flatMap { it.outputDirectory.file("component-diagram.svg") }
 
 	withType<AbstractAsciidoctorTask>().configureEach {
 		inputs.files(
@@ -215,13 +222,17 @@ tasks {
 			generateConsoleLauncherEnginesOptions,
 			generateExperimentalApisTable,
 			generateDeprecatedApisTable,
-			generateStandaloneConsoleLauncherShadowedArtifactsFile
+			generateStandaloneConsoleLauncherShadowedArtifactsFile,
+			componentDiagram
 		)
 
 		resources {
 			from(sourceDir) {
 				include("**/images/**/*.png")
 				include("**/images/**/*.svg")
+			}
+			from(componentDiagram) {
+				into("user-guide/images")
 			}
 		}
 
@@ -314,7 +325,7 @@ tasks {
 		doFirst {
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
 				val resource = resources.text.fromUri("${baseUrl}element-list")
-				elementListsDir.resolve(moduleName).apply {
+				elementListsDir.get().asFile.resolve(moduleName).apply {
 					mkdir()
 					resolve("element-list").writeText("module:$moduleName\n${resource.asString()}")
 				}
@@ -356,7 +367,7 @@ tasks {
 			links(jdkJavadocBaseUrl)
 			links("https://junit.org/junit4/javadoc/${libs.versions.junit4.get()}/")
 			externalModulesWithoutModularJavadoc.forEach { (moduleName, baseUrl) ->
-				linksOffline(baseUrl, "$elementListsDir/$moduleName")
+				linksOffline(baseUrl, elementListsDir.get().asFile.resolve(moduleName).absolutePath)
 			}
 
 			groups = mapOf(
@@ -387,7 +398,7 @@ tasks {
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
 		maxMemory = "1024m"
-		destinationDir = file("$buildDir/docs/javadoc")
+		destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
 
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
@@ -417,14 +428,14 @@ tasks {
 				}
 			}
 		}
-		into("$buildDir/docs/fixedJavadoc")
+		into(layout.buildDirectory.dir("docs/fixedJavadoc"))
 	}
 
 	val prepareDocsForUploadToGhPages by registering(Copy::class) {
 		dependsOn(fixJavadoc, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
-		from("$buildDir/checksum") {
+		from(layout.buildDirectory.dir("checksum")) {
 			include("published-checksum.txt")
 		}
 		from(asciidoctor.map { it.outputDir }) {
@@ -441,17 +452,16 @@ tasks {
 		from(fixJavadoc.map { it.destinationDir }) {
 			into("api")
 		}
-		into("$docsDir/$docsVersion")
+		into(docsDir.map { it.dir(docsVersion.toString()) })
 		includeEmptyDirs = false
 	}
 
 	val createCurrentDocsFolder by registering(Copy::class) {
 		dependsOn(prepareDocsForUploadToGhPages)
-		outputs.dir("$docsDir/current")
 		onlyIf { replaceCurrentDocs }
 
-		from("$docsDir/$docsVersion")
-		into("$docsDir/current")
+		from(docsDir.map { it.dir(docsVersion.toString()) })
+		into(docsDir.map { it.dir("current") })
 	}
 
 	val configureGitAuthor by registering {

@@ -106,8 +106,7 @@ class OrderedClassTests {
 	}
 
 	@Test
-	@TrackLogRecords
-	void orderAnnotationOnNestedTestClassesWithLocalConfig(LogRecordListener listener) {
+	void orderAnnotationOnNestedTestClassesWithLocalConfig(@TrackLogRecords LogRecordListener listener) {
 		executeTests(ClassOrderer.class, selectClass(OuterWithLocalConfig.class))//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 

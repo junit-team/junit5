@@ -10,49 +10,61 @@
 
 package org.junit.platform.launcher.core;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Prunes the stack trace in case of a failed event.
  *
  * @since 1.10
- * @see org.junit.platform.commons.util.ExceptionUtils#pruneStackTrace(Throwable, Predicate)
+ * @see org.junit.platform.commons.util.ExceptionUtils#pruneStackTrace(Throwable, List)
  */
 class StackTracePruningEngineExecutionListener extends DelegatingEngineExecutionListener {
 
-	private static final List<String> ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS = Arrays.asList( //
-		"org.junit.jupiter.api.Assertions", //
-		"org.junit.jupiter.api.Assumptions" //
-	);
-
-	private final Predicate<String> stackTraceElementFilter;
-
-	StackTracePruningEngineExecutionListener(EngineExecutionListener delegate, String pruningPattern) {
+	StackTracePruningEngineExecutionListener(EngineExecutionListener delegate) {
 		super(delegate);
-		this.stackTraceElementFilter = ClassNamePatternFilterUtils.excludeMatchingClassNames(pruningPattern) //
-				.or(ALWAYS_INCLUDED_STACK_TRACE_ELEMENTS::contains);
 	}
 
 	@Override
 	public void executionFinished(TestDescriptor testDescriptor, TestExecutionResult testExecutionResult) {
+		List<String> testClassNames = getTestClassNames(testDescriptor);
 		if (testExecutionResult.getThrowable().isPresent()) {
 			Throwable throwable = testExecutionResult.getThrowable().get();
 
-			ExceptionUtils.findNestedThrowables(throwable).forEach(this::pruneStackTrace);
+			ExceptionUtils.findNestedThrowables(throwable).forEach(
+				t -> ExceptionUtils.pruneStackTrace(t, testClassNames));
 		}
 		super.executionFinished(testDescriptor, testExecutionResult);
 	}
 
-	private void pruneStackTrace(Throwable throwable) {
-		ExceptionUtils.pruneStackTrace(throwable, stackTraceElementFilter);
+	private static List<String> getTestClassNames(TestDescriptor testDescriptor) {
+		return testDescriptor.getAncestors() //
+				.stream() //
+				.map(TestDescriptor::getSource) //
+				.filter(Optional::isPresent) //
+				.map(Optional::get) //
+				.map(source -> {
+					if (source instanceof ClassSource) {
+						return ((ClassSource) source).getClassName();
+					}
+					else if (source instanceof MethodSource) {
+						return ((MethodSource) source).getClassName();
+					}
+					else {
+						return null;
+					}
+				}) //
+				.filter(Objects::nonNull) //
+				.collect(Collectors.toList());
 	}
 
 }

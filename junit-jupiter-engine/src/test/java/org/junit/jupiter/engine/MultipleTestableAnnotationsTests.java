@@ -29,11 +29,10 @@ import org.junit.platform.commons.logging.LogRecordListener;
  *
  * @since 5.0
  */
-@TrackLogRecords
 class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void testAndRepeatedTest(LogRecordListener listener) {
+	void testAndRepeatedTest(@TrackLogRecords LogRecordListener listener) {
 		discoverTests(request().selectors(selectClass(TestCase.class)).build());
 
 		// @formatter:off

@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
@@ -32,7 +33,7 @@ import java.util.function.Function;
 final class CloseablePath implements Closeable {
 
 	private static final String FILE_URI_SCHEME = "file";
-	private static final String JAR_URI_SCHEME = "jar";
+	static final String JAR_URI_SCHEME = "jar";
 	private static final String JAR_FILE_EXTENSION = ".jar";
 	private static final String JAR_URI_SEPARATOR = "!";
 
@@ -41,26 +42,34 @@ final class CloseablePath implements Closeable {
 
 	private static final ConcurrentMap<URI, ManagedFileSystem> MANAGED_FILE_SYSTEMS = new ConcurrentHashMap<>();
 
+	private final AtomicBoolean closed = new AtomicBoolean();
+
 	private final Path path;
 	private final Closeable delegate;
 
 	static CloseablePath create(URI uri) throws URISyntaxException {
+		return create(uri, it -> FileSystems.newFileSystem(it, emptyMap()));
+	}
+
+	static CloseablePath create(URI uri, FileSystemProvider fileSystemProvider) throws URISyntaxException {
 		if (JAR_URI_SCHEME.equals(uri.getScheme())) {
 			String[] parts = uri.toString().split(JAR_URI_SEPARATOR);
 			String jarUri = parts[0];
 			String jarEntry = parts[1];
-			return createForJarFileSystem(new URI(jarUri), fileSystem -> fileSystem.getPath(jarEntry));
+			return createForJarFileSystem(new URI(jarUri), fileSystem -> fileSystem.getPath(jarEntry),
+				fileSystemProvider);
 		}
-		if (uri.getScheme().equals(FILE_URI_SCHEME) && uri.getPath().endsWith(JAR_FILE_EXTENSION)) {
+		if (FILE_URI_SCHEME.equals(uri.getScheme()) && uri.getPath().endsWith(JAR_FILE_EXTENSION)) {
 			return createForJarFileSystem(new URI(JAR_URI_SCHEME + ':' + uri),
-				fileSystem -> fileSystem.getRootDirectories().iterator().next());
+				fileSystem -> fileSystem.getRootDirectories().iterator().next(), fileSystemProvider);
 		}
 		return new CloseablePath(Paths.get(uri), NULL_CLOSEABLE);
 	}
 
-	private static CloseablePath createForJarFileSystem(URI jarUri, Function<FileSystem, Path> pathProvider) {
+	private static CloseablePath createForJarFileSystem(URI jarUri, Function<FileSystem, Path> pathProvider,
+			FileSystemProvider fileSystemProvider) {
 		ManagedFileSystem managedFileSystem = MANAGED_FILE_SYSTEMS.compute(jarUri,
-			(__, oldValue) -> oldValue == null ? new ManagedFileSystem(jarUri) : oldValue.retain());
+			(__, oldValue) -> oldValue == null ? new ManagedFileSystem(jarUri, fileSystemProvider) : oldValue.retain());
 		Path path = pathProvider.apply(managedFileSystem.fileSystem);
 		return new CloseablePath(path,
 			() -> MANAGED_FILE_SYSTEMS.compute(jarUri, (__, ___) -> managedFileSystem.release()));
@@ -77,7 +86,9 @@ final class CloseablePath implements Closeable {
 
 	@Override
 	public void close() throws IOException {
-		delegate.close();
+		if (closed.compareAndSet(false, true)) {
+			delegate.close();
+		}
 	}
 
 	private static class ManagedFileSystem {
@@ -86,10 +97,10 @@ final class CloseablePath implements Closeable {
 		private final FileSystem fileSystem;
 		private final URI jarUri;
 
-		ManagedFileSystem(URI jarUri) {
+		ManagedFileSystem(URI jarUri, FileSystemProvider fileSystemProvider) {
 			this.jarUri = jarUri;
 			try {
-				fileSystem = FileSystems.newFileSystem(jarUri, emptyMap());
+				fileSystem = fileSystemProvider.newFileSystem(jarUri);
 			}
 			catch (IOException e) {
 				throw new UncheckedIOException("Failed to create file system for " + jarUri, e);
@@ -117,5 +128,9 @@ final class CloseablePath implements Closeable {
 				throw new UncheckedIOException("Failed to close file system for " + jarUri, e);
 			}
 		}
+	}
+
+	interface FileSystemProvider {
+		FileSystem newFileSystem(URI uri) throws IOException;
 	}
 }

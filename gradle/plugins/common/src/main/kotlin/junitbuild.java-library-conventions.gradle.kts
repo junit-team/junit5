@@ -21,9 +21,9 @@ val builtByValue: String by rootProject.extra
 
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
-val moduleSourceDir = file("src/module/$javaModuleName")
+val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
-val moduleOutputDir = file("$buildDir/classes/java/module")
+val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
 val javaVersion = JavaVersion.current()
 
 eclipse {
@@ -39,7 +39,7 @@ eclipse {
 }
 
 java {
-	modularity.inferModulePath.set(false)
+	modularity.inferModulePath = false
 }
 
 if (project in mavenizedProjects) {
@@ -102,7 +102,7 @@ if (project in mavenizedProjects) {
 					}
 				}
 				pom {
-					description.set(provider { "Module \"${project.name}\" of JUnit 5." })
+					description = provider { "Module \"${project.name}\" of JUnit 5." }
 				}
 			}
 		}
@@ -156,11 +156,11 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	dependsOn(allMainClasses)
     enabled = project in modularProjects
 	source = fileTree(combinedModuleSourceDir).builtBy(prepareModuleSourceDir)
-	destinationDirectory.set(moduleOutputDir)
+	destinationDirectory = moduleOutputDir
 	sourceCompatibility = "9"
 	targetCompatibility = "9"
 	classpath = files()
-	options.release.set(9)
+	options.release = 9
 	options.compilerArgs.addAll(listOf(
 			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
@@ -177,7 +177,7 @@ val compileModule by tasks.registering(JavaCompile::class) {
     })
 	options.compilerArgumentProviders.addAll(modularProjects.map { objects.newInstance(PatchModuleArgumentProvider::class, project, it) })
 
-	modularity.inferModulePath.set(false)
+	modularity.inferModulePath = false
 
     doFirst {
         options.allCompilerArgs.forEach {
@@ -194,7 +194,7 @@ tasks.withType<Jar>().configureEach {
 	val suffix = archiveClassifier.getOrElse("")
 	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
-		from("$moduleOutputDir/$javaModuleName") {
+		from(moduleOutputDir.map { it.dir(javaModuleName) }) {
 			include("module-info.class")
 		}
 	}
@@ -260,7 +260,7 @@ afterEvaluate {
 	tasks {
 		compileJava {
 			if (extension.configureRelease) {
-				options.release.set(extension.mainJavaVersion.majorVersion.toInt())
+				options.release = extension.mainJavaVersion.majorVersion.toInt()
 			} else {
 				sourceCompatibility = extension.mainJavaVersion.majorVersion
 				targetCompatibility = extension.mainJavaVersion.majorVersion
@@ -268,7 +268,7 @@ afterEvaluate {
 		}
 		compileTestJava {
 			if (extension.configureRelease) {
-				options.release.set(extension.testJavaVersion.majorVersion.toInt())
+				options.release = extension.testJavaVersion.majorVersion.toInt()
 			} else {
 				sourceCompatibility = extension.testJavaVersion.majorVersion
 				targetCompatibility = extension.testJavaVersion.majorVersion
@@ -291,7 +291,7 @@ afterEvaluate {
 
 checkstyle {
 	toolVersion = requiredVersionFromLibs("checkstyle")
-	configDirectory.set(rootProject.layout.projectDirectory.dir("gradle/config/checkstyle"))
+	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
 }
 
 tasks {
@@ -308,6 +308,6 @@ pluginManager.withPlugin("java-test-fixtures") {
         config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
-		options.release.set(extension.testJavaVersion.majorVersion.toInt())
+		options.release = extension.testJavaVersion.majorVersion.toInt()
 	}
 }

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
@@ -23,8 +24,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -141,13 +145,49 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			assertThat(onSuccessFailingFieldDir).exists();
 		}
 
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for static fields when tests are failing.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void cleanupModeOnSuccessFailingStaticField() {
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectClass(OnSuccessFailingStaticFieldCase.class))//
+					.build();
+			executeTests(request);
+
+			assertThat(onSuccessFailingFieldDir).exists();
+		}
+
+		/**
+		 * Ensure that ON_SUCCESS cleanup modes are obeyed for static fields when nested tests are failing.
+		 * <p/>
+		 * Expect the TempDir not to be cleaned up.
+		 */
+		@Test
+		void cleanupModeOnSuccessFailingStaticFieldWithNesting() {
+			LauncherDiscoveryRequest request = request()//
+					.selectors(selectClass(OnSuccessFailingStaticFieldWithNestingCase.class))//
+					.build();
+			executeTests(request);
+
+			assertThat(onSuccessFailingFieldDir).exists();
+		}
+
 		@AfterAll
 		static void afterAll() throws IOException {
-			deleteIfExists(defaultFieldDir);
-			deleteIfExists(neverFieldDir);
-			deleteIfExists(alwaysFieldDir);
-			deleteIfExists(onSuccessFailingFieldDir);
-			deleteIfExists(onSuccessPassingFieldDir);
+			deleteIfNotNullAndExists(defaultFieldDir);
+			deleteIfNotNullAndExists(neverFieldDir);
+			deleteIfNotNullAndExists(alwaysFieldDir);
+			deleteIfNotNullAndExists(onSuccessFailingFieldDir);
+			deleteIfNotNullAndExists(onSuccessPassingFieldDir);
+		}
+
+		static void deleteIfNotNullAndExists(Path dir) throws IOException {
+			if (dir != null) {
+				deleteIfExists(dir);
+			}
 		}
 
 		// -------------------------------------------------------------------
@@ -205,6 +245,41 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			void testOnSuccessFailingField() {
 				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
 				fail();
+			}
+		}
+
+		@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+		static class OnSuccessFailingStaticFieldCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			static Path onSuccessFailingFieldDir;
+
+			@Test
+			@Order(1)
+			void failing() {
+				TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
+				fail();
+			}
+
+			@Test
+			@Order(2)
+			void passing() {
+			}
+		}
+
+		static class OnSuccessFailingStaticFieldWithNestingCase {
+
+			@TempDir(cleanup = ON_SUCCESS)
+			static Path onSuccessFailingFieldDir;
+
+			@Nested
+			class NestedTestCase {
+
+				@Test
+				void test() {
+					TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
+					fail();
+				}
 			}
 		}
 
@@ -314,11 +389,11 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 		@AfterAll
 		static void afterAll() throws IOException {
-			deleteIfExists(defaultParameterDir);
-			deleteIfExists(neverParameterDir);
-			deleteIfExists(alwaysParameterDir);
-			deleteIfExists(onSuccessFailingParameterDir);
-			deleteIfExists(onSuccessPassingParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(defaultParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(neverParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(alwaysParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(onSuccessFailingParameterDir);
+			TempDirFieldTests.deleteIfNotNullAndExists(onSuccessPassingParameterDir);
 		}
 
 		// -------------------------------------------------------------------

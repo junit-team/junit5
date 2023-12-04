@@ -23,11 +23,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * {@code @DisabledOnJre} is used to signal that the annotated test class or
- * test method is <em>disabled</em> on one or more specified Java
- * Runtime Environment (JRE) {@linkplain #value versions}.
+ * test method is <em>disabled</em> on one or more specified Java Runtime
+ * Environment (JRE) {@linkplain #value versions}.
  *
  * <p>When applied at the class level, all test methods within that class
  * will be disabled on the same specified JRE versions.
+ *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of

@@ -16,6 +16,7 @@ import java.util.Set;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
 
 /**
@@ -29,7 +30,7 @@ class EngineIdValidator {
 	static Iterable<TestEngine> validate(Iterable<TestEngine> testEngines) {
 		Set<String> ids = new HashSet<>();
 		for (TestEngine testEngine : testEngines) {
-			// check usage of reserved id prefix
+			// check usage of reserved ID prefix
 			if (!validateReservedIds(testEngine)) {
 				getLogger().warn(() -> String.format(
 					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '%s'",
@@ -52,23 +53,27 @@ class EngineIdValidator {
 
 	// https://github.com/junit-team/junit5/issues/1557
 	private static boolean validateReservedIds(TestEngine testEngine) {
-		String engineId = testEngine.getId();
+		String engineId = Preconditions.notBlank(testEngine.getId(),
+			() -> String.format("ID for TestEngine [%s] must not be null or blank", testEngine.getClass().getName()));
 		if (!engineId.startsWith("junit-")) {
 			return true;
 		}
-		if (engineId.equals("junit-jupiter")) {
-			validateWellKnownClassName(testEngine, "org.junit.jupiter.engine.JupiterTestEngine");
-			return true;
+		switch (engineId) {
+			case "junit-jupiter": {
+				validateWellKnownClassName(testEngine, "org.junit.jupiter.engine.JupiterTestEngine");
+				return true;
+			}
+			case "junit-vintage": {
+				validateWellKnownClassName(testEngine, "org.junit.vintage.engine.VintageTestEngine");
+				return true;
+			}
+			case "junit-platform-suite": {
+				validateWellKnownClassName(testEngine, "org.junit.platform.suite.engine.SuiteTestEngine");
+				return true;
+			}
+			default:
+				return false;
 		}
-		if (engineId.equals("junit-vintage")) {
-			validateWellKnownClassName(testEngine, "org.junit.vintage.engine.VintageTestEngine");
-			return true;
-		}
-		if (engineId.equals("junit-platform-suite")) {
-			validateWellKnownClassName(testEngine, "org.junit.platform.suite.engine.SuiteTestEngine");
-			return true;
-		}
-		return false;
 	}
 
 	private static void validateWellKnownClassName(TestEngine testEngine, String expectedClassName) {
@@ -80,4 +85,5 @@ class EngineIdValidator {
 			String.format("Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
 				actualClassName, testEngine.getId()));
 	}
+
 }

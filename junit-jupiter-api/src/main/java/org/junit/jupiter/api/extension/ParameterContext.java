@@ -10,9 +10,11 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Parameter;
 import java.util.List;
@@ -36,7 +38,7 @@ import org.apiguardian.api.API;
  * @see java.lang.reflect.Constructor
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterContext {
+public interface ParameterContext extends AnnotatedElementContext {
 
 	/**
 	 * Get the {@link Parameter} for this context.
@@ -89,63 +91,43 @@ public interface ParameterContext {
 	Optional<Object> getTarget();
 
 	/**
-	 * Determine if an annotation of {@code annotationType} is either
-	 * <em>present</em> or <em>meta-present</em> on the {@link Parameter} for
-	 * this context.
-	 *
-	 * <h4>WARNING</h4>
-	 * <p>Favor the use of this method over directly invoking
-	 * {@link Parameter#isAnnotationPresent(Class)} due to a bug in {@code javac}
-	 * on JDK versions prior to JDK 9.
-	 *
-	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @return {@code true} if the annotation is present or meta-present
-	 * @since 5.1.1
-	 * @see #findAnnotation(Class)
-	 * @see #findRepeatableAnnotations(Class)
+	 * {@inheritDoc}
+	 * @since 5.10
 	 */
-	boolean isAnnotated(Class<? extends Annotation> annotationType);
+	@API(status = EXPERIMENTAL, since = "5.10")
+	@Override
+	default AnnotatedElement getAnnotatedElement() {
+		return getParameter();
+	}
 
 	/**
-	 * Find the first annotation of {@code annotationType} that is either
-	 * <em>present</em> or <em>meta-present</em> on the {@link Parameter} for
-	 * this context.
-	 *
-	 * <h4>WARNING</h4>
-	 * <p>Favor the use of this method over directly invoking annotation lookup
-	 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
-	 * versions prior to JDK 9.
-	 *
-	 * @param <A> the annotation type
-	 * @param annotationType the annotation type to search for; never {@code null}
-	 * @return an {@code Optional} containing the annotation; never {@code null} but
-	 * potentially empty
+	 * {@inheritDoc}
 	 * @since 5.1.1
-	 * @see #isAnnotated(Class)
-	 * @see #findRepeatableAnnotations(Class)
 	 */
-	<A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType);
+	@API(status = STABLE, since = "5.10")
+	@Override
+	default boolean isAnnotated(Class<? extends Annotation> annotationType) {
+		return AnnotatedElementContext.super.isAnnotated(annotationType);
+	}
 
 	/**
-	 * Find all <em>repeatable</em> {@linkplain Annotation annotations} of
-	 * {@code annotationType} that are either <em>present</em> or
-	 * <em>meta-present</em> on the {@link Parameter} for this context.
-	 *
-	 * <h4>WARNING</h4>
-	 * <p>Favor the use of this method over directly invoking annotation lookup
-	 * methods in the {@link Parameter} API due to a bug in {@code javac} on JDK
-	 * versions prior to JDK 9.
-	 *
-	 * @param <A> the annotation type
-	 * @param annotationType the repeatable annotation type to search for; never
-	 * {@code null}
-	 * @return the list of all such annotations found; neither {@code null} nor
-	 * mutable, but potentially empty
+	 * {@inheritDoc}
 	 * @since 5.1.1
-	 * @see #isAnnotated(Class)
-	 * @see #findAnnotation(Class)
-	 * @see java.lang.annotation.Repeatable
 	 */
-	<A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType);
+	@API(status = STABLE, since = "5.10")
+	@Override
+	default <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+		return AnnotatedElementContext.super.findAnnotation(annotationType);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @since 5.1.1
+	 */
+	@API(status = STABLE, since = "5.10")
+	@Override
+	default <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+		return AnnotatedElementContext.super.findRepeatableAnnotations(annotationType);
+	}
 
 }

@@ -59,22 +59,26 @@ import org.opentest4j.MultipleFailuresError;
  * <h2>Preemptive Timeouts</h2>
  *
  * <p>The various {@code assertTimeoutPreemptively()} methods in this class
- * execute the provided {@code executable} or {@code supplier} in a different
- * thread than that of the calling code. This behavior can lead to undesirable
- * side effects if the code that is executed within the {@code executable} or
- * {@code supplier} relies on {@link ThreadLocal} storage.
+ * execute the provided callback ({@code executable} or {@code supplier}) in a
+ * different thread than that of the calling code. If the timeout is exceeded,
+ * an attempt will be made to preemptively abort execution of the callback by
+ * {@linkplain Thread#interrupt() interrupting} the callback's thread. If the
+ * callback's thread does not return when interrupted, the thread will continue
+ * to run in the background after the {@code assertTimeoutPreemptively()} method
+ * has returned.
  *
- * <p>One common example of this is the transactional testing support in the Spring
- * Framework. Specifically, Spring's testing support binds transaction state to
- * the current thread (via a {@code ThreadLocal}) before a test method is invoked.
- * Consequently, if an {@code executable} or {@code supplier} provided to
- * {@code assertTimeoutPreemptively()} invokes Spring-managed components that
- * participate in transactions, any actions taken by those components will not be
- * rolled back with the test-managed transaction. On the contrary, such actions
- * will be committed to the persistent store (e.g., relational database) even
- * though the test-managed transaction is rolled back.
- *
- * <p>Similar side effects may be encountered with other frameworks that rely on
+ * <p>Furthermore, the behavior of {@code assertTimeoutPreemptively()} methods
+ * can lead to undesirable side effects if the code that is executed within the
+ * callback relies on {@link ThreadLocal} storage. One common example of this is
+ * the transactional testing support in the Spring Framework. Specifically, Spring's
+ * testing support binds transaction state to the current thread (via a
+ * {@code ThreadLocal}) before a test method is invoked. Consequently, if a
+ * callback provided to {@code assertTimeoutPreemptively()} invokes Spring-managed
+ * components that participate in transactions, any actions taken by those
+ * components will not be rolled back with the test-managed transaction. On the
+ * contrary, such actions will be committed to the persistent store (e.g.,
+ * relational database) even though the test-managed transaction is rolled back.
+ * Similar side effects may be encountered with other frameworks that rely on
  * {@code ThreadLocal} storage.
  *
  * <h2>Extensibility</h2>
@@ -3410,11 +3414,8 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the {@code executable} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code executable} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
@@ -3431,11 +3432,8 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the {@code executable} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code executable} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
@@ -3454,11 +3452,8 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>Note: the {@code executable} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code executable} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
@@ -3481,13 +3476,10 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
-	 * <p>Note: the {@code supplier} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code supplier} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
 	 *
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
@@ -3504,13 +3496,10 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
-	 * <p>Note: the {@code supplier} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code supplier} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
 	 *
 	 * <p>Fails with the supplied failure {@code message}.
 	 *
@@ -3529,13 +3518,10 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
-	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
 	 *
-	 * <p>Note: the {@code supplier} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code supplier} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
+	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.
@@ -3556,17 +3542,14 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code supplier}
 	 * completes before the given {@code timeout} is exceeded.
 	 *
+	 * <p>See the {@linkplain Assertions Preemptive Timeouts} section of the
+	 * class-level Javadoc for further details.
+	 *
 	 * <p>If the assertion passes then the {@code supplier}'s result is returned.
 	 *
 	 * <p>In the case the assertion does not pass, the supplied
 	 * {@link TimeoutFailureFactory} is invoked to create an exception which is
 	 * then thrown.
-	 *
-	 * <p>Note: the {@code supplier} will be executed in a different thread than
-	 * that of the calling code. Furthermore, execution of the {@code supplier} will
-	 * be preemptively aborted if the timeout is exceeded. See the
-	 * {@linkplain Assertions Preemptive Timeouts} section of the class-level
-	 * Javadoc for a discussion of possible undesirable side effects.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
 	 * supplied {@code messageSupplier}.

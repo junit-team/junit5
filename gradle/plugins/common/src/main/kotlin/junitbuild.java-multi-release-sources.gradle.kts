@@ -26,7 +26,7 @@ listOf(9, 17).forEach { javaVersion ->
 		}
 
 		named<JavaCompile>(sourceSet.get().compileJavaTaskName).configure {
-			options.release.set(javaVersion)
+			options.release = javaVersion
 		}
 
 		named<Checkstyle>("checkstyle${sourceSet.name.capitalized()}").configure {

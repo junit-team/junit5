@@ -22,12 +22,16 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * {@code @DisabledForJreRange} is used to signal that the annotated test class or
- * test method is only <em>disabled</em> for a specific range of Java Runtime
+ * {@code @DisabledForJreRange} is used to signal that the annotated test class
+ * or test method is <em>disabled</em> for a specific range of Java Runtime
  * Environment (JRE) versions from {@link #min} to {@link #max}.
  *
  * <p>When applied at the class level, all test methods within that class will
  * be disabled on the same specified JRE versions.
+ *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
  *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of

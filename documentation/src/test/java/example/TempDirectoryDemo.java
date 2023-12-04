@@ -32,6 +32,7 @@ import example.TempDirectoryDemo.InMemoryTempDirDemo.JimfsTempDirFactory;
 import example.util.ListWriter;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
@@ -110,8 +111,9 @@ class TempDirectoryDemo {
 		static class Factory implements TempDirFactory {
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws IOException {
-				return Files.createTempDirectory(context.getRequiredTestMethod().getName());
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws IOException {
+				return Files.createTempDirectory(extensionContext.getRequiredTestMethod().getName());
 			}
 
 		}
@@ -133,7 +135,8 @@ class TempDirectoryDemo {
 			private final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws IOException {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws IOException {
 				return Files.createTempDirectory(fileSystem.getPath("/"), "junit");
 			}
 

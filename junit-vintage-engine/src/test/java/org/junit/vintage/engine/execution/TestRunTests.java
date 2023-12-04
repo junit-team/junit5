@@ -32,7 +32,8 @@ class TestRunTests {
 	void returnsEmptyOptionalForUnknownDescriptions() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		var runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass));
+		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass),
+			false);
 		var unknownDescription = createTestDescription(testClass, "dynamicTest");
 
 		var testRun = new TestRun(runnerTestDescriptor);
@@ -45,7 +46,8 @@ class TestRunTests {
 	void registersDynamicTestDescriptors() throws Exception {
 		Class<?> testClass = PlainJUnit4TestCaseWithSingleTestWhichFails.class;
 		var runnerId = engineId().append(SEGMENT_TYPE_RUNNER, testClass.getName());
-		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass));
+		var runnerTestDescriptor = new RunnerTestDescriptor(runnerId, testClass, new BlockJUnit4ClassRunner(testClass),
+			false);
 		var dynamicTestId = runnerId.append(SEGMENT_TYPE_DYNAMIC, "dynamicTest");
 		var dynamicDescription = createTestDescription(testClass, "dynamicTest");
 		var dynamicTestDescriptor = new VintageTestDescriptor(dynamicTestId, dynamicDescription, null);

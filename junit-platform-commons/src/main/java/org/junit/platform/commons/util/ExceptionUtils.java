@@ -42,6 +42,9 @@ public final class ExceptionUtils {
 
 	private static final String JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX = "org.junit.platform.launcher.";
 
+	private static final Predicate<String> STACK_TRACE_ELEMENT_FILTER = ClassNamePatternFilterUtils //
+			.excludeMatchingClassNames("org.junit.*,jdk.internal.reflect.*,sun.reflect.*");
+
 	private ExceptionUtils() {
 		/* no-op */
 	}
@@ -92,38 +95,45 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Prune the stack trace of the supplied {@link Throwable} by filtering its
-	 * elements using the supplied {@link Predicate}, except for
-	 * {@code org.junit.jupiter.api.Assertions} and
-	 * {@code org.junit.jupiter.api.Assumptions} that will always remain
-	 * present.
+	 * Prune the stack trace of the supplied {@link Throwable} by removing
+	 * {@linkplain StackTraceElement stack trace elements} from the {@code org.junit},
+	 * {@code jdk.internal.reflect}, and {@code sun.reflect} packages. If a
+	 * {@code StackTraceElement} matching one of the supplied {@code classNames}
+	 * is encountered, all subsequent elements in the stack trace will be retained.
 	 *
-	 * <p>Additionally, all elements prior to and including the first
-	 * JUnit Launcher call will be removed.
+	 * <p>Additionally, all elements prior to and including the first JUnit Platform
+	 * Launcher call will be removed.
 	 *
-	 * @param throwable the {@code Throwable} whose stack trace should be
-	 * pruned; never {@code null}
-	 * @param stackTraceElementFilter the {@code Predicate} used to filter
-	 * elements of the stack trace; never {@code null}
+	 * @param throwable the {@code Throwable} whose stack trace should be pruned;
+	 * never {@code null}
+	 * @param classNames the class names that should stop the pruning if encountered;
+	 * never {@code null}
 	 *
-	 * @since 5.10
+	 * @since 1.10
 	 */
-	@API(status = INTERNAL, since = "5.10")
-	public static void pruneStackTrace(Throwable throwable, Predicate<String> stackTraceElementFilter) {
+	@API(status = INTERNAL, since = "1.10")
+	public static void pruneStackTrace(Throwable throwable, List<String> classNames) {
 		Preconditions.notNull(throwable, "Throwable must not be null");
-		Preconditions.notNull(stackTraceElementFilter, "Predicate must not be null");
+		Preconditions.notNull(classNames, "List of class names must not be null");
 
 		List<StackTraceElement> stackTrace = Arrays.asList(throwable.getStackTrace());
 		List<StackTraceElement> prunedStackTrace = new ArrayList<>();
 
 		Collections.reverse(stackTrace);
 
-		for (StackTraceElement element : stackTrace) {
+		for (int i = 0; i < stackTrace.size(); i++) {
+			StackTraceElement element = stackTrace.get(i);
 			String className = element.getClassName();
-			if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
+
+			if (classNames.contains(className)) {
+				// Include all elements called by the test
+				prunedStackTrace.addAll(stackTrace.subList(i, stackTrace.size()));
+				break;
+			}
+			else if (className.startsWith(JUNIT_PLATFORM_LAUNCHER_PACKAGE_PREFIX)) {
 				prunedStackTrace.clear();
 			}
-			else if (stackTraceElementFilter.test(className)) {
+			else if (STACK_TRACE_ELEMENT_FILTER.test(className)) {
 				prunedStackTrace.add(element);
 			}
 		}
@@ -133,16 +143,16 @@ public final class ExceptionUtils {
 	}
 
 	/**
-	 * Find all causes and suppressed exceptions in the backtrace of the
+	 * Find all causes and suppressed exceptions in the stack trace of the
 	 * supplied {@link Throwable}.
 	 *
 	 * @param rootThrowable the {@code Throwable} to explore; never {@code null}
 	 * @return an immutable list of all throwables found, including the supplied
 	 * one; never {@code null}
 	 *
-	 * @since 5.10
+	 * @since 1.10
 	 */
-	@API(status = INTERNAL, since = "5.10")
+	@API(status = INTERNAL, since = "1.10")
 	public static List<Throwable> findNestedThrowables(Throwable rootThrowable) {
 		Preconditions.notNull(rootThrowable, "Throwable must not be null");
 

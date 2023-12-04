@@ -27,7 +27,7 @@ class RandomNumberDemo {
 	private int randomNumber1;
 
 	RandomNumberDemo(@Random int randomNumber2) {
-		// Use randomNumber2 in constructor
+		// Use randomNumber2 in constructor.
 	}
 
 	@BeforeEach

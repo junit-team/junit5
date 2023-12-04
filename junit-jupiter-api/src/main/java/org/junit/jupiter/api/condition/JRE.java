@@ -37,6 +37,14 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #JAVA_12
  * @see #JAVA_13
  * @see #JAVA_14
+ * @see #JAVA_15
+ * @see #JAVA_16
+ * @see #JAVA_17
+ * @see #JAVA_18
+ * @see #JAVA_19
+ * @see #JAVA_20
+ * @see #JAVA_21
+ * @see #JAVA_22
  * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
@@ -139,7 +147,7 @@ public enum JRE {
 	JAVA_20,
 
 	/**
-	 * Java 20.
+	 * Java 21.
 	 *
 	 * @since 5.9.2
 	 */
@@ -147,11 +155,20 @@ public enum JRE {
 	JAVA_21,
 
 	/**
+	 * Java 22.
+	 *
+	 * @since 5.10
+	 */
+	@API(status = STABLE, since = "5.10")
+	JAVA_22,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
 	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
 	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18},
-	 * {@link #JAVA_19}, {@link #JAVA_20}, or {@link #JAVA_21}.
+	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21}, or
+	 * {@link #JAVA_22}.
 	 */
 	OTHER;
 
@@ -207,6 +224,8 @@ public enum JRE {
 					return JAVA_20;
 				case 21:
 					return JAVA_21;
+				case 22:
+					return JAVA_22;
 				default:
 					return OTHER;
 			}
@@ -221,14 +240,16 @@ public enum JRE {
 
 	/**
 	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
-	 * Java Runtime Environment version for the currently executing JVM
+	 * Java Runtime Environment version for the currently executing JVM or if
+	 * the version is {@link #OTHER}
 	 */
 	public boolean isCurrentVersion() {
 		return this == CURRENT_VERSION;
 	}
 
 	/**
-	 * @return the {@link JRE} for the currently executing JVM
+	 * @return the {@link JRE} for the currently executing JVM, potentially
+	 * {@link #OTHER}
 	 *
 	 * @since 5.7
 	 */

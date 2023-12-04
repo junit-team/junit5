@@ -28,6 +28,10 @@ import org.apiguardian.api.API;
  * <p>When applied at the class level, all test methods within that class will
  * be enabled within a native image.
  *
+ * <p>This annotation is not {@link java.lang.annotation.Inherited @Inherited}.
+ * Consequently, if you wish to apply the same semantics to a subclass, this
+ * annotation must be redeclared on the subclass.
+ *
  * <p>If a test method is disabled via this annotation, that does not prevent
  * the test class from being instantiated. Rather, it prevents the execution of
  * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}

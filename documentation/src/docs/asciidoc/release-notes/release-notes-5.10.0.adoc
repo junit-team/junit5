@@ -1,0 +1,25 @@
+[[release-notes-5.10.0]]
+== 5.10.0
+
+*Date of Release:* July 23, 2023
+
+*Scope:*
+
+* Promotion of various experimental APIs to stable
+* New `LauncherInterceptor` SPI
+* New `testfeed` details mode for `ConsoleLauncher`
+* New `ConsoleLauncher` subcommand for test discovery without execution
+* Dry-run mode for test execution
+* New `NamespacedHierarchicalStore` for use in third-party test engines
+* Stacktrace pruning to hide internal JUnit calls
+* New `@SelectMethod` support in test `@Suite` classes.
+* New `TempDirFactory` SPI for customizing how temporary directories are created
+* Failure threshold for `@RepeatedTest`
+* New convenience base classes for implementing `ArgumentsProvider` and `ArgumentConverter`
+* Custom class loader support for class/method selectors, `@MethodSource`, `@EnabledIf`,
+  and `@DisabledIf`
+* Improved configurability of parallel execution
+* Numerous bug fixes and minor improvements
+
+For complete details consult the
+https://junit.org/junit5/docs/5.10.0/release-notes/index.html[5.10.0 Release Notes] online.

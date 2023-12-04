@@ -38,6 +38,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.launcher.InterceptedTestEngine;
 import org.junit.platform.launcher.InterceptorInjectedLauncherSessionListener;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
@@ -298,7 +299,8 @@ class LauncherFactoryTests {
 					.addTestEngines(engine) //
 					.build();
 			var launcher = LauncherFactory.create(config);
-			var request = request().build();
+			var request = request().configurationParameter(LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME,
+				"false").build();
 
 			AtomicReference<TestExecutionResult> result = new AtomicReference<>();
 			launcher.execute(request, new TestExecutionListener() {

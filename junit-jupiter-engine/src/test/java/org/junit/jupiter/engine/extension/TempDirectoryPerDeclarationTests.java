@@ -10,6 +10,10 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +34,11 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.su
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
@@ -62,6 +71,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -220,11 +230,14 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				it -> Path.of(it.getKeyValuePairs().get(UndeletableTestCase.TEMP_DIR))).findAny().orElseThrow();
 
 		assertSingleFailedTest(results, //
-			instanceOf(IOException.class), //
-			message("Failed to delete temp directory " + tempDir.toAbsolutePath() + ". " + //
-					"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable"), //
-			suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
-			suppressed(1, instanceOf(IOException.class), message("Simulated failure")));
+			cause( //
+				instanceOf(IOException.class), //
+				message("Failed to delete temp directory " + tempDir.toAbsolutePath() + ". " + //
+						"The following paths could not be deleted (see suppressed exceptions for details): <root>, undeletable"), //
+				suppressed(0, instanceOf(DirectoryNotEmptyException.class)), //
+				suppressed(1, instanceOf(IOException.class), message("Simulated failure")) //
+			) //
+		);
 	}
 
 	@Nested
@@ -345,6 +358,20 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 					.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
+		@Test
+		@DisplayName("that uses annotated element name as temp dir name prefix")
+		void supportsFactoryWithAnnotatedElementNameAsPrefix() {
+			executeTestsForClass(FactoryWithAnnotatedElementNameAsPrefixTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
+		@Test
+		@DisplayName("that uses custom meta-annotation")
+		void supportsFactoryWithCustomMetaAnnotation() {
+			executeTestsForClass(FactoryWithCustomMetaAnnotationTestCase.class).testEvents()//
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+		}
+
 	}
 
 	@Nested
@@ -390,7 +417,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private boolean closed;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				return Files.createTempDirectory("custom");
 			}
 
@@ -1178,8 +1206,9 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		private static class Factory implements TempDirFactory {
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
-				return Files.createTempDirectory(context.getRequiredTestMethod().getName());
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return Files.createTempDirectory(extensionContext.getRequiredTestMethod().getName());
 			}
 		}
 
@@ -1203,7 +1232,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				return Files.createTempDirectory(parent, "prefix");
 			}
 		}
@@ -1223,7 +1253,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private static FileSystem fileSystem;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				fileSystem = MemoryFileSystemBuilder.newEmpty().build();
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
@@ -1250,7 +1281,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			private static FileSystem fileSystem;
 
 			@Override
-			public Path createTempDirectory(ExtensionContext context) throws Exception {
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
 				fileSystem = Jimfs.newFileSystem(Configuration.unix());
 				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
 			}
@@ -1260,6 +1292,79 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				fileSystem.close();
 				fileSystem = null;
 			}
+		}
+
+	}
+
+	static class FactoryWithAnnotatedElementNameAsPrefixTestCase {
+
+		@TempDir(factory = Factory.class)
+		private Path tempDir1;
+
+		@Test
+		void test(@TempDir(factory = Factory.class) Path tempDir2) {
+			assertThat(tempDir1.getFileName()).asString().startsWith("tempDir1");
+			assertThat(tempDir2.getFileName()).asString().startsWith("tempDir2");
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return Files.createTempDirectory(getName(elementContext.getAnnotatedElement()));
+			}
+
+			private static String getName(AnnotatedElement element) {
+				return element instanceof Field ? ((Field) element).getName() : ((Parameter) element).getName();
+			}
+
+		}
+
+	}
+
+	static class FactoryWithCustomMetaAnnotationTestCase {
+
+		@TempDirForField
+		private Path tempDir1;
+
+		@Test
+		void test(@TempDirForParameter Path tempDir2) {
+			assertThat(tempDir1.getFileName()).asString().startsWith("field");
+			assertThat(tempDir2.getFileName()).asString().startsWith("parameter");
+		}
+
+		@Target(ANNOTATION_TYPE)
+		@Retention(RUNTIME)
+		@TempDir(factory = FactoryWithCustomMetaAnnotationTestCase.Factory.class)
+		private @interface TempDirWithPrefix {
+
+			String value();
+
+		}
+
+		@Target(FIELD)
+		@Retention(RUNTIME)
+		@TempDirWithPrefix("field")
+		private @interface TempDirForField {
+		}
+
+		@Target(PARAMETER)
+		@Retention(RUNTIME)
+		@TempDirWithPrefix("parameter")
+		private @interface TempDirForParameter {
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				String prefix = elementContext.findAnnotation(TempDirWithPrefix.class) //
+						.map(TempDirWithPrefix::value).orElseThrow();
+				return Files.createTempDirectory(prefix);
+			}
+
 		}
 
 	}

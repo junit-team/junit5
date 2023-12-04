@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.function.Try.success;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.util.ReflectionUtils.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
@@ -72,6 +73,10 @@ import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNes
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClass.StaticNestedSiblingClass;
 import org.junit.platform.commons.util.ReflectionUtilsTests.OuterClassImplementingInterface.InnerClassImplementingInterface;
 import org.junit.platform.commons.util.classes.CustomType;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.SuperclassWithStaticPackagePrivateTempDirField;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateBeforeMethod;
+import org.junit.platform.commons.util.pkg1.subpkg.SubclassWithNonStaticPackagePrivateTempDirField;
 
 /**
  * Unit tests for {@link ReflectionUtils}.
@@ -703,31 +708,6 @@ class ReflectionUtilsTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
-	void getOutermostInstancePreconditions() {
-		// @formatter:off
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, null));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(null, Object.class));
-		assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.getOutermostInstance(new Object(), null));
-		// @formatter:on
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void getOutermostInstance() {
-		var firstClass = new FirstClass();
-		var secondClass = firstClass.new SecondClass();
-		var thirdClass = secondClass.new ThirdClass();
-
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.ThirdClass.class))//
-				.contains(thirdClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.SecondClass.class))//
-				.contains(secondClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, FirstClass.class)).contains(firstClass);
-		assertThat(ReflectionUtils.getOutermostInstance(thirdClass, String.class)).isEmpty();
-	}
-
-	@Test
 	void getAllClasspathRootDirectories(@TempDir Path tempDirectory) throws Exception {
 		var root1 = tempDirectory.resolve("root1").toAbsolutePath();
 		var root2 = tempDirectory.resolve("root2").toAbsolutePath();
@@ -838,8 +818,7 @@ class ReflectionUtilsTests {
 	 * @since 1.3
 	 */
 	@Test
-	@TrackLogRecords
-	void findNestedClassesWithInvalidNestedClassFile(LogRecordListener listener) throws Exception {
+	void findNestedClassesWithInvalidNestedClassFile(@TrackLogRecords LogRecordListener listener) throws Exception {
 		var jarUrl = getClass().getResource("/gh-1436-invalid-nested-class-file.jar");
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarUrl })) {
@@ -1345,6 +1324,28 @@ class ReflectionUtilsTests {
 		assertEquals(0, methods.stream().filter(Method::isBridge).count());
 	}
 
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3498
+	 */
+	@Test
+	void findMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String BEFORE = "before";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
+		Method staticMethod = superclass.getDeclaredMethod(BEFORE);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateBeforeMethod.class;
+		Method nonStaticMethod = subclass.getDeclaredMethod(BEFORE);
+
+		// Prerequisite
+		var methods = findMethods(superclass, ReflectionUtils::isStatic);
+		assertThat(methods).containsExactly(staticMethod);
+
+		// Actual use cases for this test
+		methods = findMethods(subclass, ReflectionUtils::isStatic);
+		assertThat(methods).containsExactly(staticMethod);
+		methods = findMethods(subclass, ReflectionUtils::isNotStatic);
+		assertThat(methods).containsExactly(nonStaticMethod);
+	}
+
 	@Test
 	void isGeneric() {
 		for (var method : Generic.class.getMethods()) {
@@ -1353,6 +1354,28 @@ class ReflectionUtilsTests {
 		for (var method : PublicClass.class.getMethods()) {
 			assertFalse(ReflectionUtils.isGeneric(method));
 		}
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3532
+	 */
+	@Test
+	void findFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+		final String TEMP_DIR = "tempDir";
+		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
+		Field staticField = superclass.getDeclaredField(TEMP_DIR);
+		Class<?> subclass = SubclassWithNonStaticPackagePrivateTempDirField.class;
+		Field nonStaticField = subclass.getDeclaredField(TEMP_DIR);
+
+		// Prerequisite
+		var fields = findFields(superclass, ReflectionUtils::isStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(staticField);
+
+		// Actual use cases for this test
+		fields = findFields(subclass, ReflectionUtils::isStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(staticField);
+		fields = findFields(subclass, ReflectionUtils::isNotStatic, TOP_DOWN);
+		assertThat(fields).containsExactly(nonStaticField);
 	}
 
 	@Test
@@ -1364,7 +1387,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstance() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, f -> true, TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, f -> true, TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields());
 
@@ -1373,7 +1396,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClass() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, ReflectionUtils::isStatic, TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null);
 
@@ -1382,7 +1405,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForString() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(String.class));
 
@@ -1391,8 +1414,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForString() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic),
-			TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(String.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(String.class));
 
@@ -1401,7 +1423,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForInteger() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(int.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(int.class));
 
@@ -1410,8 +1432,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForInteger() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class,
-			isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(Integer.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(Integer.class));
 
@@ -1420,7 +1441,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForDouble() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(double.class), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithFields(), isA(double.class));
 
@@ -1429,8 +1450,7 @@ class ReflectionUtilsTests {
 
 	@Test
 	void readFieldValuesFromClassWithTypeFilterForDouble() {
-		var fields = ReflectionUtils.findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic),
-			TOP_DOWN);
+		var fields = findFields(ClassWithFields.class, isA(Double.class).and(ReflectionUtils::isStatic), TOP_DOWN);
 
 		var values = ReflectionUtils.readFieldValues(fields, null, isA(Double.class));
 

@@ -272,6 +272,6 @@ When running tests via the `{Launcher}` API, you can enable _dry-run mode_ by se
 `junit.platform.execution.dryRun.enabled` <<running-tests-config-params,
 configuration parameter>> to `true`. In this mode, the `{Launcher}` will not actually
 execute any tests but will notify registered `{TestExecutionListener}` instances as if all
-tests had been executed successfully. This can be useful to test changes in the
-configuration of a build or to verify a listener is called as expected without having to
-wait for all tests to be executed.
+tests had been skipped and their containers had been successful. This can be useful to
+test changes in the configuration of a build or to verify a listener is called as expected
+without having to wait for all tests to be executed.

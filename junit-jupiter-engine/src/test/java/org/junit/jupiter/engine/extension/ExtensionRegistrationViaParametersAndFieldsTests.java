@@ -138,8 +138,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	@Test
-	@TrackLogRecords
-	void multipleRegistrationsViaField(LogRecordListener listener) {
+	void multipleRegistrationsViaField(@TrackLogRecords LogRecordListener listener) {
 		assertOneTestSucceeded(MultipleRegistrationsViaFieldTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener)).containsExactly("LongParameterResolver", "DummyExtension");
 	}
@@ -158,8 +157,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	@Test
-	@TrackLogRecords
-	void registrationOrder(LogRecordListener listener) {
+	void registrationOrder(@TrackLogRecords LogRecordListener listener) {
 		assertOneTestSucceeded(AllInOneWithTestInstancePerMethodTestCase.class);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
