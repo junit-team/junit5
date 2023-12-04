@@ -53,7 +53,7 @@ log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.5" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.7.0" }
-mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.7.0" }
+mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.8.0" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
 openTestReporting-tooling = { module = "org.opentest4j.reporting:open-test-reporting-tooling", version.ref = "openTestReporting" }
