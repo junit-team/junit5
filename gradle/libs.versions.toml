@@ -50,7 +50,7 @@ junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.3" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
-maven = { module = "org.apache.maven:apache-maven", version = "3.9.5" }
+maven = { module = "org.apache.maven:apache-maven", version = "3.9.6" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.7.0" }
 mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.7.0" }
