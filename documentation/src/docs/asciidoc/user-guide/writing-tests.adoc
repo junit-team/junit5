@@ -45,6 +45,7 @@ in the `junit-jupiter-api` module.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
+| `@AutoClose`             | Denotes that the annotated field represents a resource that should be automatically closed after test execution.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
@@ -2709,3 +2710,26 @@ following precedence rules:
 2. The default `TempDirFactory` configured via the configuration
 parameter, if present
 3. Otherwise, `org.junit.jupiter.api.io.TempDirFactory$Standard` will be used.
+
+[[writing-tests-built-in-extensions-AutoClose]]
+==== The AutoClose Extension
+
+The built-in `{AutoCloseExtension}` is used to automatically close resources used in
+tests. Therefore, the `@AutoClose` annotation is applied to fields within the
+test class to indicate that the annotated resource should be automatically closed after
+the test execution.
+
+By default, the `@AutoClose` annotation expects the annotated resource to provide
+a `close()` method that will be invoked for closing the resource. However, developers
+can customize the closing behavior by providing a different method name through the
+`value` attribute. For example, setting `value = "shutdown"` will look
+for a method named `shutdown()` to close the resource.
+
+For example, the following test declares a database connection field annotated with
+`@AutoClose` that is automatically closed afterward.
+
+[source,java,indent=0]
+.A test class using @AutoClose annotation to close used resource
+----
+include::{testDir}/example/AutoCloseDemo.java[tags=user_guide_example]
+----
