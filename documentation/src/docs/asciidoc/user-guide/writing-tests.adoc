@@ -45,6 +45,7 @@ in the `junit-jupiter-api` module.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
 | `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
+| @AutoClose               | Indicates that a field in a JUnit 5 test class represents a resource that should be automatically closed after test execution.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
