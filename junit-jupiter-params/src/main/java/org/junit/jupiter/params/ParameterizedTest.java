@@ -28,7 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
  *
  * <p>Such methods must not be {@code private} or {@code static}.
  *
- * <h2>Arguments Providers and Sources</h2>
+ * <h2>Argument Providers and Sources</h2>
  *
  * <p>{@code @ParameterizedTest} methods must specify at least one
  * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
