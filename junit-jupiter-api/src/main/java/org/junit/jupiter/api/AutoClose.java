@@ -29,8 +29,9 @@ import org.apiguardian.api.API;
  * <p>
  * By default, the {@code AutoClose} annotation expects the annotated resource to provide a {@code close()} method
  * that will be invoked for closing the resource. However, developers can customize the closing behavior by providing
- * a different method name through the {@code value} attribute. For example, setting {@code value = "destroy"} will
- * look for a method named {@code destroy()} to close the resource.
+ * a different method name through the {@code value} attribute. For example, setting {@code value = "shutdown"} will
+ * look for a method named {@code shutdown()} to close the resource.
+ * When multiple annotated resources exist the order of closing them is unspecified.
  * </p>
  *
  * <p>

@@ -52,7 +52,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
-		new TestReporterParameterResolver()));
+		new TestReporterParameterResolver(), //
+		new AutoCloseExtension()));
 
 	/**
 	 * Factory for creating and populating a new root registry with the default
@@ -73,7 +74,6 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		DEFAULT_STATELESS_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
 		extensionRegistry.registerDefaultExtension(new TempDirectory(configuration));
-		extensionRegistry.registerDefaultExtension(new AutoCloseExtension());
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
