@@ -52,7 +52,7 @@ gradleEnterprise {
 			}
 		}
 
-		if (buildParameters.enterprise.testDistribution.enabled) {
+		if (buildParameters.develocity.testDistribution.enabled) {
 			tag("test-distribution")
 		}
 	}

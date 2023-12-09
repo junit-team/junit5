@@ -26,7 +26,7 @@ buildParameters {
 			defaultValue = false
 		}
 	}
-	group("enterprise") {
+	group("develocity") {
 		description = "Parameters controlling Gradle Enterprise features"
 		group("predictiveTestSelection") {
 			bool("enabled") {
