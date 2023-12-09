@@ -25,18 +25,20 @@ dependencyResolutionManagement {
 }
 
 val buildParameters = the<BuildParametersExtension>()
-val gradleEnterpriseServer = "https://ge.junit.org"
+val develocityServer = "https://ge.junit.org"
+val useDevelocityInstance = !gradle.startParameter.isBuildScan
 
 gradleEnterprise {
+	if (useDevelocityInstance) {
+		// Publish to scans.gradle.com when `--scan` is used explicitly
+		server = develocityServer
+	}
 	buildScan {
 		capture.isTaskInputFiles = true
 		isUploadInBackground = !buildParameters.ci
 
-		publishAlways()
-
-		// Publish to scans.gradle.com when `--scan` is used explicitly
-		if (!gradle.startParameter.isBuildScan) {
-			server = gradleEnterpriseServer
+		if (useDevelocityInstance) {
+			publishAlways()
 			this as BuildScanExtensionWithHiddenFeatures
 			publishIfAuthenticated()
 		}
@@ -60,14 +62,15 @@ buildCache {
 	local {
 		isEnabled = !buildParameters.ci
 	}
-	remote<HttpBuildCache> {
-		url = uri(buildParameters.buildCache.url.getOrElse("$gradleEnterpriseServer/cache/"))
-		val buildCacheUsername = buildParameters.buildCache.username.orNull?.ifBlank { null }
-		val buildCachePassword = buildParameters.buildCache.password.orNull?.ifBlank { null }
-		isPush = buildParameters.ci && buildCacheUsername != null && buildCachePassword != null
-		credentials {
-			username = buildCacheUsername
-			password = buildCachePassword
+	if (useDevelocityInstance) {
+		remote(gradleEnterprise.buildCache) {
+			server = buildParameters.buildCache.server.orNull
+			val authenticated = System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY") != null
+			isPush = buildParameters.ci && authenticated
+		}
+	} else {
+		remote<HttpBuildCache> {
+			url = uri(buildParameters.buildCache.server.getOrElse(develocityServer)).resolve("/cache/")
 		}
 	}
 }
