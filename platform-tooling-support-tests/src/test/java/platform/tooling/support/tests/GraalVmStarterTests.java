@@ -21,7 +21,7 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
-import com.gradle.enterprise.testing.annotations.LocalOnly;
+import com.gradle.develocity.testing.annotations.LocalOnly;
 
 import org.junit.jupiter.api.Test;
 
