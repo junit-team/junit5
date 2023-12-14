@@ -171,7 +171,8 @@ public class NamespacedHierarchicalStoreTests {
 
 			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.get(namespace, key, Number.class));
-			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
+			assertEquals(
+				"Object stored under key [42] is not of required type [java.lang.Number], but was [class java.lang.String]: enigma",
 				exception.getMessage());
 		}
 
@@ -221,7 +222,8 @@ public class NamespacedHierarchicalStoreTests {
 
 			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, key, defaultCreator, String.class));
-			assertEquals("Object stored under key [pi] is not of required type [java.lang.String]",
+			assertEquals(
+				"Object stored under key [pi] is not of required type [java.lang.String], but was [class java.lang.Float]: 3.14",
 				exception.getMessage());
 		}
 
@@ -264,7 +266,8 @@ public class NamespacedHierarchicalStoreTests {
 
 			Exception exception = assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.remove(namespace, key, Number.class));
-			assertEquals("Object stored under key [42] is not of required type [java.lang.Number]",
+			assertEquals(
+				"Object stored under key [42] is not of required type [java.lang.Number], but was [class java.lang.String]: enigma",
 				exception.getMessage());
 		}
 
