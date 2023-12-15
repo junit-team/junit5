@@ -2,6 +2,8 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import junitbuild.java.ModuleCompileOptions
 import junitbuild.java.ModulePathArgumentProvider
 import junitbuild.java.PatchModuleArgumentProvider
+import org.gradle.plugins.ide.eclipse.model.Classpath
+import org.gradle.plugins.ide.eclipse.model.Library
 
 plugins {
 	`java-library`
@@ -35,6 +37,12 @@ eclipse {
 				setProperty("org.eclipse.jdt.core.compiler.codegen.methodParameters", "generate")
 			}
 		}
+	}
+	classpath.file.whenMerged {
+		this as Classpath
+		// Remove classpath entries for non-existent libraries added by various
+		// plugins, such as "junit-jupiter-api/build/classes/kotlin/testFixtures".
+		entries.removeIf { it is Library && !file(it.path).exists() }
 	}
 }
 
