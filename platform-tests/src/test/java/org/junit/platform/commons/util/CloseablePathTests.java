@@ -73,6 +73,7 @@ class CloseablePathTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void closingIsIdempotent() throws Exception {
 		var path1 = CloseablePath.create(uri);
 		paths.add(path1);

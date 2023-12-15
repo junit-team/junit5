@@ -67,6 +67,7 @@ class TreeNodeTests {
 		assertThat(treeNode.reports).hasSize(NUM_THREADS * ITEMS_PER_THREAD);
 	}
 
+	@SuppressWarnings("resource")
 	private void runConcurrently(Runnable action) throws InterruptedException {
 		ExecutorService executor = new ThreadPoolExecutor(NUM_THREADS, NUM_THREADS, 10, SECONDS,
 			new ArrayBlockingQueue<>(NUM_THREADS));
