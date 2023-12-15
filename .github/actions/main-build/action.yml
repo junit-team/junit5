@@ -5,6 +5,10 @@ inputs:
     required: true
     description: Gradle arguments
     default: build
+  dependency-graph:
+    required: false
+    description: 'see https://github.com/gradle/gradle-build-action#enable-dependency-graph-generation-for-a-workflow'
+    default: disabled
 runs:
   using: "composite"
   steps:
@@ -12,6 +16,7 @@ runs:
     - uses: ./.github/actions/run-gradle
       with:
         arguments: ${{ inputs.arguments }}
+        dependency-graph: ${{ inputs.dependency-graph }}
     - uses: actions/upload-artifact@v3
       if: ${{ always() }}
       with:
