@@ -35,6 +35,7 @@ jobs:
     - name: Build
       uses: ./.github/actions/main-build
       with:
+        dependency-graph: generate-and-submit
         arguments: |
           -Ptesting.enableJaCoCo
           build
