@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.params.converter;
+package org.junit.platform.commons.support.conversion;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
@@ -19,15 +19,15 @@ import java.util.Objects;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.converter.FallbackStringToObjectConverter.IsFactoryConstructor;
-import org.junit.jupiter.params.converter.FallbackStringToObjectConverter.IsFactoryMethod;
+import org.junit.platform.commons.support.conversion.FallbackStringToObjectConverter.IsFactoryConstructor;
+import org.junit.platform.commons.support.conversion.FallbackStringToObjectConverter.IsFactoryMethod;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link FallbackStringToObjectConverter}, {@link IsFactoryMethod},
  * and {@link IsFactoryConstructor}.
  *
- * @since 5.1
+ * @since 1.11 (originally since JUnit Jupiter 5.1)
  */
 class FallbackStringToObjectConverterTests {
 
