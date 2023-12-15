@@ -253,7 +253,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		// else
 		throw new NamespacedHierarchicalStoreException(
 			String.format("Object stored under key [%s] is not of required type [%s], but was [%s]: %s", key,
-				requiredType.getName(), value.getClass(), value));
+				requiredType.getName(), value.getClass().getName(), value));
 	}
 
 	private static class CompositeKey<N> {

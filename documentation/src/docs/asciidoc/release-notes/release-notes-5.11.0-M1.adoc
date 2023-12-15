@@ -28,7 +28,9 @@ repository on GitHub.
 * New `StringConversionSupport` in `junit-platform-commons` to expose internal conversion
   logic used by Jupiter's `DefaultArgumentConverter` for use in third-party extensions and
   test engines.
-* Improve type mismatch error message in `NamespacedHierarchicalStore` to include actual type and value.
+* Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
+  actual type and value in addition to the required type.
+
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
 === JUnit Jupiter
