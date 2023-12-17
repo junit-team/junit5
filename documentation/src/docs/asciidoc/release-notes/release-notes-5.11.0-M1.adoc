@@ -19,6 +19,9 @@ repository on GitHub.
   `junit.platform.launcher.interceptors.enabled` is set to `true`.
   - See link:https://github.com/junit-team/junit5/issues/3561[issue 3561] for details.
 
+* Fixed parsing of recursive jar uris. Allows the JUnit Platform Launcher to be used
+  inside Spring Boot executable jars for Spring Boot 3.2 and later.
+
 ==== Deprecations and Breaking Changes
 
 * ❓

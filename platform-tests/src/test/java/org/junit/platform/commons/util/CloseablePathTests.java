@@ -18,9 +18,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
+import java.nio.file.FileSystem;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.util.ArrayList;
@@ -49,6 +51,37 @@ class CloseablePathTests {
 	@AfterEach
 	void closeAllPaths() {
 		closeAll(paths);
+	}
+
+	@Test
+	void parsesJarUri() throws Exception {
+		FileSystemProvider fileSystemProvider = mock();
+
+		FileSystem fileSystem = mock();
+		when(fileSystemProvider.newFileSystem(any())).thenReturn(fileSystem);
+
+		URI jarFileWithEntry = URI.create("jar:file:/example.jar!/com/example/Example.class");
+		CloseablePath.create(jarFileWithEntry, fileSystemProvider).close();
+
+		URI jarFileUri = URI.create("jar:file:/example.jar");
+		verify(fileSystemProvider).newFileSystem(jarFileUri);
+		verifyNoMoreInteractions(fileSystemProvider);
+	}
+
+	@Test
+	void parsesRecursiveJarUri() throws Exception {
+		FileSystemProvider fileSystemProvider = mock();
+
+		FileSystem fileSystem = mock();
+		when(fileSystemProvider.newFileSystem(any())).thenReturn(fileSystem);
+
+		URI jarNestedFileWithEntry = URI.create(
+			"jar:nested:file:/example.jar!/BOOT-INF/classes!/com/example/Example.class");
+		CloseablePath.create(jarNestedFileWithEntry, fileSystemProvider).close();
+
+		URI jarNestedFile = URI.create("jar:nested:file:/example.jar!/BOOT-INF/classes");
+		verify(fileSystemProvider).newFileSystem(jarNestedFile);
+		verifyNoMoreInteractions(fileSystemProvider);
 	}
 
 	@Test
