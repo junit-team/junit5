@@ -30,7 +30,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
- * {@code StringConversionSupport} is able to convert from strings to a number
+ * {@code ConversionSupport} is able to convert from strings to a number
  * of primitive types and their corresponding wrapper types (Byte, Short,
  * Integer, Long, Float, and Double), date and time types from the
  * {@code java.time} package, and some additional common Java types such as
@@ -43,7 +43,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  * @since 1.11
  */
 @API(status = EXPERIMENTAL, since = "1.11")
-public final class StringConversionSupport {
+public final class ConversionSupport {
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
 		new StringToBooleanConverter(), //
@@ -56,7 +56,7 @@ public final class StringConversionSupport {
 		new FallbackStringToObjectConverter() //
 	));
 
-	private StringConversionSupport() {
+	private ConversionSupport() {
 		/* no-op */
 	}
 

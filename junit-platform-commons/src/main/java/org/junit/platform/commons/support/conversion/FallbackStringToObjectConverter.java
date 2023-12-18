@@ -49,7 +49,7 @@ import org.junit.platform.commons.util.Preconditions;
  * converter acts as a no-op.
  *
  * @since 1.11
- * @see StringConversionSupport
+ * @see ConversionSupport
  */
 class FallbackStringToObjectConverter implements StringToObjectConverter {
 

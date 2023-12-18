@@ -25,9 +25,9 @@ repository on GitHub.
 
 ==== New Features and Improvements
 
-* New `StringConversionSupport` in `junit-platform-commons` to expose internal conversion
-  logic used by Jupiter's `DefaultArgumentConverter` for use in third-party extensions and
-  test engines.
+* New `ConversionSupport` utility in `junit-platform-commons` which exposes the conversion
+  logic that was previously private to JUnit Jupiter's `@ParameterizedTest` infrastructure
+  -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
 
