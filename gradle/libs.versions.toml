@@ -33,7 +33,7 @@ classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.165" }
 commons-io = { module = "commons-io:commons-io", version = "2.15.1" }
 gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.12.1" }
 gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.7.0" }
-gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.16" }
+gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.16.1" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
 gradle-shadow = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.23.3" }
