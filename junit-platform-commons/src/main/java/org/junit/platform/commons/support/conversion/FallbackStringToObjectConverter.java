@@ -70,7 +70,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		= new ConcurrentHashMap<>(64);
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return findFactoryExecutable(targetType) != NULL_EXECUTABLE;
 	}
 

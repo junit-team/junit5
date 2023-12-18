@@ -114,7 +114,7 @@ public final class ConversionSupport {
 
 		Class<?> targetTypeToUse = toWrapperType(targetType);
 		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
+			candidate -> candidate.canConvertTo(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
 			try {
 				ClassLoader classLoaderToUse = classLoader != null ? classLoader

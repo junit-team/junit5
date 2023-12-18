@@ -21,12 +21,15 @@ interface StringToObjectConverter {
 	 * supplied target type (which is guaranteed to be a wrapper type for
 	 * primitives &mdash; for example, {@link Integer} instead of {@code int}).
 	 */
-	boolean canConvert(Class<?> targetType);
+	boolean canConvertTo(Class<?> targetType);
 
 	/**
 	 * Convert the supplied {@link String} to the supplied target type (which is
 	 * guaranteed to be a wrapper type for primitives &mdash; for example,
 	 * {@link Integer} instead of {@code int}).
+	 *
+	 * <p>This method will only be invoked in {@link #canConvertTo(Class)}
+	 * returned {@code true} for the same target type.
 	 */
 	Object convert(String source, Class<?> targetType) throws Exception;
 
@@ -34,6 +37,9 @@ interface StringToObjectConverter {
 	 * Convert the supplied {@link String} to the supplied target type (which is
 	 * guaranteed to be a wrapper type for primitives &mdash; for example,
 	 * {@link Integer} instead of {@code int}).
+	 *
+	 * <p>This method will only be invoked in {@link #canConvertTo(Class)}
+	 * returned {@code true} for the same target type.
 	 *
 	 * <p>The default implementation simply delegates to {@link #convert(String, Class)}.
 	 * Can be overridden by concrete implementations of this interface that need

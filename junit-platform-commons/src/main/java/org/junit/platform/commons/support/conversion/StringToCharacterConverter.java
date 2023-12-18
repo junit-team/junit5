@@ -15,7 +15,7 @@ import org.junit.platform.commons.util.Preconditions;
 class StringToCharacterConverter implements StringToObjectConverter {
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return targetType == Character.class;
 	}
 

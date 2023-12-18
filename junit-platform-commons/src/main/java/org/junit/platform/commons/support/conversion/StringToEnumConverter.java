@@ -13,7 +13,7 @@ package org.junit.platform.commons.support.conversion;
 class StringToEnumConverter implements StringToObjectConverter {
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return targetType.isEnum();
 	}
 

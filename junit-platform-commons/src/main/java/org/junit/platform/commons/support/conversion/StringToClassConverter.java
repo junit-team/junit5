@@ -15,7 +15,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class StringToClassConverter implements StringToObjectConverter {
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return targetType == Class.class;
 	}
 

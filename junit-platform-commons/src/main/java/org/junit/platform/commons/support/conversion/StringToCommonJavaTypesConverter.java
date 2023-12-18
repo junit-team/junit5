@@ -49,7 +49,7 @@ class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
