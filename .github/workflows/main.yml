@@ -16,6 +16,8 @@ env:
 jobs:
   Linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for submitting a dependency graph
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
