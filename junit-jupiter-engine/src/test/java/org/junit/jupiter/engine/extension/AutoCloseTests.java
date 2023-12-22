@@ -11,11 +11,11 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -32,7 +32,8 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
- * Integration tests for the behavior of the {@link AutoCloseExtension} to release resources after test execution.
+ * Integration tests for the behavior of the {@link AutoCloseExtension} to
+ * release resources after test execution.
  *
  * @since 5.11
  */
@@ -52,16 +53,18 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		Events tests = engineExecutionResults.testEvents();
 		tests.assertStatistics(stats -> stats.succeeded(2));
 		// @formatter:off
-		assertEquals(asList(
+		assertThat(recorder).containsExactly(
 				"afterEach-close()", "afterEach-run()",
 				"afterEach-close()", "afterEach-run()",
-					"afterAll-close()"), recorder);
-		// @formatter:onf
+						"afterAll-close()");
+		// @formatter:on
 	}
 
 	@Test
 	void noCloseMethod() {
-		String msg = "@AutoClose: Cannot resolve the destroy method close() at AutoCloseNoCloseMethodFailingTestCase.resource: String";
+		String msg = "@AutoClose failed to close object for field "
+				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoCloseMethodFailingTestCase.resource "
+				+ "because the close() method could not be resolved.";
 
 		Events tests = executeTestsForClass(AutoCloseNoCloseMethodFailingTestCase.class).testEvents();
 		assertFailingWithMessage(tests, msg);
@@ -69,15 +72,12 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void noShutdownMethod() {
-		String msg = "@AutoClose: Cannot resolve the destroy method shutdown() at AutoCloseNoShutdownMethodFailingTestCase.resource: String";
+		String msg = "@AutoClose failed to close object for field "
+				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoShutdownMethodFailingTestCase.resource "
+				+ "because the shutdown() method could not be resolved.";
 
 		Events tests = executeTestsForClass(AutoCloseNoShutdownMethodFailingTestCase.class).testEvents();
 		assertFailingWithMessage(tests, msg);
-	}
-
-	@Test
-	void namespace() {
-		assertEquals(Namespace.create(AutoClose.class), AutoCloseExtension.NAMESPACE);
 	}
 
 	@Test
@@ -98,12 +98,22 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 	static class AutoCloseTestCase {
 
-		private static @AutoClose AutoCloseable staticClosable;
-		private static @AutoClose AutoCloseable nullStatic;
+		@AutoClose
+		private static AutoCloseable staticClosable;
+		@AutoClose
+		private static AutoCloseable nullStatic;
 
-		private final @AutoClose AutoCloseable closable = new AutoCloseSpy("afterEach-");
-		private final @AutoClose("run") Runnable runnable = new AutoCloseSpy("afterEach-");
-		private @AutoClose AutoCloseable nullField;
+		@AutoClose
+		private final AutoCloseable closable = new AutoCloseSpy("afterEach-");
+		@AutoClose("run")
+		private final Runnable runnable = new AutoCloseSpy("afterEach-");
+		@AutoClose
+		private AutoCloseable nullField;
+
+		@BeforeAll
+		static void setup() {
+			staticClosable = new AutoCloseSpy("afterAll-");
+		}
 
 		@Test
 		void justPass() {
@@ -122,11 +132,6 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 			assertNotNull(closable);
 			assertNotNull(runnable);
 			assertNull(nullField);
-		}
-
-		@BeforeAll
-		static void setup() {
-			staticClosable = new AutoCloseSpy("afterAll-");
 		}
 
 	}
@@ -177,8 +182,9 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 
 		private void checkIfAlreadyInvoked() {
-			if (!invokedMethod.isEmpty())
+			if (!invokedMethod.isEmpty()) {
 				throw new IllegalStateException();
+			}
 		}
 
 		private void recordInvocation(String methodName) {

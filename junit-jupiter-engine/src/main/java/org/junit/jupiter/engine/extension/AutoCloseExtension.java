@@ -16,7 +16,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.apiguardian.api.API;
 import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -30,20 +29,20 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * {@code AutoCloseExtension} is a JUnit Jupiter extension that closes resources if a field in a test class is annotated
- * with {@link AutoClose @AutoClose}.
+ * {@code AutoCloseExtension} is a JUnit Jupiter extension that closes resources
+ * if a field in a test class is annotated with {@link AutoClose @AutoClose}.
  *
- * <p>Consult the Javadoc for {@link AutoClose} for details on the contract.
+ * <p>Consult the Javadoc for {@link AutoClose @AutoClose} for details on the
+ * contract.
  *
  * @since 5.11
  * @see AutoClose
  * @see AutoCloseable
  */
-@API(status = API.Status.EXPERIMENTAL, since = "5.11")
-public class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
+class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoCloseExtension.class);
-	static final Namespace NAMESPACE = Namespace.create(AutoClose.class);
+	private static final Namespace NAMESPACE = Namespace.create(AutoClose.class);
 
 	@Override
 	public void afterAll(ExtensionContext context) {
@@ -62,9 +61,9 @@ public class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
 		}
 	}
 
-	private void registerCloseables(Store contextStore, Class<?> testClass, /* @Nullable */ Object testInstance) {
-		Predicate<Field> isStatic = testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic;
-		findAnnotatedFields(testClass, AutoClose.class, isStatic).forEach(field -> {
+	private void registerCloseables(Store contextStore, Class<?> testClass, Object testInstance) {
+		Predicate<Field> predicate = testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic;
+		findAnnotatedFields(testClass, AutoClose.class, predicate).forEach(field -> {
 			try {
 				contextStore.put(field, asCloseableResource(testInstance, field));
 			}
@@ -74,28 +73,29 @@ public class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
 		});
 	}
 
-	private static Store.CloseableResource asCloseableResource(/* @Nullable */ Object testInstance, Field field) {
+	private static Store.CloseableResource asCloseableResource(Object testInstance, Field field) {
 		return () -> {
 			Object toBeClosed = ReflectionUtils.tryToReadFieldValue(field, testInstance).get();
 			if (toBeClosed == null) {
-				logger.warn(() -> "@AutoClose: Field " + getQualifiedFieldName(field)
-						+ " couldn't be closed because it was null.");
+				logger.warn(() -> "@AutoClose couldn't close object for field " + getQualifiedFieldName(field)
+						+ "  because it was null.");
 				return;
 			}
-			getAndDestroy(field, toBeClosed);
+			invokeCloseMethod(field, toBeClosed);
 		};
 	}
 
-	private static void getAndDestroy(Field field, Object toBeClosed) {
+	private static void invokeCloseMethod(Field field, Object toBeClosed) {
 		String methodName = field.getAnnotation(AutoClose.class).value();
 		Method destroyMethod = ReflectionUtils.findMethod(toBeClosed.getClass(), methodName).orElseThrow(
-			() -> new ExtensionConfigurationException("@AutoClose: Cannot resolve the destroy method " + methodName
-					+ "() at " + getQualifiedFieldName(field) + ": " + field.getType().getSimpleName()));
+			() -> new ExtensionConfigurationException(
+				"@AutoClose failed to close object for field " + getQualifiedFieldName(field) + " because the "
+						+ methodName + "() method could not be " + "resolved."));
 		ReflectionUtils.invokeMethod(destroyMethod, toBeClosed);
 	}
 
 	private static String getQualifiedFieldName(Field field) {
-		return field.getDeclaringClass().getSimpleName() + "." + field.getName();
+		return field.getDeclaringClass().getName() + "." + field.getName();
 	}
 
 }
