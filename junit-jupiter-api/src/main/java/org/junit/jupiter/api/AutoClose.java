@@ -16,6 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * The {@code AutoClose} annotation is used to automatically close resources
@@ -40,6 +41,7 @@ import org.apiguardian.api.API;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 @API(status = API.Status.EXPERIMENTAL, since = "5.11")
+@ExtendWith(AutoCloseExtension.class)
 public @interface AutoClose {
 
 	/**

@@ -52,8 +52,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
-		new TestReporterParameterResolver(), //
-		new AutoCloseExtension()));
+		new TestReporterParameterResolver()));
 
 	/**
 	 * Factory for creating and populating a new root registry with the default

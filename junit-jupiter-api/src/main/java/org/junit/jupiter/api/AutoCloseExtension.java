@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.extension;
+package org.junit.jupiter.api;
 
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 
@@ -16,13 +16,12 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
-import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.extension.AfterAllCallback;
-import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -39,7 +38,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @see AutoClose
  * @see AutoCloseable
  */
-class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
+class AutoCloseExtension implements AfterAllCallback, TestInstancePreDestroyCallback {
 
 	private static final Logger logger = LoggerFactory.getLogger(AutoCloseExtension.class);
 	private static final Namespace NAMESPACE = Namespace.create(AutoClose.class);
@@ -53,7 +52,7 @@ class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
 	}
 
 	@Override
-	public void afterEach(ExtensionContext context) {
+	public void preDestroyTestInstance(ExtensionContext context) {
 		Store contextStore = context.getStore(NAMESPACE);
 
 		for (Object instance : context.getRequiredTestInstances().getAllInstances()) {
@@ -87,11 +86,11 @@ class AutoCloseExtension implements AfterAllCallback, AfterEachCallback {
 
 	private static void invokeCloseMethod(Field field, Object toBeClosed) {
 		String methodName = field.getAnnotation(AutoClose.class).value();
-		Method destroyMethod = ReflectionUtils.findMethod(toBeClosed.getClass(), methodName).orElseThrow(
+		Method closeMethod = ReflectionUtils.findMethod(toBeClosed.getClass(), methodName).orElseThrow(
 			() -> new ExtensionConfigurationException(
 				"@AutoClose failed to close object for field " + getQualifiedFieldName(field) + " because the "
 						+ methodName + "() method could not be " + "resolved."));
-		ReflectionUtils.invokeMethod(destroyMethod, toBeClosed);
+		ReflectionUtils.invokeMethod(closeMethod, toBeClosed);
 	}
 
 	private static String getQualifiedFieldName(Field field) {

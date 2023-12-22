@@ -13,9 +13,11 @@ package org.junit.jupiter.engine.extension;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -27,13 +29,14 @@ import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
- * Integration tests for the behavior of the {@link AutoCloseExtension} to
- * release resources after test execution.
+ * Integration tests for the behavior of the
+ * {@link org.junit.jupiter.api.AutoCloseExtension} to release resources after
+ * test execution.
  *
  * @since 5.11
  */
@@ -48,9 +51,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void fieldsAreProperlyClosed() {
-		EngineExecutionResults engineExecutionResults = executeTestsForClass(AutoCloseTestCase.class);
-
-		Events tests = engineExecutionResults.testEvents();
+		Events tests = executeTestsForClass(AutoCloseTestCase.class).testEvents();
 		tests.assertStatistics(stats -> stats.succeeded(2));
 		// @formatter:off
 		assertThat(recorder).containsExactly(
@@ -89,6 +90,12 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		assertThrows(IllegalStateException.class, spy::close);
 		assertThrows(IllegalStateException.class, spy::run);
 		assertEquals(asList("close()"), recorder);
+	}
+
+	@Test
+	void instancePerClass() {
+		Events tests = executeTestsForClass(AutoCloseInstancePerClassTestCase.class).testEvents();
+		tests.assertStatistics(stats -> stats.succeeded(2));
 	}
 
 	private static void assertFailingWithMessage(Events testEvent, String msg) {
@@ -139,11 +146,11 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	static class AutoCloseNoCloseMethodFailingTestCase {
 
 		@AutoClose
-		private final String resource = "nothing to close()";
+		private final String field = "nothing to close()";
 
 		@Test
 		void alwaysPass() {
-			assertNotNull(resource);
+			assertNotNull(field);
 		}
 
 	}
@@ -151,11 +158,31 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	static class AutoCloseNoShutdownMethodFailingTestCase {
 
 		@AutoClose("shutdown")
-		private final String resource = "nothing to shutdown()";
+		private final String field = "nothing to shutdown()";
 
 		@Test
 		void alwaysPass() {
-			assertNotNull(resource);
+			assertNotNull(field);
+		}
+
+	}
+
+	@TestInstance(PER_CLASS)
+	static class AutoCloseInstancePerClassTestCase {
+
+		static boolean closed;
+
+		@AutoClose
+		AutoCloseable field = () -> closed = true;
+
+		@Test
+		void test1() {
+			assertFalse(closed);
+		}
+
+		@Test
+		void test2() {
+			assertFalse(closed);
 		}
 
 	}
