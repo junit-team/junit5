@@ -36,7 +36,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.11
  * @see AutoClose
- * @see AutoCloseable
  */
 class AutoCloseExtension implements AfterAllCallback, TestInstancePreDestroyCallback {
 
