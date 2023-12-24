@@ -153,7 +153,7 @@ endif::[]
 // Jupiter Engine
 :junit-jupiter-engine:                       {javadoc-root}/org.junit.jupiter.engine/org/junit/jupiter/engine/package-summary.html[junit-jupiter-engine]
 // Jupiter Extension Implementations
-:AutoCloseExtension:                         {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/AutoCloseExtension.java[AutoCloseExtension]
+:AutoCloseExtension:                         {current-branch}/junit-jupiter-api/src/main/java/org/junit/jupiter/api/AutoCloseExtension.java[AutoCloseExtension]
 :DisabledCondition:                          {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/DisabledCondition.java[DisabledCondition]
 :RepetitionExtension:                        {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/RepetitionExtension.java[RepetitionExtension]
 :TempDirectory:                              {current-branch}/junit-jupiter-engine/src/main/java/org/junit/jupiter/engine/extension/TempDirectory.java[TempDirectory]
