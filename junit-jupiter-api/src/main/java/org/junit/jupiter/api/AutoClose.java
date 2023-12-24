@@ -42,6 +42,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Target(ElementType.FIELD)
 @API(status = API.Status.EXPERIMENTAL, since = "5.11")
 @ExtendWith(AutoCloseExtension.class)
+@SuppressWarnings("exports")
 public @interface AutoClose {
 
 	/**

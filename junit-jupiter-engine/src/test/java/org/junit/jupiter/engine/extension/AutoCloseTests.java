@@ -64,7 +64,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void noCloseMethod() {
 		String msg = "@AutoClose failed to close object for field "
-				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoCloseMethodFailingTestCase.resource "
+				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoCloseMethodFailingTestCase.field "
 				+ "because the close() method could not be resolved.";
 
 		Events tests = executeTestsForClass(AutoCloseNoCloseMethodFailingTestCase.class).testEvents();
@@ -74,7 +74,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void noShutdownMethod() {
 		String msg = "@AutoClose failed to close object for field "
-				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoShutdownMethodFailingTestCase.resource "
+				+ "org.junit.jupiter.engine.extension.AutoCloseTests$AutoCloseNoShutdownMethodFailingTestCase.field "
 				+ "because the shutdown() method could not be resolved.";
 
 		Events tests = executeTestsForClass(AutoCloseNoShutdownMethodFailingTestCase.class).testEvents();

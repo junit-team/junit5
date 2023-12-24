@@ -18,13 +18,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.jupiter.api.AutoClose;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 // tag::user_guide_example[]
 class AutoCloseDemo {
 
 	@AutoClose
-	Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/testdb");
+	Connection connection = getJdbcConnection("jdbc:mysql://localhost/testdb");
 
 	@Test
 	void usersTableHasEntries() throws SQLException {
@@ -33,8 +35,15 @@ class AutoCloseDemo {
 		assertTrue(resultSet.next());
 	}
 
-	AutoCloseDemo() throws SQLException {
+	// ...
+	// end::user_guide_example[]
+	private static Connection getJdbcConnection(String url) {
+		try {
+			return DriverManager.getConnection(url);
+		}
+		catch (SQLException ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 }
-// end::user_guide_example[]
