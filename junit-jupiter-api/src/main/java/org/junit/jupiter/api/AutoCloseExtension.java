@@ -66,7 +66,7 @@ class AutoCloseExtension implements AfterAllCallback, TestInstancePreDestroyCall
 				contextStore.put(field, asCloseableResource(testInstance, field));
 			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
 	}
