@@ -117,7 +117,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 		// No handlers left?
 		if (exceptionHandlers.isEmpty()) {
-			ExceptionUtils.throwAsUncheckedException(throwable);
+			throw ExceptionUtils.throwAsUncheckedException(throwable);
 		}
 
 		try {

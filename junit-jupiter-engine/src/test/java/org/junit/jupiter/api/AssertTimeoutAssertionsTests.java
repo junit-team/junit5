@@ -102,10 +102,8 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			assertTimeout(ofMillis(500), () -> {
-				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
-				return "Tempus Fugit";
-			});
+			assertTimeout(ofMillis(500),
+				() -> ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time")));
 		});
 		assertMessageEquals(exception, "not this time");
 	}
@@ -113,10 +111,7 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnAssertionFailedError() {
 		AssertionFailedError exception = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeout(ofMillis(500), () -> {
-				fail("enigma");
-				return "Tempus Fugit";
-			});
+			assertTimeout(ofMillis(500), () -> fail("enigma"));
 		});
 		assertMessageEquals(exception, "enigma");
 	}

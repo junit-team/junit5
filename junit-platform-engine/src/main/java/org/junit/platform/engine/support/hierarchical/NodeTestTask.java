@@ -239,7 +239,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					// Futures returned by execute() may have been cancelled
 				}
 				catch (ExecutionException e) {
-					ExceptionUtils.throwAsUncheckedException(e.getCause());
+					throw ExceptionUtils.throwAsUncheckedException(e.getCause());
 				}
 			}
 		}

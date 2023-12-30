@@ -248,7 +248,7 @@ public class Assumptions {
 				executable.execute();
 			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		}
 	}

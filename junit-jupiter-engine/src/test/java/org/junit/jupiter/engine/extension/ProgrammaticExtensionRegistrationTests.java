@@ -708,7 +708,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 						field.set(testInstance, new CrystalBall("Outlook good"));
 					}
 					catch (Throwable t) {
-						ExceptionUtils.throwAsUncheckedException(t);
+						throw ExceptionUtils.throwAsUncheckedException(t);
 					}
 				});
 			// @formatter:on

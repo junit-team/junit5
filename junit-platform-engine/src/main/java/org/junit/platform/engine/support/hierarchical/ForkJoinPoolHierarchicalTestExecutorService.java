@@ -202,7 +202,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				testTask.execute();
 			}
 			catch (InterruptedException e) {
-				ExceptionUtils.throwAsUncheckedException(e);
+				throw ExceptionUtils.throwAsUncheckedException(e);
 			}
 		}
 
