@@ -39,7 +39,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
  */
 class ExtensionRegistryTests {
 
-	private static final int NUM_DEFAULT_EXTENSIONS = 6;
+	private static final int NUM_DEFAULT_EXTENSIONS = 7;
 
 	private final JupiterConfiguration configuration = mock();
 

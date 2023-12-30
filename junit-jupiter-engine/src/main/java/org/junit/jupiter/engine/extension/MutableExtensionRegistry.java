@@ -49,6 +49,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static final List<Extension> DEFAULT_STATELESS_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
 		new DisabledCondition(), //
+		new AutoCloseExtension(), //
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //

@@ -31,6 +31,9 @@ class WebServerDemo {
 
 	@Test
 	void getProductList() {
+		// end::user_guide[]
+		@SuppressWarnings("resource")
+		// tag::user_guide[]
 		WebClient webClient = new WebClient();
 		String serverUrl = server.getServerUrl();
 		// Use WebClient to connect to web server using serverUrl and verify response

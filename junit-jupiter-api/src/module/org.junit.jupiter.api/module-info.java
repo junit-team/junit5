@@ -23,6 +23,5 @@ module org.junit.jupiter.api {
 	exports org.junit.jupiter.api.io;
 	exports org.junit.jupiter.api.parallel;
 
-	opens org.junit.jupiter.api to org.junit.platform.commons;
 	opens org.junit.jupiter.api.condition to org.junit.platform.commons;
 }

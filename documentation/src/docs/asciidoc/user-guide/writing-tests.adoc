@@ -41,11 +41,11 @@ in the `junit-jupiter-api` module.
 | `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not _inherited_.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
 | `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
+| `@AutoClose`             | Denotes that the annotated field represents a resource that will be <<writing-tests-built-in-extensions-AutoClose,automatically closed>> after test execution.
 | `@Timeout`               | Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are _inherited_.
+| `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
 | `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
 | `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
-| `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
-| `@AutoClose`             | Denotes that the annotated field represents a resource that should be automatically closed after test execution.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
@@ -2573,12 +2573,12 @@ include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 === Built-in Extensions
 
 While the JUnit team encourages reusable extensions to be packaged and maintained in
-separate libraries, the JUnit Jupiter API artifact includes a few user-facing extension
-implementations that are considered so generally useful that users shouldn't have to add
-another dependency.
+separate libraries, JUnit Jupiter includes a few user-facing extension implementations
+that are considered so generally useful that users shouldn't have to add another
+dependency.
 
 [[writing-tests-built-in-extensions-TempDirectory]]
-==== The TempDirectory Extension
+==== The @TempDir Extension
 
 The built-in `{TempDirectory}` extension is used to create and clean up a temporary
 directory for an individual test or all tests in a test class. It is registered by
@@ -2712,24 +2712,51 @@ parameter, if present
 3. Otherwise, `org.junit.jupiter.api.io.TempDirFactory$Standard` will be used.
 
 [[writing-tests-built-in-extensions-AutoClose]]
-==== The AutoClose Extension
+==== The @AutoClose Extension
 
-The built-in `{AutoCloseExtension}` is used to automatically close resources used in
-tests. Therefore, the `@AutoClose` annotation is applied to fields within the
-test class to indicate that the annotated resource should be automatically closed after
-the test execution.
+The built-in `{AutoCloseExtension}` automatically closes resources associated with fields.
+It is registered by default. To use it, annotate a field in a test class with
+`{AutoClose}`.
 
-By default, the `@AutoClose` annotation expects the annotated resource to provide
-a `close()` method that will be invoked for closing the resource. However, developers
-can customize the closing behavior by providing a different method name through the
-`value` attribute. For example, setting `value = "shutdown"` will look
-for a method named `shutdown()` to close the resource.
+`@AutoClose` fields may be either `static` or non-static. If the value of an `@AutoClose`
+field is `null` when it is evaluated the field will be ignored, but a warning message will
+be logged to inform you.
 
-For example, the following test declares a database connection field annotated with
-`@AutoClose` that is automatically closed afterward.
+By default, `@AutoClose` expects the value of the annotated field to implement a `close()`
+method that will be invoked to close the resource. However, developers can customize the
+name of the close method via the `value` attribute. For example, `@AutoClose("shutdown")`
+instructs JUnit to look for a `shutdown()` method to close the resource.
+
+`@AutoClose` fields are inherited from superclasses as long as they are not hidden.
+Furthermore, `@AutoClose` fields from subclasses will be closed before `@AutoClose` fields
+in superclasses.
+
+When multiple `@AutoClose` fields exist within a given test class, the order in which the
+resources are closed depends on an algorithm that is deterministic but intentionally
+nonobvious. This ensures that subsequent runs of a test suite close resources in the same
+order, thereby allowing for repeatable builds.
+
+The `AutoCloseExtension` implements the `AfterAllCallback` and
+`TestInstancePreDestroyCallback` extension APIs. Consequently, a `static` `@AutoClose`
+field will be closed after all tests in the current test class have completed, effectively
+after `@AfterAll` methods have executed for the test class. A non-static `@AutoClose`
+field will be closed before the current test class instance is destroyed. Specifically, if
+the test class is configured with `@TestInstance(Lifecycle.PER_METHOD)` semantics, a
+non-static `@AutoClose` field will be closed after the execution of each test method, test
+factory method, or test template method. However, if the test class is configured with
+`@TestInstance(Lifecycle.PER_CLASS)` semantics, a non-static `@AutoClose` field will not
+be closed until the current test class instance is no longer needed, which means after
+`@AfterAll` methods and after all `static` `@AutoClose` fields have been closed.
+
+The following example demonstrates how to annotate an instance field with `@AutoClose` so
+that the resource is automatically closed after test execution. In this example, we assume
+that the default `@TestInstance(Lifecycle.PER_METHOD)` semantics apply.
 
 [source,java,indent=0]
-.A test class using @AutoClose annotation to close used resource
+.A test class using `@AutoClose` to close a resource
 ----
 include::{testDir}/example/AutoCloseDemo.java[tags=user_guide_example]
 ----
+<1> Annotate an instance field with `@AutoClose`.
+<2> `WebClient` implements `java.lang.AutoCloseable` which defines a `close()` method that
+    will be invoked after each `@Test` method.
