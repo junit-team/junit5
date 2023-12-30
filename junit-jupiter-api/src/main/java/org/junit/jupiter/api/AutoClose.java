@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -38,10 +39,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @see java.lang.annotation.Retention
  * @see java.lang.annotation.Target
  */
-@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@API(status = API.Status.EXPERIMENTAL, since = "5.11")
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
 @ExtendWith(AutoCloseExtension.class)
+@API(status = API.Status.EXPERIMENTAL, since = "5.11")
 @SuppressWarnings("exports")
 public @interface AutoClose {
 
