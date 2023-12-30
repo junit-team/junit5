@@ -158,11 +158,11 @@ class AssertTimeoutAssertionsTests {
 	 * Take a nap for 100 milliseconds.
 	 */
 	private void nap() throws InterruptedException {
-		long start = System.currentTimeMillis();
+		long start = System.nanoTime();
 		// workaround for imprecise clocks (yes, Windows, I'm talking about you)
 		do {
 			Thread.sleep(100);
-		} while (System.currentTimeMillis() - start < 100);
+		} while (System.nanoTime() - start < 100_000_000L);
 	}
 
 }
