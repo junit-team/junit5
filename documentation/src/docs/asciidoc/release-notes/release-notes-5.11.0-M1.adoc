@@ -111,6 +111,8 @@ page in the Wiki.
   the supplied message is not the _expected message_ of the thrown exception.
 * Improved documentation for semantics of a disabled test regarding class-level lifecycle
   methods and callbacks.
+* New `assertInstanceOf` methods added for Kotlin following up with similar Java
+  `assertInstanceOf` methods introduced in `5.8` version.
 
 
 [[release-notes-5.11.0-M1-junit-vintage]]
