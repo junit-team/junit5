@@ -102,10 +102,8 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			assertTimeout(ofMillis(500), () -> {
-				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
-				return "Tempus Fugit";
-			});
+			assertTimeout(ofMillis(500),
+				() -> ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time")));
 		});
 		assertMessageEquals(exception, "not this time");
 	}
@@ -113,10 +111,7 @@ class AssertTimeoutAssertionsTests {
 	@Test
 	void assertTimeoutForSupplierThatThrowsAnAssertionFailedError() {
 		AssertionFailedError exception = assertThrows(AssertionFailedError.class, () -> {
-			assertTimeout(ofMillis(500), () -> {
-				fail("enigma");
-				return "Tempus Fugit";
-			});
+			assertTimeout(ofMillis(500), () -> fail("enigma"));
 		});
 		assertMessageEquals(exception, "enigma");
 	}
@@ -158,11 +153,11 @@ class AssertTimeoutAssertionsTests {
 	 * Take a nap for 100 milliseconds.
 	 */
 	private void nap() throws InterruptedException {
-		long start = System.currentTimeMillis();
+		long start = System.nanoTime();
 		// workaround for imprecise clocks (yes, Windows, I'm talking about you)
 		do {
 			Thread.sleep(100);
-		} while (System.currentTimeMillis() - start < 100);
+		} while (System.nanoTime() - start < 100_000_000L);
 	}
 
 }

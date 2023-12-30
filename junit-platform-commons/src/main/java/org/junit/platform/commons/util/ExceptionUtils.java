@@ -71,14 +71,12 @@ public final class ExceptionUtils {
 	 */
 	public static RuntimeException throwAsUncheckedException(Throwable t) {
 		Preconditions.notNull(t, "Throwable must not be null");
-		ExceptionUtils.throwAs(t);
-
-		// Appeasing the compiler: the following line will never be executed.
-		return null;
+		// the following line will never return but throw t
+		return ExceptionUtils.throwAs(t);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> void throwAs(Throwable t) throws T {
+	private static <T extends Throwable> T throwAs(Throwable t) throws T {
 		throw (T) t;
 	}
 

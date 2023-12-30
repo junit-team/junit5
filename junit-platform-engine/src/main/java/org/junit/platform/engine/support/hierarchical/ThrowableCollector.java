@@ -158,7 +158,7 @@ public class ThrowableCollector {
 	 */
 	public void assertEmpty() {
 		if (!isEmpty()) {
-			ExceptionUtils.throwAsUncheckedException(this.throwable);
+			throw ExceptionUtils.throwAsUncheckedException(this.throwable);
 		}
 	}
 

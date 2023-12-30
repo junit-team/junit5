@@ -147,7 +147,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					getPathOrFile(new FieldContext(field), field.getType(), factory, cleanupMode, scope, context));
 			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
 	}

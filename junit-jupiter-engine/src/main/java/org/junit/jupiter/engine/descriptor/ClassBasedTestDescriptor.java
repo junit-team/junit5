@@ -383,7 +383,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			executable.execute();
 		}
 		catch (Throwable throwable) {
-			ExceptionUtils.throwAsUncheckedException(throwable);
+			throw ExceptionUtils.throwAsUncheckedException(throwable);
 		}
 	}
 

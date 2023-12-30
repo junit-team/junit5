@@ -128,10 +128,8 @@ class AssertTimeoutPreemptivelyAssertionsTests {
 	@Test
 	void assertTimeoutPreemptivelyForSupplierThatThrowsAnException() {
 		RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-			assertTimeoutPreemptively(ofMillis(500), () -> {
-				ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time"));
-				return "Tempus Fugit";
-			});
+			assertTimeoutPreemptively(ofMillis(500),
+				() -> ExceptionUtils.throwAsUncheckedException(new RuntimeException("not this time")));
 		});
 		assertMessageEquals(exception, "not this time");
 	}

@@ -362,7 +362,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 				computeValue();
 			}
 			if (this.value instanceof Failure) {
-				ExceptionUtils.throwAsUncheckedException(((Failure) this.value).throwable);
+				throw ExceptionUtils.throwAsUncheckedException(((Failure) this.value).throwable);
 			}
 			return this.value;
 		}

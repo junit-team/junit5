@@ -865,7 +865,7 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Bef
 				makeAccessible(field).set(instance, trigger + " - " + field.getName());
 			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
 	}
