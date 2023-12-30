@@ -270,11 +270,11 @@ internal class KotlinAssertTimeoutAssertionsTests {
      * Take a nap for 100 milliseconds.
      */
     private fun nap() {
-        val start = System.nanoTime()
+        val start = System.currentTimeMillis()
         // workaround for imprecise clocks (yes, Windows, I'm talking about you)
         do {
             Thread.sleep(100)
-        } while (System.nanoTime() - start < 100_000_000)
+        } while (System.currentTimeMillis() - start < 100)
     }
 
     private fun waitForInterrupt() {
