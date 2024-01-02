@@ -30,8 +30,10 @@ jobs:
     - name: Install GraalVM
       uses: graalvm/setup-graalvm@v1
       with:
+        distribution: graalvm-community
         version: 'latest'
         java-version: '21'
+        set-java-home: false
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       uses: ./.github/actions/main-build
