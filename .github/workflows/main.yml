@@ -35,6 +35,13 @@ jobs:
         java-version: '21'
         set-java-home: false
         github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Debugging
+      run: |
+        echo "GRAALVM_HOME: $GRAALVM_HOME"
+        echo "JAVA_HOME: $JAVA_HOME"
+        ls -r $GRAALVM_HOME/bin
+        java --version
+        native-image --version
     - name: Build
       uses: ./.github/actions/main-build
       with:
