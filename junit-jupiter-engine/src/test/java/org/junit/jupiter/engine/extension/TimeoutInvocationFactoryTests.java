@@ -46,7 +46,8 @@ class TimeoutInvocationFactoryTests {
 
 	@BeforeEach
 	void setUp() {
-		parameters = new TimeoutInvocationParameters<>(invocation, timeoutDuration, () -> "description");
+		parameters = new TimeoutInvocationParameters<>(invocation, timeoutDuration, () -> "description",
+			PreInterruptCallbackInvocation.NOOP);
 		timeoutInvocationFactory = new TimeoutInvocationFactory(store);
 	}
 

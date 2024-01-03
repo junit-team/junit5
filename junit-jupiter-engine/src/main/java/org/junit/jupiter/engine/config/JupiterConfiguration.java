@@ -39,6 +39,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
+	String EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.preinterruptcallback.default.enabled";
 	String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = TestInstance.Lifecycle.DEFAULT_LIFECYCLE_PROPERTY_NAME;
 	String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = DisplayNameGenerator.DEFAULT_GENERATOR_PROPERTY_NAME;
 	String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = MethodOrderer.DEFAULT_ORDER_PROPERTY_NAME;
@@ -51,6 +52,8 @@ public interface JupiterConfiguration {
 	boolean isParallelExecutionEnabled();
 
 	boolean isExtensionAutoDetectionEnabled();
+
+	boolean isExtensionDefaultPreInterruptCallbackEnabled();
 
 	ExecutionMode getDefaultExecutionMode();
 

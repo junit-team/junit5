@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -44,7 +45,8 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 @API(status = INTERNAL, since = "5.5")
 public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionRegistrar {
-
+	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
+		MutableExtensionRegistry.class);
 	private static final Logger logger = LoggerFactory.getLogger(MutableExtensionRegistry.class);
 
 	private static final List<Extension> DEFAULT_STATELESS_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
@@ -63,6 +65,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * auto-detected using Java's {@link ServiceLoader} mechanism and automatically
 	 * registered after the default extensions.
 	 *
+	 * <p>If the {@link org.junit.jupiter.engine.Constants#EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME}
+	 * configuration parameter has been set to {@code true}, the {@link DefaultPreInterruptCallback} will be installed.
+	 *
 	 * @param configuration configuration parameters used to retrieve the extension
 	 * auto-detection flag; never {@code null}
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
@@ -77,7 +82,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
 		}
-
+		if (configuration.isExtensionDefaultPreInterruptCallbackEnabled()) {
+			extensionRegistry.registerDefaultExtension(new DefaultPreInterruptCallback());
+		}
 		return extensionRegistry;
 	}
 
@@ -164,6 +171,18 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	@Override
 	public void registerSyntheticExtension(Extension extension, Object source) {
 		registerExtension("synthetic", extension, source);
+	}
+
+	public void storeInExtensionContext(ExtensionContext extensionContext) {
+		ExtensionContext.Store store = extensionContext.getStore(MutableExtensionRegistry.NAMESPACE);
+		if (store != null) {
+			store.put(ExtensionRegistry.class, this);
+		}
+	}
+
+	static ExtensionRegistry getRegistryFromExtensionContext(ExtensionContext extensionContext) {
+		return (ExtensionRegistry) extensionContext.getStore(MutableExtensionRegistry.NAMESPACE).get(
+			ExtensionRegistry.class);
 	}
 
 	private void registerDefaultExtension(Extension extension) {

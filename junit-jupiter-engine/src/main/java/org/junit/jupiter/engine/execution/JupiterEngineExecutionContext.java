@@ -172,10 +172,17 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 		public JupiterEngineExecutionContext build() {
 			if (newState != null) {
+				storeExtensionRegistryInExtensionContext();
 				originalState = newState;
 				newState = null;
 			}
 			return new JupiterEngineExecutionContext(originalState);
+		}
+
+		private void storeExtensionRegistryInExtensionContext() {
+			if (newState.extensionRegistry != null && newState.extensionContext != null) {
+				newState.extensionRegistry.storeInExtensionContext(newState.extensionContext);
+			}
 		}
 
 		private State newState() {

@@ -108,6 +108,13 @@ public final class Constants {
 	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
 
 	/**
+	 * Property name used to enable the default {@link org.junit.jupiter.api.extension.PreInterruptCallback} extension.
+	 *
+	 * <p>The default behavior is not to enable the pre interrupt callback.
+	 */
+	public static final String EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME;
+
+	/**
 	 * Property name used to set the default test instance lifecycle mode: {@value}
 	 *
 	 * @see TestInstance.Lifecycle#DEFAULT_LIFECYCLE_PROPERTY_NAME

@@ -2261,6 +2261,12 @@ NOTE: If you need more control over polling intervals and greater flexibility wi
 asynchronous tests, consider using a dedicated library such as
 link:https://github.com/awaitility/awaitility[Awaitility].
 
+[[writing-tests-dump-stack-timeout]]
+=== Dump Stacks on Timeout
+
+It can be helpful for debugging to dump the stacks of all Threads, when a Timeout happened.
+The <<extensions-preinterrupt-callback, PreInterruptCallback>> provides a default
+implementation for that.
 
 [[writing-tests-declarative-timeouts-mode]]
 ==== Disable @Timeout Globally

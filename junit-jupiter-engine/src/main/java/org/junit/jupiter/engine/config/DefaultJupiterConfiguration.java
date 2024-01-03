@@ -90,6 +90,12 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isExtensionDefaultPreInterruptCallbackEnabled() {
+		return configurationParameters.getBoolean(EXTENSIONS_DEFAULT_PRE_INTERRUPT_CALLBACK_ENABLED_PROPERTY_NAME)//
+				.orElse(false);
+	}
+
+	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return executionModeConverter.get(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			ExecutionMode.SAME_THREAD);
