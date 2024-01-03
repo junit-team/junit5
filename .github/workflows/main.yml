@@ -33,14 +33,12 @@ jobs:
         distribution: graalvm-community
         version: 'latest'
         java-version: '21'
-        set-java-home: false
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       uses: ./.github/actions/main-build
       with:
         dependency-graph: generate-and-submit
         arguments: |
-          -Porg.gradle.java.installations.paths=${{ env.GRAALVM_HOME }}
           -Ptesting.enableJaCoCo
           build
           jacocoRootReport
