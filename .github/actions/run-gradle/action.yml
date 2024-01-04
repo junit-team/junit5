@@ -17,7 +17,7 @@ runs:
       with:
         distribution: temurin
         java-version: 21
-    - uses: gradle/gradle-build-action@v2
+    - uses: gradle/gradle-build-action@v3-beta
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       with:
