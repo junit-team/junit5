@@ -35,7 +35,9 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.testkit.engine.Execution;
 
 /**
  * Integration tests for {@link AutoClose @AutoClose} and the {@link AutoCloseExtension}.
@@ -213,6 +215,62 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 			// Class-level cleanup in superclass
 			"SuperTestCase.superStaticClosable.close()" //
 		);
+	}
+
+	@Test
+	void allFieldsAreClosedIfAnyFieldThrowsAnException() {
+		String staticField1 = "staticField1";
+		String staticField2 = "staticField2";
+		String staticField3 = "staticField3";
+		String field1 = "field1";
+		String field2 = "field2";
+		String field3 = "field3";
+
+		// Prerequisites to ensure fields are "ordered" as expected (based on the hash codes for their names).
+		assertThat(staticField1.hashCode()).isLessThan(staticField2.hashCode()).isLessThan(staticField3.hashCode());
+		assertThat(field1.hashCode()).isLessThan(field2.hashCode()).isLessThan(field3.hashCode());
+
+		Class<?> testClass = FailingFieldsTestCase.class;
+		EngineExecutionResults allEvents = executeTestsForClass(testClass);
+
+		Events tests = allEvents.testEvents();
+		tests.assertStatistics(stats -> stats.succeeded(0).failed(1));
+		// Verify that ALL fields were closed.
+		assertThat(recorder).containsExactly(//
+			"FailingFieldsTestCase.field1.close()", //
+			"FailingFieldsTestCase.field2.close()", //
+			"FailingFieldsTestCase.field3.close()", //
+			"FailingFieldsTestCase.staticField1.close()", //
+			"FailingFieldsTestCase.staticField2.close()", //
+			"FailingFieldsTestCase.staticField3.close()" //
+		);
+
+		// Test-level failures
+		Throwable throwable = findExecution(tests, "test()")//
+				.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
+		assertThat(throwable) //
+				.isExactlyInstanceOf(RuntimeException.class) //
+				.hasMessage("FailingFieldsTestCase.field1.close()")//
+				.hasNoCause()//
+				.hasSuppressedException(new RuntimeException("FailingFieldsTestCase.field2.close()"));
+
+		Events containers = allEvents.containerEvents();
+		containers.assertStatistics(stats -> stats.succeeded(1).failed(1));
+
+		// Container-level failures
+		throwable = findExecution(containers, testClass.getSimpleName())//
+				.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
+		assertThat(throwable) //
+				.isExactlyInstanceOf(RuntimeException.class) //
+				.hasMessage("FailingFieldsTestCase.staticField1.close()")//
+				.hasNoCause()//
+				.hasSuppressedException(new RuntimeException("FailingFieldsTestCase.staticField2.close()"));
+	}
+
+	private static Execution findExecution(Events events, String displayName) {
+		return events.executions()//
+				.filter(execution -> execution.getTestDescriptor().getDisplayName().contains(displayName))//
+				.findFirst().get();
 	}
 
 	private static void assertFailingWithMessage(Events testEvents, String msg) {
@@ -427,14 +485,54 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	static class FailingFieldsTestCase {
+
+		@AutoClose
+		static AutoCloseable staticField1;
+
+		@AutoClose
+		static AutoCloseable staticField2;
+
+		@AutoClose
+		static AutoCloseable staticField3;
+
+		@AutoClose
+		final AutoCloseable field1 = new AutoCloseSpy("field1", true);
+
+		@AutoClose
+		final AutoCloseable field2 = new AutoCloseSpy("field2", true);
+
+		@AutoClose
+		final AutoCloseable field3 = new AutoCloseSpy("field3", false);
+
+		@BeforeAll
+		static void setup() {
+			staticField1 = new AutoCloseSpy("staticField1", true);
+			staticField2 = new AutoCloseSpy("staticField2", true);
+			staticField3 = new AutoCloseSpy("staticField3", false);
+		}
+
+		@Test
+		void test() {
+		}
+	}
+
 	static class AutoCloseSpy implements AutoCloseable, Runnable {
 
 		private final String prefix;
+		private final boolean fail;
 		private String invokedMethod = null;
 
 		AutoCloseSpy(String prefix) {
 			Class<?> callerClass = StackWalker.getInstance(RETAIN_CLASS_REFERENCE).getCallerClass();
+			this.fail = false;
 			this.prefix = callerClass.getSimpleName() + "." + prefix + ".";
+		}
+
+		AutoCloseSpy(String prefix, boolean fail) {
+			Class<?> callerClass = StackWalker.getInstance(RETAIN_CLASS_REFERENCE).getCallerClass();
+			this.prefix = callerClass.getSimpleName() + "." + prefix + ".";
+			this.fail = fail;
 		}
 
 		@Override
@@ -452,7 +550,11 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 				throw new IllegalStateException("Already closed via " + this.invokedMethod);
 			}
 			this.invokedMethod = methodName;
-			recorder.add(this.prefix + this.invokedMethod);
+			String invocation = this.prefix + this.invokedMethod;
+			recorder.add(invocation);
+			if (this.fail) {
+				throw new RuntimeException(invocation);
+			}
 		}
 	}
 

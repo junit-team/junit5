@@ -24,10 +24,10 @@ import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.AnnotationUtils;
-import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * {@code AutoCloseExtension} is a JUnit Jupiter extension that closes resources
@@ -54,15 +54,11 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 	}
 
 	private static void closeFields(Class<?> testClass, Object testInstance) {
+		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
 		Predicate<Field> predicate = (testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
-		AnnotationUtils.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(field -> {
-			try {
-				closeField(field, testInstance);
-			}
-			catch (Throwable t) {
-				throw ExceptionUtils.throwAsUncheckedException(t);
-			}
-		});
+		AnnotationUtils.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
+			field -> throwableCollector.execute(() -> closeField(field, testInstance)));
+		throwableCollector.assertEmpty();
 	}
 
 	private static void closeField(Field field, Object testInstance) throws Exception {
