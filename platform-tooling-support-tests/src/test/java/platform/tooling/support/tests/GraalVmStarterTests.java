@@ -41,7 +41,6 @@ class GraalVmStarterTests {
 				.setProject("graalvm-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
-				.addArguments("-Porg.gradle.java.installations.fromEnv=GRAALVM_HOME") //
 				.setTimeout(Duration.ofMinutes(5)) //
 				.build();
 
