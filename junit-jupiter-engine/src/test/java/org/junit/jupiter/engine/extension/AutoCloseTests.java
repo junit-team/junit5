@@ -246,9 +246,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		);
 
 		// Test-level failures
-		Throwable throwable = findExecution(tests, "test()")//
-				.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
-		assertThat(throwable) //
+		assertThat(findFailure(tests, "test()")) //
 				.isExactlyInstanceOf(RuntimeException.class) //
 				.hasMessage("FailingFieldsTestCase.field1.close()")//
 				.hasNoCause()//
@@ -258,13 +256,16 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		containers.assertStatistics(stats -> stats.succeeded(1).failed(1));
 
 		// Container-level failures
-		throwable = findExecution(containers, testClass.getSimpleName())//
-				.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
-		assertThat(throwable) //
+		assertThat(findFailure(containers, testClass.getSimpleName())) //
 				.isExactlyInstanceOf(RuntimeException.class) //
 				.hasMessage("FailingFieldsTestCase.staticField1.close()")//
 				.hasNoCause()//
 				.hasSuppressedException(new RuntimeException("FailingFieldsTestCase.staticField2.close()"));
+	}
+
+	private Throwable findFailure(Events tests, String displayName) {
+		return findExecution(tests, displayName)//
+				.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow();
 	}
 
 	private static Execution findExecution(Events events, String displayName) {
