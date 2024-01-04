@@ -44,21 +44,23 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 
 	@Override
 	public void preDestroyTestInstance(ExtensionContext context) {
+		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
 		TestInstancePreDestroyCallback.preDestroyTestInstances(context,
-			testInstance -> closeFields(testInstance.getClass(), testInstance));
+			testInstance -> closeFields(testInstance.getClass(), testInstance, throwableCollector));
+		throwableCollector.assertEmpty();
 	}
 
 	@Override
 	public void afterAll(ExtensionContext context) {
-		closeFields(context.getRequiredTestClass(), null);
+		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
+		closeFields(context.getRequiredTestClass(), null, throwableCollector);
+		throwableCollector.assertEmpty();
 	}
 
-	private static void closeFields(Class<?> testClass, Object testInstance) {
-		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
+	private static void closeFields(Class<?> testClass, Object testInstance, ThrowableCollector throwableCollector) {
 		Predicate<Field> predicate = (testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
 		AnnotationUtils.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
 			field -> throwableCollector.execute(() -> closeField(field, testInstance)));
-		throwableCollector.assertEmpty();
 	}
 
 	private static void closeField(Field field, Object testInstance) throws Exception {

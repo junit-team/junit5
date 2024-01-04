@@ -219,23 +219,18 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void allFieldsAreClosedIfAnyFieldThrowsAnException() {
-		String staticField1 = "staticField1";
-		String staticField2 = "staticField2";
-		String staticField3 = "staticField3";
-		String field1 = "field1";
-		String field2 = "field2";
-		String field3 = "field3";
-
 		// Prerequisites to ensure fields are "ordered" as expected (based on the hash codes for their names).
-		assertThat(staticField1.hashCode()).isLessThan(staticField2.hashCode()).isLessThan(staticField3.hashCode());
-		assertThat(field1.hashCode()).isLessThan(field2.hashCode()).isLessThan(field3.hashCode());
+		assertThat("staticField1".hashCode()).isLessThan("staticField2".hashCode()).isLessThan(
+			"staticField3".hashCode());
+		assertThat("field1".hashCode()).isLessThan("field2".hashCode()).isLessThan("field3".hashCode());
 
 		Class<?> testClass = FailingFieldsTestCase.class;
 		EngineExecutionResults allEvents = executeTestsForClass(testClass);
 
 		Events tests = allEvents.testEvents();
 		tests.assertStatistics(stats -> stats.succeeded(0).failed(1));
-		// Verify that ALL fields were closed.
+
+		// Verify that ALL fields were closed in the proper order.
 		assertThat(recorder).containsExactly(//
 			"FailingFieldsTestCase.field1.close()", //
 			"FailingFieldsTestCase.field2.close()", //
@@ -261,6 +256,108 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 				.hasMessage("FailingFieldsTestCase.staticField1.close()")//
 				.hasNoCause()//
 				.hasSuppressedException(new RuntimeException("FailingFieldsTestCase.staticField2.close()"));
+	}
+
+	@Test
+	void allFieldsAreClosedIfAnyFieldThrowsAnExceptionWithNestedTestClassesWithInstancePerMethod() {
+		Class<?> enclosingTestClass = FailingFieldsEnclosingTestCase.class;
+		Class<?> nestedTestClass = FailingFieldsEnclosingTestCase.NestedTestCase.class;
+
+		EngineExecutionResults allEvents = executeTestsForClass(nestedTestClass);
+		Events tests = allEvents.testEvents();
+		tests.assertStatistics(stats -> stats.succeeded(0).failed(1));
+
+		// Verify that ALL fields were closed in the proper order.
+		assertThat(recorder).containsExactly(//
+			// Results from NestedTestCase instance
+			"NestedTestCase.nestedField1.close()", //
+			"NestedTestCase.nestedField2.close()", //
+			// Results from FailingFieldsEnclosingTestCase instance
+			"FailingFieldsEnclosingTestCase.enclosingField1.close()", //
+			"FailingFieldsEnclosingTestCase.enclosingField2.close()", //
+			// Results from NestedTestCase class
+			"NestedTestCase.nestedStaticField1.close()", //
+			"NestedTestCase.nestedStaticField2.close()", //
+			// Results from FailingFieldsEnclosingTestCase class
+			"FailingFieldsEnclosingTestCase.enclosingStaticField1.close()", //
+			"FailingFieldsEnclosingTestCase.enclosingStaticField2.close()"//
+		);
+
+		// Test-level failures
+		assertThat(findFailure(tests, "nestedTest()"))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("NestedTestCase.nestedField1.close()")//
+				.hasNoCause()//
+				.hasSuppressedException(new RuntimeException("FailingFieldsEnclosingTestCase.enclosingField1.close()"));
+
+		Events containers = allEvents.containerEvents();
+		containers.assertStatistics(stats -> stats.succeeded(1).failed(2));
+
+		// Container-level failures
+		assertThat(findFailure(containers, nestedTestClass.getSimpleName()))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("NestedTestCase.nestedStaticField1.close()")//
+				.hasNoCause()//
+				.hasNoSuppressedExceptions();
+		assertThat(findFailure(containers, enclosingTestClass.getSimpleName()))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("FailingFieldsEnclosingTestCase.enclosingStaticField1.close()")//
+				.hasNoCause()//
+				.hasNoSuppressedExceptions();
+
+		// Reset tracking
+		resetTracking();
+
+		allEvents = executeTestsForClass(enclosingTestClass);
+		tests = allEvents.testEvents();
+		tests.assertStatistics(stats -> stats.succeeded(0).failed(2));
+
+		// Verify that ALL fields were closed in the proper order.
+		assertThat(recorder).containsExactly(//
+			// Results from FailingFieldsEnclosingTestCase instance
+			"FailingFieldsEnclosingTestCase.enclosingField1.close()", //
+			"FailingFieldsEnclosingTestCase.enclosingField2.close()", //
+
+			// Results from NestedTestCase instance
+			"NestedTestCase.nestedField1.close()", //
+			"NestedTestCase.nestedField2.close()", //
+			// Results from FailingFieldsEnclosingTestCase instance
+			"FailingFieldsEnclosingTestCase.enclosingField1.close()", //
+			"FailingFieldsEnclosingTestCase.enclosingField2.close()", //
+			// Results from NestedTestCase class
+			"NestedTestCase.nestedStaticField1.close()", //
+			"NestedTestCase.nestedStaticField2.close()", //
+			// Results from FailingFieldsEnclosingTestCase class
+			"FailingFieldsEnclosingTestCase.enclosingStaticField1.close()", //
+			"FailingFieldsEnclosingTestCase.enclosingStaticField2.close()"//
+		);
+
+		// Test-level failures
+		assertThat(findFailure(tests, "enclosingTest()"))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("FailingFieldsEnclosingTestCase.enclosingField1.close()")//
+				.hasNoCause()//
+				.hasNoSuppressedExceptions();
+		assertThat(findFailure(tests, "nestedTest()"))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("NestedTestCase.nestedField1.close()")//
+				.hasNoCause()//
+				.hasSuppressedException(new RuntimeException("FailingFieldsEnclosingTestCase.enclosingField1.close()"));
+
+		containers = allEvents.containerEvents();
+		containers.assertStatistics(stats -> stats.succeeded(1).failed(2));
+
+		// Container-level failures
+		assertThat(findFailure(containers, nestedTestClass.getSimpleName()))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("NestedTestCase.nestedStaticField1.close()")//
+				.hasNoCause()//
+				.hasNoSuppressedExceptions();
+		assertThat(findFailure(containers, enclosingTestClass.getSimpleName()))//
+				.isExactlyInstanceOf(RuntimeException.class)//
+				.hasMessage("FailingFieldsEnclosingTestCase.enclosingStaticField1.close()")//
+				.hasNoCause()//
+				.hasNoSuppressedExceptions();
 	}
 
 	private Throwable findFailure(Events tests, String displayName) {
@@ -515,6 +612,57 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void test() {
+		}
+	}
+
+	static class FailingFieldsEnclosingTestCase {
+
+		@AutoClose
+		static AutoCloseable enclosingStaticField1;
+
+		@AutoClose
+		static AutoCloseable enclosingStaticField2;
+
+		@AutoClose
+		final AutoCloseable enclosingField1 = new AutoCloseSpy("enclosingField1", true);
+
+		@AutoClose
+		final AutoCloseable enclosingField2 = new AutoCloseSpy("enclosingField2", false);
+
+		@BeforeAll
+		static void setup() {
+			enclosingStaticField1 = new AutoCloseSpy("enclosingStaticField1", true);
+			enclosingStaticField2 = new AutoCloseSpy("enclosingStaticField2", false);
+		}
+
+		@Test
+		void enclosingTest() {
+		}
+
+		@Nested
+		class NestedTestCase {
+
+			@AutoClose
+			static AutoCloseable nestedStaticField1;
+
+			@AutoClose
+			static AutoCloseable nestedStaticField2;
+
+			@AutoClose
+			final AutoCloseable nestedField1 = new AutoCloseSpy("nestedField1", true);
+
+			@AutoClose
+			final AutoCloseable nestedField2 = new AutoCloseSpy("nestedField2", false);
+
+			@BeforeAll
+			static void setup() {
+				nestedStaticField1 = new AutoCloseSpy("nestedStaticField1", true);
+				nestedStaticField2 = new AutoCloseSpy("nestedStaticField2", false);
+			}
+
+			@Test
+			void nestedTest() {
+			}
 		}
 	}
 
