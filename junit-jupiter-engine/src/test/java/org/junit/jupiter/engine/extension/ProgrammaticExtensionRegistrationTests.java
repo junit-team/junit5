@@ -32,6 +32,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -98,7 +99,30 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	}
 
 	@Test
-	void instanceLevelWithInheritedAndHiddenExtensions() {
+	void instanceLevelWithInheritedExtensions() {
+		Class<?> testClass = InstanceLevelExtensionRegistrationParentTestCase.class;
+		String parent = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test" //
+		);
+
+		callSequence.clear();
+		testClass = InstanceLevelExtensionRegistrationChildTestCase.class;
+		String child = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test", //
+			child + " :: extension2 :: before test", //
+			child + " :: extension3 :: before test" //
+		);
+	}
+
+	@Disabled("Disabled until legacy search mode is supported")
+	@Test
+	void instanceLevelWithInheritedAndHiddenExtensionsInLegacyMode() {
 		Class<?> testClass = InstanceLevelExtensionRegistrationParentTestCase.class;
 		String parent = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
@@ -119,7 +143,30 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	}
 
 	@Test
-	void classLevelWithInheritedAndHiddenExtensions() {
+	void classLevelWithInheritedExtensions() {
+		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
+		String parent = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test" //
+		);
+
+		callSequence.clear();
+		testClass = ClassLevelExtensionRegistrationChildTestCase.class;
+		String child = testClass.getSimpleName();
+		assertOneTestSucceeded(testClass);
+		assertThat(callSequence).containsExactly( //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test", //
+			child + " :: extension2 :: before test", //
+			child + " :: extension3 :: before test" //
+		);
+	}
+
+	@Disabled("Disabled until legacy search mode is supported")
+	@Test
+	void classLevelWithInheritedAndHiddenExtensionsInLegacyMode() {
 		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
 		String parent = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
@@ -489,7 +536,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	static class ClassLevelExtensionRegistrationChildTestCase extends ClassLevelExtensionRegistrationParentTestCase {
 
-		// "Hides" ClassLevelExtensionRegistrationParentTestCase.extension2
+		// "Hides" ClassLevelExtensionRegistrationParentTestCase.extension2 in legacy mode
 		@RegisterExtension
 		static Extension extension2 = new BeforeEachExtension(2);
 
@@ -515,7 +562,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	static class InstanceLevelExtensionRegistrationChildTestCase
 			extends InstanceLevelExtensionRegistrationParentTestCase {
 
-		// "Hides" InstanceLevelExtensionRegistrationParentTestCase.extension2
+		// "Hides" InstanceLevelExtensionRegistrationParentTestCase.extension2 in legacy mode
 		@RegisterExtension
 		Extension extension2 = new BeforeEachExtension(2);
 

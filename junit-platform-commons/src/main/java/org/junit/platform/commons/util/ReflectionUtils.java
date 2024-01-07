@@ -1524,10 +1524,10 @@ public final class ReflectionUtils {
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
 				.collect(toList());
 		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
 
@@ -1672,7 +1672,7 @@ public final class ReflectionUtils {
 					.collect(toList());
 
 			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
-					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
+					.filter(method -> !isMethodOverriddenByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
 
@@ -1718,7 +1718,9 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
-		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		// TODO Enable if legacy field search semantics are enabled.
+		// return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		return false;
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
@@ -1729,12 +1731,39 @@ public final class ReflectionUtils {
 		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
-	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
-		return localMethods.stream().anyMatch(local -> isMethodShadowedBy(method, local));
+	private static boolean isMethodOverriddenByLocalMethods(Method method, List<Method> localMethods) {
+		return localMethods.stream().anyMatch(local -> isMethodOverriddenBy(method, local));
 	}
 
-	private static boolean isMethodShadowedBy(Method upper, Method lower) {
+	private static boolean isMethodOverriddenBy(Method upper, Method lower) {
+		// TODO Skip to hasCompatibleSignature() if legacy method search semantics are enabled.
+
+		// A static method cannot override anything.
+		if (Modifier.isStatic(lower.getModifiers())) {
+			return false;
+		}
+
+		// Cannot override a private, static, or final method.
+		int modifiers = upper.getModifiers();
+		if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
+			return false;
+		}
+
+		// Cannot override a package-private method in another package.
+		if (isPackagePrivate(upper) && !declaredInSamePackage(upper, lower)) {
+			return false;
+		}
+
 		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
+	}
+
+	private static boolean isPackagePrivate(Member member) {
+		int modifiers = member.getModifiers();
+		return !(Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers));
+	}
+
+	private static boolean declaredInSamePackage(Method m1, Method m2) {
+		return m1.getDeclaringClass().getPackage().getName().equals(m2.getDeclaringClass().getPackage().getName());
 	}
 
 	/**

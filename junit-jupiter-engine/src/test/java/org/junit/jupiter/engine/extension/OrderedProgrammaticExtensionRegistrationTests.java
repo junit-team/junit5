@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -154,7 +155,22 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	@Test
-	void classLevelWithDefaultOrderShadowingOrderFromSuperclass() {
+	void classLevelWithDefaultOrderDoesNotShadowExtensionFromSuperclass() {
+		Class<?> testClass = DefaultOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String parentName = parent.getSimpleName();
+		assertOutcome(testClass, //
+			parentName + " :: extension3 :: before test", //
+			parentName + " :: extension1 :: before test", //
+			parentName + " :: extension2 :: before test", //
+			testClassName + " :: extension3 :: before test" //
+		);
+	}
+
+	@Disabled("Disabled until legacy search mode is supported")
+	@Test
+	void classLevelWithDefaultOrderShadowingOrderFromSuperclassInLegacyMode() {
 		Class<?> testClass = DefaultOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
 		String testClassName = testClass.getSimpleName();
 		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
@@ -167,7 +183,22 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	@Test
-	void classLevelWithExplicitOrderShadowingOrderFromSuperclass() {
+	void classLevelWithExplicitOrderDoesNotShadowExtensionFromSuperclass() {
+		Class<?> testClass = ExplicitOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String parentName = parent.getSimpleName();
+		assertOutcome(testClass, //
+			parentName + " :: extension3 :: before test", //
+			testClassName + " :: extension2 :: before test", //
+			parentName + " :: extension1 :: before test", //
+			parentName + " :: extension2 :: before test" //
+		);
+	}
+
+	@Disabled("Disabled until legacy search mode is supported")
+	@Test
+	void classLevelWithExplicitOrderShadowingOrderFromSuperclassInLegacyMode() {
 		Class<?> testClass = ExplicitOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
 		String testClassName = testClass.getSimpleName();
 		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;

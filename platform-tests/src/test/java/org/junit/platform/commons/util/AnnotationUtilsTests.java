@@ -393,7 +393,6 @@ class AnnotationUtilsTests {
 	/**
 	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
-	@Disabled("Until #3553 is resolved")
 	@Test
 	void findAnnotatedMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 		final String BEFORE = "before";
@@ -493,27 +492,35 @@ class AnnotationUtilsTests {
 	}
 
 	@Test
-	void findAnnotatedFieldsForShadowedFields() throws Exception {
-		Class<?> clazz = ClassWithShadowedAnnotatedFields.class;
-		var interfaceField = clazz.getDeclaredField("interfaceField");
-		var superField = clazz.getDeclaredField("superField");
-		var field1 = clazz.getDeclaredField("field1");
-		var field2 = clazz.getDeclaredField("field2");
-		var field3 = clazz.getDeclaredField("field3");
-
-		assertThat(findShadowingAnnotatedFields(Annotation1.class)).containsExactly(superField, field1, field3);
-		assertThat(findShadowingAnnotatedFields(Annotation2.class)).containsExactly(field2, field3);
-		assertThat(findShadowingAnnotatedFields(Annotation3.class)).containsExactly(interfaceField);
+	void findAnnotatedFieldsFindsAllFieldsInTypeHierarchy() {
+		assertThat(findShadowingAnnotatedFields(Annotation1.class))//
+				.containsExactly("super", "foo", "baz", "super-shadow", "foo-shadow", "baz-shadow");
+		assertThat(findShadowingAnnotatedFields(Annotation2.class))//
+				.containsExactly("bar", "baz", "bar-shadow", "baz-shadow");
+		assertThat(findShadowingAnnotatedFields(Annotation3.class))//
+				.containsExactly("interface", "interface-shadow");
 	}
 
-	private List<Field> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {
-		return findAnnotatedFields(ClassWithShadowedAnnotatedFields.class, annotationType, isStringField);
+	@Disabled("Disabled until legacy search mode is supported")
+	@Test
+	void findAnnotatedFieldsForShadowedFieldsInLegacyMode() {
+		assertThat(findShadowingAnnotatedFields(Annotation1.class))//
+				.containsExactly("super-shadow", "foo-shadow", "baz-shadow");
+		assertThat(findShadowingAnnotatedFields(Annotation2.class))//
+				.containsExactly("bar-shadow", "baz-shadow");
+		assertThat(findShadowingAnnotatedFields(Annotation3.class))//
+				.containsExactly("interface-shadow");
+	}
+
+	private List<String> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {
+		var fields = findAnnotatedFields(ClassWithShadowedAnnotatedFields.class, annotationType, isStringField);
+		var values = ReflectionUtils.readFieldValues(fields, new ClassWithShadowedAnnotatedFields());
+		return values.stream().map(String::valueOf).toList();
 	}
 
 	/**
 	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
-	@Disabled("Until #3553 is resolved")
 	@Test
 	void findAnnotatedFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 		final String TEMP_DIR = "tempDir";
