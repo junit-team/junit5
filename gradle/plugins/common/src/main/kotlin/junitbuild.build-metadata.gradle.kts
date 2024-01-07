@@ -1,4 +1,6 @@
+import java.time.Instant
 import java.time.OffsetDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 
@@ -11,12 +13,14 @@ val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ")
 
 val buildTimeAndDate = buildParameters.manifest.buildTimestamp
 	.map {
-		DateTimeFormatterBuilder()
-			.append(dateFormatter)
-			.appendLiteral(' ')
-			.append(timeFormatter)
-			.toFormatter()
-			.parse(it)
+		it.toLongOrNull()
+			?.let { s -> Instant.ofEpochSecond(s).atOffset(ZoneOffset.UTC) }
+			?: DateTimeFormatterBuilder()
+				.append(dateFormatter)
+				.appendLiteral(' ')
+				.append(timeFormatter)
+				.toFormatter()
+				.parse(it)
 	}
 	.orNull
 	?: OffsetDateTime.now()

@@ -70,7 +70,8 @@ buildParameters {
 	}
 	group("manifest") {
 		string("buildTimestamp") {
-			description = "Overrides the value of the 'Build-Date' and 'Build-Time' jar manifest entries (e.g. '2023-11-05 17:49:13.996+0100')."
+			description = "Overrides the value of the 'Build-Date' and 'Build-Time' jar manifest entries. Can be set as a String (e.g. '2023-11-05 17:49:13.996+0100') or as seconds since the epoch."
+			fromEnvironment("SOURCE_DATE_EPOCH") // see https://reproducible-builds.org/docs/source-date-epoch/
 		}
 		string("builtBy") {
 			description = "Overrides the value of the 'Built-By' jar manifest entry"

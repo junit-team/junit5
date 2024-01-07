@@ -2,16 +2,16 @@
 
 rm -rf checksums*
 
-BUILD_TIMESTAMP=$(date -Iseconds)
+export SOURCE_DATE_EPOCH=$(date +%s)
 
 function calculate_checksums() {
     OUTPUT=$1
 
     ./gradlew \
+        --configuration-cache \
         --no-build-cache \
         -Porg.gradle.java.installations.auto-download=false \
         -Dscan.tag.Reproducibility \
-        -Pmanifest.buildTimestamp="${BUILD_TIMESTAMP}" \
         clean \
         assemble
 
