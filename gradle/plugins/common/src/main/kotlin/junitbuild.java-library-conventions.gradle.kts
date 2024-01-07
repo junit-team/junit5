@@ -9,6 +9,7 @@ plugins {
 	idea
 	checkstyle
 	id("junitbuild.base-conventions")
+	id("junitbuild.build-parameters")
 	id("junitbuild.jacoco-java-conventions")
 }
 
@@ -17,7 +18,6 @@ val modularProjects: List<Project> by rootProject.extra
 val buildDate: String by rootProject.extra
 val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
-val builtByValue: String by rootProject.extra
 
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
@@ -203,8 +203,9 @@ tasks.withType<Jar>().configureEach {
 tasks.jar {
 	manifest {
 		attributes(
-				"Created-By" to "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})",
-				"Built-By" to builtByValue,
+				"Created-By" to (buildParameters.manifest.createdBy.orNull
+					?: "${System.getProperty("java.version")} (${System.getProperty("java.vendor")} ${System.getProperty("java.vm.version")})"),
+				"Built-By" to buildParameters.manifest.builtBy.orElse("JUnit Team"),
 				"Build-Date" to buildDate,
 				"Build-Time" to buildTime,
 				"Build-Revision" to buildRevision,

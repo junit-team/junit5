@@ -1,28 +1,30 @@
-import java.time.Instant
 import java.time.OffsetDateTime
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 
-val buildTimeAndDate =
-	if (System.getenv().containsKey("SOURCE_DATE_EPOCH")) {
+plugins {
+	id("junitbuild.build-parameters")
+}
 
-		// SOURCE_DATE_EPOCH is a UNIX timestamp for pinning build metadata against
-		// in order to achieve reproducible builds
-		//
-		// More details - https://reproducible-builds.org/docs/source-date-epoch/
-		val sourceDateEpoch = System.getenv("SOURCE_DATE_EPOCH").toLong()
+val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ")
 
-		Instant.ofEpochSecond(sourceDateEpoch).atOffset(ZoneOffset.UTC)
-
-	} else {
-		OffsetDateTime.now()
+val buildTimeAndDate = buildParameters.manifest.buildTimestamp
+	.map {
+		DateTimeFormatterBuilder()
+			.append(dateFormatter)
+			.appendLiteral(' ')
+			.append(timeFormatter)
+			.toFormatter()
+			.parse(it)
 	}
+	.orNull
+	?: OffsetDateTime.now()
 
-val buildDate: String by extra { DateTimeFormatter.ISO_LOCAL_DATE.format(buildTimeAndDate) }
-val buildTime: String by extra { DateTimeFormatter.ofPattern("HH:mm:ss.SSSZ").format(buildTimeAndDate) }
+val buildDate: String by extra { dateFormatter.format(buildTimeAndDate) }
+val buildTime: String by extra { timeFormatter.format(buildTimeAndDate) }
 val buildRevision: String by extra {
 	providers.exec {
 		commandLine("git", "rev-parse", "--verify", "HEAD")
 	}.standardOutput.asText.get()
 }
-val builtByValue by extra { project.findProperty("builtBy") ?: project.property("defaultBuiltBy") }
