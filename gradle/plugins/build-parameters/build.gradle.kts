@@ -68,4 +68,15 @@ buildParameters {
 			description = "Sign artifacts before publishing them to Maven repos"
 		}
 	}
+	group("manifest") {
+		string("buildTimestamp") {
+			description = "Overrides the value of the 'Build-Date' and 'Build-Time' jar manifest entries (e.g. '2023-11-05 17:49:13.996+0100')."
+		}
+		string("builtBy") {
+			description = "Overrides the value of the 'Built-By' jar manifest entry"
+		}
+		string("createdBy") {
+			description = "Overrides the value of the 'Created-By' jar manifest entry"
+		}
+	}
 }

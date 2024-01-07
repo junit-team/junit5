@@ -2,18 +2,24 @@
 
 rm -rf checksums*
 
-export SOURCE_DATE_EPOCH=$(date +%s)
+BUILD_TIMESTAMP=$(date -Iseconds)
 
 function calculate_checksums() {
     OUTPUT=$1
 
-    ./gradlew --no-build-cache clean assemble --parallel -Porg.gradle.java.installations.auto-download=false -Dscan.tag.Reproducibility
+    ./gradlew \
+        --no-build-cache \
+        -Porg.gradle.java.installations.auto-download=false \
+        -Dscan.tag.Reproducibility \
+        -Pmanifest.buildTimestamp="${BUILD_TIMESTAMP}" \
+        clean \
+        assemble
 
     find . -name '*.jar' \
         | grep '/build/libs/' \
         | grep --invert-match 'javadoc' \
         | sort \
-        | xargs sha256sum > ${OUTPUT}
+        | xargs sha256sum > "${OUTPUT}"
 }
 
 
