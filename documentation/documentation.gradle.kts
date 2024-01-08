@@ -283,7 +283,7 @@ tasks {
 			inputs.dir(kotlin.srcDirs.first())
 		}
 
-		forkOptions {
+		jvm {
 			// To avoid warning, see https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/597
 			jvmArgs(
 				"--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
