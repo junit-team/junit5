@@ -21,6 +21,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.Resource;
 
 /**
  * Collection of utilities for working with {@code java.lang.Module}
@@ -94,6 +95,22 @@ public class ModuleUtils {
 		Preconditions.notNull(filter, "Class filter must not be null");
 
 		logger.config(() -> "Basic version of findAllClassesInModule() always returns an empty list!");
+		return emptyList();
+	}
+
+	/**
+	 * TODO: DOC
+	 *
+	 * @param moduleName
+	 * @param filter
+	 * @return
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static List<Resource> findAllResourcesInModule(String moduleName, ResourceFilter filter) {
+		Preconditions.notBlank(moduleName, "Module name must not be null or empty");
+		Preconditions.notNull(filter, "Resource filter must not be null");
+
+		logger.config(() -> "Basic version of findAllResourcesInModule() always returns an empty list!");
 		return emptyList();
 	}
 

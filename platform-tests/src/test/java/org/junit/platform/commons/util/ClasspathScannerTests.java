@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -17,12 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.module.ModuleFinder;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -45,6 +50,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.support.Resource;
 
 /**
  * Unit tests for {@link ClasspathScanner}.
@@ -55,6 +61,7 @@ import org.junit.platform.commons.logging.LogRecordListener;
 class ClasspathScannerTests {
 
 	private static final ClassFilter allClasses = ClassFilter.of(type -> true);
+	private static final ResourceFilter allResources = ResourceFilter.of(type -> true);
 
 	private final List<Class<?>> loadedClasses = new ArrayList<>();
 
@@ -183,6 +190,14 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void scanForResourcesInPackage() throws URISyntaxException {
+		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
+		assertThat(resources).extracting(Resource::getUri).containsExactly(
+			uriOf("/org/junit/platform/commons/example.resource"),
+			uriOf("/org/junit/platform/commons/other-example.resource"));
+	}
+
+	@Test
 	// #2500
 	void scanForClassesInPackageWithinModulesSharingNamePrefix(@TempDir Path temp) throws Exception {
 		var moduleSourcePath = Path.of(getClass().getResource("/modules-2500/").toURI()).toString();
@@ -249,6 +264,33 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void findAllResourcesInPackageWithinJarFileConcurrently() throws Exception {
+		var jarFile = getClass().getResource("/jartest.jar");
+		var jarUri = URI.create("jar:" + jarFile);
+
+		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+
+			var results = executeConcurrently(10,
+				() -> classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included", allResources));
+
+			assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
+				"FileSystem should be closed");
+
+			results.forEach(resources -> {
+				// TODO: Actual URI's start with `jar:file:///` instead of `jar:file:/` which seems weird.
+				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).anyMatch(
+					s -> s.endsWith("!/org/junit/platform/jartest/included/included.resource"));
+				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).anyMatch(
+					s -> s.endsWith("!/org/junit/platform/jartest/included/recursive/recursively-included.resource"));
+				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).noneMatch(
+					s -> s.endsWith("!/org/junit/platform/jartest/not-included/not-included.resource"));
+
+			});
+		}
+	}
+
+	@Test
 	void scanForClassesInDefaultPackage() {
 		var classFilter = ClassFilter.of(this::inDefaultPackage);
 		var classes = classpathScanner.scanForClassesInPackage("", classFilter);
@@ -259,10 +301,44 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void scanForResourcesInDefaultPackage() {
+		var resourceFilter = ResourceFilter.of(this::inDefaultPackage);
+		var resources = classpathScanner.scanForResourcesInPackage("", resourceFilter);
+
+		assertThat(resources).as("number of resources found in default package").isNotEmpty();
+		assertTrue(resources.stream().allMatch(this::inDefaultPackage));
+		assertTrue(resources.stream().anyMatch(resource -> "default-package.resource".equals(resource.getName())));
+	}
+
+	@Test
 	void scanForClassesInPackageWithFilter() {
 		var thisClassOnly = ClassFilter.of(clazz -> clazz == ClasspathScannerTests.class);
 		var classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", thisClassOnly);
 		assertSame(ClasspathScannerTests.class, classes.get(0));
+	}
+
+	@Test
+	void scanForResourcesInPackageWithFilter() {
+		var thisResourceOnly = ResourceFilter.of(
+			resource -> "org/junit/platform/commons/example.resource".equals(resource.getName()));
+		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
+		assertThat(resources).extracting(Resource::getName).containsExactly(
+			"org/junit/platform/commons/example.resource");
+	}
+
+	@Test
+	void resourcesCanBeRead() throws IOException {
+		var thisResourceOnly = ResourceFilter.of(
+			resource -> "org/junit/platform/commons/example.resource".equals(resource.getName()));
+		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
+		Resource resource = resources.get(0);
+
+		assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
+		assertThat(resource.getUri()).isEqualTo(uriOf("/org/junit/platform/commons/example.resource"));
+		try (InputStream is = resource.getInputStream()) {
+			String contents = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+			assertThat(contents).isEqualTo("This file was unintentionally left blank.");
+		}
 	}
 
 	@Test
@@ -272,9 +348,21 @@ class ClasspathScannerTests {
 	}
 
 	@Test
+	void scanForResourcesInPackageForNullBasePackage() {
+		assertThrows(PreconditionViolationException.class,
+			() -> classpathScanner.scanForResourcesInPackage(null, allResources));
+	}
+
+	@Test
 	void scanForClassesInPackageForWhitespaceBasePackage() {
 		assertThrows(PreconditionViolationException.class,
 			() -> classpathScanner.scanForClassesInPackage("    ", allClasses));
+	}
+
+	@Test
+	void scanForResourcesInPackageForWhitespaceBasePackage() {
+		assertThrows(PreconditionViolationException.class,
+			() -> classpathScanner.scanForResourcesInPackage("    ", allResources));
 	}
 
 	@Test
@@ -287,6 +375,13 @@ class ClasspathScannerTests {
 	void scanForClassesInPackageWhenIOExceptionOccurs() {
 		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
 		var classes = scanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
+		assertThat(classes).isEmpty();
+	}
+
+	@Test
+	void scanForResourcesInPackageWhenIOExceptionOccurs() {
+		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
+		var classes = scanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
 		assertThat(classes).isEmpty();
 	}
 
@@ -340,6 +435,10 @@ class ClasspathScannerTests {
 		return pkg == null || "".equals(clazz.getPackage().getName());
 	}
 
+	private boolean inDefaultPackage(Resource resource) {
+		return !resource.getName().contains("/");
+	}
+
 	@Test
 	void findAllClassesInClasspathRootWithFilter() throws Exception {
 		var root = getTestClasspathRoot();
@@ -375,6 +474,16 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInClasspathRoot(root, classFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+	}
+
+	private static URI uriOf(String name) {
+		var resource = ClasspathScannerTests.class.getResource(name);
+		try {
+			return requireNonNull(resource).toURI();
+		}
+		catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private URI getTestClasspathRoot() throws Exception {
