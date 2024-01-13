@@ -1019,6 +1019,8 @@ expressions can be useful.
 Since version 1.3, the JUnit Platform provides opt-in support for capturing output
 printed to `System.out` and `System.err`. To enable it, set the
 `junit.platform.output.capture.stdout` and/or `junit.platform.output.capture.stderr`
+<<running-tests-config-params, configuration parameter>> to `true`. And since version 5.11
+you can capture a merged stdout/stderr output by setting the `junit.platform.output.capture.merge`
 <<running-tests-config-params, configuration parameter>> to `true`. In addition, you may
 configure the maximum number of buffered bytes to be used per executed test or container
 using `junit.platform.output.capture.maxBuffer`.
@@ -1026,7 +1028,8 @@ using `junit.platform.output.capture.maxBuffer`.
 If enabled, the JUnit Platform captures the corresponding output and publishes it as a
 report entry using the `stdout` or `stderr` keys to all registered
 `{TestExecutionListener}` instances immediately before reporting the test or container as
-finished.
+finished, in case of a `junit.platform.output.capture.merge` <<running-tests-config-params, configuration parameter>>,
+the merged output will be published as a report entry using the `stdout` key.
 
 Please note that the captured output will only contain output emitted by the thread that
 was used to execute a container or test. Any output by other threads will be omitted

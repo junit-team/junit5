@@ -156,7 +156,7 @@ public class ConsoleTestExecutor {
 		launcher.registerTestExecutionListeners(summaryListener);
 		// optionally, register test plan execution details printing listener
 		createDetailsPrintingListener(out).ifPresent(launcher::registerTestExecutionListeners);
-		// optionally, register XML reports writingCAPTURE_STDERR_PROPERTY_NAME listener
+		// optionally, register XML reports writing listener
 		createXmlWritingListener(out, reportsDir).ifPresent(launcher::registerTestExecutionListeners);
 		return summaryListener;
 	}

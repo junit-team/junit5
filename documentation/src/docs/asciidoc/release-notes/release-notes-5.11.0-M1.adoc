@@ -30,7 +30,9 @@ repository on GitHub.
   -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
-
+* New optional config parameter `junit.platform.output.capture.merge` that can be used to merge stdout and stderr and
+  capture it as stdout.
+* New optional CLI options `--redirect-stdout` and `--redirect-stderr` to redirect stdout and stderr outputs to a file.
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
 === JUnit Jupiter
