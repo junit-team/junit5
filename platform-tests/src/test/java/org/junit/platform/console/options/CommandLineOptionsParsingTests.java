@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
@@ -56,23 +57,25 @@ class CommandLineOptionsParsingTests {
 		// @formatter:off
 		assertAll(
 			() -> assertFalse(options.output.isAnsiColorOutputDisabled()),
-			() -> assertEquals(TestConsoleOutputOptions.DEFAULT_DETAILS, options.output.getDetails()),
-			() -> assertFalse(options.discovery.isScanClasspath()),
-			() -> assertEquals(List.of(STANDARD_INCLUDE_PATTERN), options.discovery.getIncludedClassNamePatterns()),
-			() -> assertEquals(List.of(), options.discovery.getExcludedClassNamePatterns()),
-			() -> assertEquals(List.of(), options.discovery.getIncludedPackages()),
-			() -> assertEquals(List.of(), options.discovery.getExcludedPackages()),
-			() -> assertEquals(List.of(), options.discovery.getIncludedTagExpressions()),
-			() -> assertEquals(List.of(), options.discovery.getExcludedTagExpressions()),
-			() -> assertEquals(List.of(), options.discovery.getAdditionalClasspathEntries()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedUris()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedFiles()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedDirectories()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedModules()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedPackages()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedMethods()),
-			() -> assertEquals(List.of(), options.discovery.getSelectedClasspathEntries()),
-			() -> assertEquals(Map.of(), options.discovery.getConfigurationParameters())
+				() -> assertNull(options.output.getStdoutPath()),
+				() -> assertNull(options.output.getStderrPath()),
+		() -> assertEquals(TestConsoleOutputOptions.DEFAULT_DETAILS, options.output.getDetails()),
+		() -> assertFalse(options.discovery.isScanClasspath()),
+		() -> assertEquals(List.of(STANDARD_INCLUDE_PATTERN), options.discovery.getIncludedClassNamePatterns()),
+		() -> assertEquals(List.of(), options.discovery.getExcludedClassNamePatterns()),
+		() -> assertEquals(List.of(), options.discovery.getIncludedPackages()),
+		() -> assertEquals(List.of(), options.discovery.getExcludedPackages()),
+		() -> assertEquals(List.of(), options.discovery.getIncludedTagExpressions()),
+		() -> assertEquals(List.of(), options.discovery.getExcludedTagExpressions()),
+		() -> assertEquals(List.of(), options.discovery.getAdditionalClasspathEntries()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedUris()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedFiles()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedDirectories()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedModules()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedPackages()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedMethods()),
+		() -> assertEquals(List.of(), options.discovery.getSelectedClasspathEntries()),
+		() -> assertEquals(Map.of(), options.discovery.getConfigurationParameters())
 		);
 		// @formatter:on
 	}
@@ -539,6 +542,48 @@ class CommandLineOptionsParsingTests {
 	@Test
 	void parseInvalidConfigurationParameters() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-config", "--config");
+	}
+
+	@ParameterizedTest
+	@EnumSource
+	void parseValidStdoutRedirectionFile(ArgsType type) {
+		var file = Paths.get("foo.txt");
+		// @formatter:off
+		assertAll(
+				() -> assertNull(type.parseArgLine("").output.getStdoutPath()),
+				() -> assertEquals(file, type.parseArgLine("--redirect-stdout=foo.txt").output.getStdoutPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stdout=foo.txt").output.getStdoutPath()),
+				() -> assertEquals(file, type.parseArgLine("--redirect-stdout foo.txt").output.getStdoutPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stdout foo.txt").output.getStdoutPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stdout bar.txt -redirect-stdout foo.txt").output.getStdoutPath())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidStdoutRedirectionFile() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--redirect-stdout", "-redirect-stdout");
+	}
+
+	@ParameterizedTest
+	@EnumSource
+	void parseValidStderrRedirectionFile(ArgsType type) {
+		var file = Paths.get("foo.txt");
+		// @formatter:off
+		assertAll(
+				() -> assertNull(type.parseArgLine("").output.getStderrPath()),
+				() -> assertEquals(file, type.parseArgLine("--redirect-stderr=foo.txt").output.getStderrPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stderr=foo.txt").output.getStderrPath()),
+				() -> assertEquals(file, type.parseArgLine("--redirect-stderr foo.txt").output.getStderrPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stderr foo.txt").output.getStderrPath()),
+				() -> assertEquals(file, type.parseArgLine("-redirect-stderr bar.txt -redirect-stderr foo.txt").output.getStderrPath())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidStderrRedirectionFile() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--redirect-stderr", "-redirect-stderr");
 	}
 
 	@ParameterizedTest
