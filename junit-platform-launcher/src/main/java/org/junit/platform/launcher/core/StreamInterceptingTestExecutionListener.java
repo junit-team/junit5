@@ -12,6 +12,7 @@ package org.junit.platform.launcher.core;
 
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MAX_BUFFER_DEFAULT;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MAX_BUFFER_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
@@ -43,17 +44,28 @@ class StreamInterceptingTestExecutionListener implements EagerTestExecutionListe
 
 		boolean captureStdout = configurationParameters.getBoolean(CAPTURE_STDOUT_PROPERTY_NAME).orElse(false);
 		boolean captureStderr = configurationParameters.getBoolean(CAPTURE_STDERR_PROPERTY_NAME).orElse(false);
-		if (!captureStdout && !captureStderr) {
+		boolean captureMergeStandardStreams = configurationParameters.getBoolean(
+			CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME).orElse(false);
+
+		if (!captureStdout && !captureStderr && !captureMergeStandardStreams) {
 			return Optional.empty();
 		}
 
 		int maxSize = configurationParameters.get(CAPTURE_MAX_BUFFER_PROPERTY_NAME, Integer::valueOf) //
 				.orElse(CAPTURE_MAX_BUFFER_DEFAULT);
 
-		Optional<StreamInterceptor> stdoutInterceptor = captureStdout ? StreamInterceptor.registerStdout(maxSize)
-				: Optional.empty();
-		Optional<StreamInterceptor> stderrInterceptor = captureStderr ? StreamInterceptor.registerStderr(maxSize)
-				: Optional.empty();
+		Optional<StreamInterceptor> stdoutInterceptor = Optional.empty();
+		Optional<StreamInterceptor> stderrInterceptor = Optional.empty();
+
+		if (captureMergeStandardStreams) {
+			stdoutInterceptor = StreamInterceptor.registerMergedStandardStreams(maxSize);
+			captureStderr = false;
+			captureStdout = true;
+		}
+		else {
+			stdoutInterceptor = captureStdout ? StreamInterceptor.registerStdout(maxSize) : Optional.empty();
+			stderrInterceptor = captureStderr ? StreamInterceptor.registerStderr(maxSize) : Optional.empty();
+		}
 
 		if ((!stdoutInterceptor.isPresent() && captureStdout) || (!stderrInterceptor.isPresent() && captureStderr)) {
 			stdoutInterceptor.ifPresent(StreamInterceptor::unregister);
