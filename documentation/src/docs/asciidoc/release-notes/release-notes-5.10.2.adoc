@@ -1,0 +1,35 @@
+[[release-notes-5.10.2]]
+== 5.10.2
+
+*Date of Release:* ❓
+
+*Scope:* minor bug fixes since 5.10.1.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/73?closed=1+[5.10.2] milestone page in the
+JUnit repository on GitHub.
+
+
+[[release-notes-5.10.2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Fixes use of the launcher as a Java module when `junit.platform.launcher.interceptors.enabled` is enabled
+  - See link:https://github.com/junit-team/junit5/issues/3561[issue 3561] for details.
+
+
+[[release-notes-5.10.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* _none so far_
+
+
+[[release-notes-5.10.2-junit-vintage]]
+=== JUnit Vintage
+
+==== Bug Fixes
+
+* _none so far_
