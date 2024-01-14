@@ -206,24 +206,28 @@ public class ConsoleTestExecutor {
 		summary.printTo(out);
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	private boolean isSameFile(Path path1, Path path2) {
 		if (path1 == null || path2 == null)
 			return false;
 		return (path1.normalize().toAbsolutePath().equals(path2.normalize().toAbsolutePath()));
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	private void captureStdout() {
 		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
 		configParameters.put(LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME, "true");
 		discoveryOptions.setConfigurationParameters(configParameters);
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	private void captureStderr() {
 		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
 		configParameters.put(LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME, "true");
 		discoveryOptions.setConfigurationParameters(configParameters);
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	private void captureMergedStandardStreams() {
 		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
 		configParameters.put(LauncherConstants.CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME, "true");

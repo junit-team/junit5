@@ -75,18 +75,22 @@ public class TestConsoleOutputOptions {
 		this.theme = theme;
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	public Path getStdoutPath() {
 		return this.stdoutPath;
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	public void setStdoutPath(Path stdoutPath) {
 		this.stdoutPath = stdoutPath;
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	public Path getStderrPath() {
 		return this.stderrPath;
 	}
 
+	@API(status = INTERNAL, since = "5.11")
 	public void setStderrPath(Path stderrPath) {
 		this.stderrPath = stderrPath;
 	}
