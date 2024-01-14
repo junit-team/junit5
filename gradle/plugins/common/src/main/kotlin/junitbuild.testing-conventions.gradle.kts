@@ -22,9 +22,9 @@ tasks.withType<Test>().configureEach {
 		maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
 	}
 	distribution {
-		enabled.convention(buildParameters.develocity.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
-		maxLocalExecutors = buildParameters.develocity.testDistribution.maxLocalExecutors
-		maxRemoteExecutors = buildParameters.develocity.testDistribution.maxRemoteExecutors
+		enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
+		maxLocalExecutors = buildParameters.junit.develocity.testDistribution.maxLocalExecutors
+		maxRemoteExecutors = buildParameters.junit.develocity.testDistribution.maxRemoteExecutors
 		if (buildParameters.ci) {
 			when {
 				OperatingSystem.current().isLinux -> requirements.add("os=linux")
@@ -34,7 +34,7 @@ tasks.withType<Test>().configureEach {
 		}
 	}
 	predictiveSelection {
-		enabled = buildParameters.develocity.predictiveTestSelection.enabled
+		enabled = buildParameters.junit.develocity.predictiveTestSelection.enabled
 
 		// Ensure PTS works when publishing Build Scans to scans.gradle.com
 		this as PredictiveTestSelectionExtensionInternal

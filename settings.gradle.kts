@@ -52,7 +52,7 @@ gradleEnterprise {
 			}
 		}
 
-		if (buildParameters.develocity.testDistribution.enabled) {
+		if (buildParameters.junit.develocity.testDistribution.enabled) {
 			tag("test-distribution")
 		}
 	}
@@ -62,15 +62,16 @@ buildCache {
 	local {
 		isEnabled = !buildParameters.ci
 	}
+	val buildCacheServer = buildParameters.junit.develocity.buildCache.server
 	if (useDevelocityInstance) {
 		remote(gradleEnterprise.buildCache) {
-			server = buildParameters.buildCache.server.orNull
+			server = buildCacheServer.orNull
 			val authenticated = System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY") != null
 			isPush = buildParameters.ci && authenticated
 		}
 	} else {
 		remote<HttpBuildCache> {
-			url = uri(buildParameters.buildCache.server.getOrElse(develocityServer)).resolve("/cache/")
+			url = uri(buildCacheServer.getOrElse(develocityServer)).resolve("/cache/")
 		}
 	}
 }
