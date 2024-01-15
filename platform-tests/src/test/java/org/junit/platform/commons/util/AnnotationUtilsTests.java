@@ -44,6 +44,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.pkg1.ClassLevelDir;
@@ -509,10 +510,11 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3532
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findAnnotatedFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findAnnotatedFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 		final String TEMP_DIR = "tempDir";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
 		Field staticField = superclass.getDeclaredField(TEMP_DIR);

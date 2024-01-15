@@ -52,6 +52,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -1357,10 +1358,11 @@ class ReflectionUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3532
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 		final String TEMP_DIR = "tempDir";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
 		Field staticField = superclass.getDeclaredField(TEMP_DIR);

@@ -1202,23 +1202,21 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		return findAllFieldsInHierarchy(clazz, predicate, traversalMode).stream();
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream().filter(predicate);
 	}
 
-	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Field> localFields = getDeclaredFields(clazz, predicate).stream()
+		List<Field> localFields = getDeclaredFields(clazz).stream()
 				.filter(field -> !field.isSynthetic())
 				.collect(toList());
-		List<Field> superclassFields = getSuperclassFields(clazz, predicate, traversalMode).stream()
+		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
 				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
-		List<Field> interfaceFields = getInterfaceFields(clazz, predicate, traversalMode).stream()
+		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
 				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
 		// @formatter:on
@@ -1481,18 +1479,18 @@ public final class ReflectionUtils {
 
 	/**
 	 * Custom alternative to {@link Class#getFields()} that sorts the fields
-	 * which match the supplied predicate and converts them to a mutable list.
+	 * and converts them to a mutable list.
 	 */
-	private static List<Field> getFields(Class<?> clazz, Predicate<Field> predicate) {
-		return toSortedMutableList(clazz.getFields(), predicate);
+	private static List<Field> getFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getFields());
 	}
 
 	/**
 	 * Custom alternative to {@link Class#getDeclaredFields()} that sorts the
-	 * fields which match the supplied predicate and converts them to a mutable list.
+	 * fields and converts them to a mutable list.
 	 */
-	private static List<Field> getDeclaredFields(Class<?> clazz, Predicate<Field> predicate) {
-		return toSortedMutableList(clazz.getDeclaredFields(), predicate);
+	private static List<Field> getDeclaredFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getDeclaredFields());
 	}
 
 	/**
@@ -1556,10 +1554,9 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
-	private static List<Field> toSortedMutableList(Field[] fields, Predicate<Field> predicate) {
+	private static List<Field> toSortedMutableList(Field[] fields) {
 		// @formatter:off
 		return Arrays.stream(fields)
-				.filter(predicate)
 				.sorted(ReflectionUtils::defaultFieldSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
@@ -1628,15 +1625,13 @@ public final class ReflectionUtils {
 		return allInterfaceMethods;
 	}
 
-	private static List<Field> getInterfaceFields(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Field> allInterfaceFields = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			List<Field> localInterfaceFields = getFields(ifc, predicate);
+			List<Field> localInterfaceFields = getFields(ifc);
 
 			// @formatter:off
-			List<Field> superinterfaceFields = getInterfaceFields(ifc, predicate, traversalMode).stream()
+			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
 					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
 					.collect(toList());
 			// @formatter:on
@@ -1652,14 +1647,12 @@ public final class ReflectionUtils {
 		return allInterfaceFields;
 	}
 
-	private static List<Field> getSuperclassFields(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> getSuperclassFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
 		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
-		return findAllFieldsInHierarchy(superclass, predicate, traversalMode);
+		return findAllFieldsInHierarchy(superclass, traversalMode);
 	}
 
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
