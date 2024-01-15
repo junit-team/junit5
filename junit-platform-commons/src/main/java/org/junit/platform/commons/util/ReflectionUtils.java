@@ -1405,11 +1405,11 @@ public final class ReflectionUtils {
 
 		for (Class<?> current = clazz; isSearchable(current); current = current.getSuperclass()) {
 			// Search for match in current type
-			List<Method> methods = current.isInterface() ? getMethods(current, predicate)
-					: getDeclaredMethods(current, predicate, BOTTOM_UP);
-			if (!methods.isEmpty()) {
-				// Since the predicate has already been applied, return the first match.
-				return Optional.of(methods.get(0));
+			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
+			for (Method method : methods) {
+				if (predicate.test(method)) {
+					return Optional.of(method);
+				}
 			}
 
 			// Search for match in interfaces implemented by current type
@@ -1504,8 +1504,8 @@ public final class ReflectionUtils {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Method> localMethods = getDeclaredMethods(clazz, predicate, traversalMode).stream()
-				.filter(method -> !method.isSynthetic())
+		List<Method> localMethods = getDeclaredMethods(clazz, traversalMode).stream()
+				.filter(predicate.and(method -> !method.isSynthetic()))
 				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, predicate, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
@@ -1546,26 +1546,24 @@ public final class ReflectionUtils {
 
 	/**
 	 * Custom alternative to {@link Class#getMethods()} that sorts the methods
-	 * which match the supplied predicate and converts them to a mutable list.
+	 * and converts them to a mutable list.
 	 */
-	private static List<Method> getMethods(Class<?> clazz, Predicate<Method> predicate) {
-		return toSortedMutableList(clazz.getMethods(), predicate);
+	private static List<Method> getMethods(Class<?> clazz) {
+		return toSortedMutableList(clazz.getMethods());
 	}
 
 	/**
 	 * Custom alternative to {@link Class#getDeclaredMethods()} that sorts the
-	 * methods which match the supplied predicate and converts them to a mutable list.
+	 * methods and converts them to a mutable list.
 	 *
 	 * <p>In addition, the list returned by this method includes interface
 	 * default methods which are either prepended or appended to the list of
 	 * declared methods depending on the supplied traversal mode.
 	 */
-	private static List<Method> getDeclaredMethods(Class<?> clazz, Predicate<Method> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Method> getDeclaredMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		// Note: getDefaultMethods() already sorts the methods,
-		List<Method> defaultMethods = getDefaultMethods(clazz, predicate);
-		List<Method> declaredMethods = toSortedMutableList(clazz.getDeclaredMethods(), predicate);
+		List<Method> defaultMethods = getDefaultMethods(clazz);
+		List<Method> declaredMethods = toSortedMutableList(clazz.getDeclaredMethods());
 
 		// Take the traversal mode into account in order to retain the inherited
 		// nature of interface default methods.
@@ -1582,23 +1580,23 @@ public final class ReflectionUtils {
 	/**
 	 * Get a sorted, mutable list of all default methods present in interfaces
 	 * implemented by the supplied class which are also <em>visible</em> within
-	 * the supplied class and match the supplied predicate.
+	 * the supplied class.
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-6.html#d5e9652">Method Visibility</a>
 	 * in the Java Language Specification
 	 */
-	private static List<Method> getDefaultMethods(Class<?> clazz, Predicate<Method> predicate) {
+	private static List<Method> getDefaultMethods(Class<?> clazz) {
 		// @formatter:off
 		// Visible default methods are interface default methods that have not
 		// been overridden.
 		List<Method> visibleDefaultMethods = Arrays.stream(clazz.getMethods())
-				.filter(predicate.and(Method::isDefault))
+				.filter(Method::isDefault)
 				.collect(toCollection(ArrayList::new));
 		if (visibleDefaultMethods.isEmpty()) {
 			return visibleDefaultMethods;
 		}
 		return Arrays.stream(clazz.getInterfaces())
-				.map(ifc -> getMethods(ifc, predicate))
+				.map(ReflectionUtils::getMethods)
 				.flatMap(List::stream)
 				.filter(visibleDefaultMethods::contains)
 				.collect(toCollection(ArrayList::new));
@@ -1614,10 +1612,9 @@ public final class ReflectionUtils {
 		// @formatter:on
 	}
 
-	private static List<Method> toSortedMutableList(Method[] methods, Predicate<Method> predicate) {
+	private static List<Method> toSortedMutableList(Method[] methods) {
 		// @formatter:off
 		return Arrays.stream(methods)
-				.filter(predicate)
 				.sorted(ReflectionUtils::defaultMethodSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
@@ -1656,8 +1653,8 @@ public final class ReflectionUtils {
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			// @formatter:off
-			List<Method> localInterfaceMethods = getMethods(ifc, predicate).stream()
-					.filter(method -> !isAbstract(method))
+			List<Method> localInterfaceMethods = getMethods(ifc).stream()
+					.filter(predicate.and(method -> !isAbstract(method)))
 					.collect(toList());
 
 			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, predicate, traversalMode).stream()
