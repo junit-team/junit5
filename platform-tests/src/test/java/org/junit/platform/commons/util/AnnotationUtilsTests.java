@@ -391,10 +391,11 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3498
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findAnnotatedMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findAnnotatedMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 		final String BEFORE = "before";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
 		Method beforeAllMethod = superclass.getDeclaredMethod(BEFORE);

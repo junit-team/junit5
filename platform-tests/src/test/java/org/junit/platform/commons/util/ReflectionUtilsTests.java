@@ -1326,10 +1326,11 @@ class ReflectionUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3498
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 		final String BEFORE = "before";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
 		Method staticMethod = superclass.getDeclaredMethod(BEFORE);

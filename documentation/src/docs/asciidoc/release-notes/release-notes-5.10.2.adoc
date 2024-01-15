@@ -21,12 +21,16 @@ on GitHub.
 
 ==== Deprecations and Breaking Changes
 
-* Field predicates are no longer applied eagerly while searching the type hierarchy. This
-  reverts changes made in 5.10.1 that affected `findFields(...)` and `streamFields(...)`
-  in `ReflectionSupport` as well as `findAnnotatedFields(...)` and
-  `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
-  - See issues link:https://github.com/junit-team/junit5/issues/3638[#3638] and
-    link:https://github.com/junit-team/junit5/issues/3553[#3553] for details.
+* Field predicates are no longer applied eagerly while searching the type hierarchy.
+  - This reverts changes made in 5.10.1 that affected `findFields(...)` and
+    `streamFields(...)` in `ReflectionSupport` as well as `findAnnotatedFields(...)` and
+    `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
+  - See issue link:https://github.com/junit-team/junit5/issues/3638[#3638] for details.
+* Method predicates are no longer applied eagerly while searching the type hierarchy.
+  - This reverts changes made in 5.10.1 that affected `findMethods(...)` and
+    `streamMethods(...)` in `ReflectionSupport` as well as `findAnnotatedMethods(...)` in
+    `AnnotationSupport`.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
 
 
 [[release-notes-5.10.2-junit-jupiter]]
@@ -34,16 +38,23 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* JUnit Jupiter once again properly detects when a `@Test` method is overridden in a
+  subclass.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
 
 ==== Deprecations and Breaking Changes
 
 * A package-private static field annotated with `@TempDir` is once again _shadowed_ by a
   non-static field annotated with `@TempDir` when the non-static field resides in a
-  different package and has the same name as the static field. This reverts changes made
-  in 5.10.1.
-  - See issues link:https://github.com/junit-team/junit5/issues/3638[#3638] and
-    link:https://github.com/junit-team/junit5/issues/3553[#3553] for details.
+  different package and has the same name as the static field.
+  - This reverts changes made in 5.10.1.
+  - See issue link:https://github.com/junit-team/junit5/issues/3638[#3638] for details.
+* A package-private class-level lifecycle method annotated with `@BeforeAll` or
+  `@AfterAll` is once again _shadowed_ by a method-level lifecycle method annotated with
+  `@BeforeEach` or `@AfterEach` when the method-level lifecycle method resides in a
+  different package and has the same name as the class-level lifecycle method.
+  - This reverts changes made in 5.10.1.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
 
 
 [[release-notes-5.10.2-junit-vintage]]
