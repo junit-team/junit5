@@ -3,11 +3,11 @@
 
 *Date of Release:* ❓
 
-*Scope:* minor bug fixes since 5.10.1.
+*Scope:* minor bug fixes and changes since 5.10.1.
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/73?closed=1+[5.10.2] milestone page in the
-JUnit repository on GitHub.
+link:{junit5-repo}+/milestone/73?closed=1+[5.10.2] milestone page in the JUnit repository
+on GitHub.
 
 
 [[release-notes-5.10.2-junit-platform]]
@@ -15,9 +15,18 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* Allow `junit-platform-launcher` to be used as a Java module when
+* The `junit-platform-launcher` may now be used as a Java module when
   `junit.platform.launcher.interceptors.enabled` is set to `true`.
-  - See link:https://github.com/junit-team/junit5/issues/3561[issue 3561] for details.
+  - See issue link:https://github.com/junit-team/junit5/issues/3561[#3561] for details.
+
+==== Deprecations and Breaking Changes
+
+* Field predicates are no longer applied eagerly while searching the type hierarchy. This
+  reverts changes made in 5.10.1 that affected `findFields(...)` and `streamFields(...)`
+  in `ReflectionSupport` as well as `findAnnotatedFields(...)` and
+  `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
+  - See issues link:https://github.com/junit-team/junit5/issues/3638[#3638] and
+    link:https://github.com/junit-team/junit5/issues/3553[#3553] for details.
 
 
 [[release-notes-5.10.2-junit-jupiter]]
@@ -25,7 +34,16 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* _none so far_
+* ❓
+
+==== Deprecations and Breaking Changes
+
+* A package-private static field annotated with `@TempDir` is once again _shadowed_ by a
+  non-static field annotated with `@TempDir` when the non-static field resides in a
+  different package and has the same name as the static field. This reverts changes made
+  in 5.10.1.
+  - See issues link:https://github.com/junit-team/junit5/issues/3638[#3638] and
+    link:https://github.com/junit-team/junit5/issues/3553[#3553] for details.
 
 
 [[release-notes-5.10.2-junit-vintage]]
@@ -33,4 +51,4 @@ JUnit repository on GitHub.
 
 ==== Bug Fixes
 
-* _none so far_
+* ❓

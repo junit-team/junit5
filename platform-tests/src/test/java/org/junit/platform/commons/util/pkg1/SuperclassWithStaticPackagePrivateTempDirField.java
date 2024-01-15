@@ -13,7 +13,7 @@ package org.junit.platform.commons.util.pkg1;
 import java.nio.file.Path;
 
 /**
- * @see https://github.com/junit-team/junit5/issues/3532
+ * @see https://github.com/junit-team/junit5/issues/3553
  */
 public class SuperclassWithStaticPackagePrivateTempDirField {
 
