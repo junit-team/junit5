@@ -496,8 +496,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Method methods} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Method methods} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType}.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
