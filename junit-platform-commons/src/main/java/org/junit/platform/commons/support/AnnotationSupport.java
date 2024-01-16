@@ -262,8 +262,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType}, using top-down search semantics within the type
 	 * hierarchy.
 	 *
@@ -289,8 +289,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType} and match the specified {@code predicate}, using
 	 * top-down search semantics within the type hierarchy.
 	 *
@@ -318,8 +318,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType} and match the specified {@code predicate}, using
 	 * the supplied hierarchy traversal mode.
 	 *

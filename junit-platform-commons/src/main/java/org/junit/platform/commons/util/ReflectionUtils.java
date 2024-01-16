@@ -1202,7 +1202,11 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		return findAllFieldsInHierarchy(clazz, traversalMode).stream().filter(predicate);
+		// @formatter:off
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
+				.filter(predicate)
+				.distinct();
+		// @formatter:on
 	}
 
 	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {

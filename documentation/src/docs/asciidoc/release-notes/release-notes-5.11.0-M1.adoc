@@ -16,7 +16,7 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* `ReflectionSupport.findFields(...)` now returns a distinct set of fields.
 
 [[release-notes-5.11.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

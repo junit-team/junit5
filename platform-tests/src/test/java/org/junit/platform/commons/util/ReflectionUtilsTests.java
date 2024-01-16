@@ -1406,6 +1406,25 @@ class ReflectionUtilsTests {
 		assertThat(values).containsExactly(2.5, "constant", 99);
 	}
 
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3646
+	 * @since 1.11
+	 */
+	@Test
+	void readFieldValuesFromInteracesAndClassesInTypeHierarchy() {
+		var fields = findFields(InterfaceWithField.class, ReflectionUtils::isStatic, TOP_DOWN);
+		var values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsOnly("ifc");
+
+		fields = findFields(SuperclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
+		values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsExactly("ifc", "super");
+
+		fields = findFields(SubclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
+		values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsExactly("ifc", "super", "sub");
+	}
+
 	@Test
 	void readFieldValuesFromInstanceWithTypeFilterForString() {
 		var fields = findFields(ClassWithFields.class, isA(String.class), TOP_DOWN);
@@ -1940,6 +1959,22 @@ class ReflectionUtilsTests {
 
 		public final double doubleField = 3.14;
 
+	}
+
+	interface InterfaceWithField {
+
+		String interfacePath = "ifc";
+	}
+
+	static class SuperclassWithFieldAndFieldFromInterface implements InterfaceWithField {
+
+		static final String superPath = "super";
+	}
+
+	static class SubclassWithFieldAndFieldFromInterface extends SuperclassWithFieldAndFieldFromInterface
+			implements InterfaceWithField {
+
+		static final String subPath = "sub";
 	}
 
 	@SuppressWarnings("unused")
