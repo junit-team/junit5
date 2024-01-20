@@ -30,6 +30,9 @@ repository on GitHub.
   -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
+* New `NamedExecutable` interface that associates a name, a payload and an Executable.
+* New DynamicTests generators in DynamicTest class that takes one Stream/Iterator of NamedExecutables,
+  this helps simplify the generation of DynamicTests Stream.
 
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
