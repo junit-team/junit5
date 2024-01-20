@@ -298,8 +298,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that match the specified {@code predicate}.
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that match the specified {@code predicate}.
 	 *
 	 * <p>Fields declared in the same class or interface will be ordered using
 	 * an algorithm that is deterministic but intentionally nonobvious.
@@ -325,8 +325,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that match the specified {@code predicate}.
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that match the specified {@code predicate}.
 	 *
 	 * <p>Fields declared in the same class or interface will be ordered using
 	 * an algorithm that is deterministic but intentionally nonobvious.

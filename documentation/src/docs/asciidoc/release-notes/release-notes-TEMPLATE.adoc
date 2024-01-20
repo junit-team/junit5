@@ -28,14 +28,17 @@ JUnit repository on GitHub.
 [[release-notes-VERSION-junit-platform]]
 === JUnit Platform
 
+[[release-notes-VERSION-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
 * ❓
 
+[[release-notes-VERSION-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
 * ❓
 
+[[release-notes-VERSION-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * ❓
@@ -44,14 +47,17 @@ JUnit repository on GitHub.
 [[release-notes-VERSION-junit-jupiter]]
 === JUnit Jupiter
 
+[[release-notes-VERSION-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
 * ❓
 
+[[release-notes-VERSION-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
 * ❓
 
+[[release-notes-VERSION-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * ❓
@@ -60,14 +66,17 @@ JUnit repository on GitHub.
 [[release-notes-VERSION-junit-vintage]]
 === JUnit Vintage
 
+[[release-notes-VERSION-junit-vintage-bug-fixes]]
 ==== Bug Fixes
 
 * ❓
 
+[[release-notes-VERSION-junit-vintage-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
 * ❓
 
+[[release-notes-VERSION-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * ❓

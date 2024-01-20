@@ -52,6 +52,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -1325,10 +1326,11 @@ class ReflectionUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3498
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 		final String BEFORE = "before";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
 		Method staticMethod = superclass.getDeclaredMethod(BEFORE);
@@ -1357,10 +1359,11 @@ class ReflectionUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3532
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 		final String TEMP_DIR = "tempDir";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
 		Field staticField = superclass.getDeclaredField(TEMP_DIR);
@@ -1401,6 +1404,25 @@ class ReflectionUtilsTests {
 		var values = ReflectionUtils.readFieldValues(fields, null);
 
 		assertThat(values).containsExactly(2.5, "constant", 99);
+	}
+
+	/**
+	 * @see https://github.com/junit-team/junit5/issues/3646
+	 * @since 1.11
+	 */
+	@Test
+	void readFieldValuesFromInteracesAndClassesInTypeHierarchy() {
+		var fields = findFields(InterfaceWithField.class, ReflectionUtils::isStatic, TOP_DOWN);
+		var values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsOnly("ifc");
+
+		fields = findFields(SuperclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
+		values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsExactly("ifc", "super");
+
+		fields = findFields(SubclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
+		values = ReflectionUtils.readFieldValues(fields, null);
+		assertThat(values).containsExactly("ifc", "super", "sub");
 	}
 
 	@Test
@@ -1937,6 +1959,22 @@ class ReflectionUtilsTests {
 
 		public final double doubleField = 3.14;
 
+	}
+
+	interface InterfaceWithField {
+
+		String interfacePath = "ifc";
+	}
+
+	static class SuperclassWithFieldAndFieldFromInterface implements InterfaceWithField {
+
+		static final String superPath = "super";
+	}
+
+	static class SubclassWithFieldAndFieldFromInterface extends SuperclassWithFieldAndFieldFromInterface
+			implements InterfaceWithField {
+
+		static final String subPath = "sub";
 	}
 
 	@SuppressWarnings("unused")

@@ -13,7 +13,7 @@ package org.junit.platform.commons.util.pkg1;
 import org.junit.jupiter.api.BeforeAll;
 
 /**
- * @see https://github.com/junit-team/junit5/issues/3498
+ * @see https://github.com/junit-team/junit5/issues/3553
  */
 public class SuperclassWithStaticPackagePrivateBeforeMethod {
 
