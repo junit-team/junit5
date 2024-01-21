@@ -621,12 +621,31 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch 
 Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
 Jupiter tests and print test execution results to the console.
 
-An executable `junit-platform-console-standalone-{platform-version}.jar` with all
-dependencies included is published in the {Maven_Central} repository under the
+An executable _Fat JAR_ (`junit-platform-console-standalone-{platform-version}.jar`) that
+contains the contents of all of its dependencies is published in the {Maven_Central}
+repository under the
 https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
-directory. It includes the following dependencies:
+directory. It contains the contents of the following artifacts:
 
 include::{standaloneConsoleLauncherShadowedArtifactsFile}[]
+
+[NOTE]
+====
+Since the `junit-platform-console-standalone` JAR contains the contents of all of its
+dependencies, its Maven POM does not declare any dependencies.
+
+Furthermore, it is not very likely that you would need to include a dependency on the
+`junit-platform-console-standalone` artifact in your project's Maven POM or Gradle build
+script. On the contrary, the executable `junit-platform-console-standalone` JAR is
+typically invoked directly from the command line or a shell script without a build script.
+
+If you need to declare dependencies in your build script on some of the artifacts
+contained in the `junit-platform-console-standalone` artifact, you should declare
+dependencies only on the JUnit artifacts that are used in your project. To simplify
+dependency management of JUnit artifacts in your build, you may wish to use the
+`junit-jupiter` aggregator artifact or `junit-bom`. See <<dependency-metadata>> for
+details.
+====
 
 You can https://docs.oracle.com/javase/tutorial/deployment/jar/run.html[run] the
 standalone `ConsoleLauncher` as shown below.
