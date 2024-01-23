@@ -163,12 +163,20 @@ public enum JRE {
 	JAVA_22,
 
 	/**
+	 * Java 23.
+	 *
+	 * @since 5.11
+	 */
+	@API(status = STABLE, since = "5.11")
+	JAVA_23,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
 	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
 	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18},
-	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21}, or
-	 * {@link #JAVA_22}.
+	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21},
+	 * {@link #JAVA_22}, or {@link #JAVA_23}.
 	 */
 	OTHER;
 
@@ -226,6 +234,8 @@ public enum JRE {
 					return JAVA_21;
 				case 22:
 					return JAVA_22;
+				case 23:
+					return JAVA_23;
 				default:
 					return OTHER;
 			}
