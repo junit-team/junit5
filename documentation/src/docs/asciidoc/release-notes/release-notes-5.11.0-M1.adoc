@@ -50,6 +50,7 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * New `@AutoClose` annotation that can be applied to fields within tests to automatically
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for
