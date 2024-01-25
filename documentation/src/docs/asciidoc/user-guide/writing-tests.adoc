@@ -358,6 +358,15 @@ annotation, via one of the annotations discussed in
 <<writing-tests-conditional-execution>>, or via a custom <<extensions-conditions,
 `ExecutionCondition`>>.
 
+When `@Disabled` is applied at the class level, all test methods within that class are
+automatically disabled as well.
+
+If a test method is disabled via `@Disabled`, that prevents execution of the test method
+and method-level lifecycle callbacks such as `@BeforeEach` methods, `@AfterEach` methods,
+and corresponding extension APIs. However, that does not prevent the test class from being
+instantiated, and it does not prevent the execution of class-level lifecycle callbacks
+such as `@BeforeAll` methods, `@AfterAll` methods, and corresponding extension APIs.
+
 Here's a `@Disabled` test class.
 
 [source,java,indent=0]
@@ -393,16 +402,25 @@ superclass is `@Disabled`, you must redeclare `@Disabled` on the subclass.
 === Conditional Test Execution
 
 The <<extensions-conditions, `ExecutionCondition`>> extension API in JUnit Jupiter allows
-developers to either _enable_ or _disable_ a container or test based on certain
+developers to either _enable_ or _disable_ a test class or test method based on certain
 conditions _programmatically_. The simplest example of such a condition is the built-in
 `{DisabledCondition}` which supports the `{Disabled}` annotation (see
-<<writing-tests-disabling>>). In addition to `@Disabled`, JUnit Jupiter also supports
-several other annotation-based conditions in the `org.junit.jupiter.api.condition`
-package that allow developers to enable or disable containers and tests _declaratively_.
-When multiple `ExecutionCondition` extensions are registered, a container or test is
-disabled as soon as one of the conditions returns _disabled_. If you wish to provide
+<<writing-tests-disabling>>).
+
+In addition to `@Disabled`, JUnit Jupiter also supports several other annotation-based
+conditions in the `org.junit.jupiter.api.condition` package that allow developers to
+enable or disable test classes and test methods _declaratively_. If you wish to provide
 details about why they might be disabled, every annotation associated with these built-in
 conditions has a `disabledReason` attribute available for that purpose.
+
+When multiple `ExecutionCondition` extensions are registered, a test class or test method
+is disabled as soon as one of the conditions returns _disabled_. If a test class is
+disabled, all test methods within that class are automatically disabled as well. If a test
+method is disabled, that prevents execution of the test method and method-level lifecycle
+callbacks such as `@BeforeEach` methods, `@AfterEach` methods, and corresponding extension
+APIs. However, that does not prevent the test class from being instantiated, and it does
+not prevent the execution of class-level lifecycle callbacks such as `@BeforeAll` methods,
+`@AfterAll` methods, and corresponding extension APIs.
 
 See <<extensions-conditions, `ExecutionCondition`>> and the following sections for
 details.

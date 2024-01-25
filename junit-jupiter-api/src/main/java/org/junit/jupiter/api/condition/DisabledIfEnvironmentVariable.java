@@ -35,10 +35,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * Consequently, if you wish to apply the same semantics to a subclass, this
  * annotation must be redeclared on the subclass.
  *
- * <p>If a test method is disabled via this annotation, that does not prevent
- * the test class from being instantiated. Rather, it prevents the execution of
- * the test method and method-level lifecycle callbacks such as {@code @BeforeEach}
- * methods, {@code @AfterEach} methods, and corresponding extension APIs.
+ * <p>If a test method is disabled via this annotation, that prevents execution
+ * of the test method and method-level lifecycle callbacks such as
+ * {@code @BeforeEach} methods, {@code @AfterEach} methods, and corresponding
+ * extension APIs. However, that does not prevent the test class from being
+ * instantiated, and it does not prevent the execution of class-level lifecycle
+ * callbacks such as {@code @BeforeAll} methods, {@code @AfterAll} methods, and
+ * corresponding extension APIs.
  *
  * <p>If the specified environment variable is undefined, the presence of this
  * annotation will have no effect on whether or not the class or method

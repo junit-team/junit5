@@ -51,6 +51,8 @@ repository on GitHub.
 ==== New Features and Improvements
 
 * `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* Improved documentation for semantics of a disabled test regarding class-level lifecycle
+  methods and callbacks.
 * New `@AutoClose` annotation that can be applied to fields within tests to automatically
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for
