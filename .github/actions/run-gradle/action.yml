@@ -5,10 +5,6 @@ inputs:
     required: true
     description: Gradle arguments
     default: build
-  dependency-graph:
-    required: false
-    description: 'see https://github.com/gradle/gradle-build-action#enable-dependency-graph-generation-for-a-workflow'
-    default: disabled
 runs:
   using: "composite"
   steps:
@@ -21,7 +17,6 @@ runs:
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       with:
-        dependency-graph: ${{ inputs.dependency-graph }}
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
           -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
