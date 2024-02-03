@@ -341,8 +341,14 @@ public final class ReflectionUtils {
 		return !isStatic(clazz) && clazz.isMemberClass();
 	}
 
-	public static boolean returnsVoid(Method method) {
-		return method.getReturnType().equals(Void.TYPE);
+	/**
+	 * Determine if the return type of the supplied method is primitive {@code void}.
+	 *
+	 * @param method the method to test; never {@code null}
+	 * @return {@code true} if the method's return type is {@code void}
+	 */
+	public static boolean returnsPrimitiveVoid(Method method) {
+		return method.getReturnType() == void.class;
 	}
 
 	/**

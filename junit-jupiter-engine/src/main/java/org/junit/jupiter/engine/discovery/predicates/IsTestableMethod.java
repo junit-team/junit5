@@ -14,7 +14,7 @@ import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
 import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isStatic;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsVoid;
+import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -26,11 +26,11 @@ import java.util.function.Predicate;
 abstract class IsTestableMethod implements Predicate<Method> {
 
 	private final Class<? extends Annotation> annotationType;
-	private final boolean mustReturnVoid;
+	private final boolean mustReturnPrimitiveVoid;
 
-	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnVoid) {
+	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnPrimitiveVoid) {
 		this.annotationType = annotationType;
-		this.mustReturnVoid = mustReturnVoid;
+		this.mustReturnPrimitiveVoid = mustReturnPrimitiveVoid;
 	}
 
 	@Override
@@ -45,7 +45,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 		if (isAbstract(candidate)) {
 			return false;
 		}
-		if (returnsVoid(candidate) != this.mustReturnVoid) {
+		if (returnsPrimitiveVoid(candidate) != this.mustReturnPrimitiveVoid) {
 			return false;
 		}
 
