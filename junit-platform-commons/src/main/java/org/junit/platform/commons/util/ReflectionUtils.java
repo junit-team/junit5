@@ -97,7 +97,7 @@ public final class ReflectionUtils {
 		/**
 		 * Traverse the hierarchy using bottom-up semantics.
 		 */
-		BOTTOM_UP;
+		BOTTOM_UP
 	}
 
 	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.

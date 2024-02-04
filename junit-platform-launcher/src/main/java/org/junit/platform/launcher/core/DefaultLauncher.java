@@ -39,7 +39,7 @@ class DefaultLauncher implements Launcher {
 
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
 	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
-		listenerRegistry.testExecutionListeners);;
+		listenerRegistry.testExecutionListeners);
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
 
 	/**

@@ -27,14 +27,14 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsWithNulls() {
-		assertArrayEquals((boolean[]) null, (boolean[]) null);
-		assertArrayEquals((char[]) null, (char[]) null);
-		assertArrayEquals((byte[]) null, (byte[]) null);
-		assertArrayEquals((int[]) null, (int[]) null);
-		assertArrayEquals((long[]) null, (long[]) null);
-		assertArrayEquals((float[]) null, (float[]) null);
-		assertArrayEquals((double[]) null, (double[]) null);
-		assertArrayEquals((Object[]) null, (Object[]) null);
+		assertArrayEquals(null, (boolean[]) null);
+		assertArrayEquals(null, (char[]) null);
+		assertArrayEquals(null, (byte[]) null);
+		assertArrayEquals(null, (int[]) null);
+		assertArrayEquals(null, (long[]) null);
+		assertArrayEquals(null, (float[]) null);
+		assertArrayEquals(null, (double[]) null);
+		assertArrayEquals(null, (Object[]) null);
 	}
 
 	@Test

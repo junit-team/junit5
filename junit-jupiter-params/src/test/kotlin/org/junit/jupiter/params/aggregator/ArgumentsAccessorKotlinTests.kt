@@ -60,7 +60,7 @@ class ArgumentsAccessorKotlinTests {
     fun parameterContext(): ParameterContext {
         val declaringExecutable: Method = ReflectionUtils.findMethod(DefaultArgumentsAccessorTests::class.java, "foo").get()
         val parameterContext: ParameterContext = mock()
-        `when`(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable)
+        `when`(parameterContext.declaringExecutable).thenReturn(declaringExecutable)
         return parameterContext
     }
 

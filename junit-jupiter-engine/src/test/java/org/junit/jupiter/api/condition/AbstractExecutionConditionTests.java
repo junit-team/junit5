@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
@@ -83,7 +84,7 @@ abstract class AbstractExecutionConditionTests {
 	}
 
 	protected void assertEnabled() {
-		assertTrue(!this.result.isDisabled(), "Should be enabled");
+		assertFalse(this.result.isDisabled(), "Should be enabled");
 	}
 
 	protected void assertDisabled() {

@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -500,7 +500,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(testInfo).isNotNull();
 			assertThat(text).isEqualTo("testFactory-1-method");
 
-			return IntStream.of(2, 4).mapToObj(num -> dynamicTest("" + num, () -> assertTrue(num % 2 == 0)));
+			return IntStream.of(2, 4).mapToObj(num -> dynamicTest("" + num, () -> assertEquals(0, num % 2)));
 		}
 
 		@AfterEach
