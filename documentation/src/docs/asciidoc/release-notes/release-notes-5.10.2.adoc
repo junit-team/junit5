@@ -1,7 +1,7 @@
 [[release-notes-5.10.2]]
 == 5.10.2
 
-*Date of Release:* ❓
+*Date of Release:* February 4, 2024
 
 *Scope:* minor bug fixes and changes since 5.10.1.
 
@@ -60,6 +60,4 @@ on GitHub.
 [[release-notes-5.10.2-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
+No changes.
