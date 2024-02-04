@@ -12,8 +12,8 @@ val projectDescription = objects.property<String>().convention(provider { projec
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskExtension` extension which allows for generating OSGi
 // metadata into the jar
-tasks.withType<Jar>().matching { task: Jar ->
-	task.name == "jar" || task.name == "shadowJar"
+tasks.withType<Jar>().named {
+	it == "jar" || it == "shadowJar"
 }.all { // configure tasks eagerly as workaround for https://github.com/bndtools/bnd/issues/5695
 	extra["importAPIGuardian"] = importAPIGuardian
 
