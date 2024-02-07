@@ -21,8 +21,6 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
-import com.gradle.enterprise.testing.annotations.LocalOnly;
-
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.MavenRepo;
@@ -31,7 +29,6 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
-@LocalOnly(because = "GraalVM is not installed on Test Distribution agents")
 class GraalVmStarterTests {
 
 	@Test
@@ -42,7 +39,7 @@ class GraalVmStarterTests {
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
 				.addArguments("-Porg.gradle.java.installations.fromEnv=GRAALVM_HOME") //
-				.setTimeout(Duration.ofMinutes(5)) //
+				.setTimeout(Duration.ofMinutes(10)) //
 				.build();
 
 		var result = request.run();
