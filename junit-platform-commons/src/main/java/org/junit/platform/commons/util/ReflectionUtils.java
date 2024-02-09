@@ -22,9 +22,9 @@ import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversal
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
@@ -1724,12 +1724,22 @@ public final class ReflectionUtils {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
+	@API(status = INTERNAL, since = "1.11")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
-	public static <T extends AccessibleObject> T makeAccessible(T object) {
-		if (!object.isAccessible()) {
-			object.setAccessible(true);
+	public static <T extends Executable> T makeAccessible(T executable) {
+		if ((!isPublic(executable) || !isPublic(executable.getDeclaringClass())) && !executable.isAccessible()) {
+			executable.setAccessible(true);
 		}
-		return object;
+		return executable;
+	}
+
+	@API(status = INTERNAL, since = "1.11")
+	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
+	public static Field makeAccessible(Field field) {
+		if ((!isPublic(field) || !isPublic(field.getDeclaringClass()) || isFinal(field)) && !field.isAccessible()) {
+			field.setAccessible(true);
+		}
+		return field;
 	}
 
 	/**
