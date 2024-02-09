@@ -34,8 +34,10 @@ import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValues;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -256,6 +258,27 @@ class ReflectionUtilsTests {
 			for (var method : NonGenericClass.class.getMethods()) {
 				assertFalse(ReflectionUtils.isGeneric(method));
 			}
+		}
+
+		/**
+		 * @see <a href="https://github.com/junit-team/junit5/issues/3684">#3684</a>
+		 */
+		@Test
+		void getInterfaceMethodIfPossible() throws Exception {
+			// "anonymous" because it's implemented as an anonymous class.
+			InputStream anonymousInputStream = InputStream.nullInputStream();
+			Class<?> targetType = anonymousInputStream.getClass();
+			assertThat(targetType.isAnonymousClass()).isTrue();
+
+			Method method = targetType.getMethod("close");
+			assertThat(method).isNotNull();
+			assertThat(method.getDeclaringClass()).isEqualTo(targetType);
+
+			Method interfaceMethod = ReflectionUtils.getInterfaceMethodIfPossible(method, targetType);
+			assertThat(interfaceMethod).isNotNull().isNotEqualTo(method);
+			// InputStream implements Closeable directly, so we find the `close` method
+			// in Closeable instead of AutoCloseable.
+			assertThat(interfaceMethod.getDeclaringClass()).isEqualTo(Closeable.class);
 		}
 
 		static class ClassWithVoidAndNonVoidMethods {

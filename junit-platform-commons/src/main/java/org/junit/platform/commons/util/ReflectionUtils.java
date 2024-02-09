@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -124,6 +125,13 @@ public final class ReflectionUtils {
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+
+	/**
+	 * Cache for equivalent methods on an interface implemented by the declaring class.
+	 * @since 1.11
+	 * @see #getInterfaceMethodIfPossible(Method, Class)
+	 */
+	private static final Map<Method, Method> interfaceMethodCache = synchronizedMap(new LruCache<>(255));
 
 	/**
 	 * Set of fully qualified class names for which no cycles have been detected
@@ -1310,6 +1318,54 @@ public final class ReflectionUtils {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
 		return Try.call(() -> clazz.getMethod(methodName, parameterTypes));
+	}
+
+	/**
+	 * Determine a corresponding interface method for the given method handle, if possible.
+	 * <p>This is particularly useful for arriving at a public exported type on the Java
+	 * Module System which can be reflectively invoked without an illegal access warning.
+	 * @param method the method to be invoked, potentially from an implementation class
+	 * @param targetClass the target class to check for declared interfaces
+	 * @return the corresponding interface method, or the original method if none found
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Method getInterfaceMethodIfPossible(Method method, Class<?> targetClass) {
+		if (!isPublic(method) || method.getDeclaringClass().isInterface()) {
+			return method;
+		}
+		// Try cached version of method in its declaring class
+		Method result = interfaceMethodCache.computeIfAbsent(method,
+			m -> findInterfaceMethodIfPossible(m, m.getDeclaringClass(), Object.class));
+		if (result == method && targetClass != null) {
+			// No interface method found yet -> try given target class (possibly a subclass of the
+			// declaring class, late-binding a base class method to a subclass-declared interface:
+			// see e.g. HashMap.HashIterator.hasNext)
+			result = findInterfaceMethodIfPossible(method, targetClass, method.getDeclaringClass());
+		}
+		return result;
+	}
+
+	private static Method findInterfaceMethodIfPossible(Method method, Class<?> startClass, Class<?> endClass) {
+		Class<?>[] parameterTypes = null;
+		Class<?> current = startClass;
+		while (current != null && current != endClass) {
+			if (parameterTypes == null) {
+				// Since Method#getParameterTypes() clones the array, we lazily retrieve
+				// and cache parameter types to avoid cloning the array multiple times.
+				parameterTypes = method.getParameterTypes();
+			}
+			for (Class<?> ifc : current.getInterfaces()) {
+				try {
+					return ifc.getMethod(method.getName(), parameterTypes);
+				}
+				catch (NoSuchMethodException ex) {
+					// ignore
+				}
+			}
+			current = current.getSuperclass();
+		}
+		return method;
 	}
 
 	/**
