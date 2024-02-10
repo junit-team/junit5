@@ -13,7 +13,6 @@ package org.junit.platform.engine.support.hierarchical;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
-import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;

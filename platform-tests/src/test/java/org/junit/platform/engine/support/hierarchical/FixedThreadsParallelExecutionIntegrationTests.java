@@ -10,21 +10,29 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.MethodOrderer.MethodName;
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.Isolated;
-import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
-import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
-import org.junit.platform.testkit.engine.EngineTestKit;
-import org.junit.platform.testkit.engine.Event;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static org.junit.jupiter.engine.Constants.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
+import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.type;
+import static org.junit.platform.testkit.engine.EventType.REPORTING_ENTRY_PUBLISHED;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -40,18 +48,29 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
-import static org.junit.jupiter.engine.Constants.*;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-import static org.junit.platform.testkit.engine.EventConditions.*;
-import static org.junit.platform.testkit.engine.EventType.REPORTING_ENTRY_PUBLISHED;
+import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.EngineTestKit;
+import org.junit.platform.testkit.engine.Event;
 
 class FixedThreadsParallelExecutionIntegrationTests {
 
