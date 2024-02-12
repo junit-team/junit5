@@ -63,7 +63,7 @@ spock1 = { module = "org.spockframework:spock-core", version = "1.3-groovy-2.5" 
 univocity-parsers = { module = "com.univocity:univocity-parsers", version = "2.9.1" }
 xmlunit-assertj = { module = "org.xmlunit:xmlunit-assertj3", version.ref = "xmlunit" }
 xmlunit-placeholders = { module = "org.xmlunit:xmlunit-placeholders", version.ref = "xmlunit" }
-testingAnnotations = { module = "com.gradle:develocity-testing-annotations", version = "2.0" }
+testingAnnotations = { module = "com.gradle:develocity-testing-annotations", version = "2.0.1" }
 
 # Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
