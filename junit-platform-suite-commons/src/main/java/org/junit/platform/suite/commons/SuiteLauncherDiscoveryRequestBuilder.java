@@ -130,12 +130,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
+		suiteConfigurationParameters(suiteClass);
+
 		// Annotations in alphabetical order (except @SelectClasses)
 		// @formatter:off
-		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
-				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
-		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
-				.ifPresent(__ -> enableParentConfigurationParameters = false);
 		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)
@@ -194,6 +192,16 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(suiteClass, SelectPackages.class, SelectPackages::value)
 				.map(AdditionalDiscoverySelectors::selectPackages)
 				.ifPresent(this::selectors);
+		// @formatter:on
+		return this;
+	}
+
+	public SuiteLauncherDiscoveryRequestBuilder suiteConfigurationParameters(Class<?> suiteClass) {
+		// @formatter:off
+		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
+				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
+		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
+				.ifPresent(__ -> enableParentConfigurationParameters = false);
 		// @formatter:on
 		return this;
 	}

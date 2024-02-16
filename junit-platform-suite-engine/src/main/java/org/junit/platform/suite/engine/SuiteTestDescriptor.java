@@ -75,10 +75,12 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		return this;
 	}
 
-	SuiteTestDescriptor addDiscoveryRequestFrom(UniqueId uniqueId) {
+	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> suiteClass, UniqueId uniqueId) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		discoveryRequestBuilder.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
+		discoveryRequestBuilder
+				.suiteConfigurationParameters(suiteClass)
+				.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
 		return this;
 	}
 

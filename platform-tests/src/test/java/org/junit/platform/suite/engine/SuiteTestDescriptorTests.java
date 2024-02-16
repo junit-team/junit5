@@ -66,7 +66,7 @@ class SuiteTestDescriptorTests {
 
 	@Test
 	void suitDiscoversTestsFromUniqueId() {
-		suite.addDiscoveryRequestFrom(methodId);
+		suite.addDiscoveryRequestFrom(TestSuite.class, methodId);
 		suite.discover();
 		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),
 			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
@@ -83,7 +83,7 @@ class SuiteTestDescriptorTests {
 
 		}, () -> {
 			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> suite.addDiscoveryRequestFrom(methodId));
+				() -> suite.addDiscoveryRequestFrom(SelectClassesSuite.class, methodId));
 			assertEquals("discovery request can not be modified after discovery", exception.getMessage());
 		});
 	}

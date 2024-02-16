@@ -18,6 +18,9 @@ repository on GitHub.
 
 * `ReflectionSupport.findFields(...)` now returns a distinct set of fields.
 
+* The `junit-platform-suite-engine` will now include configuration provided by
+`@ConfigurationParameter` when selecting tests by `UniqueId`.
+
 [[release-notes-5.11.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
