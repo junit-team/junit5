@@ -81,5 +81,5 @@ gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0-rc-2" }
-plantuml = { id = "io.freefair.plantuml", version = "8.4" }
+plantuml = { id = "io.freefair.plantuml", version = "8.6" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }
