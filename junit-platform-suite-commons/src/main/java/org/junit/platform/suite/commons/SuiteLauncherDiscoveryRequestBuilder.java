@@ -165,6 +165,21 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+    /**
+     * Add all the supplied {@code filters} to the request.
+     *
+     * <p>The {@code filters} are combined using AND semantics, i.e. all of them
+     * have to include a resource for it to end up in the test plan.
+     *
+     * <p><strong>Warning</strong>: be cautious when registering multiple competing
+     * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
+     * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
+     * for the same discovery request since doing so will likely lead to
+     * undesirable results (i.e., zero engines being active).
+     *
+     * @param filters the {@code Filter}s to add; never {@code null}
+     * @return this builder for method chaining
+     */
 	public SuiteLauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
 		delegate.filters(filters);
 		return this;
