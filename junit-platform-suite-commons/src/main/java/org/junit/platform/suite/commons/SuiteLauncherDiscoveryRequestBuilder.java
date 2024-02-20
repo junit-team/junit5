@@ -120,10 +120,23 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private SuiteLauncherDiscoveryRequestBuilder() {
 	}
 
+    /**
+     * Creates a mew instance of {@code SuiteLauncherDiscoveryRequestBuilder}
+     *
+     * @return a new builder
+     */
 	public static SuiteLauncherDiscoveryRequestBuilder request() {
 		return new SuiteLauncherDiscoveryRequestBuilder();
 	}
 
+    /**
+     * Specifies whether to filter standard class name patterns.
+     * <p>If set to {@code true}, standard class name patterns are filtered.
+     *
+     * @param filterStandardClassNamePatterns {@code true} to filter standard class name patterns,
+     * {@code false} otherwise
+     * @return this builder for method chaining
+     */
 	public SuiteLauncherDiscoveryRequestBuilder filterStandardClassNamePatterns(
 			boolean filterStandardClassNamePatterns) {
 		this.filterStandardClassNamePatterns = filterStandardClassNamePatterns;
