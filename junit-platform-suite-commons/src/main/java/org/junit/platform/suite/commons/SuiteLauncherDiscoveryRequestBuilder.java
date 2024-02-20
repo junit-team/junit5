@@ -133,9 +133,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * @param suiteClass the class to apply the annotations from;
 	 * never {@code null}
 	 * @return this builder for method chaining
-	 * @see org.junit.platform.suite.api.Suite
 	 * @since 1.11
-	 *
+	 * @see org.junit.platform.suite.api.Suite
 	 * @deprecated use {@link #applyConfigurationParametersFromSuite} and/or {@link #applySelectorsAndFiltersFromSuite} instead.
 	 */
 	@Deprecated
