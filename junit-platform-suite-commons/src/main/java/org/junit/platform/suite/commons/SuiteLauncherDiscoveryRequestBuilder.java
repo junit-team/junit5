@@ -143,11 +143,23 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+    /**
+     * Add all the supplied {@code selectors} to the request.
+     *
+     * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+     * @return this builder for method chaining
+     */
 	public SuiteLauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
 		delegate.selectors(selectors);
 		return this;
 	}
 
+    /**
+     * Add all the supplied {@code selectors} to the request.
+     *
+     * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+     * @return this builder for method chaining
+     */
 	public SuiteLauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
 		delegate.selectors(selectors);
 		return this;
