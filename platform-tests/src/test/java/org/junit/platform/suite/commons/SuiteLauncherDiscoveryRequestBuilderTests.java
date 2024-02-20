@@ -245,7 +245,8 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		var e = assertThrows(PreconditionViolationException.class, () -> builder.applySelectorsAndFiltersFromSuite(Suite.class));
+		var e = assertThrows(PreconditionViolationException.class,
+			() -> builder.applySelectorsAndFiltersFromSuite(Suite.class));
 
 		assertThat(e).hasMessageMatching(
 			"@SelectClasses on class \\[" + Pattern.quote(SuiteLauncherDiscoveryRequestBuilderTests.class.getName())
