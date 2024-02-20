@@ -82,7 +82,7 @@ final class ClassSelectorResolver implements SelectorResolver {
 								// The uniqueId selector either targeted a class annotated with @Suite;
 								? suite.addDiscoveryRequestFrom(suiteClass)
 								// or a specific test in that suite
-								: suite.addDiscoveryRequestFrom(suiteClass, uniqueId)))
+								: suite.addDiscoveryRequestFrom( uniqueId)))
 				.map(ClassSelectorResolver::toResolution)
 				.orElseGet(Resolution::unresolved);
 		// @formatter:on

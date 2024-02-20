@@ -127,10 +127,44 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * TODO: Write docs
+	 *
+	 * @since 1.11
+	 * @deprecated use {@link #applyConfigurationParametersFromSuite} and/or {@link #applySelectorsAndFiltersFromSuite} instead.
+	 */
+	@Deprecated
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
+		applyConfigurationParametersFromSuite(suiteClass);
+		applySelectorsAndFiltersFromSuite(suiteClass);
+		return this;
+	}
 
-		suiteConfigurationParameters(suiteClass);
+	/**
+	 * TODO: Write docs
+	 *
+	 * @since 1.11
+	 */
+	public SuiteLauncherDiscoveryRequestBuilder applyConfigurationParametersFromSuite(Class<?> suiteClass) {
+		Preconditions.notNull(suiteClass, "Suite class must not be null");
+
+		// @formatter:off
+		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
+				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
+		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
+				.ifPresent(__ -> enableParentConfigurationParameters = false);
+		// @formatter:on
+		return this;
+	}
+
+	/**
+	 * TODO: Write docs
+	 *
+	 * @since 1.11
+	 */
+	public SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
+		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
 		// Annotations in alphabetical order (except @SelectClasses)
 		// @formatter:off
@@ -192,16 +226,6 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		findAnnotationValues(suiteClass, SelectPackages.class, SelectPackages::value)
 				.map(AdditionalDiscoverySelectors::selectPackages)
 				.ifPresent(this::selectors);
-		// @formatter:on
-		return this;
-	}
-
-	public SuiteLauncherDiscoveryRequestBuilder suiteConfigurationParameters(Class<?> suiteClass) {
-		// @formatter:off
-		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
-				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
-		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
-				.ifPresent(__ -> enableParentConfigurationParameters = false);
 		// @formatter:on
 		return this;
 	}
