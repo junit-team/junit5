@@ -128,8 +128,12 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * TODO: Write docs
+	 * Apply a suites annotation based configuration, selectors and filters to this builder.
 	 *
+	 * @param suiteClass the class to apply the annotations from;
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 * @see org.junit.platform.suite.api.Suite
 	 * @since 1.11
 	 * @deprecated use {@link #applyConfigurationParametersFromSuite} and/or {@link #applySelectorsAndFiltersFromSuite} instead.
 	 */
@@ -142,9 +146,18 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * TODO: Write docs
+	 * Apply a suites annotation based configuration to this builder.
+	 * <p>
+	 * This will apply the configuration from:
+	 * <ul>
+	 *   <li>{@link ConfigurationParameter}</li>
+	 *   <li>{@link DisableParentConfigurationParameters}</li>
+	 * </ul>
 	 *
+	 * @param suiteClass the class to apply the configuration annotations from; never {@code null}
+	 * @return this builder for method chaining
 	 * @since 1.11
+	 * @see org.junit.platform.suite.api.Suite
 	 */
 	public SuiteLauncherDiscoveryRequestBuilder applyConfigurationParametersFromSuite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
@@ -159,9 +172,32 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * TODO: Write docs
+	 * Apply a suites annotation based discovery selectors and filters to this builder.
+	 * <p>
+	 * This will apply the configuration from:
+	 * <ul>
+	 *   <li>{@link ExcludeClassNamePatterns}</li>
+	 *   <li>{@link ExcludeEngines}</li>
+	 *   <li>{@link ExcludePackages}</li>
+	 *   <li>{@link ExcludeTags}</li>
+	 *   <li>{@link IncludeClassNamePatterns}</li>
+	 *   <li>{@link IncludeEngines}</li>
+	 *   <li>{@link IncludePackages}</li>
+	 *   <li>{@link IncludeTags}</li>
+	 *   <li>{@link SelectClasses}</li>
+	 *   <li>{@link SelectClasspathResource}</li>
+	 *   <li>{@link SelectDirectories}</li>
+	 *   <li>{@link SelectFile}</li>
+	 *   <li>{@link SelectMethod}</li>
+	 *   <li>{@link SelectModules}</li>
+	 *   <li>{@link SelectUris}</li>
+	 *   <li>{@link SelectPackages}</li>
+	 * </ul>
 	 *
+	 * @param suiteClass the class to apply the discovery selectors and filter annotations from; never {@code null}
+	 * @return this builder for method chaining
 	 * @since 1.11
+	 * @see org.junit.platform.suite.api.Suite
 	 */
 	public SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
