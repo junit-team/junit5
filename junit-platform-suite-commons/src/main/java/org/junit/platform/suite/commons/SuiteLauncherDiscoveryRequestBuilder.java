@@ -135,6 +135,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * @return this builder for method chaining
 	 * @see org.junit.platform.suite.api.Suite
 	 * @since 1.11
+	 *
 	 * @deprecated use {@link #applyConfigurationParametersFromSuite} and/or {@link #applySelectorsAndFiltersFromSuite} instead.
 	 */
 	@Deprecated
