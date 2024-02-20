@@ -65,7 +65,46 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.SelectUris;
 
 /**
+ * The {@code SuiteLauncherDiscoveryRequestBuilder} provides a builder for constructing instances
+ * of {@link LauncherDiscoveryRequest} specifically tailored for suite execution.
+ *
+ * <h2>Example</h2>
+ *
+ * <pre>{@code
+ * SuiteLauncherDiscoveryRequestBuilder.request()
+ * 		.selectors(
+ * 			selectPackage("org.example.user"),
+ * 			selectClass("org.example.payment.PaymentTests"),
+ * 			selectClass(File.class),
+ * 			DiscoverySelectors.selectMethod("org.example.order.OrderTests#test1"),
+ * 			DiscoverySelectors.selectMethod("org.example.order.OrderTests#test2()"),
+ * 			DiscoverySelectors.selectMethod("org.example.order.OrderTests#test3(java.lang.String)"),
+ * 			DiscoverySelectors.selectMethod("org.example.order.OrderTests", "test4"),
+ * 			DiscoverySelectors.selectMethod(OrderTests.class, "test5"),
+ * 			DiscoverySelectors.selectMethod(OrderTests.class, testMethod),
+ * 			selectClasspathRoots(Collections.singleton(Paths.get("/my/local/path1"))),
+ * 			selectUniqueId("unique-id-1"),
+ * 			selectUniqueId("unique-id-2")
+ * 		)
+ * 		.filters(
+ * 			includeEngines("junit-jupiter", "spek"),
+ * 			// excludeEngines("junit-vintage"),
+ * 			includeTags("fast"),
+ * 			// excludeTags("slow"),
+ * 			includeClassNamePatterns(".*Test[s]?")
+ * 			// includeClassNamePatterns("org\.example\.tests.*")
+ * 		)
+ * 		.configurationParameter("key", "value")
+ * 		.enableImplicitConfigurationParameters(true)
+ * 		.suite(File.class)
+ * 		.build();
+ * }</pre>
+ *
  * @since 1.8
+ * @see org.junit.platform.engine.discovery.DiscoverySelectors
+ * @see org.junit.platform.engine.discovery.ClassNameFilter
+ * @see org.junit.platform.launcher.EngineFilter
+ * @see org.junit.platform.launcher.TagFilter
  */
 @API(status = Status.INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine",
 		"org.junit.platform.runner" })
@@ -314,6 +353,6 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.map(String::trim)
 				.toArray(String[]::new));
 		// @formatter:on
-	}
+    }
 
 }
