@@ -327,6 +327,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Build the {@link LauncherDiscoveryRequest} that has been configured via
+	 * this builder.
+	 */
 	public LauncherDiscoveryRequest build() {
 		if (filterStandardClassNamePatterns && !includeClassNamePatternsUsed) {
 			delegate.filters(createIncludeClassNameFilter(STANDARD_INCLUDE_PATTERN));
