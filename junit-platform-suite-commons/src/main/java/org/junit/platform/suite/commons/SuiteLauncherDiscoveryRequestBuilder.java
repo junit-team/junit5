@@ -222,6 +222,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
      * @param parentConfigurationParameters the parent instance to be used for looking
      * up configuration parameters that have not been explicitly configured;
      * never {@code null}
+	 * @return this builder for method chaining
+	 *
      * @see #configurationParameter(String, String)
      * @see #configurationParameters(Map)
      */
@@ -239,6 +241,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
      * and from the {@code junit-platform.properties} classpath resource.
      * Passing {@code false} to this method, disables the latter two sources so
      * that only explicit configuration parameters are taken into account.
+	 * @return this builder for method chaining
      *
      * @see #configurationParameter(String, String)
      * @see #configurationParameters(Map)
@@ -255,6 +258,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * the suite discovery and execution.
 	 *
 	 * @param suiteClass the suite class to configure
+	 * @return this builder for method chaining
 	 */
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
