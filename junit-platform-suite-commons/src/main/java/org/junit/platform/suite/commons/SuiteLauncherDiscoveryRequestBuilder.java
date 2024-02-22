@@ -120,132 +120,132 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private SuiteLauncherDiscoveryRequestBuilder() {
 	}
 
-    /**
-     * Creates a mew instance of {@code SuiteLauncherDiscoveryRequestBuilder}
-     *
-     * @return a new builder
-     */
+	/**
+	 * Creates a mew instance of {@code SuiteLauncherDiscoveryRequestBuilder}
+	 *
+	 * @return a new builder
+	 */
 	public static SuiteLauncherDiscoveryRequestBuilder request() {
 		return new SuiteLauncherDiscoveryRequestBuilder();
 	}
 
-    /**
-     * Specifies whether to filter standard class name patterns.
-     * <p>If set to {@code true}, standard class name patterns are filtered.
-     *
-     * @param filterStandardClassNamePatterns {@code true} to filter standard class name patterns,
-     * {@code false} otherwise
-     * @return this builder for method chaining
-     */
+	/**
+	 * Specifies whether to filter standard class name patterns.
+	 * <p>If set to {@code true}, standard class name patterns are filtered.
+	 *
+	 * @param filterStandardClassNamePatterns {@code true} to filter standard class name patterns,
+	 * {@code false} otherwise
+	 * @return this builder for method chaining
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder filterStandardClassNamePatterns(
 			boolean filterStandardClassNamePatterns) {
 		this.filterStandardClassNamePatterns = filterStandardClassNamePatterns;
 		return this;
 	}
 
-    /**
-     * Add all the supplied {@code selectors} to the request.
-     *
-     * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
-     * @return this builder for method chaining
-     */
+	/**
+	 * Add all the supplied {@code selectors} to the request.
+	 *
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder selectors(DiscoverySelector... selectors) {
 		delegate.selectors(selectors);
 		return this;
 	}
 
-    /**
-     * Add all the supplied {@code selectors} to the request.
-     *
-     * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
-     * @return this builder for method chaining
-     */
+	/**
+	 * Add all the supplied {@code selectors} to the request.
+	 *
+	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
+	 * @return this builder for method chaining
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder selectors(List<? extends DiscoverySelector> selectors) {
 		delegate.selectors(selectors);
 		return this;
 	}
 
-    /**
-     * Add all the supplied {@code filters} to the request.
-     *
-     * <p>The {@code filters} are combined using AND semantics, i.e. all of them
-     * have to include a resource for it to end up in the test plan.
-     *
-     * <p><strong>Warning</strong>: be cautious when registering multiple competing
-     * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
-     * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
-     * for the same discovery request since doing so will likely lead to
-     * undesirable results (i.e., zero engines being active).
-     *
-     * @param filters the {@code Filter}s to add; never {@code null}
-     * @return this builder for method chaining
-     */
+	/**
+	 * Add all the supplied {@code filters} to the request.
+	 *
+	 * <p>The {@code filters} are combined using AND semantics, i.e. all of them
+	 * have to include a resource for it to end up in the test plan.
+	 *
+	 * <p><strong>Warning</strong>: be cautious when registering multiple competing
+	 * {@link EngineFilter#includeEngines include} {@code EngineFilters} or multiple
+	 * competing {@link EngineFilter#excludeEngines exclude} {@code EngineFilters}
+	 * for the same discovery request since doing so will likely lead to
+	 * undesirable results (i.e., zero engines being active).
+	 *
+	 * @param filters the {@code Filter}s to add; never {@code null}
+	 * @return this builder for method chaining
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder filters(Filter<?>... filters) {
 		delegate.filters(filters);
 		return this;
 	}
 
-    /**
-     * Add the supplied <em>configuration parameter</em> to the request.
-     *
-     * @param key the configuration parameter key under which to store the
-     * value; never {@code null} or blank
-     * @param value the value to store
-     * @return this builder for method chaining
-     */
+	/**
+	 * Add the supplied <em>configuration parameter</em> to the request.
+	 *
+	 * @param key the configuration parameter key under which to store the
+	 * value; never {@code null} or blank
+	 * @param value the value to store
+	 * @return this builder for method chaining
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		delegate.configurationParameter(key, value);
 		return this;
 	}
 
-    /**
-     * Add all the supplied configuration parameters to the request.
-     *
-     * @param configurationParameters the map of configuration parameters to add;
-     * never {@code null}
-     * @return this builder for method chaining
-     * @see #configurationParameter(String, String)
-     */
+	/**
+	 * Add all the supplied configuration parameters to the request.
+	 *
+	 * @param configurationParameters the map of configuration parameters to add;
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 * @see #configurationParameter(String, String)
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		delegate.configurationParameters(configurationParameters);
 		return this;
 	}
 
-    /**
-     * Set the parent configuration parameters to use for the request.
-     *
-     * <p>Any explicit configuration parameters configured via
-     * {@link #configurationParameter(String, String)} or
-     * {@link #configurationParameters(Map)} takes precedence over the supplied
-     * configuration parameters.
-     *
-     * @param parentConfigurationParameters the parent instance to be used for looking
-     * up configuration parameters that have not been explicitly configured;
-     * never {@code null}
+	/**
+	 * Set the parent configuration parameters to use for the request.
+	 *
+	 * <p>Any explicit configuration parameters configured via
+	 * {@link #configurationParameter(String, String)} or
+	 * {@link #configurationParameters(Map)} takes precedence over the supplied
+	 * configuration parameters.
+	 *
+	 * @param parentConfigurationParameters the parent instance to be used for looking
+	 * up configuration parameters that have not been explicitly configured;
+	 * never {@code null}
 	 * @return this builder for method chaining
 	 *
-     * @see #configurationParameter(String, String)
-     * @see #configurationParameters(Map)
-     */
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder parentConfigurationParameters(
 			ConfigurationParameters parentConfigurationParameters) {
 		this.parentConfigurationParameters = parentConfigurationParameters;
 		return this;
 	}
 
-    /**
-     * Configure whether implicit configuration parameters should be considered.
-     *
-     * <p>By default, in addition to those parameters that are passed explicitly
-     * to this builder, configuration parameters are read from system properties
-     * and from the {@code junit-platform.properties} classpath resource.
-     * Passing {@code false} to this method, disables the latter two sources so
-     * that only explicit configuration parameters are taken into account.
+	/**
+	 * Configure whether implicit configuration parameters should be considered.
+	 *
+	 * <p>By default, in addition to those parameters that are passed explicitly
+	 * to this builder, configuration parameters are read from system properties
+	 * and from the {@code junit-platform.properties} classpath resource.
+	 * Passing {@code false} to this method, disables the latter two sources so
+	 * that only explicit configuration parameters are taken into account.
 	 * @return this builder for method chaining
-     *
-     * @see #configurationParameter(String, String)
-     * @see #configurationParameters(Map)
-     */
+	 *
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
 		delegate.enableImplicitConfigurationParameters(enabled);
 		return this;
@@ -451,6 +451,6 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.map(String::trim)
 				.toArray(String[]::new));
 		// @formatter:on
-    }
+	}
 
 }
