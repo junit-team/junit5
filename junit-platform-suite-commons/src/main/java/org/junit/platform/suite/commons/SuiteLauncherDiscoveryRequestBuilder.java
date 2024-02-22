@@ -248,6 +248,14 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Configures the suite class for the suite launcher discovery request.
+	 *
+	 * <p>This method processes annotations on the suite class to customize
+	 * the suite discovery and execution.
+	 *
+	 * @param suiteClass the suite class to configure
+	 */
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
