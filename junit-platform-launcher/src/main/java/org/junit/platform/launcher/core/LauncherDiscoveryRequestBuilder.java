@@ -58,7 +58,7 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  *        selectMethod("org.example.order.OrderTests", "test4"),
  *        selectMethod(OrderTests.class, "test5"),
  *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots(Collections.singleton(Path.get("/my/local/path1"))),
+ *        selectClasspathRoots(Collections.singleton(Paths.get("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
  *     )
