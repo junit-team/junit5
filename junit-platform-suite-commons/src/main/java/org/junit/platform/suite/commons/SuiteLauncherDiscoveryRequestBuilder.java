@@ -185,22 +185,64 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+    /**
+     * Add the supplied <em>configuration parameter</em> to the request.
+     *
+     * @param key the configuration parameter key under which to store the
+     * value; never {@code null} or blank
+     * @param value the value to store
+     * @return this builder for method chaining
+     */
 	public SuiteLauncherDiscoveryRequestBuilder configurationParameter(String key, String value) {
 		delegate.configurationParameter(key, value);
 		return this;
 	}
 
+    /**
+     * Add all the supplied configuration parameters to the request.
+     *
+     * @param configurationParameters the map of configuration parameters to add;
+     * never {@code null}
+     * @return this builder for method chaining
+     * @see #configurationParameter(String, String)
+     */
 	public SuiteLauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		delegate.configurationParameters(configurationParameters);
 		return this;
 	}
 
+    /**
+     * Set the parent configuration parameters to use for the request.
+     *
+     * <p>Any explicit configuration parameters configured via
+     * {@link #configurationParameter(String, String)} or
+     * {@link #configurationParameters(Map)} takes precedence over the supplied
+     * configuration parameters.
+     *
+     * @param parentConfigurationParameters the parent instance to be used for looking
+     * up configuration parameters that have not been explicitly configured;
+     * never {@code null}
+     * @see #configurationParameter(String, String)
+     * @see #configurationParameters(Map)
+     */
 	public SuiteLauncherDiscoveryRequestBuilder parentConfigurationParameters(
 			ConfigurationParameters parentConfigurationParameters) {
 		this.parentConfigurationParameters = parentConfigurationParameters;
 		return this;
 	}
 
+    /**
+     * Configure whether implicit configuration parameters should be considered.
+     *
+     * <p>By default, in addition to those parameters that are passed explicitly
+     * to this builder, configuration parameters are read from system properties
+     * and from the {@code junit-platform.properties} classpath resource.
+     * Passing {@code false} to this method, disables the latter two sources so
+     * that only explicit configuration parameters are taken into account.
+     *
+     * @see #configurationParameter(String, String)
+     * @see #configurationParameters(Map)
+     */
 	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
 		delegate.enableImplicitConfigurationParameters(enabled);
 		return this;
