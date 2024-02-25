@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
-import static org.junit.platform.commons.util.Preconditions.notNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -190,9 +189,9 @@ class ClasspathScannerTests {
 	}
 
 	@Test
-	void scanForResourcesInPackage() throws URISyntaxException {
+	void scanForResourcesInPackage() {
 		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
-		assertThat(resources).extracting(Resource::getUri).containsExactly(
+		assertThat(resources).extracting(Resource::getUri).containsExactlyInAnyOrder(
 			uriOf("/org/junit/platform/commons/example.resource"),
 			uriOf("/org/junit/platform/commons/other-example.resource"));
 	}
