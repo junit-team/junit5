@@ -16,6 +16,7 @@ import java.util.Objects;
 import org.junit.platform.commons.support.Resource;
 
 class ClasspathResource implements Resource {
+
 	private final String name;
 	private final URI uri;
 
