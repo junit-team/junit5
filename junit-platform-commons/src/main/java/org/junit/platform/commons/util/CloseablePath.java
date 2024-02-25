@@ -53,7 +53,7 @@ final class CloseablePath implements Closeable {
 
 	static CloseablePath create(URI uri, FileSystemProvider fileSystemProvider) throws URISyntaxException {
 		if (JAR_URI_SCHEME.equals(uri.getScheme())) {
-			// Parsing: jar:<url>!/[<entry>]
+			// Parsing: jar:<url>!/[<entry>], see java.net.JarURLConnection
 			String uriString = uri.toString();
 			int lastJarUriSeparator = uriString.lastIndexOf(JAR_URI_SEPARATOR);
 			String jarUri = uriString.substring(0, lastJarUriSeparator);
