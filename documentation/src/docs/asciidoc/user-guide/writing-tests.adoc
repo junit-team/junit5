@@ -2546,7 +2546,10 @@ System Property.
 
 When access to shared resources is declared using the `{ResourceLock}` annotation, the
 JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
-parallel.
+parallel. This guarantee extends to lifecycle methods of a test class or method. For
+example, if a test method is annotated with a `{ResourceLock}` annotation, the "lock" will
+be acquired before any `@BeforeEach` methods are executed and released after all
+`@AfterEach` methods have been executed.
 
 [NOTE]
 .Running tests in isolation

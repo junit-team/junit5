@@ -20,6 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 
 /**
  * {@code @ResourceLock} is used to declare that the annotated test class or test
@@ -34,6 +36,12 @@ import org.apiguardian.api.API;
  * the annotated element may be executed concurrently with other test classes or
  * methods that also require {@code READ} access but not at the same time as any
  * other test that requires {@code READ_WRITE} access.
+ *
+ * <p>This guarantee extends to lifecycle methods of a test class or method. For
+ * example, if a test method is annotated with a {@code @ResourceLock}
+ * annotation the "lock" will be acquired before any
+ * {@link BeforeEach @BeforeEach} methods are executed and released after all
+ * {@link AfterEach @AfterEach} methods have been executed.
  *
  * <p>This annotation can be repeated to declare the use of multiple shared resources.
  *
