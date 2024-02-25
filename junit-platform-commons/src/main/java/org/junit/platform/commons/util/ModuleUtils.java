@@ -99,11 +99,13 @@ public class ModuleUtils {
 	}
 
 	/**
-	 * TODO: DOC
+	 * Find all resources for the given module name.
 	 *
-	 * @param moduleName
-	 * @param filter
-	 * @return
+	 * @param moduleName the name of the module to scan; never {@code null} or
+	 * <em>empty</em>
+	 * @param filter the class filter to apply; never {@code null}
+	 * @return an immutable list of all such resources found; never {@code null}
+	 * but potentially empty
 	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static List<Resource> findAllResourcesInModule(String moduleName, ResourceFilter filter) {
