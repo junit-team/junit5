@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
 import static org.junit.jupiter.api.condition.JRE.JAVA_22;
+import static org.junit.jupiter.api.condition.JRE.JAVA_23;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -54,7 +55,7 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17, JAVA_18,
-			JAVA_19, JAVA_20, JAVA_21, JAVA_22, OTHER })
+			JAVA_19, JAVA_20, JAVA_21, JAVA_22, JAVA_23, OTHER })
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -149,6 +150,12 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_23)
+	void java23() {
+		assertTrue(onJava23());
+	}
+
+	@Test
 	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
 		assertFalse(
@@ -216,4 +223,7 @@ class EnabledOnJreIntegrationTests {
 		return JAVA_VERSION.startsWith("22");
 	}
 
+	static boolean onJava23() {
+		return JAVA_VERSION.startsWith("23");
+	}
 }

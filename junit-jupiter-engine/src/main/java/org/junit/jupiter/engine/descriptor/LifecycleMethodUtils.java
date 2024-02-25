@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsVoid;
+import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -96,7 +96,7 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
-		if (!returnsVoid(method)) {
+		if (!returnsPrimitiveVoid(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}

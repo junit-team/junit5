@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,11 +10,13 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE;
 import static org.assertj.core.api.Assertions.allOf;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
@@ -47,7 +49,6 @@ import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -60,6 +61,11 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
 class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> callSequence = new ArrayList<>();
+
+	@BeforeEach
+	void clearCallSequence() {
+		callSequence.clear();
+	}
 
 	@Test
 	void instanceLevel() {
@@ -93,13 +99,12 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	@Test
 	void instanceLevelWithInheritedAndHiddenExtensions() {
-		callSequence.clear();
 		Class<?> testClass = InstanceLevelExtensionRegistrationParentTestCase.class;
 		String parent = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
 		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1: before test", //
-			parent + " :: extension2: before test" //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test" //
 		);
 
 		callSequence.clear();
@@ -107,21 +112,20 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		String child = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
 		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1: before test", //
-			child + " :: extension2: before test", //
-			child + " :: extension3: before test" //
+			parent + " :: extension1 :: before test", //
+			child + " :: extension2 :: before test", //
+			child + " :: extension3 :: before test" //
 		);
 	}
 
 	@Test
 	void classLevelWithInheritedAndHiddenExtensions() {
-		callSequence.clear();
 		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
 		String parent = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
 		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1: before test", //
-			parent + " :: extension2: before test" //
+			parent + " :: extension1 :: before test", //
+			parent + " :: extension2 :: before test" //
 		);
 
 		callSequence.clear();
@@ -129,9 +133,9 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		String child = testClass.getSimpleName();
 		assertOneTestSucceeded(testClass);
 		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1: before test", //
-			child + " :: extension2: before test", //
-			child + " :: extension3: before test" //
+			parent + " :: extension1 :: before test", //
+			child + " :: extension2 :: before test", //
+			child + " :: extension3 :: before test" //
 		);
 	}
 
@@ -140,7 +144,6 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	 */
 	@Test
 	void instanceLevelWithFieldThatDoesNotImplementAnExtensionApi() {
-		callSequence.clear();
 		assertOneTestSucceeded(InstanceLevelCustomExtensionApiTestCase.class);
 		assertThat(callSequence).containsExactly( //
 			CustomExtensionImpl.class.getSimpleName() + " :: before test", //
@@ -153,7 +156,6 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	 */
 	@Test
 	void classLevelWithFieldThatDoesNotImplementAnExtensionApi() {
-		callSequence.clear();
 		assertOneTestSucceeded(ClassLevelCustomExtensionApiTestCase.class);
 		assertThat(callSequence).containsExactly( //
 			CustomExtensionImpl.class.getSimpleName() + " :: before test", //
@@ -474,14 +476,10 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 	static class ClassLevelExtensionRegistrationParentTestCase {
 
 		@RegisterExtension
-		static BeforeEachCallback extension1 = context -> callSequence.add(
-			ClassLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension1: before "
-					+ context.getRequiredTestMethod().getName());
+		static Extension extension1 = new BeforeEachExtension(1);
 
 		@RegisterExtension
-		static BeforeEachCallback extension2 = context -> callSequence.add(
-			ClassLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension2: before "
-					+ context.getRequiredTestMethod().getName());
+		static Extension extension2 = new BeforeEachExtension(2);
 
 		@Test
 		void test() {
@@ -493,28 +491,20 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 		// "Hides" ClassLevelExtensionRegistrationParentTestCase.extension2
 		@RegisterExtension
-		static BeforeEachCallback extension2 = context -> callSequence.add(
-			ClassLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension2: before "
-					+ context.getRequiredTestMethod().getName());
+		static Extension extension2 = new BeforeEachExtension(2);
 
 		@RegisterExtension
-		static BeforeEachCallback extension3 = context -> callSequence.add(
-			ClassLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension3: before "
-					+ context.getRequiredTestMethod().getName());
+		static Extension extension3 = new BeforeEachExtension(3);
 
 	}
 
 	static class InstanceLevelExtensionRegistrationParentTestCase {
 
 		@RegisterExtension
-		BeforeEachCallback extension1 = context -> callSequence.add(
-			InstanceLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension1: before "
-					+ context.getRequiredTestMethod().getName());
+		Extension extension1 = new BeforeEachExtension(1);
 
 		@RegisterExtension
-		BeforeEachCallback extension2 = context -> callSequence.add(
-			InstanceLevelExtensionRegistrationParentTestCase.class.getSimpleName() + " :: extension2: before "
-					+ context.getRequiredTestMethod().getName());
+		Extension extension2 = new BeforeEachExtension(2);
 
 		@Test
 		void test() {
@@ -527,14 +517,26 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 		// "Hides" InstanceLevelExtensionRegistrationParentTestCase.extension2
 		@RegisterExtension
-		BeforeEachCallback extension2 = context -> callSequence.add(
-			InstanceLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension2: before "
-					+ context.getRequiredTestMethod().getName());
+		Extension extension2 = new BeforeEachExtension(2);
 
 		@RegisterExtension
-		BeforeEachCallback extension3 = context -> callSequence.add(
-			InstanceLevelExtensionRegistrationChildTestCase.class.getSimpleName() + " :: extension3: before "
-					+ context.getRequiredTestMethod().getName());
+		Extension extension3 = new BeforeEachExtension(3);
+
+	}
+
+	private static class BeforeEachExtension implements BeforeEachCallback {
+
+		private final String prefix;
+
+		BeforeEachExtension(int id) {
+			Class<?> callerClass = StackWalker.getInstance(RETAIN_CLASS_REFERENCE).getCallerClass();
+			this.prefix = callerClass.getSimpleName() + " :: extension" + id + " :: before ";
+		}
+
+		@Override
+		public void beforeEach(ExtensionContext context) {
+			callSequence.add(this.prefix + context.getRequiredTestMethod().getName());
+		}
 
 	}
 
@@ -704,11 +706,10 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 				.findFirst()
 				.ifPresent(field -> {
 					try {
-						ReflectionUtils.makeAccessible(field);
-						field.set(testInstance, new CrystalBall("Outlook good"));
+						makeAccessible(field).set(testInstance, new CrystalBall("Outlook good"));
 					}
 					catch (Throwable t) {
-						ExceptionUtils.throwAsUncheckedException(t);
+						throw ExceptionUtils.throwAsUncheckedException(t);
 					}
 				});
 			// @formatter:on

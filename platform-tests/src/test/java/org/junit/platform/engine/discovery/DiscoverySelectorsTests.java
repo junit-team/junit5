@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -333,7 +333,7 @@ class DiscoverySelectorsTests {
 		@Test
 		@DisplayName("Preconditions: selectMethod(className, methodName)")
 		void selectMethodByClassNameAndMethodNamePreconditions() {
-			assertViolatesPrecondition(() -> selectMethod("TestClass", (String) null));
+			assertViolatesPrecondition(() -> selectMethod("TestClass", null));
 			assertViolatesPrecondition(() -> selectMethod("TestClass", ""));
 			assertViolatesPrecondition(() -> selectMethod("TestClass", "  "));
 			assertViolatesPrecondition(() -> selectMethod((String) null, "method"));

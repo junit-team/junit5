@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -24,7 +24,7 @@ import java.util.UUID;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.support.conversion.ConversionException;
-import org.junit.platform.commons.support.conversion.StringConversionSupport;
+import org.junit.platform.commons.support.conversion.ConversionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -44,7 +44,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.0
  * @see org.junit.jupiter.params.converter.ArgumentConverter
- * @see org.junit.platform.commons.support.conversion.StringConversionSupport
+ * @see org.junit.platform.commons.support.conversion.ConversionSupport
  */
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
@@ -78,7 +78,7 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 			Class<?> declaringClass = context.getDeclaringExecutable().getDeclaringClass();
 			ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
 			try {
-				return StringConversionSupport.convert((String) source, targetType, classLoader);
+				return ConversionSupport.convert((String) source, targetType, classLoader);
 			}
 			catch (ConversionException ex) {
 				throw new ArgumentConversionException(ex.getMessage(), ex);

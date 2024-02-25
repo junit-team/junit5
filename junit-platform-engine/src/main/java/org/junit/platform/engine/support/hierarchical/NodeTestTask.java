@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -239,7 +239,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					// Futures returned by execute() may have been cancelled
 				}
 				catch (ExecutionException e) {
-					ExceptionUtils.throwAsUncheckedException(e.getCause());
+					throw ExceptionUtils.throwAsUncheckedException(e.getCause());
 				}
 			}
 		}

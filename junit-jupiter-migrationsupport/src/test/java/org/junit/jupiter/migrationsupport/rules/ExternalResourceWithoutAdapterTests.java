@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ public class ExternalResourceWithoutAdapterTests {
 			folder.newFile("temp.txt");
 		}
 		catch (Exception exception) {
-			assertTrue(exception.getMessage().equals("the temporary folder has not yet been created"));
+			assertEquals("the temporary folder has not yet been created", exception.getMessage());
 		}
 	}
 

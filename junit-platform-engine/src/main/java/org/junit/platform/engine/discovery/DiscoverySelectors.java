@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -389,7 +389,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		return selectClass((ClassLoader) null, className);
+		return selectClass(null, className);
 	}
 
 	/**
@@ -524,7 +524,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames) {
-		return selectMethod((ClassLoader) null, className, methodName, parameterTypeNames);
+		return selectMethod(null, className, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -608,7 +608,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new MethodSelector((ClassLoader) null, className, methodName, parameterTypes);
+		return new MethodSelector(null, className, methodName, parameterTypes);
 	}
 
 	/**
@@ -673,7 +673,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
-		return selectNestedClass((ClassLoader) null, enclosingClassNames, nestedClassName);
+		return selectNestedClass(null, enclosingClassNames, nestedClassName);
 	}
 
 	/**
@@ -707,7 +707,7 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName) {
-		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName);
+		return selectNestedMethod(null, enclosingClassNames, nestedClassName, methodName);
 	}
 
 	/**
@@ -752,8 +752,7 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, String parameterTypeNames) {
-		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
-			parameterTypeNames);
+		return selectNestedMethod(null, enclosingClassNames, nestedClassName, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -807,8 +806,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new NestedMethodSelector((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
-			parameterTypes);
+		return new NestedMethodSelector(null, enclosingClassNames, nestedClassName, methodName, parameterTypes);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -87,13 +87,13 @@ class FallbackStringToObjectConverterTests {
 	@Test
 	@DisplayName("Cannot convert String to Diary because Diary has neither a static factory method nor a factory constructor")
 	void cannotConvertStringToDiary() {
-		assertThat(converter.canConvert(Diary.class)).isFalse();
+		assertThat(converter.canConvertTo(Diary.class)).isFalse();
 	}
 
 	@Test
 	@DisplayName("Cannot convert String to Magazine because Magazine has multiple static factory methods")
 	void cannotConvertStringToMagazine() {
-		assertThat(converter.canConvert(Magazine.class)).isFalse();
+		assertThat(converter.canConvertTo(Magazine.class)).isFalse();
 	}
 
 	// -------------------------------------------------------------------------
@@ -120,7 +120,7 @@ class FallbackStringToObjectConverterTests {
 	}
 
 	private static void assertConverts(String input, Class<?> targetType, Object expectedOutput) throws Exception {
-		assertThat(converter.canConvert(targetType)).isTrue();
+		assertThat(converter.canConvertTo(targetType)).isTrue();
 
 		var result = converter.convert(input, targetType);
 
@@ -161,10 +161,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Book)) {
+			if (!(obj instanceof Book that)) {
 				return false;
 			}
-			var that = (Book) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -183,10 +182,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Journal)) {
+			if (!(obj instanceof Journal that)) {
 				return false;
 			}
-			var that = (Journal) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -213,10 +211,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Newspaper)) {
+			if (!(obj instanceof Newspaper that)) {
 				return false;
 			}
-			var that = (Newspaper) obj;
 			return Objects.equals(this.title, that.title);
 		}
 

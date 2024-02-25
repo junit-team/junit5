@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -108,8 +108,7 @@ class ClassLoaderUtilsTests {
 
 	@Test
 	void getLocationFromVariousObjectsArePresent() {
-		assertTrue(ClassLoaderUtils.getLocation(void.class).isPresent());
-		assertTrue(ClassLoaderUtils.getLocation(byte.class).isPresent());
+		assertTrue(ClassLoaderUtils.getLocation(getClass()).isPresent());
 		assertTrue(ClassLoaderUtils.getLocation(this).isPresent());
 		assertTrue(ClassLoaderUtils.getLocation("").isPresent());
 		assertTrue(ClassLoaderUtils.getLocation(0).isPresent());

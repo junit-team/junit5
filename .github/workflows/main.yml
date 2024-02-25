@@ -10,12 +10,14 @@ on:
       - '*'
 
 env:
-  DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
+  JUNIT_DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
   Linux:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # required for submitting a dependency graph
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -28,9 +30,9 @@ jobs:
     - name: Install GraalVM
       uses: graalvm/setup-graalvm@v1
       with:
+        distribution: graalvm-community
         version: 'latest'
         java-version: '21'
-        components: 'native-image'
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       uses: ./.github/actions/main-build
@@ -42,7 +44,7 @@ jobs:
           jacocoRootReport
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
 
   Windows:
     runs-on: windows-latest

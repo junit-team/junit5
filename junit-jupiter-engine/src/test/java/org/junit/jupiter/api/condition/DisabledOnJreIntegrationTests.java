@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava20;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava21;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava22;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava23;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
 import static org.junit.jupiter.api.condition.JRE.JAVA_22;
+import static org.junit.jupiter.api.condition.JRE.JAVA_23;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
@@ -68,7 +70,7 @@ class DisabledOnJreIntegrationTests {
 
 	@Test
 	@DisabledOnJre(value = { JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17,
-			JAVA_18, JAVA_19, JAVA_20, JAVA_21, JAVA_22, OTHER }, disabledReason = "Disabled on every JRE")
+			JAVA_18, JAVA_19, JAVA_20, JAVA_21, JAVA_22, JAVA_23, OTHER }, disabledReason = "Disabled on every JRE")
 	void disabledOnAllJavaVersions() {
 		fail("should be disabled");
 	}
@@ -164,11 +166,17 @@ class DisabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@DisabledOnJre(JAVA_23)
+	void java23() {
+		assertFalse(onJava23());
+	}
+
+	@Test
 	@DisabledOnJre(OTHER)
 	void other() {
-		assertTrue(
-			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
-					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22());
+		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
+				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21()
+				|| onJava22() || onJava23());
 	}
 
 }

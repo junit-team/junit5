@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -262,8 +262,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType}, using top-down search semantics within the type
 	 * hierarchy.
 	 *
@@ -289,8 +289,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType} and match the specified {@code predicate}, using
 	 * top-down search semantics within the type hierarchy.
 	 *
@@ -318,8 +318,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Field fields} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Field fields} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType} and match the specified {@code predicate}, using
 	 * the supplied hierarchy traversal mode.
 	 *
@@ -496,8 +496,8 @@ public final class AnnotationSupport {
 	}
 
 	/**
-	 * Find all {@linkplain Method methods} of the supplied class or interface
-	 * that are annotated or <em>meta-annotated</em> with the specified
+	 * Find all distinct {@linkplain Method methods} of the supplied class or
+	 * interface that are annotated or <em>meta-annotated</em> with the specified
 	 * {@code annotationType}.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}

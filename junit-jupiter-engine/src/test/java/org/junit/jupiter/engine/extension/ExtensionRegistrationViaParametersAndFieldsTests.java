@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
@@ -500,7 +500,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(testInfo).isNotNull();
 			assertThat(text).isEqualTo("testFactory-1-method");
 
-			return IntStream.of(2, 4).mapToObj(num -> dynamicTest("" + num, () -> assertTrue(num % 2 == 0)));
+			return IntStream.of(2, 4).mapToObj(num -> dynamicTest("" + num, () -> assertEquals(0, num % 2)));
 		}
 
 		@AfterEach
@@ -865,7 +865,7 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Bef
 				makeAccessible(field).set(instance, trigger + " - " + field.getName());
 			}
 			catch (Throwable t) {
-				ExceptionUtils.throwAsUncheckedException(t);
+				throw ExceptionUtils.throwAsUncheckedException(t);
 			}
 		});
 	}

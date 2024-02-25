@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.lang.StackWalker.Option.RETAIN_CLASS_REFERENCE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Order.DEFAULT;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -41,7 +42,7 @@ import org.junit.jupiter.engine.JupiterTestEngine;
  */
 class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTests {
 
-	private static final List<Integer> callSequence = new ArrayList<>();
+	private static final List<String> callSequence = new ArrayList<>();
 
 	/**
 	 * This method basically verifies the implementation of
@@ -69,17 +70,35 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 
 	@Test
 	void instanceLevelWithDefaultOrder() {
-		assertOutcome(DefaultOrderInstanceLevelExtensionRegistrationTestCase.class, 1, 2, 3);
+		Class<?> testClass = DefaultOrderInstanceLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension1 :: before test", //
+			testClassName + " :: extension2 :: before test", //
+			testClassName + " :: extension3 :: before test" //
+		);
 	}
 
 	@Test
 	void instanceLevelWithExplicitOrder() {
-		assertOutcome(ExplicitOrderInstanceLevelExtensionRegistrationTestCase.class, 3, 2, 1);
+		Class<?> testClass = ExplicitOrderInstanceLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension3 :: before test", //
+			testClassName + " :: extension2 :: before test", //
+			testClassName + " :: extension1 :: before test" //
+		);
 	}
 
 	@Test
 	void instanceLevelWithDefaultOrderAndExplicitOrder() {
-		assertOutcome(DefaultOrderAndExplicitOrderInstanceLevelExtensionRegistrationTestCase.class, 3, 1, 2);
+		Class<?> testClass = DefaultOrderAndExplicitOrderInstanceLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension3 :: before test", //
+			testClassName + " :: extension1 :: before test", //
+			testClassName + " :: extension2 :: before test" //
+		);
 	}
 
 	/**
@@ -91,44 +110,88 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	 */
 	@Test
 	void instanceLevelWithDefaultOrderPlusOneAndDefaultOrder() {
-		assertOutcome(DefaultOrderPlusOneAndDefaultOrderInstanceLevelExtensionRegistrationTestCase.class, 1, 3, 2);
+		Class<?> testClass = DefaultOrderPlusOneAndDefaultOrderInstanceLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension1 :: after test", //
+			testClassName + " :: extension3 :: after test", //
+			testClassName + " :: extension2 :: after test" //
+		);
 	}
 
 	@Test
 	void instanceLevelWithDefaultOrderAndExplicitOrderWithTestInstancePerClassLifecycle() {
-		assertOutcome(
-			DefaultOrderAndExplicitOrderInstanceLevelExtensionRegistrationWithTestInstancePerClassLifecycleTestCase.class,
-			3, 1, 2);
+		Class<?> testClass = DefaultOrderAndExplicitOrderInstanceLevelExtensionRegistrationWithTestInstancePerClassLifecycleTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension3 :: before test", //
+			testClassName + " :: extension1 :: before test", //
+			testClassName + " :: extension2 :: before test" //
+		);
 	}
 
 	@Test
 	void classLevelWithDefaultOrderAndExplicitOrder() {
-		assertOutcome(DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class, 3, 1, 2);
+		Class<?> testClass = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		assertOutcome(testClass, //
+			testClassName + " :: extension3 :: before test", //
+			testClassName + " :: extension1 :: before test", //
+			testClassName + " :: extension2 :: before test" //
+		);
 	}
 
 	@Test
 	void classLevelWithDefaultOrderAndExplicitOrderInheritedFromSuperclass() {
-		assertOutcome(InheritedDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class, 3, 1, 2);
+		Class<?> testClass = InheritedDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String parentName = parent.getSimpleName();
+		assertOutcome(testClass, //
+			parentName + " :: extension3 :: before test", //
+			parentName + " :: extension1 :: before test", //
+			parentName + " :: extension2 :: before test" //
+		);
 	}
 
 	@Test
 	void classLevelWithDefaultOrderShadowingOrderFromSuperclass() {
-		assertOutcome(DefaultOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class, 1,
-			2, 3);
+		Class<?> testClass = DefaultOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String parentName = parent.getSimpleName();
+		assertOutcome(testClass, //
+			parentName + " :: extension1 :: before test", //
+			parentName + " :: extension2 :: before test", //
+			testClassName + " :: extension3 :: before test" //
+		);
 	}
 
 	@Test
 	void classLevelWithExplicitOrderShadowingOrderFromSuperclass() {
-		assertOutcome(ExplicitOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class,
-			3, 2, 1);
+		Class<?> testClass = ExplicitOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String testClassName = testClass.getSimpleName();
+		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
+		String parentName = parent.getSimpleName();
+		assertOutcome(testClass, //
+			parentName + " :: extension3 :: before test", //
+			testClassName + " :: extension2 :: before test", //
+			parentName + " :: extension1 :: before test" //
+		);
 	}
 
 	@Test
 	void classLevelWithDefaultOrderAndExplicitOrderFromInterface() {
-		assertOutcome(DefaultOrderAndExplicitOrderExtensionRegistrationFromInterfaceTestCase.class, 3, 1, 2);
+		Class<?> testClass = DefaultOrderAndExplicitOrderExtensionRegistrationFromInterfaceTestCase.class;
+		Class<?> testInterface = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationInterface.class;
+		String interfaceName = testInterface.getSimpleName();
+		assertOutcome(testClass, //
+			interfaceName + " :: extension3 :: before test", //
+			interfaceName + " :: extension1 :: before test", //
+			interfaceName + " :: extension2 :: before test" //
+		);
 	}
 
-	private void assertOutcome(Class<?> testClass, Integer... values) {
+	private void assertOutcome(Class<?> testClass, String... values) {
 		executeTestsForClass(testClass).testEvents().assertStatistics(stats -> stats.succeeded(1));
 		assertThat(callSequence).containsExactly(values);
 	}
@@ -280,30 +343,32 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 
 	private static class BeforeEachExtension implements BeforeEachCallback {
 
-		private final int id;
+		private final String prefix;
 
 		BeforeEachExtension(int id) {
-			this.id = id;
+			Class<?> callerClass = StackWalker.getInstance(RETAIN_CLASS_REFERENCE).getCallerClass();
+			this.prefix = callerClass.getSimpleName() + " :: extension" + id + " :: before ";
 		}
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
-			callSequence.add(this.id);
+			callSequence.add(this.prefix + context.getRequiredTestMethod().getName());
 		}
 
 	}
 
 	private static class AfterEachExtension implements AfterEachCallback {
 
-		private final int id;
+		private final String prefix;
 
 		AfterEachExtension(int id) {
-			this.id = id;
+			Class<?> callerClass = StackWalker.getInstance(RETAIN_CLASS_REFERENCE).getCallerClass();
+			this.prefix = callerClass.getSimpleName() + " :: extension" + id + " :: after ";
 		}
 
 		@Override
 		public void afterEach(ExtensionContext context) {
-			callSequence.add(this.id);
+			callSequence.add(this.prefix + context.getRequiredTestMethod().getName());
 		}
 
 	}

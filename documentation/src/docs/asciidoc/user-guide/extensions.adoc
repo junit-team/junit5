@@ -731,12 +731,11 @@ details.
 [[extensions-supported-utilities-conversion]]
 ==== Conversion Support
 
-`StringConversionSupport` (in the `org.junit.platform.commons.support.conversion` package)
+`ConversionSupport` (in the `org.junit.platform.commons.support.conversion` package)
 provides support for converting from strings to primitive types and their corresponding
 wrapper types, date and time types from the `java.time package`, and some additional
 common Java types such as `File`, `BigDecimal`, `BigInteger`, `Currency`, `Locale`, `URI`,
-`URL`, `UUID`, etc. Consult the Javadoc for `{StringConversionSupport}` for further
-details.
+`URL`, `UUID`, etc. Consult the Javadoc for `{ConversionSupport}` for further details.
 
 
 [[extensions-execution-order]]

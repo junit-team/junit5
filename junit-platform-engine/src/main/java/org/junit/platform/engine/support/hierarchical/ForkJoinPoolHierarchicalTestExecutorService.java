@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -94,9 +94,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	private static Optional<Constructor<ForkJoinPool>> sinceJava9Constructor() {
-		return Try.call(() -> ForkJoinPool.class.getDeclaredConstructor(Integer.TYPE, ForkJoinWorkerThreadFactory.class,
-			UncaughtExceptionHandler.class, Boolean.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE, Predicate.class,
-			Long.TYPE, TimeUnit.class)) //
+		return Try.call(() -> ForkJoinPool.class.getDeclaredConstructor(int.class, ForkJoinWorkerThreadFactory.class,
+			UncaughtExceptionHandler.class, boolean.class, int.class, int.class, int.class, Predicate.class, long.class,
+			TimeUnit.class)) //
 				.toOptional();
 	}
 
@@ -202,7 +202,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				testTask.execute();
 			}
 			catch (InterruptedException e) {
-				ExceptionUtils.throwAsUncheckedException(e);
+				throw ExceptionUtils.throwAsUncheckedException(e);
 			}
 		}
 

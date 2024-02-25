@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -39,19 +39,17 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 		Stream.of(selector2, selector3, selector4).forEach(selector -> {
 			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "method", "int"));
-			assertEqualsAndHashCode(selector1, selector,
-				new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "method", ""));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "method", ""));
 			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "X", "int, boolean"));
-			assertEqualsAndHashCode(selector1, selector,
-				new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "X", ""));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, TEST_CASE_NAME, "X", ""));
 			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, "X", "method", "int, boolean"));
-			assertEqualsAndHashCode(selector1, selector, new MethodSelector((ClassLoader) null, "X", "method", ""));
+			assertEqualsAndHashCode(selector1, selector, new MethodSelector(null, "X", "method", ""));
 		});
 	}
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadJavaClass() {
-		var selector = new MethodSelector((ClassLoader) null, "org.example.BogusClass", "method", "int, boolean");
+		var selector = new MethodSelector(null, "org.example.BogusClass", "method", "int, boolean");
 
 		assertThat(selector.getClassName()).isEqualTo("org.example.BogusClass");
 		assertThat(selector.getMethodName()).isEqualTo("method");
@@ -65,7 +63,7 @@ class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
 	void preservesOriginalExceptionWhenTryingToLoadClassForParameterType() {
-		var selector = new MethodSelector((ClassLoader) null, TEST_CASE_NAME, "method", "int[], org.example.Bogus");
+		var selector = new MethodSelector(null, TEST_CASE_NAME, "method", "int[], org.example.Bogus");
 
 		assertThat(selector.getClassName()).isEqualTo(TEST_CASE_NAME);
 		assertThat(selector.getMethodName()).isEqualTo("method");

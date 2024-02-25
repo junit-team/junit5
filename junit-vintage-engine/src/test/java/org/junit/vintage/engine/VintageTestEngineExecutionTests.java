@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -749,7 +749,7 @@ class VintageTestEngineExecutionTests {
 					instanceOf(MultipleFailuresError.class), //
 					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getFailures().size() == 3,
 						"MultipleFailuresError must contain 3 failures"), //
-					new Condition<>(throwable -> ((MultipleFailuresError) throwable).getSuppressed().length == 3,
+					new Condition<>(throwable -> throwable.getSuppressed().length == 3,
 						"MultipleFailuresError must contain 3 suppressed exceptions")//
 				)), //
 			event(container(testClass), finishedSuccessfully()), //

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -71,7 +71,7 @@ class TestFactoryTestDescriptorTests {
 			assertThat(file).isFile();
 
 			FilePosition position = FilePosition.from(42, 21);
-			URI uri = URI.create(file.toURI().toString() + "?line=42&column=21");
+			URI uri = URI.create(file.toURI() + "?line=42&column=21");
 			TestSource testSource = TestFactoryTestDescriptor.fromUri(uri);
 
 			assertThat(testSource).isInstanceOf(FileSource.class);

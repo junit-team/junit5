@@ -283,7 +283,7 @@ tasks {
 			inputs.dir(kotlin.srcDirs.first())
 		}
 
-		forkOptions {
+		jvm {
 			// To avoid warning, see https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/597
 			jvmArgs(
 				"--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED",
@@ -383,8 +383,10 @@ tasks {
 			val moduleSourcePathOption = addPathOption("-module-source-path")
 			moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
 			moduleSourcePathOption.value.forEach { inputs.dir(it) }
-			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate {
-				it.javaModuleName to files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava.srcDirs }).asPath
+			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate { project ->
+				project.javaModuleName to files(
+					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs }
+				).asPath
 			}))
 			addStringOption("-add-modules", "info.picocli")
 			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
@@ -394,7 +396,9 @@ tasks {
 			)))
 		}
 
-		source(modularProjects.map { files(it.sourceSets.matching { it.name.startsWith("main") }.map { it.allJava }) })
+		source(modularProjects.map { project ->
+			files(project.sourceSets.named { it.startsWith("main") }.map { it.allJava })
+		})
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
 		maxMemory = "1024m"

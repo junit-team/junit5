@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.lang.String.format;
+import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
@@ -22,9 +23,9 @@ import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversal
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.InvocationTargetException;
@@ -97,7 +98,7 @@ public final class ReflectionUtils {
 		/**
 		 * Traverse the hierarchy using bottom-up semantics.
 		 */
-		BOTTOM_UP;
+		BOTTOM_UP
 	}
 
 	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
@@ -124,6 +125,13 @@ public final class ReflectionUtils {
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
 		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+
+	/**
+	 * Cache for equivalent methods on an interface implemented by the declaring class.
+	 * @since 1.11
+	 * @see #getInterfaceMethodIfPossible(Method, Class)
+	 */
+	private static final Map<Method, Method> interfaceMethodCache = synchronizedMap(new LruCache<>(255));
 
 	/**
 	 * Set of fully qualified class names for which no cycles have been detected
@@ -341,8 +349,14 @@ public final class ReflectionUtils {
 		return !isStatic(clazz) && clazz.isMemberClass();
 	}
 
-	public static boolean returnsVoid(Method method) {
-		return method.getReturnType().equals(Void.TYPE);
+	/**
+	 * Determine if the return type of the supplied method is primitive {@code void}.
+	 *
+	 * @param method the method to test; never {@code null}
+	 * @return {@code true} if the method's return type is {@code void}
+	 */
+	public static boolean returnsPrimitiveVoid(Method method) {
+		return method.getReturnType() == void.class;
 	}
 
 	/**
@@ -1202,23 +1216,25 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		return findAllFieldsInHierarchy(clazz, predicate, traversalMode).stream();
+		// @formatter:off
+		return findAllFieldsInHierarchy(clazz, traversalMode).stream()
+				.filter(predicate)
+				.distinct();
+		// @formatter:on
 	}
 
-	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> findAllFieldsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Field> localFields = getDeclaredFields(clazz, predicate).stream()
+		List<Field> localFields = getDeclaredFields(clazz).stream()
 				.filter(field -> !field.isSynthetic())
 				.collect(toList());
-		List<Field> superclassFields = getSuperclassFields(clazz, predicate, traversalMode).stream()
+		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
 				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
-		List<Field> interfaceFields = getInterfaceFields(clazz, predicate, traversalMode).stream()
+		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
 				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
 				.collect(toList());
 		// @formatter:on
@@ -1305,6 +1321,54 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Determine a corresponding interface method for the given method handle, if possible.
+	 * <p>This is particularly useful for arriving at a public exported type on the Java
+	 * Module System which can be reflectively invoked without an illegal access warning.
+	 * @param method the method to be invoked, potentially from an implementation class
+	 * @param targetClass the target class to check for declared interfaces
+	 * @return the corresponding interface method, or the original method if none found
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Method getInterfaceMethodIfPossible(Method method, Class<?> targetClass) {
+		if (!isPublic(method) || method.getDeclaringClass().isInterface()) {
+			return method;
+		}
+		// Try cached version of method in its declaring class
+		Method result = interfaceMethodCache.computeIfAbsent(method,
+			m -> findInterfaceMethodIfPossible(m, m.getDeclaringClass(), Object.class));
+		if (result == method && targetClass != null) {
+			// No interface method found yet -> try given target class (possibly a subclass of the
+			// declaring class, late-binding a base class method to a subclass-declared interface:
+			// see e.g. HashMap.HashIterator.hasNext)
+			result = findInterfaceMethodIfPossible(method, targetClass, method.getDeclaringClass());
+		}
+		return result;
+	}
+
+	private static Method findInterfaceMethodIfPossible(Method method, Class<?> startClass, Class<?> endClass) {
+		Class<?>[] parameterTypes = null;
+		Class<?> current = startClass;
+		while (current != null && current != endClass) {
+			if (parameterTypes == null) {
+				// Since Method#getParameterTypes() clones the array, we lazily retrieve
+				// and cache parameter types to avoid cloning the array multiple times.
+				parameterTypes = method.getParameterTypes();
+			}
+			for (Class<?> ifc : current.getInterfaces()) {
+				try {
+					return ifc.getMethod(method.getName(), parameterTypes);
+				}
+				catch (NoSuchMethodException ex) {
+					// ignore
+				}
+			}
+			current = current.getSuperclass();
+		}
+		return method;
+	}
+
+	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findMethod(Class, String, String)
 	 */
 	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
@@ -1356,11 +1420,11 @@ public final class ReflectionUtils {
 
 		for (Class<?> current = clazz; isSearchable(current); current = current.getSuperclass()) {
 			// Search for match in current type
-			List<Method> methods = current.isInterface() ? getMethods(current, predicate)
-					: getDeclaredMethods(current, predicate, BOTTOM_UP);
-			if (!methods.isEmpty()) {
-				// Since the predicate has already been applied, return the first match.
-				return Optional.of(methods.get(0));
+			List<Method> methods = current.isInterface() ? getMethods(current) : getDeclaredMethods(current, BOTTOM_UP);
+			for (Method method : methods) {
+				if (predicate.test(method)) {
+					return Optional.of(method);
+				}
 			}
 
 			// Search for match in interfaces implemented by current type
@@ -1441,27 +1505,29 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
-		return findAllMethodsInHierarchy(clazz, predicate, traversalMode).stream().distinct();
+		// @formatter:off
+		return findAllMethodsInHierarchy(clazz, traversalMode).stream()
+				.filter(predicate)
+				.distinct();
+		// @formatter:on
 	}
 
 	/**
 	 * Find all non-synthetic methods in the superclass and interface hierarchy,
-	 * excluding Object, that match the specified {@code predicate}.
+	 * excluding Object.
 	 */
-	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, Predicate<Method> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Method> findAllMethodsInHierarchy(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Method> localMethods = getDeclaredMethods(clazz, predicate, traversalMode).stream()
+		List<Method> localMethods = getDeclaredMethods(clazz, traversalMode).stream()
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
-		List<Method> superclassMethods = getSuperclassMethods(clazz, predicate, traversalMode).stream()
+		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
-		List<Method> interfaceMethods = getInterfaceMethods(clazz, predicate, traversalMode).stream()
+		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
 				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
@@ -1481,42 +1547,40 @@ public final class ReflectionUtils {
 
 	/**
 	 * Custom alternative to {@link Class#getFields()} that sorts the fields
-	 * which match the supplied predicate and converts them to a mutable list.
+	 * and converts them to a mutable list.
 	 */
-	private static List<Field> getFields(Class<?> clazz, Predicate<Field> predicate) {
-		return toSortedMutableList(clazz.getFields(), predicate);
+	private static List<Field> getFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getFields());
 	}
 
 	/**
 	 * Custom alternative to {@link Class#getDeclaredFields()} that sorts the
-	 * fields which match the supplied predicate and converts them to a mutable list.
+	 * fields and converts them to a mutable list.
 	 */
-	private static List<Field> getDeclaredFields(Class<?> clazz, Predicate<Field> predicate) {
-		return toSortedMutableList(clazz.getDeclaredFields(), predicate);
+	private static List<Field> getDeclaredFields(Class<?> clazz) {
+		return toSortedMutableList(clazz.getDeclaredFields());
 	}
 
 	/**
 	 * Custom alternative to {@link Class#getMethods()} that sorts the methods
-	 * which match the supplied predicate and converts them to a mutable list.
+	 * and converts them to a mutable list.
 	 */
-	private static List<Method> getMethods(Class<?> clazz, Predicate<Method> predicate) {
-		return toSortedMutableList(clazz.getMethods(), predicate);
+	private static List<Method> getMethods(Class<?> clazz) {
+		return toSortedMutableList(clazz.getMethods());
 	}
 
 	/**
 	 * Custom alternative to {@link Class#getDeclaredMethods()} that sorts the
-	 * methods which match the supplied predicate and converts them to a mutable list.
+	 * methods and converts them to a mutable list.
 	 *
 	 * <p>In addition, the list returned by this method includes interface
 	 * default methods which are either prepended or appended to the list of
 	 * declared methods depending on the supplied traversal mode.
 	 */
-	private static List<Method> getDeclaredMethods(Class<?> clazz, Predicate<Method> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Method> getDeclaredMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		// Note: getDefaultMethods() already sorts the methods,
-		List<Method> defaultMethods = getDefaultMethods(clazz, predicate);
-		List<Method> declaredMethods = toSortedMutableList(clazz.getDeclaredMethods(), predicate);
+		List<Method> defaultMethods = getDefaultMethods(clazz);
+		List<Method> declaredMethods = toSortedMutableList(clazz.getDeclaredMethods());
 
 		// Take the traversal mode into account in order to retain the inherited
 		// nature of interface default methods.
@@ -1533,43 +1597,41 @@ public final class ReflectionUtils {
 	/**
 	 * Get a sorted, mutable list of all default methods present in interfaces
 	 * implemented by the supplied class which are also <em>visible</em> within
-	 * the supplied class and match the supplied predicate.
+	 * the supplied class.
 	 *
 	 * @see <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-6.html#d5e9652">Method Visibility</a>
 	 * in the Java Language Specification
 	 */
-	private static List<Method> getDefaultMethods(Class<?> clazz, Predicate<Method> predicate) {
+	private static List<Method> getDefaultMethods(Class<?> clazz) {
 		// @formatter:off
 		// Visible default methods are interface default methods that have not
 		// been overridden.
 		List<Method> visibleDefaultMethods = Arrays.stream(clazz.getMethods())
-				.filter(predicate.and(Method::isDefault))
+				.filter(Method::isDefault)
 				.collect(toCollection(ArrayList::new));
 		if (visibleDefaultMethods.isEmpty()) {
 			return visibleDefaultMethods;
 		}
 		return Arrays.stream(clazz.getInterfaces())
-				.map(ifc -> getMethods(ifc, predicate))
+				.map(ReflectionUtils::getMethods)
 				.flatMap(List::stream)
 				.filter(visibleDefaultMethods::contains)
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
 
-	private static List<Field> toSortedMutableList(Field[] fields, Predicate<Field> predicate) {
+	private static List<Field> toSortedMutableList(Field[] fields) {
 		// @formatter:off
 		return Arrays.stream(fields)
-				.filter(predicate)
 				.sorted(ReflectionUtils::defaultFieldSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 	}
 
-	private static List<Method> toSortedMutableList(Method[] methods, Predicate<Method> predicate) {
+	private static List<Method> toSortedMutableList(Method[] methods) {
 		// @formatter:off
 		return Arrays.stream(methods)
-				.filter(predicate)
 				.sorted(ReflectionUtils::defaultMethodSorter)
 				// Use toCollection() instead of toList() to ensure list is mutable.
 				.collect(toCollection(ArrayList::new));
@@ -1601,18 +1663,16 @@ public final class ReflectionUtils {
 		return comparison;
 	}
 
-	private static List<Method> getInterfaceMethods(Class<?> clazz, Predicate<Method> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Method> getInterfaceMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Method> allInterfaceMethods = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			// @formatter:off
-			List<Method> localInterfaceMethods = getMethods(ifc, predicate).stream()
-					.filter(method -> !isAbstract(method))
+			List<Method> localInterfaceMethods = getMethods(ifc).stream()
+					.filter(m -> !isAbstract(m))
 					.collect(toList());
 
-			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, predicate, traversalMode).stream()
+			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
 					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
@@ -1628,15 +1688,13 @@ public final class ReflectionUtils {
 		return allInterfaceMethods;
 	}
 
-	private static List<Field> getInterfaceFields(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Field> allInterfaceFields = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			List<Field> localInterfaceFields = getFields(ifc, predicate);
+			List<Field> localInterfaceFields = getFields(ifc);
 
 			// @formatter:off
-			List<Field> superinterfaceFields = getInterfaceFields(ifc, predicate, traversalMode).stream()
+			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
 					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
 					.collect(toList());
 			// @formatter:on
@@ -1652,28 +1710,24 @@ public final class ReflectionUtils {
 		return allInterfaceFields;
 	}
 
-	private static List<Field> getSuperclassFields(Class<?> clazz, Predicate<Field> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Field> getSuperclassFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
 		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
-		return findAllFieldsInHierarchy(superclass, predicate, traversalMode);
+		return findAllFieldsInHierarchy(superclass, traversalMode);
 	}
 
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
 		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
 	}
 
-	private static List<Method> getSuperclassMethods(Class<?> clazz, Predicate<Method> predicate,
-			HierarchyTraversalMode traversalMode) {
-
+	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		Class<?> superclass = clazz.getSuperclass();
 		if (!isSearchable(superclass)) {
 			return Collections.emptyList();
 		}
-		return findAllMethodsInHierarchy(superclass, predicate, traversalMode);
+		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
 	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
@@ -1726,12 +1780,22 @@ public final class ReflectionUtils {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
 	}
 
+	@API(status = INTERNAL, since = "1.11")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
-	public static <T extends AccessibleObject> T makeAccessible(T object) {
-		if (!object.isAccessible()) {
-			object.setAccessible(true);
+	public static <T extends Executable> T makeAccessible(T executable) {
+		if ((!isPublic(executable) || !isPublic(executable.getDeclaringClass())) && !executable.isAccessible()) {
+			executable.setAccessible(true);
 		}
-		return object;
+		return executable;
+	}
+
+	@API(status = INTERNAL, since = "1.11")
+	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
+	public static Field makeAccessible(Field field) {
+		if ((!isPublic(field) || !isPublic(field.getDeclaringClass()) || isFinal(field)) && !field.isAccessible()) {
+			field.setAccessible(true);
+		}
+		return field;
 	}
 
 	/**

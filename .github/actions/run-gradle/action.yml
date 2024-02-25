@@ -17,14 +17,14 @@ runs:
       with:
         distribution: temurin
         java-version: 21
-    - uses: gradle/gradle-build-action@v2
+    - uses: gradle/gradle-build-action@v3
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       with:
         dependency-graph: ${{ inputs.dependency-graph }}
         arguments: |
           -Porg.gradle.java.installations.auto-download=false
-          -Pdevelocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
+          -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
           "-Dscan.value.GitHub job=${{ github.job }}"
           javaToolchains
           ${{ inputs.arguments }}

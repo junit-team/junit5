@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -270,11 +270,11 @@ internal class KotlinAssertTimeoutAssertionsTests {
      * Take a nap for 100 milliseconds.
      */
     private fun nap() {
-        val start = System.currentTimeMillis()
+        val start = System.nanoTime()
         // workaround for imprecise clocks (yes, Windows, I'm talking about you)
         do {
             Thread.sleep(100)
-        } while (System.currentTimeMillis() - start < 100)
+        } while (System.nanoTime() - start < 100_000_000L)
     }
 
     private fun waitForInterrupt() {

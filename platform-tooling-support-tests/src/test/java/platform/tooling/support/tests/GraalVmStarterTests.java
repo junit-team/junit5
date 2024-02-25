@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,8 +21,6 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
-import com.gradle.develocity.testing.annotations.LocalOnly;
-
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.MavenRepo;
@@ -31,7 +29,6 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
-@LocalOnly(because = "GraalVM is not installed on Test Distribution agents")
 class GraalVmStarterTests {
 
 	@Test
@@ -41,7 +38,8 @@ class GraalVmStarterTests {
 				.setProject("graalvm-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
-				.setTimeout(Duration.ofMinutes(5)) //
+				.addArguments("-Porg.gradle.java.installations.fromEnv=GRAALVM_HOME") //
+				.setTimeout(Duration.ofMinutes(10)) //
 				.build();
 
 		var result = request.run();
@@ -49,7 +47,8 @@ class GraalVmStarterTests {
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
 		assumeFalse(
-			result.getOutputLines("err").stream().anyMatch(line -> line.contains("No matching toolchains found")),
+			result.getOutputLines("err").stream().anyMatch(
+				line -> line.contains("No locally installed toolchains match")),
 			"Abort test if GraalVM is not installed");
 
 		assertEquals(0, result.getExitCode());

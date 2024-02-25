@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
@@ -27,7 +26,6 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_FACTORY_METHOD_TIM
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.TIMEOUT_MODE_PROPERTY_NAME;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.Status.FAILED;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -333,11 +331,10 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.hasMessage("timeout duration must be a positive number: 0");
 	}
 
-	private Execution findExecution(Events events, String displayName) {
-		return getOnlyElement(events //
-				.executions() //
-				.filter(execution -> execution.getTestDescriptor().getDisplayName().contains(displayName)) //
-				.collect(toList()));
+	private static Execution findExecution(Events events, String displayName) {
+		return events.executions()//
+				.filter(execution -> execution.getTestDescriptor().getDisplayName().contains(displayName))//
+				.findFirst().get();
 	}
 
 	@Nested

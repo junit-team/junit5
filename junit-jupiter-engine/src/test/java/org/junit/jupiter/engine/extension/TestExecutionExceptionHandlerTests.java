@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -168,7 +169,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-			assertTrue(throwable instanceof IOException);
+			assertInstanceOf(IOException.class, throwable);
 			handleExceptionCalled = true;
 			handlerCalls.add("rethrow");
 
@@ -182,7 +183,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
-			assertTrue(throwable instanceof IOException);
+			assertInstanceOf(IOException.class, throwable);
 			handleExceptionCalled = true;
 			handlerCalls.add("swallow");
 			//swallow exception by not rethrowing it
@@ -195,7 +196,7 @@ class TestExecutionExceptionHandlerTests extends AbstractJupiterTestEngineTests 
 
 		@Override
 		public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
-			assertTrue(throwable instanceof RuntimeException);
+			assertInstanceOf(RuntimeException.class, throwable);
 			handleExceptionCalled = true;
 			handlerCalls.add("convert");
 			throw new IOException("checked");

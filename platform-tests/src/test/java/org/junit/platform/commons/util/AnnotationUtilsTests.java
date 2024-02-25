@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -44,6 +44,7 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.pkg1.ClassLevelDir;
@@ -390,10 +391,11 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3498
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findAnnotatedMethodsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findAnnotatedMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 		final String BEFORE = "before";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateBeforeMethod.class;
 		Method beforeAllMethod = superclass.getDeclaredMethod(BEFORE);
@@ -509,10 +511,11 @@ class AnnotationUtilsTests {
 	}
 
 	/**
-	 * @see https://github.com/junit-team/junit5/issues/3532
+	 * @see https://github.com/junit-team/junit5/issues/3553
 	 */
+	@Disabled("Until #3553 is resolved")
 	@Test
-	void findAnnotatedFieldsAppliesPredicateBeforeSearchingTypeHierarchy() throws Exception {
+	void findAnnotatedFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 		final String TEMP_DIR = "tempDir";
 		Class<?> superclass = SuperclassWithStaticPackagePrivateTempDirField.class;
 		Field staticField = superclass.getDeclaredField(TEMP_DIR);

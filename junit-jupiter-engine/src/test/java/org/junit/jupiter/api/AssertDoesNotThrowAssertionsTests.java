@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -73,7 +73,7 @@ class AssertDoesNotThrowAssertionsTests {
 		assertDoesNotThrow(foo::normalMethod);
 
 		// Explicitly as an Executable
-		assertDoesNotThrow((Executable) foo::normalMethod);
+		assertDoesNotThrow(foo::normalMethod);
 		assertDoesNotThrow((Executable) foo::overloaded);
 	}
 
@@ -152,7 +152,7 @@ class AssertDoesNotThrowAssertionsTests {
 	@Test
 	void assertDoesNotThrowWithExecutableThatThrowsAnError() {
 		try {
-			assertDoesNotThrow((Executable) AssertionTestUtils::recurseIndefinitely);
+			assertDoesNotThrow(AssertionTestUtils::recurseIndefinitely);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {

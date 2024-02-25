@@ -1,0 +1,63 @@
+[[release-notes-5.10.2]]
+== 5.10.2
+
+*Date of Release:* February 4, 2024
+
+*Scope:* minor bug fixes and changes since 5.10.1.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/73?closed=1+[5.10.2] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.10.2-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* The `junit-platform-launcher` may now be used as a Java module when
+  `junit.platform.launcher.interceptors.enabled` is set to `true`.
+  - See issue link:https://github.com/junit-team/junit5/issues/3561[#3561] for details.
+
+==== Deprecations and Breaking Changes
+
+* Field predicates are no longer applied eagerly while searching the type hierarchy.
+  - This reverts changes made in 5.10.1 that affected `findFields(...)` and
+    `streamFields(...)` in `ReflectionSupport` as well as `findAnnotatedFields(...)` and
+    `findAnnotatedFieldValues(...)` in `AnnotationSupport`.
+  - See issue link:https://github.com/junit-team/junit5/issues/3638[#3638] for details.
+* Method predicates are no longer applied eagerly while searching the type hierarchy.
+  - This reverts changes made in 5.10.1 that affected `findMethods(...)` and
+    `streamMethods(...)` in `ReflectionSupport` as well as `findAnnotatedMethods(...)` in
+    `AnnotationSupport`.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
+
+
+[[release-notes-5.10.2-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* JUnit Jupiter once again properly detects when a `@Test` method is overridden in a
+  subclass.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
+
+==== Deprecations and Breaking Changes
+
+* A package-private static field annotated with `@TempDir` is once again _shadowed_ by a
+  non-static field annotated with `@TempDir` when the non-static field resides in a
+  different package and has the same name as the static field.
+  - This reverts changes made in 5.10.1.
+  - See issue link:https://github.com/junit-team/junit5/issues/3638[#3638] for details.
+* A package-private class-level lifecycle method annotated with `@BeforeAll` or
+  `@AfterAll` is once again _shadowed_ by a method-level lifecycle method annotated with
+  `@BeforeEach` or `@AfterEach` when the method-level lifecycle method resides in a
+  different package and has the same name as the class-level lifecycle method.
+  - This reverts changes made in 5.10.1.
+  - See issue link:https://github.com/junit-team/junit5/issues/3600[#3600] for details.
+
+
+[[release-notes-5.10.2-junit-vintage]]
+=== JUnit Vintage
+
+No changes.

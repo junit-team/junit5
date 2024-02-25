@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -27,11 +27,11 @@ import org.junit.jupiter.engine.subpackage.SuperClassWithPackagePrivateLifecycle
 class LifecycleMethodOverridingAndSupersedingTests {
 
 	@Nested
-	@DisplayName("A package-private lifecycle super-method can be overridden by")
+	@DisplayName("A package-private lifecycle method can be overridden by")
 	class PackagePrivateSuperClassTests {
 
 		@Nested
-		@DisplayName("a protected lifecycle method in the derived class")
+		@DisplayName("a protected lifecycle method in a subclass")
 		class ProtectedExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
@@ -43,7 +43,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 		}
 
 		@Nested
-		@DisplayName("a package-private lifecycle method in the derived class")
+		@DisplayName("a package-private lifecycle method in a subclass")
 		class PackagePrivateExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
@@ -55,7 +55,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 		}
 
 		@Nested
-		@DisplayName("a public lifecycle method in the derived class")
+		@DisplayName("a public lifecycle method in a subclass")
 		class PublicExtendsPackagePrivateLifecycleMethod extends SuperClassWithPackagePrivateLifecycleMethodTestCase {
 
 			@Override
@@ -67,11 +67,11 @@ class LifecycleMethodOverridingAndSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A package-private lifecycle super-method from a different package can be superseded by")
+	@DisplayName("A package-private lifecycle method from a different package can be superseded by")
 	class PackagePrivateSuperClassInDifferentPackageTests {
 
 		@Nested
-		@DisplayName("a protected lifecycle method in the derived class")
+		@DisplayName("a protected lifecycle method in a subclass")
 		class ProtectedExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
 
@@ -83,7 +83,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 		}
 
 		@Nested
-		@DisplayName("a package-private lifecycle method in the derived class")
+		@DisplayName("a package-private lifecycle method in a subclass")
 		class PackagePrivateExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
 
@@ -95,7 +95,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 		}
 
 		@Nested
-		@DisplayName("a public lifecycle method in the derived class")
+		@DisplayName("a public lifecycle method in a subclass")
 		class PublicExtendsPackagePrivateLifecycleMethod
 				extends SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
 
@@ -108,11 +108,11 @@ class LifecycleMethodOverridingAndSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A protected lifecycle super-method can be overridden by")
+	@DisplayName("A protected lifecycle method can be overridden by")
 	class ProtectedSuperClassTests {
 
 		@Nested
-		@DisplayName("a protected lifecycle method in the derived class")
+		@DisplayName("a protected lifecycle method in a subclass")
 		class ProtectedExtendsPackagePrivate extends SuperClassWithProtectedLifecycleMethodTestCase {
 
 			@Override
@@ -123,7 +123,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 		}
 
 		@Nested
-		@DisplayName("a public lifecycle method in the derived class")
+		@DisplayName("a public lifecycle method in a subclass")
 		class PublicExtendsPackagePrivate extends SuperClassWithProtectedLifecycleMethodTestCase {
 
 			@Override
@@ -135,11 +135,11 @@ class LifecycleMethodOverridingAndSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A public lifecycle super-method can be overridden by")
+	@DisplayName("A public lifecycle method can be overridden by")
 	class PublicSuperClassTests {
 
 		@Nested
-		@DisplayName("a public lifecycle method in the derived class")
+		@DisplayName("a public lifecycle method in a subclass")
 		class PublicExtendsPackagePrivate extends SuperClassWithPublicLifecycleMethodTestCase {
 
 			@Override

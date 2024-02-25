@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -71,14 +71,13 @@ public final class ExceptionUtils {
 	 */
 	public static RuntimeException throwAsUncheckedException(Throwable t) {
 		Preconditions.notNull(t, "Throwable must not be null");
-		ExceptionUtils.throwAs(t);
-
-		// Appeasing the compiler: the following line will never be executed.
-		return null;
+		// The following line will never actually return an exception but rather
+		// throw t masked as a RuntimeException.
+		return ExceptionUtils.throwAs(t);
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T extends Throwable> void throwAs(Throwable t) throws T {
+	private static <T extends Throwable> T throwAs(Throwable t) throws T {
 		throw (T) t;
 	}
 

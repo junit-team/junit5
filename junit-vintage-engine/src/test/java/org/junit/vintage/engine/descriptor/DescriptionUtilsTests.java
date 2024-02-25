@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -49,8 +49,8 @@ class DescriptionUtilsTests {
 
 	Stream<DynamicNode> toDynamicTests(Stream<Description> children) {
 		return children.map(description -> description.isTest() //
-				? toDynamicTest(description, "child: " + description.toString()) //
-				: dynamicContainer("class: " + description.toString(), Stream.concat( //
+				? toDynamicTest(description, "child: " + description) //
+				: dynamicContainer("class: " + description, Stream.concat( //
 					Stream.of(toDynamicTest(description, "self")), //
 					toDynamicTests(description.getChildren().stream()))));
 	}

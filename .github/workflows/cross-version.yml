@@ -10,7 +10,7 @@ on:
       - '*'
 
 env:
-  DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
+  JUNIT_DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
   GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
 
 jobs:
@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [22]
+        jdk: [22, 23]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +45,7 @@ jobs:
             -Dscan.tag.JDK_${{ matrix.jdk }}
             build
       - name: Upload Test Distribution trace files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'

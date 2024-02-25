@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -53,7 +53,7 @@ public class TestExecutionResult {
 		/**
 		 * Indicates that the execution of a test or container <em>failed</em>.
 		 */
-		FAILED;
+		FAILED
 
 	}
 
@@ -62,6 +62,7 @@ public class TestExecutionResult {
 	/**
 	 * Create a {@code TestExecutionResult} for a <em>successful</em> execution
 	 * of a test or container.
+	 *
 	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
 	public static TestExecutionResult successful() {

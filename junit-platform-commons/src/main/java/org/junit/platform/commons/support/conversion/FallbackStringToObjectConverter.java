@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -49,7 +49,7 @@ import org.junit.platform.commons.util.Preconditions;
  * converter acts as a no-op.
  *
  * @since 1.11
- * @see StringConversionSupport
+ * @see ConversionSupport
  */
 class FallbackStringToObjectConverter implements StringToObjectConverter {
 
@@ -70,7 +70,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		= new ConcurrentHashMap<>(64);
 
 	@Override
-	public boolean canConvert(Class<?> targetType) {
+	public boolean canConvertTo(Class<?> targetType) {
 		return findFactoryExecutable(targetType) != NULL_EXECUTABLE;
 	}
 

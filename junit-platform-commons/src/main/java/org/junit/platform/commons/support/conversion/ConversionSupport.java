@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,35 +15,20 @@ import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.net.URI;
-import java.net.URL;
-import java.util.Currency;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
- * {@code StringConversionSupport} is able to convert from strings to a number
- * of primitive types and their corresponding wrapper types (Byte, Short,
- * Integer, Long, Float, and Double), date and time types from the
- * {@code java.time} package, and some additional common Java types such as
- * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
- * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
- *
- * <p>If the target type is {@code String} the source {@code String} will not
- * be modified.
+ * {@code ConversionSupport} provides static utility methods for converting a
+ * given object into an instance of a specified type.
  *
  * @since 1.11
  */
 @API(status = EXPERIMENTAL, since = "1.11")
-public final class StringConversionSupport {
+public final class ConversionSupport {
 
 	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
 		new StringToBooleanConverter(), //
@@ -56,21 +41,57 @@ public final class StringConversionSupport {
 		new FallbackStringToObjectConverter() //
 	));
 
-	private StringConversionSupport() {
+	private ConversionSupport() {
 		/* no-op */
 	}
 
 	/**
-	 * Convert a {@code String} into an object of the supplied type.
+	 * Convert the supplied source {@code String} into an instance of the specified
+	 * target type.
 	 *
-	 * <p>Some underlying converters can require a {@code ClassLoader}.
-	 * If none is provided, the default one given by
-	 * {@link ClassLoaderUtils#getDefaultClassLoader()} will be used.
+	 * <p>If the target type is {@code String}, the source {@code String} will not
+	 * be modified.
+	 *
+	 * <p>Some forms of conversion require a {@link ClassLoader}. If none is
+	 * provided, the {@linkplain ClassLoaderUtils#getDefaultClassLoader() default
+	 * ClassLoader} will be used.
+	 *
+	 * <p>This method is able to convert strings into primitive types and their
+	 * corresponding wrapper types ({@link Boolean}, {@link Character}, {@link Byte},
+	 * {@link Short}, {@link Integer}, {@link Long}, {@link Float}, and
+	 * {@link Double}), enum constants, date and time types from the
+	 * {@code java.time} package, as well as common Java types such as {@link Class},
+	 * {@link java.io.File}, {@link java.nio.file.Path}, {@link java.nio.charset.Charset},
+	 * {@link java.math.BigDecimal}, {@link java.math.BigInteger},
+	 * {@link java.util.Currency}, {@link java.util.Locale}, {@link java.util.UUID},
+	 * {@link java.net.URI}, and {@link java.net.URL}.
+	 *
+	 * <p>If the target type is not covered by any of the above, a convention-based
+	 * conversion strategy will be used to convert the source {@code String} into the
+	 * given target type by invoking a static factory method or factory constructor
+	 * defined in the target type. The search algorithm used in this strategy is
+	 * outlined below.
+	 *
+	 * <h4>Search Algorithm</h4>
+	 *
+	 * <ol>
+	 * <li>Search for a single, non-private static factory method in the target
+	 * type that converts from a String to the target type. Use the factory method
+	 * if present.</li>
+	 * <li>Search for a single, non-private constructor in the target type that
+	 * accepts a String. Use the constructor if present.</li>
+	 * </ol>
+	 *
+	 * <p>If multiple suitable factory methods are discovered they will be ignored.
+	 * If neither a single factory method nor a single constructor is found, the
+	 * convention-based conversion strategy will not apply.
 	 *
 	 * @param source the source {@code String} to convert; may be {@code null}
+	 * but only if the target type is a reference type
 	 * @param targetType the target type the source should be converted into;
 	 * never {@code null}
-	 * @param classLoader the {@code ClassLoader} to use; may be {@code null}
+	 * @param classLoader the {@code ClassLoader} to use; may be {@code null} to
+	 * use the default {@code ClassLoader}
 	 * @param <T> the type of the target
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
@@ -93,7 +114,7 @@ public final class StringConversionSupport {
 
 		Class<?> targetTypeToUse = toWrapperType(targetType);
 		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
+			candidate -> candidate.canConvertTo(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
 			try {
 				ClassLoader classLoaderToUse = classLoader != null ? classLoader

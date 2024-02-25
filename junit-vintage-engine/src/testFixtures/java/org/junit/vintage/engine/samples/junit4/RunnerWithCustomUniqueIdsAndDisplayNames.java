@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2023 the original author or authors.
+ * Copyright 2015-2024 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -66,8 +66,7 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof CustomUniqueId) {
-				var that = (CustomUniqueId) obj;
+			if (obj instanceof CustomUniqueId that) {
 				return Objects.equals(this.testName, that.testName);
 			}
 			return false;
