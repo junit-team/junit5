@@ -26,7 +26,6 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
 val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
-val javaVersion = JavaVersion.current()
 
 eclipse {
 	jdt {
