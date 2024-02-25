@@ -124,6 +124,11 @@ class StandaloneTests {
 
 		var expected = """
 				.
+				+-- JUnit Platform Suite
+				| '-- SuiteIntegration
+				|   '-- JUnit Jupiter
+				|     '-- SuiteIntegration$SingleTestContainer
+				|       '-- successful()
 				+-- JUnit Jupiter
 				| +-- JupiterIntegration
 				| | +-- successful()
@@ -134,16 +139,11 @@ class StandaloneTests {
 				| | '-- successful()
 				| '-- JupiterParamsIntegration
 				|   '-- parameterizedTest(String)
-				+-- JUnit Vintage
-				| '-- VintageIntegration
-				|   +-- f4il
-				|   +-- ignored
-				|   '-- succ3ssful
-				'-- JUnit Platform Suite
-				  '-- SuiteIntegration
-				    '-- JUnit Jupiter
-				      '-- SuiteIntegration$SingleTestContainer
-				        '-- successful()
+				'-- JUnit Vintage
+				  '-- VintageIntegration
+				    +-- f4il
+				    +-- ignored
+				    '-- succ3ssful
 
 				[        11 containers found ]
 				[         9 tests found      ]
@@ -158,6 +158,11 @@ class StandaloneTests {
 		Result result = discover("--details=flat");
 
 		var expected = """
+				JUnit Platform Suite ([engine:junit-platform-suite])
+				SuiteIntegration ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration])
+				JUnit Jupiter ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter])
+				SuiteIntegration$SingleTestContainer ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer])
+				successful() ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()])
 				JUnit Jupiter ([engine:junit-jupiter])
 				JupiterIntegration ([engine:junit-jupiter]/[class:standalone.JupiterIntegration])
 				successful() ([engine:junit-jupiter]/[class:standalone.JupiterIntegration]/[method:successful()])
@@ -173,11 +178,6 @@ class StandaloneTests {
 				f4il ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:f4il(standalone.VintageIntegration)])
 				ignored ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:ignored(standalone.VintageIntegration)])
 				succ3ssful ([engine:junit-vintage]/[runner:standalone.VintageIntegration]/[test:succ3ssful(standalone.VintageIntegration)])
-				JUnit Platform Suite ([engine:junit-platform-suite])
-				SuiteIntegration ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration])
-				JUnit Jupiter ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter])
-				SuiteIntegration$SingleTestContainer ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer])
-				successful() ([engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()])
 
 				[        11 containers found ]
 				[         9 tests found      ]
@@ -192,6 +192,19 @@ class StandaloneTests {
 		Result result = discover("--details=verbose", "--details-theme=ascii");
 
 		var expected = """
+				+-- JUnit Platform Suite
+				| +-- SuiteIntegration
+				| | +-- JUnit Jupiter
+				| | | +-- SuiteIntegration$SingleTestContainer
+				| | | | +-- successful()
+				| | | | |      tags: []
+				| | | | |  uniqueId: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()]
+				| | | | |    parent: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]
+				| | | | |    source: MethodSource [className = 'standalone.SuiteIntegration$SingleTestContainer', methodName = 'successful', methodParameterTypes = '']
+				| | | '-- SuiteIntegration$SingleTestContainer
+				| | '-- JUnit Jupiter
+				| '-- SuiteIntegration
+				'-- JUnit Platform Suite
 				+-- JUnit Jupiter
 				| +-- JupiterIntegration
 				| | +-- successful()
@@ -249,19 +262,6 @@ class StandaloneTests {
 				| | |    source: MethodSource [className = 'standalone.VintageIntegration', methodName = 'succ3ssful', methodParameterTypes = '']
 				| '-- VintageIntegration
 				'-- JUnit Vintage
-				+-- JUnit Platform Suite
-				| +-- SuiteIntegration
-				| | +-- JUnit Jupiter
-				| | | +-- SuiteIntegration$SingleTestContainer
-				| | | | +-- successful()
-				| | | | |      tags: []
-				| | | | |  uniqueId: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]/[method:successful()]
-				| | | | |    parent: [engine:junit-platform-suite]/[suite:standalone.SuiteIntegration]/[engine:junit-jupiter]/[class:standalone.SuiteIntegration$SingleTestContainer]
-				| | | | |    source: MethodSource [className = 'standalone.SuiteIntegration$SingleTestContainer', methodName = 'successful', methodParameterTypes = '']
-				| | | '-- SuiteIntegration$SingleTestContainer
-				| | '-- JUnit Jupiter
-				| '-- SuiteIntegration
-				'-- JUnit Platform Suite
 
 				[        11 containers found ]
 				[         9 tests found      ]
@@ -296,8 +296,8 @@ class StandaloneTests {
 	@Order(2)
 	void discoverTestFeed() {
 		Result result = discover("--details=testfeed");
-
 		var expected = """
+				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
 				JUnit Jupiter > JupiterIntegration > successful()
 				JUnit Jupiter > JupiterIntegration > fail()
 				JUnit Jupiter > JupiterIntegration > abort()
@@ -306,12 +306,12 @@ class StandaloneTests {
 				JUnit Vintage > VintageIntegration > f4il
 				JUnit Vintage > VintageIntegration > ignored
 				JUnit Vintage > VintageIntegration > succ3ssful
-				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
 
 				[        11 containers found ]
 				[         9 tests found      ]
 
 				""".stripIndent();
+
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
