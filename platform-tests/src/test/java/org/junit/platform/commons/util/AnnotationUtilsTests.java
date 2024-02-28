@@ -44,7 +44,6 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.pkg1.ClassLevelDir;
@@ -501,15 +500,21 @@ class AnnotationUtilsTests {
 				.containsExactly("interface", "interface-shadow");
 	}
 
-	@Disabled("Disabled until legacy search mode is supported")
 	@Test
 	void findAnnotatedFieldsForShadowedFieldsInLegacyMode() {
-		assertThat(findShadowingAnnotatedFields(Annotation1.class))//
-				.containsExactly("super-shadow", "foo-shadow", "baz-shadow");
-		assertThat(findShadowingAnnotatedFields(Annotation2.class))//
-				.containsExactly("bar-shadow", "baz-shadow");
-		assertThat(findShadowingAnnotatedFields(Annotation3.class))//
-				.containsExactly("interface-shadow");
+		try {
+			ReflectionUtils.useLegacySearchSemantics = true;
+
+			assertThat(findShadowingAnnotatedFields(Annotation1.class))//
+					.containsExactly("super-shadow", "foo-shadow", "baz-shadow");
+			assertThat(findShadowingAnnotatedFields(Annotation2.class))//
+					.containsExactly("bar-shadow", "baz-shadow");
+			assertThat(findShadowingAnnotatedFields(Annotation3.class))//
+					.containsExactly("interface-shadow");
+		}
+		finally {
+			ReflectionUtils.useLegacySearchSemantics = false;
+		}
 	}
 
 	private List<String> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {

@@ -78,6 +78,27 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.0")
 public final class ReflectionUtils {
 
+	/**
+	 * Property name used to signal that legacy semantics should be used when
+	 * searching for fields and methods within a type hierarchy: {@value}.
+	 *
+	 * <p>Value must be either {@code true} or {@code false} (ignoring case);
+	 * defaults to {@code false}.
+	 *
+	 * <p>When set to {@code false} (either explicitly or implicitly), field and
+	 * method searches will adhere to Java semantics regarding whether a given
+	 * field or method is visible or overridable, where the latter only applies
+	 * to methods. When set to {@code true}, the semantics used in JUnit 5 prior
+	 * to JUnit 5.11 (JUnit Platform 1.11) will be used, which means that fields
+	 * and methods can hide, shadow, or supersede fields and methods in supertypes
+	 * based solely on the field's name or the method's signature, disregarding
+	 * the actual Java language semantics for visibility and whether a method
+	 * overrides another method.
+	 *
+	 * @since 1.11
+	 */
+	private static final String USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME = "junit.platform.reflection.search.useLegacySemantics";
+
 	private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
 	private ReflectionUtils() {
@@ -237,6 +258,8 @@ public final class ReflectionUtils {
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
+
+	static volatile boolean useLegacySearchSemantics = getLegacySearchSemanticsFlag();
 
 	public static boolean isPublic(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -1718,8 +1741,9 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
-		// TODO Enable if legacy field search semantics are enabled.
-		// return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		if (useLegacySearchSemantics) {
+			return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		}
 		return false;
 	}
 
@@ -1736,22 +1760,23 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isMethodOverriddenBy(Method upper, Method lower) {
-		// TODO Skip to hasCompatibleSignature() if legacy method search semantics are enabled.
+		// If legacy search semantics are enabled, skip to hasCompatibleSignature() check.
+		if (!useLegacySearchSemantics) {
+			// A static method cannot override anything.
+			if (Modifier.isStatic(lower.getModifiers())) {
+				return false;
+			}
 
-		// A static method cannot override anything.
-		if (Modifier.isStatic(lower.getModifiers())) {
-			return false;
-		}
+			// Cannot override a private, static, or final method.
+			int modifiers = upper.getModifiers();
+			if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
+				return false;
+			}
 
-		// Cannot override a private, static, or final method.
-		int modifiers = upper.getModifiers();
-		if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
-			return false;
-		}
-
-		// Cannot override a package-private method in another package.
-		if (isPackagePrivate(upper) && !declaredInSamePackage(upper, lower)) {
-			return false;
+			// Cannot override a package-private method in another package.
+			if (isPackagePrivate(upper) && !declaredInSamePackage(upper, lower)) {
+				return false;
+			}
 		}
 
 		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
@@ -1878,6 +1903,18 @@ public final class ReflectionUtils {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
 		return t;
+	}
+
+	private static boolean getLegacySearchSemanticsFlag() {
+		String rawValue = System.getProperty(USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME);
+		if (StringUtils.isBlank(rawValue)) {
+			return false;
+		}
+		String value = rawValue.trim().toLowerCase();
+		boolean isTrue = "true".equals(value);
+		Preconditions.condition(isTrue || "false".equals(value), () -> USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME
+				+ " property must be 'true' or 'false' (ignoring case): " + rawValue);
+		return isTrue;
 	}
 
 }
