@@ -200,7 +200,8 @@ class ClasspathScanner {
 					// @formatter:off
 					loadClass.apply(fullyQualifiedClassName, getClassLoader())
 							.toOptional()
-							.filter(classFilter) // Always use ".filter(classFilter)" to include future predicates.
+							// Always use ".filter(classFilter)" to include future predicates.
+							.filter(classFilter)
 							.ifPresent(classConsumer);
 					// @formatter:on
 				}
@@ -221,7 +222,8 @@ class ClasspathScanner {
 				resourceFile);
 			if (resourceFilter.match(fullyQualifiedResourceName)) {
 				Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
-				if (resourceFilter.test(resource)) { // Always use ".test(classFilter)" to include future predicates.
+				// Always use ".test(classFilter)" to include future predicates.
+				if (resourceFilter.test(resource)) {
 					resourceConsumer.accept(resource);
 				}
 			}

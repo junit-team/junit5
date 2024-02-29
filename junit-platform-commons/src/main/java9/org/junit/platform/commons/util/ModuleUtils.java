@@ -221,8 +221,8 @@ public class ModuleUtils {
 							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
 							.map(this::loadClassUnchecked)
-							// TODO: The ClasspathScanner invokes Predicate.test here
-							.filter(classFilter::match)
+							// Always use ".filter(classFilter)" to include future predicates.
+							.filter(classFilter)
 							.collect(Collectors.toList());
 					// @formatter:on
 				}
@@ -279,8 +279,8 @@ public class ModuleUtils {
 					return names.filter(name -> !name.endsWith(".class"))
 							.filter(resourceFilter::match)
 							.map(this::loadResourceUnchecked)
-							// TODO: The ClasspathScanner invokes Predicate.test here
-							.filter(resourceFilter::match)
+							// Always use ".filter(resourceFilter)" to include future predicates.
+							.filter(resourceFilter)
 							.collect(Collectors.toList());
 					// @formatter:on
 				}
