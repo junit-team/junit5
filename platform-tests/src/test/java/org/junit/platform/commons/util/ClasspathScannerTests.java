@@ -82,7 +82,7 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(malformedClassNameSimulationFilter);
-		assertDebugMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
+		assertDebugMessageLogged(listener, "Failed to load .+ during classpath scanning.");
 	}
 
 	@Test
@@ -110,7 +110,7 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(otherInternalErrorSimulationFilter);
-		assertDebugMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
+		assertDebugMessageLogged(listener, "Failed to load .+ during classpath scanning.");
 	}
 
 	@Test
@@ -123,7 +123,7 @@ class ClasspathScannerTests {
 		};
 
 		assertClassesScannedWhenExceptionIsThrown(runtimeExceptionSimulationFilter);
-		assertDebugMessageLogged(listener, "Failed to load java.lang.Class for path .+ during classpath scanning.");
+		assertDebugMessageLogged(listener, "Failed to load .+ during classpath scanning.");
 	}
 
 	private void assertClassesScannedWhenExceptionIsThrown(Predicate<Class<?>> filter) throws Exception {
@@ -336,7 +336,7 @@ class ClasspathScannerTests {
 		assertThat(resource.getUri()).isEqualTo(uriOf("/org/junit/platform/commons/example.resource"));
 		try (InputStream is = resource.getInputStream()) {
 			String contents = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-			assertThat(contents).isEqualTo("This file was unintentionally left blank.");
+			assertThat(contents).isEqualTo("This file was unintentionally left blank.\n");
 		}
 	}
 

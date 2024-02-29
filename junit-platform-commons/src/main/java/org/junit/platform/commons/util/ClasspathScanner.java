@@ -310,10 +310,9 @@ class ClasspathScanner {
 		}
 	}
 
-	private void logGenericFileProcessingException(Path classFile, Throwable throwable) {
-		// TODO: Can't mention java.lang.Class here, could be a resource
-		logger.debug(throwable, () -> format("Failed to load java.lang.Class for path [%s] during classpath scanning.",
-			classFile.toAbsolutePath()));
+	private void logGenericFileProcessingException(Path classpathFile, Throwable throwable) {
+		logger.debug(throwable,
+			() -> format("Failed to load [%s] during classpath scanning.", classpathFile.toAbsolutePath()));
 	}
 
 	private ClassLoader getClassLoader() {
