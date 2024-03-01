@@ -48,6 +48,6 @@ public enum CleanupMode {
 	/**
 	 * Never clean up a temporary directory after the test has completed.
 	 */
-	NEVER;
+	NEVER
 
 }

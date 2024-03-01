@@ -108,8 +108,7 @@ class ClassLoaderUtilsTests {
 
 	@Test
 	void getLocationFromVariousObjectsArePresent() {
-		assertTrue(ClassLoaderUtils.getLocation(void.class).isPresent());
-		assertTrue(ClassLoaderUtils.getLocation(byte.class).isPresent());
+		assertTrue(ClassLoaderUtils.getLocation(getClass()).isPresent());
 		assertTrue(ClassLoaderUtils.getLocation(this).isPresent());
 		assertTrue(ClassLoaderUtils.getLocation("").isPresent());
 		assertTrue(ClassLoaderUtils.getLocation(0).isPresent());

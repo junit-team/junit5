@@ -13,6 +13,7 @@ package org.junit.platform.launcher;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -29,6 +30,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
  * for start events are called in registration order while methods for finish
  * events are called in reverse order. Test case execution won't start before
  * all {@link #executionStarted(TestIdentifier)} calls have returned.
+ *
+ * <p>If an exception is thrown by an implementation of a method of this
+ * interface, the exception will be caught and logged unless it is deemed
+ * {@linkplain UnrecoverableExceptions unrecoverable}. In consequence, a
+ * {@code TestExecutionListener} cannot cause test execution to fail or abort it
+ * early by throwing an exception.
  *
  * <p>JUnit provides two example implementations.
  *

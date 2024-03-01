@@ -49,8 +49,8 @@ class DescriptionUtilsTests {
 
 	Stream<DynamicNode> toDynamicTests(Stream<Description> children) {
 		return children.map(description -> description.isTest() //
-				? toDynamicTest(description, "child: " + description.toString()) //
-				: dynamicContainer("class: " + description.toString(), Stream.concat( //
+				? toDynamicTest(description, "child: " + description) //
+				: dynamicContainer("class: " + description, Stream.concat( //
 					Stream.of(toDynamicTest(description, "self")), //
 					toDynamicTests(description.getChildren().stream()))));
 	}

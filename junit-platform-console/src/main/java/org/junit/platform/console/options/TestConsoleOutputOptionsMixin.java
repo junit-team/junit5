@@ -39,17 +39,17 @@ class TestConsoleOutputOptionsMixin {
 		@Option(names = "--details", paramLabel = "MODE", defaultValue = DEFAULT_DETAILS_NAME, description = "Select an output details mode for when tests are executed. " //
 				+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
 				+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
-		private Details details = DEFAULT_DETAILS;
+		private final Details details = DEFAULT_DETAILS;
 
 		@Option(names = "-details", hidden = true, defaultValue = DEFAULT_DETAILS_NAME)
-		private Details details2 = DEFAULT_DETAILS;
+		private final Details details2 = DEFAULT_DETAILS;
 
 		@Option(names = "--details-theme", paramLabel = "THEME", description = "Select an output details tree theme for when tests are executed. "
 				+ "Use one of: ${COMPLETION-CANDIDATES}. Default is detected based on default character encoding.")
-		private Theme theme = DEFAULT_THEME;
+		private final Theme theme = DEFAULT_THEME;
 
 		@Option(names = "-details-theme", hidden = true)
-		private Theme theme2 = DEFAULT_THEME;
+		private final Theme theme2 = DEFAULT_THEME;
 
 		private void applyTo(TestConsoleOutputOptions result) {
 			result.setColorPalettePath(choose(colorPalette, colorPalette2, null));

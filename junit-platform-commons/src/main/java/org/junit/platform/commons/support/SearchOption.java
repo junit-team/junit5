@@ -38,6 +38,6 @@ public enum SearchOption {
 	 * but also search the {@linkplain Class#getEnclosingClass() enclosing class}
 	 * hierarchy for <em>inner classes</em> (i.e., a non-static member classes).
 	 */
-	INCLUDE_ENCLOSING_CLASSES;
+	INCLUDE_ENCLOSING_CLASSES
 
 }

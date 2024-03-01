@@ -73,7 +73,7 @@ class AssertDoesNotThrowAssertionsTests {
 		assertDoesNotThrow(foo::normalMethod);
 
 		// Explicitly as an Executable
-		assertDoesNotThrow((Executable) foo::normalMethod);
+		assertDoesNotThrow(foo::normalMethod);
 		assertDoesNotThrow((Executable) foo::overloaded);
 	}
 
@@ -152,7 +152,7 @@ class AssertDoesNotThrowAssertionsTests {
 	@Test
 	void assertDoesNotThrowWithExecutableThatThrowsAnError() {
 		try {
-			assertDoesNotThrow((Executable) AssertionTestUtils::recurseIndefinitely);
+			assertDoesNotThrow(AssertionTestUtils::recurseIndefinitely);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {

@@ -11,9 +11,9 @@
 package org.junit.jupiter.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.abort;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -226,7 +226,7 @@ class AssumptionsTests {
 			expectTestAbortedException();
 		}
 		catch (Throwable ex) {
-			assertTrue(ex instanceof TestAbortedException);
+			assertInstanceOf(TestAbortedException.class, ex);
 			assertMessageEquals(ex, expectedMessage);
 		}
 	}

@@ -11,7 +11,6 @@
 package example.defaultmethods;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,7 @@ public interface EqualsContract<T> extends Testable<T> {
 	@Test
 	default void valueDoesNotEqualNull() {
 		T value = createValue();
-		assertFalse(value.equals(null));
+		assertNotEquals(null, value);
 	}
 
 	@Test

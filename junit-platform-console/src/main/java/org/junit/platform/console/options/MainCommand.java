@@ -53,7 +53,7 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 	private boolean helpRequested2;
 
 	@Unmatched
-	private List<String> allParameters = new ArrayList<>();
+	private final List<String> allParameters = new ArrayList<>();
 
 	@Spec
 	CommandSpec commandSpec;

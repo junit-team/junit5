@@ -18,10 +18,13 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.io.InputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -113,6 +116,18 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		assertThatIllegalStateException().isThrownBy(spy::run).withMessage("Already closed via close()");
 		assertThatIllegalStateException().isThrownBy(spy::close).withMessage("Already closed via close()");
 		assertThat(recorder).containsExactly("AutoCloseTests.preconditions.close()");
+	}
+
+	/**
+	 * @see <a href="https://github.com/junit-team/junit5/issues/3684">#3684</a>
+	 */
+	@Test
+	void fieldsAreProperlyClosedViaInterfaceMethods() {
+		// If the test method succeeds, that means there was no issue invoking
+		// the @AutoClose fields. No need to assert anything else for this use case.
+		executeTestsForClass(CloseMethodMustBeInvokedViaInterfaceTestCase.class)//
+				.testEvents()//
+				.assertStatistics(stats -> stats.succeeded(1));
 	}
 
 	@Test
@@ -430,6 +445,15 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 		@AutoShutdown
 		private final String field = "";
+	}
+
+	static class CloseMethodMustBeInvokedViaInterfaceTestCase implements TestInterface {
+
+		@AutoClose
+		final InputStream inputStream = InputStream.nullInputStream();
+
+		@AutoClose("shutdown")
+		final ExecutorService service = Executors.newSingleThreadExecutor();
 	}
 
 	@TestInstance(PER_METHOD)

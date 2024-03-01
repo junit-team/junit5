@@ -161,10 +161,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Book)) {
+			if (!(obj instanceof Book that)) {
 				return false;
 			}
-			var that = (Book) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -183,10 +182,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Journal)) {
+			if (!(obj instanceof Journal that)) {
 				return false;
 			}
-			var that = (Journal) obj;
 			return Objects.equals(this.title, that.title);
 		}
 
@@ -213,10 +211,9 @@ class FallbackStringToObjectConverterTests {
 			if (this == obj) {
 				return true;
 			}
-			if (!(obj instanceof Newspaper)) {
+			if (!(obj instanceof Newspaper that)) {
 				return false;
 			}
-			var that = (Newspaper) obj;
 			return Objects.equals(this.title, that.title);
 		}
 

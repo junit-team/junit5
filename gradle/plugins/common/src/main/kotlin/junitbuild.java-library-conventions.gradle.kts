@@ -26,7 +26,6 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
 val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
-val javaVersion = JavaVersion.current()
 
 eclipse {
 	jdt {
@@ -155,7 +154,7 @@ val allMainClasses by tasks.registering {
 
 val prepareModuleSourceDir by tasks.registering(Sync::class) {
     from(moduleSourceDir)
-    from(sourceSets.matching { it.name.startsWith("main") }.map { it.allJava })
+    from(sourceSets.named { it.startsWith("main") }.map { it.allJava })
     into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

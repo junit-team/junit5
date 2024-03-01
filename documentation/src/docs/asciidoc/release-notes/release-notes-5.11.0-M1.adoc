@@ -17,6 +17,8 @@ repository on GitHub.
 ==== Bug Fixes
 
 * `ReflectionSupport.findFields(...)` now returns a distinct set of fields.
+* Fixed parsing of recursive jar uris. Allows the JUnit Platform Launcher to be used
+  inside Spring Boot executable jars for Spring Boot 3.2 and later.
 
 [[release-notes-5.11.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -53,6 +55,9 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* Improved documentation for semantics of a disabled test regarding class-level lifecycle
+  methods and callbacks.
 * New `@AutoClose` annotation that can be applied to fields within tests to automatically
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for

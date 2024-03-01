@@ -53,7 +53,7 @@ public class TestExecutionResult {
 		/**
 		 * Indicates that the execution of a test or container <em>failed</em>.
 		 */
-		FAILED;
+		FAILED
 
 	}
 
@@ -62,6 +62,7 @@ public class TestExecutionResult {
 	/**
 	 * Create a {@code TestExecutionResult} for a <em>successful</em> execution
 	 * of a test or container.
+	 *
 	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
 	public static TestExecutionResult successful() {

@@ -333,7 +333,7 @@ class DiscoverySelectorsTests {
 		@Test
 		@DisplayName("Preconditions: selectMethod(className, methodName)")
 		void selectMethodByClassNameAndMethodNamePreconditions() {
-			assertViolatesPrecondition(() -> selectMethod("TestClass", (String) null));
+			assertViolatesPrecondition(() -> selectMethod("TestClass", null));
 			assertViolatesPrecondition(() -> selectMethod("TestClass", ""));
 			assertViolatesPrecondition(() -> selectMethod("TestClass", "  "));
 			assertViolatesPrecondition(() -> selectMethod((String) null, "method"));

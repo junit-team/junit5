@@ -107,7 +107,7 @@ class EnumSourceTests {
 	}
 
 	enum EnumWithThreeConstants {
-		FOO, BAR, BAZ;
+		FOO, BAR, BAZ
 
 	}
 

@@ -71,7 +71,7 @@ class TestFactoryTestDescriptorTests {
 			assertThat(file).isFile();
 
 			FilePosition position = FilePosition.from(42, 21);
-			URI uri = URI.create(file.toURI().toString() + "?line=42&column=21");
+			URI uri = URI.create(file.toURI() + "?line=42&column=21");
 			TestSource testSource = TestFactoryTestDescriptor.fromUri(uri);
 
 			assertThat(testSource).isInstanceOf(FileSource.class);

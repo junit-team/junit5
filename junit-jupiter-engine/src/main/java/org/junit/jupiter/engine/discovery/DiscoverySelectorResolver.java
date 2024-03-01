@@ -21,10 +21,12 @@ import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolve
 
 /**
  * {@code DiscoverySelectorResolver} resolves {@link TestDescriptor TestDescriptors}
- * for containers and tests selected by DiscoverySelectors with the help of the
- * {@code JavaElementsResolver}.
+ * for containers and tests selected by {@link org.junit.platform.engine.DiscoverySelector
+ * DiscoverySelectors}, with the help of an {@link EngineDiscoveryRequestResolver}.
  *
- * <p>This class is the only public entry point into the discovery package.
+ * <p>This is an internal utility which is only {@code public} in order to provide
+ * the {@link org.junit.jupiter.engine.JupiterTestEngine JupiterTestEngine} access
+ * to the functionality of the {@code discovery} package.
  *
  * @since 5.0
  */

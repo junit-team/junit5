@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -102,8 +103,8 @@ class AssertAllAssertionsTests {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
 			assertAll(
-				() -> assertFalse(true),
-				() -> assertFalse(true)
+				() -> fail(),
+				() -> fail()
 			)
 		);
 		// @formatter:on
@@ -116,8 +117,8 @@ class AssertAllAssertionsTests {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
 			assertAll(asList(
-				() -> assertFalse(true),
-				() -> assertFalse(true)
+				() -> fail(),
+				() -> fail()
 			))
 		);
 		// @formatter:on
@@ -130,8 +131,8 @@ class AssertAllAssertionsTests {
 		// @formatter:off
 		MultipleFailuresError multipleFailuresError = assertThrows(MultipleFailuresError.class, () ->
 			assertAll(Stream.of(
-				() -> assertFalse(true),
-				() -> assertFalse(true)
+				() -> fail(),
+				() -> fail()
 			))
 		);
 		// @formatter:on

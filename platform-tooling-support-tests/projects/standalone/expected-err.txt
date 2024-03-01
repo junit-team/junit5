@@ -4,9 +4,9 @@
 .+ Loaded LauncherSessionListener instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
 .+ Discovered TestEngines:
+- junit-platform-suite .+
 - junit-jupiter .+
 - junit-vintage .+
-- junit-platform-suite .+
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded PostDiscoveryFilter instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
@@ -15,6 +15,6 @@
 .+ Loaded TestExecutionListener instances: .+
 .+ org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry loadTestEngines
 .+ Discovered TestEngines:
+- junit-platform-suite .+
 - junit-jupiter .+
 - junit-vintage .+
-- junit-platform-suite .+

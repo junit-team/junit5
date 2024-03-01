@@ -71,7 +71,7 @@ class TagExpressions {
 
 			@Override
 			public String toString() {
-				return "!" + toNegate + "";
+				return "!" + toNegate;
 			}
 		};
 	}

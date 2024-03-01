@@ -35,7 +35,7 @@ artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
     Support for discovering and executing tests on the JUnit Platform from the console.
     See <<running-tests-console-launcher>> for details.
   `junit-platform-console-standalone`::
-    An executable JAR with all dependencies included is provided in Maven Central under the
+    An executable _Fat JAR_ that contains all dependencies is provided in Maven Central under the
     https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
     directory. See <<running-tests-console-launcher>> for details.
   `junit-platform-engine`::

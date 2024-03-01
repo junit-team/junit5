@@ -10,7 +10,7 @@ description = "JUnit Platform Console Standalone"
 dependencies {
 	shadowed(projects.junitPlatformReporting)
 	shadowed(projects.junitPlatformConsole)
-	shadowed(projects.junitPlatformSuite)
+	shadowed(projects.junitPlatformSuiteEngine)
 	shadowed(projects.junitJupiterEngine)
 	shadowed(projects.junitJupiterParams)
 	shadowed(projects.junitVintageEngine)
