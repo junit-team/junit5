@@ -26,8 +26,10 @@ JUnit repository on GitHub.
 [[release-notes-5.11.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
-
+* `NamespacedHierarchicalStore` will now throw an IllegalStateException for
+  modification or query calls after it has been closed. Closing an already
+  closed store is a no-op.
+  - See link:https://github.com/junit-team/junit5/issues/3614[issue 3614] for details.
 
 [[release-notes-5.11.0-M2-junit-jupiter]]
 === JUnit Jupiter
