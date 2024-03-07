@@ -14,13 +14,12 @@ import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.ClassFileVisitor.CLASS_FILE_SUFFIX;
+import static org.junit.platform.commons.util.ClasspathFilters.CLASS_FILE_SUFFIX;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -29,9 +28,10 @@ import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -127,8 +127,11 @@ class ClasspathScanner {
 
 	private List<Class<?>> findClassesForUri(URI baseUri, String basePackageName, ClassFilter classFilter) {
 		List<Class<?>> classes = new ArrayList<>();
-		walkFilesForUri(baseUri, baseDir -> new ClassFileVisitor(
-			classFile -> processClassFileSafely(baseDir, basePackageName, classFilter, classFile, classes::add)));
+		// @formatter:off
+		walkFilesForUri(baseUri, ClasspathFilters.classFiles(),
+				(baseDir, file) ->
+						processClassFileSafely(baseDir, basePackageName, classFilter, file, classes::add));
+		// @formatter:on
 		return classes;
 	}
 
@@ -148,17 +151,20 @@ class ClasspathScanner {
 
 	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName, ResourceFilter resourceFilter) {
 		List<Resource> resources = new ArrayList<>();
-		walkFilesForUri(baseUri, baseDir -> new ResourceFileVisitor(resourceFile -> processResourceFileSafely(baseDir,
-			basePackageName, resourceFilter, resourceFile, resources::add)));
+		// @formatter:off
+		walkFilesForUri(baseUri, ClasspathFilters.resourceFiles(),
+				(baseDir, file) ->
+						processResourceFileSafely(baseDir, basePackageName, resourceFilter, file, resources::add));
+		// @formatter:on
 		return resources;
 	}
 
-	private static void walkFilesForUri(URI baseUri, Function<Path, FileVisitor<Path>> visitorConstructor) {
+	private static void walkFilesForUri(URI baseUri, Predicate<Path> filter, BiConsumer<Path, Path> consumer) {
 		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
 			Path baseDir = closeablePath.getPath();
 			Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
 			try {
-				Files.walkFileTree(baseDir, visitorConstructor.apply(baseDir));
+				Files.walkFileTree(baseDir, new ClasspathFileVisitor(baseDir, filter, consumer));
 			}
 			catch (IOException ex) {
 				logger.warn(ex, () -> "I/O error scanning files in " + baseDir);

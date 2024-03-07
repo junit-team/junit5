@@ -17,7 +17,8 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -25,22 +26,24 @@ import org.junit.platform.commons.logging.LoggerFactory;
 /**
  * @since 1.11
  */
-class ResourceFileVisitor extends SimpleFileVisitor<Path> {
+class ClasspathFileVisitor extends SimpleFileVisitor<Path> {
 
-	private static final Logger logger = LoggerFactory.getLogger(ResourceFileVisitor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ClasspathFileVisitor.class);
 
-	static final String CLASS_FILE_SUFFIX = ".class";
+	private final Path basePath;
+	private final BiConsumer<Path, Path> consumer;
+	private final Predicate<Path> filter;
 
-	private final Consumer<Path> classFileConsumer;
-
-	ResourceFileVisitor(Consumer<Path> classFileConsumer) {
-		this.classFileConsumer = classFileConsumer;
+	ClasspathFileVisitor(Path basePath, Predicate<Path> filter, BiConsumer<Path, Path> consumer) {
+		this.basePath = basePath;
+		this.filter = filter;
+		this.consumer = consumer;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-		if (isNotClassFile(file)) {
-			classFileConsumer.accept(file);
+		if (filter.test(file)) {
+			consumer.accept(basePath, file);
 		}
 		return CONTINUE;
 	}
@@ -57,10 +60,6 @@ class ResourceFileVisitor extends SimpleFileVisitor<Path> {
 			logger.warn(ex, () -> "I/O error visiting directory: " + dir);
 		}
 		return CONTINUE;
-	}
-
-	private static boolean isNotClassFile(Path file) {
-		return !file.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 }
