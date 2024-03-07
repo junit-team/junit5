@@ -197,7 +197,9 @@ public class ModuleUtils {
 	}
 
 	/**
-	 * {@link ModuleReference} scanner.
+	 * {@link ModuleReference} class scanner.
+	 *
+	 * @since 1.1
 	 */
 	static class ModuleReferenceClassScanner {
 
@@ -256,8 +258,11 @@ public class ModuleUtils {
 		}
 
 	}
+
 	/**
-	 * {@link ModuleReference} scanner.
+	 * {@link ModuleReference} resource class scanner.
+	 *
+	 * @since 1.11
 	 */
 	static class ModuleReferenceResourceScanner {
 

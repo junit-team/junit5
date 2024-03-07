@@ -15,6 +15,9 @@ import java.util.Objects;
 
 import org.junit.platform.commons.support.Resource;
 
+/**
+ * @since 1.11
+ */
 class ClasspathResource implements Resource {
 
 	private final String name;
