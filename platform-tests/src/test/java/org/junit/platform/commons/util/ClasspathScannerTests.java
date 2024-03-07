@@ -132,6 +132,26 @@ class ClasspathScannerTests {
 		assertThat(classes).hasSizeGreaterThanOrEqualTo(150);
 	}
 
+	@Test
+	void scanForResourcesInClasspathRootWhenGenericRuntimeExceptionOccurs(LogRecordListener listener) throws Exception {
+		Predicate<Resource> runtimeExceptionSimulationFilter = resource -> {
+			if (resource.getName().equals("org/junit/platform/commons/other-example.resource")) {
+				throw new RuntimeException("a generic exception");
+			}
+			return true;
+		};
+
+		assertResourcesScannedWhenExceptionIsThrown(runtimeExceptionSimulationFilter);
+		assertDebugMessageLogged(listener, "Failed to load .+ during classpath scanning.");
+	}
+
+	private void assertResourcesScannedWhenExceptionIsThrown(Predicate<Resource> filter) {
+		var resourceFilter = ResourceFilter.of(filter);
+		var resources = this.classpathScanner.scanForResourcesInClasspathRoot(getTestClasspathResourceRoot(), resourceFilter);
+		assertThat(resources).hasSizeGreaterThanOrEqualTo(150);
+	}
+
+
 	private void assertDebugMessageLogged(LogRecordListener listener, String regex) {
 		// @formatter:off
 		assertThat(listener.stream(ClasspathScanner.class, Level.FINE)
@@ -172,11 +192,37 @@ class ClasspathScannerTests {
 			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var classes = classpathScanner.scanForClassesInClasspathRoot(jarfile.toURI(), allClasses);
-			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
-			assertThat(classNames).hasSize(3) //
-					.contains("org.junit.platform.jartest.notincluded.NotIncluded",
+			assertThat(classes).extracting(Class::getName) //
+					.containsExactlyInAnyOrder("org.junit.platform.jartest.notincluded.NotIncluded",
 						"org.junit.platform.jartest.included.recursive.RecursivelyIncluded",
 						"org.junit.platform.jartest.included.Included");
+		}
+	}
+
+	@Test
+	void scanForResourcesInClasspathRootWithinJarFile() throws Exception {
+		scanForResourcesInClasspathRootWithinJarFile("/jartest.jar");
+	}
+
+	@Test
+	void scanForResourcesInClasspathRootWithinJarWithSpacesInPath() throws Exception {
+		scanForResourcesInClasspathRootWithinJarFile("/folder with spaces/jar test with spaces.jar");
+	}
+
+	private void scanForResourcesInClasspathRootWithinJarFile(String resourceName) throws Exception {
+		var jarfile = getClass().getResource(resourceName);
+
+		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+
+			var resources = classpathScanner.scanForResourcesInClasspathRoot(jarfile.toURI(), allResources);
+			assertThat(resources).extracting(Resource::getName) //
+					.containsExactlyInAnyOrder("org/junit/platform/jartest/notincluded/not-included.resource",
+							"org/junit/platform/jartest/included/included.resource",
+							"org/junit/platform/jartest/included/recursive/recursively-included.resource",
+							// TODO: This is interesting. Would we also scan classes in META-INF/versions?
+							"META-INF/MANIFEST.MF"
+					);
 		}
 	}
 
@@ -488,6 +534,12 @@ class ClasspathScannerTests {
 	private URI getTestClasspathRoot() throws Exception {
 		var location = getClass().getProtectionDomain().getCodeSource().getLocation();
 		return location.toURI();
+	}
+	private URI getTestClasspathResourceRoot() {
+		// Gradle puts classes and resources in different roots.
+		var defaultPackageResource = "/default-package.resource";
+		var resourceUri = getClass().getResource(defaultPackageResource).toString();
+		return URI.create(resourceUri.substring(0, resourceUri.length() - defaultPackageResource.length()));
 	}
 
 	class MemberClassToBeFound {
