@@ -147,10 +147,10 @@ class ClasspathScannerTests {
 
 	private void assertResourcesScannedWhenExceptionIsThrown(Predicate<Resource> filter) {
 		var resourceFilter = ResourceFilter.of(filter);
-		var resources = this.classpathScanner.scanForResourcesInClasspathRoot(getTestClasspathResourceRoot(), resourceFilter);
+		var resources = this.classpathScanner.scanForResourcesInClasspathRoot(getTestClasspathResourceRoot(),
+			resourceFilter);
 		assertThat(resources).hasSizeGreaterThanOrEqualTo(150);
 	}
-
 
 	private void assertDebugMessageLogged(LogRecordListener listener, String regex) {
 		// @formatter:off
@@ -218,11 +218,10 @@ class ClasspathScannerTests {
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(jarfile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName) //
 					.containsExactlyInAnyOrder("org/junit/platform/jartest/notincluded/not-included.resource",
-							"org/junit/platform/jartest/included/included.resource",
-							"org/junit/platform/jartest/included/recursive/recursively-included.resource",
-							// TODO: This is interesting. Would we also scan classes in META-INF/versions?
-							"META-INF/MANIFEST.MF"
-					);
+						"org/junit/platform/jartest/included/included.resource",
+						"org/junit/platform/jartest/included/recursive/recursively-included.resource",
+						// TODO: This is interesting. Would we also scan classes in META-INF/versions?
+						"META-INF/MANIFEST.MF");
 		}
 	}
 
@@ -535,6 +534,7 @@ class ClasspathScannerTests {
 		var location = getClass().getProtectionDomain().getCodeSource().getLocation();
 		return location.toURI();
 	}
+
 	private URI getTestClasspathResourceRoot() {
 		// Gradle puts classes and resources in different roots.
 		var defaultPackageResource = "/default-package.resource";
