@@ -17,10 +17,10 @@ abstract class UpdateJarAction @Inject constructor(private val operations: ExecO
     abstract val args: ListProperty<String>
 
     init {
-        args.addAll(
+        args.convention(listOf(
             "--update",
             "--date=${Instant.ofEpochMilli(ZipCopyAction.CONSTANT_TIME_FOR_ZIP_ENTRIES)}",
-        )
+        ))
     }
 
     override fun execute(t: Task) {
