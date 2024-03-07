@@ -10,12 +10,17 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -41,11 +46,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
 	private final FilePosition position;
+	private Resource classpathResource;
 
 	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);
 		this.position = position;
+	}
+
+	ClasspathResourceSelector(Resource classpathResource) {
+		this(classpathResource.getName(), null);
+		this.classpathResource = classpathResource;
 	}
 
 	/**
@@ -60,6 +71,26 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 */
 	public String getClasspathResourceName() {
 		return this.classpathResourceName;
+	}
+
+	/**
+	 * Get the selected {@link Resource}.
+	 *
+	 * <p>If the {@link Resource} was not provided, but only the name, this
+	 * method attempts to lazily load the {@link Resource} based on its name and
+	 * throws a {@link PreconditionViolationException} if the resource cannot
+	 * be loaded.
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public Resource getClasspathResource() {
+		if (this.classpathResource == null) {
+			// @formatter:off
+            Try<Resource> tryToLoadClass = ReflectionUtils.tryToLoadResource(this.classpathResourceName);
+            this.classpathResource = tryToLoadClass.getOrThrow(cause ->
+                    new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
+            // @formatter:on
+		}
+		return this.classpathResource;
 	}
 
 	/**

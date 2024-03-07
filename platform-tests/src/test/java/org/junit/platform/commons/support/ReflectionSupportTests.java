@@ -123,6 +123,18 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void tryToLoadResourcePreconditions() {
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(null));
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(""));
+	}
+
+	@Test
+	void tryToLoadResourceDelegates() {
+		assertEquals(ReflectionUtils.tryToLoadResource("default-package.resource").toOptional(),
+			ReflectionSupport.tryToLoadResource("default-package.resource").toOptional());
+	}
+
+	@Test
 	void findAllClassesInClasspathRootPreconditions() {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",

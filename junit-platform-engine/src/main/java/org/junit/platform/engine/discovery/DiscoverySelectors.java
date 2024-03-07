@@ -26,6 +26,7 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -276,6 +277,7 @@ public final class DiscoverySelectors {
 	 * @param classpathResourceName the name of the classpath resource; never
 	 * {@code null} or blank
 	 * @see #selectClasspathResource(String, FilePosition)
+	 * @see #selectClasspathResource(Resource)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)
@@ -305,6 +307,7 @@ public final class DiscoverySelectors {
 	 * {@code null} or blank
 	 * @param position the position inside the classpath resource; may be {@code null}
 	 * @see #selectClasspathResource(String)
+	 * @see #selectClasspathResource(Resource)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)
@@ -314,6 +317,28 @@ public final class DiscoverySelectors {
 			FilePosition position) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		return new ClasspathResourceSelector(classpathResourceName, position);
+	}
+
+	/**
+	 * Create a {@code ClasspathResourceSelector} for the supplied classpath
+	 * resource.
+	 *
+	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
+	 * expected to modify the classpath, the supplied resource must be on the
+	 * classpath of the
+	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
+	 * {@linkplain Thread thread} that uses the resulting selector.
+	 *
+	 * @param classpathResource the classpath resource; never {@code null}
+	 * @see #selectClasspathResource(String, FilePosition)
+	 * @see #selectClasspathResource(String)
+	 * @see ClasspathResourceSelector
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {
+		Preconditions.notNull(classpathResource, "classpath resource must not be null or blank");
+		return new ClasspathResourceSelector(classpathResource);
 	}
 
 	/**
