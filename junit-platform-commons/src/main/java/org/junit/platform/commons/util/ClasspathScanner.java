@@ -222,7 +222,7 @@ class ClasspathScanner {
 				resourceFile);
 			if (resourceFilter.match(fullyQualifiedResourceName)) {
 				Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
-				// Always use ".test(classFilter)" to include future predicates.
+				// Always use "resourceFilter.test" to include future predicates.
 				if (resourceFilter.test(resource)) {
 					resourceConsumer.accept(resource);
 				}

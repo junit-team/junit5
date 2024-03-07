@@ -253,12 +253,14 @@ class ClasspathScannerTests {
 			assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
 				"FileSystem should be closed");
 
-			results.forEach(classes -> {
-				assertThat(classes).hasSize(2);
-				var classNames = classes.stream().map(Class::getSimpleName).toList();
-				assertTrue(classNames.contains("Included"));
-				assertTrue(classNames.contains("RecursivelyIncluded"));
-			});
+			// @formatter:off
+			results.forEach(classes -> assertThat(classes)
+					.hasSize(2)
+					.extracting(Class::getSimpleName).containsExactlyInAnyOrder(
+							"Included",
+							"RecursivelyIncluded"
+					));
+			// @formatter:on
 		}
 	}
 
@@ -276,16 +278,14 @@ class ClasspathScannerTests {
 			assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
 				"FileSystem should be closed");
 
-			results.forEach(resources -> {
-				// TODO: Actual URI's start with `jar:file:///` instead of `jar:file:/` which seems weird.
-				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).anyMatch(
-					s -> s.endsWith("!/org/junit/platform/jartest/included/included.resource"));
-				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).anyMatch(
-					s -> s.endsWith("!/org/junit/platform/jartest/included/recursive/recursively-included.resource"));
-				assertThat(resources).extracting(Resource::getUri).extracting(URI::toString).noneMatch(
-					s -> s.endsWith("!/org/junit/platform/jartest/not-included/not-included.resource"));
-
-			});
+			// @formatter:off
+			results.forEach(resources -> assertThat(resources)
+					.hasSize(2)
+					.extracting(Resource::getName).containsExactlyInAnyOrder(
+							"org/junit/platform/jartest/included/included.resource",
+							"org/junit/platform/jartest/included/recursive/recursively-included.resource"
+					));
+			// @formatter:on
 		}
 	}
 
