@@ -20,6 +20,7 @@ import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -124,17 +126,10 @@ class ClasspathScanner {
 	}
 
 	private List<Class<?>> findClassesForUri(URI baseUri, String basePackageName, ClassFilter classFilter) {
-		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
-			Path baseDir = closeablePath.getPath();
-			return findClassesForPath(baseDir, basePackageName, classFilter);
-		}
-		catch (PreconditionViolationException ex) {
-			throw ex;
-		}
-		catch (Exception ex) {
-			logger.warn(ex, () -> "Error scanning files for URI " + baseUri);
-			return emptyList();
-		}
+		List<Class<?>> classes = new ArrayList<>();
+		walkFilesForUri(baseUri, baseDir -> new ClassFileVisitor(
+			classFile -> processClassFileSafely(baseDir, basePackageName, classFilter, classFile, classes::add)));
+		return classes;
 	}
 
 	/**
@@ -152,43 +147,29 @@ class ClasspathScanner {
 	}
 
 	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName, ResourceFilter resourceFilter) {
+		List<Resource> resources = new ArrayList<>();
+		walkFilesForUri(baseUri, baseDir -> new ResourceFileVisitor(resourceFile -> processResourceFileSafely(baseDir,
+			basePackageName, resourceFilter, resourceFile, resources::add)));
+		return resources;
+	}
+
+	private static void walkFilesForUri(URI baseUri, Function<Path, FileVisitor<Path>> visitorConstructor) {
 		try (CloseablePath closeablePath = CloseablePath.create(baseUri)) {
 			Path baseDir = closeablePath.getPath();
-			return findResourcesForPath(baseDir, basePackageName, resourceFilter);
+			Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
+			try {
+				Files.walkFileTree(baseDir, visitorConstructor.apply(baseDir));
+			}
+			catch (IOException ex) {
+				logger.warn(ex, () -> "I/O error scanning files in " + baseDir);
+			}
 		}
 		catch (PreconditionViolationException ex) {
 			throw ex;
 		}
 		catch (Exception ex) {
 			logger.warn(ex, () -> "Error scanning files for URI " + baseUri);
-			return emptyList();
 		}
-	}
-
-	private List<Class<?>> findClassesForPath(Path baseDir, String basePackageName, ClassFilter classFilter) {
-		Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
-		List<Class<?>> classes = new ArrayList<>();
-		try {
-			Files.walkFileTree(baseDir, new ClassFileVisitor(
-				classFile -> processClassFileSafely(baseDir, basePackageName, classFilter, classFile, classes::add)));
-		}
-		catch (IOException ex) {
-			logger.warn(ex, () -> "I/O error scanning files in " + baseDir);
-		}
-		return classes;
-	}
-
-	private List<Resource> findResourcesForPath(Path baseDir, String basePackageName, ResourceFilter resourceFilter) {
-		Preconditions.condition(Files.exists(baseDir), () -> "baseDir must exist: " + baseDir);
-		List<Resource> resources = new ArrayList<>();
-		try {
-			Files.walkFileTree(baseDir, new ResourceFileVisitor(resourceFile -> processResourceFileSafely(baseDir,
-				basePackageName, resourceFilter, resourceFile, resources::add)));
-		}
-		catch (IOException ex) {
-			logger.warn(ex, () -> "I/O error scanning files in " + baseDir);
-		}
-		return resources;
 	}
 
 	private void processClassFileSafely(Path baseDir, String basePackageName, ClassFilter classFilter, Path classFile,
