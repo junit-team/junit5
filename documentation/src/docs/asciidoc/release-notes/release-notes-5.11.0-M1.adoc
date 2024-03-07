@@ -34,6 +34,7 @@ repository on GitHub.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
 
+* `ReflectionUtils` now supports scanning for classpath resources.
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
 === JUnit Jupiter
