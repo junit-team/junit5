@@ -79,7 +79,8 @@ public class UniqueIdSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		// UniqueId already takes care of properly encoding problematic characters
+		// TODO use urlEncode in UniqueIdFormat for all chars
+        // UniqueId already takes care of properly encoding problematic characters
 		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.uniqueId.toString()));
 	}
 
