@@ -58,7 +58,7 @@ class VintageDiscovererTests {
 		var testDescriptor = discover(request);
 
 		assertThat(testDescriptor.getChildren()).hasSize(1);
-		assertThat(getOnlyElement(testDescriptor.getChildren()).getUniqueId().toString()).contains(Foo.class.getName());
+		assertThat(getOnlyElement(testDescriptor.getChildren()).getUniqueId().toString()).contains(Foo.class.getName().replace("$", "%24"));
 	}
 
 	@Test

@@ -94,8 +94,8 @@ public class PackageSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
-			return Stream.of(DiscoverySelectors.selectPackage(CodingUtil.urlDecode(selector.getSchemeSpecificPart())));
+		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
+			return Stream.of(DiscoverySelectors.selectPackage(CodingUtil.urlDecode(selector.getValue())));
 		}
 	}
 }

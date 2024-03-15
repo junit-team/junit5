@@ -18,5 +18,5 @@ import org.junit.platform.engine.DiscoverySelector;
 public interface SelectorParser {
 	String getPrefix();
 
-	Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context);
+	Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context);
 }

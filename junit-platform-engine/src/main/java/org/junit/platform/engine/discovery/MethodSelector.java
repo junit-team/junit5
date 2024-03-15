@@ -337,9 +337,9 @@ public class MethodSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
+		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
 			// TODO fix decoding
-			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getSchemeSpecificPart()),
+			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getValue()),
 				CodingUtil.urlDecode(selector.getFragment())));
 		}
 	}

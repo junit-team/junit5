@@ -40,8 +40,8 @@ class SelectorParsers implements SelectorParserContext {
 
 	@Override
 	public Stream<DiscoverySelector> parse(String selector) {
-		URI uri = URI.create(selector);
-		String scheme = uri.getScheme();
+        TBD uri = TBD.parse(selector);
+		String scheme = uri.getPrefix();
 		Preconditions.notNull(scheme, "Selector must have a scheme: " + selector);
 
 		SelectorParser parser = parsers.get(scheme);
