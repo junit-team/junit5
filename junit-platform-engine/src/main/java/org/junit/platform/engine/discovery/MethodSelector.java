@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -26,6 +27,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 
@@ -313,8 +315,8 @@ public class MethodSelector implements DiscoverySelector {
 
     @Override
     public Optional<String> toSelectorString() {
-        if (StringUtils.isNotBlank(this.methodParameterTypes)) {
-            return Optional.of(String.format("%s#%s(%s)", this.className, this.methodName, this.methodParameterTypes));
+        if (StringUtils.isNotBlank(this.getParameterTypeNames())) {
+            return Optional.of(String.format("%s#%s(%s)", this.className, this.methodName, Arrays.toString(this.getParameterTypes())));
         } else {
             return Optional.of(String.format("%s#%s", this.className, this.methodName));
         }

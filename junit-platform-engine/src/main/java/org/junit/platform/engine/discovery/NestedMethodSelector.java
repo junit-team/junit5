@@ -254,8 +254,8 @@ public class NestedMethodSelector implements DiscoverySelector {
                .insert(0, Parser.PREFIX) //
                .append("#") //
                .append(CodingUtil.urlEncode(methodSelector.getMethodName()));
-          if (methodSelector.getMethodParameterTypes() != null) {
-                sb.append("(").append(methodSelector.getMethodParameterTypes()).append(")");
+          if (methodSelector.getParameterTypeNames() != null) {
+                sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
           }
           return sb.toString();
         });
