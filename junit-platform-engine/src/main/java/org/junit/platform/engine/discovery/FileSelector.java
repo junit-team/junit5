@@ -119,20 +119,23 @@ public class FileSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).append("position", this.position).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        if(this.position == null) {
-            return Optional.of(String.format("%s://%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
-        } else {
-            return Optional.of(String.format("%s://%s?%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart()));
-        }
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		if (this.position == null) {
+			return Optional.of(
+				String.format("%s://%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+		}
+		else {
+			return Optional.of(String.format("%s://%s?%s", Parser.PREFIX,
+				CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart()));
+		}
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "file";
+		private static final String PREFIX = "file";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -150,9 +153,9 @@ public class FileSelector implements DiscoverySelector {
 
 			String path = selector.getHost() == null ? selector.getPath() : selector.getHost() + selector.getPath();
 
-			return FilePosition.fromQuery(selector.getQuery())
-					.map(filePosition -> Stream.<DiscoverySelector>of(DiscoverySelectors.selectFile(path, filePosition)))
-					.orElseGet(() -> Stream.of(DiscoverySelectors.selectFile(path)));
+			return FilePosition.fromQuery(selector.getQuery()).map(filePosition -> Stream.<DiscoverySelector> of(
+				DiscoverySelectors.selectFile(path, filePosition))).orElseGet(
+					() -> Stream.of(DiscoverySelectors.selectFile(path)));
 		}
 	}
 }

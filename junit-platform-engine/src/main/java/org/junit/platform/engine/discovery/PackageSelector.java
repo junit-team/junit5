@@ -76,16 +76,16 @@ public class PackageSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("packageName", this.packageName).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.packageName)));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.packageName)));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "package";
+		private static final String PREFIX = "package";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override

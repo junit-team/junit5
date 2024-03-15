@@ -94,15 +94,15 @@ class DiscoverySelectorsTests {
 	class SelectFileTests {
 
 		@Test
-	void parseUriSelector() {
-		var uri = URLEncoder.encode("https://junit.org", StandardCharsets.UTF_8);
-		var selectorStream = DiscoverySelectors.parse("uri:" + uri);
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(UriSelector.class))
-				.extracting(UriSelector::getUri).isEqualTo(URI.create("https://junit.org"));
-	}
+		void parseUriSelector() {
+			var uri = URLEncoder.encode("https://junit.org", StandardCharsets.UTF_8);
+			var selectorStream = DiscoverySelectors.parse("uri:" + uri);
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(UriSelector.class)).extracting(
+				UriSelector::getUri).isEqualTo(URI.create("https://junit.org"));
+		}
 
-	@Test
+		@Test
 		void selectFileByName() {
 			assertViolatesPrecondition(() -> selectFile((String) null));
 			assertViolatesPrecondition(() -> selectFile("   "));
@@ -170,57 +170,57 @@ class DiscoverySelectorsTests {
 	class SelectDirectoryTests {
 
 		@Test
-	void parseFileSelectorWithRelativePath() {
-		var path = "src/test/resources/do_not_delete_me.txt";
-		var selectorStream = DiscoverySelectors.parse("file://" + path);
+		void parseFileSelectorWithRelativePath() {
+			var path = "src/test/resources/do_not_delete_me.txt";
+			var selectorStream = DiscoverySelectors.parse("file://" + path);
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class))
-				.extracting(FileSelector::getRawPath, FileSelector::getFile,FileSelector::getPath, FileSelector::getPosition)
-				.containsExactly(path, new File(path),Paths.get(path), Optional.empty());
-	}
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class)).extracting(
+				FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+				FileSelector::getPosition).containsExactly(path, new File(path), Paths.get(path), Optional.empty());
+		}
 
-	@Test
-	void parseFileSelectorWithAbsolutePath() {
-		var path = "src/test/resources/do_not_delete_me.txt";
-		var absolutePath = new File(path).getAbsolutePath();
-		var selectorStream = DiscoverySelectors.parse("file://" + absolutePath);
+		@Test
+		void parseFileSelectorWithAbsolutePath() {
+			var path = "src/test/resources/do_not_delete_me.txt";
+			var absolutePath = new File(path).getAbsolutePath();
+			var selectorStream = DiscoverySelectors.parse("file://" + absolutePath);
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class))
-				.extracting(FileSelector::getRawPath, FileSelector::getFile,FileSelector::getPath, FileSelector::getPosition)
-				.containsExactly(absolutePath, new File(absolutePath),Paths.get(absolutePath), Optional.empty());
-	}
-	@Test
-	void parseFileSelectorWithRelativePathAndFilePosition() {
-		var path = "src/test/resources/do_not_delete_me.txt";
-		var selectorStream = DiscoverySelectors.parse("file://" + path + "?line=12&column=34");
-		var filePosition = FilePosition.from(12, 34);
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class)).extracting(
+				FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+				FileSelector::getPosition).containsExactly(absolutePath, new File(absolutePath),
+					Paths.get(absolutePath), Optional.empty());
+		}
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class))
-				.extracting(FileSelector::getRawPath, FileSelector::getFile,FileSelector::getPath, FileSelector::getPosition)
-				.containsExactly(path, new File(path),Paths.get(path), Optional.of(filePosition));
-	}
+		@Test
+		void parseFileSelectorWithRelativePathAndFilePosition() {
+			var path = "src/test/resources/do_not_delete_me.txt";
+			var selectorStream = DiscoverySelectors.parse("file://" + path + "?line=12&column=34");
+			var filePosition = FilePosition.from(12, 34);
 
-	@Test
-	void parseFileSelectorWithAbsolutePathAndFilePosition() {
-		var path = "src/test/resources/do_not_delete_me.txt";
-		var absolutePath = new File(path).getAbsolutePath();
-		var selectorStream = DiscoverySelectors.parse("file://" + absolutePath + "?line=12&column=34");
-		var filePosition = FilePosition.from(12, 34);
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class)).extracting(
+				FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+				FileSelector::getPosition).containsExactly(path, new File(path), Paths.get(path),
+					Optional.of(filePosition));
+		}
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class))
-				.extracting(FileSelector::getRawPath, FileSelector::getFile,FileSelector::getPath, FileSelector::getPosition)
-				.containsExactly(absolutePath, new File(absolutePath),Paths.get(absolutePath), Optional.of(filePosition));
-	}
+		@Test
+		void parseFileSelectorWithAbsolutePathAndFilePosition() {
+			var path = "src/test/resources/do_not_delete_me.txt";
+			var absolutePath = new File(path).getAbsolutePath();
+			var selectorStream = DiscoverySelectors.parse("file://" + absolutePath + "?line=12&column=34");
+			var filePosition = FilePosition.from(12, 34);
 
-	@Test
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(FileSelector.class)).extracting(
+				FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+				FileSelector::getPosition).containsExactly(absolutePath, new File(absolutePath),
+					Paths.get(absolutePath), Optional.of(filePosition));
+		}
+
+		@Test
 		void selectDirectoryByName() {
 			assertViolatesPrecondition(() -> selectDirectory((String) null));
 			assertViolatesPrecondition(() -> selectDirectory("   "));
@@ -255,31 +255,30 @@ class DiscoverySelectorsTests {
 	class SelectClasspathResourceTests {
 
 		@Test
-	void parseDirectorySelectorWithRelativePath() {
-		var path = "src/test/resources";
+		void parseDirectorySelectorWithRelativePath() {
+			var path = "src/test/resources";
 
-		var selectorStream = DiscoverySelectors.parse("directory:" + path);
+			var selectorStream = DiscoverySelectors.parse("directory:" + path);
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(DirectorySelector.class))
-				.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory, DirectorySelector::getPath)
-				.containsExactly(path, new File(path),Paths.get(path));
-	}
-	@Test
-	void parseDirectorySelectorWithAbsolutePath() {
-		var path = new File("src/test/resources").getAbsolutePath();
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(DirectorySelector.class)).extracting(
+				DirectorySelector::getRawPath, DirectorySelector::getDirectory,
+				DirectorySelector::getPath).containsExactly(path, new File(path), Paths.get(path));
+		}
 
-		var selectorStream = DiscoverySelectors.parse("directory:" + path);
+		@Test
+		void parseDirectorySelectorWithAbsolutePath() {
+			var path = new File("src/test/resources").getAbsolutePath();
 
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(DirectorySelector.class))
-				.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory, DirectorySelector::getPath)
-				.containsExactly(path, new File(path),Paths.get(path));
-	}
+			var selectorStream = DiscoverySelectors.parse("directory:" + path);
 
-	@Test
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(DirectorySelector.class)).extracting(
+				DirectorySelector::getRawPath, DirectorySelector::getDirectory,
+				DirectorySelector::getPath).containsExactly(path, new File(path), Paths.get(path));
+		}
+
+		@Test
 		void selectClasspathResources() {
 			assertViolatesPrecondition(() -> selectClasspathResource(null));
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
@@ -313,44 +312,47 @@ class DiscoverySelectorsTests {
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
 			assertEquals(filePosition, selector.getPosition().get());
 		}
-	@Test
-	void parseClasspathResources() {
-		// with unnecessary "/" prefix
-		var selectorStream = DiscoverySelectors.parse("classpath:/foo/bar/spec.xml");
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathResourceSelector.class))
-				.extracting(ClasspathResourceSelector::getClasspathResourceName, ClasspathResourceSelector::getPosition)
-				.containsExactly("foo/bar/spec.xml", Optional.empty());
 
-		// standard use case
-		selectorStream = DiscoverySelectors.parse("classpath:A/B/C/spec.json");
-		selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathResourceSelector.class))
-				.extracting(ClasspathResourceSelector::getClasspathResourceName, ClasspathResourceSelector::getPosition)
-				.containsExactly("A/B/C/spec.json", Optional.empty());
-	}
+		@Test
+		void parseClasspathResources() {
+			// with unnecessary "/" prefix
+			var selectorStream = DiscoverySelectors.parse("classpath:/foo/bar/spec.xml");
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(
+				InstanceOfAssertFactories.type(ClasspathResourceSelector.class)).extracting(
+					ClasspathResourceSelector::getClasspathResourceName,
+					ClasspathResourceSelector::getPosition).containsExactly("foo/bar/spec.xml", Optional.empty());
 
-	@Test
-	void parseClasspathResourcesWithFilePosition() {
-		var filePosition = FilePosition.from(12, 34);
-		// with unnecessary "/" prefix
-		var selectorStream = DiscoverySelectors.parse("classpath:/foo/bar/spec.xml?line=12&column=34");
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathResourceSelector.class))
-				.extracting(ClasspathResourceSelector::getClasspathResourceName, ClasspathResourceSelector::getPosition)
-				.containsExactly("foo/bar/spec.xml", Optional.of(filePosition));
+			// standard use case
+			selectorStream = DiscoverySelectors.parse("classpath:A/B/C/spec.json");
+			selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(
+				InstanceOfAssertFactories.type(ClasspathResourceSelector.class)).extracting(
+					ClasspathResourceSelector::getClasspathResourceName,
+					ClasspathResourceSelector::getPosition).containsExactly("A/B/C/spec.json", Optional.empty());
+		}
 
-		// standard use case
-		selectorStream = DiscoverySelectors.parse("classpath:A/B/C/spec.json?line=12&column=34");
-		selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathResourceSelector.class))
-				.extracting(ClasspathResourceSelector::getClasspathResourceName, ClasspathResourceSelector::getPosition)
-				.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
-	}
+		@Test
+		void parseClasspathResourcesWithFilePosition() {
+			var filePosition = FilePosition.from(12, 34);
+			// with unnecessary "/" prefix
+			var selectorStream = DiscoverySelectors.parse("classpath:/foo/bar/spec.xml?line=12&column=34");
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(
+				InstanceOfAssertFactories.type(ClasspathResourceSelector.class)).extracting(
+					ClasspathResourceSelector::getClasspathResourceName,
+					ClasspathResourceSelector::getPosition).containsExactly("foo/bar/spec.xml",
+						Optional.of(filePosition));
+
+			// standard use case
+			selectorStream = DiscoverySelectors.parse("classpath:A/B/C/spec.json?line=12&column=34");
+			selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(
+				InstanceOfAssertFactories.type(ClasspathResourceSelector.class)).extracting(
+					ClasspathResourceSelector::getClasspathResourceName,
+					ClasspathResourceSelector::getPosition).containsExactly("A/B/C/spec.json",
+						Optional.of(filePosition));
+		}
 
 	}
 
@@ -362,14 +364,14 @@ class DiscoverySelectorsTests {
 			var selector = selectModule("java.base");
 			assertEquals("java.base", selector.getModuleName());
 		}
-	@Test
-	void parseModuleByName() {
-		var selectorStream =  DiscoverySelectors.parse("module:java.base");
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ModuleSelector.class))
-				.extracting(ModuleSelector::getModuleName).isEqualTo("java.base");
-	}
+
+		@Test
+		void parseModuleByName() {
+			var selectorStream = DiscoverySelectors.parse("module:java.base");
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ModuleSelector.class)).extracting(
+				ModuleSelector::getModuleName).isEqualTo("java.base");
+		}
 
 		@Test
 		void selectModuleByNamePreconditions() {
@@ -401,14 +403,14 @@ class DiscoverySelectorsTests {
 			var selector = selectPackage(getClass().getPackage().getName());
 			assertEquals(getClass().getPackage().getName(), selector.getPackageName());
 		}
-	@Test
-	void parsePackageByName() {
-		var selectorStream =  DiscoverySelectors.parse("package:" + getClass().getPackage().getName());
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(PackageSelector.class))
-				.extracting(PackageSelector::getPackageName).isEqualTo(getClass().getPackage().getName());
-	}
+
+		@Test
+		void parsePackageByName() {
+			var selectorStream = DiscoverySelectors.parse("package:" + getClass().getPackage().getName());
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(PackageSelector.class)).extracting(
+				PackageSelector::getPackageName).isEqualTo(getClass().getPackage().getName());
+		}
 
 	}
 
@@ -456,14 +458,14 @@ class DiscoverySelectorsTests {
 			var selector = selectClass(getClass().getName());
 			assertEquals(getClass(), selector.getJavaClass());
 		}
-	@Test
-	void pareClassByName() {
-		var selectorStream =  DiscoverySelectors.parse("class:" + getClass().getName());
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClassSelector.class))
-				.extracting(ClassSelector::getJavaClass).isEqualTo(getClass());
-	}
+
+		@Test
+		void pareClassByName() {
+			var selectorStream = DiscoverySelectors.parse("class:" + getClass().getName());
+			var selector = getSingleSelector(selectorStream);
+			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ClassSelector.class)).extracting(
+				ClassSelector::getJavaClass).isEqualTo(getClass());
+		}
 
 		@Test
 		void selectClassByNameWithExplicitClassLoader() throws Exception {
@@ -949,34 +951,34 @@ class DiscoverySelectorsTests {
 	}
 	@Test
 	void parseClasspathRootsWithNonExistingDirectory() {
-		var selectorStream =  DiscoverySelectors.parse("classpath-root:some/local/path");
+		var selectorStream = DiscoverySelectors.parse("classpath-root:some/local/path");
 		assertThat(selectorStream.count()).isEqualTo(0);
 	}
 
 	@Test
 	void parseClasspathRootsWithNonExistingJarFile() {
-		var selectorStream =  DiscoverySelectors.parse("classpath-root:some.jar");
+		var selectorStream = DiscoverySelectors.parse("classpath-root:some.jar");
 		assertThat(selectorStream.count()).isEqualTo(0);
 	}
 
 	@Test
 	void parseClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
-		var selectorStream = DiscoverySelectors.parse("classpath-root:" + URLEncoder.encode(tempDir.toUri().toString(), StandardCharsets.UTF_8));
+		var selectorStream = DiscoverySelectors.parse(
+			"classpath-root:" + URLEncoder.encode(tempDir.toUri().toString(), StandardCharsets.UTF_8));
 		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class))
-				.extracting(ClasspathRootSelector::getClasspathRoot).isEqualTo(tempDir.toUri());
+		assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class)).extracting(
+			ClasspathRootSelector::getClasspathRoot).isEqualTo(tempDir.toUri());
 	}
 
 	@Test
 	void parseClasspathRootsWithExistingJarFile() throws Exception {
 		var jarUri = getClass().getResource("/jartest.jar").toURI();
 
-		var selectorStream = DiscoverySelectors.parse("classpath-root:" + URLEncoder.encode(jarUri.toString(), StandardCharsets.UTF_8));
+		var selectorStream = DiscoverySelectors.parse(
+			"classpath-root:" + URLEncoder.encode(jarUri.toString(), StandardCharsets.UTF_8));
 		var selector = getSingleSelector(selectorStream);
-		assertThat(selector)
-				.asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class))
-				.extracting(ClasspathRootSelector::getClasspathRoot).isEqualTo(jarUri);
+		assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class)).extracting(
+			ClasspathRootSelector::getClasspathRoot).isEqualTo(jarUri);
 	}
 
 	@Nested

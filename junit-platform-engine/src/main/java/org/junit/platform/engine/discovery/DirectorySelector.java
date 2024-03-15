@@ -110,15 +110,15 @@ public class DirectorySelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("path", this.path).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+	}
 	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "directory";
+		private static final String PREFIX = "directory";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override

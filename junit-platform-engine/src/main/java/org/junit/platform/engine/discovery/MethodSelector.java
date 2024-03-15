@@ -313,22 +313,23 @@ public class MethodSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        if (StringUtils.isNotBlank(this.getParameterTypeNames())) {
-            return Optional.of(String.format("%s#%s(%s)", this.className, this.methodName, Arrays.toString(this.getParameterTypes())));
-        } else {
-            return Optional.of(String.format("%s#%s", this.className, this.methodName));
-        }
-    }
-
-    public static class Parser implements SelectorParser {
-
-        private static final String PREFIX = "method";
-
-        public Parser() {
+	@Override
+	public Optional<String> toSelectorString() {
+		if (StringUtils.isNotBlank(this.getParameterTypeNames())) {
+			return Optional.of(
+				String.format("%s#%s(%s)", this.className, this.methodName, Arrays.toString(this.getParameterTypes())));
 		}
+		else {
+			return Optional.of(String.format("%s#%s", this.className, this.methodName));
+		}
+	}
 
+	public static class Parser implements SelectorParser {
+
+		private static final String PREFIX = "method";
+
+		public Parser() {
+		}
 
 		@Override
 		public String getPrefix() {
@@ -337,8 +338,9 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
-            // TODO fix decoding
-			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getSchemeSpecificPart()), CodingUtil.urlDecode(selector.getFragment())));
+			// TODO fix decoding
+			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getSchemeSpecificPart()),
+				CodingUtil.urlDecode(selector.getFragment())));
 		}
 	}
 }

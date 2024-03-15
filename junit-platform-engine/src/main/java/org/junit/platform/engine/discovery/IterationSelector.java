@@ -95,20 +95,19 @@ public class IterationSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return parentSelector.toSelectorString()
-            .map(parentSelectorString -> String.format("%s:%s#%s", //
-                Parser.PREFIX, //
-                CodingUtil.urlEncode(parentSelectorString), //
-                iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return parentSelector.toSelectorString().map(parentSelectorString -> String.format("%s:%s#%s", //
+			Parser.PREFIX, //
+			CodingUtil.urlEncode(parentSelectorString), //
+			iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "iteration";
+		private static final String PREFIX = "iteration";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -118,9 +117,11 @@ public class IterationSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
-            int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(Integer::parseInt).toArray();
-            String parentSelector = CodingUtil.urlDecode(selector.getSchemeSpecificPart());
-            return context.parse(parentSelector).map(parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
+			int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(
+				Integer::parseInt).toArray();
+			String parentSelector = CodingUtil.urlDecode(selector.getSchemeSpecificPart());
+			return context.parse(parentSelector).map(
+				parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
 		}
 	}
 }

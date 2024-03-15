@@ -244,28 +244,28 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return nestedClassSelector.toSelectorString().map(parent -> {
-           StringBuilder sb = new StringBuilder(parent)
-               // Not totally happy with how we have to change the prefix here.
-               // Alternativly, we could duplicate the logic of the NestedClassSelector
-               .delete(0, NestedClassSelector.Parser.PREFIX.length() ) //
-               .insert(0, Parser.PREFIX) //
-               .append("#") //
-               .append(CodingUtil.urlEncode(methodSelector.getMethodName()));
-          if (methodSelector.getParameterTypeNames() != null) {
-                sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
-          }
-          return sb.toString();
-        });
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return nestedClassSelector.toSelectorString().map(parent -> {
+			StringBuilder sb = new StringBuilder(parent)
+					// Not totally happy with how we have to change the prefix here.
+					// Alternativly, we could duplicate the logic of the NestedClassSelector
+					.delete(0, NestedClassSelector.Parser.PREFIX.length()) //
+					.insert(0, Parser.PREFIX) //
+					.append("#") //
+					.append(CodingUtil.urlEncode(methodSelector.getMethodName()));
+			if (methodSelector.getParameterTypeNames() != null) {
+				sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
+			}
+			return sb.toString();
+		});
+	}
 
 	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "nested-method";
+		private static final String PREFIX = "nested-method";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -275,10 +275,10 @@ public class NestedMethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
-            List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/"))
-                .map(CodingUtil::urlDecode)
-                .collect(toList());
-			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1), selector.getFragment()));
+			List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/")).map(
+				CodingUtil::urlDecode).collect(toList());
+			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1),
+				parts.get(parts.size() - 1), selector.getFragment()));
 		}
 	}
 }

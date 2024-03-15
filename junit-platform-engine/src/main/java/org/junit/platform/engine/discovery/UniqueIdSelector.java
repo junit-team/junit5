@@ -77,17 +77,17 @@ public class UniqueIdSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("uniqueId", this.uniqueId).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        // UniqueId already takes care of properly encoding problematic characters
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, this.uniqueId.toString()));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		// UniqueId already takes care of properly encoding problematic characters
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.uniqueId.toString()));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "uid";
+		private static final String PREFIX = "uid";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override

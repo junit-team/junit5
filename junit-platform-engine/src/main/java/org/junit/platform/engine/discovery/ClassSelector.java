@@ -136,16 +136,16 @@ public class ClassSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.className)));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.className)));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "class";
+		private static final String PREFIX = "class";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override

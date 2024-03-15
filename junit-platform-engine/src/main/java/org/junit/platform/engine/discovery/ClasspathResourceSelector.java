@@ -103,16 +103,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			this.position).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(
+			String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "classpath";
+		private static final String PREFIX = "classpath";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -131,7 +132,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			if (queryIndex == -1) {
 				resourceName = part;
 				position = null;
-			} else {
+			}
+			else {
 				resourceName = part.substring(0, queryIndex);
 				position = FilePosition.fromQuery(part.substring(queryIndex + 1)).orElse(null);
 			}

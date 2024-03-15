@@ -79,16 +79,16 @@ public class UriSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("uri", this.uri).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.uri.toString())));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.uri.toString())));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "uri";
+		private static final String PREFIX = "uri";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -98,7 +98,7 @@ public class UriSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
-            return Stream.of(DiscoverySelectors.selectUri(CodingUtil.urlEncode(selector.getSchemeSpecificPart())));
+			return Stream.of(DiscoverySelectors.selectUri(CodingUtil.urlEncode(selector.getSchemeSpecificPart())));
 		}
 	}
 }

@@ -47,13 +47,13 @@ class UniqueIdFormat implements Serializable {
 		return Pattern.quote(String.valueOf(c));
 	}
 
-    private final char openSegment;
+	private final char openSegment;
 	private final char closeSegment;
 	private final char segmentDelimiter;
 	private final char typeValueSeparator;
 	private final Pattern segmentPattern;
 
-    UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
+	UniqueIdFormat(char openSegment, char typeValueSeparator, char closeSegment, char segmentDelimiter) {
 		this.openSegment = openSegment;
 		this.typeValueSeparator = typeValueSeparator;
 		this.closeSegment = closeSegment;
@@ -115,12 +115,12 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private String encode(String s) {
-        try {
-            return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
-        }
-        catch (UnsupportedEncodingException e) {
-            throw new AssertionError("UTF-8 should be supported", e);
-        }
+		try {
+			return URLEncoder.encode(s, StandardCharsets.UTF_8.name());
+		}
+		catch (UnsupportedEncodingException e) {
+			throw new AssertionError("UTF-8 should be supported", e);
+		}
 	}
 
 	private static String decode(String s) {

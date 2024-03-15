@@ -88,18 +88,20 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		return new ToStringBuilder(this).append("classpathRoot", this.classpathRoot).toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
-    }
+	@Override
+	public Optional<String> toSelectorString() {
+		return Optional.of(String.format("%s:%s", Parser.PREFIX,
+			CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        private static final String PREFIX = "classpath-root";
+		private static final String PREFIX = "classpath-root";
 
-        public Parser() {
+		public Parser() {
 
 		}
+
 		@Override
 		public String getPrefix() {
 			return PREFIX;
@@ -109,10 +111,10 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			try {
 				String rootSelector = URLDecoder.decode(selector.getSchemeSpecificPart(), "UTF-8");
-				return DiscoverySelectors.selectClasspathRoots(Collections.singleton(Paths.get(rootSelector)))
-						.stream()
-						.map(DiscoverySelector.class::cast);
-			} catch (UnsupportedEncodingException e) {
+				return DiscoverySelectors.selectClasspathRoots(
+					Collections.singleton(Paths.get(rootSelector))).stream().map(DiscoverySelector.class::cast);
+			}
+			catch (UnsupportedEncodingException e) {
 				throw new IllegalArgumentException("Could not decode classpath root selector: " + selector, e);
 			}
 		}

@@ -147,26 +147,26 @@ public class NestedClassSelector implements DiscoverySelector {
 				.toString();
 	}
 
-    @Override
-    public Optional<String> toSelectorString() {
-        StringBuilder sb = new StringBuilder() //
-            .append(Parser.PREFIX) //
-            .append(":");
+	@Override
+	public Optional<String> toSelectorString() {
+		StringBuilder sb = new StringBuilder() //
+				.append(Parser.PREFIX) //
+				.append(":");
 
-        enclosingClassSelectors.stream() //
-            .map(ClassSelector::getClassName) //
-            .map(CodingUtil::urlEncode) //
-            .forEach(s -> sb.append(s).append("/"));
+		enclosingClassSelectors.stream() //
+				.map(ClassSelector::getClassName) //
+				.map(CodingUtil::urlEncode) //
+				.forEach(s -> sb.append(s).append("/"));
 
-        sb.append(CodingUtil.urlEncode(getNestedClassName()));
-        return Optional.of(sb.toString());
-    }
+		sb.append(CodingUtil.urlEncode(getNestedClassName()));
+		return Optional.of(sb.toString());
+	}
 
-    public static class Parser implements SelectorParser {
+	public static class Parser implements SelectorParser {
 
-        static final String PREFIX = "nested-class";
+		static final String PREFIX = "nested-class";
 
-        public Parser() {
+		public Parser() {
 		}
 
 		@Override
@@ -177,9 +177,10 @@ public class NestedClassSelector implements DiscoverySelector {
 		@Override
 		public Stream<DiscoverySelector> parse(URI selector, SelectorParserContext context) {
 			List<String> parts = Arrays.stream(selector.getSchemeSpecificPart().split("/")) //
-                .map(CodingUtil::urlDecode) //
-                .collect(toList());
-			return Stream.of(DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
+					.map(CodingUtil::urlDecode) //
+					.collect(toList());
+			return Stream.of(
+				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}
 	}
 }
