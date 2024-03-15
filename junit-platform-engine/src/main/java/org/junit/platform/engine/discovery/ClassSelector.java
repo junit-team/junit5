@@ -13,7 +13,6 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -138,7 +137,7 @@ public class ClassSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.className)));
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.className));
 	}
 
 	public static class Parser implements SelectorParser {

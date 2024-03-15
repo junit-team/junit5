@@ -31,8 +31,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -95,8 +93,7 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void parseUriSelector() {
-			var uri = URLEncoder.encode("https://junit.org", StandardCharsets.UTF_8);
-			var selectorStream = DiscoverySelectors.parse("uri:" + uri);
+			var selectorStream = DiscoverySelectors.parse("uri:https://junit.org");
 			var selector = getSingleSelector(selectorStream);
 			assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(UriSelector.class)).extracting(
 				UriSelector::getUri).isEqualTo(URI.create("https://junit.org"));
@@ -963,8 +960,7 @@ class DiscoverySelectorsTests {
 
 	@Test
 	void parseClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
-		var selectorStream = DiscoverySelectors.parse(
-			"classpath-root:" + URLEncoder.encode(tempDir.toUri().toString(), StandardCharsets.UTF_8));
+		var selectorStream = DiscoverySelectors.parse("classpath-root:" + tempDir);
 		var selector = getSingleSelector(selectorStream);
 		assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class)).extracting(
 			ClasspathRootSelector::getClasspathRoot).isEqualTo(tempDir.toUri());
@@ -973,9 +969,9 @@ class DiscoverySelectorsTests {
 	@Test
 	void parseClasspathRootsWithExistingJarFile() throws Exception {
 		var jarUri = getClass().getResource("/jartest.jar").toURI();
+		var jarPath = Path.of(jarUri);
 
-		var selectorStream = DiscoverySelectors.parse(
-			"classpath-root:" + URLEncoder.encode(jarUri.toString(), StandardCharsets.UTF_8));
+		var selectorStream = DiscoverySelectors.parse("classpath-root:" + jarPath);
 		var selector = getSingleSelector(selectorStream);
 		assertThat(selector).asInstanceOf(InstanceOfAssertFactories.type(ClasspathRootSelector.class)).extracting(
 			ClasspathRootSelector::getClasspathRoot).isEqualTo(jarUri);

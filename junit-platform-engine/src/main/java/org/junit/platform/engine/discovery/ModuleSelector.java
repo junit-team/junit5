@@ -12,7 +12,6 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -78,7 +77,7 @@ public class ModuleSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.moduleName)));
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.moduleName));
 	}
 
 	public static class Parser implements SelectorParser {
@@ -95,7 +94,7 @@ public class ModuleSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			return Stream.of(DiscoverySelectors.selectModule(CodingUtil.urlDecode(selector.getValue())));
+			return Stream.of(DiscoverySelectors.selectModule(selector.getValue()));
 		}
 	}
 }

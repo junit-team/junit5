@@ -81,7 +81,7 @@ public class UriSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX, CodingUtil.urlEncode(this.uri.toString())));
+		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.uri.toString()));
 	}
 
 	public static class Parser implements SelectorParser {
@@ -98,7 +98,7 @@ public class UriSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			return Stream.of(DiscoverySelectors.selectUri(CodingUtil.urlEncode(selector.getValue())));
+			return Stream.of(DiscoverySelectors.selectUri(selector.getValue()));
 		}
 	}
 }

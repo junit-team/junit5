@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -155,10 +154,9 @@ public class NestedClassSelector implements DiscoverySelector {
 
 		enclosingClassSelectors.stream() //
 				.map(ClassSelector::getClassName) //
-				.map(CodingUtil::urlEncode) //
 				.forEach(s -> sb.append(s).append("/"));
 
-		sb.append(CodingUtil.urlEncode(getNestedClassName()));
+		sb.append(getNestedClassName());
 		return Optional.of(sb.toString());
 	}
 
@@ -176,9 +174,7 @@ public class NestedClassSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			List<String> parts = Arrays.stream(selector.getValue().split("/")) //
-					.map(CodingUtil::urlDecode) //
-					.collect(toList());
+			List<String> parts = Arrays.asList(selector.getValue().split("/"));
 			return Stream.of(
 				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}

@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -253,7 +252,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 					.delete(0, NestedClassSelector.Parser.PREFIX.length()) //
 					.insert(0, Parser.PREFIX) //
 					.append("#") //
-					.append(CodingUtil.urlEncode(methodSelector.getMethodName()));
+					.append(methodSelector.getMethodName());
 			if (methodSelector.getParameterTypeNames() != null) {
 				sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
 			}
@@ -275,8 +274,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			List<String> parts = Arrays.stream(selector.getValue().split("/")).map(
-				CodingUtil::urlDecode).collect(toList());
+			List<String> parts = Arrays.asList(selector.getValue().split("/"));
 
 			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1),
 				parts.get(parts.size() - 1), selector.getFragment()));
