@@ -87,7 +87,7 @@ public final class ReflectionUtils {
 	 *
 	 * <p>When set to {@code false} (either explicitly or implicitly), field and
 	 * method searches will adhere to Java semantics regarding whether a given
-	 * field or method is visible or overridable, where the latter only applies
+	 * field or method is visible or overridden, where the latter only applies
 	 * to methods. When set to {@code true}, the semantics used in JUnit 5 prior
 	 * to JUnit 5.11 (JUnit Platform 1.11) will be used, which means that fields
 	 * and methods can hide, shadow, or supersede fields and methods in supertypes
@@ -1494,8 +1494,7 @@ public final class ReflectionUtils {
 	 * that match the specified {@code predicate}, using top-down search semantics
 	 * within the type hierarchy.
 	 *
-	 * <p>The results will not contain instance methods that are <em>overridden</em>
-	 * or {@code static} methods that are <em>hidden</em>.
+	 * <p>The results will not contain instance methods that are <em>overridden</em>.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}

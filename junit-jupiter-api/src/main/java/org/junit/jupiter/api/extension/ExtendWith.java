@@ -35,10 +35,10 @@ import org.apiguardian.api.API;
  *
  * <h2>Inheritance</h2>
  *
- * <p>{@code @ExtendWith} fields are inherited from superclasses as long as they
- * are not <em>hidden</em> or <em>overridden</em>. Furthermore, {@code @ExtendWith}
- * fields from superclasses will be registered before {@code @ExtendWith} fields
- * in subclasses.
+ * <p>{@code @ExtendWith} fields are inherited from superclasses. Furthermore,
+ * {@code @ExtendWith} fields from superclasses will be registered before
+ * {@code @ExtendWith} fields in subclasses unless {@code @Order} is used to
+ * alter that behavior (see below).
  *
  * <h2>Registration Order</h2>
  *
