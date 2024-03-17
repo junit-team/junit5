@@ -1324,8 +1324,10 @@ public final class ReflectionUtils {
 	 * Determine a corresponding interface method for the given method handle, if possible.
 	 * <p>This is particularly useful for arriving at a public exported type on the Java
 	 * Module System which can be reflectively invoked without an illegal access warning.
-	 * @param method the method to be invoked, potentially from an implementation class
-	 * @param targetClass the target class to check for declared interfaces
+	 * @param method the method to be invoked, potentially from an implementation class;
+	 * never {@code null}
+	 * @param targetClass the target class to check for declared interfaces;
+	 * potentially {@code null}
 	 * @return the corresponding interface method, or the original method if none found
 	 * @since 1.11
 	 */
@@ -1336,25 +1338,22 @@ public final class ReflectionUtils {
 		}
 		// Try cached version of method in its declaring class
 		Method result = interfaceMethodCache.computeIfAbsent(method,
-			m -> findInterfaceMethodIfPossible(m, m.getDeclaringClass(), Object.class));
+			m -> findInterfaceMethodIfPossible(m, m.getParameterTypes(), m.getDeclaringClass(), Object.class));
 		if (result == method && targetClass != null) {
 			// No interface method found yet -> try given target class (possibly a subclass of the
 			// declaring class, late-binding a base class method to a subclass-declared interface:
 			// see e.g. HashMap.HashIterator.hasNext)
-			result = findInterfaceMethodIfPossible(method, targetClass, method.getDeclaringClass());
+			result = findInterfaceMethodIfPossible(method, method.getParameterTypes(), targetClass,
+				method.getDeclaringClass());
 		}
 		return result;
 	}
 
-	private static Method findInterfaceMethodIfPossible(Method method, Class<?> startClass, Class<?> endClass) {
-		Class<?>[] parameterTypes = null;
+	private static Method findInterfaceMethodIfPossible(Method method, Class<?>[] parameterTypes, Class<?> startClass,
+			Class<?> endClass) {
+
 		Class<?> current = startClass;
 		while (current != null && current != endClass) {
-			if (parameterTypes == null) {
-				// Since Method#getParameterTypes() clones the array, we lazily retrieve
-				// and cache parameter types to avoid cloning the array multiple times.
-				parameterTypes = method.getParameterTypes();
-			}
 			for (Class<?> ifc : current.getInterfaces()) {
 				try {
 					return ifc.getMethod(method.getName(), parameterTypes);
