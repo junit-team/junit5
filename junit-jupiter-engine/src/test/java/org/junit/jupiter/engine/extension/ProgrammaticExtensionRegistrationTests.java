@@ -32,7 +32,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -120,28 +119,6 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		);
 	}
 
-	@Disabled("Disabled until legacy search mode is supported")
-	@Test
-	void instanceLevelWithInheritedAndHiddenExtensionsInLegacyMode() {
-		Class<?> testClass = InstanceLevelExtensionRegistrationParentTestCase.class;
-		String parent = testClass.getSimpleName();
-		assertOneTestSucceeded(testClass);
-		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1 :: before test", //
-			parent + " :: extension2 :: before test" //
-		);
-
-		callSequence.clear();
-		testClass = InstanceLevelExtensionRegistrationChildTestCase.class;
-		String child = testClass.getSimpleName();
-		assertOneTestSucceeded(testClass);
-		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1 :: before test", //
-			child + " :: extension2 :: before test", //
-			child + " :: extension3 :: before test" //
-		);
-	}
-
 	@Test
 	void classLevelWithInheritedExtensions() {
 		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
@@ -159,28 +136,6 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 		assertThat(callSequence).containsExactly( //
 			parent + " :: extension1 :: before test", //
 			parent + " :: extension2 :: before test", //
-			child + " :: extension2 :: before test", //
-			child + " :: extension3 :: before test" //
-		);
-	}
-
-	@Disabled("Disabled until legacy search mode is supported")
-	@Test
-	void classLevelWithInheritedAndHiddenExtensionsInLegacyMode() {
-		Class<?> testClass = ClassLevelExtensionRegistrationParentTestCase.class;
-		String parent = testClass.getSimpleName();
-		assertOneTestSucceeded(testClass);
-		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1 :: before test", //
-			parent + " :: extension2 :: before test" //
-		);
-
-		callSequence.clear();
-		testClass = ClassLevelExtensionRegistrationChildTestCase.class;
-		String child = testClass.getSimpleName();
-		assertOneTestSucceeded(testClass);
-		assertThat(callSequence).containsExactly( //
-			parent + " :: extension1 :: before test", //
 			child + " :: extension2 :: before test", //
 			child + " :: extension3 :: before test" //
 		);
