@@ -1,11 +1,11 @@
 [versions]
 ant = "1.10.14"
 apiguardian = "1.1.2"
-asciidoctorj-pdf = "2.3.12"
+asciidoctorj-pdf = "2.3.15"
 asciidoctor-plugins = "4.0.2" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.25.3"
 bnd = "7.0.0"
-checkstyle = "10.12.5"
+checkstyle = "10.14.2"
 gradleVersionsPlugin = "0.51.0"
 jacoco = "0.8.7"
 jmh = "1.37"
@@ -13,7 +13,7 @@ junit4 = "4.13.2"
 junit4Osgi = "4.13.2_1"
 junit4Min = "4.12"
 ktlint = "0.48.2"
-log4j = "2.22.1"
+log4j = "2.23.1"
 opentest4j = "1.3.0"
 openTestReporting = "0.1.0-M1"
 surefire = "3.2.5"
@@ -29,16 +29,16 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.165" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.168" }
 commons-io = { module = "commons-io:commons-io", version = "2.15.1" }
-gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.12.1" }
+gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.13" }
 gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.8.0" }
 gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.16.2" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
 gradle-shadow = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
 gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleVersionsPlugin" }
-groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.18" }
+groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.20" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
 jfrunit = { module = "org.moditect.jfrunit:jfrunit-core", version = "1.0.0.Alpha2" }
@@ -47,13 +47,13 @@ jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.0" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.7.3" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.0" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.6" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.0" }
-mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.10.0" }
+mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.11.0" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
 openTestReporting-tooling = { module = "org.opentest4j.reporting:open-test-reporting-tooling", version.ref = "openTestReporting" }
@@ -77,9 +77,9 @@ xmlunit = ["xmlunit-assertj", "xmlunit-placeholders"]
 asciidoctorConvert = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugins" }
 asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-plugins" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.3" }
-gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.1" }
+gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0-rc-2" }
-plantuml = { id = "io.freefair.plantuml", version = "8.4" }
+plantuml = { id = "io.freefair.plantuml", version = "8.6" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }

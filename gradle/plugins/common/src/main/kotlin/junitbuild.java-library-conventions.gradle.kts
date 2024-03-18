@@ -26,7 +26,6 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
 val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
-val javaVersion = JavaVersion.current()
 
 eclipse {
 	jdt {
@@ -301,6 +300,13 @@ afterEvaluate {
 checkstyle {
 	toolVersion = requiredVersionFromLibs("checkstyle")
 	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
+}
+
+// Workaround for https://github.com/checkstyle/checkstyle/issues/14123
+configurations.checkstyle {
+	resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
+		select("com.google.guava:guava:0")
+	}
 }
 
 tasks {

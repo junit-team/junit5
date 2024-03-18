@@ -17,6 +17,8 @@ repository on GitHub.
 ==== Bug Fixes
 
 * `ReflectionSupport.findFields(...)` now returns a distinct set of fields.
+* Fixed parsing of recursive jar uris. Allows the JUnit Platform Launcher to be used
+  inside Spring Boot executable jars for Spring Boot 3.2 and later.
 
 * The `junit-platform-suite-engine` now includes configuration provided by
 `@ConfigurationParameter` when selecting tests by `UniqueId`.
