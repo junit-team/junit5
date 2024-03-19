@@ -134,8 +134,8 @@ tasks.test {
 		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
 
-	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get())
-	jvmArgumentProviders += JarPath(project, antJarsClasspath.get())
+	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
+	jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
 	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
 
 	(options as JUnitPlatformOptions).apply {
