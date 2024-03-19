@@ -9,12 +9,16 @@
  */
 package org.junit.api.tools;
 
-import org.apiguardian.api.API.Status;
-
 import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+
+import io.github.classgraph.ClassInfo;
+
+import org.apiguardian.api.API.Status;
 
 /**
  * @since 1.0
  */
-record ApiReport(List<Class<?>> types, Map<Status, List<Declaration>> declarationsMap) {}
+record ApiReport(SortedSet<ClassInfo> types, Map<Status, List<Declaration>> declarations) {
+}

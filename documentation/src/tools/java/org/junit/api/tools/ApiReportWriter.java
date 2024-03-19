@@ -11,7 +11,7 @@
 package org.junit.api.tools;
 
 import java.io.PrintWriter;
-import java.util.EnumSet;
+import java.util.Set;
 
 import org.apiguardian.api.API.Status;
 
@@ -22,6 +22,6 @@ interface ApiReportWriter {
 
 	void printReportHeader(PrintWriter out);
 
-	void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses);
+	void printDeclarationInfo(PrintWriter out, Set<Status> statuses);
 
 }

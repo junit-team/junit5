@@ -12,14 +12,12 @@ package org.junit.api.tools;
 
 import java.io.PrintWriter;
 
-import org.apiguardian.api.API;
-
 /**
  * @since 1.0
  */
 class AsciidocApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String ASCIIDOC_FORMAT = "| %-52s | %-42s | %-12s%n";
+	private static final String ASCIIDOC_FORMAT = "| %-52s | %-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
 
 	AsciidocApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
@@ -48,18 +46,16 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("|===");
-		out.printf(ASCIIDOC_FORMAT, "Package Name", "Type Name", "Since");
+		out.printf(ASCIIDOC_FORMAT, "Package Name", "Name", "Since");
 		out.println();
 	}
 
 	@Override
 	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
-		String packageName = declaration.getPackageName();
-		String name = declaration.getName();
 		out.printf(ASCIIDOC_FORMAT, //
-			code(packageName), //
-			code(name) + " " + italic("(" + declaration.getKind() + ")"), //
-			code(type.getAnnotation(API.class).since()) //
+			code(declaration.packageName()), //
+			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
+			code(declaration.since()) //
 		);
 	}
 
