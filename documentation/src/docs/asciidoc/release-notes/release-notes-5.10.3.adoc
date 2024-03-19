@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* The `junit-platform-suite-engine` now includes configuration provided by
+  `@ConfigurationParameter` when selecting tests by `UniqueId`.
 
 ==== Deprecations and Breaking Changes
 

@@ -71,7 +71,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> suiteClass) {
 		Preconditions.condition(launcherDiscoveryResult == null,
 			"discovery request can not be modified after discovery");
-		discoveryRequestBuilder.suite(suiteClass);
+		discoveryRequestBuilder.applySelectorsAndFiltersFromSuite(suiteClass);
 		return this;
 	}
 
@@ -92,6 +92,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 				.filterStandardClassNamePatterns(true)
 				.enableImplicitConfigurationParameters(false)
 				.parentConfigurationParameters(configurationParameters)
+				.applyConfigurationParametersFromSuite(suiteClass)
 				.build();
 		// @formatter:on
 		this.launcher = SuiteLauncher.create();

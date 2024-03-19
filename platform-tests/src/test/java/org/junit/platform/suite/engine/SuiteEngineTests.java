@@ -34,12 +34,14 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
+import org.junit.platform.suite.engine.testcases.ConfigurationSensitiveTestCase;
 import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
 import org.junit.platform.suite.engine.testcases.JUnit4TestsTestCase;
 import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testcases.TaggedTestTestCase;
 import org.junit.platform.suite.engine.testsuites.AbstractSuite;
+import org.junit.platform.suite.engine.testsuites.ConfigurationSuite;
 import org.junit.platform.suite.engine.testsuites.CyclicSuite;
 import org.junit.platform.suite.engine.testsuites.DynamicSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyCyclicSuite;
@@ -282,6 +284,34 @@ class SuiteEngineTests {
 				.assertThatEvents()
 				.haveExactly(2, event(test(MultipleSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(2, event(test(MultipleTestsTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void selectConfigurationSensitiveMethodsInTestPlanByUnique() {
+		// @formatter:off
+		var uniqueId1 = UniqueId.forEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, ConfigurationSuite.class.getName())
+				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
+				.append(ClassTestDescriptor.SEGMENT_TYPE, ConfigurationSensitiveTestCase.class.getName())
+				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test1()");
+
+		var uniqueId2 = UniqueId.forEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, ConfigurationSuite.class.getName())
+				.append("engine", JupiterEngineDescriptor.ENGINE_ID)
+				.append(ClassTestDescriptor.SEGMENT_TYPE, ConfigurationSensitiveTestCase.class.getName())
+				.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test2()");
+
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(
+					selectUniqueId(uniqueId1),
+					selectUniqueId(uniqueId2)
+				)
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(ConfigurationSuite.class.getName(), "test1()"), finishedSuccessfully()))
+				.haveExactly(1, event(test(ConfigurationSuite.class.getName(), "test2()"), finishedSuccessfully()));
 		// @formatter:on
 	}
 
