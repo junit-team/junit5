@@ -28,9 +28,18 @@ spotless {
 	}
 }
 
-val thirdPartyJars by configurations.creatingResolvable
-val antJars by configurations.creatingResolvable
-val mavenDistribution by configurations.creatingResolvable
+val thirdPartyJars = configurations.dependencyScope("thirdPartyJars")
+val thirdPartyJarsClasspath = configurations.resolvable("thirdPartyJarsClasspath") {
+	extendsFrom(thirdPartyJars.get())
+}
+val antJars = configurations.dependencyScope("antJars")
+val antJarsClasspath = configurations.resolvable("antJarsClasspath") {
+	extendsFrom(antJars.get())
+}
+val mavenDistribution = configurations.dependencyScope("mavenDistribution")
+val mavenDistributionClasspath = configurations.resolvable("mavenDistributionClasspath") {
+	extendsFrom(mavenDistribution.get())
+}
 
 dependencies {
 	implementation(libs.bartholdy) {
@@ -83,7 +92,7 @@ dependencies {
 }
 
 val unzipMavenDistribution by tasks.registering(Sync::class) {
-	from(zipTree(mavenDistribution.elements.map { it.single() }))
+	from(zipTree(mavenDistributionClasspath.flatMap { d -> d.elements.map { e -> e.single() } }))
 	into(layout.buildDirectory.dir("maven-distribution"))
 }
 
@@ -125,8 +134,8 @@ tasks.test {
 		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
 
-	jvmArgumentProviders += JarPath(project, thirdPartyJars)
-	jvmArgumentProviders += JarPath(project, antJars)
+	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get())
+	jvmArgumentProviders += JarPath(project, antJarsClasspath.get())
 	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
 
 	(options as JUnitPlatformOptions).apply {

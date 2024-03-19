@@ -27,8 +27,14 @@ javaLibrary {
 	testJavaVersion = JavaVersion.VERSION_1_8
 }
 
-val apiReport by configurations.creatingResolvable
-val standaloneConsoleLauncher by configurations.creatingResolvable
+val apiReport = configurations.dependencyScope("apiReport")
+val apiReportClasspath = configurations.resolvable("apiReportClasspath") {
+	extendsFrom(apiReport.get())
+}
+val standaloneConsoleLauncher = configurations.dependencyScope("standaloneConsoleLauncher")
+val standaloneConsoleLauncherClasspath = configurations.resolvable("standaloneConsoleLauncherClasspath") {
+	extendsFrom(standaloneConsoleLauncher.get())
+}
 
 val tools by sourceSets.creating
 val toolsImplementation by configurations.getting
@@ -166,28 +172,28 @@ tasks {
 	}
 
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(standaloneConsoleLauncher)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("--help", "--disable-banner")
 		outputFile = consoleLauncherOptionsFile
 	}
 
 	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(standaloneConsoleLauncher)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("discover", "--help", "--disable-banner")
 		outputFile = consoleLauncherDiscoverOptionsFile
 	}
 
 	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(standaloneConsoleLauncher)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("execute", "--help", "--disable-banner")
 		outputFile = consoleLauncherExecuteOptionsFile
 	}
 
 	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(standaloneConsoleLauncher)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("engines", "--help", "--disable-banner")
 		outputFile = consoleLauncherEnginesOptionsFile
@@ -196,7 +202,7 @@ tasks {
 	val generateApiTables by registering(JavaExec::class) {
 		classpath = tools.runtimeClasspath
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
-		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
+		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReportClasspath.get())
 		argumentProviders += CommandLineArgumentProvider {
 			listOf(
 				"DEPRECATED=${deprecatedApisTableFile.get().asFile.absolutePath}",
@@ -209,7 +215,7 @@ tasks {
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
-		inputJar.fileProvider(standaloneConsoleLauncher.elements.map { it.single().asFile })
+		inputJar.fileProvider(standaloneConsoleLauncherClasspath.flatMap { it.elements.map { it.single().asFile } })
 		outputFile = standaloneConsoleLauncherShadowedArtifactsFile
 	}
 
@@ -495,14 +501,14 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
-		plusConfigurations.add(projects.junitJupiterParams.dependencyProject.configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.dependencyProject.configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
