@@ -6,6 +6,7 @@ asciidoctor-plugins = "4.0.2" # Check if workaround in documentation.gradle.kts 
 assertj = "3.25.3"
 bnd = "7.0.0"
 checkstyle = "10.14.2"
+eclipse = "4.30.0"
 gradleVersionsPlugin = "0.51.0"
 jacoco = "0.8.7"
 jmh = "1.37"
@@ -67,6 +68,7 @@ testingAnnotations = { module = "com.gradle:develocity-testing-annotations", ver
 
 # Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
+eclipse-platform = { module = "org.eclipse.platform:org.eclipse.platform", version.ref = "eclipse" }
 
 [bundles]
 ant = ["ant", "ant-junit", "ant-junitlauncher"]

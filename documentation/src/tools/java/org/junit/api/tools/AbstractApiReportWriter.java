@@ -13,8 +13,8 @@ package org.junit.api.tools;
 import static java.lang.String.format;
 
 import java.io.PrintWriter;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apiguardian.api.API.Status;
 
@@ -22,6 +22,8 @@ import org.apiguardian.api.API.Status;
  * @since 1.0
  */
 abstract class AbstractApiReportWriter implements ApiReportWriter {
+
+	protected static final int NAME_COLUMN_WIDTH = 128;
 
 	private final ApiReport apiReport;
 
@@ -34,31 +36,28 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		out.println(h1("@API Declarations"));
 		out.println();
 		out.println(paragraph(
-			format("Discovered %d types with %s declarations.", this.apiReport.getTypes().size(), code("@API"))));
+			format("Discovered %d types with %s declarations.", this.apiReport.types().size(), code("@API"))));
 		out.println();
 	}
 
 	@Override
-	public void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses) {
-		// @formatter:off
-		this.apiReport.getDeclarationsMap().entrySet().stream()
-				.filter(e -> statuses.contains(e.getKey()))
-				.forEach(e -> printDeclarationSection(statuses, e.getKey(), e.getValue(), out));
-		// @formatter:on
+	public void printDeclarationInfo(PrintWriter out, Set<Status> statuses) {
+		statuses.forEach(
+			status -> printDeclarationSection(statuses, status, this.apiReport.declarations().get(status), out));
 	}
 
-	protected void printDeclarationSection(EnumSet<Status> statuses, Status status, List<Class<?>> types,
+	protected void printDeclarationSection(Set<Status> statuses, Status status, List<Declaration> declarations,
 			PrintWriter out) {
-		printDeclarationSectionHeader(statuses, status, types, out);
-		if (types.size() > 0) {
+		printDeclarationSectionHeader(statuses, status, declarations, out);
+		if (!declarations.isEmpty()) {
 			printDeclarationTableHeader(out);
-			types.forEach(type -> printDeclarationTableRow(type, out));
+			declarations.forEach(it -> printDeclarationTableRow(it, out));
 			printDeclarationTableFooter(out);
 			out.println();
 		}
 	}
 
-	protected void printDeclarationSectionHeader(EnumSet<Status> statuses, Status status, List<Class<?>> types,
+	protected void printDeclarationSectionHeader(Set<Status> statuses, Status status, List<Declaration> declarations,
 			PrintWriter out) {
 		if (statuses.size() < 2) {
 			// omit section header when only a single status is printed
@@ -66,7 +65,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		}
 		out.println(h2(format("@API(%s)", status)));
 		out.println();
-		out.println(paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", types.size(), status)));
+		out.println(
+			paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", declarations.size(), status)));
 		out.println();
 	}
 
@@ -84,21 +84,8 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 
 	protected abstract void printDeclarationTableHeader(PrintWriter out);
 
-	protected abstract void printDeclarationTableRow(Class<?> type, PrintWriter out);
+	protected abstract void printDeclarationTableRow(Declaration declaration, PrintWriter out);
 
 	protected abstract void printDeclarationTableFooter(PrintWriter out);
-
-	protected String getKind(Class<?> type) {
-		if (type.isAnnotation()) {
-			return "annotation";
-		}
-		if (type.isEnum()) {
-			return "enum";
-		}
-		if (type.isInterface()) {
-			return "interface";
-		}
-		return "class";
-	}
 
 }
