@@ -158,11 +158,6 @@ tasks {
 	}
 
 	named<JavaCompile>(tools.compileJavaTaskName) {
-		java {
-			toolchain {
-				languageVersion.set(JavaLanguageVersion.of(21))
-			}
-		}
 		options.release.set(21)
 	}
 
@@ -198,20 +193,19 @@ tasks {
 		outputFile = consoleLauncherEnginesOptionsFile
 	}
 
-	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(tools.runtimeClasspath)
+	val generateApiTables by registering(JavaExec::class) {
+		classpath = tools.runtimeClasspath
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
 		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args.add("EXPERIMENTAL")
-		outputFile = experimentalApisTableFile
-	}
-
-	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(tools.runtimeClasspath)
-		mainClass = "org.junit.api.tools.ApiReportGenerator"
-		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args.add("DEPRECATED")
-		outputFile = deprecatedApisTableFile
+		argumentProviders += CommandLineArgumentProvider {
+			listOf(
+				"DEPRECATED=${deprecatedApisTableFile.get().asFile.absolutePath}",
+				"EXPERIMENTAL=${experimentalApisTableFile.get().asFile.absolutePath}",
+			)
+		}
+		outputs.cacheIf { true }
+		outputs.file(deprecatedApisTableFile)
+		outputs.file(experimentalApisTableFile)
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
@@ -232,8 +226,7 @@ tasks {
 			generateConsoleLauncherDiscoverOptions,
 			generateConsoleLauncherExecuteOptions,
 			generateConsoleLauncherEnginesOptions,
-			generateExperimentalApisTable,
-			generateDeprecatedApisTable,
+			generateApiTables,
 			generateStandaloneConsoleLauncherShadowedArtifactsFile,
 			componentDiagram
 		)
@@ -413,8 +406,8 @@ tasks {
 		})
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
-		maxMemory = "1024m"
-		destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
+		setMaxMemory("1024m")
+		options.destinationDirectory = layout.buildDirectory.dir("docs/javadoc").get().asFile
 
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()

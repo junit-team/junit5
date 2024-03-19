@@ -12,8 +12,15 @@ package org.junit.api.tools;
 
 import static java.util.stream.Collectors.toCollection;
 
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
@@ -45,7 +52,6 @@ class ApiReportGenerator {
 		// CAUTION: The output produced by this method is used to
 		//          generate a table in the User Guide.
 
-		var writer = new PrintWriter(System.out, true);
 		var reportGenerator = new ApiReportGenerator();
 
 		// scan all types below "org.junit" package
@@ -55,20 +61,46 @@ class ApiReportGenerator {
 		ApiReportWriter reportWriter = new AsciidocApiReportWriter(apiReport);
 		// ApiReportWriter reportWriter = new HtmlApiReportWriter(apiReport);
 
-		// reportWriter.printReportHeader(writer);
+		// reportWriter.printReportHeader(new PrintWriter(System.out, true));
 
 		// Print report for all Usage enum constants
-		// reportWriter.printDeclarationInfo(writer, EnumSet.allOf(Status.class));
+		// reportWriter.printDeclarationInfo(new PrintWriter(System.out, true), EnumSet.allOf(Status.class));
 
-		// Print report only for a specific Status constant, defaults to EXPERIMENTAL
-		var status = Status.EXPERIMENTAL;
-		if (args.length == 1) {
-			status = Status.valueOf(args[0]);
-		}
-		reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
+		// Print report only for specific Status constants, defaults to only EXPERIMENTAL
+		parseArgs(args).forEach((status, opener) -> {
+			try (var stream = opener.openStream()) {
+				var writer = new PrintWriter(stream == null ? System.out : stream, true);
+				reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Failed to write report", e);
+			}
+		});
 	}
 
 	// -------------------------------------------------------------------------
+
+	private static Map<Status, StreamOpener> parseArgs(String[] args) {
+		Map<Status, StreamOpener> outputByStatus = new EnumMap<>(Status.class);
+		if (args.length == 0) {
+			outputByStatus.put(Status.EXPERIMENTAL, () -> null);
+		}
+		else {
+			Arrays.stream(args) //
+					.map(arg -> arg.split("=", 2)) //
+					.forEach(parts -> outputByStatus.put(//
+						Status.valueOf(parts[0]), //
+						() -> parts.length < 2 //
+								? null //
+								: new BufferedOutputStream(Files.newOutputStream(Path.of(parts[1]))) //
+					));
+		}
+		return outputByStatus;
+	}
+
+	private interface StreamOpener {
+		OutputStream openStream() throws IOException;
+	}
 
 	ApiReport generateReport(String... packages) {
 		Map<Status, List<Declaration>> declarations = new EnumMap<>(Status.class);
