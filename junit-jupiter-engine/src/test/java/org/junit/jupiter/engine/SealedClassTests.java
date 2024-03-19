@@ -23,10 +23,7 @@ class SealedClassTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.finished(2).succeeded(1).failed(1));
 	}
 
-	sealed
-	abstract static class AbstractTestCase
-	permits TestCase
-	{
+	sealed abstract static class AbstractTestCase permits TestCase {
 
 		@Test
 		void succeedingTest() {

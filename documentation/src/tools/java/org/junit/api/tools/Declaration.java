@@ -22,9 +22,7 @@ import io.github.classgraph.MethodInfo;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
-// @formatter:off
 sealed interface Declaration extends Comparable<Declaration> {
-// @formatter:on
 
 	String packageName();
 
@@ -45,22 +43,22 @@ sealed interface Declaration extends Comparable<Declaration> {
 
 	record Type(ClassInfo classInfo) implements Declaration {
 
-	@Override
+		@Override
 		public String packageName() {
 			return classInfo.getPackageName();
 		}
 
-	@Override
+		@Override
 		public String fullName() {
 			return classInfo.getName();
 		}
 
-	@Override
+		@Override
 		public String name() {
 			return getShortClassName(classInfo);
 		}
 
-	@Override
+		@Override
 		public String kind() {
 			return switch (classInfo) {
 				case ClassInfo ignored when classInfo.isRecord() -> "record";

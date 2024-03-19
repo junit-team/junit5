@@ -7,6 +7,7 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+
 package org.junit.api.tools;
 
 import java.util.List;

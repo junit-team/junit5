@@ -34,7 +34,9 @@ spotless {
 		java {
 			licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
 			importOrderFile(importOrderConfigFile)
-			eclipse().configFile(javaFormatterConfigFile)
+			val fullVersion = requiredVersionFromLibs("eclipse")
+			val majorMinorVersion = "([0-9]+\\.[0-9]+).*".toRegex().matchEntire(fullVersion)!!.let { it.groups[1]!!.value }
+			eclipse(majorMinorVersion).configFile(javaFormatterConfigFile)
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
