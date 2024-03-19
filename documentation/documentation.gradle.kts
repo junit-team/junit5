@@ -160,11 +160,10 @@ tasks {
 	named<JavaCompile>(tools.compileJavaTaskName) {
 		java {
 			toolchain {
-				languageVersion.set(JavaLanguageVersion.of(20))
+				languageVersion.set(JavaLanguageVersion.of(21))
 			}
 		}
-		options.release.set(20)
-		options.compilerArgs.add("--enable-preview")
+		options.release.set(21)
 	}
 
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
