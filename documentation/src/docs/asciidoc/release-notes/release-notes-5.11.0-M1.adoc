@@ -20,6 +20,9 @@ repository on GitHub.
 * Fixed parsing of recursive jar uris. Allows the JUnit Platform Launcher to be used
   inside Spring Boot executable jars for Spring Boot 3.2 and later.
 
+* The `junit-platform-suite-engine` now includes configuration provided by
+`@ConfigurationParameter` when selecting tests by `UniqueId`.
+
 [[release-notes-5.11.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
