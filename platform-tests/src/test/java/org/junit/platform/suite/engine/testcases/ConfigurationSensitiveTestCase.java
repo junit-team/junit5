@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 /**
- * @since 1.10.2
+ * @since 1.11
  */
 @TestMethodOrder(MethodName.class)
 public class ConfigurationSensitiveTestCase {
@@ -31,6 +31,8 @@ public class ConfigurationSensitiveTestCase {
 
 	@Test
 	void test2() {
+		// This will fail unless the test instance lifecycle is set to per_class,
+		// which is configured via @ConfigurationParameter in ConfigurationSuite.
 		assertTrue(shared);
 	}
 
