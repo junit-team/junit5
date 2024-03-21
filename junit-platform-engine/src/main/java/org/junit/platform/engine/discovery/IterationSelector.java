@@ -10,18 +10,18 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects the iterations of a parent
@@ -50,15 +50,15 @@ public class IterationSelector implements DiscoverySelector {
 	}
 
 	/**
-     * Get the selected parent {@link DiscoverySelector}.
-     */
+	 * Get the selected parent {@link DiscoverySelector}.
+	 */
 	public DiscoverySelector getParentSelector() {
 		return parentSelector;
 	}
 
 	/**
-     * Get the selected iteration indices.
-     */
+	 * Get the selected iteration indices.
+	 */
 	public SortedSet<Integer> getIterationIndices() {
 		return iterationIndices;
 	}
@@ -111,7 +111,7 @@ public class IterationSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Stream<IterationSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			int[] iterationIndices = Arrays.stream(identifier.getFragment().split(",")).mapToInt(
 				Integer::parseInt).toArray();
 			String parentSelector = CodingUtil.urlDecode(identifier.getValue());

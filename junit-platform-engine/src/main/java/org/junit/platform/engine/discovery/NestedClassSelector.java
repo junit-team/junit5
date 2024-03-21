@@ -10,11 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
+import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,10 +21,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a nested {@link Class}
@@ -174,7 +174,7 @@ public class NestedClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Stream<NestedClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
 			return Stream.of(
 				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));

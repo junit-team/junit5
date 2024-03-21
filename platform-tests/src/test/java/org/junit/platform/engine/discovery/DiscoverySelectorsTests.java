@@ -15,18 +15,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectDirectory;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModules;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedClass;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.*;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -1292,10 +1282,8 @@ class DiscoverySelectorsTests {
 		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", join(", ", params));
 	}
 
-	private static DiscoverySelector getSingleSelector(Stream<DiscoverySelector> selectorStream) {
-		var discoverySelectors = selectorStream.toList();
-		assertThat(discoverySelectors).hasSize(1);
-		return discoverySelectors.get(0);
+	private static DiscoverySelector getSingleSelector(Stream<? extends DiscoverySelector> selectorStream) {
+		return getOnlyElement(selectorStream.toList());
 	}
 
 	interface TestInterface {

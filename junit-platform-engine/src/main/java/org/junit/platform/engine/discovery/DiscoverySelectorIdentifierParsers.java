@@ -10,24 +10,24 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-class SelectorParsers implements DiscoverySelectorIdentifierParser.Context {
+import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
+class DiscoverySelectorIdentifierParsers implements DiscoverySelectorIdentifierParser.Context {
 
 	private final Map<String, DiscoverySelectorIdentifierParser> parsers = loadParsers();
 
 	private static Map<String, DiscoverySelectorIdentifierParser> loadParsers() {
 		Map<String, DiscoverySelectorIdentifierParser> parsers = new HashMap<>();
-		Iterable<DiscoverySelectorIdentifierParser> listeners = ServiceLoader.load(DiscoverySelectorIdentifierParser.class,
-			ClassLoaderUtils.getDefaultClassLoader());
+		Iterable<DiscoverySelectorIdentifierParser> listeners = ServiceLoader.load(
+			DiscoverySelectorIdentifierParser.class, ClassLoaderUtils.getDefaultClassLoader());
 		for (DiscoverySelectorIdentifierParser parser : listeners) {
 			DiscoverySelectorIdentifierParser previous = parsers.put(parser.getPrefix(), parser);
 			Preconditions.condition(previous == null,
@@ -39,10 +39,10 @@ class SelectorParsers implements DiscoverySelectorIdentifierParser.Context {
 	}
 
 	@Override
-	public Stream<DiscoverySelector> parse(String selector) {
+	public Stream<? extends DiscoverySelector> parse(String selector) {
 		DiscoverySelectorIdentifier identifier = DiscoverySelectorIdentifier.parse(selector);
 
-        DiscoverySelectorIdentifierParser parser = parsers.get(identifier.getPrefix());
+		DiscoverySelectorIdentifierParser parser = parsers.get(identifier.getPrefix());
 		Preconditions.notNull(parser, "No parser for prefix: " + identifier.getPrefix());
 
 		return parser.parse(identifier, this);

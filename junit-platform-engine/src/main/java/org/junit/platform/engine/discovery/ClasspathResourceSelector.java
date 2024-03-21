@@ -10,16 +10,16 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects the name of a <em>classpath resource</em>
@@ -105,8 +105,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(
-			String.format("%s:%s", IdentifierParser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX,
+			CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
@@ -122,7 +122,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Stream<ClasspathResourceSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			String part = identifier.getValue();
 
 			// Unfortunately, URI only parses the query if you have scheme://something?query

@@ -36,7 +36,6 @@ import org.junit.platform.engine.UniqueId;
  * Collection of {@code static} factory methods for creating
  * {@link DiscoverySelector DiscoverySelectors}.
  *
- * @since 1.0
  * @see UriSelector
  * @see FileSelector
  * @see DirectorySelector
@@ -49,6 +48,7 @@ import org.junit.platform.engine.UniqueId;
  * @see NestedClassSelector
  * @see NestedMethodSelector
  * @see UniqueIdSelector
+ * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
@@ -938,7 +938,7 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
-	public static Stream<DiscoverySelector> parse(String selector) {
-		return new SelectorParsers().parse(selector);
+	public static Stream<? extends DiscoverySelector> parse(String selector) {
+		return new DiscoverySelectorIdentifierParsers().parse(selector);
 	}
 }

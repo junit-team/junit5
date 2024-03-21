@@ -10,17 +10,17 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link URI} so that
@@ -98,7 +98,7 @@ public class UriSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Stream<UriSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Stream.of(DiscoverySelectors.selectUri(identifier.getValue()));
 		}
 	}

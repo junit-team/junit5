@@ -10,10 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.DiscoverySelectorIdentifier;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.net.URI;
@@ -25,7 +22,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a file so that
@@ -145,7 +145,7 @@ public class FileSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Stream<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			// Problem: the real file url, e.g. `file:///` does not support relative paths.
 			// if we use just the schemeSpecificPart and omit the `///` we can support `file:relative/path` and `file:/absolute/path`
 			// however it won't parse the Query part of the URI anymore, which is used to specify the line and column.
@@ -155,9 +155,9 @@ public class FileSelector implements DiscoverySelector {
 			URI uri = URI.create(identifier.getPrefix() + ":" + identifier.getValue());
 			String path = uri.getHost() == null ? uri.getPath() : uri.getHost() + uri.getPath();
 
-			return FilePosition.fromQuery(uri.getQuery()).map(filePosition -> Stream.<DiscoverySelector> of(
-				DiscoverySelectors.selectFile(path, filePosition))).orElseGet(
-					() -> Stream.of(DiscoverySelectors.selectFile(path)));
+			return FilePosition.fromQuery(uri.getQuery()) //
+					.map(filePosition -> Stream.of(DiscoverySelectors.selectFile(path, filePosition))) //
+					.orElseGet(() -> Stream.of(DiscoverySelectors.selectFile(path)));
 		}
 	}
 }
