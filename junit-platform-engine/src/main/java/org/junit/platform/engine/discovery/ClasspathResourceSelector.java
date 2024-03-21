@@ -106,18 +106,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		if (this.position == null) {
-			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-				CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.classpathResourceName));
 		}
 		else {
-			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, String.format("%s?%s",
-				CodingUtil.normalizeDirectorySeparators(this.classpathResourceName), this.position.toQueryPart())));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+				String.format("%s?%s", this.classpathResourceName, this.position.toQueryPart())));
 		}
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
-		private static final String PREFIX = "classpath";
+		private static final String PREFIX = "resource";
 
 		public IdentifierParser() {
 		}
@@ -129,22 +128,13 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<ClasspathResourceSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			String part = identifier.getValue();
-
-			// Unfortunately, URI only parses the query if you have scheme://something?query
-			int queryIndex = part.indexOf('?');
-			String resourceName;
-			FilePosition position;
-			if (queryIndex == -1) {
-				resourceName = part;
-				position = null;
+			String[] parts = identifier.getValue().split("\\?", 2);
+			if (parts.length == 2) {
+				String resourceName = parts[0];
+				FilePosition position = FilePosition.fromQuery(parts[1]).orElse(null);
+				return Stream.of(DiscoverySelectors.selectClasspathResource(resourceName, position));
 			}
-			else {
-				resourceName = part.substring(0, queryIndex);
-				position = FilePosition.fromQuery(part.substring(queryIndex + 1)).orElse(null);
-			}
-
-			return Stream.of(DiscoverySelectors.selectClasspathResource(resourceName, position));
+			return Stream.of(DiscoverySelectors.selectClasspathResource(identifier.getValue()));
 		}
 	}
 }

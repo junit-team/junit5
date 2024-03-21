@@ -30,6 +30,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -938,7 +939,15 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
-	public static Stream<? extends DiscoverySelector> parse(String selector) {
-		return new DiscoverySelectorIdentifierParsers().parse(selector);
+	public static Stream<? extends DiscoverySelector> parse(String identifier) {
+		return new DiscoverySelectorIdentifierParsers().parse(identifier);
+	}
+
+	public static Stream<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+		return new DiscoverySelectorIdentifierParsers().parse(identifier);
+	}
+
+	public static Stream<? extends DiscoverySelector> parseAll(List<DiscoverySelectorIdentifier> identifiers) {
+		return new DiscoverySelectorIdentifierParsers().parseAll(identifiers);
 	}
 }

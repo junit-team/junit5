@@ -13,7 +13,6 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
-import java.net.URI;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
@@ -123,12 +122,11 @@ public class FileSelector implements DiscoverySelector {
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		if (this.position == null) {
-			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-				String.format("//%s", CodingUtil.normalizeDirectorySeparators(this.path))));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.path));
 		}
 		else {
-			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, String.format("//%s?%s",
-				CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart())));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+				String.format("%s?%s", this.path, this.position.toQueryPart())));
 		}
 	}
 
@@ -146,18 +144,13 @@ public class FileSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			// Problem: the real file url, e.g. `file:///` does not support relative paths.
-			// if we use just the schemeSpecificPart and omit the `///` we can support `file:relative/path` and `file:/absolute/path`
-			// however it won't parse the Query part of the URI anymore, which is used to specify the line and column.
-			// and it won't be a standard file URI (https://en.wikipedia.org/wiki/File_URI_scheme) anymore.
-			// For now, we misuse the host part of the uri, so when it is set, we treat it as relative path and when it is not set, we treat it as absolute path.
-
-			URI uri = URI.create(identifier.getPrefix() + ":" + identifier.getValue());
-			String path = uri.getHost() == null ? uri.getPath() : uri.getHost() + uri.getPath();
-
-			return FilePosition.fromQuery(uri.getQuery()) //
-					.map(filePosition -> Stream.of(DiscoverySelectors.selectFile(path, filePosition))) //
-					.orElseGet(() -> Stream.of(DiscoverySelectors.selectFile(path)));
+			String[] parts = identifier.getValue().split("\\?", 2);
+			if (parts.length == 2) {
+				String resourceName = parts[0];
+				FilePosition position = FilePosition.fromQuery(parts[1]).orElse(null);
+				return Stream.of(DiscoverySelectors.selectFile(resourceName, position));
+			}
+			return Stream.of(DiscoverySelectors.selectFile(identifier.getValue()));
 		}
 	}
 }

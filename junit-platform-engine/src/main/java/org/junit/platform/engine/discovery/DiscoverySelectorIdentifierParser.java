@@ -19,6 +19,7 @@ public interface DiscoverySelectorIdentifierParser {
 
 	String getPrefix();
 
+	// TODO change return type to DiscoverySelector
 	Stream<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context);
 
 	interface Context {

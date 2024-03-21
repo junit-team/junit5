@@ -21,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -48,7 +49,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 	private final URI classpathRoot;
 
 	ClasspathRootSelector(URI classpathRoot) {
-		this.classpathRoot = classpathRoot;
+		this.classpathRoot = Preconditions.notNull(classpathRoot, "classpathRoot must not be null");
 	}
 
 	/**
@@ -90,8 +91,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-			CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.classpathRoot.toString()));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

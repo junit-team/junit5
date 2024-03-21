@@ -21,9 +21,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -99,14 +103,17 @@ public class IterationSelector implements DiscoverySelector {
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
-			CodingUtil.urlEncode(parentSelectorString.toString()), //
-			iterationIndices.stream().map(String::valueOf).collect(joining(","))) //
+			String.format("%s[%s]", parentSelectorString,
+				iterationIndices.stream().map(String::valueOf).collect(joining(",")))) //
 		);
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
-		private static final String PREFIX = "iteration";
+		public static final String PREFIX = "iteration";
+
+		private static final Pattern PATTERN = Pattern.compile(
+			"(?<parentIdentifier>.+)\\[(?<indices>(\\d+)(\\.\\.\\d+)?(\\s*,\\s*(\\d+)(\\.\\.\\d+)?)*)]");
 
 		public IdentifierParser() {
 		}
@@ -118,14 +125,25 @@ public class IterationSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<IterationSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			String parentSelector = CodingUtil.urlDecode(identifier.getValue());
-			return context.parse(parentSelector) //
+			Matcher matcher = PATTERN.matcher(identifier.getValue());
+			Preconditions.condition(matcher.matches(), "Invalid format: must be IDENTIFIER[INDEX(,INDEX)*]");
+			return context.parse(matcher.group("parentIdentifier")) //
 					.map(parent -> {
-						int[] iterationIndices = Arrays.stream(identifier.getFragment().split(",")) //
-								.mapToInt(Integer::parseInt) //
+						int[] iterationIndices = Arrays.stream(matcher.group("indices").split(",")) //
+								.flatMapToInt(this::parseIndexDefinition) //
 								.toArray();
 						return DiscoverySelectors.selectIteration(parent, iterationIndices);
 					});
+		}
+
+		private IntStream parseIndexDefinition(String value) {
+			String[] parts = value.split("\\.\\.", 2);
+			int firstIndex = Integer.parseInt(parts[0]);
+			if (parts.length == 2) {
+				int lastIndex = Integer.parseInt(parts[1]);
+				return IntStream.rangeClosed(firstIndex, lastIndex);
+			}
+			return IntStream.of(firstIndex);
 		}
 	}
 }
