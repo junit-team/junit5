@@ -105,8 +105,14 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-			CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+		if (this.position == null) {
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+				CodingUtil.normalizeDirectorySeparators(this.classpathResourceName)));
+		}
+		else {
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, String.format("%s?%s",
+				CodingUtil.normalizeDirectorySeparators(this.classpathResourceName), this.position.toQueryPart())));
+		}
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

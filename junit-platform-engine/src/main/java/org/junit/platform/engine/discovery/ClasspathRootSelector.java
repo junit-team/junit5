@@ -10,11 +10,12 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Collections.singleton;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.net.URI;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -107,8 +108,8 @@ public class ClasspathRootSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<ClasspathRootSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return DiscoverySelectors.selectClasspathRoots(
-				Collections.singleton(Paths.get(identifier.getValue()))).stream();
+			Path path = Paths.get(URI.create(identifier.getValue()));
+			return DiscoverySelectors.selectClasspathRoots(singleton(path)).stream();
 		}
 	}
 }

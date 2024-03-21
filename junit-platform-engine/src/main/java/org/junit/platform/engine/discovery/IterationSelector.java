@@ -11,11 +11,16 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toCollection;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -95,7 +100,7 @@ public class IterationSelector implements DiscoverySelector {
 		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
 			CodingUtil.urlEncode(parentSelectorString.toString()), //
-			iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))) //
+			iterationIndices.stream().map(String::valueOf).collect(joining(","))) //
 		);
 	}
 
@@ -113,11 +118,14 @@ public class IterationSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<IterationSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			int[] iterationIndices = Arrays.stream(identifier.getFragment().split(",")).mapToInt(
-				Integer::parseInt).toArray();
 			String parentSelector = CodingUtil.urlDecode(identifier.getValue());
-			return context.parse(parentSelector).map(
-				parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
+			return context.parse(parentSelector) //
+					.map(parent -> {
+						int[] iterationIndices = Arrays.stream(identifier.getFragment().split(",")) //
+								.mapToInt(Integer::parseInt) //
+								.toArray();
+						return DiscoverySelectors.selectIteration(parent, iterationIndices);
+					});
 		}
 	}
 }

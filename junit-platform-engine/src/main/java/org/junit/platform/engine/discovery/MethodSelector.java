@@ -13,9 +13,10 @@ package org.junit.platform.engine.discovery;
 import static org.apiguardian.api.API.Status.*;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -24,7 +25,6 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -313,19 +313,14 @@ public class MethodSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		if (StringUtils.isNotBlank(this.getParameterTypeNames())) {
-			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className,
-				String.format("%s(%s)", this.methodName, Arrays.toString(this.getParameterTypes()))));
-		}
-		else {
-			return Optional.of(
-				DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className, this.methodName));
-		}
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className,
+			String.format("%s(%s)", this.methodName, this.getParameterTypeNames())));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "method";
+		private static final Pattern FRAGMENT_PATTERN = Pattern.compile("^(.+)\\((.*)\\)$");
 
 		public IdentifierParser() {
 		}
@@ -337,7 +332,18 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectMethod(identifier.getValue(), identifier.getFragment()));
+			return Stream.of(parse(identifier.getValue(), identifier.getFragment()));
+		}
+
+		static MethodSelector parse(String className, String fragment) {
+			Matcher matcher = FRAGMENT_PATTERN.matcher(fragment);
+			String methodName = fragment;
+			String parameterTypeNames = "";
+			if (matcher.find()) {
+				methodName = matcher.group(1);
+				parameterTypeNames = matcher.group(2);
+			}
+			return DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames);
 		}
 	}
 }

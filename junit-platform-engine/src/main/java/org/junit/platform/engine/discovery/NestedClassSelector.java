@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -149,14 +150,10 @@ public class NestedClassSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		StringBuilder sb = new StringBuilder();
-
-		enclosingClassSelectors.stream() //
+		String allClassNames = Stream.concat(enclosingClassSelectors.stream(), Stream.of(nestedClassSelector)) //
 				.map(ClassSelector::getClassName) //
-				.forEach(s -> sb.append(s).append("/"));
-
-		sb.append(getNestedClassName());
-		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, sb.toString()));
+				.collect(joining("/"));
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, allClassNames));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

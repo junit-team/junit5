@@ -55,10 +55,6 @@ public final class DiscoverySelectorIdentifier {
 		return fragment;
 	}
 
-	public DiscoverySelectorIdentifier withFragment(String fragment) {
-		return new DiscoverySelectorIdentifier(prefix, value, fragment);
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)

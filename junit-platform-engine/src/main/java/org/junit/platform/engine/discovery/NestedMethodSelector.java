@@ -10,7 +10,9 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -243,13 +245,10 @@ public class NestedMethodSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		return nestedClassSelector.toIdentifier().map(parent -> {
-			StringBuilder sb = new StringBuilder().append(methodSelector.getMethodName());
-			if (methodSelector.getParameterTypeNames() != null) {
-				sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
-			}
-			return DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, parent.getValue(), sb.toString());
-		});
+		return nestedClassSelector.toIdentifier() //
+				.flatMap(parent -> methodSelector.toIdentifier() //
+						.map(methodIdentifier -> DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+							parent.getValue(), methodIdentifier.getFragment())));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
@@ -267,9 +266,16 @@ public class NestedMethodSelector implements DiscoverySelector {
 		@Override
 		public Stream<NestedMethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
+			List<String> enclosingClassNames = parts.subList(0, parts.size() - 1);
+			String nestedClassName = parts.get(parts.size() - 1);
 
-			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1),
-				parts.get(parts.size() - 1), identifier.getFragment()));
+			MethodSelector methodSelector = MethodSelector.IdentifierParser.parse(nestedClassName,
+				identifier.getFragment());
+			String methodName = methodSelector.getMethodName();
+			String parameterTypeNames = methodSelector.getParameterTypeNames();
+
+			return Stream.of(DiscoverySelectors.selectNestedMethod(enclosingClassNames, nestedClassName, methodName,
+				parameterTypeNames));
 		}
 	}
 }
