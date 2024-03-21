@@ -10,26 +10,26 @@
 
 package org.junit.platform.engine.discovery;
 
-import java.net.URI;
+import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
-import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.DiscoverySelector;
+class SelectorParsers implements DiscoverySelectorIdentifierParser.Context {
 
-class SelectorParsers implements SelectorParserContext {
+	private final Map<String, DiscoverySelectorIdentifierParser> parsers = loadParsers();
 
-	private final Map<String, SelectorParser> parsers = loadParsers();
-
-	private static Map<String, SelectorParser> loadParsers() {
-		Map<String, SelectorParser> parsers = new HashMap<>();
-		Iterable<SelectorParser> listeners = ServiceLoader.load(SelectorParser.class,
+	private static Map<String, DiscoverySelectorIdentifierParser> loadParsers() {
+		Map<String, DiscoverySelectorIdentifierParser> parsers = new HashMap<>();
+		Iterable<DiscoverySelectorIdentifierParser> listeners = ServiceLoader.load(DiscoverySelectorIdentifierParser.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		for (SelectorParser parser : listeners) {
-			SelectorParser previous = parsers.put(parser.getPrefix(), parser);
+		for (DiscoverySelectorIdentifierParser parser : listeners) {
+			DiscoverySelectorIdentifierParser previous = parsers.put(parser.getPrefix(), parser);
 			Preconditions.condition(previous == null,
 				() -> String.format("Duplicate parser for prefix: [%s] candidate a: [%s] candidate b: [%s] ",
 					parser.getPrefix(), previous.getClass().getName(), parser.getClass().getName()));
@@ -40,14 +40,12 @@ class SelectorParsers implements SelectorParserContext {
 
 	@Override
 	public Stream<DiscoverySelector> parse(String selector) {
-		TBD uri = TBD.parse(selector);
-		String scheme = uri.getPrefix();
-		Preconditions.notNull(scheme, "Selector must have a scheme: " + selector);
+		DiscoverySelectorIdentifier identifier = DiscoverySelectorIdentifier.parse(selector);
 
-		SelectorParser parser = parsers.get(scheme);
-		Preconditions.notNull(parser, "No parser for scheme: " + scheme);
+        DiscoverySelectorIdentifierParser parser = parsers.get(identifier.getPrefix());
+		Preconditions.notNull(parser, "No parser for prefix: " + identifier.getPrefix());
 
-		return parser.parse(uri, this);
+		return parser.parse(identifier, this);
 	}
 
 }

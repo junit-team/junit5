@@ -10,23 +10,18 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toCollection;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toCollection;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 /**
  * A {@link DiscoverySelector} that selects the iterations of a parent
@@ -34,8 +29,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * a subset of the iterations of tests or containers.
  *
- * @since 1.9
  * @see DiscoverySelectors#selectIteration(DiscoverySelector, int...)
+ * @since 1.9
  */
 @API(status = EXPERIMENTAL, since = "1.9")
 public class IterationSelector implements DiscoverySelector {
@@ -55,15 +50,15 @@ public class IterationSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected parent {@link DiscoverySelector}.
-	 */
+     * Get the selected parent {@link DiscoverySelector}.
+     */
 	public DiscoverySelector getParentSelector() {
 		return parentSelector;
 	}
 
 	/**
-	 * Get the selected iteration indices.
-	 */
+     * Get the selected iteration indices.
+     */
 	public SortedSet<Integer> getIterationIndices() {
 		return iterationIndices;
 	}
@@ -98,16 +93,16 @@ public class IterationSelector implements DiscoverySelector {
 	@Override
 	public Optional<String> toSelectorString() {
 		return parentSelector.toSelectorString().map(parentSelectorString -> String.format("%s:%s#%s", //
-			Parser.PREFIX, //
+			IdentifierParser.PREFIX, //
 			CodingUtil.urlEncode(parentSelectorString), //
 			iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))));
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "iteration";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -116,10 +111,10 @@ public class IterationSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			int[] iterationIndices = Arrays.stream(selector.getFragment().split(",")).mapToInt(
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			int[] iterationIndices = Arrays.stream(identifier.getFragment().split(",")).mapToInt(
 				Integer::parseInt).toArray();
-			String parentSelector = CodingUtil.urlDecode(selector.getValue());
+			String parentSelector = CodingUtil.urlDecode(identifier.getValue());
 			return context.parse(parentSelector).map(
 				parent -> DiscoverySelectors.selectIteration(parent, iterationIndices));
 		}

@@ -10,15 +10,16 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * A {@link DiscoverySelector} that selects a package name so that
@@ -77,14 +78,14 @@ public class PackageSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.packageName));
+		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX, this.packageName));
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "package";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -93,8 +94,8 @@ public class PackageSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			return Stream.of(DiscoverySelectors.selectPackage(selector.getValue()));
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Stream.of(DiscoverySelectors.selectPackage(identifier.getValue()));
 		}
 	}
 }

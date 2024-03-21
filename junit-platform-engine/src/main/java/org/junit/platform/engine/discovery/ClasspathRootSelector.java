@@ -10,7 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 import java.net.URI;
 import java.nio.file.Paths;
@@ -19,9 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * A {@link DiscoverySelector} that selects a <em>classpath root</em> so that
@@ -31,9 +32,9 @@ import org.junit.platform.engine.DiscoverySelector;
  *
  * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
  * expected to modify the classpath, the classpath root represented by this
- * selector must be on the classpath of the
+ * identifier must be on the classpath of the
  * {@linkplain Thread#getContextClassLoader() context class loader} of the
- * {@linkplain Thread thread} that uses this selector.
+ * {@linkplain Thread thread} that uses this identifier.
  *
  * @since 1.0
  * @see DiscoverySelectors#selectClasspathRoots(java.util.Set)
@@ -88,16 +89,15 @@ public class ClasspathRootSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX,
+		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX,
 			CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "classpath-root";
 
-		public Parser() {
-
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -106,9 +106,9 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return DiscoverySelectors.selectClasspathRoots(
-				Collections.singleton(Paths.get(selector.getValue()))).stream().map(DiscoverySelector.class::cast);
+				Collections.singleton(Paths.get(identifier.getValue()))).stream().map(DiscoverySelector.class::cast);
 		}
 	}
 }

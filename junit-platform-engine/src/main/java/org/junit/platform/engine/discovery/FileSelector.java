@@ -10,7 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 import java.io.File;
 import java.net.URI;
@@ -22,9 +25,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * A {@link DiscoverySelector} that selects a file so that
@@ -123,19 +124,19 @@ public class FileSelector implements DiscoverySelector {
 	public Optional<String> toSelectorString() {
 		if (this.position == null) {
 			return Optional.of(
-				String.format("%s://%s", Parser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+				String.format("%s://%s", IdentifierParser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
 		}
 		else {
-			return Optional.of(String.format("%s://%s?%s", Parser.PREFIX,
+			return Optional.of(String.format("%s://%s?%s", IdentifierParser.PREFIX,
 				CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart()));
 		}
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "file";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -144,14 +145,14 @@ public class FileSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			// Problem: the real file url, e.g. `file:///` does not support relative paths.
 			// if we use just the schemeSpecificPart and omit the `///` we can support `file:relative/path` and `file:/absolute/path`
 			// however it won't parse the Query part of the URI anymore, which is used to specify the line and column.
 			// and it won't be a standard file URI (https://en.wikipedia.org/wiki/File_URI_scheme) anymore.
 			// For now, we misuse the host part of the uri, so when it is set, we treat it as relative path and when it is not set, we treat it as absolute path.
 
-			URI uri = URI.create(selector.getPrefix() + ":" + selector.getValue());
+			URI uri = URI.create(identifier.getPrefix() + ":" + identifier.getValue());
 			String path = uri.getHost() == null ? uri.getPath() : uri.getHost() + uri.getPath();
 
 			return FilePosition.fromQuery(uri.getQuery()).map(filePosition -> Stream.<DiscoverySelector> of(

@@ -10,38 +10,39 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
-
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link Class} or class name so
  * that {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on classes.
  *
- * <p>If a Java {@link Class} reference is provided, the selector will return
+ * <p>If a Java {@link Class} reference is provided, the identifier will return
  * that {@code Class} and its class name accordingly. If a class name is
- * provided, the selector will only attempt to lazily load the {@link Class}
+ * provided, the identifier will only attempt to lazily load the {@link Class}
  * if {@link #getJavaClass()} is invoked.
  *
  * <p>In this context, Java {@link Class} means anything that can be referenced
  * as a {@link Class} on the JVM &mdash; for example, classes from other JVM
  * languages such Groovy, Scala, etc.
  *
- * @since 1.0
  * @see DiscoverySelectors#selectClass(String)
  * @see DiscoverySelectors#selectClass(Class)
  * @see org.junit.platform.engine.support.descriptor.ClassSource
+ * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {
@@ -63,30 +64,30 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the {@link ClassLoader} used to load the selected class.
-	 *
-	 * @return the {@code ClassLoader}; potentially {@code null}
-	 * @since 1.10
-	 */
+     * Get the {@link ClassLoader} used to load the selected class.
+     *
+     * @return the {@code ClassLoader}; potentially {@code null}
+     * @since 1.10
+     */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
 
 	/**
-	 * Get the selected class name.
-	 */
+     * Get the selected class name.
+     */
 	public String getClassName() {
 		return this.className;
 	}
 
 	/**
-	 * Get the selected {@link Class}.
-	 *
-	 * <p>If the {@link Class} was not provided, but only the name, this method
-	 * attempts to lazily load the {@link Class} based on its name and throws a
-	 * {@link PreconditionViolationException} if the class cannot be loaded.
-	 */
+     * Get the selected {@link Class}.
+     *
+     * <p>If the {@link Class} was not provided, but only the name, this method
+     * attempts to lazily load the {@link Class} based on its name and throws a
+     * {@link PreconditionViolationException} if the class cannot be loaded.
+     */
 	public Class<?> getJavaClass() {
 		if (this.javaClass == null) {
 			// @formatter:off
@@ -137,14 +138,14 @@ public class ClassSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", Parser.PREFIX, this.className));
+		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX, this.className));
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "class";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -153,8 +154,8 @@ public class ClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			return Stream.of(DiscoverySelectors.selectClass(selector.getValue()));
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Stream.of(DiscoverySelectors.selectClass(identifier.getValue()));
 		}
 	}
 }

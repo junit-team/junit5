@@ -10,22 +10,20 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
+import static org.apiguardian.api.API.Status.*;
 
 /**
  * A {@link DiscoverySelector} that selects a nested {@link Method}
@@ -34,10 +32,10 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on methods.
  *
- * <p>If a Java {@link Method} is provided, the selector will return that
+ * <p>If a Java {@link Method} is provided, the identifier will return that
  * {@linkplain #getMethod() method} and its method name, class name, enclosing
  * classes names, and parameter types accordingly. If class names or method names
- * are provided, this selector will only attempt to lazily load a class or method
+ * are provided, this identifier will only attempt to lazily load a class or method
  * if {@link #getEnclosingClasses()}, {@link #getNestedClass()},
  * {@link #getMethod()}, or {@link #getParameterTypes()} is invoked.
  *
@@ -249,8 +247,8 @@ public class NestedMethodSelector implements DiscoverySelector {
 			StringBuilder sb = new StringBuilder(parent)
 					// Not totally happy with how we have to change the prefix here.
 					// Alternativly, we could duplicate the logic of the NestedClassSelector
-					.delete(0, NestedClassSelector.Parser.PREFIX.length()) //
-					.insert(0, Parser.PREFIX) //
+					.delete(0, NestedClassSelector.IdentifierParser.PREFIX.length()) //
+					.insert(0, IdentifierParser.PREFIX) //
 					.append("#") //
 					.append(methodSelector.getMethodName());
 			if (methodSelector.getParameterTypeNames() != null) {
@@ -260,11 +258,11 @@ public class NestedMethodSelector implements DiscoverySelector {
 		});
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "nested-method";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -273,11 +271,11 @@ public class NestedMethodSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			List<String> parts = Arrays.asList(selector.getValue().split("/"));
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
 
 			return Stream.of(DiscoverySelectors.selectNestedMethod(parts.subList(0, parts.size() - 1),
-				parts.get(parts.size() - 1), selector.getFragment()));
+				parts.get(parts.size() - 1), identifier.getFragment()));
 		}
 	}
 }

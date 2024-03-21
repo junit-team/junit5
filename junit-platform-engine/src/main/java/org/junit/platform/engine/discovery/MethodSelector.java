@@ -10,17 +10,6 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
-
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -30,6 +19,15 @@ import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
+import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static org.apiguardian.api.API.Status.*;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link Method} or a combination of
@@ -37,11 +35,11 @@ import org.junit.platform.engine.DiscoverySelector;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover tests
  * or containers based on methods.
  *
- * <p>If a Java {@link Method} is provided, the selector will return that
+ * <p>If a Java {@link Method} is provided, the identifier will return that
  * {@linkplain #getJavaMethod() method} and its method name, class name, and
  * parameter types accordingly. If a {@link Class} and method name, a class name
  * and method name, or a <em>fully qualified method name</em> is provided,
- * this selector will only attempt to lazily load the class, method, or parameter
+ * this identifier will only attempt to lazily load the class, method, or parameter
  * types if {@link #getJavaClass()}, {@link #getJavaMethod()}, or
  * {@link #getParameterTypes()} is invoked.
  *
@@ -49,7 +47,6 @@ import org.junit.platform.engine.DiscoverySelector;
  * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
  * or methods from other JVM languages such Groovy, Scala, etc.
  *
- * @since 1.0
  * @see DiscoverySelectors#selectMethod(String)
  * @see DiscoverySelectors#selectMethod(String, String)
  * @see DiscoverySelectors#selectMethod(String, String, String)
@@ -57,6 +54,7 @@ import org.junit.platform.engine.DiscoverySelector;
  * @see DiscoverySelectors#selectMethod(Class, String, String)
  * @see DiscoverySelectors#selectMethod(Class, Method)
  * @see org.junit.platform.engine.support.descriptor.MethodSource
+ * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class MethodSelector implements DiscoverySelector {
@@ -71,8 +69,8 @@ public class MethodSelector implements DiscoverySelector {
 	private volatile Class<?>[] parameterTypes;
 
 	/**
-	 * @since 1.10
-	 */
+     * @since 1.10
+     */
 	MethodSelector(ClassLoader classLoader, String className, String methodName, String parameterTypeNames) {
 		this.classLoader = classLoader;
 		this.className = className;
@@ -89,8 +87,8 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * @since 1.10
-	 */
+     * @since 1.10
+     */
 	MethodSelector(ClassLoader classLoader, String className, String methodName, Class<?>... parameterTypes) {
 		this.classLoader = classLoader;
 		this.className = className;
@@ -100,8 +98,8 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * @since 1.10
-	 */
+     * @since 1.10
+     */
 	MethodSelector(Class<?> javaClass, String methodName, Class<?>... parameterTypes) {
 		this.classLoader = javaClass.getClassLoader();
 		this.javaClass = javaClass;
@@ -122,41 +120,41 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the {@link ClassLoader} used to load the specified class.
-	 *
-	 * @return the {@code ClassLoader}; potentially {@code null}
-	 * @since 1.10
-	 */
+     * Get the {@link ClassLoader} used to load the specified class.
+     *
+     * @return the {@code ClassLoader}; potentially {@code null}
+     * @since 1.10
+     */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
 
 	/**
-	 * Get the selected class name.
-	 */
+     * Get the selected class name.
+     */
 	public String getClassName() {
 		return this.className;
 	}
 
 	/**
-	 * Get the selected method name.
-	 */
+     * Get the selected method name.
+     */
 	public String getMethodName() {
 		return this.methodName;
 	}
 
 	/**
-	 * Get the names of parameter types for the selected method.
-	 *
-	 * <p>See {@link #getParameterTypeNames()} for details.
-	 *
-	 * @return the names of parameter types
-	 * @since 1.0
-	 * @see #getParameterTypeNames()
-	 * @see #getParameterTypes()
-	 * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
-	 */
+     * Get the names of parameter types for the selected method.
+     *
+     * <p>See {@link #getParameterTypeNames()} for details.
+     *
+     * @return the names of parameter types
+     * @see #getParameterTypeNames()
+     * @see #getParameterTypes()
+     * @since 1.0
+     * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
+     */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.10")
 	public String getMethodParameterTypes() {
@@ -164,70 +162,70 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the names of parameter types for the selected method as a {@link String},
-	 * typically a comma-separated list of primitive types, fully qualified class
-	 * names, or array types.
-	 *
-	 * <p>Note: the names of parameter types are provided as a single string instead
-	 * of a collection in order to allow this selector to be used in a generic
-	 * fashion by various test engines. It is therefore the responsibility of
-	 * the caller of this method to determine how to parse the returned string.
-	 *
-	 * @return the names of parameter types supplied to this {@code MethodSelector}
-	 * via a constructor or deduced from a {@code Method} or parameter types supplied
-	 * via a constructor; never {@code null} but potentially an empty string
-	 * @since 1.10
-	 * @see #getParameterTypes()
-	 */
+     * Get the names of parameter types for the selected method as a {@link String},
+     * typically a comma-separated list of primitive types, fully qualified class
+     * names, or array types.
+     *
+     * <p>Note: the names of parameter types are provided as a single string instead
+     * of a collection in order to allow this identifier to be used in a generic
+     * fashion by various test engines. It is therefore the responsibility of
+     * the caller of this method to determine how to parse the returned string.
+     *
+     * @return the names of parameter types supplied to this {@code MethodSelector}
+     * via a constructor or deduced from a {@code Method} or parameter types supplied
+     * via a constructor; never {@code null} but potentially an empty string
+     * @see #getParameterTypes()
+     * @since 1.10
+     */
 	@API(status = STABLE, since = "1.10")
 	public String getParameterTypeNames() {
 		return this.parameterTypeNames;
 	}
 
 	/**
-	 * Get the {@link Class} in which the selected {@linkplain #getJavaMethod
-	 * method} is declared, or a subclass thereof.
-	 *
-	 * <p>If the {@link Class} was not provided, but only the name, this method
-	 * attempts to lazily load the {@code Class} based on its name and throws a
-	 * {@link PreconditionViolationException} if the class cannot be loaded.
-	 *
-	 * @see #getJavaMethod()
-	 */
+     * Get the {@link Class} in which the selected {@linkplain #getJavaMethod
+     * method} is declared, or a subclass thereof.
+     *
+     * <p>If the {@link Class} was not provided, but only the name, this method
+     * attempts to lazily load the {@code Class} based on its name and throws a
+     * {@link PreconditionViolationException} if the class cannot be loaded.
+     *
+     * @see #getJavaMethod()
+     */
 	public Class<?> getJavaClass() {
 		lazyLoadJavaClass();
 		return this.javaClass;
 	}
 
 	/**
-	 * Get the selected {@link Method}.
-	 *
-	 * <p>If the {@link Method} was not provided, but only the name, this method
-	 * attempts to lazily load the {@code Method} based on its name and throws a
-	 * {@link PreconditionViolationException} if the method cannot be loaded.
-	 *
-	 * @see #getJavaClass()
-	 */
+     * Get the selected {@link Method}.
+     *
+     * <p>If the {@link Method} was not provided, but only the name, this method
+     * attempts to lazily load the {@code Method} based on its name and throws a
+     * {@link PreconditionViolationException} if the method cannot be loaded.
+     *
+     * @see #getJavaClass()
+     */
 	public Method getJavaMethod() {
 		lazyLoadJavaMethod();
 		return this.javaMethod;
 	}
 
 	/**
-	 * Get the parameter types for the selected method.
-	 *
-	 * <p>If the parameter types were not provided as {@link Class} references
-	 * (or could not be deduced as {@code Class} references in the constructor),
-	 * this method attempts to lazily load the class reference for each parameter
-	 * type based on its name and throws a {@link JUnitException} if the class
-	 * cannot be loaded.
-	 *
-	 * @return the method's parameter types; never {@code null} but potentially
-	 * an empty array if the selected method does not declare parameters
-	 * @since 1.10
-	 * @see #getParameterTypeNames()
-	 * @see Method#getParameterTypes()
-	 */
+     * Get the parameter types for the selected method.
+     *
+     * <p>If the parameter types were not provided as {@link Class} references
+     * (or could not be deduced as {@code Class} references in the constructor),
+     * this method attempts to lazily load the class reference for each parameter
+     * type based on its name and throws a {@link JUnitException} if the class
+     * cannot be loaded.
+     *
+     * @return the method's parameter types; never {@code null} but potentially
+     * an empty array if the selected method does not declare parameters
+     * @see #getParameterTypeNames()
+     * @see Method#getParameterTypes()
+     * @since 1.10
+     */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public Class<?>[] getParameterTypes() {
 		lazyLoadParameterTypes();
@@ -324,11 +322,11 @@ public class MethodSelector implements DiscoverySelector {
 		}
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "method";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -337,10 +335,10 @@ public class MethodSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			// TODO fix decoding
-			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(selector.getValue()),
-				CodingUtil.urlDecode(selector.getFragment())));
+			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(identifier.getValue()),
+				CodingUtil.urlDecode(identifier.getFragment())));
 		}
 	}
 }

@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.discovery.DiscoverySelectorIdentifierParser;
 
 /**
  * A selector defines what a {@link TestEngine} can use to discover tests
@@ -32,11 +33,12 @@ public interface DiscoverySelector {
 	 * Return a {@link String} representation of this selector.
 	 * <p>
 	 * The returned string has to be parsable by a corresponding
-	 * {@link org.junit.platform.engine.discovery.SelectorParser}.
+	 * {@link DiscoverySelectorIdentifierParser}.
 	 * <p>
 	 * @return a {@link String} representation of this selector or empty if it is not supported.
 	 */
 	default Optional<String> toSelectorString() {
 		return Optional.empty();
 	}
+
 }

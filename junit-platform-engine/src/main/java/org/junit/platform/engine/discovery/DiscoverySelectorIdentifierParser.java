@@ -10,10 +10,18 @@
 
 package org.junit.platform.engine.discovery;
 
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
+
 import java.util.stream.Stream;
 
-import org.junit.platform.engine.DiscoverySelector;
+public interface DiscoverySelectorIdentifierParser {
 
-public interface SelectorParserContext {
-	Stream<DiscoverySelector> parse(String selector);
+	String getPrefix();
+
+	Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context);
+
+	interface Context {
+		Stream<DiscoverySelector> parse(String selector);
+	}
 }

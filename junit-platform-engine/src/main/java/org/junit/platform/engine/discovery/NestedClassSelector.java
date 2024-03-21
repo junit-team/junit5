@@ -10,10 +10,11 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.toList;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ToStringBuilder;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,10 +22,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.apiguardian.api.API;
-import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ToStringBuilder;
-import org.junit.platform.engine.DiscoverySelector;
+import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 /**
  * A {@link DiscoverySelector} that selects a nested {@link Class}
@@ -33,8 +34,8 @@ import org.junit.platform.engine.DiscoverySelector;
  * tests or containers based on classes.
  *
  * <p>If Java {@link Class} references are provided for the nested class or
- * the enclosing classes, the selector will return those classes and their class
- * names accordingly. If class names are provided, the selector will only attempt
+ * the enclosing classes, the identifier will return those classes and their class
+ * names accordingly. If class names are provided, the identifier will only attempt
  * to lazily load classes if {@link #getEnclosingClasses()} or
  * {@link #getNestedClass()} is invoked.
  *
@@ -149,7 +150,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	@Override
 	public Optional<String> toSelectorString() {
 		StringBuilder sb = new StringBuilder() //
-				.append(Parser.PREFIX) //
+				.append(IdentifierParser.PREFIX) //
 				.append(":");
 
 		enclosingClassSelectors.stream() //
@@ -160,11 +161,11 @@ public class NestedClassSelector implements DiscoverySelector {
 		return Optional.of(sb.toString());
 	}
 
-	public static class Parser implements SelectorParser {
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		static final String PREFIX = "nested-class";
 
-		public Parser() {
+		public IdentifierParser() {
 		}
 
 		@Override
@@ -173,8 +174,8 @@ public class NestedClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DiscoverySelector> parse(TBD selector, SelectorParserContext context) {
-			List<String> parts = Arrays.asList(selector.getValue().split("/"));
+		public Stream<DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
 			return Stream.of(
 				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}
