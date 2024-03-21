@@ -97,7 +97,8 @@ import org.junit.platform.suite.api.SelectUris;
  *   )
  *   .configurationParameter("key", "value")
  *   .enableImplicitConfigurationParameters(true)
- *   .suite(File.class)
+ *   .applyConfigurationParametersFromSuite(MySuite.class)
+ *   .applySelectorsAndFiltersFromSuite(MySuite.class)
  *   .build();
  * }</pre>
  *
@@ -254,14 +255,15 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Apply a suites annotation based configuration, selectors and filters to this builder.
+	 * Apply a suite's annotation-based configuration, selectors, and filters to
+	 * this builder.
 	 *
-	 * @param suiteClass the class to apply the annotations from;
-	 * never {@code null}
+	 * @param suiteClass the class to apply the annotations from; never {@code null}
 	 * @return this builder for method chaining
-	 * @since 1.11
 	 * @see org.junit.platform.suite.api.Suite
-	 * @deprecated use {@link #applyConfigurationParametersFromSuite} and/or {@link #applySelectorsAndFiltersFromSuite} instead.
+	 * @deprecated as of JUnit Platform 1.11 in favor of
+	 * {@link #applyConfigurationParametersFromSuite} and
+	 * {@link #applySelectorsAndFiltersFromSuite}
 	 */
 	@Deprecated
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
@@ -272,15 +274,16 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Apply a suites annotation based configuration to this builder.
-	 * <p>
-	 * This will apply the configuration from:
+	 * Apply a suite's annotation-based configuration to this builder.
+	 *
+	 * <p>This will apply the configuration from the following annotations.
 	 * <ul>
 	 *   <li>{@link ConfigurationParameter}</li>
 	 *   <li>{@link DisableParentConfigurationParameters}</li>
 	 * </ul>
 	 *
-	 * @param suiteClass the class to apply the configuration annotations from; never {@code null}
+	 * @param suiteClass the class to apply the configuration annotations from;
+	 * never {@code null}
 	 * @return this builder for method chaining
 	 * @since 1.11
 	 * @see org.junit.platform.suite.api.Suite
@@ -298,9 +301,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Apply a suites annotation based discovery selectors and filters to this builder.
-	 * <p>
-	 * This will apply the configuration from:
+	 * Apply a suite's annotation-based discovery selectors and filters to this
+	 * builder.
+	 *
+	 * <p>This will apply the configuration from the following annotations.
 	 * <ul>
 	 *   <li>{@link ExcludeClassNamePatterns}</li>
 	 *   <li>{@link ExcludeEngines}</li>
@@ -320,7 +324,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 *   <li>{@link SelectPackages}</li>
 	 * </ul>
 	 *
-	 * @param suiteClass the class to apply the discovery selectors and filter annotations from; never {@code null}
+	 * @param suiteClass the class to apply the discovery selectors and filter
+	 * annotations from; never {@code null}
 	 * @return this builder for method chaining
 	 * @since 1.11
 	 * @see org.junit.platform.suite.api.Suite

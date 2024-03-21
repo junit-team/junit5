@@ -275,7 +275,7 @@ class SuiteEngineTests {
 	}
 
 	@Test
-	void selectConfigurationSensitiveMethodsInTestPlanByUnique() {
+	void selectConfigurationSensitiveMethodsInTestPlanByUniqueId() {
 		// @formatter:off
 		var uniqueId1 = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, ConfigurationSuite.class.getName())
