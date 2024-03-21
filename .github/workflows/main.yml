@@ -45,6 +45,8 @@ jobs:
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
   Windows:
     runs-on: windows-latest

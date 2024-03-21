@@ -302,13 +302,6 @@ checkstyle {
 	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
 }
 
-// Workaround for https://github.com/checkstyle/checkstyle/issues/14123
-configurations.checkstyle {
-	resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
-		select("com.google.guava:guava:0")
-	}
-}
-
 tasks {
 	checkstyleMain {
         config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))

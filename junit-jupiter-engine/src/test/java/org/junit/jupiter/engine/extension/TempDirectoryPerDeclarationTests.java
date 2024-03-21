@@ -408,8 +408,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		void supportsCustomDefaultFactoryWithStandardFactoryOnDeclaration() {
 			executeTestsForClassWithDefaultFactory( //
 				CustomDefaultFactoryWithStandardDeclarationTestCase.class, Factory.class) //
-					.testEvents()//
-					.assertStatistics(stats -> stats.started(1).succeeded(1));
+						.testEvents()//
+						.assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 		private static class Factory implements TempDirFactory {

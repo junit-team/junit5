@@ -23,9 +23,9 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation
- * that is used to register {@linkplain Extension extensions} for the annotated
- * test class, test interface, test method, parameter, or field.
+ * {@code @ExtendWith} is a {@linkplain Repeatable repeatable} annotation that
+ * is used to register {@linkplain Extension extensions} for the annotated test
+ * class, test interface, test method, parameter, or field.
  *
  * <p>Annotated parameters are supported in test class constructors, in test
  * methods, and in {@code @BeforeAll}, {@code @AfterAll}, {@code @BeforeEach},

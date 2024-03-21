@@ -27,8 +27,17 @@ javaLibrary {
 	testJavaVersion = JavaVersion.VERSION_1_8
 }
 
-val apiReport by configurations.creatingResolvable
-val standaloneConsoleLauncher by configurations.creatingResolvable
+val apiReport = configurations.dependencyScope("apiReport")
+val apiReportClasspath = configurations.resolvable("apiReportClasspath") {
+	extendsFrom(apiReport.get())
+}
+val standaloneConsoleLauncher = configurations.dependencyScope("standaloneConsoleLauncher")
+val standaloneConsoleLauncherClasspath = configurations.resolvable("standaloneConsoleLauncherClasspath") {
+	extendsFrom(standaloneConsoleLauncher.get())
+}
+
+val tools by sourceSets.creating
+val toolsImplementation by configurations.getting
 
 dependencies {
 	implementation(projects.junitJupiterApi) {
@@ -44,16 +53,12 @@ dependencies {
 	testImplementation(projects.junitPlatformRunner)
 	testImplementation(projects.junitPlatformSuite)
 	testImplementation(projects.junitPlatformTestkit)
+	testImplementation(projects.junitVintageEngine)
 	testImplementation(kotlin("stdlib"))
 
-	testImplementation(projects.junitVintageEngine)
-	testRuntimeOnly(libs.apiguardian) {
-		because("it's required to generate API tables")
-	}
-
-	testImplementation(libs.classgraph) {
-		because("ApiReportGenerator needs it")
-	}
+	toolsImplementation(projects.junitPlatformCommons)
+	toolsImplementation(libs.classgraph)
+	toolsImplementation(libs.apiguardian)
 
 	testImplementation(libs.jimfs) {
 		because("Jimfs is used in src/test/java")
@@ -158,52 +163,59 @@ tasks {
 		dependsOn(consoleLauncherTest)
 	}
 
+	named<JavaCompile>(tools.compileJavaTaskName) {
+		options.release.set(21)
+	}
+
+	named<Checkstyle>("checkstyleTools") {
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
+	}
+
 	val generateConsoleLauncherOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("--help", "--disable-banner")
 		outputFile = consoleLauncherOptionsFile
 	}
 
 	val generateConsoleLauncherDiscoverOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("discover", "--help", "--disable-banner")
 		outputFile = consoleLauncherDiscoverOptionsFile
 	}
 
 	val generateConsoleLauncherExecuteOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("execute", "--help", "--disable-banner")
 		outputFile = consoleLauncherExecuteOptionsFile
 	}
 
 	val generateConsoleLauncherEnginesOptions by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+		classpath.from(standaloneConsoleLauncherClasspath)
 		mainClass = "org.junit.platform.console.ConsoleLauncher"
 		args.addAll("engines", "--help", "--disable-banner")
 		outputFile = consoleLauncherEnginesOptionsFile
 	}
 
-	val generateExperimentalApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
+	val generateApiTables by registering(JavaExec::class) {
+		classpath = tools.runtimeClasspath
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
-		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args.add("EXPERIMENTAL")
-		outputFile = experimentalApisTableFile
-	}
-
-	val generateDeprecatedApisTable by registering(CaptureJavaExecOutput::class) {
-		classpath.from(sourceSets["test"].runtimeClasspath)
-		mainClass = "org.junit.api.tools.ApiReportGenerator"
-		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReport)
-		args.add("DEPRECATED")
-		outputFile = deprecatedApisTableFile
+		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReportClasspath.get())
+		argumentProviders += CommandLineArgumentProvider {
+			listOf(
+				"DEPRECATED=${deprecatedApisTableFile.get().asFile.absolutePath}",
+				"EXPERIMENTAL=${experimentalApisTableFile.get().asFile.absolutePath}",
+			)
+		}
+		outputs.cacheIf { true }
+		outputs.file(deprecatedApisTableFile)
+		outputs.file(experimentalApisTableFile)
 	}
 
 	val generateStandaloneConsoleLauncherShadowedArtifactsFile by registering(GenerateStandaloneConsoleLauncherShadowedArtifactsFile::class) {
-		inputJar.fileProvider(standaloneConsoleLauncher.elements.map { it.single().asFile })
+		inputJar.fileProvider(standaloneConsoleLauncherClasspath.flatMap { it.elements.map { it.single().asFile } })
 		outputFile = standaloneConsoleLauncherShadowedArtifactsFile
 	}
 
@@ -220,8 +232,7 @@ tasks {
 			generateConsoleLauncherDiscoverOptions,
 			generateConsoleLauncherExecuteOptions,
 			generateConsoleLauncherEnginesOptions,
-			generateExperimentalApisTable,
-			generateDeprecatedApisTable,
+			generateApiTables,
 			generateStandaloneConsoleLauncherShadowedArtifactsFile,
 			componentDiagram
 		)
@@ -401,8 +412,8 @@ tasks {
 		})
 		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
 
-		maxMemory = "1024m"
-		destinationDir = layout.buildDirectory.dir("docs/javadoc").get().asFile
+		setMaxMemory("1024m")
+		options.destinationDirectory = layout.buildDirectory.dir("docs/javadoc").get().asFile
 
 		doFirst {
 			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
@@ -490,14 +501,14 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
-		plusConfigurations.add(projects.junitJupiterParams.dependencyProject.configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.dependencyProject.configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
