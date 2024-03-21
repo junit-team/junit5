@@ -88,8 +88,8 @@ public class ClasspathRootSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX,
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
 			CodingUtil.normalizeDirectorySeparators(String.valueOf(this.classpathRoot))));
 	}
 

@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine;
 
+import java.util.Objects;
+
 import org.junit.platform.commons.util.Preconditions;
 
 public final class DiscoverySelectorIdentifier {
@@ -18,10 +20,12 @@ public final class DiscoverySelectorIdentifier {
 	private final String value;
 	private final String fragment;
 
-	private DiscoverySelectorIdentifier(String prefix, String value, String fragment) {
-		this.prefix = prefix;
-		this.value = value;
-		this.fragment = fragment;
+	public static DiscoverySelectorIdentifier create(String prefix, String value) {
+		return create(prefix, value, "");
+	}
+
+	public static DiscoverySelectorIdentifier create(String prefix, String value, String fragment) {
+		return new DiscoverySelectorIdentifier(prefix, value, fragment);
 	}
 
 	public static DiscoverySelectorIdentifier parse(String string) {
@@ -31,6 +35,12 @@ public final class DiscoverySelectorIdentifier {
 
 		String[] valueParts = parts[1].split("#", 2);
 		return new DiscoverySelectorIdentifier(parts[0], valueParts[0], valueParts.length == 1 ? "" : valueParts[1]);
+	}
+
+	private DiscoverySelectorIdentifier(String prefix, String value, String fragment) {
+		this.prefix = prefix;
+		this.value = value;
+		this.fragment = fragment;
 	}
 
 	public String getPrefix() {
@@ -43,5 +53,30 @@ public final class DiscoverySelectorIdentifier {
 
 	public String getFragment() {
 		return fragment;
+	}
+
+	public DiscoverySelectorIdentifier withFragment(String fragment) {
+		return new DiscoverySelectorIdentifier(prefix, value, fragment);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		DiscoverySelectorIdentifier that = (DiscoverySelectorIdentifier) o;
+		return Objects.equals(prefix, that.prefix) && Objects.equals(value, that.value)
+				&& Objects.equals(fragment, that.fragment);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(prefix, value, fragment);
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s:%s%s", prefix, value, fragment.isEmpty() ? "" : "#" + fragment);
 	}
 }

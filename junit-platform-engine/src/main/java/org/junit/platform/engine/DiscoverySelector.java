@@ -30,14 +30,16 @@ import org.junit.platform.engine.discovery.DiscoverySelectorIdentifierParser;
 public interface DiscoverySelector {
 
 	/**
-	 * Return a {@link String} representation of this selector.
+	 * Return the {@linkplain DiscoverySelectorIdentifier identifier} of this
+	 * selector.
 	 * <p>
-	 * The returned string has to be parsable by a corresponding
+	 * The returned identifier has to be parsable by a corresponding
 	 * {@link DiscoverySelectorIdentifierParser}.
 	 * <p>
-	 * @return a {@link String} representation of this selector or empty if it is not supported.
+	 * @return the identifier of this selector or empty if it is not supported;
+	 * never {@code null}
 	 */
-	default Optional<String> toSelectorString() {
+	default Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		return Optional.empty();
 	}
 

@@ -242,19 +242,13 @@ public class NestedMethodSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return nestedClassSelector.toSelectorString().map(parent -> {
-			StringBuilder sb = new StringBuilder(parent)
-					// Not totally happy with how we have to change the prefix here.
-					// Alternativly, we could duplicate the logic of the NestedClassSelector
-					.delete(0, NestedClassSelector.IdentifierParser.PREFIX.length()) //
-					.insert(0, IdentifierParser.PREFIX) //
-					.append("#") //
-					.append(methodSelector.getMethodName());
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return nestedClassSelector.toIdentifier().map(parent -> {
+			StringBuilder sb = new StringBuilder().append(methodSelector.getMethodName());
 			if (methodSelector.getParameterTypeNames() != null) {
 				sb.append("(").append(Arrays.toString(methodSelector.getParameterTypes())).append(")");
 			}
-			return sb.toString();
+			return DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, parent.getValue(), sb.toString());
 		});
 	}
 

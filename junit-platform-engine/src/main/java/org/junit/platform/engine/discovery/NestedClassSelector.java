@@ -148,17 +148,15 @@ public class NestedClassSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		StringBuilder sb = new StringBuilder() //
-				.append(IdentifierParser.PREFIX) //
-				.append(":");
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		StringBuilder sb = new StringBuilder();
 
 		enclosingClassSelectors.stream() //
 				.map(ClassSelector::getClassName) //
 				.forEach(s -> sb.append(s).append("/"));
 
 		sb.append(getNestedClassName());
-		return Optional.of(sb.toString());
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, sb.toString()));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

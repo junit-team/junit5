@@ -77,8 +77,8 @@ public class ModuleSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX, this.moduleName));
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.moduleName));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

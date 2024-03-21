@@ -111,9 +111,9 @@ public class DirectorySelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return Optional.of(
-			String.format("%s:%s", IdentifierParser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+			CodingUtil.normalizeDirectorySeparators(this.path)));
 	}
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

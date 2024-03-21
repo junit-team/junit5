@@ -77,8 +77,8 @@ public class PackageSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX, this.packageName));
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.packageName));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

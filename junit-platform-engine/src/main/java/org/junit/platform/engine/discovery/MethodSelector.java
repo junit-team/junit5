@@ -312,13 +312,14 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		if (StringUtils.isNotBlank(this.getParameterTypeNames())) {
-			return Optional.of(
-				String.format("%s#%s(%s)", this.className, this.methodName, Arrays.toString(this.getParameterTypes())));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className,
+				String.format("%s(%s)", this.methodName, Arrays.toString(this.getParameterTypes()))));
 		}
 		else {
-			return Optional.of(String.format("%s#%s", this.className, this.methodName));
+			return Optional.of(
+				DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className, this.methodName));
 		}
 	}
 
@@ -336,9 +337,7 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			// TODO fix decoding
-			return Stream.of(DiscoverySelectors.selectMethod(CodingUtil.urlDecode(identifier.getValue()),
-				CodingUtil.urlDecode(identifier.getFragment())));
+			return Stream.of(DiscoverySelectors.selectMethod(identifier.getValue(), identifier.getFragment()));
 		}
 	}
 }

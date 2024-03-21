@@ -33,13 +33,13 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * can discover tests or containers based on files in the
  * file system.
  *
- * @since 1.0
  * @see DiscoverySelectors#selectFile(String)
  * @see DiscoverySelectors#selectFile(File)
  * @see DirectorySelector
  * @see #getFile()
  * @see #getPath()
  * @see #getRawPath()
+ * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class FileSelector implements DiscoverySelector {
@@ -121,14 +121,14 @@ public class FileSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		if (this.position == null) {
-			return Optional.of(
-				String.format("%s://%s", IdentifierParser.PREFIX, CodingUtil.normalizeDirectorySeparators(this.path)));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+				String.format("//%s", CodingUtil.normalizeDirectorySeparators(this.path))));
 		}
 		else {
-			return Optional.of(String.format("%s://%s?%s", IdentifierParser.PREFIX,
-				CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart()));
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, String.format("//%s?%s",
+				CodingUtil.normalizeDirectorySeparators(this.path), this.position.toQueryPart())));
 		}
 	}
 

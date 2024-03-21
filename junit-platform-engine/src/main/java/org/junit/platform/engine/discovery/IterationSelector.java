@@ -91,11 +91,12 @@ public class IterationSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return parentSelector.toSelectorString().map(parentSelectorString -> String.format("%s:%s#%s", //
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
-			CodingUtil.urlEncode(parentSelectorString), //
-			iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))));
+			CodingUtil.urlEncode(parentSelectorString.toString()), //
+			iterationIndices.stream().map(String::valueOf).collect(Collectors.joining(","))) //
+		);
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {

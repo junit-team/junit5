@@ -137,8 +137,8 @@ public class ClassSelector implements DiscoverySelector {
 	}
 
 	@Override
-	public Optional<String> toSelectorString() {
-		return Optional.of(String.format("%s:%s", IdentifierParser.PREFIX, this.className));
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
