@@ -169,9 +169,9 @@ public class NestedClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<NestedClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Optional<NestedClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
-			return Stream.of(
+			return Optional.of(
 				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
 		}
 	}

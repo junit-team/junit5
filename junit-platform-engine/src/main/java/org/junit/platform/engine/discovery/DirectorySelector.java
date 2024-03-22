@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -127,8 +126,8 @@ public class DirectorySelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<DirectorySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectDirectory(identifier.getValue()));
+		public Optional<DirectorySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectDirectory(identifier.getValue()));
 		}
 	}
 }

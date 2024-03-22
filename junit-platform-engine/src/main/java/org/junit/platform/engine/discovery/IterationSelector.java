@@ -24,7 +24,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -125,7 +124,7 @@ public class IterationSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<IterationSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Optional<IterationSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			Matcher matcher = PATTERN.matcher(identifier.getValue());
 			Preconditions.condition(matcher.matches(), "Invalid format: must be IDENTIFIER[INDEX(,INDEX)*]");
 			return context.parse(matcher.group("parentIdentifier")) //

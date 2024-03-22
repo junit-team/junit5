@@ -10,9 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
@@ -39,15 +40,15 @@ class DiscoverySelectorIdentifierParsers {
 		return parsers;
 	}
 
-	public Stream<? extends DiscoverySelector> parseAll(List<DiscoverySelectorIdentifier> identifiers) {
-		return identifiers.stream().flatMap(this::parse);
+	public Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
+		return identifiers.stream().map(this::parse).filter(Optional::isPresent).map(Optional::get);
 	}
 
-	public Stream<? extends DiscoverySelector> parse(String identifier) {
+	public Optional<? extends DiscoverySelector> parse(String identifier) {
 		return parse(DiscoverySelectorIdentifier.parse(identifier));
 	}
 
-	public Stream<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+	public Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
 		DiscoverySelectorIdentifierParser parser = parsers.get(identifier.getPrefix());
 		Preconditions.notNull(parser, "No parser for prefix: " + identifier.getPrefix());
 

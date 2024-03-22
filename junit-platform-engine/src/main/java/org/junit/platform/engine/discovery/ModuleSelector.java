@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -94,8 +93,8 @@ public class ModuleSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<ModuleSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectModule(identifier.getValue()));
+		public Optional<ModuleSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectModule(identifier.getValue()));
 		}
 	}
 }

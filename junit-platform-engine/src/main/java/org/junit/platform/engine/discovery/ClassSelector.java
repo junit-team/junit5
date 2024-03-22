@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -154,8 +153,8 @@ public class ClassSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<ClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectClass(identifier.getValue()));
+		public Optional<ClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectClass(identifier.getValue()));
 		}
 	}
 }

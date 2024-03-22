@@ -98,7 +98,7 @@ class SelectorConverter {
 		public IterationSelector convert(String value) {
 			DiscoverySelectorIdentifier identifier = DiscoverySelectorIdentifier.create(
 				IterationSelector.IdentifierParser.PREFIX, value);
-			return (IterationSelector) DiscoverySelectors.parse(identifier).findFirst() //
+			return (IterationSelector) DiscoverySelectors.parse(identifier) //
 					.orElseThrow(() -> new PreconditionViolationException("Invalid format: Failed to parse selector"));
 		}
 

@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -95,8 +94,8 @@ public class UniqueIdSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<UniqueIdSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectUniqueId(identifier.getValue()));
+		public Optional<UniqueIdSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectUniqueId(identifier.getValue()));
 		}
 	}
 }

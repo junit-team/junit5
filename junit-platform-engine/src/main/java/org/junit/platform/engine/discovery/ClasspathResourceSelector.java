@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.StringUtils;
@@ -128,15 +127,14 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<ClasspathResourceSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			ClasspathResourceSelector selector = StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
+		public Optional<ClasspathResourceSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
 				DiscoverySelectors::selectClasspathResource, //
 				(resourceName, query) -> {
-					FilePosition position = FilePosition.fromQuery(query).orElse(null);
-					return DiscoverySelectors.selectClasspathResource(resourceName, position);
+					FilePosition position1 = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectClasspathResource(resourceName, position1);
 				} //
-			);
-			return Stream.of(selector);
+			));
 		}
 	}
 }

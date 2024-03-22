@@ -21,7 +21,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -939,15 +941,15 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
-	public static Stream<? extends DiscoverySelector> parse(String identifier) {
+	public static Optional<? extends DiscoverySelector> parse(String identifier) {
 		return new DiscoverySelectorIdentifierParsers().parse(identifier);
 	}
 
-	public static Stream<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
 		return new DiscoverySelectorIdentifierParsers().parse(identifier);
 	}
 
-	public static Stream<? extends DiscoverySelector> parseAll(List<DiscoverySelectorIdentifier> identifiers) {
+	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		return new DiscoverySelectorIdentifierParsers().parseAll(identifiers);
 	}
 }

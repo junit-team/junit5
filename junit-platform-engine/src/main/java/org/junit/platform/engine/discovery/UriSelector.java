@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -98,8 +97,8 @@ public class UriSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<UriSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(DiscoverySelectors.selectUri(identifier.getValue()));
+		public Optional<UriSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectUri(identifier.getValue()));
 		}
 	}
 }

@@ -11,13 +11,13 @@
 package org.junit.platform.engine.discovery;
 
 import static java.lang.String.join;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClasspathRoots;
@@ -56,6 +56,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * Unit tests for {@link DiscoverySelectors}.
@@ -97,10 +98,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void parseUriSelector() {
-			var selectorStream = parseIdentifier(selectUri("https://junit.org"));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(UriSelector.class)).extracting(UriSelector::getUri).isEqualTo(
-				URI.create("https://junit.org"));
+			var selector = parseIdentifier(selectUri("https://junit.org"));
+			assertThat(selector) //
+					.asInstanceOf(type(UriSelector.class)) //
+					.extracting(UriSelector::getUri) //
+					.isEqualTo(URI.create("https://junit.org"));
 		}
 
 		@Test
@@ -128,7 +130,7 @@ class DiscoverySelectorsTests {
 			assertEquals(path, selector.getRawPath());
 			assertEquals(new File(path), selector.getFile());
 			assertEquals(Paths.get(path), selector.getPath());
-			assertEquals(filePosition, selector.getPosition().get());
+			assertEquals(filePosition, selector.getPosition().orElseThrow());
 		}
 
 		@Test
@@ -162,7 +164,7 @@ class DiscoverySelectorsTests {
 			assertEquals(path, selector.getRawPath());
 			assertEquals(file.getCanonicalFile(), selector.getFile());
 			assertEquals(Paths.get(path), selector.getPath());
-			assertEquals(FilePosition.from(12, 34), selector.getPosition().get());
+			assertEquals(FilePosition.from(12, 34), selector.getPosition().orElseThrow());
 		}
 
 	}
@@ -173,36 +175,39 @@ class DiscoverySelectorsTests {
 		@Test
 		void parseFileSelectorWithRelativePath() {
 			var path = "src/test/resources/do_not_delete_me.txt";
-			var selectorStream = parseIdentifier(selectFile(path));
+			var selector = parseIdentifier(selectFile(path));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(FileSelector.class)).extracting(FileSelector::getRawPath,
-				FileSelector::getFile, FileSelector::getPath, FileSelector::getPosition).containsExactly(path,
-					new File(path), Paths.get(path), Optional.empty());
+			assertThat(selector) //
+					.asInstanceOf(type(FileSelector.class)) //
+					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+							FileSelector::getPosition) //
+					.containsExactly(path, new File(path), Paths.get(path), Optional.empty());
 		}
 
 		@Test
 		void parseFileSelectorWithAbsolutePath() {
 			var path = "src/test/resources/do_not_delete_me.txt";
 			var absolutePath = new File(path).getAbsolutePath();
-			var selectorStream = parseIdentifier(selectFile(absolutePath));
+			var selector = parseIdentifier(selectFile(absolutePath));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(FileSelector.class)).extracting(FileSelector::getRawPath,
-				FileSelector::getFile, FileSelector::getPath, FileSelector::getPosition).containsExactly(absolutePath,
-					new File(absolutePath), Paths.get(absolutePath), Optional.empty());
+			assertThat(selector) //
+					.asInstanceOf(type(FileSelector.class)) //
+					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+							FileSelector::getPosition) //
+					.containsExactly(absolutePath, new File(absolutePath), Paths.get(absolutePath), Optional.empty());
 		}
 
 		@Test
 		void parseFileSelectorWithRelativePathAndFilePosition() {
 			var path = "src/test/resources/do_not_delete_me.txt";
 			var filePosition = FilePosition.from(12, 34);
-			var selectorStream = parseIdentifier(selectFile(path, filePosition));
+			var selector = parseIdentifier(selectFile(path, filePosition));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(FileSelector.class)).extracting(FileSelector::getRawPath,
-				FileSelector::getFile, FileSelector::getPath, FileSelector::getPosition).containsExactly(path,
-					new File(path), Paths.get(path), Optional.of(filePosition));
+			assertThat(selector) //
+					.asInstanceOf(type(FileSelector.class)) //
+					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+							FileSelector::getPosition) //
+					.containsExactly(path, new File(path), Paths.get(path), Optional.of(filePosition));
 		}
 
 		@Test
@@ -210,12 +215,14 @@ class DiscoverySelectorsTests {
 			var path = "src/test/resources/do_not_delete_me.txt";
 			var absolutePath = new File(path).getAbsolutePath();
 			var filePosition = FilePosition.from(12, 34);
-			var selectorStream = parseIdentifier(selectFile(absolutePath, filePosition));
+			var selector = parseIdentifier(selectFile(absolutePath, filePosition));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(FileSelector.class)).extracting(FileSelector::getRawPath,
-				FileSelector::getFile, FileSelector::getPath, FileSelector::getPosition).containsExactly(absolutePath,
-					new File(absolutePath), Paths.get(absolutePath), Optional.of(filePosition));
+			assertThat(selector) //
+					.asInstanceOf(type(FileSelector.class)) //
+					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
+							FileSelector::getPosition) //
+					.containsExactly(absolutePath, new File(absolutePath), Paths.get(absolutePath),
+							Optional.of(filePosition));
 		}
 
 		@Test
@@ -256,24 +263,26 @@ class DiscoverySelectorsTests {
 		void parseDirectorySelectorWithRelativePath() {
 			var path = "src/test/resources";
 
-			var selectorStream = parseIdentifier(selectDirectory(path));
+			var selector = parseIdentifier(selectDirectory(path));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(DirectorySelector.class)).extracting(DirectorySelector::getRawPath,
-				DirectorySelector::getDirectory, DirectorySelector::getPath).containsExactly(path, new File(path),
-					Paths.get(path));
+			assertThat(selector) //
+					.asInstanceOf(type(DirectorySelector.class)) //
+					.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory,
+							DirectorySelector::getPath) //
+					.containsExactly(path, new File(path), Paths.get(path));
 		}
 
 		@Test
 		void parseDirectorySelectorWithAbsolutePath() {
 			var path = new File("src/test/resources").getAbsolutePath();
 
-			var selectorStream = parseIdentifier(selectDirectory(path));
+			var selector = parseIdentifier(selectDirectory(path));
 
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(DirectorySelector.class)).extracting(DirectorySelector::getRawPath,
-				DirectorySelector::getDirectory, DirectorySelector::getPath).containsExactly(path, new File(path),
-					Paths.get(path));
+			assertThat(selector) //
+					.asInstanceOf(type(DirectorySelector.class)) //
+					.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory,
+							DirectorySelector::getPath) //
+					.containsExactly(path, new File(path), Paths.get(path));
 		}
 
 		@Test
@@ -303,49 +312,51 @@ class DiscoverySelectorsTests {
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml", filePosition);
 			assertEquals("foo/bar/spec.xml", selector.getClasspathResourceName());
-			assertEquals(FilePosition.from(12, 34), selector.getPosition().get());
+			assertEquals(FilePosition.from(12, 34), selector.getPosition().orElseThrow());
 
 			// standard use case
 			selector = selectClasspathResource("A/B/C/spec.json", filePosition);
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
-			assertEquals(filePosition, selector.getPosition().get());
+			assertEquals(filePosition, selector.getPosition().orElseThrow());
 		}
 
 		@Test
 		void parseClasspathResources() {
 			// with unnecessary "/" prefix
-			var selectorStream = parseIdentifier(selectClasspathResource("/foo/bar/spec.xml"));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ClasspathResourceSelector.class)).extracting(
-				ClasspathResourceSelector::getClasspathResourceName,
-				ClasspathResourceSelector::getPosition).containsExactly("foo/bar/spec.xml", Optional.empty());
+			var selector = parseIdentifier(selectClasspathResource("/foo/bar/spec.xml"));
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathResourceSelector.class)) //
+					.extracting(ClasspathResourceSelector::getClasspathResourceName,
+							ClasspathResourceSelector::getPosition) //
+					.containsExactly("foo/bar/spec.xml", Optional.empty());
 
 			// standard use case
-			selectorStream = parseIdentifier(selectClasspathResource("A/B/C/spec.json"));
-			selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ClasspathResourceSelector.class)).extracting(
-				ClasspathResourceSelector::getClasspathResourceName,
-				ClasspathResourceSelector::getPosition).containsExactly("A/B/C/spec.json", Optional.empty());
+			selector = parseIdentifier(selectClasspathResource("A/B/C/spec.json"));
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathResourceSelector.class)) //
+					.extracting(ClasspathResourceSelector::getClasspathResourceName,
+							ClasspathResourceSelector::getPosition) //
+					.containsExactly("A/B/C/spec.json", Optional.empty());
 		}
 
 		@Test
 		void parseClasspathResourcesWithFilePosition() {
 			var filePosition = FilePosition.from(12, 34);
 			// with unnecessary "/" prefix
-			var selectorStream = parseIdentifier(
-				selectClasspathResource("/foo/bar/spec.xml", FilePosition.from(12, 34)));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ClasspathResourceSelector.class)) //
+			var selector = parseIdentifier(selectClasspathResource("/foo/bar/spec.xml", FilePosition.from(12, 34)));
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathResourceSelector.class)) //
 					.extracting(ClasspathResourceSelector::getClasspathResourceName,
-						ClasspathResourceSelector::getPosition) //
+							ClasspathResourceSelector::getPosition) //
 					.containsExactly("foo/bar/spec.xml", Optional.of(filePosition));
 
 			// standard use case
-			selectorStream = parseIdentifier(selectClasspathResource("A/B/C/spec.json", FilePosition.from(12, 34)));
-			selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ClasspathResourceSelector.class)).extracting(
-				ClasspathResourceSelector::getClasspathResourceName,
-				ClasspathResourceSelector::getPosition).containsExactly("A/B/C/spec.json", Optional.of(filePosition));
+			selector = parseIdentifier(selectClasspathResource("A/B/C/spec.json", FilePosition.from(12, 34)));
+			assertThat(selector) //
+					.asInstanceOf(type(ClasspathResourceSelector.class)) //
+					.extracting(ClasspathResourceSelector::getClasspathResourceName,
+							ClasspathResourceSelector::getPosition) //
+					.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
 		}
 
 	}
@@ -361,10 +372,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void parseModuleByName() {
-			var selectorStream = parseIdentifier(selectModule("java.base"));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ModuleSelector.class)).extracting(
-				ModuleSelector::getModuleName).isEqualTo("java.base");
+			var selector = parseIdentifier(selectModule("java.base"));
+			assertThat(selector) //
+					.asInstanceOf(type(ModuleSelector.class)) //
+					.extracting(ModuleSelector::getModuleName) //
+					.isEqualTo("java.base");
 		}
 
 		@Test
@@ -400,10 +412,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void parsePackageByName() {
-			var selectorStream = parseIdentifier(selectPackage(getClass().getPackage().getName()));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(PackageSelector.class)).extracting(
-				PackageSelector::getPackageName).isEqualTo(getClass().getPackage().getName());
+			var selector = parseIdentifier(selectPackage(getClass().getPackage().getName()));
+			assertThat(selector) //
+					.asInstanceOf(type(PackageSelector.class)) //
+					.extracting(PackageSelector::getPackageName) //
+					.isEqualTo(getClass().getPackage().getName());
 		}
 
 	}
@@ -434,7 +447,7 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void selectClasspathRootsWithExistingJarFile() throws Exception {
-			var jarUri = getClass().getResource("/jartest.jar").toURI();
+			var jarUri = requireNonNull(getClass().getResource("/jartest.jar")).toURI();
 			var jarFile = Paths.get(jarUri);
 
 			var selectors = selectClasspathRoots(Set.of(jarFile));
@@ -455,10 +468,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void pareClassByName() {
-			var selectorStream = parseIdentifier(selectClass(getClass()));
-			var selector = getSingleSelector(selectorStream);
-			assertThat(selector).asInstanceOf(type(ClassSelector.class)).extracting(
-				ClassSelector::getJavaClass).isEqualTo(getClass());
+			var selector = parseIdentifier(selectClass(getClass()));
+			assertThat(selector) //
+					.asInstanceOf(type(ClassSelector.class)) //
+					.extracting(ClassSelector::getJavaClass) //
+					.isEqualTo(getClass());
 		}
 
 		@Test
@@ -571,7 +585,7 @@ class DiscoverySelectorsTests {
 			Class<?> clazz = testClass();
 			var method = clazz.getDeclaredMethod("myTest");
 			var selector = assertSelectMethodByFullyQualifiedName(clazz, method);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -595,76 +609,76 @@ class DiscoverySelectorsTests {
 			Class<?> clazz = TestCaseWithDefaultMethod.class;
 			var method = clazz.getMethod("myTest");
 			var selector = assertSelectMethodByFullyQualifiedName(clazz, method);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithPrimitiveParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int.class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, int.class, "int");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithPrimitiveParameterUsingSourceCodeSyntax() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int.class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "int", "int");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithObjectParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String.class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, String.class,
-				String.class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					String.class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithObjectParameterUsingSourceCodeSyntax() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String.class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "java.lang.String",
-				String.class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					String.class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithPrimitiveArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int[].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, int[].class,
-				int[].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					int[].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithPrimitiveArrayParameterUsingSourceCodeSyntax() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int[].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "int[]", "int[]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithObjectArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String[].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, String[].class,
-				String[].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					String[].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithObjectArrayParameterUsingSourceCodeSyntax() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String[].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "java.lang.String[]",
-				"java.lang.String[]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					"java.lang.String[]");
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithTwoDimensionalPrimitiveArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int[][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, int[][].class,
-				int[][].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					int[][].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -672,15 +686,15 @@ class DiscoverySelectorsTests {
 				throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int[][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "int[][]", "int[][]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithTwoDimensionalObjectArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String[][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, String[][].class,
-				String[][].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					String[][].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -688,16 +702,16 @@ class DiscoverySelectorsTests {
 				throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", String[][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "java.lang.String[][]",
-				"java.lang.String[][]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					"java.lang.String[][]");
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithMultidimensionalPrimitiveArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", int[][][][][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, int[][][][][].class,
-				int[][][][][].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					int[][][][][].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -706,16 +720,16 @@ class DiscoverySelectorsTests {
 
 			var method = testClass().getDeclaredMethod("myTest", int[][][][][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "int[][][][][]",
-				"int[][][][][]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					"int[][][][][]");
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectMethodByFullyQualifiedNameWithMultidimensionalObjectArrayParameter() throws Exception {
 			var method = testClass().getDeclaredMethod("myTest", Double[][][][][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, Double[][][][][].class,
-				Double[][][][][].class.getName());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					Double[][][][][].class.getName());
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -724,8 +738,8 @@ class DiscoverySelectorsTests {
 
 			var method = testClass().getDeclaredMethod("myTest", Double[][][][][].class);
 			var selector = assertSelectMethodByFullyQualifiedName(testClass(), method, "java.lang.Double[][][][][]",
-				"java.lang.Double[][][][][]");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+					"java.lang.Double[][][][][]");
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -741,7 +755,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -757,7 +771,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -774,7 +788,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals(methodParameters, selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -791,7 +805,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -808,7 +822,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -826,7 +840,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals(methodParameters, selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		private MethodSelector assertSelectMethodByFullyQualifiedName(Class<?> clazz, Method method) {
@@ -873,7 +887,7 @@ class DiscoverySelectorsTests {
 			assertEquals(method, selector.getJavaMethod());
 			assertEquals("myTest", selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -889,7 +903,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 			assertThat(selector.getParameterTypes()).containsExactly(String.class, boolean[].class);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -905,7 +919,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 			assertThat(selector.getParameterTypes()).containsExactly(String.class, boolean[].class);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -918,7 +932,7 @@ class DiscoverySelectorsTests {
 
 				var method = clazz.getDeclaredMethod("myTest", String.class, boolean[].class);
 				var selector = selectMethod(testClassLoader, testClass.getName(), "myTest",
-					"java.lang.String, boolean[]");
+						"java.lang.String, boolean[]");
 
 				assertThat(selector.getClassName()).isEqualTo(clazz.getName());
 				assertThat(selector.getJavaClass()).isEqualTo(clazz);
@@ -926,7 +940,7 @@ class DiscoverySelectorsTests {
 				assertThat(selector.getJavaMethod()).isEqualTo(method);
 				assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 				assertThat(selector.getParameterTypes()).containsExactly(String.class, boolean[].class);
-				assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+				assertThat(parseIdentifier(selector)).isEqualTo(selector);
 			}
 		}
 
@@ -943,7 +957,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 			assertThat(selector.getParameterTypes()).containsExactly(String.class, boolean[].class);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -959,7 +973,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getJavaMethod()).isEqualTo(method);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String, boolean[]");
 			assertThat(selector.getParameterTypes()).containsExactly(String.class, boolean[].class);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -978,7 +992,7 @@ class DiscoverySelectorsTests {
 			assertEquals(className, selector.getClassName());
 			assertEquals(methodName, selector.getMethodName());
 			assertEquals("", selector.getParameterTypeNames());
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		private static Class<?> testClass() {
@@ -986,6 +1000,7 @@ class DiscoverySelectorsTests {
 		}
 
 	}
+
 	@Test
 	void parseClasspathRootsWithNonExistingDirectory() {
 		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(Path.of("some/local/path"))));
@@ -1001,20 +1016,24 @@ class DiscoverySelectorsTests {
 	@Test
 	void parseClasspathRootsWithExistingDirectory(@TempDir Path tempDir) {
 		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(tempDir)));
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector).asInstanceOf(type(ClasspathRootSelector.class)).extracting(
-			ClasspathRootSelector::getClasspathRoot).isEqualTo(tempDir.toUri());
+		var selector = selectorStream.findAny().orElseThrow();
+		assertThat(selector) //
+				.asInstanceOf(type(ClasspathRootSelector.class)) //
+				.extracting(ClasspathRootSelector::getClasspathRoot) //
+				.isEqualTo(tempDir.toUri());
 	}
 
 	@Test
 	void parseClasspathRootsWithExistingJarFile() throws Exception {
-		var jarUri = getClass().getResource("/jartest.jar").toURI();
+		var jarUri = requireNonNull(getClass().getResource("/jartest.jar")).toURI();
 		var jarPath = Path.of(jarUri);
 
 		var selectorStream = parseIdentifiers(selectClasspathRoots(Set.of(jarPath)));
-		var selector = getSingleSelector(selectorStream);
-		assertThat(selector).asInstanceOf(type(ClasspathRootSelector.class)).extracting(
-			ClasspathRootSelector::getClasspathRoot).isEqualTo(jarUri);
+		var selector = selectorStream.findAny().orElseThrow();
+		assertThat(selector) //
+				.asInstanceOf(type(ClasspathRootSelector.class)) //
+				.extracting(ClasspathRootSelector::getClasspathRoot) //
+				.isEqualTo(jarUri);
 	}
 
 	@Nested
@@ -1034,7 +1053,7 @@ class DiscoverySelectorsTests {
 
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -1051,9 +1070,9 @@ class DiscoverySelectorsTests {
 
 				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
-					testClassLoader);
+						testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
-				assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+				assertThat(parseIdentifier(selector)).isEqualTo(selector);
 			}
 		}
 
@@ -1062,13 +1081,13 @@ class DiscoverySelectorsTests {
 			var selector = selectNestedClass(List.of(enclosingClassName, nestedClassName), doubleNestedClassName);
 
 			assertThat(selector.getEnclosingClasses()).containsExactly(ClassWithNestedInnerClass.class,
-				ClassWithNestedInnerClass.NestedClass.class);
+					ClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(
-				ClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
+					ClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
 
 			assertThat(selector.getEnclosingClassNames()).containsExactly(enclosingClassName, nestedClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(doubleNestedClassName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -1091,7 +1110,7 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -1100,7 +1119,7 @@ class DiscoverySelectorsTests {
 
 			try (var testClassLoader = TestClassLoader.forClasses(testClasses)) {
 				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
-					methodName);
+						methodName);
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(ClassWithNestedInnerClass.class);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -1109,18 +1128,18 @@ class DiscoverySelectorsTests {
 
 				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
-					testClassLoader);
+						testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
-				assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+				assertThat(parseIdentifier(selector)).isEqualTo(selector);
 			}
 		}
 
 		@Test
 		void selectNestedMethodByEnclosingClassesAndMethodName() throws Exception {
 			var selector = selectNestedMethod(List.of(ClassWithNestedInnerClass.class),
-				ClassWithNestedInnerClass.NestedClass.class, methodName);
+					ClassWithNestedInnerClass.NestedClass.class, methodName);
 
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(ClassWithNestedInnerClass.NestedClass.class);
@@ -1129,23 +1148,23 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectNestedMethodByEnclosingClassNamesMethodNameAndParameterTypeNames() throws Exception {
 			var selector = selectNestedMethod(List.of(enclosingClassName), nestedClassName, methodName,
-				String.class.getName());
+					String.class.getName());
 
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(ClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(
-				selector.getNestedClass().getDeclaredMethod(methodName, String.class));
+					selector.getNestedClass().getDeclaredMethod(methodName, String.class));
 
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -1158,14 +1177,14 @@ class DiscoverySelectorsTests {
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(ClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(
-				selector.getNestedClass().getDeclaredMethod(methodName, String.class));
+					selector.getNestedClass().getDeclaredMethod(methodName, String.class));
 			assertThat(selector.getParameterTypes()).containsExactly(String.class);
 
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		/**
@@ -1180,7 +1199,7 @@ class DiscoverySelectorsTests {
 
 			try (var testClassLoader = TestClassLoader.forClasses(enclosingClass, nestedClass)) {
 				var selector = selectNestedMethod(testClassLoader, List.of(enclosingClassName), nestedClassName,
-					methodName, String.class.getName());
+						methodName, String.class.getName());
 
 				assertThat(selector.getEnclosingClasses()).doesNotContain(enclosingClass);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getName).containsOnly(enclosingClassName);
@@ -1189,12 +1208,12 @@ class DiscoverySelectorsTests {
 
 				assertThat(selector.getClassLoader()).isSameAs(testClassLoader);
 				assertThat(selector.getEnclosingClasses()).extracting(Class::getClassLoader).containsOnly(
-					testClassLoader);
+						testClassLoader);
 				assertThat(selector.getNestedClass().getClassLoader()).isSameAs(testClassLoader);
 
 				assertThat(selector.getMethodName()).isEqualTo(methodName);
 				assertThat(selector.getParameterTypeNames()).isEqualTo(String.class.getName());
-				assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+				assertThat(parseIdentifier(selector)).isEqualTo(selector);
 			}
 		}
 
@@ -1204,38 +1223,38 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectNestedMethodByEnclosingClassesMethodNameAndParameterTypes() throws Exception {
 			var selector = selectNestedMethod(List.of(ClassWithNestedInnerClass.class),
-				ClassWithNestedInnerClass.NestedClass.class, methodName, String.class);
+					ClassWithNestedInnerClass.NestedClass.class, methodName, String.class);
 
 			assertThat(selector.getEnclosingClasses()).containsOnly(ClassWithNestedInnerClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(ClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(
-				selector.getNestedClass().getDeclaredMethod(methodName, String.class));
+					selector.getNestedClass().getDeclaredMethod(methodName, String.class));
 			assertThat(selector.getParameterTypes()).containsExactly(String.class);
 
 			assertThat(selector.getEnclosingClassNames()).containsOnly(enclosingClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(nestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(methodName);
 			assertThat(selector.getParameterTypeNames()).isEqualTo("java.lang.String");
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
 		void selectDoubleNestedMethodByEnclosingClassNamesAndMethodName() throws Exception {
 			var doubleNestedMethodName = "doubleNestedTest";
 			var selector = selectNestedMethod(List.of(enclosingClassName, nestedClassName), doubleNestedClassName,
-				doubleNestedMethodName);
+					doubleNestedMethodName);
 
 			assertThat(selector.getEnclosingClasses()).containsExactly(ClassWithNestedInnerClass.class,
-				ClassWithNestedInnerClass.NestedClass.class);
+					ClassWithNestedInnerClass.NestedClass.class);
 			assertThat(selector.getNestedClass()).isEqualTo(
-				ClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
+					ClassWithNestedInnerClass.NestedClass.DoubleNestedClass.class);
 			assertThat(selector.getMethod()).isEqualTo(
-				selector.getNestedClass().getDeclaredMethod(doubleNestedMethodName));
+					selector.getNestedClass().getDeclaredMethod(doubleNestedMethodName));
 
 			assertThat(selector.getEnclosingClassNames()).containsExactly(enclosingClassName, nestedClassName);
 			assertThat(selector.getNestedClassName()).isEqualTo(doubleNestedClassName);
 			assertThat(selector.getMethodName()).isEqualTo(doubleNestedMethodName);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 
 		@Test
@@ -1259,7 +1278,7 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null, "int"));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " ", "int"));
 			assertViolatesPrecondition(
-				() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", (String) null));
+					() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", (String) null));
 		}
 
 		/**
@@ -1275,9 +1294,9 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", null, int.class));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", " ", int.class));
 			assertViolatesPrecondition(
-				() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", (Class<?>) null));
+					() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName", (Class<?>) null));
 			assertViolatesPrecondition(() -> selectNestedMethod(List.of("ClassName"), "ClassName", "methodName",
-				new Class<?>[] { int.class, null }));
+					new Class<?>[] { int.class, null }));
 		}
 
 		/**
@@ -1295,14 +1314,15 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectNestedMethod(enclosingClassList, nestedClass, null, int.class));
 			assertViolatesPrecondition(() -> selectNestedMethod(enclosingClassList, nestedClass, " ", int.class));
 			assertViolatesPrecondition(
-				() -> selectNestedMethod(enclosingClassList, nestedClass, "methodName", (Class<?>) null));
+					() -> selectNestedMethod(enclosingClassList, nestedClass, "methodName", (Class<?>) null));
 			assertViolatesPrecondition(() -> selectNestedMethod(enclosingClassList, nestedClass, "methodName",
-				new Class<?>[] { int.class, null }));
+					new Class<?>[] { int.class, null }));
 		}
 
 		static class ClassWithNestedInnerClass {
 
 			// @Nested
+			@SuppressWarnings({ "InnerClassMayBeStatic", "unused" })
 			class NestedClass {
 
 				// @Test
@@ -1335,7 +1355,7 @@ class DiscoverySelectorsTests {
 			var selector = DiscoverySelectors.selectIteration(parentSelector, 23, 42);
 			assertThat(selector.getParentSelector()).isSameAs(parentSelector);
 			assertThat(selector.getIterationIndices()).containsExactly(23, 42);
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 	}
 
@@ -1345,7 +1365,7 @@ class DiscoverySelectorsTests {
 		void selectsUniqueId() {
 			var selector = selectUniqueId(uniqueIdForMethod(DiscoverySelectorsTests.class, "myTest(int)"));
 			assertThat(selector.getUniqueId()).isNotNull();
-			assertThat(getSingleSelector(parseIdentifier(selector))).isEqualTo(selector);
+			assertThat(parseIdentifier(selector)).isEqualTo(selector);
 		}
 	}
 
@@ -1355,13 +1375,18 @@ class DiscoverySelectorsTests {
 		assertThrows(PreconditionViolationException.class, precondition);
 	}
 
-	private static Stream<? extends DiscoverySelector> parseIdentifier(DiscoverySelector selector) {
-		return DiscoverySelectors.parse(selector.toIdentifier().orElseThrow().toString());
+	private static DiscoverySelector parseIdentifier(DiscoverySelector selector) {
+		return DiscoverySelectors.parse(toIdentifierString(selector)).orElseThrow();
 	}
 
 	private static Stream<? extends DiscoverySelector> parseIdentifiers(
 			Collection<? extends DiscoverySelector> selectors) {
-		return selectors.stream().flatMap(DiscoverySelectorsTests::parseIdentifier);
+		return DiscoverySelectors.parseAll(
+				selectors.stream().map(it -> DiscoverySelectorIdentifier.parse(toIdentifierString(it))).toList());
+	}
+
+	private static String toIdentifierString(DiscoverySelector selector) {
+		return selector.toIdentifier().orElseThrow().toString();
 	}
 
 	private static String fqmn(Class<?>... params) {
@@ -1376,10 +1401,6 @@ class DiscoverySelectorsTests {
 		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", join(", ", params));
 	}
 
-	private static DiscoverySelector getSingleSelector(Stream<? extends DiscoverySelector> selectorStream) {
-		return getOnlyElement(selectorStream.toList());
-	}
-
 	interface TestInterface {
 
 		@Test
@@ -1387,37 +1408,48 @@ class DiscoverySelectorsTests {
 		}
 
 	}
+
 	private static class TestCaseWithDefaultMethod implements TestInterface {
 
 	}
 
+	@SuppressWarnings("unused")
 	void myTest() {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(int num) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(int[] nums) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(int[][] grid) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(int[][][][][] grid) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(String info) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(String info, boolean[] flags) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(String[] info) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(String[][] info) {
 	}
 
+	@SuppressWarnings("unused")
 	void myTest(Double[][][][][] data) {
 	}
 

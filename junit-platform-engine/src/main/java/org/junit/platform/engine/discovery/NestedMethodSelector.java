@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -267,7 +266,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<NestedMethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Optional<NestedMethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
 			List<String> enclosingClassNames = parts.subList(0, parts.size() - 1);
 
@@ -276,7 +275,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 			String methodName = methodParts[1];
 			String parameterTypeNames = methodParts[2];
 
-			return Stream.of(DiscoverySelectors.selectNestedMethod(enclosingClassNames, nestedClassName, methodName,
+			return Optional.of(DiscoverySelectors.selectNestedMethod(enclosingClassNames, nestedClassName, methodName,
 				parameterTypeNames));
 		}
 	}

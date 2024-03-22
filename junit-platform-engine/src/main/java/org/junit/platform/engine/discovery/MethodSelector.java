@@ -17,7 +17,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -331,12 +330,12 @@ public class MethodSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+		public Optional<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(identifier.getValue());
 			String className = methodParts[0];
 			String methodName = methodParts[1];
 			String parameterTypeNames = methodParts[2];
-			return Stream.of(DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames));
+			return Optional.of(DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames));
 		}
 
 	}

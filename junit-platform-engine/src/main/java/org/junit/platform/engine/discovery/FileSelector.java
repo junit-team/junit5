@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.StringUtils;
@@ -144,15 +143,14 @@ public class FileSelector implements DiscoverySelector {
 		}
 
 		@Override
-		public Stream<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			FileSelector selector = StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
+		public Optional<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
 				DiscoverySelectors::selectFile, //
-				(path, query) -> {
-					FilePosition position = FilePosition.fromQuery(query).orElse(null);
-					return DiscoverySelectors.selectFile(path, position);
+				(path1, query) -> {
+					FilePosition position1 = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectFile(path1, position1);
 				} //
-			);
-			return Stream.of(selector);
+			));
 		}
 	}
 }
