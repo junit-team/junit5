@@ -244,4 +244,5 @@ public final class CollectionUtils {
 			action.accept(iterator.previous());
 		}
 	}
+
 }

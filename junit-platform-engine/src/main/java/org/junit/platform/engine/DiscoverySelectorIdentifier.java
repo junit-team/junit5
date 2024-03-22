@@ -59,7 +59,6 @@ public final class DiscoverySelectorIdentifier {
 	public static DiscoverySelectorIdentifier parse(String string) {
 		return StringUtils.splitIntoTwo(':', string).mapTwo( //
 			() -> new PreconditionViolationException("Identifier string must be 'prefix:value', but was " + string),
-			//
 			DiscoverySelectorIdentifier::new //
 		);
 	}
