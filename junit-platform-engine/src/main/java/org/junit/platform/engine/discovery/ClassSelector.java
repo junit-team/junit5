@@ -29,9 +29,9 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * that {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on classes.
  *
- * <p>If a Java {@link Class} reference is provided, the identifier will return
+ * <p>If a Java {@link Class} reference is provided, the selector will return
  * that {@code Class} and its class name accordingly. If a class name is
- * provided, the identifier will only attempt to lazily load the {@link Class}
+ * provided, the selector will only attempt to lazily load the {@link Class}
  * if {@link #getJavaClass()} is invoked.
  *
  * <p>In this context, Java {@link Class} means anything that can be referenced

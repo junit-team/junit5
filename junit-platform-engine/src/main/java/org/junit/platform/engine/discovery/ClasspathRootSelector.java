@@ -34,9 +34,9 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  *
  * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
  * expected to modify the classpath, the classpath root represented by this
- * identifier must be on the classpath of the
+ * selector must be on the classpath of the
  * {@linkplain Thread#getContextClassLoader() context class loader} of the
- * {@linkplain Thread thread} that uses this identifier.
+ * {@linkplain Thread thread} that uses this selector.
  *
  * @since 1.0
  * @see DiscoverySelectors#selectClasspathRoots(java.util.Set)

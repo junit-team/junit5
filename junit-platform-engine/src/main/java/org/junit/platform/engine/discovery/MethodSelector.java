@@ -34,11 +34,11 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover tests
  * or containers based on methods.
  *
- * <p>If a Java {@link Method} is provided, the identifier will return that
+ * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getJavaMethod() method} and its method name, class name, and
  * parameter types accordingly. If a {@link Class} and method name, a class name
  * and method name, or a <em>fully qualified method name</em> is provided,
- * this identifier will only attempt to lazily load the class, method, or parameter
+ * this selector will only attempt to lazily load the class, method, or parameter
  * types if {@link #getJavaClass()}, {@link #getJavaMethod()}, or
  * {@link #getParameterTypes()} is invoked.
  *
@@ -166,7 +166,7 @@ public class MethodSelector implements DiscoverySelector {
 	 * names, or array types.
 	 *
 	 * <p>Note: the names of parameter types are provided as a single string instead
-	 * of a collection in order to allow this identifier to be used in a generic
+	 * of a collection in order to allow this selector to be used in a generic
 	 * fashion by various test engines. It is therefore the responsibility of
 	 * the caller of this method to determine how to parse the returned string.
 	 *

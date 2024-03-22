@@ -34,10 +34,10 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * tests or containers based on methods.
  *
- * <p>If a Java {@link Method} is provided, the identifier will return that
+ * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getMethod() method} and its method name, class name, enclosing
  * classes names, and parameter types accordingly. If class names or method names
- * are provided, this identifier will only attempt to lazily load a class or method
+ * are provided, this selector will only attempt to lazily load a class or method
  * if {@link #getEnclosingClasses()}, {@link #getNestedClass()},
  * {@link #getMethod()}, or {@link #getParameterTypes()} is invoked.
  *
