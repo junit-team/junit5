@@ -146,9 +146,9 @@ public class FileSelector implements DiscoverySelector {
 		public Optional<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
 				DiscoverySelectors::selectFile, //
-				(path1, query) -> {
-					FilePosition position1 = FilePosition.fromQuery(query).orElse(null);
-					return DiscoverySelectors.selectFile(path1, position1);
+				(path, query) -> {
+					FilePosition position = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectFile(path, position);
 				} //
 			));
 		}

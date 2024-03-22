@@ -331,11 +331,7 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Optional<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(identifier.getValue());
-			String className = methodParts[0];
-			String methodName = methodParts[1];
-			String parameterTypeNames = methodParts[2];
-			return Optional.of(DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames));
+			return Optional.of(DiscoverySelectors.selectMethod(identifier.getValue()));
 		}
 
 	}
