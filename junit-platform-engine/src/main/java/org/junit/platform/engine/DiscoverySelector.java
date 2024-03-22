@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
@@ -38,7 +39,9 @@ public interface DiscoverySelector {
 	 * <p>
 	 * @return the identifier of this selector or empty if it is not supported;
 	 * never {@code null}
+	 * @since 1.11
 	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
 	default Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		return Optional.empty();
 	}
