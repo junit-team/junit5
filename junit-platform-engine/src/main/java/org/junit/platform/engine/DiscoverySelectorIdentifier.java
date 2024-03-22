@@ -18,14 +18,9 @@ public final class DiscoverySelectorIdentifier {
 
 	private final String prefix;
 	private final String value;
-	private final String fragment;
 
 	public static DiscoverySelectorIdentifier create(String prefix, String value) {
-		return create(prefix, value, "");
-	}
-
-	public static DiscoverySelectorIdentifier create(String prefix, String value, String fragment) {
-		return new DiscoverySelectorIdentifier(prefix, value, fragment);
+		return new DiscoverySelectorIdentifier(prefix, value);
 	}
 
 	public static DiscoverySelectorIdentifier parse(String string) {
@@ -33,14 +28,12 @@ public final class DiscoverySelectorIdentifier {
 		String[] parts = string.split(":", 2);
 		Preconditions.condition(parts.length == 2, () -> "Identifier string must be 'prefix:value', but was " + string);
 
-		String[] valueParts = parts[1].split("#", 2);
-		return new DiscoverySelectorIdentifier(parts[0], valueParts[0], valueParts.length == 1 ? "" : valueParts[1]);
+		return new DiscoverySelectorIdentifier(parts[0], parts[1]);
 	}
 
-	private DiscoverySelectorIdentifier(String prefix, String value, String fragment) {
+	private DiscoverySelectorIdentifier(String prefix, String value) {
 		this.prefix = prefix;
 		this.value = value;
-		this.fragment = fragment;
 	}
 
 	public String getPrefix() {
@@ -51,10 +44,6 @@ public final class DiscoverySelectorIdentifier {
 		return value;
 	}
 
-	public String getFragment() {
-		return fragment;
-	}
-
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -62,17 +51,16 @@ public final class DiscoverySelectorIdentifier {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		DiscoverySelectorIdentifier that = (DiscoverySelectorIdentifier) o;
-		return Objects.equals(prefix, that.prefix) && Objects.equals(value, that.value)
-				&& Objects.equals(fragment, that.fragment);
+		return Objects.equals(prefix, that.prefix) && Objects.equals(value, that.value);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(prefix, value, fragment);
+		return Objects.hash(prefix, value);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s:%s%s", prefix, value, fragment.isEmpty() ? "" : "#" + fragment);
+		return String.format("%s:%s", prefix, value);
 	}
 }

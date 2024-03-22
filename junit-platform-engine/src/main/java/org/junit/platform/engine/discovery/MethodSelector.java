@@ -10,13 +10,13 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.*;
+import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -313,14 +313,14 @@ public class MethodSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className,
-			String.format("%s(%s)", this.methodName, this.getParameterTypeNames())));
+		String fullyQualifiedMethodName = ReflectionUtils.getFullyQualifiedMethodName(this.className, this.methodName,
+			this.parameterTypeNames);
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, fullyQualifiedMethodName));
 	}
 
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "method";
-		private static final Pattern FRAGMENT_PATTERN = Pattern.compile("^(.+)\\((.*)\\)$");
 
 		public IdentifierParser() {
 		}
@@ -332,18 +332,12 @@ public class MethodSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<MethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			return Stream.of(parse(identifier.getValue(), identifier.getFragment()));
+			String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(identifier.getValue());
+			String className = methodParts[0];
+			String methodName = methodParts[1];
+			String parameterTypeNames = methodParts[2];
+			return Stream.of(DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames));
 		}
 
-		static MethodSelector parse(String className, String fragment) {
-			Matcher matcher = FRAGMENT_PATTERN.matcher(fragment);
-			String methodName = fragment;
-			String parameterTypeNames = "";
-			if (matcher.find()) {
-				methodName = matcher.group(1);
-				parameterTypeNames = matcher.group(2);
-			}
-			return DiscoverySelectors.selectMethod(className, methodName, parameterTypeNames);
-		}
 	}
 }
