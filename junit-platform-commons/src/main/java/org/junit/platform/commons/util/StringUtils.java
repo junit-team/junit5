@@ -14,6 +14,9 @@ import static java.util.regex.Pattern.UNICODE_CHARACTER_CLASS;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
@@ -254,6 +257,108 @@ public final class StringUtils {
 	public static String replaceWhitespaceCharacters(String str, String replacement) {
 		Preconditions.notNull(replacement, "replacement must not be null");
 		return str == null ? null : WHITESPACE_PATTERN.matcher(str).replaceAll(replacement);
+	}
+
+	/**
+	 * Split the supplied {@link String} into up to two parts using the supplied
+	 * separator character.
+	 *
+	 * @param separator the separator character
+	 * @param value the value to split; never {@code null}
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static TwoPartSplitResult splitIntoTwo(char separator, String value) {
+		Preconditions.notNull(value, "value must not be null");
+		return splitIntoTwo(value, value.indexOf(separator), 1);
+	}
+
+	/**
+	 * Split the supplied {@link String} into up to two parts using the supplied
+	 * separator string.
+	 *
+	 * @param separator the separator string; never {@code null}
+	 * @param value the value to split; never {@code null}
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static TwoPartSplitResult splitIntoTwo(String separator, String value) {
+		Preconditions.notNull(separator, "separator must not be null");
+		Preconditions.notNull(value, "value must not be null");
+		return splitIntoTwo(value, value.indexOf(separator), separator.length());
+	}
+
+	private static TwoPartSplitResult splitIntoTwo(String value, int index, int length) {
+		if (index == -1) {
+			return new OnePart(value);
+		}
+		return new TwoParts(value.substring(0, index), value.substring(index + length));
+	}
+
+	/**
+	 * The result of splitting a string into up to two parts.
+	 *
+	 * @see StringUtils#splitIntoTwo(char, String)
+	 * @see StringUtils#splitIntoTwo(String, String)
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public interface TwoPartSplitResult {
+
+		/**
+		 * Maps the result of splitting a string into two parts or throw an exception.
+		 *
+		 * @param onePartExceptionCreator the exception creator to use if the string was split into a single part
+		 * @param twoPartsMapper the mapper to use if the string was split into two parts
+		 */
+		default <T> T mapTwo(Supplier<? extends RuntimeException> onePartExceptionCreator,
+				BiFunction<String, String, ? extends T> twoPartsMapper) {
+			Function<String, ? extends T> onePartMapper = __ -> {
+				throw onePartExceptionCreator.get();
+			};
+			return map(onePartMapper, twoPartsMapper);
+		}
+
+		/**
+		 * Maps the result of splitting a string into up to two parts.
+		 *
+		 * @param onePartMapper the mapper to use if the string was split into a single part
+		 * @param twoPartsMapper the mapper to use if the string was split into two parts
+		 */
+		<T> T map(Function<String, ? extends T> onePartMapper, BiFunction<String, String, ? extends T> twoPartsMapper);
+
+	}
+
+	private static final class OnePart implements TwoPartSplitResult {
+
+		private final String value;
+
+		OnePart(String value) {
+			this.value = value;
+		}
+
+		@Override
+		public <T> T map(Function<String, ? extends T> onePartMapper,
+				BiFunction<String, String, ? extends T> twoPartsMapper) {
+			return onePartMapper.apply(value);
+		}
+	}
+
+	private static final class TwoParts implements TwoPartSplitResult {
+
+		private final String first;
+		private final String second;
+
+		TwoParts(String first, String second) {
+			this.first = first;
+			this.second = second;
+		}
+
+		@Override
+		public <T> T map(Function<String, ? extends T> onePartMapper,
+				BiFunction<String, String, ? extends T> twoPartsMapper) {
+			return twoPartsMapper.apply(first, second);
+		}
 	}
 
 }

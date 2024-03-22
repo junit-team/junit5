@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -144,13 +145,14 @@ public class FileSelector implements DiscoverySelector {
 
 		@Override
 		public Stream<FileSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			String[] parts = identifier.getValue().split("\\?", 2);
-			if (parts.length == 2) {
-				String resourceName = parts[0];
-				FilePosition position = FilePosition.fromQuery(parts[1]).orElse(null);
-				return Stream.of(DiscoverySelectors.selectFile(resourceName, position));
-			}
-			return Stream.of(DiscoverySelectors.selectFile(identifier.getValue()));
+			FileSelector selector = StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
+				DiscoverySelectors::selectFile, //
+				(path, query) -> {
+					FilePosition position = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectFile(path, position);
+				} //
+			);
+			return Stream.of(selector);
 		}
 	}
 }

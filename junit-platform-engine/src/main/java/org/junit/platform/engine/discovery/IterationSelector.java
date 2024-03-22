@@ -28,6 +28,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -137,13 +138,11 @@ public class IterationSelector implements DiscoverySelector {
 		}
 
 		private IntStream parseIndexDefinition(String value) {
-			String[] parts = value.split("\\.\\.", 2);
-			int firstIndex = Integer.parseInt(parts[0]);
-			if (parts.length == 2) {
-				int lastIndex = Integer.parseInt(parts[1]);
-				return IntStream.rangeClosed(firstIndex, lastIndex);
-			}
-			return IntStream.of(firstIndex);
+			return StringUtils.splitIntoTwo("..", value).map( //
+				index -> IntStream.of(Integer.parseInt(index)), //
+				(firstIndex, lastIndex) -> IntStream.rangeClosed(Integer.parseInt(firstIndex),
+					Integer.parseInt(lastIndex))//
+			);
 		}
 	}
 }
