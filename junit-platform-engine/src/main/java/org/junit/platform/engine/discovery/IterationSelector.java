@@ -101,6 +101,7 @@ public class IterationSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		// TODO Collapse ranges using start..end notation
 		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
 			String.format("%s[%s]", parentSelectorString,
