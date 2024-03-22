@@ -39,6 +39,7 @@ import org.junit.platform.engine.UniqueId;
  * Collection of {@code static} factory methods for creating
  * {@link DiscoverySelector DiscoverySelectors}.
  *
+ * @since 1.0
  * @see UriSelector
  * @see FileSelector
  * @see DirectorySelector
@@ -51,7 +52,7 @@ import org.junit.platform.engine.UniqueId;
  * @see NestedClassSelector
  * @see NestedMethodSelector
  * @see UniqueIdSelector
- * @since 1.0
+ * @see DiscoverySelectorIdentifier
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
@@ -941,14 +942,43 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
+	/**
+	 * Parse the supplied string representation of a
+	 * {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the string representation of a {@code DiscoverySelectorIdentifier};
+	 * never {@code null} or blank
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Optional<? extends DiscoverySelector> parse(String identifier) {
 		return new DiscoverySelectorIdentifierParsers().parse(identifier);
 	}
 
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the {@code DiscoverySelectorIdentifier} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
 		return new DiscoverySelectorIdentifierParsers().parse(identifier);
 	}
 
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier
+	 * DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the {@code DiscoverySelectorIdentifiers} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		return new DiscoverySelectorIdentifierParsers().parseAll(identifiers);
 	}

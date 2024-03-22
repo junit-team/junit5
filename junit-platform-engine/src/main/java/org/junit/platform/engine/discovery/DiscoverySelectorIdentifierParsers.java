@@ -22,6 +22,12 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
+/**
+ * Utility class for parsing {@link DiscoverySelectorIdentifier
+ * DiscoverySelectorIdentifiers}.
+ *
+ * @since 1.11
+ */
 class DiscoverySelectorIdentifierParsers {
 
 	private final Map<String, DiscoverySelectorIdentifierParser> parsers = loadParsers();
@@ -41,14 +47,17 @@ class DiscoverySelectorIdentifierParsers {
 	}
 
 	public Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
+		Preconditions.notNull(identifiers, "identifiers must not be null");
 		return identifiers.stream().map(this::parse).filter(Optional::isPresent).map(Optional::get);
 	}
 
 	public Optional<? extends DiscoverySelector> parse(String identifier) {
+		Preconditions.notNull(identifier, "identifier must not be null");
 		return parse(DiscoverySelectorIdentifier.parse(identifier));
 	}
 
 	public Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+		Preconditions.notNull(identifier, "identifier must not be null");
 		DiscoverySelectorIdentifierParser parser = parsers.get(identifier.getPrefix());
 		Preconditions.notNull(parser, "No parser for prefix: " + identifier.getPrefix());
 

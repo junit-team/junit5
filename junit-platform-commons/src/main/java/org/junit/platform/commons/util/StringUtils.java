@@ -298,9 +298,9 @@ public final class StringUtils {
 	/**
 	 * The result of splitting a string into up to two parts.
 	 *
+	 * @since 1.11
 	 * @see StringUtils#splitIntoTwo(char, String)
 	 * @see StringUtils#splitIntoTwo(String, String)
-	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
 	public interface TwoPartSplitResult {

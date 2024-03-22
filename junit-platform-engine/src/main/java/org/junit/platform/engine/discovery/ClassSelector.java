@@ -38,10 +38,10 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * as a {@link Class} on the JVM &mdash; for example, classes from other JVM
  * languages such Groovy, Scala, etc.
  *
+ * @since 1.0
  * @see DiscoverySelectors#selectClass(String)
  * @see DiscoverySelectors#selectClass(Class)
  * @see org.junit.platform.engine.support.descriptor.ClassSource
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {

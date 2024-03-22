@@ -38,8 +38,8 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
  * a subset of the iterations of tests or containers.
  *
- * @see DiscoverySelectors#selectIteration(DiscoverySelector, int...)
  * @since 1.9
+ * @see DiscoverySelectors#selectIteration(DiscoverySelector, int...)
  */
 @API(status = EXPERIMENTAL, since = "1.9")
 public class IterationSelector implements DiscoverySelector {

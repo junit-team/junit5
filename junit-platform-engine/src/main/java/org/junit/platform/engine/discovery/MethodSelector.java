@@ -46,6 +46,7 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * as a {@link Method} on the JVM &mdash; for example, methods from Java classes
  * or methods from other JVM languages such Groovy, Scala, etc.
  *
+ * @since 1.0
  * @see DiscoverySelectors#selectMethod(String)
  * @see DiscoverySelectors#selectMethod(String, String)
  * @see DiscoverySelectors#selectMethod(String, String, String)
@@ -53,7 +54,6 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * @see DiscoverySelectors#selectMethod(Class, String, String)
  * @see DiscoverySelectors#selectMethod(Class, Method)
  * @see org.junit.platform.engine.support.descriptor.MethodSource
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class MethodSelector implements DiscoverySelector {
@@ -149,9 +149,9 @@ public class MethodSelector implements DiscoverySelector {
 	 * <p>See {@link #getParameterTypeNames()} for details.
 	 *
 	 * @return the names of parameter types
+	 * @since 1.0
 	 * @see #getParameterTypeNames()
 	 * @see #getParameterTypes()
-	 * @since 1.0
 	 * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
 	 */
 	@Deprecated
@@ -173,8 +173,8 @@ public class MethodSelector implements DiscoverySelector {
 	 * @return the names of parameter types supplied to this {@code MethodSelector}
 	 * via a constructor or deduced from a {@code Method} or parameter types supplied
 	 * via a constructor; never {@code null} but potentially an empty string
-	 * @see #getParameterTypes()
 	 * @since 1.10
+	 * @see #getParameterTypes()
 	 */
 	@API(status = STABLE, since = "1.10")
 	public String getParameterTypeNames() {
@@ -221,9 +221,9 @@ public class MethodSelector implements DiscoverySelector {
 	 *
 	 * @return the method's parameter types; never {@code null} but potentially
 	 * an empty array if the selected method does not declare parameters
+	 * @since 1.10
 	 * @see #getParameterTypeNames()
 	 * @see Method#getParameterTypes()
-	 * @since 1.10
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public Class<?>[] getParameterTypes() {

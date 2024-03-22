@@ -32,13 +32,13 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * can discover tests or containers based on files in the
  * file system.
  *
+ * @since 1.0
  * @see DiscoverySelectors#selectFile(String)
  * @see DiscoverySelectors#selectFile(File)
  * @see DirectorySelector
  * @see #getFile()
  * @see #getPath()
  * @see #getRawPath()
- * @since 1.0
  */
 @API(status = STABLE, since = "1.0")
 public class FileSelector implements DiscoverySelector {
