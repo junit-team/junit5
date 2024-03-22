@@ -12,6 +12,7 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -253,6 +254,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 				});
 	}
 
+	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "nested-method";

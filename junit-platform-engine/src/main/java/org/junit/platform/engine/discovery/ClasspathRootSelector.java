@@ -11,6 +11,7 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.Collections.singleton;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.getFirstElement;
 
@@ -94,6 +95,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.classpathRoot.toString()));
 	}
 
+	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
 		private static final String PREFIX = "classpath-root";
