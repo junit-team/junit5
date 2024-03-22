@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,8 +42,7 @@ class DiscoverySelectorIdentifierParsers {
 			DiscoverySelectorIdentifierParser previous = parsers.put(parser.getPrefix(), parser);
 			Preconditions.condition(previous == null,
 				() -> String.format("Duplicate parser for prefix: [%s] candidate a: [%s] candidate b: [%s] ",
-					parser.getPrefix(), previous.getClass().getName(), parser.getClass().getName()));
-
+					parser.getPrefix(), requireNonNull(previous).getClass().getName(), parser.getClass().getName()));
 		}
 		return parsers;
 	}
