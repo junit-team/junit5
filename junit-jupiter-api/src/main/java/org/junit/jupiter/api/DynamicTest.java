@@ -226,6 +226,65 @@ public class DynamicTest extends DynamicNode {
 				.map(input -> dynamicTest(input.getName(), () -> testExecutor.accept(input.getPayload())));
 	}
 
+	/**
+	 * Generate a stream of dynamic tests based on the given input stream.
+	 *
+	 * <p>Use this method when the set of dynamic tests is nondeterministic in
+	 * nature or when the input comes from an existing {@link Iterator}. See
+	 * {@link #stream(Stream)} as an alternative.
+	 *
+	 * <p>The given {@code inputGenerator} is responsible for supplying input values,
+	 * display names, and an executor that executes a test. A {@link DynamicTest} will be
+	 * added to the resulting stream for each dynamically supplied input value.
+	 *
+	 * @param inputGenerator an {@code Iterator} with {@code NamedExecutable} values
+	 * that serves as a dynamic <em>input generator</em>; never {@code null}
+	 * @param <T> the type of <em>input</em> supplied by the {@code inputStream}
+	 * @return a stream of dynamic tests based on the given generator; never {@code null}
+	 * @since 5.11
+	 *
+	 * @see #dynamicTest(String, Executable)
+	 * @see #stream(Stream)
+	 * @see NamedExecutable
+	 */
+
+	public static <T extends NamedExecutable<T>> Stream<DynamicTest> stream(
+			Iterator<? extends NamedExecutable<T>> inputGenerator) {
+		Preconditions.notNull(inputGenerator, "inputGenerator must not be null");
+
+		return stream(StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false));
+	}
+
+	/**
+	 * Generate a stream of dynamic tests based on the given input stream.
+	 *
+	 * <p>Use this method when the set of dynamic tests is nondeterministic in
+	 * nature or when the input comes from an existing {@link Stream}. See
+	 * {@link #stream(Iterator)} as an alternative.
+	 *
+	 * <p>The given {@code inputStream} is responsible for supplying input values,
+	 * display names, and an executor that executes a test. A {@link DynamicTest} will be
+	 * added to the resulting stream for each dynamically supplied input value.
+	 *
+	 * @param inputStream a {@code Stream} that supplies dynamic {@code NamedExecutable}
+	 * input values; never {@code null}
+	 * @param <T> the type of <em>input</em> supplied by the {@code inputStream}
+	 * @return a stream of dynamic tests based on the given generator; never {@code null}
+	 * @since 5.11
+	 *
+	 * @see #dynamicTest(String, Executable)
+	 * @see #stream(Iterator)
+	 * @see NamedExecutable
+	 */
+
+	public static <T extends NamedExecutable<T>> Stream<DynamicTest> stream(
+			Stream<? extends NamedExecutable<T>> inputStream) {
+		Preconditions.notNull(inputStream, "inputStream must not be null");
+
+		return inputStream. //
+				map((input) -> dynamicTest(input.getName(), input));
+	}
+
 	private final Executable executable;
 
 	private DynamicTest(String displayName, URI testSourceUri, Executable executable) {

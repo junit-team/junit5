@@ -37,6 +37,28 @@ import org.opentest4j.AssertionFailedError;
  */
 class DynamicTestTests {
 
+	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer) implements NamedExecutable<DummyNamedExecutableForTests> {
+
+	@Override
+	public String toString() {
+		return getName().toLowerCase();
+	}
+
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public DummyNamedExecutableForTests getPayload() {
+		return this;
+	}
+
+	@Override
+	public void execute() throws Throwable {
+		consumer.accept(getPayload().toString());
+	}}
+
 	private static final Executable nix = () -> {
 	};
 
@@ -91,6 +113,18 @@ class DynamicTestTests {
 	}
 
 	@Test
+	void streamFromStreamWithNamedExecutablesPreconditions() {
+		assertThrows(PreconditionViolationException.class,
+				() -> DynamicTest.stream((Stream<NamedExecutable<DummyNamedExecutableForTests>>)null));
+	}
+
+	@Test
+	void streamFromIteratorWithNamedExecutablesPreconditions() {
+		assertThrows(PreconditionViolationException.class,
+				() -> DynamicTest.stream((Iterator<DummyNamedExecutableForTests>)null));
+	}
+
+	@Test
 	void streamFromStream() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(Stream.of("foo", "bar", "baz"), String::toUpperCase,
 			this::throwingConsumer);
@@ -116,6 +150,24 @@ class DynamicTestTests {
 		Stream<DynamicTest> stream = DynamicTest.stream(
 			List.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")).iterator(),
 			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromStreamWithNamedExecutables() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			Stream.of(new DummyNamedExecutableForTests("FOO", this::throwingConsumer), new DummyNamedExecutableForTests("BAR", this::throwingConsumer), new DummyNamedExecutableForTests("BAZ", this::throwingConsumer))
+		);
+
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromIteratorWithNamedExecutables() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			List.of(new DummyNamedExecutableForTests("FOO", this::throwingConsumer), new DummyNamedExecutableForTests("BAR", this::throwingConsumer), new DummyNamedExecutableForTests("BAZ", this::throwingConsumer)).iterator()
+		);
+
 		assertStream(stream);
 	}
 

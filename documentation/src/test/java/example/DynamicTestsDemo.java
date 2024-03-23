@@ -35,6 +35,7 @@ import example.util.Calculator;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.NamedExecutable;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -43,6 +44,36 @@ import org.junit.jupiter.api.function.ThrowingConsumer;
 // @formatter:off
 // tag::user_guide[]
 class DynamicTestsDemo {
+
+	static class PalindromeNamedExecutable implements NamedExecutable<PalindromeNamedExecutable> {
+		private final String name;
+		private final String payload;
+
+		public PalindromeNamedExecutable(String name, String payload) {
+			this.name = name;
+			this.payload = payload;
+		}
+
+		@Override
+		public PalindromeNamedExecutable getPayload() {
+			return this;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+		@Override
+		public void execute() {
+			assertTrue(isPalindrome(getPayload().toString()));
+		}
+
+		@Override
+		public String toString() {
+			return payload;
+		}
+	}
 
 	private final Calculator calculator = new Calculator();
 
@@ -169,6 +200,19 @@ class DynamicTestsDemo {
 	}
 
 	@TestFactory
+	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNamedExecutables() {
+		// Stream of NamedExecutables to check if a string is a palindrome
+		Stream<NamedExecutable<PalindromeNamedExecutable>> inputStream = Stream.of(
+				new PalindromeNamedExecutable("test if madam is a palindrome", "madam"),
+				new PalindromeNamedExecutable("another test to test mom is a palindrome", "mom"),
+				new PalindromeNamedExecutable("is radar a palindrome ?", "radar")
+		);
+
+		// Returns a stream of dynamic tests.
+		return DynamicTest.stream(inputStream);
+	}
+
+	@TestFactory
 	Stream<DynamicNode> dynamicTestsWithContainers() {
 		return Stream.of("A", "B", "C")
 			.map(input -> dynamicContainer("Container " + input, Stream.of(
@@ -192,6 +236,5 @@ class DynamicTestsDemo {
 				.map(text -> dynamicTest(text, () -> assertTrue(isPalindrome(text)))
 		));
 	}
-
 }
 // end::user_guide[]
