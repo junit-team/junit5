@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.LauncherConstants.CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
@@ -119,7 +120,8 @@ class StreamInterceptingTestExecutionListenerIntegrationTests {
 	private static Stream<Arguments> systemStreams() {
 		return Stream.of(//
 			streamType(CAPTURE_STDOUT_PROPERTY_NAME, () -> System.out, STDOUT_REPORT_ENTRY_KEY), //
-			streamType(CAPTURE_STDERR_PROPERTY_NAME, () -> System.err, STDERR_REPORT_ENTRY_KEY));
+			streamType(CAPTURE_STDERR_PROPERTY_NAME, () -> System.err, STDERR_REPORT_ENTRY_KEY), //
+			streamType(CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME, () -> System.out, STDOUT_REPORT_ENTRY_KEY));
 	}
 
 	private static Arguments streamType(String configParam, Supplier<PrintStream> printStreamSupplier,

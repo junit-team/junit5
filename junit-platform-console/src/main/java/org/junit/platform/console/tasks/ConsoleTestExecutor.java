@@ -17,7 +17,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -29,6 +31,7 @@ import org.junit.platform.console.options.TestConsoleOutputOptions;
 import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
@@ -97,6 +100,24 @@ public class ConsoleTestExecutor {
 	private TestExecutionSummary executeTests(PrintWriter out, Optional<Path> reportsDir) {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
+
+		if (isSameFile(outputOptions.getStdoutPath(), outputOptions.getStderrPath())) {
+			captureMergedStandardStreams();
+		}
+		else {
+			if (outputOptions.getStdoutPath() != null) {
+				captureStdout();
+			}
+			if (outputOptions.getStderrPath() != null) {
+				captureStderr();
+			}
+		}
+
+		if (outputOptions.getStdoutPath() != null || outputOptions.getStderrPath() != null) {
+			TestExecutionListener redirectionListener = new RedirectStdoutAndStderrListener(
+				outputOptions.getStdoutPath(), outputOptions.getStderrPath(), out);
+			launcher.registerTestExecutionListeners(redirectionListener);
+		}
 
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		launcher.execute(discoveryRequest);
@@ -183,6 +204,34 @@ public class ConsoleTestExecutor {
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
+	}
+
+	@API(status = INTERNAL, since = "5.11")
+	private boolean isSameFile(Path path1, Path path2) {
+		if (path1 == null || path2 == null)
+			return false;
+		return (path1.normalize().toAbsolutePath().equals(path2.normalize().toAbsolutePath()));
+	}
+
+	@API(status = INTERNAL, since = "5.11")
+	private void captureStdout() {
+		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
+		configParameters.put(LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME, "true");
+		discoveryOptions.setConfigurationParameters(configParameters);
+	}
+
+	@API(status = INTERNAL, since = "5.11")
+	private void captureStderr() {
+		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
+		configParameters.put(LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME, "true");
+		discoveryOptions.setConfigurationParameters(configParameters);
+	}
+
+	@API(status = INTERNAL, since = "5.11")
+	private void captureMergedStandardStreams() {
+		Map<String, String> configParameters = new HashMap<>(discoveryOptions.getConfigurationParameters());
+		configParameters.put(LauncherConstants.CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME, "true");
+		discoveryOptions.setConfigurationParameters(configParameters);
 	}
 
 	@FunctionalInterface

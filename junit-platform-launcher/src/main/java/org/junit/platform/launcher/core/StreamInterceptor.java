@@ -37,6 +37,12 @@ class StreamInterceptor extends PrintStream {
 		return register(System.err, System::setErr, maxNumberOfBytesPerThread);
 	}
 
+	static Optional<StreamInterceptor> registerMergedStandardStreams(int maxNumberOfBytesPerThread) {
+		Optional<StreamInterceptor> interceptor = registerStdout(maxNumberOfBytesPerThread);
+		interceptor.ifPresent((System::setErr));
+		return interceptor;
+	}
+
 	static Optional<StreamInterceptor> register(PrintStream originalStream, Consumer<PrintStream> streamSetter,
 			int maxNumberOfBytesPerThread) {
 		if (originalStream instanceof StreamInterceptor) {

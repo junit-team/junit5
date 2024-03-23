@@ -61,6 +61,21 @@ public class LauncherConstants {
 	public static final String CAPTURE_STDERR_PROPERTY_NAME = "junit.platform.output.capture.stderr";
 
 	/**
+	 * Property name used to enable merging and capturing output to {@link System#err} and {@link System#out}:
+	 * {@value}
+	 *
+	 * <p>If enabled, the JUnit Platform merges stdout and stderr and publishes
+	 * it as a {@link ReportEntry} using the
+	 * {@value #STDOUT_REPORT_ENTRY_KEY} key immediately before reporting the
+	 * test identifier as finished.
+	 *
+	 * @see #STDOUT_REPORT_ENTRY_KEY
+	 * @see ReportEntry
+	 * @see TestExecutionListener#reportingEntryPublished(TestIdentifier, ReportEntry)
+	 */
+	public static final String CAPTURE_MERGED_STANDARD_STREAMS_PROPERTY_NAME = "junit.platform.output.capture.merge";
+
+	/**
 	 * Property name used to configure the maximum number of bytes for buffering
 	 * to use per thread and output type if output capturing is enabled:
 	 * {@value}
