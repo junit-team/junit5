@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -135,6 +136,10 @@ class TestDiscoveryOptionsMixin {
 				"-select-iteration" }, arity = "1", hidden = true, converter = SelectorConverter.Iteration.class)
 		private final List<IterationSelector> selectedIterations2 = new ArrayList<>();
 
+		@Option(names = {
+				"--select" }, arity = "1", converter = SelectorConverter.Identifier.class, description = "Select via a prefixed identifier. This option can be repeated.")
+		private final List<DiscoverySelectorIdentifier> selectorIdentifiers = new ArrayList<>();
+
 		SelectorOptions() {
 		}
 
@@ -152,6 +157,7 @@ class TestDiscoveryOptionsMixin {
 			result.setSelectedClasspathResources(
 				merge(this.selectedClasspathResources, this.selectedClasspathResources2));
 			result.setSelectedIterations(merge(this.selectedIterations, this.selectedIterations2));
+			result.setSelectorIdentifiers(this.selectorIdentifiers);
 		}
 	}
 

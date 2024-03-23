@@ -42,6 +42,8 @@ import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 
 /**
  * @since 1.10
@@ -549,6 +551,32 @@ class CommandLineOptionsParsingTests {
 		assertThat(e.getMessage()).isEqualTo("Duplicate key 'foo' for values 'bar' and 'baz'.");
 	}
 
+	@ParameterizedTest
+	@EnumSource
+	void parseValidSelectorIdentifier(ArgsType type) {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), parseIdentifiers(type,"--select resource:/foo.csv")),
+				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), parseIdentifiers(type,"--select method:com.acme.Foo#m()")),
+				() -> assertEquals(List.of(selectClass("com.acme.Foo")), parseIdentifiers(type,"--select class:com.acme.Foo")),
+				() -> assertEquals(List.of(selectPackage("com.acme.foo")), parseIdentifiers(type,"--select package:com.acme.foo")),
+				() -> assertEquals(List.of(selectModule("com.acme.foo")), parseIdentifiers(type,"--select module:com.acme.foo")),
+				() -> assertEquals(List.of(selectDirectory("foo/bar")), parseIdentifiers(type,"--select directory:foo/bar")),
+				() -> assertEquals(List.of(selectFile("foo.txt"), selectUri("file:///foo.txt")), parseIdentifiers(type,"--select file:foo.txt --select uri:file:///foo.txt"))
+		);
+		// @formatter:on
+	}
+
+	private static List<? extends DiscoverySelector> parseIdentifiers(ArgsType type, String argLine)
+			throws IOException {
+		return DiscoverySelectors.parseAll(type.parseArgLine(argLine).discovery.getSelectorIdentifiers()).toList();
+	}
+
+	@Test
+	void parseInvalidSelectorIdentifier() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--select");
+	}
+
 	private void assertOptionWithMissingRequiredArgumentThrowsException(String... options) {
 		assertAll(
 			Stream.of(options).map(opt -> () -> assertThrows(Exception.class, () -> ArgsType.args.parseArgLine(opt))));
@@ -574,6 +602,7 @@ class CommandLineOptionsParsingTests {
 				}
 			}
 		};
+
 		abstract Result parseArgLine(String argLine) throws IOException;
 
 		private static String[] split(String argLine) {
