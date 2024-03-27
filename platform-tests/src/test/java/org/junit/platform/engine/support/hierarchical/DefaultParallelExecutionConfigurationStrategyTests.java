@@ -50,6 +50,20 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
+		assertThat(configuration.getTestExecutor()).isSameAs(ParallelExecutionConfiguration.TestExecutor.FORK_JOIN);
+	}
+
+	@Test
+	void fixedStrategySupportsCustomTestExecutor() {
+		when(configParams.get(DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME))
+				.thenReturn(Optional.of("42"));
+		when(configParams.get(DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME))
+				.thenReturn(Optional.of("fixed_threads"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.FIXED;
+		var configuration = strategy.createConfiguration(configParams);
+
+		assertThat(configuration.getTestExecutor()).isSameAs(ParallelExecutionConfiguration.TestExecutor.FIXED_THREADS);
 	}
 
 	@Test
@@ -79,6 +93,18 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
 		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
+		assertThat(configuration.getTestExecutor()).isSameAs(ParallelExecutionConfiguration.TestExecutor.FORK_JOIN);
+	}
+
+	@Test
+	void dynamicStrategySupportsCustomTestExecutor() {
+		when(configParams.get(DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME))
+				.thenReturn(Optional.of("fixed_threads"));
+
+		ParallelExecutionConfigurationStrategy strategy = DefaultParallelExecutionConfigurationStrategy.DYNAMIC;
+		var configuration = strategy.createConfiguration(configParams);
+
+		assertThat(configuration.getTestExecutor()).isSameAs(ParallelExecutionConfiguration.TestExecutor.FIXED_THREADS);
 	}
 
 	@Test
@@ -212,7 +238,8 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 	static class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfigurationStrategy {
 		@Override
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
-			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, __ -> true);
+			return new DefaultParallelExecutionConfiguration(1, 2, 3, 4, 5, __ -> true,
+				ParallelExecutionConfiguration.TestExecutor.FORK_JOIN);
 		}
 	}
 
