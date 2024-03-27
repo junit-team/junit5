@@ -27,6 +27,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.params.converter.LocaleConversionFormat;
 
 /**
  * @since 5.4
@@ -43,6 +44,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = DisplayNameGenerator.DEFAULT_GENERATOR_PROPERTY_NAME;
 	String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = MethodOrderer.DEFAULT_ORDER_PROPERTY_NAME;
 	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;
+	String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
 	Optional<String> getRawConfigurationParameter(String key);
 
@@ -69,5 +71,7 @@ public interface JupiterConfiguration {
 	CleanupMode getDefaultTempDirCleanupMode();
 
 	Supplier<TempDirFactory> getDefaultTempDirFactorySupplier();
+
+	LocaleConversionFormat getDefaultLocaleConversionFormat();
 
 }
