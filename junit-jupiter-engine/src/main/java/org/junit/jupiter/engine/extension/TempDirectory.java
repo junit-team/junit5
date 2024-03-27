@@ -338,6 +338,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					if (exc instanceof NoSuchFileException) {
+						return CONTINUE;
+					}
 					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
 					resetPermissionsAndTryToDeleteAgain(file, exc);
 					return CONTINUE;

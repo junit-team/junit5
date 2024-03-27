@@ -43,7 +43,8 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* `TempDir` suppresses `NoSuchFileException` when deleting files that may have been deleted
+  by another thread or process.
 
 [[release-notes-5.11.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
