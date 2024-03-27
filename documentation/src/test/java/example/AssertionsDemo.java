@@ -41,8 +41,22 @@ class AssertionsDemo {
 		assertEquals(2, calculator.add(1, 1));
 		assertEquals(4, calculator.multiply(2, 2),
 				"The optional failure message is now the last parameter");
+		// When third parameter is used as message supplier (lambda expression)
+		// it will be lazily evaluated, only when the assertion fails.
 		assertTrue('a' < 'b', () -> "Assertion messages can be lazily evaluated -- "
 				+ "to avoid constructing complex messages unnecessarily.");
+	}
+
+	@Test
+	void assertWithMessageSupplier() {
+		// When assertion failure message is used as a plain expression,
+		// the expression will be evaluated irrespective of the assertion result.
+		assertEquals(4, calculator.multiply(2, 2),
+				"This expression will always evaluate irrespective of assertion result.");
+		// When assertion failure message is created as a lambda expression,
+		// expression will only evaluate when assertion result is failed (lazy evaluation)
+		// and can help us save unnecessary computations when they are not needed.
+		assertTrue('a' < 'b', () -> "This lambda will evaluate only if assertion fails.");
 	}
 
 	@Test
