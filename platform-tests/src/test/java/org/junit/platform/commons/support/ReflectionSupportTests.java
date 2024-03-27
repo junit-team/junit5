@@ -36,6 +36,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 class ReflectionSupportTests {
 
 	private static final Predicate<Class<?>> allTypes = type -> true;
+	private static final Predicate<Resource> allResources = type -> true;
 	private static final Predicate<String> allNames = name -> true;
 	private static final Predicate<Method> allMethods = name -> true;
 	private static final Predicate<Field> allFields = name -> true;
@@ -122,6 +123,18 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void tryToLoadResourcePreconditions() {
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(null));
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(""));
+	}
+
+	@Test
+	void tryToLoadResourceDelegates() {
+		assertEquals(ReflectionUtils.tryToLoadResource("default-package.resource").toOptional(),
+			ReflectionSupport.tryToLoadResource("default-package.resource").toOptional());
+	}
+
+	@Test
 	void findAllClassesInClasspathRootPreconditions() {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",
@@ -130,6 +143,36 @@ class ReflectionSupportTests {
 			() -> ReflectionSupport.findAllClassesInClasspathRoot(path, null, allNames));
 		assertPreconditionViolationException("name predicate",
 			() -> ReflectionSupport.findAllClassesInClasspathRoot(path, allTypes, null));
+	}
+
+	@TestFactory
+	List<DynamicTest> findAllResourcesInClasspathRootDelegates() throws Throwable {
+		List<DynamicTest> tests = new ArrayList<>();
+		List<Path> paths = new ArrayList<>();
+		paths.add(Path.of(".").toRealPath());
+		paths.addAll(ReflectionUtils.getAllClasspathRootDirectories());
+		for (var path : paths) {
+			var root = path.toUri();
+			var displayName = root.getPath();
+			if (displayName.length() > 42) {
+				displayName = "..." + displayName.substring(displayName.length() - 42);
+			}
+			tests.add(DynamicTest.dynamicTest(displayName,
+				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources, allNames),
+					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources, allNames))));
+		}
+		return tests;
+	}
+
+	@Test
+	void findAllResourcesInClasspathRootPreconditions() {
+		var path = Path.of(".").toUri();
+		assertPreconditionViolationException("root",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources, allNames));
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, allResources, null));
 	}
 
 	@Test
@@ -150,6 +193,24 @@ class ReflectionSupportTests {
 	}
 
 	@Test
+	void findAllResourcesInPackageDelegates() {
+		assertNotEquals(0, ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames).size());
+
+		assertEquals(ReflectionUtils.findAllResourcesInPackage("org.junit", allResources, allNames),
+			ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames));
+	}
+
+	@Test
+	void findAllResourcesInPackagePreconditions() {
+		assertPreconditionViolationExceptionForString("basePackageName",
+			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources, allNames));
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, null));
+	}
+
+	@Test
 	void findAllClassesInModuleDelegates() {
 		assertEquals(ReflectionUtils.findAllClassesInModule("org.junit.platform.commons", allTypes, allNames),
 			ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", allTypes, allNames));
@@ -164,6 +225,23 @@ class ReflectionSupportTests {
 			() -> ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", null, allNames));
 		assertPreconditionViolationException("name predicate",
 			() -> ReflectionSupport.findAllClassesInModule("org.junit.platform.commons", allTypes, null));
+	}
+
+	@Test
+	void findAllResourcesInModuleDelegates() {
+		assertEquals(ReflectionUtils.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames),
+			ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames));
+	}
+
+	@Test
+	void findAllResourcesInModulePreconditions() {
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> ReflectionSupport.findAllResourcesInModule(null, allResources, allNames));
+		assertEquals("Module name must not be null or empty", exception.getMessage());
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, null));
 	}
 
 	@Test

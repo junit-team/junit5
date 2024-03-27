@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.discovery;
 
 import static java.util.stream.Collectors.toCollection;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -26,6 +28,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
@@ -161,6 +164,24 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		}
 
 		/**
+		 * Add a predefined resolver that resolves {@link ClasspathRootSelector
+		 * ClasspathRootSelectors}, {@link ModuleSelector ModuleSelectors}, and
+		 * {@link PackageSelector PackageSelectors} into {@link ClasspathResourceSelector
+		 * ClasspathResourceSelectors} by scanning for resources that satisfy the supplied
+		 * predicate in the respective class containers to this builder.
+		 *
+		 * @param resourceFilter predicate the resolved classes must satisfy; never
+		 * {@code null}
+		 * @return this builder for method chaining
+		 */
+		@API(status = EXPERIMENTAL, since = "1.11")
+		public Builder<T> addResourceContainerSelectorResolver(Predicate<Resource> resourceFilter) {
+			Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
+			return addSelectorResolver(
+				context -> new ResourceContainerSelectorResolver(resourceFilter, context.getPackageFilter()));
+		}
+
+		/**
 		 * Add a context insensitive {@link SelectorResolver} to this builder.
 		 *
 		 * @param resolver the resolver to add; never {@code null}
@@ -247,6 +268,17 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 */
 		Predicate<String> getClassNameFilter();
 
+		/**
+		 * Get the class package filter built from the {@link PackageNameFilter
+		 * PackageNameFilters} in the {@link EngineDiscoveryRequest} that is
+		 * about to be resolved.
+		 *
+		 * @return the predicate for filtering the resolved resource names; never
+		 * {@code null}
+		 */
+		@API(status = EXPERIMENTAL, since = "1.11")
+		Predicate<String> getPackageFilter();
+
 	}
 
 	private static class DefaultInitializationContext<T extends TestDescriptor> implements InitializationContext<T> {
@@ -254,11 +286,13 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		private final EngineDiscoveryRequest request;
 		private final T engineDescriptor;
 		private final Predicate<String> classNameFilter;
+		private final Predicate<String> packageFilter;
 
 		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor) {
 			this.request = request;
 			this.engineDescriptor = engineDescriptor;
 			this.classNameFilter = buildClassNamePredicate(request);
+			this.packageFilter = buildPackagePredicate(request);
 		}
 
 		/**
@@ -270,6 +304,12 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		private Predicate<String> buildClassNamePredicate(EngineDiscoveryRequest request) {
 			List<DiscoveryFilter<String>> filters = new ArrayList<>();
 			filters.addAll(request.getFiltersByType(ClassNameFilter.class));
+			filters.addAll(request.getFiltersByType(PackageNameFilter.class));
+			return Filter.composeFilters(filters).toPredicate();
+		}
+
+		private Predicate<String> buildPackagePredicate(EngineDiscoveryRequest request) {
+			List<DiscoveryFilter<String>> filters = new ArrayList<>();
 			filters.addAll(request.getFiltersByType(PackageNameFilter.class));
 			return Filter.composeFilters(filters).toPredicate();
 		}
@@ -287,6 +327,11 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@Override
 		public Predicate<String> getClassNameFilter() {
 			return classNameFilter;
+		}
+
+		@Override
+		public Predicate<String> getPackageFilter() {
+			return packageFilter;
 		}
 	}
 
