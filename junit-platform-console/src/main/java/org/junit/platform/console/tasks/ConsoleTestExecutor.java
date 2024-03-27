@@ -143,6 +143,7 @@ public class ConsoleTestExecutor {
 	private Optional<DetailsPrintingListener> createDetailsPrintingListener(PrintWriter out) {
 		ColorPalette colorPalette = getColorPalette();
 		Theme theme = outputOptions.getTheme();
+
 		switch (outputOptions.getDetails()) {
 			case SUMMARY:
 				// summary listener is always created and registered
