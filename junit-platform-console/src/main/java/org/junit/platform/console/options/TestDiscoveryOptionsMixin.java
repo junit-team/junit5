@@ -112,7 +112,7 @@ class TestDiscoveryOptionsMixin {
 		private final List<ClassSelector> selectedClasses2 = new ArrayList<>();
 
 		@Option(names = { "-m",
-				"--select-method" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Method.class, description = "Select a method for test discovery. This option can be repeated.")
+				"--select-method" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Method.class, description = "Select a method for test discovery. The following formats are supported: [fully qualified class name]#[methodName] and [fully qualified class name]#[methodName](parameter type list). This option can be repeated.")
 		private final List<MethodSelector> selectedMethods = new ArrayList<>();
 
 		@Option(names = { "--m",
