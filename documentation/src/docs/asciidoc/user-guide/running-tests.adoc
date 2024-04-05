@@ -8,9 +8,8 @@
 ==== IntelliJ IDEA
 
 IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For
-details please see the
-https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the
-IntelliJ IDEA blog]. Note, however, that it is recommended to use IDEA 2017.3 or newer
+more information consult the following 
+https://jb.gg/junit-idea/[IntelliJ IDEA resource]. Note, however, that it is recommended to use IDEA 2017.3 or newer
 since these newer versions of IDEA will download the following JARs automatically based
 on the API version used in the project: `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine`.
