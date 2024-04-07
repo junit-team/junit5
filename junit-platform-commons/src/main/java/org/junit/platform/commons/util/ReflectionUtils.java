@@ -1803,15 +1803,16 @@ public final class ReflectionUtils {
 		if (parameterTypes.length != candidate.getParameterCount()) {
 			return false;
 		}
+		Class<?>[] candidateParameterTypes = candidate.getParameterTypes();
 		// trivial case: parameter types exactly match
-		if (Arrays.equals(parameterTypes, candidate.getParameterTypes())) {
+		if (Arrays.equals(parameterTypes, candidateParameterTypes)) {
 			return true;
 		}
 		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
 		for (int i = 0; i < parameterTypes.length; i++) {
 			Class<?> lowerType = parameterTypes[i];
-			Class<?> upperType = candidate.getParameterTypes()[i];
+			Class<?> upperType = candidateParameterTypes[i];
 			if (!upperType.isAssignableFrom(lowerType)) {
 				return false;
 			}
