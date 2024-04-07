@@ -159,9 +159,10 @@ will always be applied in a subclass.
 Test methods and lifecycle methods are inherited unless they are overridden according to
 the visibility rules of the Java language. For example, a `@Test` method from a superclass
 will always be applied in a subclass unless the subclass explicitly overrides the method.
-Similarly, if a `@Test` method is declared in a superclass that resides in a different
-package than the subclass, that `@Test` method will always be applied in the subclass
-since the subclass cannot override a package-private method from a superclass.
+Similarly, if a package-private `@Test` method is declared in a superclass that resides in
+a different package than the subclass, that `@Test` method will always be applied in the
+subclass since the subclass cannot override a package-private method from a superclass in
+a different package.
 
 See also: <<extensions-supported-utilities-search-semantics>>
 ====
