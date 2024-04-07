@@ -45,17 +45,15 @@ import org.apiguardian.api.API;
  *
  * <h2>Inheritance and Execution Order</h2>
  *
- * <p>{@code @BeforeAll} methods are inherited from superclasses as long as
- * they are not <em>hidden</em> (default mode with {@code static} modifier),
- * <em>overridden</em>, or <em>superseded</em> (i.e., replaced based on
- * signature only, irrespective of Java's visibility rules). Furthermore,
- * {@code @BeforeAll} methods from superclasses will be executed before
- * {@code @BeforeAll} methods in subclasses.
+ * <p>{@code @BeforeAll} methods are inherited from superclasses as long as they
+ * are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Furthermore, {@code @BeforeAll} methods from superclasses will be
+ * executed before {@code @BeforeAll} methods in subclasses.
  *
- * <p>Similarly, {@code @BeforeAll} methods declared in an interface are
- * inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
- * and {@code @BeforeAll} methods from an interface will be executed before
- * {@code @BeforeAll} methods in the class that implements the interface.
+ * <p>Similarly, {@code @BeforeAll} methods declared in an interface are inherited
+ * as long as they are not overridden, and {@code @BeforeAll} methods from an
+ * interface will be executed before {@code @BeforeAll} methods in the class that
+ * implements the interface.
  *
  * <p>JUnit Jupiter does not guarantee the execution order of multiple
  * {@code @BeforeAll} methods that are declared within a single test class or

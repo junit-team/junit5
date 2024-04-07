@@ -103,23 +103,31 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		assertThat(actualExceptionInAfterAllCallback).isEmpty();
 	}
 
+	/**
+	 * Since static methods cannot be overridden, "static hiding" no longer occurs since 5.11.
+	 */
 	@Test
-	void beforeAllAndAfterAllCallbacksInSubSubclassWithStaticMethodHiding() {
+	void beforeAllAndAfterAllCallbacksInSubSubclassWithoutStaticMethodHiding() {
+		// NOTE: both the @BeforeAll AND the @AfterAll methods in level 3 are
+		// executed as 1/2/3 due to the "stable" method sort order on the Platform.
+
 		// @formatter:off
 		assertBeforeAllAndAfterAllCallbacks(ThirdLevelStaticHidingTestCase.class,
 			"fooBeforeAllCallback",
 			"barBeforeAllCallback",
 				"bazBeforeAllCallback",
 					"quuxBeforeAllCallback",
-						"beforeAllMethod-1-hidden",
-						"beforeAllMethod-2-hidden",
-						"beforeAllMethod-3",
-							"test-3",
-						// The @AfterAll methods are executed as 1/2/3 due to
-						// the "stable" method sort order on the Platform.
-						"afterAllMethod-1-hidden",
-						"afterAllMethod-2-hidden",
-						"afterAllMethod-3",
+						"beforeAllMethod-1",
+							"beforeAllMethod-2",
+								"beforeAllMethod-1-level3",
+								"beforeAllMethod-2-level3",
+								"beforeAllMethod-3-level3",
+									"test-3",
+								"afterAllMethod-1-level3",
+								"afterAllMethod-2-level3",
+								"afterAllMethod-3-level3",
+							"afterAllMethod-2",
+						"afterAllMethod-1",
 					"quuxAfterAllCallback",
 				"bazAfterAllCallback",
 			"barAfterAllCallback",
@@ -244,32 +252,32 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 
 		@BeforeAll
 		static void beforeAll1() {
-			callSequence.add("beforeAllMethod-1-hidden");
+			callSequence.add("beforeAllMethod-1-level3");
 		}
 
 		@BeforeAll
 		static void beforeAll2() {
-			callSequence.add("beforeAllMethod-2-hidden");
+			callSequence.add("beforeAllMethod-2-level3");
 		}
 
 		@BeforeAll
 		static void beforeAll3() {
-			callSequence.add("beforeAllMethod-3");
+			callSequence.add("beforeAllMethod-3-level3");
 		}
 
 		@AfterAll
 		static void afterAll1() {
-			callSequence.add("afterAllMethod-1-hidden");
+			callSequence.add("afterAllMethod-1-level3");
 		}
 
 		@AfterAll
 		static void afterAll2() {
-			callSequence.add("afterAllMethod-2-hidden");
+			callSequence.add("afterAllMethod-2-level3");
 		}
 
 		@AfterAll
 		static void afterAll3() {
-			callSequence.add("afterAllMethod-3");
+			callSequence.add("afterAllMethod-3-level3");
 		}
 
 		@Test
