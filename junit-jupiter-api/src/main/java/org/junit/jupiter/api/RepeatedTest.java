@@ -44,6 +44,13 @@ import org.apiguardian.api.API;
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @RepeatedTest}.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>{@code @RepeatedTest} methods are inherited from superclasses as long as
+ * they are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Similarly, {@code @RepeatedTest} methods declared as <em>interface
+ * default methods</em> are inherited as long as they are not overridden.
+ *
  * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is

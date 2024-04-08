@@ -39,6 +39,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -56,7 +60,6 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -1452,58 +1455,161 @@ class ReflectionUtilsTests {
 				MethodShadowingChild.class.getMethod("method5", Long.class));
 		}
 
+		/**
+		 * In non-legacy mode, "static hiding" does not occur.
+		 */
 		@Test
-		void findMethodsWithStaticHidingUsingHierarchyUpMode() throws Exception {
+		void findMethodsWithoutStaticHidingUsingHierarchyUpMode() throws Exception {
 			Class<?> ifc = StaticMethodHidingInterface.class;
 			Class<?> parent = StaticMethodHidingParent.class;
 			Class<?> child = StaticMethodHidingChild.class;
 
+			var ifcMethod1 = ifc.getDeclaredMethod("method1", String.class);
 			var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
 			var childMethod1 = child.getDeclaredMethod("method1", String.class);
 			var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
 			var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+			var parentMethod1 = parent.getDeclaredMethod("method1", String.class);
 			var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+			var parentMethod4 = parent.getDeclaredMethod("method4", boolean.class);
 			var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
 
-			assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1);
+			assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1, parentMethod1,
+				ifcMethod1);
 			assertThat(findMethods(child, methodContains2, BOTTOM_UP)).containsExactly(parentMethod2, ifcMethod2);
-			assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4);
+			assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4, parentMethod4);
 			assertThat(findMethods(child, methodContains5, BOTTOM_UP)).containsExactly(childMethod5, parentMethod5);
 
 			var methods = findMethods(child, method -> true, BOTTOM_UP);
-			assertEquals(6, methods.size());
+			assertEquals(9, methods.size());
 			assertThat(methods.subList(0, 3)).containsOnly(childMethod1, childMethod4, childMethod5);
-			assertThat(methods.subList(3, 5)).containsOnly(parentMethod2, parentMethod5);
-			assertEquals(ifcMethod2, methods.get(5));
+			assertThat(methods.subList(3, 7)).containsOnly(parentMethod1, parentMethod2, parentMethod4, parentMethod5);
+			assertThat(methods.subList(7, 9)).containsOnly(ifcMethod1, ifcMethod2);
 		}
 
+		/**
+		 * In legacy mode, "static hiding" occurs.
+		 */
 		@Test
-		void findMethodsWithStaticHidingUsingHierarchyDownMode() throws Exception {
+		void findMethodsWithStaticHidingUsingHierarchyUpModeInLegacyMode() throws Exception {
+			try {
+				ReflectionUtils.useLegacySearchSemantics = true;
+
+				Class<?> ifc = StaticMethodHidingInterface.class;
+				Class<?> parent = StaticMethodHidingParent.class;
+				Class<?> child = StaticMethodHidingChild.class;
+
+				var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+				var childMethod1 = child.getDeclaredMethod("method1", String.class);
+				var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+				var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+				var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+				var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+
+				assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1);
+				assertThat(findMethods(child, methodContains2, BOTTOM_UP)).containsExactly(parentMethod2, ifcMethod2);
+				assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4);
+				assertThat(findMethods(child, methodContains5, BOTTOM_UP)).containsExactly(childMethod5, parentMethod5);
+
+				var methods = findMethods(child, method -> true, BOTTOM_UP);
+				assertEquals(6, methods.size());
+				assertThat(methods.subList(0, 3)).containsOnly(childMethod1, childMethod4, childMethod5);
+				assertThat(methods.subList(3, 5)).containsOnly(parentMethod2, parentMethod5);
+				assertEquals(ifcMethod2, methods.get(5));
+			}
+			finally {
+				ReflectionUtils.useLegacySearchSemantics = false;
+			}
+		}
+
+		/**
+		 * In non-legacy mode, "static hiding" does not occur.
+		 */
+		@Test
+		void findMethodsWithoutStaticHidingUsingHierarchyDownMode() throws Exception {
 			Class<?> ifc = StaticMethodHidingInterface.class;
 			Class<?> parent = StaticMethodHidingParent.class;
 			Class<?> child = StaticMethodHidingChild.class;
 
+			var ifcMethod1 = ifc.getDeclaredMethod("method1", String.class);
 			var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
 			var childMethod1 = child.getDeclaredMethod("method1", String.class);
 			var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
 			var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+			var parentMethod1 = parent.getDeclaredMethod("method1", String.class);
 			var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+			var parentMethod4 = parent.getDeclaredMethod("method4", boolean.class);
 			var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
 
-			assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(childMethod1);
+			assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(ifcMethod1, parentMethod1,
+				childMethod1);
 			assertThat(findMethods(child, methodContains2, TOP_DOWN)).containsExactly(ifcMethod2, parentMethod2);
-			assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(childMethod4);
+			assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(parentMethod4, childMethod4);
 			assertThat(findMethods(child, methodContains5, TOP_DOWN)).containsExactly(parentMethod5, childMethod5);
 
 			var methods = findMethods(child, method -> true, TOP_DOWN);
-			assertEquals(6, methods.size());
-			assertEquals(ifcMethod2, methods.get(0));
-			assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
-			assertThat(methods.subList(3, 6)).containsOnly(childMethod1, childMethod4, childMethod5);
+			assertEquals(9, methods.size());
+			methods.forEach(System.err::println);
+			assertThat(methods.subList(0, 2)).containsOnly(ifcMethod1, ifcMethod2);
+			assertThat(methods.subList(2, 6)).containsOnly(parentMethod1, parentMethod2, parentMethod4, parentMethod5);
+			assertThat(methods.subList(6, 9)).containsOnly(childMethod1, childMethod4, childMethod5);
+		}
+
+		/**
+		 * In legacy mode, "static hiding" occurs.
+		 */
+		@Test
+		void findMethodsWithStaticHidingUsingHierarchyDownModeInLegacyMode() throws Exception {
+			try {
+				ReflectionUtils.useLegacySearchSemantics = true;
+
+				Class<?> ifc = StaticMethodHidingInterface.class;
+				Class<?> parent = StaticMethodHidingParent.class;
+				Class<?> child = StaticMethodHidingChild.class;
+
+				var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
+				var childMethod1 = child.getDeclaredMethod("method1", String.class);
+				var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
+				var childMethod5 = child.getDeclaredMethod("method5", Long.class);
+				var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
+				var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
+
+				assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(childMethod1);
+				assertThat(findMethods(child, methodContains2, TOP_DOWN)).containsExactly(ifcMethod2, parentMethod2);
+				assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(childMethod4);
+				assertThat(findMethods(child, methodContains5, TOP_DOWN)).containsExactly(parentMethod5, childMethod5);
+
+				var methods = findMethods(child, method -> true, TOP_DOWN);
+				assertEquals(6, methods.size());
+				assertEquals(ifcMethod2, methods.get(0));
+				assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
+				assertThat(methods.subList(3, 6)).containsOnly(childMethod1, childMethod4, childMethod5);
+			}
+			finally {
+				ReflectionUtils.useLegacySearchSemantics = false;
+			}
 		}
 
 		@Test
-		void findMethodsReturnsAllOverloadedMethodsThatAreNotShadowed() {
+		void findMethodsDoesNotReturnOverriddenMethods() {
+			Predicate<Method> isSpecial = method -> method.isAnnotationPresent(Special.class);
+
+			// Search for all @Special methods.
+			var methods = findMethods(SuperclassWithInstanceMethods.class, isSpecial);
+
+			assertThat(signaturesOf(methods))//
+					.containsExactlyInAnyOrder("specialFoo()", "specialFoo(int)", "specialFoo(char)", "specialBar()",
+						"specialBaz()");
+
+			// Search for all @Special methods.
+			methods = findMethods(SubclassWithOverriddenInstanceMethods.class, isSpecial);
+
+			assertThat(signaturesOf(methods))//
+					.containsExactlyInAnyOrder("foo()", "specialFoo()", "specialFoo(int)", "specialBar()");
+		}
+
+		@Test
+		void findMethodsReturnsAllOverloadedMethodsInGenericTypeHieararchy() {
 			Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 			// Search for all foo(*) methods.
@@ -1556,7 +1662,6 @@ class ReflectionUtilsTests {
 		/**
 		 * @see https://github.com/junit-team/junit5/issues/3553
 		 */
-		@Disabled("Until #3553 is resolved")
 		@Test
 		void findMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
 			final String BEFORE = "before";
@@ -1589,6 +1694,67 @@ class ReflectionUtilsTests {
 		 * Inherits strings() from interfaces StringsInterface1 and StringsInterface2.
 		 */
 		static class DoubleInheritedInterfaceMethodTestCase implements StringsInterface1, StringsInterface2 {
+		}
+
+		@Target(ElementType.METHOD)
+		@Retention(RetentionPolicy.RUNTIME)
+		@interface Special {
+		}
+
+		static class SuperclassWithInstanceMethods {
+
+			void foo() {
+			}
+
+			void bar() {
+			}
+
+			void baz() {
+			}
+
+			@Special
+			void specialFoo() {
+			}
+
+			@Special
+			void specialFoo(int i) {
+			}
+
+			@Special
+			void specialFoo(char ch) {
+			}
+
+			@Special
+			int specialBar() {
+				return 99;
+			}
+
+			@Special
+			String specialBaz() {
+				return "42";
+			}
+		}
+
+		static class SubclassWithOverriddenInstanceMethods extends SuperclassWithInstanceMethods {
+
+			// foo() is now special.
+			@Special
+			@Override
+			void foo() {
+			}
+
+			// No longer special.
+			// Simulates overriding a @Test method without redeclaring @Test.
+			@Override
+			void specialFoo(char ch) {
+			}
+
+			// No longer special.
+			// Simulates overriding a @TestFactory method without redeclaring @TestFactory.
+			@Override
+			String specialBaz() {
+				return super.specialBaz();
+			}
 		}
 
 	}
@@ -1683,7 +1849,6 @@ class ReflectionUtilsTests {
 		/**
 		 * @see https://github.com/junit-team/junit5/issues/3553
 		 */
-		@Disabled("Until #3553 is resolved")
 		@Test
 		void findFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {
 			final String TEMP_DIR = "tempDir";
