@@ -22,7 +22,7 @@ tasks.withType<Test>().configureEach {
 		maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
 	}
 	distribution {
-		enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY").isNotBlank()))
+		enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrBlank()))
 		maxLocalExecutors = buildParameters.junit.develocity.testDistribution.maxLocalExecutors
 		maxRemoteExecutors = buildParameters.junit.develocity.testDistribution.maxRemoteExecutors
 		if (buildParameters.ci) {
