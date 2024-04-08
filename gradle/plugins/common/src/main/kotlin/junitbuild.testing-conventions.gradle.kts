@@ -1,5 +1,4 @@
-import com.gradle.enterprise.gradleplugin.testretry.retry
-import com.gradle.enterprise.gradleplugin.testselection.internal.PredictiveTestSelectionExtensionInternal
+import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
@@ -18,27 +17,29 @@ tasks.withType<Test>().configureEach {
 		events = setOf(FAILED)
 		exceptionFormat = FULL
 	}
-	retry {
-		maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
-	}
-	distribution {
-		enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrBlank()))
-		maxLocalExecutors = buildParameters.junit.develocity.testDistribution.maxLocalExecutors
-		maxRemoteExecutors = buildParameters.junit.develocity.testDistribution.maxRemoteExecutors
-		if (buildParameters.ci) {
-			when {
-				OperatingSystem.current().isLinux -> requirements.add("os=linux")
-				OperatingSystem.current().isWindows -> requirements.add("os=windows")
-				OperatingSystem.current().isMacOsX -> requirements.add("os=macos")
+	develocity {
+		testRetry {
+			maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
+		}
+		testDistribution {
+			enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrBlank()))
+			maxLocalExecutors = buildParameters.junit.develocity.testDistribution.maxLocalExecutors
+			maxRemoteExecutors = buildParameters.junit.develocity.testDistribution.maxRemoteExecutors
+			if (buildParameters.ci) {
+				when {
+					OperatingSystem.current().isLinux -> requirements.add("os=linux")
+					OperatingSystem.current().isWindows -> requirements.add("os=windows")
+					OperatingSystem.current().isMacOsX -> requirements.add("os=macos")
+				}
 			}
 		}
-	}
-	predictiveSelection {
-		enabled = buildParameters.junit.develocity.predictiveTestSelection.enabled
+		predictiveTestSelection {
+			enabled = buildParameters.junit.develocity.predictiveTestSelection.enabled
 
-		// Ensure PTS works when publishing Build Scans to scans.gradle.com
-		this as PredictiveTestSelectionExtensionInternal
-		server = uri("https://ge.junit.org")
+			// Ensure PTS works when publishing Build Scans to scans.gradle.com
+			this as PredictiveTestSelectionConfigurationInternal
+			server = uri("https://ge.junit.org")
+		}
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
 	// Required until ASM officially supports the JDK 14

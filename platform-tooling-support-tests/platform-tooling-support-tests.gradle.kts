@@ -1,4 +1,4 @@
-import com.gradle.enterprise.gradleplugin.testdistribution.internal.TestDistributionExtensionInternal
+import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
@@ -153,12 +153,14 @@ tasks.test {
 		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
 	}
 
-	distribution {
-		requirements.add("jdk=8")
-		this as TestDistributionExtensionInternal
-		preferredMaxDuration = Duration.ofMillis(500)
+	develocity {
+		testDistribution {
+			requirements.add("jdk=8")
+			this as TestDistributionConfigurationInternal
+			preferredMaxDuration = Duration.ofMillis(500)
+		}
 	}
-	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
+	jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
 }
 
 class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : CommandLineArgumentProvider {
