@@ -1,5 +1,4 @@
 import buildparameters.BuildParametersExtension
-import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	includeBuild("gradle/plugins")
