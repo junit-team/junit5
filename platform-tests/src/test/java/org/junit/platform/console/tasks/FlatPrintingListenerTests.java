@@ -26,6 +26,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
+import org.opentest4j.AssertionFailedError;
 
 /**
  * @since 1.0
@@ -69,6 +70,52 @@ class FlatPrintingListenerTests {
 		assertAll("lines in the output", //
 			() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
 			() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Boom!", lines[1]));
+	}
+
+	@Nested
+	class DiffOutputTests {
+		@Test
+		void printDiffForStringsInAssertionFailedErrors() {
+			var stringWriter = new StringWriter();
+			listener(stringWriter).executionFinished(newTestIdentifier(),
+				failed(new AssertionFailedError("Detail Message", "Expected content", "Actual content")));
+			var lines = lines(stringWriter);
+
+			assertTrue(lines.length >= 5, "At least 5 lines are expected in failure report!");
+			assertAll("lines in the output", //
+				() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
+				() -> assertEquals(INDENTATION + "=> Expected : Expected content", lines[1]), //
+				() -> assertEquals(INDENTATION + "=> Actual   : Actual content", lines[2]), //
+				() -> assertEquals(INDENTATION + "=> Diff     : ~Expected~**Actual** content", lines[3]), //
+				() -> assertEquals(INDENTATION + "=> Exception: org.opentest4j.AssertionFailedError: Detail Message",
+					lines[4]));
+		}
+
+		@Test
+		void ignoreDiffForNumbersInAssertionFailedErrors() {
+			var stringWriter = new StringWriter();
+			listener(stringWriter).executionFinished(newTestIdentifier(),
+				failed(new AssertionFailedError("Detail Message", 10, 20)));
+			var lines = lines(stringWriter);
+
+			assertTrue(lines.length >= 2, "At least 3 lines are expected in failure report!");
+			assertAll("lines in the output", //
+				() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
+				() -> assertEquals(INDENTATION + "=> Exception: org.opentest4j.AssertionFailedError: Detail Message",
+					lines[1]));
+		}
+
+		@Test
+		void ignoreDiffForAnyAssertionErrors() {
+			var stringWriter = new StringWriter();
+			listener(stringWriter).executionFinished(newTestIdentifier(), failed(new AssertionError("Detail Message")));
+			var lines = lines(stringWriter);
+
+			assertTrue(lines.length >= 2, "At least 2 lines are expected in failure report!");
+			assertAll("lines in the output", //
+				() -> assertEquals("Finished:    demo-test ([engine:demo-engine])", lines[0]), //
+				() -> assertEquals(INDENTATION + "=> Exception: java.lang.AssertionError: Detail Message", lines[1]));
+		}
 	}
 
 	@Nested
