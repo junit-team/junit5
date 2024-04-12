@@ -9,7 +9,12 @@ dependencies {
 	api(projects.junitPlatformLauncher)
 
 	compileOnlyApi(libs.apiguardian)
-	compileOnly(libs.jfrPolyfill)
+
+	if (java.toolchain.implementation.orNull == JvmImplementation.J9) {
+		compileOnly(libs.jfrPolyfill) {
+			because("OpenJ9 does not include JFR")
+		}
+	}
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
