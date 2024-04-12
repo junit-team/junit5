@@ -18,6 +18,7 @@ import static org.moditect.jfrunit.JfrEventsAssert.assertThat;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly;
 import org.moditect.jfrunit.EnableEvent;
@@ -25,6 +26,7 @@ import org.moditect.jfrunit.JfrEventTest;
 import org.moditect.jfrunit.JfrEvents;
 
 @JfrEventTest
+@DisabledOnOpenJ9
 public class FlightRecordingExecutionListenerIntegrationTests {
 
 	public JfrEvents jfrEvents = new JfrEvents();

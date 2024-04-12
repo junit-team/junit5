@@ -22,6 +22,7 @@ import java.time.Duration;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
@@ -29,6 +30,7 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
+@DisabledOnOpenJ9
 class GraalVmStarterTests {
 
 	@Test

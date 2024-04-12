@@ -68,6 +68,7 @@ dependencies {
 		because("we reference Ant's main class")
 	}
 	testImplementation(libs.bundles.xmlunit)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
