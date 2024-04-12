@@ -42,6 +42,8 @@ tasks.withType<Test>().configureEach {
 		}
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	// Avoid overhead (see https://logging.apache.org/log4j/2.x/manual/jmx.html#enabling-jmx)
+	systemProperty("log4j2.disableJmx", "true")
 	// Required until ASM officially supports the JDK 14
 	systemProperty("net.bytebuddy.experimental", true)
 	if (buildParameters.testing.enableJFR) {
