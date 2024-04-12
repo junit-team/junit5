@@ -41,7 +41,7 @@ jobs:
         uses: ./.github/actions/run-gradle
         with:
           arguments: |
-            -PjavaToolchainVersion=${{ matrix.jdk }}
+            -PjavaToolchain.version=${{ matrix.jdk }}
             -Dscan.tag.JDK_${{ matrix.jdk }}
             build
       - name: Upload Test Distribution trace files
@@ -77,7 +77,8 @@ jobs:
         uses: ./.github/actions/run-gradle
         with:
           arguments: |
-            -PjavaToolchainVersion=${{ matrix.jdk }}
+            -PjavaToolchain.version=${{ matrix.jdk }}
+            -PjavaToolchain.implementation=j9
             -Dscan.tag.JDK_${{ matrix.jdk }}
             -Dscan.tag.OpenJ9
             build
