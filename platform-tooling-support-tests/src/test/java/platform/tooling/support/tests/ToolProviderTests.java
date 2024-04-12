@@ -36,6 +36,7 @@ import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
@@ -87,6 +88,7 @@ class ToolProviderTests {
 	}
 
 	@Test
+	@DisabledOnOpenJ9
 	void findAndRunJUnitOnTheModulePath() {
 		var finder = ModuleFinder.of(LIB);
 		var modules = finder.findAll().stream() //

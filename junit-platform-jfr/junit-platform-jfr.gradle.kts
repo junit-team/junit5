@@ -9,6 +9,7 @@ dependencies {
 	api(projects.junitPlatformLauncher)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jfrPolyfill)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
