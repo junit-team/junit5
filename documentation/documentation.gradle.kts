@@ -64,6 +64,10 @@ dependencies {
 		because("Jimfs is used in src/test/java")
 	}
 
+	testRuntimeOnly(libs.jfrPolyfill) {
+		because("OpenJ9 does not include JFR")
+	}
+
 	standaloneConsoleLauncher(projects.junitPlatformConsoleStandalone)
 }
 
