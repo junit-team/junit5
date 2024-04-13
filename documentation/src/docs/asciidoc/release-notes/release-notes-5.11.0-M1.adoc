@@ -3,7 +3,12 @@
 
 *Date of Release:* ❓
 
-*Scope:* ❓
+*Scope:*
+
+* Numerous bug fixes and enhancements regarding field and method search algorithms
+* `@FieldSource` annotation for use with `@ParameterizedTest` methods
+* `@AutoClose` annotation to automatically close field resources in tests
+* `ConversionSupport` utility for converting from a string to a supported target type
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/68?closed=1+[5.11.0-M1] milestone page in the JUnit
@@ -77,13 +82,19 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
-* Improved documentation for semantics of a disabled test regarding class-level lifecycle
-  methods and callbacks.
+* New `@FieldSource` annotation for use with `@ParameterizedTest` methods which allows
+  you to source arguments from a local field or an external field referenced by
+  fully-qualified field name. This feature is similar to the existing `@MethodSource`
+  feature. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-FieldSource, User
+  Guide>> for details.
 * New `@AutoClose` annotation that can be applied to fields within tests to automatically
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for
   details.
+* `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* Improved documentation for semantics of a disabled test regarding class-level lifecycle
+  methods and callbacks.
 
 
 [[release-notes-5.11.0-M1-junit-vintage]]

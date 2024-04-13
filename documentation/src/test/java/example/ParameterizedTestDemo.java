@@ -29,8 +29,10 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -61,6 +63,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
@@ -204,6 +207,78 @@ class ParameterizedTestDemo {
 		);
 	}
 	// end::multi_arg_MethodSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::default_field_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource
+	void arrayOfFruits(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final String[] arrayOfFruits = { "apple", "banana" };
+	// end::default_field_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::explicit_field_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource("listOfFruits")
+	void singleFieldSource(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final List<String> listOfFruits = Arrays.asList("apple", "banana");
+	// end::explicit_field_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::multiple_fields_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource({ "listOfFruits", "additionalFruits" })
+	void multipleFieldSources(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final Collection<String> additionalFruits = Arrays.asList("cherry", "dewberry");
+	// end::multiple_fields_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::named_arguments_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource
+	void namedArgumentsSupplier(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final Supplier<Stream<Arguments>> namedArgumentsSupplier = () -> Stream.of(
+		arguments(named("Apple", "apple")),
+		arguments(named("Banana", "banana"))
+	);
+	// end::named_arguments_FieldSource_example[]
+	// @formatter:on
+
+	private static void assertFruit(String fruit) {
+		assertTrue(Arrays.asList("apple", "banana", "cherry", "dewberry").contains(fruit));
+	}
+
+	// @formatter:off
+	// tag::multi_arg_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource("stringIntAndListArguments")
+	void testWithMultiArgFieldSource(String str, int num, List<String> list) {
+		assertEquals(5, str.length());
+		assertTrue(num >=1 && num <=2);
+		assertEquals(2, list.size());
+	}
+
+	static List<Arguments> stringIntAndListArguments = Arrays.asList(
+		arguments("apple", 1, Arrays.asList("a", "b")),
+		arguments("lemon", 2, Arrays.asList("x", "y"))
+	);
+	// end::multi_arg_FieldSource_example[]
 	// @formatter:on
 
 	// @formatter:off
