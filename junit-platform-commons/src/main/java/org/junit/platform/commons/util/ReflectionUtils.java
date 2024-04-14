@@ -808,6 +808,25 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+	 * using the supplied {@link ClassLoader}.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)}
+	 * for details on support for class names for arrays.
+	 *
+	 * @param name the name of the class to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @throws JUnitException if the class could not be loaded
+	 * @since 1.11
+	 * @see #tryToLoadClass(String, ClassLoader)
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Class<?> loadRequiredClass(String name, ClassLoader classLoader) throws JUnitException {
+		return tryToLoadClass(name, classLoader).getOrThrow(
+			cause -> new JUnitException(format("Could not load class [%s]", name), cause));
+	}
+
+	/**
 	 * Try to load a class by its <em>primitive name</em> or <em>fully qualified
 	 * name</em>, using the supplied {@link ClassLoader}.
 	 *
@@ -962,6 +981,33 @@ public final class ReflectionUtils {
 			}
 		}
 		return new String[] { className, methodName, methodParameters };
+	}
+
+	/**
+	 * Parse the supplied <em>fully qualified field name</em> into a 2-element
+	 * {@code String[]} with the following content.
+	 *
+	 * <ul>
+	 *   <li>index {@code 0}: the fully qualified class name</li>
+	 *   <li>index {@code 1}: the name of the field</li>
+	 * </ul>
+	 *
+	 * @param fullyQualifiedFieldName a <em>fully qualified field name</em>,
+	 * never {@code null} or blank
+	 * @return a 2-element array of strings containing the parsed values
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static String[] parseFullyQualifiedFieldName(String fullyQualifiedFieldName) {
+		Preconditions.notBlank(fullyQualifiedFieldName, "fullyQualifiedFieldName must not be null or blank");
+
+		int indexOfHashtag = fullyQualifiedFieldName.indexOf('#');
+		boolean validSyntax = (indexOfHashtag > 0) && (indexOfHashtag < fullyQualifiedFieldName.length() - 1);
+		Preconditions.condition(validSyntax,
+			() -> "[" + fullyQualifiedFieldName + "] is not a valid fully qualified field name: "
+					+ "it must start with a fully qualified class name followed by a '#' "
+					+ "and then the field name.");
+		return fullyQualifiedFieldName.split("#");
 	}
 
 	public static Set<Path> getAllClasspathRootDirectories() {

@@ -1512,6 +1512,119 @@ can be referenced by its fully qualified method name, e.g.
 include::{testDir}/example/MethodSourceParameterResolutionDemo.java[tags=parameter_resolution_MethodSource_example]
 ----
 
+[[writing-tests-parameterized-tests-sources-FieldSource]]
+===== @FieldSource
+
+`{FieldSource}` allows you to refer to one or more fields of the test class or external
+classes.
+
+Fields within the test class must be `static` unless the test class is annotated with
+`@TestInstance(Lifecycle.PER_CLASS)`; whereas, fields in external classes must always be
+`static`.
+
+Each field must be able to supply a _stream_ of arguments, and each set of "arguments"
+within the "stream" will be provided as the physical arguments for individual invocations
+of the annotated `@ParameterizedTest` method.
+
+In this context, a "stream" is anything that JUnit can reliably convert to a `Stream`;
+however, the actual concrete return type can take on many forms. Generally speaking this
+translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
+`DoubleStream`, `LongStream`, or `IntStream`), a `Supplier` of an `Iterator`, an array of
+objects, or an array of primitives. Each set of "arguments" within the "stream" can be
+supplied as an instance of `Arguments`, an array of objects (for example, `Object[]`,
+`String[]`, etc.), or a single value if the parameterized test method accepts a single
+argument.
+
+[WARNING]
+====
+In contrast to the supported return types for
+<<writing-tests-parameterized-tests-sources-MethodSource, `@MethodSource`>> factory
+methods, the value of a `@FieldSource` field cannot be an instance of `Stream`,
+`DoubleStream`, `LongStream`, `IntStream`, or `Iterator`, since the values of such types
+are _consumed_ the first time they are processed. However, if you wish to use one of
+these types, you can wrap it in a `Supplier` — for example, `Supplier<IntStream>`.
+====
+
+Please note that a one-dimensional array of objects supplied as a set of "arguments" will
+be handled differently than other types of arguments. Specifically, all of the elements
+of a one-dimensional array of objects will be passed as individual physical arguments to
+the `@ParameterizedTest` method. See the Javadoc for `{FieldSource}` for further details.
+
+If you do not explicitly provide a field name via `@FieldSource`, JUnit Jupiter will
+search in the test class for a field that has the same name as the current
+`@ParameterizedTest` method by convention. This is demonstrated in the following example.
+This parameterized test method will be invoked twice: with the values `"apple"` and
+`"banana"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=default_field_FieldSource_example]
+----
+
+The following example demonstrates how to provide a single explicit field name via
+`@FieldSource`. This parameterized test method will be invoked twice: with the values
+`"apple"` and `"banana"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_field_FieldSource_example]
+----
+
+The following example demonstrates how to provide multiple explicit field names via
+`@FieldSource`. This example uses the `listOfFruits` field from the previous example as
+well as the `additionalFruits` field. Consequently, this parameterized test method will
+be invoked four times: with the values `"apple"`, `"banana"`, `"cherry"`, and
+`"dewberry"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=multiple_fields_FieldSource_example]
+----
+
+It is also possible to provide a `Stream`, `DoubleStream`, `IntStream`, `LongStream`, or
+`Iterator` as the source of arguments via a `@FieldSource` field as long as the stream is
+wrapped in a `java.util.function.Supplier`. The following example demonstrates how to
+provide a `Supplier` of a `Stream` of named arguments. This parameterized test method
+will be invoked twice: with the values `"apple"` and `"banana"` and with display names
+`Apple` and `Banana`, respectively.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments_FieldSource_example]
+----
+
+[NOTE]
+====
+Note that `arguments(Object...)` is a static factory method defined in the
+`org.junit.jupiter.params.provider.Arguments` interface.
+
+Similarly, `named(String, String)` is a static factory method defined in the
+`org.junit.jupiter.api.Named` interface.
+====
+
+If a parameterized test method declares multiple parameters, the corresponding
+`@FieldSource` field must be able to provide a collection, stream supplier, or array of
+`Arguments` instances or object arrays as shown below (see the Javadoc for
+`{FieldSource}` for further details on supported types).
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_FieldSource_example]
+----
+
+[NOTE]
+====
+Note that `arguments(Object...)` is a static factory method defined in the
+`org.junit.jupiter.params.provider.Arguments` interface.
+====
+
+An external, `static` `@FieldSource` field can be referenced by providing its
+_fully-qualified field name_ as demonstrated in the following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ExternalFieldSourceDemo.java[tags=external_field_FieldSource_example]
+----
 
 [[writing-tests-parameterized-tests-sources-CsvSource]]
 ===== @CsvSource
