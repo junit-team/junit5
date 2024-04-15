@@ -88,6 +88,15 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		return field;
 	}
 
+	private static Field validateField(Field field, Object testInstance) {
+		Preconditions.condition(field.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(field),
+			() -> format("Field '%s' must be static: local @FieldSource fields must be static "
+					+ "unless the PER_CLASS @TestInstance lifecycle mode is used; "
+					+ "external @FieldSource fields must always be static.",
+				field.toGenericString()));
+		return field;
+	}
+
 	private static Object readField(Field field, Object testInstance) {
 		Object value = ReflectionUtils.tryToReadFieldValue(field, testInstance).getOrThrow(
 			cause -> new JUnitException(format("Could not read field [%s]", field.getName()), cause));
@@ -137,10 +146,12 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 				Type[] typeArguments = parameterizedType.getActualTypeArguments();
 				if (typeArguments.length == 1) {
 					Type type = typeArguments[0];
+					// Handle cases such as Supplier<IntStream>
 					if (type instanceof Class) {
 						Class<?> clazz = (Class<?>) type;
 						return CollectionUtils.isConvertibleToStream(clazz);
 					}
+					// Handle cases such as Supplier<Stream<String>>
 					if (type instanceof ParameterizedType) {
 						Type rawType = ((ParameterizedType) type).getRawType();
 						if (rawType instanceof Class<?>) {
@@ -152,15 +163,6 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 			}
 		}
 		return false;
-	}
-
-	private static Field validateField(Field field, Object testInstance) {
-		Preconditions.condition(field.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(field),
-			() -> format("Field '%s' must be static: local @FieldSource fields must be static "
-					+ "unless the PER_CLASS @TestInstance lifecycle mode is used; "
-					+ "external @FieldSource fields must always be static.",
-				field.toGenericString()));
-		return field;
 	}
 
 }

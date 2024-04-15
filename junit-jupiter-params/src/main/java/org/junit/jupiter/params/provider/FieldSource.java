@@ -23,9 +23,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @FieldSource} is an {@link ArgumentsSource} which provides access to
- * values returned from {@linkplain #value() fields} of the class in which this
- * annotation is declared or from static fields in external classes referenced
- * by <em>fully-qualified field name</em>.
+ * values of {@linkplain #value() fields} of the class in which this annotation
+ * is declared or from static fields in external classes referenced by
+ * <em>fully-qualified field name</em>.
  *
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
@@ -33,7 +33,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@link ParameterizedTest @ParameterizedTest} method.
  *
  * <p>In this context, a "stream" is anything that JUnit can reliably convert to
- * a {@link java.util.stream.Stream Stream}; however, the actual concrete return
+ * a {@link java.util.stream.Stream Stream}; however, the actual concrete field
  * type can take on many forms. Generally speaking this translates to a
  * {@link java.util.Collection Collection}, an {@link Iterable}, a
  * {@link java.util.function.Supplier Supplier} of a stream

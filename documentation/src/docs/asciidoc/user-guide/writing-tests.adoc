@@ -1527,7 +1527,7 @@ within the "stream" will be provided as the physical arguments for individual in
 of the annotated `@ParameterizedTest` method.
 
 In this context, a "stream" is anything that JUnit can reliably convert to a `Stream`;
-however, the actual concrete return type can take on many forms. Generally speaking this
+however, the actual concrete field type can take on many forms. Generally speaking this
 translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
 `DoubleStream`, `LongStream`, or `IntStream`), a `Supplier` of an `Iterator`, an array of
 objects, or an array of primitives. Each set of "arguments" within the "stream" can be
@@ -1598,7 +1598,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments_Field
 Note that `arguments(Object...)` is a static factory method defined in the
 `org.junit.jupiter.params.provider.Arguments` interface.
 
-Similarly, `named(String, String)` is a static factory method defined in the
+Similarly, `named(String, Object)` is a static factory method defined in the
 `org.junit.jupiter.api.Named` interface.
 ====
 
