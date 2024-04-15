@@ -352,7 +352,19 @@ class FieldArgumentsProviderTests {
 		}
 
 		@Test
-		void throwsExceptionWhenFullyQualifiedFieldNameSyntaxIsInvalid() {
+		void throwsExceptionWhenFullyQualifiedFieldNameIsMissingFieldName() {
+			String fieldName = "org.example.wrongSyntax#"; // missing "fieldName"
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> provideArguments(fieldName).toArray());
+
+			assertThat(exception.getMessage()).isEqualTo("""
+					[%s] is not a valid fully qualified field name: \
+					it must start with a fully qualified class name followed by a \
+					'#' and then the field name.""", fieldName, TestCase.class.getName());
+		}
+
+		@Test
+		void throwsExceptionWhenFullyQualifiedFieldNameIsMissingHashAndFieldName() {
 			String fieldName = "org.example.wrongSyntax"; // missing "#fieldName"
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments(fieldName).toArray());

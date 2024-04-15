@@ -84,7 +84,7 @@ repository on GitHub.
 
 * New `@FieldSource` annotation for use with `@ParameterizedTest` methods which allows
   you to source arguments from a local field or an external field referenced by
-  fully-qualified field name. This feature is similar to the existing `@MethodSource`
+  fully qualified field name. This feature is similar to the existing `@MethodSource`
   feature. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-sources-FieldSource, User
   Guide>> for details.

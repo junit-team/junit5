@@ -66,12 +66,12 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 			return findFactoryMethodBySimpleName(testClass, testMethod, factoryMethodName);
 		}
 
-		// Convert local factory method name to fully-qualified method name.
+		// Convert local factory method name to fully qualified method name.
 		if (!looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
 			factoryMethodName = testClass.getName() + "#" + factoryMethodName;
 		}
 
-		// Find factory method using fully-qualified name.
+		// Find factory method using fully qualified name.
 		Method factoryMethod = findFactoryMethodByFullyQualifiedName(testClass, testMethod, factoryMethodName);
 
 		// Ensure factory method has a valid return type and is not a test method.
@@ -96,9 +96,9 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 			return indexOfFirstDot < indexOfLastOpeningParenthesis;
 		}
 		// If we get this far, we conclude the supplied factory method name "looks"
-		// like it was intended to be a fully-qualified method name, even if the
+		// like it was intended to be a fully qualified method name, even if the
 		// syntax is invalid. We do this in order to provide better diagnostics for
-		// the user when a fully-qualified method name is in fact invalid.
+		// the user when a fully qualified method name is in fact invalid.
 		return true;
 	}
 

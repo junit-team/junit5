@@ -1619,7 +1619,7 @@ Note that `arguments(Object...)` is a static factory method defined in the
 ====
 
 An external, `static` `@FieldSource` field can be referenced by providing its
-_fully-qualified field name_ as demonstrated in the following example.
+_fully qualified field name_ as demonstrated in the following example.
 
 [source,java,indent=0]
 ----

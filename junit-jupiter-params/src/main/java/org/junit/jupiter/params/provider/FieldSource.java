@@ -25,7 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@code @FieldSource} is an {@link ArgumentsSource} which provides access to
  * values of {@linkplain #value() fields} of the class in which this annotation
  * is declared or from static fields in external classes referenced by
- * <em>fully-qualified field name</em>.
+ * <em>fully qualified field name</em>.
  *
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
@@ -121,7 +121,7 @@ public @interface FieldSource {
 	 * The names of fields within the test class or in external classes to use
 	 * as sources for arguments.
 	 *
-	 * <p>Fields in external classes must be referenced by <em>fully-qualified
+	 * <p>Fields in external classes must be referenced by <em>fully qualified
 	 * field name</em> &mdash; for example,
 	 * {@code "com.example.WebUtils#httpMethodNames"} or
 	 * {@code "com.example.TopLevelClass$NestedClass#numbers"} for a field in a

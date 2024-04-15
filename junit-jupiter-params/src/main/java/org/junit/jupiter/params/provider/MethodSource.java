@@ -113,7 +113,7 @@ public @interface MethodSource {
 	 * to use as sources for arguments.
 	 *
 	 * <p>Factory methods in external classes must be referenced by
-	 * <em>fully-qualified method name</em> &mdash; for example,
+	 * <em>fully qualified method name</em> &mdash; for example,
 	 * {@code "com.example.StringsProviders#blankStrings"} or
 	 * {@code "com.example.TopLevelClass$NestedClass#classMethod"} for a factory
 	 * method in a static nested class.
@@ -123,7 +123,7 @@ public @interface MethodSource {
 	 * you can supply the formal parameter list in the qualified method name to
 	 * disambiguate between overloaded variants of the factory method. For example,
 	 * {@code "blankStrings(int)"} for a local qualified method name or
-	 * {@code "com.example.StringsProviders#blankStrings(int)"} for a fully-qualified
+	 * {@code "com.example.StringsProviders#blankStrings(int)"} for a fully qualified
 	 * method name.
 	 *
 	 * <p>If no factory method names are declared, a method within the test class
