@@ -13,13 +13,14 @@ runs:
       with:
         distribution: temurin
         java-version: 21
-    - uses: gradle/gradle-build-action@v3
+    - uses: gradle/actions/setup-gradle@v3
+    - shell: bash
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
-      with:
-        arguments: |
-          -Porg.gradle.java.installations.auto-download=false
-          -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
-          "-Dscan.value.GitHub job=${{ github.job }}"
-          javaToolchains
-          ${{ inputs.arguments }}
+      run: |
+        ./gradlew \
+        -Porg.gradle.java.installations.auto-download=false \
+        -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }} \
+        "-Dscan.value.GitHub job=${{ github.job }}" \
+        javaToolchains \
+        ${{ inputs.arguments }}

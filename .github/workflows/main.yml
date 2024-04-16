@@ -38,9 +38,9 @@ jobs:
       uses: ./.github/actions/main-build
       with:
         arguments: |
-          -Ptesting.enableJaCoCo
-          build
-          jacocoRootReport
+          -Ptesting.enableJaCoCo \
+          build \
+          jacocoRootReport \
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
