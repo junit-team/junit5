@@ -3070,7 +3070,7 @@ public class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}. That message is <i>not</i>
+	 * <p>Fails with the supplied failure {@code message}. That message is <em>not</em>
 	 * the expected message for the thrown exception.
 	 *
 	 * @since 5.8
@@ -3089,8 +3089,8 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}. That message is <i>not</i> the expected
-	* message for the thrown exception.
+	 * supplied {@code messageSupplier}. That message is <em>not</em> the expected
+	 * message for the thrown exception.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
@@ -3127,7 +3127,7 @@ public class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}. That message is <i>not</i>
+	 * <p>Fails with the supplied failure {@code message}. That message is <em>not</em>
 	 * the expected message for the thrown exception.
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
@@ -3142,7 +3142,7 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}. That message is <i>not</i> the expected
+	 * supplied {@code messageSupplier}. That message is <em>not</em> the expected
 	 * message for the thrown exception.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
