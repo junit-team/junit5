@@ -1,11 +1,12 @@
 [versions]
 ant = "1.10.14"
 apiguardian = "1.1.2"
-asciidoctorj-pdf = "2.3.14"
+asciidoctorj-pdf = "2.3.15"
 asciidoctor-plugins = "4.0.2" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.25.3"
 bnd = "7.0.0"
-checkstyle = "10.14.0"
+checkstyle = "10.15.0"
+eclipse = "4.31.100"
 gradleVersionsPlugin = "0.51.0"
 jacoco = "0.8.7"
 jmh = "1.37"
@@ -24,23 +25,24 @@ ant = { module = "org.apache.ant:ant", version.ref = "ant" }
 ant-junit = { module = "org.apache.ant:ant-junit", version.ref = "ant" }
 ant-junitlauncher = { module = "org.apache.ant:ant-junitlauncher", version.ref = "ant" }
 apiguardian = { module = "org.apiguardian:apiguardian-api", version.ref = "apiguardian" }
-archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.2.1" }
+archunit = { module = "com.tngtech.archunit:archunit-junit5", version = "1.3.0" }
 assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.168" }
-commons-io = { module = "commons-io:commons-io", version = "2.15.1" }
-gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "1.13" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.170" }
+commons-io = { module = "commons-io:commons-io", version = "2.16.1" }
+gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "2.0" }
 gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.8.0" }
-gradle-enterprise = { module = "com.gradle:gradle-enterprise-gradle-plugin", version = "3.16.2" }
+gradle-develocity = { module = "com.gradle:develocity-gradle-plugin", version = "3.17.1" }
 gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
 gradle-shadow = { module = "com.github.johnrengelman:shadow", version = "8.1.1" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "6.25.0" }
 gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleVersionsPlugin" }
-groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.19" }
+groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.21" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
+jfrPolyfill = { module = "org.gradle.jfr.polyfill:jfr-polyfill", version = "1.0.2" }
 jfrunit = { module = "org.moditect.jfrunit:jfrunit-core", version = "1.0.0.Alpha2" }
 jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
@@ -58,7 +60,7 @@ opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" 
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
 openTestReporting-tooling = { module = "org.opentest4j.reporting:open-test-reporting-tooling", version.ref = "openTestReporting" }
 picocli = { module = "info.picocli:picocli", version = "4.7.5" }
-slf4j-julBinding = { module = "org.slf4j:slf4j-jdk14", version = "2.0.12" }
+slf4j-julBinding = { module = "org.slf4j:slf4j-jdk14", version = "2.0.13" }
 spock1 = { module = "org.spockframework:spock-core", version = "1.3-groovy-2.5" }
 univocity-parsers = { module = "com.univocity:univocity-parsers", version = "2.9.1" }
 xmlunit-assertj = { module = "org.xmlunit:xmlunit-assertj3", version.ref = "xmlunit" }
@@ -67,6 +69,7 @@ testingAnnotations = { module = "com.gradle:develocity-testing-annotations", ver
 
 # Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
+eclipse-platform = { module = "org.eclipse.platform:org.eclipse.platform", version.ref = "eclipse" }
 
 [bundles]
 ant = ["ant", "ant-junit", "ant-junitlauncher"]
@@ -76,10 +79,10 @@ xmlunit = ["xmlunit-assertj", "xmlunit-placeholders"]
 [plugins]
 asciidoctorConvert = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugins" }
 asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-plugins" }
-buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.3" }
+buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
-nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0-rc-2" }
+nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.6" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }

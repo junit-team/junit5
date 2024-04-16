@@ -156,6 +156,15 @@ using the `@Order` annotation. See the <<extensions-registration-programmatic-or
 Extension Registration Order>> tip for `@RegisterExtension` fields for details.
 ====
 
+[TIP]
+.Extension Inheritance
+====
+Extensions registered declaratively via `@ExtendWith` on fields in superclasses will be
+inherited.
+
+See <<extensions-registration-inheritance, Extension Inheritance>> for details.
+====
+
 NOTE: `@ExtendWith` fields may be either `static` or non-static. The documentation on
 <<extensions-registration-programmatic-static-fields, Static Fields>> and
 <<extensions-registration-programmatic-instance-fields, Instance Fields>> for
@@ -194,6 +203,15 @@ registered after non-annotated extensions. For example, assigning an extension a
 order value that is greater than the default order value allows _before_ callback
 extensions to be registered last and _after_ callback extensions to be registered first,
 relative to other programmatically registered extensions.
+====
+
+[TIP]
+.Extension Inheritance
+====
+Extensions registered via `@RegisterExtension` or `@ExtendWith` on fields in superclasses
+will be inherited.
+
+See <<extensions-registration-inheritance, Extension Inheritance>> for details.
 ====
 
 NOTE: `@RegisterExtension` fields must not be `null` (at evaluation time) but may be
@@ -304,11 +322,23 @@ support for `TestInfo`, `TestReporter`, etc.).
 [[extensions-registration-inheritance]]
 ==== Extension Inheritance
 
-Registered extensions are inherited within test class hierarchies with top-down
-semantics. Similarly, extensions registered at the class-level are inherited at the
-method-level. Furthermore, a specific extension implementation can only be registered
-once for a given extension context and its parent contexts. Consequently, any attempt to
-register a duplicate extension implementation will be ignored.
+Registered extensions are inherited within test class hierarchies with top-down semantics.
+Similarly, extensions registered at the class-level are inherited at the method-level.
+This applies to all extensions, independent of how they are registered (declaratively or
+programmatically).
+
+This means that extensions registered declaratively via `@ExtendWith` on a superclass will
+be registered before extensions registered declaratively via `@ExtendWith` on a subclass.
+
+Similarly, extensions registered programmatically via `@RegisterExtension` or
+`@ExtendWith` on fields in a superclass will be registered before extensions registered
+programmatically via `@RegisterExtension` or `@ExtendWith` on fields in a subclass, unless
+`@Order` is used to alter that behavior (see <<extensions-registration-programmatic-order,
+Extension Registration Order>> for details).
+
+NOTE: A specific extension implementation can only be registered once for a given
+extension context and its parent contexts. Consequently, any attempt to register a
+duplicate extension implementation will be ignored.
 
 [[extensions-conditions]]
 === Conditional Test Execution
@@ -704,6 +734,8 @@ and fields in a class or interface. Some of these methods search on implemented
 interfaces and within class hierarchies to find annotations. Consult the Javadoc for
 `{AnnotationSupport}` for further details.
 
+NOTE: See also: <<extensions-supported-utilities-search-semantics>>
+
 [[extensions-supported-utilities-classes]]
 ==== Class Support
 
@@ -719,6 +751,8 @@ search of classes matching specified predicates, to load and create new instance
 class, and to find and invoke methods. Some of these methods traverse class hierarchies
 to locate matching methods. Consult the Javadoc for `{ReflectionSupport}` for further
 details.
+
+NOTE: See also: <<extensions-supported-utilities-search-semantics>>
 
 [[extensions-supported-utilities-modifier]]
 ==== Modifier Support
@@ -737,6 +771,37 @@ wrapper types, date and time types from the `java.time package`, and some additi
 common Java types such as `File`, `BigDecimal`, `BigInteger`, `Currency`, `Locale`, `URI`,
 `URL`, `UUID`, etc. Consult the Javadoc for `{ConversionSupport}` for further details.
 
+[[extensions-supported-utilities-search-semantics]]
+==== Field and Method Search Semantics
+
+Various methods in `AnnotationSupport` and `ReflectionSupport` use search algorithms that
+traverse type hierarchies to locate matching fields and methods – for example,
+`AnnotationSupport.findAnnotatedFields(...)`, `ReflectionSupport.findMethods(...)`, etc.
+
+As of JUnit 5.11 (JUnit Platform 1.11), field and method search algorithms adhere to
+standard Java semantics regarding whether a given field or method is visible or overridden
+according to the rules of the Java language.
+
+Prior to JUnit 5.11, the field and method search algorithms applied what we now refer to
+as "legacy semantics". Legacy semantics consider fields and methods to be _hidden_,
+_shadowed_, or _superseded_ by fields and methods in super types (superclasses or
+interfaces) based solely on the field's name or the method's signature, disregarding the
+actual Java language semantics for visibility and the rules that determine if one method
+overrides another method.
+
+Although the JUnit team recommends the use of the standard search semantics, developers
+may optionally revert to the legacy semantics via the
+`junit.platform.reflection.search.useLegacySemantics` JVM system property.
+
+For example, to enable legacy search semantics for fields and methods, you can start your
+JVM with the following system property.
+
+`-Djunit.platform.reflection.search.useLegacySemantics=true`
+
+NOTE: Due to the low-level nature of the feature, the
+`junit.platform.reflection.search.useLegacySemantics` flag can only be set via a JVM
+system property. It cannot be set via a <<running-tests-config-params, configuration
+parameter>>.
 
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions
@@ -863,31 +928,27 @@ callbacks implemented by `Extension2`. `Extension1` is therefore said to _wrap_
 JUnit Jupiter also guarantees _wrapping_ behavior within class and interface hierarchies
 for user-supplied _lifecycle methods_ (see <<writing-tests-definitions>>).
 
-* `@BeforeAll` methods are inherited from superclasses as long as they are not _hidden_,
-  _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
-  Java's visibility rules). Furthermore, `@BeforeAll` methods from superclasses will be
-  executed **before** `@BeforeAll` methods in subclasses.
+* `@BeforeAll` methods are inherited from superclasses as long as they are not
+  _overridden_. Furthermore, `@BeforeAll` methods from superclasses will be executed
+  **before** `@BeforeAll` methods in subclasses.
 ** Similarly, `@BeforeAll` methods declared in an interface are inherited as long as they
-   are not _hidden_ or _overridden_, and `@BeforeAll` methods from an interface will be
-   executed **before** `@BeforeAll` methods in the class that implements the interface.
-* `@AfterAll` methods are inherited from superclasses as long as they are not _hidden_,
-  _overridden_, or _superseded_ (i.e., replaced based on signature only, irrespective of
-  Java's visibility rules). Furthermore, `@AfterAll` methods from superclasses will be
-  executed **after** `@AfterAll` methods in subclasses.
+   are not _overridden_, and `@BeforeAll` methods from an interface will be executed
+   **before** `@BeforeAll` methods in the class that implements the interface.
+* `@AfterAll` methods are inherited from superclasses as long as they are not
+  _overridden_. Furthermore, `@AfterAll` methods from superclasses will be executed
+  **after** `@AfterAll` methods in subclasses.
 ** Similarly, `@AfterAll` methods declared in an interface are inherited as long as they
-   are not _hidden_ or _overridden_, and `@AfterAll` methods from an interface will be
-   executed **after** `@AfterAll` methods in the class that implements the interface.
+   are not _overridden_, and `@AfterAll` methods from an interface will be executed
+   **after** `@AfterAll` methods in the class that implements the interface.
 * `@BeforeEach` methods are inherited from superclasses as long as they are not
-  _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of
-  Java's visibility rules). Furthermore, `@BeforeEach` methods from superclasses will be
-  executed **before** `@BeforeEach` methods in subclasses.
+  _overridden_. Furthermore, `@BeforeEach` methods from superclasses will be executed
+  **before** `@BeforeEach` methods in subclasses.
 ** Similarly, `@BeforeEach` methods declared as interface default methods are inherited as
    long as they are not _overridden_, and `@BeforeEach` default methods will be executed
    **before** `@BeforeEach` methods in the class that implements the interface.
 * `@AfterEach` methods are inherited from superclasses as long as they are not
-  _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of
-  Java's visibility rules). Furthermore, `@AfterEach` methods from superclasses will be
-  executed **after** `@AfterEach` methods in subclasses.
+  _overridden_. Furthermore, `@AfterEach` methods from superclasses will be executed
+  **after** `@AfterEach` methods in subclasses.
 ** Similarly, `@AfterEach` methods declared as interface default methods are inherited as
    long as they are not _overridden_, and `@AfterEach` default methods will be executed
    **after** `@AfterEach` methods in the class that implements the interface.

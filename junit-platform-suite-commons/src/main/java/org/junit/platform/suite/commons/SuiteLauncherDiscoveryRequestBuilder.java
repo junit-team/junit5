@@ -97,7 +97,8 @@ import org.junit.platform.suite.api.SelectUris;
  *   )
  *   .configurationParameter("key", "value")
  *   .enableImplicitConfigurationParameters(true)
- *   .suite(File.class)
+ *   .applyConfigurationParametersFromSuite(MySuite.class)
+ *   .applySelectorsAndFiltersFromSuite(MySuite.class)
  *   .build();
  * }</pre>
  *
@@ -254,23 +255,86 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Configure the suite class for the suite launcher discovery request.
+	 * Apply a suite's annotation-based configuration, selectors, and filters to
+	 * this builder.
 	 *
-	 * <p>This method processes annotations on the suite class to customize
-	 * the suite discovery and execution.
-	 *
-	 * @param suiteClass the suite class to configure
+	 * @param suiteClass the class to apply the annotations from; never {@code null}
 	 * @return this builder for method chaining
+	 * @see org.junit.platform.suite.api.Suite
+	 * @deprecated as of JUnit Platform 1.11 in favor of
+	 * {@link #applyConfigurationParametersFromSuite} and
+	 * {@link #applySelectorsAndFiltersFromSuite}
 	 */
+	@Deprecated
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
+		applyConfigurationParametersFromSuite(suiteClass);
+		applySelectorsAndFiltersFromSuite(suiteClass);
+		return this;
+	}
 
-		// Annotations in alphabetical order (except @SelectClasses)
+	/**
+	 * Apply a suite's annotation-based configuration to this builder.
+	 *
+	 * <p>This will apply the configuration from the following annotations.
+	 * <ul>
+	 *   <li>{@link ConfigurationParameter}</li>
+	 *   <li>{@link DisableParentConfigurationParameters}</li>
+	 * </ul>
+	 *
+	 * @param suiteClass the class to apply the configuration annotations from;
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 * @since 1.11
+	 * @see org.junit.platform.suite.api.Suite
+	 */
+	public SuiteLauncherDiscoveryRequestBuilder applyConfigurationParametersFromSuite(Class<?> suiteClass) {
+		Preconditions.notNull(suiteClass, "Suite class must not be null");
+
 		// @formatter:off
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
 				.ifPresent(__ -> this.enableParentConfigurationParameters = false);
+		// @formatter:on
+		return this;
+	}
+
+	/**
+	 * Apply a suite's annotation-based discovery selectors and filters to this
+	 * builder.
+	 *
+	 * <p>This will apply the configuration from the following annotations.
+	 * <ul>
+	 *   <li>{@link ExcludeClassNamePatterns}</li>
+	 *   <li>{@link ExcludeEngines}</li>
+	 *   <li>{@link ExcludePackages}</li>
+	 *   <li>{@link ExcludeTags}</li>
+	 *   <li>{@link IncludeClassNamePatterns}</li>
+	 *   <li>{@link IncludeEngines}</li>
+	 *   <li>{@link IncludePackages}</li>
+	 *   <li>{@link IncludeTags}</li>
+	 *   <li>{@link SelectClasses}</li>
+	 *   <li>{@link SelectClasspathResource}</li>
+	 *   <li>{@link SelectDirectories}</li>
+	 *   <li>{@link SelectFile}</li>
+	 *   <li>{@link SelectMethod}</li>
+	 *   <li>{@link SelectModules}</li>
+	 *   <li>{@link SelectUris}</li>
+	 *   <li>{@link SelectPackages}</li>
+	 * </ul>
+	 *
+	 * @param suiteClass the class to apply the discovery selectors and filter
+	 * annotations from; never {@code null}
+	 * @return this builder for method chaining
+	 * @since 1.11
+	 * @see org.junit.platform.suite.api.Suite
+	 */
+	public SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
+		Preconditions.notNull(suiteClass, "Suite class must not be null");
+
+		// Annotations in alphabetical order (except @SelectClasses)
+		// @formatter:off
 		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
 				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
 				.map(ClassNameFilter::excludeClassNamePatterns)

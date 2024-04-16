@@ -29,7 +29,7 @@ tasks {
 		}
 	}
 	val shadowedArtifactsFile by registering(WriteArtifactsFile::class) {
-		from(configurations.shadowed)
+		from(configurations.shadowedClasspath)
 		outputFile = layout.buildDirectory.file("shadowed-artifacts")
 	}
 	shadowJar {

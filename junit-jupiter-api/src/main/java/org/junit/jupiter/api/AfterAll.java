@@ -29,33 +29,31 @@ import org.apiguardian.api.API;
  *
  * <h2>Method Signatures</h2>
  *
- * <p>{@code @AfterAll} methods must have a {@code void} return type and must be
- * {@code static} by default. Consequently, {@code @AfterAll} methods are not
- * supported in {@link Nested @Nested} test classes or as <em>interface default
- * methods</em> unless the test class is annotated with
- * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
- * However, beginning with Java 16 {@code @AfterAll} methods may be declared as
- * {@code static} in {@link Nested @Nested} test classes, and the
- * {@code Lifecycle.PER_CLASS} restriction no longer applies. {@code @AfterAll}
- * methods may optionally declare parameters to be resolved by
+ * <p>{@code @AfterAll} methods must have a {@code void} return type and must
+ * be {@code static} by default. Consequently, {@code @AfterAll} methods are
+ * not supported in {@link Nested @Nested} test classes or as <em>interface
+ * default methods</em> unless the test class is annotated with
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. However, beginning
+ * with Java 16 {@code @AfterAll} methods may be declared as {@code static} in
+ * {@link Nested @Nested} test classes, in which case the {@code Lifecycle.PER_CLASS}
+ * restriction no longer applies. In addition, {@code @AfterAll} methods may
+ * optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <p>Using {@code private} visibility for {@code @AfterAll} methods is
- * strongly discouraged and will be disallowed in a future release.
+ * <p>Using {@code private} visibility for {@code @AfterAll} methods is strongly
+ * discouraged and will be disallowed in a future release.
  *
  * <h2>Inheritance and Execution Order</h2>
  *
- * <p>{@code @AfterAll} methods are inherited from superclasses as long as
- * they are not <em>hidden</em> (default mode with {@code static} modifier),
- * <em>overridden</em>, or <em>superseded</em> (i.e., replaced based on
- * signature only, irrespective of Java's visibility rules). Furthermore,
- * {@code @AfterAll} methods from superclasses will be executed before
- * {@code @AfterAll} methods in subclasses.
+ * <p>{@code @AfterAll} methods are inherited from superclasses as long as they
+ * are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Furthermore, {@code @AfterAll} methods from superclasses will be
+ * executed after {@code @AfterAll} methods in subclasses.
  *
- * <p>Similarly, {@code @AfterAll} methods declared in an interface are
- * inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
- * and {@code @AfterAll} methods from an interface will be executed after
- * {@code @AfterAll} methods in the class that implements the interface.
+ * <p>Similarly, {@code @AfterAll} methods declared in an interface are inherited
+ * as long as they are not overridden, and {@code @AfterAll} methods from an
+ * interface will be executed after {@code @AfterAll} methods in the class that
+ * implements the interface.
  *
  * <p>JUnit Jupiter does not guarantee the execution order of multiple
  * {@code @AfterAll} methods that are declared within a single test class or

@@ -1,4 +1,4 @@
-import com.gradle.enterprise.gradleplugin.testdistribution.internal.TestDistributionExtensionInternal
+import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
@@ -28,9 +28,18 @@ spotless {
 	}
 }
 
-val thirdPartyJars by configurations.creatingResolvable
-val antJars by configurations.creatingResolvable
-val mavenDistribution by configurations.creatingResolvable
+val thirdPartyJars = configurations.dependencyScope("thirdPartyJars")
+val thirdPartyJarsClasspath = configurations.resolvable("thirdPartyJarsClasspath") {
+	extendsFrom(thirdPartyJars.get())
+}
+val antJars = configurations.dependencyScope("antJars")
+val antJarsClasspath = configurations.resolvable("antJarsClasspath") {
+	extendsFrom(antJars.get())
+}
+val mavenDistribution = configurations.dependencyScope("mavenDistribution")
+val mavenDistributionClasspath = configurations.resolvable("mavenDistributionClasspath") {
+	extendsFrom(mavenDistribution.get())
+}
 
 dependencies {
 	implementation(libs.bartholdy) {
@@ -59,6 +68,7 @@ dependencies {
 		because("we reference Ant's main class")
 	}
 	testImplementation(libs.bundles.xmlunit)
+	testImplementation(testFixtures(projects.junitJupiterApi))
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
@@ -83,7 +93,7 @@ dependencies {
 }
 
 val unzipMavenDistribution by tasks.registering(Sync::class) {
-	from(zipTree(mavenDistribution.elements.map { it.single() }))
+	from(zipTree(mavenDistributionClasspath.flatMap { d -> d.elements.map { e -> e.single() } }))
 	into(layout.buildDirectory.dir("maven-distribution"))
 }
 
@@ -125,8 +135,8 @@ tasks.test {
 		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
 
-	jvmArgumentProviders += JarPath(project, thirdPartyJars)
-	jvmArgumentProviders += JarPath(project, antJars)
+	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
+	jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
 	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
 
 	(options as JUnitPlatformOptions).apply {
@@ -144,12 +154,14 @@ tasks.test {
 		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
 	}
 
-	distribution {
-		requirements.add("jdk=8")
-		this as TestDistributionExtensionInternal
-		preferredMaxDuration = Duration.ofMillis(500)
+	develocity {
+		testDistribution {
+			requirements.add("jdk=8")
+			this as TestDistributionConfigurationInternal
+			preferredMaxDuration = Duration.ofMillis(500)
+		}
 	}
-	jvmArgumentProviders += JavaHomeDir(project, 8, distribution.enabled)
+	jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
 }
 
 class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : CommandLineArgumentProvider {

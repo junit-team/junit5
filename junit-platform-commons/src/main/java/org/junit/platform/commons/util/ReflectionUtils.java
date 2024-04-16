@@ -78,6 +78,27 @@ import org.junit.platform.commons.logging.LoggerFactory;
 @API(status = INTERNAL, since = "1.0")
 public final class ReflectionUtils {
 
+	/**
+	 * Property name used to signal that legacy semantics should be used when
+	 * searching for fields and methods within a type hierarchy: {@value}.
+	 *
+	 * <p>Value must be either {@code true} or {@code false} (ignoring case);
+	 * defaults to {@code false}.
+	 *
+	 * <p>When set to {@code false} (either explicitly or implicitly), field and
+	 * method searches will adhere to Java semantics regarding whether a given
+	 * field or method is visible or overridden, where the latter only applies
+	 * to methods. When set to {@code true}, the semantics used in JUnit 5 prior
+	 * to JUnit 5.11 (JUnit Platform 1.11) will be used, which means that fields
+	 * and methods can hide, shadow, or supersede fields and methods in supertypes
+	 * based solely on the field's name or the method's signature, disregarding
+	 * the actual Java language semantics for visibility and whether a method
+	 * overrides another method.
+	 *
+	 * @since 1.11
+	 */
+	private static final String USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME = "junit.platform.reflection.search.useLegacySemantics";
+
 	private static final Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
 
 	private ReflectionUtils() {
@@ -237,6 +258,8 @@ public final class ReflectionUtils {
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
+
+	static volatile boolean useLegacySearchSemantics = getLegacySearchSemanticsFlag();
 
 	public static boolean isPublic(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
@@ -785,6 +808,25 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
+	 * using the supplied {@link ClassLoader}.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)}
+	 * for details on support for class names for arrays.
+	 *
+	 * @param name the name of the class to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @throws JUnitException if the class could not be loaded
+	 * @since 1.11
+	 * @see #tryToLoadClass(String, ClassLoader)
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Class<?> loadRequiredClass(String name, ClassLoader classLoader) throws JUnitException {
+		return tryToLoadClass(name, classLoader).getOrThrow(
+			cause -> new JUnitException(format("Could not load class [%s]", name), cause));
+	}
+
+	/**
 	 * Try to load a class by its <em>primitive name</em> or <em>fully qualified
 	 * name</em>, using the supplied {@link ClassLoader}.
 	 *
@@ -939,6 +981,33 @@ public final class ReflectionUtils {
 			}
 		}
 		return new String[] { className, methodName, methodParameters };
+	}
+
+	/**
+	 * Parse the supplied <em>fully qualified field name</em> into a 2-element
+	 * {@code String[]} with the following content.
+	 *
+	 * <ul>
+	 *   <li>index {@code 0}: the fully qualified class name</li>
+	 *   <li>index {@code 1}: the name of the field</li>
+	 * </ul>
+	 *
+	 * @param fullyQualifiedFieldName a <em>fully qualified field name</em>,
+	 * never {@code null} or blank
+	 * @return a 2-element array of strings containing the parsed values
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static String[] parseFullyQualifiedFieldName(String fullyQualifiedFieldName) {
+		Preconditions.notBlank(fullyQualifiedFieldName, "fullyQualifiedFieldName must not be null or blank");
+
+		int indexOfHashtag = fullyQualifiedFieldName.indexOf('#');
+		boolean validSyntax = (indexOfHashtag > 0) && (indexOfHashtag < fullyQualifiedFieldName.length() - 1);
+		Preconditions.condition(validSyntax,
+			() -> "[" + fullyQualifiedFieldName + "] is not a valid fully qualified field name: "
+					+ "it must start with a fully qualified class name followed by a '#' "
+					+ "and then the field name.");
+		return fullyQualifiedFieldName.split("#");
 	}
 
 	public static Set<Path> getAllClasspathRootDirectories() {
@@ -1324,8 +1393,10 @@ public final class ReflectionUtils {
 	 * Determine a corresponding interface method for the given method handle, if possible.
 	 * <p>This is particularly useful for arriving at a public exported type on the Java
 	 * Module System which can be reflectively invoked without an illegal access warning.
-	 * @param method the method to be invoked, potentially from an implementation class
-	 * @param targetClass the target class to check for declared interfaces
+	 * @param method the method to be invoked, potentially from an implementation class;
+	 * never {@code null}
+	 * @param targetClass the target class to check for declared interfaces;
+	 * potentially {@code null}
 	 * @return the corresponding interface method, or the original method if none found
 	 * @since 1.11
 	 */
@@ -1336,25 +1407,22 @@ public final class ReflectionUtils {
 		}
 		// Try cached version of method in its declaring class
 		Method result = interfaceMethodCache.computeIfAbsent(method,
-			m -> findInterfaceMethodIfPossible(m, m.getDeclaringClass(), Object.class));
+			m -> findInterfaceMethodIfPossible(m, m.getParameterTypes(), m.getDeclaringClass(), Object.class));
 		if (result == method && targetClass != null) {
 			// No interface method found yet -> try given target class (possibly a subclass of the
 			// declaring class, late-binding a base class method to a subclass-declared interface:
 			// see e.g. HashMap.HashIterator.hasNext)
-			result = findInterfaceMethodIfPossible(method, targetClass, method.getDeclaringClass());
+			result = findInterfaceMethodIfPossible(method, method.getParameterTypes(), targetClass,
+				method.getDeclaringClass());
 		}
 		return result;
 	}
 
-	private static Method findInterfaceMethodIfPossible(Method method, Class<?> startClass, Class<?> endClass) {
-		Class<?>[] parameterTypes = null;
+	private static Method findInterfaceMethodIfPossible(Method method, Class<?>[] parameterTypes, Class<?> startClass,
+			Class<?> endClass) {
+
 		Class<?> current = startClass;
 		while (current != null && current != endClass) {
-			if (parameterTypes == null) {
-				// Since Method#getParameterTypes() clones the array, we lazily retrieve
-				// and cache parameter types to avoid cloning the array multiple times.
-				parameterTypes = method.getParameterTypes();
-			}
 			for (Class<?> ifc : current.getInterfaces()) {
 				try {
 					return ifc.getMethod(method.getName(), parameterTypes);
@@ -1472,8 +1540,7 @@ public final class ReflectionUtils {
 	 * that match the specified {@code predicate}, using top-down search semantics
 	 * within the type hierarchy.
 	 *
-	 * <p>The results will not contain instance methods that are <em>overridden</em>
-	 * or {@code static} methods that are <em>hidden</em>.
+	 * <p>The results will not contain instance methods that are <em>overridden</em>.
 	 *
 	 * @param clazz the class or interface in which to find the methods; never {@code null}
 	 * @param predicate the method filter; never {@code null}
@@ -1525,10 +1592,10 @@ public final class ReflectionUtils {
 				.filter(method -> !method.isSynthetic())
 				.collect(toList());
 		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
 				.collect(toList());
 		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodShadowedByLocalMethods(method, localMethods))
+				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
 				.collect(toList());
 		// @formatter:on
 
@@ -1673,7 +1740,7 @@ public final class ReflectionUtils {
 					.collect(toList());
 
 			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
-					.filter(method -> !isMethodShadowedByLocalMethods(method, localInterfaceMethods))
+					.filter(method -> !isMethodOverriddenByLocalMethods(method, localInterfaceMethods))
 					.collect(toList());
 			// @formatter:on
 
@@ -1719,7 +1786,10 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
-		return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		if (useLegacySearchSemantics) {
+			return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+		}
+		return false;
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
@@ -1730,12 +1800,40 @@ public final class ReflectionUtils {
 		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
-	private static boolean isMethodShadowedByLocalMethods(Method method, List<Method> localMethods) {
-		return localMethods.stream().anyMatch(local -> isMethodShadowedBy(method, local));
+	private static boolean isMethodOverriddenByLocalMethods(Method method, List<Method> localMethods) {
+		return localMethods.stream().anyMatch(local -> isMethodOverriddenBy(method, local));
 	}
 
-	private static boolean isMethodShadowedBy(Method upper, Method lower) {
+	private static boolean isMethodOverriddenBy(Method upper, Method lower) {
+		// If legacy search semantics are enabled, skip to hasCompatibleSignature() check.
+		if (!useLegacySearchSemantics) {
+			// A static method cannot override anything.
+			if (Modifier.isStatic(lower.getModifiers())) {
+				return false;
+			}
+
+			// Cannot override a private, static, or final method.
+			int modifiers = upper.getModifiers();
+			if (Modifier.isPrivate(modifiers) || Modifier.isStatic(modifiers) || Modifier.isFinal(modifiers)) {
+				return false;
+			}
+
+			// Cannot override a package-private method in another package.
+			if (isPackagePrivate(upper) && !declaredInSamePackage(upper, lower)) {
+				return false;
+			}
+		}
+
 		return hasCompatibleSignature(upper, lower.getName(), lower.getParameterTypes());
+	}
+
+	private static boolean isPackagePrivate(Member member) {
+		int modifiers = member.getModifiers();
+		return !(Modifier.isPublic(modifiers) || Modifier.isProtected(modifiers) || Modifier.isPrivate(modifiers));
+	}
+
+	private static boolean declaredInSamePackage(Method m1, Method m2) {
+		return m1.getDeclaringClass().getPackage().getName().equals(m2.getDeclaringClass().getPackage().getName());
 	}
 
 	/**
@@ -1751,15 +1849,16 @@ public final class ReflectionUtils {
 		if (parameterTypes.length != candidate.getParameterCount()) {
 			return false;
 		}
+		Class<?>[] candidateParameterTypes = candidate.getParameterTypes();
 		// trivial case: parameter types exactly match
-		if (Arrays.equals(parameterTypes, candidate.getParameterTypes())) {
+		if (Arrays.equals(parameterTypes, candidateParameterTypes)) {
 			return true;
 		}
 		// param count is equal, but types do not match exactly: check for method sub-signatures
 		// https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.2
 		for (int i = 0; i < parameterTypes.length; i++) {
 			Class<?> lowerType = parameterTypes[i];
-			Class<?> upperType = candidate.getParameterTypes()[i];
+			Class<?> upperType = candidateParameterTypes[i];
 			if (!upperType.isAssignableFrom(lowerType)) {
 				return false;
 			}
@@ -1850,6 +1949,18 @@ public final class ReflectionUtils {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
 		return t;
+	}
+
+	private static boolean getLegacySearchSemanticsFlag() {
+		String rawValue = System.getProperty(USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME);
+		if (StringUtils.isBlank(rawValue)) {
+			return false;
+		}
+		String value = rawValue.trim().toLowerCase();
+		boolean isTrue = "true".equals(value);
+		Preconditions.condition(isTrue || "false".equals(value), () -> USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME
+				+ " property must be 'true' or 'false' (ignoring case): " + rawValue);
+		return isTrue;
 	}
 
 }

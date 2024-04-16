@@ -10,12 +10,9 @@
 
 package org.junit.platform.suite.engine;
 
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toSet;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -37,60 +34,63 @@ import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
  * @since 1.8
  */
 class SuiteTestDescriptorTests {
-	@Suite
-	static class TestSuite {
 
-	}
-	UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
-	UniqueId suiteId = engineId.append(SuiteTestDescriptor.SEGMENT_TYPE, "test");
-	UniqueId jupiterEngineId = suiteId.append("engine", JupiterEngineDescriptor.ENGINE_ID);
-	UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE, SingleTestTestCase.class.getName());
-	UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+	final UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
+	final UniqueId suiteId = engineId.append(SuiteTestDescriptor.SEGMENT_TYPE, "test");
+	final UniqueId jupiterEngineId = suiteId.append("engine", JupiterEngineDescriptor.ENGINE_ID);
+	final UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE,
+		SingleTestTestCase.class.getName());
+	final UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
-	ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
-	SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters);
+	final ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
+	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters);
 
 	@Test
 	void suiteIsEmptyBeforeDiscovery() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
-		assertEquals(emptySet(), suite.getChildren());
+
+		assertThat(suite.getChildren()).isEmpty();
 	}
 
 	@Test
 	void suiteDiscoversTestsFromClass() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
 		suite.discover();
-		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),
-			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
+
+		assertThat(suite.getDescendants()).map(TestDescriptor::getUniqueId)//
+				.containsExactly(jupiterEngineId, testClassId, methodId);
 	}
 
 	@Test
 	void suitDiscoversTestsFromUniqueId() {
 		suite.addDiscoveryRequestFrom(methodId);
 		suite.discover();
-		assertEquals(Set.of(jupiterEngineId, testClassId, methodId),
-			suite.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toSet()));
+
+		assertThat(suite.getDescendants()).map(TestDescriptor::getUniqueId)//
+				.containsExactly(jupiterEngineId, testClassId, methodId);
 	}
 
 	@Test
 	void discoveryPlanCanNotBeModifiedAfterDiscovery() {
 		suite.addDiscoveryRequestFrom(SelectClassesSuite.class);
 		suite.discover();
-		assertAll(() -> {
-			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> suite.addDiscoveryRequestFrom(SelectClassesSuite.class));
-			assertEquals("discovery request can not be modified after discovery", exception.getMessage());
 
-		}, () -> {
-			PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
-				() -> suite.addDiscoveryRequestFrom(methodId));
-			assertEquals("discovery request can not be modified after discovery", exception.getMessage());
-		});
+		assertAll(//
+			() -> assertThatExceptionOfType(PreconditionViolationException.class)//
+					.isThrownBy(() -> suite.addDiscoveryRequestFrom(SelectClassesSuite.class))//
+					.withMessage("discovery request cannot be modified after discovery"),
+			() -> assertThatExceptionOfType(PreconditionViolationException.class)//
+					.isThrownBy(() -> suite.addDiscoveryRequestFrom(methodId))//
+					.withMessage("discovery request cannot be modified after discovery"));
 	}
 
 	@Test
 	void suiteMayRegisterTests() {
-		assertTrue(suite.mayRegisterTests());
+		assertThat(suite.mayRegisterTests()).isTrue();
+	}
+
+	@Suite
+	static class TestSuite {
 	}
 
 	private static class EmptyConfigurationParameters implements ConfigurationParameters {

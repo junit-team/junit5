@@ -24,28 +24,28 @@ in the `junit-jupiter-api` module.
 |===
 | Annotation               | Description
 
-| `@Test`                  | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are _inherited_ unless they are _overridden_.
-| `@ParameterizedTest`     | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are _inherited_ unless they are _overridden_.
-| `@RepeatedTest`          | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestFactory`           | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are _inherited_ unless they are _overridden_.
-| `@TestClassOrder`        | Used to configure the <<writing-tests-test-execution-order-classes, test class execution order>> for `@Nested` test classes in the annotated test class. Such annotations are _inherited_.
-| `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order-methods, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are _inherited_.
-| `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are _inherited_.
-| `@DisplayName`           | Declares a custom <<writing-tests-display-names,display name>> for the test class or test method. Such annotations are not _inherited_.
-| `@DisplayNameGeneration` | Declares a custom <<writing-tests-display-name-generator,display name generator>> for the test class. Such annotations are _inherited_.
-| `@BeforeEach`            | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are _inherited_ – unless they are _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of Java's visibility rules).
-| `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are _inherited_ – unless they are _overridden_ or _superseded_ (i.e., replaced based on signature only, irrespective of Java's visibility rules).
-| `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are _inherited_ – unless they are _hidden_, _overridden_, or _superseded_, (i.e., replaced based on signature only, irrespective of Java's visibility rules) – and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
-| `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are _inherited_ – unless they are _hidden_, _overridden_, or _superseded_, (i.e., replaced based on signature only, irrespective of Java's visibility rules) – and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
-| `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not _inherited_.
-| `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are _inherited_ at the class level but not at the method level.
-| `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not _inherited_.
+| `@Test`                  | Denotes that a method is a test method. Unlike JUnit 4's `@Test` annotation, this annotation does not declare any attributes, since test extensions in JUnit Jupiter operate based on their own dedicated annotations. Such methods are inherited unless they are overridden.
+| `@ParameterizedTest`     | Denotes that a method is a <<writing-tests-parameterized-tests, parameterized test>>. Such methods are inherited unless they are overridden.
+| `@RepeatedTest`          | Denotes that a method is a test template for a <<writing-tests-repeated-tests, repeated test>>. Such methods are inherited unless they are overridden.
+| `@TestFactory`           | Denotes that a method is a test factory for <<writing-tests-dynamic-tests, dynamic tests>>. Such methods are inherited unless they are overridden.
+| `@TestTemplate`          | Denotes that a method is a <<writing-tests-test-templates, template for test cases>> designed to be invoked multiple times depending on the number of invocation contexts returned by the registered <<extensions-test-templates, providers>>. Such methods are inherited unless they are overridden.
+| `@TestClassOrder`        | Used to configure the <<writing-tests-test-execution-order-classes, test class execution order>> for `@Nested` test classes in the annotated test class. Such annotations are inherited.
+| `@TestMethodOrder`       | Used to configure the <<writing-tests-test-execution-order-methods, test method execution order>> for the annotated test class; similar to JUnit 4's `@FixMethodOrder`. Such annotations are inherited.
+| `@TestInstance`          | Used to configure the <<writing-tests-test-instance-lifecycle, test instance lifecycle>> for the annotated test class. Such annotations are inherited.
+| `@DisplayName`           | Declares a custom <<writing-tests-display-names,display name>> for the test class or test method. Such annotations are not inherited.
+| `@DisplayNameGeneration` | Declares a custom <<writing-tests-display-name-generator,display name generator>> for the test class. Such annotations are inherited.
+| `@BeforeEach`            | Denotes that the annotated method should be executed _before_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@Before`. Such methods are inherited unless they are overridden.
+| `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are inherited unless they are overridden.
+| `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
+| `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
+| `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not inherited.
+| `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are inherited at the class level but not at the method level.
+| `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not inherited.
 | `@AutoClose`             | Denotes that the annotated field represents a resource that will be <<writing-tests-built-in-extensions-AutoClose,automatically closed>> after test execution.
-| `@Timeout`               | Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are _inherited_.
-| `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.
-| `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are _inherited_.
-| `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are _inherited_ unless they are _shadowed_.
+| `@Timeout`               | Used to fail a test, test factory, test template, or lifecycle method if its execution exceeds a given duration. Such annotations are inherited.
+| `@TempDir`               | Used to supply a <<writing-tests-built-in-extensions-TempDirectory,temporary directory>> via field injection or parameter injection in a lifecycle method or test method; located in the `org.junit.jupiter.api.io` package.  Such fields are inherited.
+| `@ExtendWith`            | Used to <<extensions-registration-declarative,register extensions declaratively>>. Such annotations are inherited.
+| `@RegisterExtension`     | Used to <<extensions-registration-programmatic,register extensions programmatically>> via fields. Such fields are inherited.
 |===
 
 WARNING: Some annotations may currently be _experimental_. Consult the table in
@@ -148,6 +148,23 @@ and lifecycle methods unless there is a technical reason for doing so – for ex
 a test class is extended by a test class in another package. Another technical reason for
 making classes and methods `public` is to simplify testing on the module path when using
 the Java Module System.
+====
+
+[NOTE]
+.Field and method inheritance
+====
+Fields in test classes are inherited. For example, a `@TempDir` field from a superclass
+will always be applied in a subclass.
+
+Test methods and lifecycle methods are inherited unless they are overridden according to
+the visibility rules of the Java language. For example, a `@Test` method from a superclass
+will always be applied in a subclass unless the subclass explicitly overrides the method.
+Similarly, if a package-private `@Test` method is declared in a superclass that resides in
+a different package than the subclass, that `@Test` method will always be applied in the
+subclass since the subclass cannot override a package-private method from a superclass in
+a different package.
+
+See also: <<extensions-supported-utilities-search-semantics>>
 ====
 
 The following test class demonstrates the use of `@Test` methods and all supported
@@ -1495,6 +1512,119 @@ can be referenced by its fully qualified method name, e.g.
 include::{testDir}/example/MethodSourceParameterResolutionDemo.java[tags=parameter_resolution_MethodSource_example]
 ----
 
+[[writing-tests-parameterized-tests-sources-FieldSource]]
+===== @FieldSource
+
+`{FieldSource}` allows you to refer to one or more fields of the test class or external
+classes.
+
+Fields within the test class must be `static` unless the test class is annotated with
+`@TestInstance(Lifecycle.PER_CLASS)`; whereas, fields in external classes must always be
+`static`.
+
+Each field must be able to supply a _stream_ of arguments, and each set of "arguments"
+within the "stream" will be provided as the physical arguments for individual invocations
+of the annotated `@ParameterizedTest` method.
+
+In this context, a "stream" is anything that JUnit can reliably convert to a `Stream`;
+however, the actual concrete field type can take on many forms. Generally speaking this
+translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
+`DoubleStream`, `LongStream`, or `IntStream`), a `Supplier` of an `Iterator`, an array of
+objects, or an array of primitives. Each set of "arguments" within the "stream" can be
+supplied as an instance of `Arguments`, an array of objects (for example, `Object[]`,
+`String[]`, etc.), or a single value if the parameterized test method accepts a single
+argument.
+
+[WARNING]
+====
+In contrast to the supported return types for
+<<writing-tests-parameterized-tests-sources-MethodSource, `@MethodSource`>> factory
+methods, the value of a `@FieldSource` field cannot be an instance of `Stream`,
+`DoubleStream`, `LongStream`, `IntStream`, or `Iterator`, since the values of such types
+are _consumed_ the first time they are processed. However, if you wish to use one of
+these types, you can wrap it in a `Supplier` — for example, `Supplier<IntStream>`.
+====
+
+Please note that a one-dimensional array of objects supplied as a set of "arguments" will
+be handled differently than other types of arguments. Specifically, all of the elements
+of a one-dimensional array of objects will be passed as individual physical arguments to
+the `@ParameterizedTest` method. See the Javadoc for `{FieldSource}` for further details.
+
+If you do not explicitly provide a field name via `@FieldSource`, JUnit Jupiter will
+search in the test class for a field that has the same name as the current
+`@ParameterizedTest` method by convention. This is demonstrated in the following example.
+This parameterized test method will be invoked twice: with the values `"apple"` and
+`"banana"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=default_field_FieldSource_example]
+----
+
+The following example demonstrates how to provide a single explicit field name via
+`@FieldSource`. This parameterized test method will be invoked twice: with the values
+`"apple"` and `"banana"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=explicit_field_FieldSource_example]
+----
+
+The following example demonstrates how to provide multiple explicit field names via
+`@FieldSource`. This example uses the `listOfFruits` field from the previous example as
+well as the `additionalFruits` field. Consequently, this parameterized test method will
+be invoked four times: with the values `"apple"`, `"banana"`, `"cherry"`, and
+`"dewberry"`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=multiple_fields_FieldSource_example]
+----
+
+It is also possible to provide a `Stream`, `DoubleStream`, `IntStream`, `LongStream`, or
+`Iterator` as the source of arguments via a `@FieldSource` field as long as the stream is
+wrapped in a `java.util.function.Supplier`. The following example demonstrates how to
+provide a `Supplier` of a `Stream` of named arguments. This parameterized test method
+will be invoked twice: with the values `"apple"` and `"banana"` and with display names
+`Apple` and `Banana`, respectively.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments_FieldSource_example]
+----
+
+[NOTE]
+====
+Note that `arguments(Object...)` is a static factory method defined in the
+`org.junit.jupiter.params.provider.Arguments` interface.
+
+Similarly, `named(String, Object)` is a static factory method defined in the
+`org.junit.jupiter.api.Named` interface.
+====
+
+If a parameterized test method declares multiple parameters, the corresponding
+`@FieldSource` field must be able to provide a collection, stream supplier, or array of
+`Arguments` instances or object arrays as shown below (see the Javadoc for
+`{FieldSource}` for further details on supported types).
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=multi_arg_FieldSource_example]
+----
+
+[NOTE]
+====
+Note that `arguments(Object...)` is a static factory method defined in the
+`org.junit.jupiter.params.provider.Arguments` interface.
+====
+
+An external, `static` `@FieldSource` field can be referenced by providing its
+_fully qualified field name_ as demonstrated in the following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ExternalFieldSourceDemo.java[tags=external_field_FieldSource_example]
+----
 
 [[writing-tests-parameterized-tests-sources-CsvSource]]
 ===== @CsvSource
@@ -2748,9 +2878,8 @@ method that will be invoked to close the resource. However, developers can custo
 name of the close method via the `value` attribute. For example, `@AutoClose("shutdown")`
 instructs JUnit to look for a `shutdown()` method to close the resource.
 
-`@AutoClose` fields are inherited from superclasses as long as they are not hidden.
-Furthermore, `@AutoClose` fields from subclasses will be closed before `@AutoClose` fields
-in superclasses.
+`@AutoClose` fields are inherited from superclasses. Furthermore, `@AutoClose` fields from
+subclasses will be closed before `@AutoClose` fields in superclasses.
 
 When multiple `@AutoClose` fields exist within a given test class, the order in which the
 resources are closed depends on an algorithm that is deterministic but intentionally

@@ -10,18 +10,16 @@
 
 package org.junit.api.tools;
 
-import java.io.PrintWriter;
-import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+
+import io.github.classgraph.ClassInfo;
 
 import org.apiguardian.api.API.Status;
 
 /**
  * @since 1.0
  */
-interface ApiReportWriter {
-
-	void printReportHeader(PrintWriter out);
-
-	void printDeclarationInfo(PrintWriter out, EnumSet<Status> statuses);
-
+record ApiReport(SortedSet<ClassInfo> types, Map<Status, List<Declaration>> declarations) {
 }

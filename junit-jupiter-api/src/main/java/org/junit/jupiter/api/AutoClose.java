@@ -40,9 +40,9 @@ import org.apiguardian.api.API;
  *
  * <h2>Inheritance</h2>
  *
- * <p>{@code @AutoClose} fields are inherited from superclasses as long as they
- * are not <em>hidden</em>. Furthermore, {@code @AutoClose} fields from subclasses
- * will be closed before {@code @AutoClose} fields in superclasses.
+ * <p>{@code @AutoClose} fields are inherited from superclasses. Furthermore,
+ * {@code @AutoClose} fields from subclasses will be closed before
+ * {@code @AutoClose} fields in superclasses.
  *
  * <h2>Evaluation Order</h2>
  *
