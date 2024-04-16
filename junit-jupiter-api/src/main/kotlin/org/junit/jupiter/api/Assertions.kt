@@ -120,8 +120,8 @@ inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(failureMessage: String, executable: () -> Unit): T =
-    assertThrows({ failureMessage }, executable)
+inline fun <reified T : Throwable> assertThrows(message: String, executable: () -> Unit): T =
+    assertThrows({ message }, executable)
 
 /**
  * Example usage:
@@ -133,7 +133,7 @@ inline fun <reified T : Throwable> assertThrows(failureMessage: String, executab
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(noinline failureMessage: () -> String, executable: () -> Unit): T {
+inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, executable: () -> Unit): T {
     val throwable: Throwable? = try {
         executable()
     } catch (caught: Throwable) {
@@ -147,7 +147,7 @@ inline fun <reified T : Throwable> assertThrows(noinline failureMessage: () -> S
                 throw throwable
             }
         },
-        Supplier(failureMessage)
+        Supplier(message)
     )
 }
 
