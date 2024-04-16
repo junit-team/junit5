@@ -68,7 +68,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		fieldName = fieldName.trim();
 
 		Class<?> clazz = testClass;
-		if (fieldName.contains("#")) {
+		if (fieldName.contains("#") || fieldName.contains(".")) {
 			String[] fieldParts = ReflectionUtils.parseFullyQualifiedFieldName(fieldName);
 			String className = fieldParts[0];
 			fieldName = fieldParts[1];

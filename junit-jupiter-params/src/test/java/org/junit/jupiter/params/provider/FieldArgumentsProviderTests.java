@@ -351,9 +351,9 @@ class FieldArgumentsProviderTests {
 				"external @FieldSource fields must always be static.");
 		}
 
-		@Test
-		void throwsExceptionWhenFullyQualifiedFieldNameIsMissingFieldName() {
-			String fieldName = "org.example.wrongSyntax#"; // missing "fieldName"
+		@ParameterizedTest
+		@ValueSource(strings = { "org.example.MyUtils", "org.example.MyUtils#", "#fieldName" })
+		void throwsExceptionWhenFullyQualifiedFieldNameSyntaxIsInvalid(String fieldName) {
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> provideArguments(fieldName).toArray());
 
@@ -361,16 +361,6 @@ class FieldArgumentsProviderTests {
 					[%s] is not a valid fully qualified field name: \
 					it must start with a fully qualified class name followed by a \
 					'#' and then the field name.""", fieldName, TestCase.class.getName());
-		}
-
-		@Test
-		void throwsExceptionWhenFullyQualifiedFieldNameIsMissingHashAndFieldName() {
-			String fieldName = "org.example.wrongSyntax"; // missing "#fieldName"
-			var exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments(fieldName).toArray());
-
-			assertThat(exception.getMessage()).isEqualTo("Could not find field named [%s] in class [%s]", fieldName,
-				TestCase.class.getName());
 		}
 
 		@Test
@@ -390,14 +380,15 @@ class FieldArgumentsProviderTests {
 				TestCase.class.getName());
 		}
 
-		@Test
-		void throwsExceptionWhenExternalFieldDoesNotExist() {
+		@ParameterizedTest
+		@ValueSource(strings = { "nonExistentField", "strings()" })
+		void throwsExceptionWhenExternalFieldDoesNotExist(String fieldName) {
 			String factoryClass = ExternalFields.class.getName();
 
 			var exception = assertThrows(PreconditionViolationException.class,
-				() -> provideArguments(factoryClass + "#nonExistentField").toArray());
+				() -> provideArguments(factoryClass + "#" + fieldName).toArray());
 
-			assertThat(exception.getMessage()).isEqualTo("Could not find field named [nonExistentField] in class [%s]",
+			assertThat(exception.getMessage()).isEqualTo("Could not find field named [%s] in class [%s]", fieldName,
 				factoryClass);
 		}
 
