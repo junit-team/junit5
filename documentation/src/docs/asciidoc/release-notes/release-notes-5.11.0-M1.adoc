@@ -72,6 +72,8 @@ repository on GitHub.
     *** The same applies to other types of test methods (`@TestFactory`,
       `@ParameterizedTest`, etc.) as well as lifecycle methods (`@BeforeAll`,
       `@AfterAll`, `@BeforeEach`, and `@AfterEach`).
+* `TempDir` suppresses `NoSuchFileException` when deleting files that may have been deleted
+  by another thread or process.
 
 [[release-notes-5.11.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
