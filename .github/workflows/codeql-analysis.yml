@@ -40,8 +40,8 @@ jobs:
       uses: ./.github/actions/run-gradle
       with:
         arguments: |
-          --no-build-cache
-          -Dscan.tag.CodeQL
+          --no-build-cache \
+          -Dscan.tag.CodeQL \
           allMainClasses
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3

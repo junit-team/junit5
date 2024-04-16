@@ -18,9 +18,9 @@ runs:
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
       run: |
-        ./gradlew
-        -Porg.gradle.java.installations.auto-download=false
-        -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }}
-        "-Dscan.value.GitHub job=${{ github.job }}"
-        javaToolchains
+        ./gradlew \
+        -Porg.gradle.java.installations.auto-download=false \
+        -Pjunit.develocity.predictiveTestSelection.enabled=${{ github.event_name == 'pull_request' }} \
+        "-Dscan.value.GitHub job=${{ github.job }}" \
+        javaToolchains \
         ${{ inputs.arguments }}
