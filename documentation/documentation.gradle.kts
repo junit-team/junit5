@@ -145,7 +145,6 @@ tasks {
 
 			)
 		})
-		args.addAll("--config", "enableHttpServer=true")
 		args.addAll("--include-classname", ".*Tests")
 		args.addAll("--include-classname", ".*Demo")
 		args.addAll("--exclude-tag", "exclude")
