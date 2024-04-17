@@ -10,8 +10,9 @@
 
 package example.exception;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 // @formatter:off
 // tag::user_guide[]
@@ -20,16 +21,9 @@ class AssertDoesNotThrowExceptionDemoTestCase {
 
 	@Test
 	void assertDoesNotThrowExceptionTest() {
-		Assertions.assertThrows(RuntimeException.class, () -> {
-			failsDueToException();
-			Assertions.assertDoesNotThrow(() -> {
-				shouldNotThrowException();
-			});
+		assertDoesNotThrow(() -> {
+			shouldNotThrowException();
 		});
-	}
-
-	void failsDueToException(){
-		throw new RuntimeException();
 	}
 
 	void shouldNotThrowException(){}

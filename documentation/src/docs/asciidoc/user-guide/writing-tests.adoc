@@ -370,36 +370,96 @@ as a failure.
 [[writing-tests-exceptions]]
 === Exception Handling
 
-JUnit Jupiter provides robust support for handling test exceptions. This includes the built-in mechanisms for managing test failures due to exceptions, the role of exceptions in implementing assertions, and how to specifically assert non-throwing conditions in code.
+JUnit Jupiter provides robust support for handling test exceptions. This includes the
+built-in mechanisms for managing test failures due to exceptions, the role of exceptions
+in implementing assertions, and how to specifically assert non-throwing conditions in code.
 
-[[writing-tests-uncaught-exceptions]]
+[[writing-tests-exceptions-uncaught]]
 ==== Uncaught Exceptions and Test Failures
 
-In JUnit Jupiter, if an exception is thrown and not caught within the test method, the framework will mark the test as failed.
+In JUnit Jupiter, if an exception is thrown and not caught within the test method, the
+framework will mark the test as failed.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/exception/UncaughtExceptionHandlingDemoTestCase.java[tags=user_guide]
 ----
 
-In the above example, the `testThatFailsDueToUncaughtException` method throws a `RuntimeException`. Since the exception is not caught within the test method, JUnit Jupiter will automatically fail the test.
+In the above example, the `testThatFailsDueToUncaughtException` method throws a
+`RuntimeException`. Since the exception is not caught within the test method, JUnit
+Jupiter will automatically fail the test.
 
-[[writing-tests-assertions-using-exceptions]]
+NOTE: It's important to clarify that specifying a `throws` clause in the test method
+has no effect on the outcome of the test. JUnit Jupiter does not interpret it as
+an expectation or assertion about what exceptions the test method should throw. A test
+fails only if an exception is thrown unexpectedly or if an assertion fails.
+
+[[writing-tests-exceptions-assertions]]
 ==== Assertions Using Exceptions
 
-Assertions in JUnit Jupiter are implemented using exceptions. The framework provides a set of assertion methods in the `org.junit.jupiter.api.Assertions` class, which throw `AssertionError` when an assertion fails. This mechanism is a core aspect of how JUnit handles assertion failures as exceptions.
+Assertions in JUnit Jupiter are implemented using exceptions. The framework provides
+a set of assertion methods in the `org.junit.jupiter.api.Assertions` class, which throw
+`AssertionError` when an assertion fails. This mechanism is a core aspect of how JUnit
+handles assertion failures as exceptions.
 
-NOTE: JUnit Jupiter itself does not differentiate between failed assertions (`AssertionError`) and other types of exceptions. All uncaught exceptions lead to a test failure. However, Integrated Development Environments (IDEs) and other tools may distinguish between these two types of failures by checking whether the thrown exception is an instance of AssertionError.
+NOTE: This failed assertion behaviour (i.e. throwing `AssertionError`) may be different
+for third party assertion libraries. See also: <<writing-tests-assertions-third-party>>.
 
-[[writing-tests-assertions-using-assertDoesNotThrow]]
-==== Asserting Non-Exception Conditions with `assertDoesNotThrow`
+NOTE: JUnit Jupiter itself does not differentiate between failed assertions
+(`AssertionError`) and other types of exceptions. All uncaught exceptions lead to a test
+failure. However, Integrated Development Environments (IDEs) and other tools may
+distinguish between these two types of failures by checking whether the thrown exception
+is an instance of `AssertionError`.
 
-Although any exception thrown from a test method will cause the test to fail, there are certain use cases where it can be beneficial to explicitly assert that an exception is not thrown for a given code block within a test method. The `assertDoesNotThrow` assertion can be used when you want to verify that a particular piece of code does not throw any exceptions.
+[[writing-tests-exceptions-expected]]
+==== Asserting Expected Exception Conditions
+
+JUnit Jupiter offers specialized assertions for testing that specific exceptions are
+thrown under expected conditions. The `assertThrows` and `assertThrowsExactly` assertions
+are critical tools for validating that your code responds correctly to error conditions
+by throwing the appropriate exceptions.
+
+[[writing-tests-exceptions-expected-assertThrows]]
+===== Using `assertThrows`
+
+The `assertThrows` method is used to verify that a particular type of exception is thrown
+during the execution of a provided executable block. It not only checks for the type of
+the thrown exception but also its subclasses, making it suitable for more generalized
+exception handling tests.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/exception/ExceptionAssertionDemoTestCase.java[tags=user_guide]
+----
+
+[[writing-tests-exceptions-expected-assertThrowsExactly]]
+===== Using `assertThrowsExactly`
+
+`assertThrowsExactly` is used when you need to assert that an exception is not only
+thrown but is exactly of a specific type, not allowing for subclasses of the exception.
+This is useful when precise exception handling behavior needs to be validated.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/exception/ExceptionAssertionExactDemoTestCase.java[tags=user_guide]
+----
+
+[[writing-tests-exceptions-using-assertDoesNotThrow]]
+==== Using `assertDoesNotThrow` to Verify Absence of Exceptions
+
+Although any exception thrown from a test method will cause the test to fail, there are
+certain use cases where it can be beneficial to explicitly assert that an exception is
+not thrown for a given code block within a test method. The `assertDoesNotThrow`
+assertion can be used when you want to verify that a particular piece of code does not
+throw any exceptions.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/exception/AssertDoesNotThrowExceptionDemoTestCase.java[tags=user_guide]
 ----
+
+NOTE: Other third party assertion libraries also provide similar support. For example,
+`AssertJ` has `assertThatNoException().isThrownBy(() -> ...)`. See also: <<writing-tests-assertions-third-party>>.
 
 [[writing-tests-disabling]]
 === Disabling Tests
