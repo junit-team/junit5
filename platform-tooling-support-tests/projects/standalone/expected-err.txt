@@ -1,3 +1,4 @@
+>> JAVA VERSION >>
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
 .+ Loaded LauncherInterceptor instances: ..
 .+ org.junit.platform.launcher.core.ServiceLoaderRegistry load
