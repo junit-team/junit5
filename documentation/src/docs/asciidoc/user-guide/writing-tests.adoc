@@ -368,7 +368,7 @@ NOTE: As of JUnit Jupiter 5.4, it is also possible to use methods from JUnit 4's
 as a failure.
 
 [[writing-tests-exceptions]]
-=== Other Exceptions
+=== Exception Handling
 
 JUnit Jupiter provides robust support for handling test exceptions. This includes the built-in mechanisms for managing test failures due to exceptions, the role of exceptions in implementing assertions, and how to specifically assert non-throwing conditions in code.
 
