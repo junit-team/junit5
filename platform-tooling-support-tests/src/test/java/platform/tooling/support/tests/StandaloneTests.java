@@ -358,7 +358,13 @@ class StandaloneTests {
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+		List<String> actualErrLines = result.getOutputLines("err");
+		if (actualErrLines.getFirst().contains("stty: /dev/tty: No such device or address")) {
+			// Happens intermittently on GitHub Actions on Windows
+			actualErrLines = new ArrayList<>(actualErrLines);
+			actualErrLines.removeFirst();
+		}
+		assertLinesMatch(expectedErrLines, actualErrLines);
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
