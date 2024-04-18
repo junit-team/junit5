@@ -10,11 +10,9 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -22,6 +20,7 @@ import java.time.Duration;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
@@ -29,6 +28,7 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
+@EnabledIfEnvironmentVariable(named = "GRAALVM_HOME", matches = ".+")
 class GraalVmStarterTests {
 
 	@Test
@@ -38,7 +38,6 @@ class GraalVmStarterTests {
 				.setProject("graalvm-starter") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
-				.addArguments("-Porg.gradle.java.installations.fromEnv=GRAALVM_HOME") //
 				.setTimeout(Duration.ofMinutes(10)) //
 				.build();
 
@@ -46,15 +45,11 @@ class GraalVmStarterTests {
 
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
-		assumeFalse(
-			result.getOutputLines("err").stream().anyMatch(
-				line -> line.contains("No locally installed toolchains match")),
-			"Abort test if GraalVM is not installed");
-
 		assertEquals(0, result.getExitCode());
-		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
-
-		var testResultsDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("build/test-results/test");
-		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
+		assertThat(result.getOutputLines("out")) //
+				.anyMatch(line -> line.contains("CalculatorTests > 1 + 1 = 2 SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("CalculatorTests > 1 + 100 = 101 SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("ClassLevelAnnotationTests$Inner > test() SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("BUILD SUCCESSFUL"));
 	}
 }

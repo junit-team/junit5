@@ -130,6 +130,7 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private final List<String> uniqueIds = new ArrayList<>();
 
 	private boolean enabled;
+	private TestPlan testPlan;
 
 	public UniqueIdTrackingListener() {
 		// to avoid missing-explicit-ctor warning
@@ -138,22 +139,38 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		this.enabled = testPlan.getConfigurationParameters().getBoolean(LISTENER_ENABLED_PROPERTY_NAME).orElse(false);
+		this.testPlan = testPlan;
 	}
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		trackTestUid(testIdentifier);
+		if (this.enabled) {
+			// When a container is skipped, there are no events for its children.
+			// Therefore, in order to track them, we need to traverse the subtree.
+			trackTestUidRecursively(testIdentifier);
+		}
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
-		trackTestUid(testIdentifier);
+		if (this.enabled) {
+			trackTestUid(testIdentifier);
+		}
 	}
 
-	private void trackTestUid(TestIdentifier testIdentifier) {
-		if (this.enabled && testIdentifier.isTest()) {
-			this.uniqueIds.add(testIdentifier.getUniqueId());
+	private void trackTestUidRecursively(TestIdentifier testIdentifier) {
+		boolean tracked = trackTestUid(testIdentifier);
+		if (!tracked) {
+			this.testPlan.getChildren(testIdentifier).forEach(this::trackTestUidRecursively);
 		}
+	}
+
+	private boolean trackTestUid(TestIdentifier testIdentifier) {
+		if (testIdentifier.isTest()) {
+			this.uniqueIds.add(testIdentifier.getUniqueId());
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -178,6 +195,7 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 				logger.error(ex, () -> "Failed to write unique IDs to output file " + outputFile.toAbsolutePath());
 			}
 		}
+		this.testPlan = null;
 	}
 
 	private Path createOutputFile(ConfigurationParameters configurationParameters) {

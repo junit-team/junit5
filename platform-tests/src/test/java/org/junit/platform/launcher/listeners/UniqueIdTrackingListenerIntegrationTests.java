@@ -46,6 +46,7 @@ import java.util.stream.Stream;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.engine.TestDescriptor;
@@ -54,6 +55,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
@@ -79,9 +81,10 @@ class UniqueIdTrackingListenerIntegrationTests {
 	private static final String testD = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase3]/[method:testD()]";
 	private static final String testE = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase4]/[method:testE()]";
 	private static final String testF = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$TestCase4]/[method:testF()]";
+	private static final String testG = "[engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.UniqueIdTrackingListenerIntegrationTests$DisabledTestCase]/[nested-class:Inner]/[method:testG()]";
 
 	private static final String[] expectedUniqueIds = { passingTest, skippedTest, abortedTest, failingTest,
-			dynamicTest1, dynamicTest2, testA, testB };
+			dynamicTest1, dynamicTest2, testA, testB, testG };
 
 	private static final String[] expectedConcurrentUniqueIds = { testA, testB, testC, testD, testE, testF };
 
@@ -225,10 +228,20 @@ class UniqueIdTrackingListenerIntegrationTests {
 				.build();
 		LauncherFactory.create().execute(request, new TestExecutionListener() {
 
+			private TestPlan testPlan;
+
+			@Override
+			public void testPlanExecutionStarted(TestPlan testPlan) {
+				this.testPlan = testPlan;
+			}
+
 			@Override
 			public void executionSkipped(TestIdentifier testIdentifier, String reason) {
 				if (testIdentifier.isTest()) {
 					uniqueIds.add(testIdentifier.getUniqueId());
+				}
+				else {
+					this.testPlan.getChildren(testIdentifier).forEach(child -> executionSkipped(child, reason));
 				}
 			}
 
@@ -243,7 +256,8 @@ class UniqueIdTrackingListenerIntegrationTests {
 	}
 
 	private static ClassSelector[] selectClasses() {
-		return new ClassSelector[] { selectClass(TestCase1.class), selectClass(TestCase2.class) };
+		return new ClassSelector[] { selectClass(TestCase1.class), selectClass(TestCase2.class),
+				selectClass(DisabledTestCase.class) };
 	}
 
 	private static Stream<Path> findFiles(String dir, String prefix) throws IOException {
@@ -337,6 +351,18 @@ class UniqueIdTrackingListenerIntegrationTests {
 
 		@Test
 		void testF() {
+		}
+	}
+
+	@Disabled
+	static class DisabledTestCase {
+
+		@Nested
+		class Inner {
+
+			@Test
+			void testG() {
+			}
 		}
 	}
 

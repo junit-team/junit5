@@ -17,6 +17,8 @@ on GitHub.
 
 * The `junit-platform-suite-engine` now includes configuration provided via
   `@ConfigurationParameter` when selecting tests by `UniqueId`.
+* In order to support using `@EnabledInNativeImage` on test classes,
+  `UniqueIdTrackingListener` now tracks descendants of skipped test containers.
 
 ==== Deprecations and Breaking Changes
 
