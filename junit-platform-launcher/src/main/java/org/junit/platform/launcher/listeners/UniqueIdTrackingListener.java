@@ -167,7 +167,8 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 
 	private boolean trackTestUid(TestIdentifier testIdentifier) {
 		if (testIdentifier.isTest()) {
-			return this.uniqueIds.add(testIdentifier.getUniqueId());
+			this.uniqueIds.add(testIdentifier.getUniqueId());
+			return true;
 		}
 		return false;
 	}
