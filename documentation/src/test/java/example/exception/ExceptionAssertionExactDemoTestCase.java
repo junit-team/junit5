@@ -10,9 +10,9 @@
 
 package example.exception;
 
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
+
+import org.junit.jupiter.api.Test;
 
 // @formatter:off
 // tag::user_guide[]
