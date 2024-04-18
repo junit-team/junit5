@@ -40,7 +40,7 @@ class CsvArgumentsProviderTests {
 		var annotation = csvSource().build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
 	}
 
@@ -52,7 +52,7 @@ class CsvArgumentsProviderTests {
 				""").build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessage("@CsvSource must be declared with either `value` or `textBlock` but not both");
 	}
 
@@ -223,7 +223,7 @@ class CsvArgumentsProviderTests {
 		var annotation = csvSource().delimiter('|').delimiterString("~~~").build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("The delimiter and delimiterString attributes cannot be set simultaneously in")//
 				.withMessageContaining("CsvSource");
 	}
@@ -270,7 +270,7 @@ class CsvArgumentsProviderTests {
 		var annotation = csvSource().lines("413").maxCharsPerColumn(2).build();
 
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
@@ -289,7 +289,7 @@ class CsvArgumentsProviderTests {
 		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').build();
 
 		assertThatExceptionOfType(CsvParsingException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
 				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
 	}
@@ -308,7 +308,7 @@ class CsvArgumentsProviderTests {
 		var annotation = csvSource().lines("41").delimiter(';').maxCharsPerColumn(-1).build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
 	}
 
@@ -372,7 +372,7 @@ class CsvArgumentsProviderTests {
 				""").build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
-				.isThrownBy(() -> provideArguments(annotation))//
+				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessage(
 					"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
 	}

@@ -13,7 +13,11 @@ package org.junit.jupiter.params.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.support.AnnotationConsumerInitializer.initialize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
@@ -28,6 +32,7 @@ import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.RepeatableAnnotationArgumentsProvider;
 import org.junit.platform.commons.JUnitException;
 
 @DisplayName("AnnotationConsumerInitializer")
@@ -93,6 +98,16 @@ class AnnotationConsumerInitializerTests {
 		assertThatThrownBy(() -> initialize(parameter, instance)).isInstanceOf(JUnitException.class);
 	}
 
+	@Test
+	void shouldInitializeForEachAnnotationsWhenItIsRepeatable() throws NoSuchMethodException {
+		var instance = spy(new SomeRepeatableAnnotationArgumentsProvider());
+		var method = SubjectClass.class.getDeclaredMethod("repeatableAnnotation", String.class);
+
+		initialize(method, instance);
+
+		verify(instance, times(2)).accept(any(CsvSource.class));
+	}
+
 	private static class SomeAnnotationBasedArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 		CsvSource annotation;
@@ -126,6 +141,15 @@ class AnnotationConsumerInitializerTests {
 		}
 	}
 
+	private static class SomeRepeatableAnnotationArgumentsProvider
+			extends RepeatableAnnotationArgumentsProvider<CsvSource> {
+
+		@Override
+		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
+			return Stream.empty();
+		}
+	}
+
 	@SuppressWarnings("unused")
 	private static class SubjectClass {
 
@@ -137,6 +161,11 @@ class AnnotationConsumerInitializerTests {
 		}
 
 		void noAnnotation(String param) {
+		}
+
+		@CsvSource("a")
+		@CsvSource("b")
+		void repeatableAnnotation(String param) {
 		}
 	}
 

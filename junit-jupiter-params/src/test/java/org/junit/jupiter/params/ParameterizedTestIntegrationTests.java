@@ -249,6 +249,14 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void executesWithRepeatableCsvSource() {
+		var results = execute("testWithRepeatableCsvSource", String.class);
+		results.allEvents().assertThatEvents().haveExactly(1,
+			event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))).haveExactly(1,
+				event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+	}
+
+	@Test
 	void executesWithCustomName() {
 		var results = execute("testWithCustomName", String.class, int.class);
 		results.allEvents().assertThatEvents() //
@@ -1104,6 +1112,13 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@CsvSource({ "foo", "bar" })
 		void testWithCsvSource(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "a" })
+		@CsvSource({ "b" })
+		void testWithRepeatableCsvSource(String argument) {
 			fail(argument);
 		}
 

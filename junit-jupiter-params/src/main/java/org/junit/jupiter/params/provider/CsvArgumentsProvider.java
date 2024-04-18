@@ -33,7 +33,7 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
 /**
  * @since 5.0
  */
-class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
+class CsvArgumentsProvider extends RepeatableAnnotationArgumentsProvider<CsvSource> {
 
 	private static final String LINE_SEPARATOR = "\n";
 
