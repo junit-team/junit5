@@ -10,23 +10,20 @@
 
 package example.exception;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import org.junit.jupiter.api.Test;
 
 // @formatter:off
 // tag::user_guide[]
 
-class AssertDoesNotThrowExceptionDemoTestCase {
+class UncaughtExceptionHandlingDemo {
 
-	@Test
-	void assertDoesNotThrowExceptionTest() {
-		assertDoesNotThrow(() -> {
-			shouldNotThrowException();
-		});
-	}
-
-	void shouldNotThrowException(){}
+    // end::user_guide[]
+    @extensions.ExpectToFail
+    // tag::user_guide[]
+    @Test
+    void failsDueToUncaughtException() {
+        throw new RuntimeException("This exception will cause a test failure");
+    }
 }
 
 // end::user_guide[]

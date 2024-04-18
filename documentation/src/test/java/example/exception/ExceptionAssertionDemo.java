@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 // @formatter:off
 // tag::user_guide[]
 
-class ExceptionAssertionDemoTestCase {
+class ExceptionAssertionDemo {
     @Test
     void testExpectedExceptionIsThrown() {
         assertThrows(IllegalArgumentException.class, () -> {
