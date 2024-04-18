@@ -382,7 +382,7 @@ framework will mark the test as failed.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/exception/UncaughtExceptionHandlingDemoTestCase.java[tags=user_guide]
+include::{testDir}/example/exception/UncaughtExceptionHandlingDemo.java[tags=user_guide]
 ----
 
 In the above example, the `testThatFailsDueToUncaughtException` method throws a
@@ -429,7 +429,7 @@ exception handling tests.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/exception/ExceptionAssertionDemoTestCase.java[tags=user_guide]
+include::{testDir}/example/exception/ExceptionAssertionDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-exceptions-expected-assertThrowsExactly]]
@@ -441,7 +441,7 @@ This is useful when precise exception handling behavior needs to be validated.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/exception/ExceptionAssertionExactDemoTestCase.java[tags=user_guide]
+include::{testDir}/example/exception/ExceptionAssertionExactDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-exceptions-using-assertDoesNotThrow]]
@@ -455,7 +455,7 @@ throw any exceptions.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/exception/AssertDoesNotThrowExceptionDemoTestCase.java[tags=user_guide]
+include::{testDir}/example/exception/AssertDoesNotThrowExceptionDemo.java[tags=user_guide]
 ----
 
 NOTE: Other third party assertion libraries also provide similar support. For example,
