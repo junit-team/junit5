@@ -10,11 +10,10 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeFalse;
-import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -54,9 +53,10 @@ class GraalVmStarterTests {
 			"Abort test if GraalVM is not installed");
 
 		assertEquals(0, result.getExitCode());
-		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
-
-		var testResultsDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("build/test-results/test");
-		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
+		assertThat(result.getOutputLines("out")) //
+				.anyMatch(line -> line.contains("CalculatorTests > 1 + 1 = 2 SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("CalculatorTests > 1 + 100 = 101 SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("ClassLevelAnnotationTests$Inner > test() SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("BUILD SUCCESSFUL"));
 	}
 }
