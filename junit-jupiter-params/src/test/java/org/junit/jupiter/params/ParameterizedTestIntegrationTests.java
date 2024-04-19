@@ -249,14 +249,6 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void executesWithRepeatableCsvSource() {
-		var results = execute("testWithRepeatableCsvSource", String.class);
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
-				.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
-	}
-
-	@Test
 	void executesWithCustomName() {
 		var results = execute("testWithCustomName", String.class, int.class);
 		results.allEvents().assertThatEvents() //
@@ -1078,6 +1070,31 @@ class ParameterizedTestIntegrationTests {
 
 	}
 
+	@Nested
+	class RepeatableSourcesIntegrationTests {
+
+		@Test
+		void executesWithRepeatableCsvSource() {
+			var results = execute("testWithRepeatableCsvSource", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+		}
+
+		@Test
+		void executesWithRepeatableCsvFileSource() {
+			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
+					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"), finishedWithFailure(message("apple 1"))));
+		}
+
+		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
+			return ParameterizedTestIntegrationTests.this.execute(RepeatableSourcesTestCase.class, methodName,
+					methodParameterTypes);
+		}
+	}
+
 	@Test
 	void closeAutoCloseableArgumentsAfterTest() {
 		var results = execute("testWithAutoCloseableArgument", AutoCloseableArgument.class);
@@ -1112,13 +1129,6 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@CsvSource({ "foo", "bar" })
 		void testWithCsvSource(String argument) {
-			fail(argument);
-		}
-
-		@ParameterizedTest
-		@CsvSource({ "a" })
-		@CsvSource({ "b" })
-		void testWithRepeatableCsvSource(String argument) {
 			fail(argument);
 		}
 
@@ -1916,6 +1926,24 @@ class ParameterizedTestIntegrationTests {
 		static Stream<String> providerMethod() {
 			lifecycleEvents.add("providerMethod");
 			return Stream.of("foo", "bar");
+		}
+
+	}
+
+	static class RepeatableSourcesTestCase {
+
+		@ParameterizedTest
+		@CsvSource({ "a" })
+		@CsvSource({ "b" })
+		void testWithRepeatableCsvSource(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvFileSource(resources = "two-column.csv")
+		@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
+		void testWithRepeatableCsvFileSource(String column1, String column2) {
+			fail("%s %s".formatted(column1, column2));
 		}
 
 	}
