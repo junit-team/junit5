@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSource> {
+class ValueArgumentsProvider extends RepeatableAnnotationArgumentsProvider<ValueSource> {
 
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource valueSource) {

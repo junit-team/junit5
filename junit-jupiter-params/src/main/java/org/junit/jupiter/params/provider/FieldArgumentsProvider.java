@@ -35,7 +35,7 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
  *
  * @since 5.11
  */
-class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSource> {
+class FieldArgumentsProvider extends RepeatableAnnotationArgumentsProvider<FieldSource> {
 
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, FieldSource fieldSource) {

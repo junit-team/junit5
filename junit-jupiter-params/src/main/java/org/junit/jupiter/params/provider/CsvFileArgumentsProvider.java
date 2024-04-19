@@ -41,7 +41,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileSource> {
+class CsvFileArgumentsProvider extends RepeatableAnnotationArgumentsProvider<CsvFileSource> {
 
 	private final InputStreamProvider inputStreamProvider;
 

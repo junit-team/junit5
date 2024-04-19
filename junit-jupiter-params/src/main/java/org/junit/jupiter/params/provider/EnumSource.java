@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -49,6 +50,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(EnumSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EnumArgumentsProvider.class)
 @SuppressWarnings("exports")
