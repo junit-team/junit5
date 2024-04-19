@@ -10,6 +10,7 @@
 
 package example.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import org.junit.jupiter.api.Test;
