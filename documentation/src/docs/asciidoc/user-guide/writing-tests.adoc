@@ -425,7 +425,8 @@ by throwing the appropriate exceptions.
 The `assertThrows` method is used to verify that a particular type of exception is thrown
 during the execution of a provided executable block. It not only checks for the type of
 the thrown exception but also its subclasses, making it suitable for more generalized
-exception handling tests.
+exception handling tests. The `assertThrows` assertion method returns the thrown
+exception object to allow performing additional assertions on it.
 
 [source,java,indent=0]
 ----
@@ -437,7 +438,9 @@ include::{testDir}/example/exception/ExceptionAssertionDemo.java[tags=user_guide
 
 `assertThrowsExactly` is used when you need to assert that an exception is not only
 thrown but is exactly of a specific type, not allowing for subclasses of the exception.
-This is useful when precise exception handling behavior needs to be validated.
+This is useful when precise exception handling behavior needs to be validated. Similar
+to `assertThrows`, `assertThrowsExactly` assertion method also returns the thrown
+exception object to allow performing additional assertions on it.
 
 [source,java,indent=0]
 ----

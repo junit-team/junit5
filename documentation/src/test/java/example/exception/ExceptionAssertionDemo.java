@@ -10,6 +10,7 @@
 
 package example.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -18,15 +19,23 @@ import org.junit.jupiter.api.Test;
 // tag::user_guide[]
 
 class ExceptionAssertionDemo {
+
     @Test
     void testExpectedExceptionIsThrown() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        // The following assertion succeeds because the code under assertion throws
+        // the expected IllegalArgumentException
+        // The assertion also returns the thrown exception which can be used for
+        // further assertions like asserting the exception messages
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
-        }, "Expected IllegalArgumentException to be thrown");
+        });
+        assertEquals(exception.getMessage(), "Expected exception");
 
+        // The following assertion should also succeed because the code under assertion throws
+        // IllegalArgumentException which is subclass of RuntimeException
         assertThrows(RuntimeException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
-        }, "should also pass because IllegalArgumentException is subclass of RuntimeException");
+        });
     }
 }
 

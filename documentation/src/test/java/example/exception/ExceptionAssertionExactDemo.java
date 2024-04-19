@@ -24,13 +24,20 @@ public class ExceptionAssertionExactDemo {
     // tag::user_guide[]
     @Test
     void testExpectedExceptionIsThrown() {
-        assertThrowsExactly(IllegalArgumentException.class, () -> {
+        // The following assertion succeeds because the code under assertion throws
+        // IllegalArgumentException which is exactly equal to the expected type
+        // The assertion also returns the thrown exception which can be used for
+        // further assertions like asserting the exception messages
+        IllegalArgumentException exception = assertThrowsExactly(IllegalArgumentException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
-        }, "This will fail because because we expect IllegalArgumentException to be thrown");
+        });
+        assertEquals(exception.getMessage(), "Expected exception");
 
+        // The following assertion should fail because the assertion expected exactly
+        // RuntimeException to be thrown, not subclasses
         assertThrowsExactly(RuntimeException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
-        }, "This will fail because expected exactly RuntimeException to be thrown, not subclasses");
+        });
     }
 }
 

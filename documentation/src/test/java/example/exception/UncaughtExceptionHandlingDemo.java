@@ -22,7 +22,8 @@ class UncaughtExceptionHandlingDemo {
     // tag::user_guide[]
     @Test
     void failsDueToUncaughtException() {
-        throw new RuntimeException("This exception will cause a test failure");
+        // the following thrown exception will cause a test failure
+        throw new RuntimeException();
     }
 }
 
