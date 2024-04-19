@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   dependency-submission:
+    if: github.repository == 'junit-team/junit5'
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
