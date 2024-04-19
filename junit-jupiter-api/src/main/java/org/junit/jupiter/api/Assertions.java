@@ -3092,10 +3092,11 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}. Note that this message is <strong>not</strong>
-	 * the expected message of the thrown exception. To assert the expected message
-	 * of the thrown exception, you must use a separate, subsequent assertion against
-	 * the exception returned from this method.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
@@ -3150,10 +3151,11 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}. Note that this message is <strong>not</strong>
-	 * the expected message of the thrown exception. To assert the expected message
-	 * of the thrown exception, you must use a separate, subsequent assertion against
-	 * the exception returned from this method.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
