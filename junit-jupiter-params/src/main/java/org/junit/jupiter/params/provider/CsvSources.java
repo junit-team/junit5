@@ -23,7 +23,7 @@ import org.apiguardian.api.API;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE, since = "5.7")
-public @interface CSVSources {
+@API(status = STABLE, since = "5.11")
+public @interface CsvSources {
 	CsvSource[] value();
 }

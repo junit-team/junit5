@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
-@API(status = EXPERIMENTAL, since = "5.10")
+@API(status = EXPERIMENTAL, since = "5.11")
 public abstract class RepeatableAnnotationArgumentsProvider<A extends Annotation>
 		implements ArgumentsProvider, AnnotationConsumer<A> {
 

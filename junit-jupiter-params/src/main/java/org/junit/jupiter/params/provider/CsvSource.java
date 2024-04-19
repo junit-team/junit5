@@ -65,7 +65,7 @@ import org.apiguardian.api.API;
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-@Repeatable(CSVSources.class)
+@Repeatable(CsvSources.class)
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)

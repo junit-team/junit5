@@ -251,9 +251,9 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesWithRepeatableCsvSource() {
 		var results = execute("testWithRepeatableCsvSource", String.class);
-		results.allEvents().assertThatEvents().haveExactly(1,
-			event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))).haveExactly(1,
-				event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
+				.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
 	}
 
 	@Test
