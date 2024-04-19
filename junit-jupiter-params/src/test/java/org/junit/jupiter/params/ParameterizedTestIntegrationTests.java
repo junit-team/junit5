@@ -1085,13 +1085,15 @@ class ParameterizedTestIntegrationTests {
 		void executesWithRepeatableCsvFileSource() {
 			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
-					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"), finishedWithFailure(message("apple 1"))));
+					.haveExactly(1,
+						event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
+					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"),
+						finishedWithFailure(message("apple 1"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 			return ParameterizedTestIntegrationTests.this.execute(RepeatableSourcesTestCase.class, methodName,
-					methodParameterTypes);
+				methodParameterTypes);
 		}
 	}
 
