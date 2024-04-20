@@ -362,10 +362,9 @@ method references. All JUnit Jupiter assumptions are static methods in the
 include::{testDir}/example/AssumptionsDemo.java[tags=user_guide]
 ----
 
-NOTE: As of JUnit Jupiter 5.4, it is also possible to use methods from JUnit 4's
-`org.junit.Assume` class for assumptions. Specifically, JUnit Jupiter supports JUnit 4's
-`AssumptionViolatedException` to signal that a test should be aborted instead of marked
-as a failure.
+NOTE: It is also possible to use methods from JUnit 4's `org.junit.Assume` class for
+assumptions. Specifically, JUnit Jupiter supports JUnit 4's `AssumptionViolatedException`
+to signal that a test should be aborted instead of marked as a failure.
 
 [[writing-tests-exceptions]]
 === Exception Handling
@@ -377,19 +376,20 @@ in implementing assertions, and how to specifically assert non-throwing conditio
 [[writing-tests-exceptions-uncaught]]
 ==== Uncaught Exceptions
 
-In JUnit Jupiter, if an exception is thrown and not caught within the test method, the
-framework will mark the test as failed.
+In JUnit Jupiter, if an exception is thrown from a test method, a lifecycle method, or an
+extension and not caught within that test method, lifecycle method, or extension, the
+framework will mark the test or test class as failed.
+
+In the following example, the `failsDueToUncaughtException()` method throws an
+`ArithmeticException`. Since the exception is not caught within the test method, JUnit
+Jupiter will mark the test as failed.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/exception/UncaughtExceptionHandlingDemo.java[tags=user_guide]
 ----
 
-In the above example, the `failsDueToUncaughtException()` method throws an
-`ArithmeticException`. Since the exception is not caught within the test method, JUnit
-Jupiter will mark the test as failed.
-
-NOTE: It's important to clarify that specifying a `throws` clause in the test method has
+NOTE: It's important to note that specifying a `throws` clause in the test method has
 no effect on the outcome of the test. JUnit Jupiter does not interpret a `throws` clause
 as an expectation or assertion about what exceptions the test method should throw. A test
 fails only if an exception is thrown unexpectedly or if an assertion fails.
@@ -413,14 +413,14 @@ failure. However, Integrated Development Environments (IDEs) and other tools may
 distinguish between these two types of failures by checking whether the thrown exception
 is an instance of `AssertionError`.
 
+In the following example, the `failsDueToUncaughtAssertionError()` method throws an
+`AssertionError`. Since the exception is not caught within the test method, JUnit Jupiter
+will mark the test as failed.
+
 [source,java,indent=0]
 ----
 include::{testDir}/example/exception/FailedAssertionDemo.java[tags=user_guide]
 ----
-
-In the above example, the `failsDueToUncaughtAssertionError()` method throws an
-`AssertionError`. Since the exception is not caught within the test method, JUnit Jupiter
-will mark the test as failed.
 
 [[writing-tests-exceptions-expected]]
 ==== Asserting Expected Exceptions
