@@ -352,10 +352,21 @@ Naturally, legacy tests based on the JUnit 4 programming model can continue usin
 [[writing-tests-assumptions]]
 === Assumptions
 
-JUnit Jupiter comes with a subset of the assumption methods that JUnit 4 provides and
+Assumptions are typically used whenever it does not make sense to continue execution of a
+given test — for example, if the test depends on something that does not exist in the
+current runtime environment.
+
+* When an assumption is valid, the assumption method does not throw an exception, and
+  execution of the test continues as usual.
+* When an assumption is invalid, the assumption method throws an exception of type
+  `org.opentest4j.TestAbortedException` to signal that the test should be aborted instead
+  of marked as a failure.
+
+JUnit Jupiter comes with a subset of the _assumption_ methods that JUnit 4 provides and
 adds a few that lend themselves well to being used with Java 8 lambda expressions and
-method references. All JUnit Jupiter assumptions are static methods in the
-`{Assumptions}` class.
+method references.
+
+All JUnit Jupiter assumptions are static methods in the `{Assumptions}` class.
 
 [source,java,indent=0]
 ----
@@ -371,7 +382,8 @@ to signal that a test should be aborted instead of marked as a failure.
 
 JUnit Jupiter provides robust support for handling test exceptions. This includes the
 built-in mechanisms for managing test failures due to exceptions, the role of exceptions
-in implementing assertions, and how to specifically assert non-throwing conditions in code.
+in implementing assertions and assumptions, and how to specifically assert non-throwing
+conditions in code.
 
 [[writing-tests-exceptions-uncaught]]
 ==== Uncaught Exceptions
@@ -379,6 +391,16 @@ in implementing assertions, and how to specifically assert non-throwing conditio
 In JUnit Jupiter, if an exception is thrown from a test method, a lifecycle method, or an
 extension and not caught within that test method, lifecycle method, or extension, the
 framework will mark the test or test class as failed.
+
+[TIP]
+====
+Failed assumptions deviate from this general rule.
+
+In contrast to failed assertions, failed assumptions do not result in a test failure;
+rather, a failed assumption results in a test being aborted.
+
+See <<writing-tests-assumptions>> for further details and examples.
+====
 
 In the following example, the `failsDueToUncaughtException()` method throws an
 `ArithmeticException`. Since the exception is not caught within the test method, JUnit
