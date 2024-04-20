@@ -9,6 +9,7 @@
 * `@FieldSource` annotation for use with `@ParameterizedTest` methods
 * `@AutoClose` annotation to automatically close field resources in tests
 * `ConversionSupport` utility for converting from a string to a supported target type
+* Various documentation improvements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/68?closed=1+[5.11.0-M1] milestone page in the JUnit
@@ -53,7 +54,7 @@ repository on GitHub.
   -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
-* Updated open-test-reporting dependency to 0.1.0-M2.
+* Updated `open-test-reporting` dependency to `0.1.0-M2`.
 
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
@@ -75,8 +76,6 @@ repository on GitHub.
     *** The same applies to other types of test methods (`@TestFactory`,
       `@ParameterizedTest`, etc.) as well as lifecycle methods (`@BeforeAll`,
       `@AfterAll`, `@BeforeEach`, and `@AfterEach`).
-* `TempDir` suppresses `NoSuchFileException` when deleting files that may have been deleted
-  by another thread or process.
 
 [[release-notes-5.11.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -97,7 +96,15 @@ repository on GitHub.
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for
   details.
+* `@TempDir` now suppresses `NoSuchFileException` when attempting to delete files that may
+  have been already deleted by another thread or process.
 * `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* New <<../user-guide/index.adoc#writing-tests-exceptions, Exception Handling>>
+  documentation in the User Guide.
+* Improved documentation for <<../user-guide/index.adoc#writing-tests-assumptions,
+  Assumptions>> in the User Guide.
+* Improved Javadoc for `assertThrows()` and `assertThrowsExactly()` to make it clear that
+  the supplied message is not the _expected message_ of the thrown exception.
 * Improved documentation for semantics of a disabled test regarding class-level lifecycle
   methods and callbacks.
 
@@ -105,17 +112,4 @@ repository on GitHub.
 [[release-notes-5.11.0-M1-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.11.0-M1-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.0-M1-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.0-M1-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
