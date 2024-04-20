@@ -13,9 +13,9 @@ package example.exception;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
-import org.junit.jupiter.api.Test;
-
 import extensions.ExpectToFail;
+
+import org.junit.jupiter.api.Test;
 
 public class ExceptionAssertionExactDemo {
 

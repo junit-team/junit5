@@ -12,9 +12,9 @@ package example.exception;
 
 import example.util.Calculator;
 
-import org.junit.jupiter.api.Test;
-
 import extensions.ExpectToFail;
+
+import org.junit.jupiter.api.Test;
 
 class UncaughtExceptionHandlingDemo {
 
