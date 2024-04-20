@@ -14,20 +14,18 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.Test;
 
-// @formatter:off
-// tag::user_guide[]
-
 class AssertDoesNotThrowExceptionDemo {
 
+	// tag::user_guide[]
 	@Test
-	void assertDoesNotThrowExceptionTest() {
+	void testExceptionIsNotThrown() {
 		assertDoesNotThrow(() -> {
 			shouldNotThrowException();
 		});
 	}
 
-	void shouldNotThrowException(){}
-}
+	void shouldNotThrowException() {
+	}
+	// end::user_guide[]
 
-// end::user_guide[]
-// @formatter:on
+}

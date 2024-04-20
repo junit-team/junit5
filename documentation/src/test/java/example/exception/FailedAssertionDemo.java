@@ -10,13 +10,15 @@
 
 package example.exception;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import example.util.Calculator;
 
 import org.junit.jupiter.api.Test;
 
 import extensions.ExpectToFail;
 
-class UncaughtExceptionHandlingDemo {
+class FailedAssertionDemo {
 
 	// tag::user_guide[]
 	private final Calculator calculator = new Calculator();
@@ -26,10 +28,10 @@ class UncaughtExceptionHandlingDemo {
 	@ExpectToFail
 	// tag::user_guide[]
 	@Test
-	void failsDueToUncaughtException() {
-		// The following throws an ArithmeticException due to division by
-		// zero, which causes a test failure.
-		calculator.divide(1, 0);
+	void failsDueToUncaughtAssertionError() {
+		// The following incorrect assertion will cause a test failure.
+		// The expected value should be 2 instead of 99.
+		assertEquals(99, calculator.add(1, 1));
 	}
 	// end::user_guide[]
 

@@ -15,29 +15,30 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
-// @formatter:off
-// tag::user_guide[]
 
 class ExceptionAssertionDemo {
 
-    @Test
-    void testExpectedExceptionIsThrown() {
-        // The following assertion succeeds because the code under assertion throws
-        // the expected IllegalArgumentException
-        // The assertion also returns the thrown exception which can be used for
-        // further assertions like asserting the exception messages
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            throw new IllegalArgumentException("Expected exception");
-        });
-        assertEquals("Expected exception", exception.getMessage());
+	// @formatter:off
+	// tag::user_guide[]
+	@Test
+	void testExpectedExceptionIsThrown() {
+		// The following assertion succeeds because the code under assertion
+		// throws the expected IllegalArgumentException.
+		// The assertion also returns the thrown exception which can be used for
+		// further assertions like asserting the exception message.
+		IllegalArgumentException exception =
+			assertThrows(IllegalArgumentException.class, () -> {
+				throw new IllegalArgumentException("expected message");
+			});
+		assertEquals("expected message", exception.getMessage());
 
-        // The following assertion should also succeed because the code under assertion throws
-        // IllegalArgumentException which is subclass of RuntimeException
-        assertThrows(RuntimeException.class, () -> {
-            throw new IllegalArgumentException("Expected exception");
-        });
-    }
+		// The following assertion also succeeds because the code under assertion
+		// throws IllegalArgumentException which is a subclass of RuntimeException.
+		assertThrows(RuntimeException.class, () -> {
+			throw new IllegalArgumentException("expected message");
+		});
+	}
+	// end::user_guide[]
+	// @formatter:on
+
 }
-
-// end::user_guide[]
-// @formatter:on

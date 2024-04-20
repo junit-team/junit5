@@ -15,32 +15,32 @@ import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import org.junit.jupiter.api.Test;
 
-// @formatter:off
-// tag::user_guide[]
+import extensions.ExpectToFail;
 
 public class ExceptionAssertionExactDemo {
 
-    // end::user_guide[]
-    @extensions.ExpectToFail
-    // tag::user_guide[]
-    @Test
-    void testExpectedExceptionIsThrown() {
-        // The following assertion succeeds because the code under assertion throws
-        // IllegalArgumentException which is exactly equal to the expected type
-        // The assertion also returns the thrown exception which can be used for
-        // further assertions like asserting the exception messages
-        IllegalArgumentException exception = assertThrowsExactly(IllegalArgumentException.class, () -> {
-            throw new IllegalArgumentException("Expected exception");
-        });
-        assertEquals("Expected exception", exception.getMessage());
+	@ExpectToFail
+	// @formatter:off
+	// tag::user_guide[]
+	@Test
+	void testExpectedExceptionIsThrown() {
+		// The following assertion succeeds because the code under assertion throws
+		// IllegalArgumentException which is exactly equal to the expected type.
+		// The assertion also returns the thrown exception which can be used for
+		// further assertions like asserting the exception message.
+		IllegalArgumentException exception =
+			assertThrowsExactly(IllegalArgumentException.class, () -> {
+				throw new IllegalArgumentException("expected message");
+			});
+		assertEquals("expected message", exception.getMessage());
 
-        // The following assertion should fail because the assertion expected exactly
-        // RuntimeException to be thrown, not subclasses
-        assertThrowsExactly(RuntimeException.class, () -> {
-            throw new IllegalArgumentException("Expected exception");
-        });
-    }
+		// The following assertion fails because the assertion expects exactly
+		// RuntimeException to be thrown, not subclasses of RuntimeException.
+		assertThrowsExactly(RuntimeException.class, () -> {
+			throw new IllegalArgumentException("expected message");
+		});
+	}
+	// end::user_guide[]
+	// @formatter:on
+
 }
-
-// end::user_guide[]
-// @formatter:on
