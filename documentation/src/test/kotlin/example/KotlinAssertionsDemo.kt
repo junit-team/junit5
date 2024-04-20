@@ -38,10 +38,10 @@ class KotlinAssertionsDemo {
         assertEquals(0, result)
     }
 
-    // tag::user_guide[]
-    @Test
     // end::user_guide[]
     @extensions.DisabledOnOpenJ9
+    // tag::user_guide[]
+    @Test
     fun `expected exception testing`() {
         val calculator = Calculator()
         val exception = assertThrows<ArithmeticException> ("Should throw an exception") {
