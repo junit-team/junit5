@@ -29,7 +29,7 @@ class ExceptionAssertionDemo {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
         });
-        assertEquals(exception.getMessage(), "Expected exception");
+        assertEquals("Expected exception", exception.getMessage());
 
         // The following assertion should also succeed because the code under assertion throws
         // IllegalArgumentException which is subclass of RuntimeException
