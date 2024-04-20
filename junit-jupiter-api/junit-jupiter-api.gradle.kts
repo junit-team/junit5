@@ -31,3 +31,11 @@ tasks {
 		}
 	}
 }
+
+kotlin {
+	sourceSets {
+		main {
+			languageSettings.optIn("kotlin.contracts.ExperimentalContracts")
+		}
+	}
+}

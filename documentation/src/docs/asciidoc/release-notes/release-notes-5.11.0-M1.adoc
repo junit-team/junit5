@@ -53,7 +53,7 @@ repository on GitHub.
   -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
-
+* Introduced kotlin contracts for kotlin assertion methods.
 
 [[release-notes-5.11.0-M1-junit-jupiter]]
 === JUnit Jupiter
