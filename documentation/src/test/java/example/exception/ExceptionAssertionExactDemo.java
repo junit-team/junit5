@@ -32,7 +32,7 @@ public class ExceptionAssertionExactDemo {
         IllegalArgumentException exception = assertThrowsExactly(IllegalArgumentException.class, () -> {
             throw new IllegalArgumentException("Expected exception");
         });
-        assertEquals(exception.getMessage(), "Expected exception");
+        assertEquals("Expected exception", exception.getMessage());
 
         // The following assertion should fail because the assertion expected exactly
         // RuntimeException to be thrown, not subclasses
