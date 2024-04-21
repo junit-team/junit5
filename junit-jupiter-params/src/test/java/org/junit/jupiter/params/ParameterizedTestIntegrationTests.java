@@ -1134,7 +1134,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithSameRepeatableAnnotationMultipleTimes() {
 			var results = execute("testWithSameRepeatableAnnotationMultipleTimes", String.class);
-			results.allEvents().assertThatEvents()
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), started())) //
 					.haveExactly(1, event(test(), finishedWithFailure(message("foo"))));
 		}
@@ -1142,7 +1142,7 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithDifferentRepeatableAnnotations() {
 			var results = execute("testWithDifferentRepeatableAnnotations", String.class);
-			results.allEvents().assertThatEvents()
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b")))) //
 					.haveExactly(1, event(test(), displayName("[3] argument=c"), finishedWithFailure(message("c")))) //
