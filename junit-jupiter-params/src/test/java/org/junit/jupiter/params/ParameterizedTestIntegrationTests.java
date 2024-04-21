@@ -1131,6 +1131,24 @@ class ParameterizedTestIntegrationTests {
 						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
+		@Test
+		void executesWithSameRepeatableAnnotationMultipleTimes() {
+			var results = execute("testWithSameRepeatableAnnotationMultipleTimes", String.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), started())) //
+					.haveExactly(1, event(test(), finishedWithFailure(message("foo"))));
+		}
+
+		@Test
+		void executesWithDifferentRepeatableAnnotations() {
+			var results = execute("testWithDifferentRepeatableAnnotations", String.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b")))) //
+					.haveExactly(1, event(test(), displayName("[3] argument=c"), finishedWithFailure(message("c")))) //
+					.haveExactly(1, event(test(), displayName("[4] argument=d"), finishedWithFailure(message("d"))));
+		}
+
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 			return ParameterizedTestIntegrationTests.this.execute(RepeatableSourcesTestCase.class, methodName,
 				methodParameterTypes);
@@ -2035,6 +2053,25 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(strings = "foo")
 		@ValueSource(strings = "bar")
 		void testWithRepeatableValueSource(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "foo")
+		void testWithSameRepeatableAnnotationMultipleTimes(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "a")
+		@ValueSource(strings = "b")
+		@CsvSource({ "c" })
+		@CsvSource({ "d" })
+		void testWithDifferentRepeatableAnnotations(String argument) {
 			fail(argument);
 		}
 	}
