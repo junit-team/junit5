@@ -21,6 +21,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +34,6 @@ import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.RepeatableAnnotationArgumentsProvider;
 import org.junit.platform.commons.JUnitException;
 
 @DisplayName("AnnotationConsumerInitializer")
@@ -57,9 +58,11 @@ class AnnotationConsumerInitializerTests {
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
-		initialisedAnnotationConsumer.provideArguments(mock());
+		initialisedAnnotationConsumer.provideArguments(mock()).findAny();
 
-		assertThat(initialisedAnnotationConsumer.annotation) //
+		assertThat(initialisedAnnotationConsumer.annotations) //
+				.hasSize(1) //
+				.element(0) //
 				.isInstanceOfSatisfying(CsvSource.class, //
 					source -> assertThat(source.value()).containsExactly("a", "b"));
 	}
@@ -99,8 +102,8 @@ class AnnotationConsumerInitializerTests {
 	}
 
 	@Test
-	void shouldInitializeForEachAnnotationsWhenItIsRepeatable() throws NoSuchMethodException {
-		var instance = spy(new SomeRepeatableAnnotationArgumentsProvider());
+	void shouldInitializeForEachAnnotations() throws NoSuchMethodException {
+		var instance = spy(new SomeAnnotationBasedArgumentsProvider());
 		var method = SubjectClass.class.getDeclaredMethod("repeatableAnnotation", String.class);
 
 		initialize(method, instance);
@@ -110,11 +113,11 @@ class AnnotationConsumerInitializerTests {
 
 	private static class SomeAnnotationBasedArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
-		CsvSource annotation;
+		List<CsvSource> annotations = new ArrayList<>();
 
 		@Override
 		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-			this.annotation = annotation;
+			annotations.add(annotation);
 			return Stream.empty();
 		}
 	}
@@ -138,15 +141,6 @@ class AnnotationConsumerInitializerTests {
 		@Override
 		public void accept(CsvSource csvSource) {
 			annotation = csvSource;
-		}
-	}
-
-	private static class SomeRepeatableAnnotationArgumentsProvider
-			extends RepeatableAnnotationArgumentsProvider<CsvSource> {
-
-		@Override
-		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-			return Stream.empty();
 		}
 	}
 

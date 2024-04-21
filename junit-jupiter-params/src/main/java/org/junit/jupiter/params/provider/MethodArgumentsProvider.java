@@ -35,7 +35,7 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * @since 5.0
  */
-class MethodArgumentsProvider extends RepeatableAnnotationArgumentsProvider<MethodSource> {
+class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSource> {
 
 	private static final Predicate<Method> isFactoryMethod = //
 		method -> isConvertibleToStream(method.getReturnType()) && !isTestMethod(method);

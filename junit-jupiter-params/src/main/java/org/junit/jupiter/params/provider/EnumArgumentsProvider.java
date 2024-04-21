@@ -24,7 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.0
  */
-class EnumArgumentsProvider extends RepeatableAnnotationArgumentsProvider<EnumSource> {
+class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource> {
 
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, EnumSource enumSource) {
