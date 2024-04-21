@@ -1080,9 +1080,9 @@ class ParameterizedTestIntegrationTests {
 			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
-							event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
+						event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
 					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"),
-							finishedWithFailure(message("apple 1"))));
+						finishedWithFailure(message("apple 1"))));
 		}
 
 		@Test
@@ -1096,33 +1096,39 @@ class ParameterizedTestIntegrationTests {
 		@Test
 		void executesWithRepeatableMethodSource() {
 			var results = execute("testWithRepeatableMethodSource", String.class);
-			results.allEvents().assertThatEvents()
-					.haveExactly(1, event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1,
+						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
 		@Test
 		void executesWithRepeatableEnumSource() {
 			var results = execute("testWithRepeatableEnumSource", Action.class);
-			results.allEvents().assertThatEvents()
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=FOO"), finishedWithFailure(message("FOO")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=BAR"), finishedWithFailure(message("BAR"))));
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=BAR"), finishedWithFailure(message("BAR"))));
 		}
 
 		@Test
 		void executesWithRepeatableValueSource() {
 			var results = execute("testWithRepeatableValueSource", String.class);
-			results.allEvents().assertThatEvents()
+			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
 		@Test
 		void executesWithRepeatableFieldSource() {
 			var results = execute("testWithRepeatableFieldSource", String.class);
-			results.allEvents().assertThatEvents()
-					.haveExactly(1, event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
-					.haveExactly(1, event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1,
+						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -1989,11 +1995,16 @@ class ParameterizedTestIntegrationTests {
 			fail(argument.toString());
 		}
 
-		interface Action {}
+		interface Action {
+		}
 
-		private enum SmartAction implements Action { FOO }
+		private enum SmartAction implements Action {
+			FOO
+		}
 
-		private enum QuickAction implements Action { BAR }
+		private enum QuickAction implements Action {
+			BAR
+		}
 
 		@ParameterizedTest
 		@MethodSource("someArgumentsMethodSource")
