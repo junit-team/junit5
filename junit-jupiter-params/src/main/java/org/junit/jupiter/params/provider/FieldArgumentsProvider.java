@@ -19,9 +19,7 @@ import java.lang.reflect.Type;
 import java.util.Iterator;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import java.util.stream.DoubleStream;
-import java.util.stream.IntStream;
-import java.util.stream.LongStream;
+import java.util.stream.BaseStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -107,15 +105,8 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		Preconditions.notNull(value,
 			() -> format("The value of field [%s] in class [%s] must not be null", fieldName, declaringClass));
 
-		boolean isStream = value instanceof Stream//
-				|| value instanceof DoubleStream//
-				|| value instanceof IntStream//
-				|| value instanceof LongStream;
-
-		Preconditions.condition(!isStream,
-			() -> format(
-				"The value of field [%s] in class [%s] must not be a Stream, IntStream, LongStream, or DoubleStream",
-				fieldName, declaringClass));
+		Preconditions.condition(!(value instanceof BaseStream),
+			() -> format("The value of field [%s] in class [%s] must not be a stream", fieldName, declaringClass));
 
 		Preconditions.condition(!(value instanceof Iterator),
 			() -> format("The value of field [%s] in class [%s] must not be an Iterator", fieldName, declaringClass));

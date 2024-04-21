@@ -434,8 +434,7 @@ class FieldArgumentsProviderTests {
 
 			var exception = assertThrows(PreconditionViolationException.class, () -> provideArguments(field).toArray());
 
-			assertThat(exception.getMessage()).isEqualTo(
-				"The value of field [%s] in class [%s] must not be a Stream, IntStream, LongStream, or DoubleStream",
+			assertThat(exception.getMessage()).isEqualTo("The value of field [%s] in class [%s] must not be a stream",
 				field, factoryClass);
 		}
 
