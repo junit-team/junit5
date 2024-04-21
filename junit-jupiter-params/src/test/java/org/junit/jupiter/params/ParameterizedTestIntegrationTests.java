@@ -1132,6 +1132,18 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@Test
+		void executesWithRepeatableArgumentsSource() {
+			var results = execute("testWithRepeatableArgumentsSource", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar")))) //
+					.haveExactly(1, event(test(), displayName("[3] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1,
+						event(test(), displayName("[4] argument=bar"), finishedWithFailure(message("bar"))));
+
+		}
+
+		@Test
 		void executesWithSameRepeatableAnnotationMultipleTimes() {
 			var results = execute("testWithSameRepeatableAnnotationMultipleTimes", String.class);
 			results.allEvents().assertThatEvents() //
@@ -2072,6 +2084,13 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "c" })
 		@CsvSource({ "d" })
 		void testWithDifferentRepeatableAnnotations(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
+		@ArgumentsSource(TwoUnusedStringArgumentsProvider.class)
+		void testWithRepeatableArgumentsSource(String argument) {
 			fail(argument);
 		}
 	}
