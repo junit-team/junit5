@@ -15,6 +15,10 @@ For a complete list of all _closed_ issues and pull requests for this release, c
 link:{junit5-repo}+/milestone/68?closed=1+[5.11.0-M1] milestone page in the JUnit
 repository on GitHub.
 
+For assistance with upgrading, please consult the
+link:https://github.com/junit-team/junit5/wiki/Upgrading-to-JUnit-5.11[Upgrading to JUnit 5.11]
+page in the Wiki.
+
 
 [[release-notes-5.11.0-M1-junit-platform]]
 === JUnit Platform
