@@ -84,6 +84,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSourcesTestCase.Action;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
@@ -97,6 +98,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
@@ -1074,6 +1076,16 @@ class ParameterizedTestIntegrationTests {
 	class RepeatableSourcesIntegrationTests {
 
 		@Test
+		void executesWithRepeatableCsvFileSource() {
+			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1,
+							event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
+					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"),
+							finishedWithFailure(message("apple 1"))));
+		}
+
+		@Test
 		void executesWithRepeatableCsvSource() {
 			var results = execute("testWithRepeatableCsvSource", String.class);
 			results.allEvents().assertThatEvents() //
@@ -1082,13 +1094,35 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@Test
-		void executesWithRepeatableCsvFileSource() {
-			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
-			results.allEvents().assertThatEvents() //
-					.haveExactly(1,
-						event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
-					.haveExactly(1, event(test(), displayName("[5] column1=FRUIT = apple, column2=RANK = 1"),
-						finishedWithFailure(message("apple 1"))));
+		void executesWithRepeatableMethodSource() {
+			var results = execute("testWithRepeatableMethodSource", String.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
+		}
+
+		@Test
+		void executesWithRepeatableEnumSource() {
+			var results = execute("testWithRepeatableEnumSource", Action.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), displayName("[1] argument=FOO"), finishedWithFailure(message("FOO")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=BAR"), finishedWithFailure(message("BAR"))));
+		}
+
+		@Test
+		void executesWithRepeatableValueSource() {
+			var results = execute("testWithRepeatableValueSource", String.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+		}
+
+		@Test
+		void executesWithRepeatableFieldSource() {
+			var results = execute("testWithRepeatableFieldSource", String.class);
+			results.allEvents().assertThatEvents()
+					.haveExactly(1, event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
 		private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -1935,6 +1969,13 @@ class ParameterizedTestIntegrationTests {
 	static class RepeatableSourcesTestCase {
 
 		@ParameterizedTest
+		@CsvFileSource(resources = "two-column.csv")
+		@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
+		void testWithRepeatableCsvFileSource(String column1, String column2) {
+			fail("%s %s".formatted(column1, column2));
+		}
+
+		@ParameterizedTest
 		@CsvSource({ "a" })
 		@CsvSource({ "b" })
 		void testWithRepeatableCsvSource(String argument) {
@@ -1942,12 +1983,49 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
-		@CsvFileSource(resources = "two-column.csv")
-		@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
-		void testWithRepeatableCsvFileSource(String column1, String column2) {
-			fail("%s %s".formatted(column1, column2));
+		@EnumSource(SmartAction.class)
+		@EnumSource(QuickAction.class)
+		void testWithRepeatableEnumSource(Action argument) {
+			fail(argument.toString());
 		}
 
+		interface Action {}
+
+		private enum SmartAction implements Action { FOO }
+
+		private enum QuickAction implements Action { BAR }
+
+		@ParameterizedTest
+		@MethodSource("someArgumentsMethodSource")
+		@MethodSource("otherArgumentsMethodSource")
+		void testWithRepeatableMethodSource(String argument) {
+			fail(argument);
+		}
+
+		public static Stream<Arguments> someArgumentsMethodSource() {
+			return Stream.of(Arguments.of("some"));
+		}
+
+		public static Stream<Arguments> otherArgumentsMethodSource() {
+			return Stream.of(Arguments.of("other"));
+		}
+
+		@ParameterizedTest
+		@FieldSource("someArgumentsContainer")
+		@FieldSource("otherArgumentsContainer")
+		void testWithRepeatableFieldSource(String argument) {
+			fail(argument);
+		}
+
+		static List<String> someArgumentsContainer = List.of("some");
+		static List<String> otherArgumentsContainer = List.of("other");
+
+		@ParameterizedTest
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "bar")
+		void testWithRepeatableValueSource(String argument) {
+			fail(argument);
+		}
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
