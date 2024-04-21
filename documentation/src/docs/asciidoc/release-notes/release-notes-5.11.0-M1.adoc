@@ -111,7 +111,9 @@ page in the Wiki.
   the supplied message is not the _expected message_ of the thrown exception.
 * Improved documentation for semantics of a disabled test regarding class-level lifecycle
   methods and callbacks.
-
+* Support `@..Source` annotations as repeatable for parameterized tests. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-repeatable-sources, User Guide>>
+  for more details.
 
 [[release-notes-5.11.0-M1-junit-vintage]]
 === JUnit Vintage

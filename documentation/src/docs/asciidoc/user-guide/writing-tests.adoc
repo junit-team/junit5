@@ -1963,6 +1963,34 @@ If you wish to implement a custom `ArgumentsProvider` that also consumes an anno
 (like built-in providers such as `{ValueArgumentsProvider}` or `{CsvArgumentsProvider}`),
 you have the possibility to extend the `{AnnotationBasedArgumentsProvider}` class.
 
+[[writing-tests-parameterized-repeatable-sources]]
+===== Multiple sources using repeatable annotations
+Repeatable annotations allows you a convenient way to provide multiple sources from
+different providers whenever it fits.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=repeatable_annotations]
+----
+
+Following the above parameterized test, a test case will run for each argument:
+
+----
+[1] foo
+[2] bar
+----
+
+Annotations that support repeatable capability:
+
+* `@ValueSource`
+* `@EnumSource`
+* `@MethodSource`
+* `@FieldSource`
+* `@CsvSource`
+* `@CsvFileSource`
+* `@ArgumentsSource`
+
+
 [[writing-tests-parameterized-tests-argument-conversion]]
 ==== Argument Conversion
 
