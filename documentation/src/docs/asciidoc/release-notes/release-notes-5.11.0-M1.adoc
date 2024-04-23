@@ -1,7 +1,7 @@
 [[release-notes-5.11.0-M1]]
 == 5.11.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* April 23, 2024
 
 *Scope:*
 
