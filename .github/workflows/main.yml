@@ -58,7 +58,7 @@ jobs:
       uses: ./.github/actions/main-build
 
   macOS:
-    runs-on: macos-13
+    runs-on: macos-latest
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
