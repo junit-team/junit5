@@ -1965,8 +1965,8 @@ you have the possibility to extend the `{AnnotationBasedArgumentsProvider}` clas
 
 [[writing-tests-parameterized-repeatable-sources]]
 ===== Multiple sources using repeatable annotations
-Repeatable annotations allows you a convenient way to provide multiple sources from
-different providers whenever it fits.
+Repeatable annotations provide a convenient way to specify multiple sources from
+different providers.
 
 [source,java,indent=0]
 ----
@@ -1980,7 +1980,7 @@ Following the above parameterized test, a test case will run for each argument:
 [2] bar
 ----
 
-Annotations that support repeatable capability:
+The following annotations are repeatable:
 
 * `@ValueSource`
 * `@EnumSource`
