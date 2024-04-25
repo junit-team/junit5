@@ -1,11 +1,16 @@
 name: Set up Test JDK
 description: Sets up the JDK required to run platform-tooling-support-tests
+inputs:
+  distribution:
+    required: true
+    description: 'The JDK distribution to use'
+    default: 'liberica'
 runs:
   using: "composite"
   steps:
     - uses: actions/setup-java@v3
       with:
-        distribution: temurin
+        distribution: ${{ inputs.distribution }}
         java-version: 8
     - shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV
