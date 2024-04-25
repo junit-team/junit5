@@ -20,10 +20,27 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code @ValueSources} is a simple container for one or more
+ * {@link ValueSource} annotations.
+ *
+ * <p>Note, however, that use of the {@code @ValueSources} container is completely
+ * optional since {@code @ValueSource} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
+ * @since 5.11
+ * @see ValueSource
+ * @see java.lang.annotation.Repeatable
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.11")
 public @interface ValueSources {
+
+	/**
+	 * An array of one or more {@link ValueSource @ValueSource}
+	 * annotations.
+	 */
 	ValueSource[] value();
 }

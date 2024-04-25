@@ -20,10 +20,28 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
+
+/**
+ * {@code @MethodSources} is a simple container for one or more
+ * {@link MethodSource} annotations.
+ *
+ * <p>Note, however, that use of the {@code @MethodSources} container is completely
+ * optional since {@code @MethodSource} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
+ * @since 5.11
+ * @see MethodSource
+ * @see java.lang.annotation.Repeatable
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.11")
 public @interface MethodSources {
+
+	/**
+	 * An array of one or more {@link MethodSource @MethodSource}
+	 * annotations.
+	 */
 	MethodSource[] value();
 }

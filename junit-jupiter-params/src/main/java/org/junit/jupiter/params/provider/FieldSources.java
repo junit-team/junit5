@@ -20,10 +20,27 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code @FieldSources} is a simple container for one or more
+ * {@link FieldSource} annotations.
+ *
+ * <p>Note, however, that use of the {@code @FieldSources} container is completely
+ * optional since {@code @FieldSource} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
+ * @since 5.11
+ * @see FieldSource
+ * @see java.lang.annotation.Repeatable
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.11")
 public @interface FieldSources {
+
+	/**
+	 * An array of one or more {@link FieldSource @FieldSource}
+	 * annotations.
+	 */
 	FieldSource[] value();
 }

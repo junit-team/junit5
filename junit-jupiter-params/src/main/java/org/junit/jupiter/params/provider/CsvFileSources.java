@@ -20,10 +20,27 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
+/**
+ * {@code @CsvFileSources} is a simple container for one or more
+ * {@link CsvFileSource} annotations.
+ *
+ * <p>Note, however, that use of the {@code @CsvFileSources} container is completely
+ * optional since {@code @CsvFileSource} is a {@linkplain java.lang.annotation.Repeatable
+ * repeatable} annotation.
+ *
+ * @since 5.11
+ * @see CsvFileSource
+ * @see java.lang.annotation.Repeatable
+ */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.11")
 public @interface CsvFileSources {
+
+	/**
+	 * An array of one or more {@link CsvFileSource @CsvFileSource}
+	 * annotations.
+	 */
 	CsvFileSource[] value();
 }
