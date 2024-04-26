@@ -112,6 +112,7 @@ page in the Wiki.
 * Improved documentation for semantics of a disabled test regarding class-level lifecycle
   methods and callbacks.
 
+
 [[release-notes-5.11.0-M1-junit-vintage]]
 === JUnit Vintage
 

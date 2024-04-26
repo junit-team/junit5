@@ -20,7 +20,6 @@ import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
 
-
 /**
  * {@code @MethodSources} is a simple container for one or more
  * {@link MethodSource} annotations.
