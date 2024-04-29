@@ -10,6 +10,15 @@ link:{junit5-repo}+/milestone/74?closed=1+[5.11.0-M2] milestone page in the
 JUnit repository on GitHub.
 
 
+[[release-notes-5.11.0-M2-overall-improvements]]
+=== Overall Improvements
+
+[[release-notes-5.11.0-M2-overall-new-features-and-improvements]]
+==== New Features and Improvements
+* The shipped bytecode was compiled with the `-parameters` option of `javac` and thus now
+  contains metadata for reflection on parameters such as their names.
+
+
 [[release-notes-5.11.0-M2-junit-platform]]
 === JUnit Platform
 
