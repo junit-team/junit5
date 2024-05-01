@@ -6,8 +6,8 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/74?closed=1+[5.11.0-M2] milestone page in the
-JUnit repository on GitHub.
+link:{junit5-repo}+/milestone/74?closed=1+[5.11.0-M2] milestone page in the JUnit
+repository on GitHub.
 
 
 [[release-notes-5.11.0-M2-overall-improvements]]
@@ -15,8 +15,9 @@ JUnit repository on GitHub.
 
 [[release-notes-5.11.0-M2-overall-new-features-and-improvements]]
 ==== New Features and Improvements
-* The shipped bytecode was compiled with the `-parameters` option of `javac` and thus now
-  contains metadata for reflection on parameters such as their names.
+
+* Java classes in published artifacts are now compiled with the `-parameters` option of
+  `javac` and thus now contain metadata for reflection on parameters such as their names.
 
 
 [[release-notes-5.11.0-M2-junit-platform]]

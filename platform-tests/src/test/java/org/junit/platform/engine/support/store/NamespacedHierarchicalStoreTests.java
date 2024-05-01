@@ -437,7 +437,7 @@ public class NamespacedHierarchicalStoreTests {
 		}
 	}
 
-	private Object createObject(final String display) {
+	private static Object createObject(String display) {
 		return new Object() {
 
 			@Override
