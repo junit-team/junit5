@@ -468,7 +468,7 @@ public class NamespacedHierarchicalStoreTests {
 			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1"));
 			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1", Integer.class));
 			assertThrows(IllegalStateException.class,
-				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "tzadina 9ba7"));
+				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "value"));
 			assertThrows(IllegalStateException.class,
 				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> 1337, Integer.class));
 		}
