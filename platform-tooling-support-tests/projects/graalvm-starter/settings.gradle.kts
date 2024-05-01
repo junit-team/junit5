@@ -1,6 +1,6 @@
 pluginManagement {
     plugins {
-        id("org.graalvm.buildtools.native") version "0.9.13"
+        id("org.graalvm.buildtools.native") version "0.10.1"
     }
     repositories {
         mavenCentral()

@@ -33,4 +33,5 @@ public class NamespacedHierarchicalStoreException extends JUnitException {
 	public NamespacedHierarchicalStoreException(String message, Throwable cause) {
 		super(message, cause);
 	}
+
 }

@@ -38,6 +38,9 @@ class KotlinAssertionsDemo {
         assertEquals(0, result)
     }
 
+    // end::user_guide[]
+    @extensions.DisabledOnOpenJ9
+    // tag::user_guide[]
     @Test
     fun `expected exception testing`() {
         val calculator = Calculator()

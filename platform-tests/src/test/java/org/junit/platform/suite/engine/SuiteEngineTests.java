@@ -126,12 +126,6 @@ class SuiteEngineTests {
 		// @formatter:on
 	}
 
-	@Suite
-	@SelectClasses(SingleTestTestCase.class)
-	private static class PrivateSuite {
-
-	}
-
 	@Test
 	void innerSuiteIsNotExecuted() {
 		// @formatter:off
@@ -142,13 +136,6 @@ class SuiteEngineTests {
 				.assertThatEvents()
 				.isEmpty();
 		// @formatter:on
-	}
-
-	@SuppressWarnings("InnerClassMayBeStatic")
-	@Suite
-	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
-	private class InnerSuite {
-
 	}
 
 	@Test
@@ -288,7 +275,7 @@ class SuiteEngineTests {
 	}
 
 	@Test
-	void selectConfigurationSensitiveMethodsInTestPlanByUnique() {
+	void selectConfigurationSensitiveMethodsInTestPlanByUniqueId() {
 		// @formatter:off
 		var uniqueId1 = UniqueId.forEngine(ENGINE_ID)
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, ConfigurationSuite.class.getName())
@@ -434,6 +421,16 @@ class SuiteEngineTests {
 				.assertThatEvents()
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
+	}
+
+	@Suite
+	@SelectClasses(SingleTestTestCase.class)
+	private static class PrivateSuite {
+	}
+
+	@Suite
+	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
+	private class InnerSuite {
 	}
 
 }

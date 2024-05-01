@@ -11,7 +11,7 @@ on:
 
 env:
   JUNIT_DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
-  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
 jobs:
   Linux:
@@ -37,11 +37,10 @@ jobs:
     - name: Build
       uses: ./.github/actions/main-build
       with:
-        dependency-graph: generate-and-submit
         arguments: |
-          -Ptesting.enableJaCoCo
-          build
-          jacocoRootReport
+          -Ptesting.enableJaCoCo \
+          build \
+          jacocoRootReport \
           prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4

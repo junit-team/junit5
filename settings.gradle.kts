@@ -1,5 +1,4 @@
 import buildparameters.BuildParametersExtension
-import com.gradle.enterprise.gradleplugin.internal.extension.BuildScanExtensionWithHiddenFeatures
 
 pluginManagement {
 	includeBuild("gradle/plugins")
@@ -28,19 +27,16 @@ val buildParameters = the<BuildParametersExtension>()
 val develocityServer = "https://ge.junit.org"
 val useDevelocityInstance = !gradle.startParameter.isBuildScan
 
-gradleEnterprise {
+develocity {
 	if (useDevelocityInstance) {
 		// Publish to scans.gradle.com when `--scan` is used explicitly
 		server = develocityServer
 	}
 	buildScan {
-		capture.isTaskInputFiles = true
-		isUploadInBackground = !buildParameters.ci
+		uploadInBackground = !buildParameters.ci
 
-		if (useDevelocityInstance) {
-			publishAlways()
-			this as BuildScanExtensionWithHiddenFeatures
-			publishIfAuthenticated()
+		publishing {
+			onlyIf { it.isAuthenticated }
 		}
 
 		obfuscation {
@@ -64,9 +60,9 @@ buildCache {
 	}
 	val buildCacheServer = buildParameters.junit.develocity.buildCache.server
 	if (useDevelocityInstance) {
-		remote(gradleEnterprise.buildCache) {
+		remote(develocity.buildCache) {
 			server = buildCacheServer.orNull
-			val authenticated = System.getenv("GRADLE_ENTERPRISE_ACCESS_KEY") != null
+			val authenticated = System.getenv("DEVELOCITY_ACCESS_KEY") != null
 			isPush = buildParameters.ci && authenticated
 		}
 	} else {

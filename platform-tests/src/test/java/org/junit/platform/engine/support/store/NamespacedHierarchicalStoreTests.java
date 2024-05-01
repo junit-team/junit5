@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -435,9 +436,45 @@ public class NamespacedHierarchicalStoreTests {
 
 			verifyNoInteractions(closeAction);
 		}
+
+		@Test
+		void closeIsIdempotent() throws Throwable {
+			store.put(namespace, "key1", "value1");
+
+			verifyNoInteractions(closeAction);
+
+			store.close();
+
+			verify(closeAction, times(1)).close(namespace, "key1", "value1");
+
+			store.close();
+
+			verifyNoMoreInteractions(closeAction);
+		}
+
+		@Test
+		void rejectsModificationAfterClose() {
+			store.close();
+
+			assertThrows(IllegalStateException.class, () -> store.put(namespace, "key1", "value1"));
+			assertThrows(IllegalStateException.class, () -> store.remove(namespace, "key1"));
+			assertThrows(IllegalStateException.class, () -> store.remove(namespace, "key1", Number.class));
+		}
+
+		@Test
+		void rejectsQueryAfterClose() {
+			store.close();
+
+			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1"));
+			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1", Integer.class));
+			assertThrows(IllegalStateException.class,
+				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "value"));
+			assertThrows(IllegalStateException.class,
+				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> 1337, Integer.class));
+		}
 	}
 
-	private Object createObject(final String display) {
+	private static Object createObject(String display) {
 		return new Object() {
 
 			@Override

@@ -37,7 +37,7 @@ public class GlobalSetupTeardownListener implements LauncherSessionListener {
 			@Override
 			public void testPlanExecutionStarted(TestPlan testPlan) {
 				//end::user_guide[]
-				if (!testPlan.getConfigurationParameters().getBoolean("enableHttpServer").orElse(false)) {
+				if (!testPlan.getConfigurationParameters().getBoolean("enableHttpServer").orElse(true)) {
 					// avoid starting multiple HTTP servers unnecessarily from UsingTheLauncherDemo
 					return;
 				}
