@@ -83,7 +83,7 @@ public final class CollectionUtils {
 		Preconditions.notNull(collection, "collection must not be null");
 		return collection.isEmpty() //
 				? Optional.empty() //
-				: Optional.of(firstElement(collection));
+				: Optional.ofNullable(firstElement(collection));
 	}
 
 	private static <T> T firstElement(Collection<T> collection) {
