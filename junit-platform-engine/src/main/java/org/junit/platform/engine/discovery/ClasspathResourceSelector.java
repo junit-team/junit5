@@ -133,8 +133,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			return Optional.of(StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
 				DiscoverySelectors::selectClasspathResource, //
 				(resourceName, query) -> {
-					FilePosition position1 = FilePosition.fromQuery(query).orElse(null);
-					return DiscoverySelectors.selectClasspathResource(resourceName, position1);
+					FilePosition position = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectClasspathResource(resourceName, position);
 				} //
 			));
 		}
