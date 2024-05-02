@@ -154,12 +154,13 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	@Test
-	void classLevelWithDefaultOrderShadowingOrderFromSuperclass() {
+	void classLevelWithDefaultOrderDoesNotShadowExtensionFromSuperclass() {
 		Class<?> testClass = DefaultOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
 		String testClassName = testClass.getSimpleName();
 		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
 		String parentName = parent.getSimpleName();
 		assertOutcome(testClass, //
+			parentName + " :: extension3 :: before test", //
 			parentName + " :: extension1 :: before test", //
 			parentName + " :: extension2 :: before test", //
 			testClassName + " :: extension3 :: before test" //
@@ -167,7 +168,7 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 	}
 
 	@Test
-	void classLevelWithExplicitOrderShadowingOrderFromSuperclass() {
+	void classLevelWithExplicitOrderDoesNotShadowExtensionFromSuperclass() {
 		Class<?> testClass = ExplicitOrderShadowingDefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
 		String testClassName = testClass.getSimpleName();
 		Class<?> parent = DefaultOrderAndExplicitOrderClassLevelExtensionRegistrationTestCase.class;
@@ -175,7 +176,8 @@ class OrderedProgrammaticExtensionRegistrationTests extends AbstractJupiterTestE
 		assertOutcome(testClass, //
 			parentName + " :: extension3 :: before test", //
 			testClassName + " :: extension2 :: before test", //
-			parentName + " :: extension1 :: before test" //
+			parentName + " :: extension1 :: before test", //
+			parentName + " :: extension2 :: before test" //
 		);
 	}
 

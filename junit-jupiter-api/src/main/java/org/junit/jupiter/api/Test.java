@@ -22,19 +22,24 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.annotation.Testable;
 
 /**
- * {@code @Test} is used to signal that the annotated method is a
- * <em>test</em> method.
+ * {@code @Test} is used to signal that the annotated method is a <em>test</em>
+ * method.
  *
- * <p>{@code @Test} methods must not be {@code private} or {@code static}
- * and must not return a value.
+ * <p>{@code @Test} methods must not be {@code private} or {@code static} and
+ * must not return a value.
  *
- * <p>{@code @Test} methods may optionally declare parameters to be
- * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
- * ParameterResolvers}.
+ * <p>{@code @Test} methods may optionally declare parameters to be resolved by
+ * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <p>{@code @Test} may also be used as a meta-annotation in order to create
- * a custom <em>composed annotation</em> that inherits the semantics of
- * {@code @Test}.
+ * <p>{@code @Test} may also be used as a meta-annotation in order to create a
+ * custom <em>composed annotation</em> that inherits the semantics of {@code @Test}.
+ *
+ * <h2>Inheritance</h2>
+ *
+ * <p>{@code @Test} methods are inherited from superclasses as long as they are
+ * not <em>overridden</em> according to the visibility rules of the Java language.
+ * Similarly, {@code @Test} methods declared as <em>interface default methods</em>
+ * are inherited as long as they are not overridden.
  *
  * <h2>Test Execution Order</h2>
  *

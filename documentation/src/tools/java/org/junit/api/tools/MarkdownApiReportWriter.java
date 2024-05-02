@@ -13,14 +13,12 @@ package org.junit.api.tools;
 import java.io.PrintWriter;
 import java.nio.CharBuffer;
 
-import org.apiguardian.api.API;
-
 /**
  * @since 1.0
  */
 class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String MARKDOWN_FORMAT = "%-52s | %-42s | %-12s | %-27s%n";
+	private static final String MARKDOWN_FORMAT = "%-52s | %-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
 
 	MarkdownApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
@@ -48,8 +46,8 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
-		out.printf(MARKDOWN_FORMAT, "Package Name", "Type Name", "Since");
-		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(42), dashes(12), dashes(27));
+		out.printf(MARKDOWN_FORMAT, "Package Name", "Name", "Since");
+		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(NAME_COLUMN_WIDTH), dashes(12));
 	}
 
 	private String dashes(int length) {
@@ -57,11 +55,11 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
-	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, //
-			code(type.getPackage().getName()), //
-			code(type.getSimpleName()) + " " + italic("(" + getKind(type) + ")"), //
-			code(type.getAnnotation(API.class).since()) //
+			code(declaration.packageName()), //
+			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
+			code(declaration.since()) //
 		);
 	}
 

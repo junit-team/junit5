@@ -3070,7 +3070,11 @@ public class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}.
+	 * <p>Fails with the supplied failure {@code message}. Note that the supplied
+	 * {@code message} is <strong>not</strong> the expected message of the thrown
+	 * exception. To assert the expected message of the thrown exception, you must
+	 * use a separate, subsequent assertion against the exception returned from
+	 * this method.
 	 *
 	 * @since 5.8
 	 */
@@ -3088,7 +3092,11 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
@@ -3133,7 +3141,11 @@ public class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}.
+	 * <p>Fails with the supplied failure {@code message}. Note that the supplied
+	 * {@code message} is <strong>not</strong> the expected message of the thrown
+	 * exception. To assert the expected message of the thrown exception, you must
+	 * use a separate, subsequent assertion against the exception returned from
+	 * this method.
 	 *
 	 * @see #assertThrowsExactly(Class, Executable, String)
 	 */
@@ -3152,7 +3164,11 @@ public class Assertions {
 	 * this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.

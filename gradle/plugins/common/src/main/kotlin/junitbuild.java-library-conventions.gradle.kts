@@ -238,7 +238,9 @@ tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror" // Terminates compilation when warnings occur.
+			"-Werror", // Terminates compilation when warnings occur.
+			// Required for compatibility with Java 8's reflection APIs (see https://github.com/junit-team/junit5/issues/3797).
+			"-parameters", // Generates metadata for reflection on method parameters.
 	))
 }
 
@@ -300,13 +302,6 @@ afterEvaluate {
 checkstyle {
 	toolVersion = requiredVersionFromLibs("checkstyle")
 	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
-}
-
-// Workaround for https://github.com/checkstyle/checkstyle/issues/14123
-configurations.checkstyle {
-	resolutionStrategy.capabilitiesResolution.withCapability("com.google.collections:google-collections") {
-		select("com.google.guava:guava:0")
-	}
 }
 
 tasks {

@@ -64,10 +64,12 @@ tasks {
 			excludeTags("exclude")
 		}
 		jvmArgs("-Xmx1g")
-		distribution {
-			// Retry in a new JVM on Windows to improve chances of successful retries when
-			// cached resources are used (e.g. in ClasspathScannerTests)
-			retryInSameJvm = !OperatingSystem.current().isWindows
+		develocity {
+			testDistribution {
+				// Retry in a new JVM on Windows to improve chances of successful retries when
+				// cached resources are used (e.g. in ClasspathScannerTests)
+				retryInSameJvm = !OperatingSystem.current().isWindows
+			}
 		}
 	}
 	test {
@@ -87,12 +89,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
 	}
 }

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,12 +20,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.subpackage.SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase;
 
 /**
- * Integration tests that explicitly demonstrate the overriding and superseding
- * rules for lifecycle methods in the {@link JupiterTestEngine}.
+ * Integration tests that explicitly demonstrate the overriding rules for
+ * lifecycle methods in the {@link JupiterTestEngine}.
  *
  * @since 5.9
  */
-class LifecycleMethodOverridingAndSupersedingTests {
+class LifecycleMethodOverridingTests {
 
 	@Nested
 	@DisplayName("A package-private lifecycle method can be overridden by")
@@ -67,7 +68,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 	}
 
 	@Nested
-	@DisplayName("A package-private lifecycle method from a different package can be superseded by")
+	@DisplayName("A package-private lifecycle method from a different package cannot be overridden by")
 	class PackagePrivateSuperClassInDifferentPackageTests {
 
 		@Nested
@@ -78,6 +79,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 			// @Override
 			@BeforeEach
 			protected void beforeEach() {
+				assertThat(super.beforeEachInvoked).isTrue();
 			}
 
 		}
@@ -90,6 +92,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 			// @Override
 			@BeforeEach
 			void beforeEach() {
+				assertThat(super.beforeEachInvoked).isTrue();
 			}
 
 		}
@@ -102,6 +105,7 @@ class LifecycleMethodOverridingAndSupersedingTests {
 			// @Override
 			@BeforeEach
 			public void beforeEach() {
+				assertThat(super.beforeEachInvoked).isTrue();
 			}
 
 		}

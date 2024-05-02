@@ -12,8 +12,6 @@ package org.junit.api.tools;
 
 import java.io.PrintWriter;
 
-import org.apiguardian.api.API;
-
 /**
  * @since 1.0
  */
@@ -54,15 +52,15 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("<table>");
-		out.printf(HTML_HEADER_FORMAT, "Package Name", "Type Name", "Since");
+		out.printf(HTML_HEADER_FORMAT, "Package Name", "Name", "Since");
 	}
 
 	@Override
-	protected void printDeclarationTableRow(Class<?> type, PrintWriter out) {
+	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(HTML_ROW_FORMAT, //
-			code(type.getPackage().getName()), //
-			code(type.getSimpleName()) + " " + italic("(" + getKind(type) + ")"), //
-			code(type.getAnnotation(API.class).since()) //
+			code(declaration.packageName()), //
+			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
+			code(declaration.since()) //
 		);
 	}
 

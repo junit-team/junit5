@@ -5,7 +5,10 @@ plugins {
 	id("com.github.johnrengelman.shadow")
 }
 
-val shadowed by configurations.creatingResolvable
+val shadowed = configurations.dependencyScope("shadowed")
+val shadowedClasspath = configurations.resolvable("shadowedClasspath") {
+	extendsFrom(shadowed.get())
+}
 
 configurations {
 	listOf(apiElements, runtimeElements).forEach {
@@ -22,34 +25,34 @@ configurations {
 
 sourceSets {
 	main {
-		compileClasspath += shadowed
+		compileClasspath += shadowedClasspath.get()
 	}
 	test {
-		runtimeClasspath += shadowed
+		runtimeClasspath += shadowedClasspath.get()
 	}
 }
 
 eclipse {
 	classpath {
-		plusConfigurations.add(shadowed)
+		plusConfigurations.add(shadowedClasspath.get())
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(shadowed)
+		scopes["PROVIDED"]!!["plus"]!!.add(shadowedClasspath.get())
 	}
 }
 
 tasks {
 	javadoc {
-		classpath += shadowed
+		classpath += shadowedClasspath.get()
 	}
 	checkstyleMain {
-		classpath += shadowed
+		classpath += shadowedClasspath.get()
 	}
 	shadowJar {
-		configurations = listOf(shadowed)
+		configurations = listOf(shadowedClasspath.get())
 		exclude("META-INF/maven/**")
 		excludes.remove("module-info.class")
 		archiveClassifier = ""
@@ -69,6 +72,6 @@ tasks {
 		classpath += files(shadowJar.map { it.archiveFile })
 	}
     named<JavaCompile>("compileModule") {
-        the<ModuleCompileOptions>().modulePath.from(shadowed)
+        the<ModuleCompileOptions>().modulePath.from(shadowedClasspath.get())
     }
 }

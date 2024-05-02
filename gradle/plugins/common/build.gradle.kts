@@ -11,7 +11,7 @@ dependencies {
 	implementation(kotlin("gradle-plugin"))
 	implementation(libs.gradle.bnd)
 	implementation(libs.gradle.commonCustomUserData)
-	implementation(libs.gradle.enterprise)
+	implementation(libs.gradle.develocity)
 	implementation(libs.gradle.foojayResolver)
 	implementation(libs.gradle.shadow)
 	implementation(libs.gradle.spotless)

@@ -7,13 +7,11 @@
 [[running-tests-ide-intellij-idea]]
 ==== IntelliJ IDEA
 
-IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For
-details please see the
-https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/[post on the
-IntelliJ IDEA blog]. Note, however, that it is recommended to use IDEA 2017.3 or newer
-since these newer versions of IDEA will download the following JARs automatically based
-on the API version used in the project: `junit-platform-launcher`,
-`junit-jupiter-engine`, and `junit-vintage-engine`.
+IntelliJ IDEA supports running tests on the JUnit Platform since version 2016.2. For more
+information, please consult this https://jb.gg/junit-idea/[IntelliJ IDEA resource]. Note,
+however, that it is recommended to use IDEA 2017.3 or newer since more recent versions of
+IDEA download the following JARs automatically based on the API version used in the
+project: `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine`.
 
 WARNING: IntelliJ IDEA releases prior to IDEA 2017.3 bundle specific versions of JUnit 5.
 Thus, if you want to use a newer version of JUnit Jupiter, execution of tests within the
@@ -243,6 +241,8 @@ details).
 ----
 test {
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")
+	// Avoid overhead (see https://logging.apache.org/log4j/2.x/manual/jmx.html#enabling-jmx)
+	systemProperty("log4j2.disableJmx", "true")
 }
 ----
 
