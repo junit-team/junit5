@@ -3106,7 +3106,7 @@ public class Assertions {
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>The assertion passes if the thrown exception type is the same as
-	 * {@code expectedType} or a subtype of it. To check for the exact thrown
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
 	 * type use {@link #assertThrowsExactly(Class, Executable) assertThrowsExactly}.
 	 * If no exception is thrown, or if an exception of a different type is thrown,
 	 * this method will fail.
@@ -3125,7 +3125,7 @@ public class Assertions {
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>The assertion passes if the thrown exception type is the same as
-	 * {@code expectedType} or a subtype of it. To check for the exact thrown
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
 	 * type use {@link #assertThrowsExactly(Class, Executable, String) assertThrowsExactly}.
 	 * If no exception is thrown, or if an exception of a different type is thrown,
 	 * this method will fail.
@@ -3146,7 +3146,7 @@ public class Assertions {
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
 	 * <p>The assertion passes if the thrown exception type is the same as
-	 * {@code expectedType} or a subtype of it. To check for the exact thrown
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
 	 * type use {@link #assertThrowsExactly(Class, Executable, Supplier) assertThrowsExactly}.
 	 * If no exception is thrown, or if an exception of a different type is thrown,
 	 * this method will fail.
