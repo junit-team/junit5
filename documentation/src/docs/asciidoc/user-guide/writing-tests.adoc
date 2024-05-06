@@ -1713,11 +1713,11 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=multiple_fields_Field
 ----
 
 It is also possible to provide a `Stream`, `DoubleStream`, `IntStream`, `LongStream`, or
-`Iterator` as the source of arguments via a `@FieldSource` field as long as the stream is
-wrapped in a `java.util.function.Supplier`. The following example demonstrates how to
-provide a `Supplier` of a `Stream` of named arguments. This parameterized test method
-will be invoked twice: with the values `"apple"` and `"banana"` and with display names
-`Apple` and `Banana`, respectively.
+`Iterator` as the source of arguments via a `@FieldSource` field as long as the stream or
+iterator is wrapped in a `java.util.function.Supplier`. The following example demonstrates
+how to provide a `Supplier` of a `Stream` of named arguments. This parameterized test
+method will be invoked twice: with the values `"apple"` and `"banana"` and with display
+names `Apple` and `Banana`, respectively.
 
 [source,java,indent=0]
 ----
