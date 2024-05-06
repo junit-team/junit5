@@ -37,7 +37,8 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * {@link #NamespacedHierarchicalStore(NamespacedHierarchicalStore, CloseAction)}
  * constructor.
  *
- * <p>This class is thread-safe.
+ * <p>This class is thread-safe. Please note, however, that thread safety is
+ * not guaranteed while the {@link #close()} method is being invoked.
  *
  * @param <N> Namespace type
  * @since 1.10
