@@ -453,14 +453,14 @@ public class NamespacedHierarchicalStoreTests {
 
 		@Test
 		void closeIsIdempotent() throws Throwable {
-			store.put(namespace, "key1", "value1");
+			store.put(namespace, key, value);
 
 			verifyNoInteractions(closeAction);
 
 			store.close();
 			assertClosed();
 
-			verify(closeAction, times(1)).close(namespace, "key1", "value1");
+			verify(closeAction, times(1)).close(namespace, key, value);
 
 			store.close();
 			assertClosed();
