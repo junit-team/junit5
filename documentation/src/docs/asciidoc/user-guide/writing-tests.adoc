@@ -2642,34 +2642,41 @@ The following diagram illustrates how the execution of two top-level test classe
 `junit.jupiter.execution.parallel.mode.classes.default` (see labels in first column).
 
 ////
-Source: https://mermaidjs.github.io/mermaid-live-editor/#/view/eyJjb2RlIjoiZ2FudHRcbiAgICBkYXRlRm9ybWF0ICBZWVlZLU1NLUREXG5cbiAgICBzZWN0aW9uIChzYW1lX3RocmVhZCwgc2FtZV90aHJlYWQpXG4gICAgQS50ZXN0MSgpIDphc3MxLCAyMDE5LTAxLTAxLCAxZFxuICAgIEEudGVzdDIoKSA6YXNzMiwgYWZ0ZXIgYXNzMSwgMWRcbiAgICBCLnRlc3QxKCkgOmJzczEsIGFmdGVyIGFzczIsIDFkXG4gICAgQi50ZXN0MigpIDpic3MyLCBhZnRlciBic3MxLCAxZFxuXG4gICAgc2VjdGlvbiAoc2FtZV90aHJlYWQsIGNvbmN1cnJlbnQpXG4gICAgQS50ZXN0MSgpIDphc2MxLCAyMDE5LTAxLTAxLCAxZFxuICAgIEEudGVzdDIoKSA6YXNjMiwgYWZ0ZXIgYXNjMSwgMWRcbiAgICBCLnRlc3QxKCkgOmJzYzEsIDIwMTktMDEtMDEsIDFkXG4gICAgQi50ZXN0MigpIDpic2MyLCBhZnRlciBic2MxLCAxZFxuXG4gICAgc2VjdGlvbiAoY29uY3VycmVudCwgc2FtZV90aHJlYWQpXG4gICAgQS50ZXN0MSgpIDphY3MxLCAyMDE5LTAxLTAxLCAxZFxuICAgIEEudGVzdDIoKSA6YWNzMiwgMjAxOS0wMS0wMSwgMWRcbiAgICBCLnRlc3QxKCkgOmJjczEsIGFmdGVyIGFjczIsIDFkXG4gICAgQi50ZXN0MigpIDpiY3MyLCBhZnRlciBhY3MyLCAxZFxuXG4gICAgc2VjdGlvbiAoY29uY3VycmVudCwgY29uY3VycmVudClcbiAgICBBLnRlc3QxKCkgOmFjYzEsIDIwMTktMDEtMDEsIDFkXG4gICAgQS50ZXN0MigpIDphY2MyLCAyMDE5LTAxLTAxLCAxZFxuICAgIEIudGVzdDEoKSA6YmNjMSwgMjAxOS0wMS0wMSwgMWRcbiAgICBCLnRlc3QyKCkgOmJjYzIsIDIwMTktMDEtMDEsIDFkXG4iLCJtZXJtYWlkIjp7InRoZW1lIjoibmV1dHJhbCIsImdhbnR0Ijp7ImxlZnRQYWRkaW5nIjoyMjUsImJhckdhcCI6NSwiZ3JpZExpbmVTdGFydFBhZGRpbmciOjEwLCJiYXJIZWlnaHQiOjMwLCJmb250U2l6ZSI6MTV9LCJ0aGVtZUNTUyI6Ii50YXNrVGV4dCwgLnNlY3Rpb25UaXRsZSB7IGZvbnQtZmFtaWx5OiAnT3BlbiBTYW5zJzsgZm9udC1zaXplOjE1cHggfSAuZ3JpZCAudGljayB0ZXh0IHsgZGlzcGxheTpub25lIH0gLmdyaWQgLnRpY2s6bnRoLWNoaWxkKDJuKzEpIHsgZGlzcGxheTpub25lIH0ifX0
+Source: https://mermaid-js.github.io/mermaid-live-editor/edit#pako:eNqFlE1u2zAQha9CEChio7IQKfVGXfUH_QEatICyKAIBwYQaW0QkUiDHhV3X2x4gvWFPUlKUbTmpEq2kN2-GHx403HKhS-QZn81mhSqlbWvYXDopY0I3LQgqVFcq1BIUuS_mnhIIP2jTALHvQYG1tL3ywgaJpLj7rAjND6hZsteoRvb39x9GlUEoLfvltMZL9_4M77EoSGrFJhYavAm-iA0-psH3Jia0lEymLANrk4idR_tjQintS2nEYOE4WLClwfP22H7b6QeP818MPWnvOcwJ_ldPAwutxMoYVPQ_XjHOKwa8YoT3tP0EUwww-_YHmEey52IV47EKH8dDhEAnBmmKR4mnvScdeNLnMJ8MU4yHKcQ45XiGgy4e8Qbdby1LtyNbby04VdhgwTP3qnBFBuqCR6EUdsSVtmFqwWtc0DcoS6mWXk_TebQv3YL5CK1Xk_ODuDSy_CIV5gRm2DiwuL5PKJdVd9DFUV9oRbn82aElc6_uogHxuzwP0DGBvbvCtcs17tO-6vZyy_yI2QIaWW8ydva1RcVyUPbsdahYNz1L5u2a7VjsSVnst5yRG-a6--sjU1rhqSNTVM1EJetykqqXyfSRueCF2rmwYUU63yjBMzIrjPiq9XfNewlLAw3PFlBbp2IpSZvLcHN1F1jEW1DXWu89u3-YPX1X
+
+---
+displayMode: compact
+---
 
 gantt
-    dateFormat  YYYY-MM-DD
+    dateFormat X
+    axisFormat %s
+    tickInterval 1
+    title ↓ threads | time →
 
     section (same_thread, same_thread)
-    A.test1() :ass1, 2019-01-01, 1d
-    A.test2() :ass2, after ass1, 1d
-    B.test1() :bss1, after ass2, 1d
-    B.test2() :bss2, after bss1, 1d
+    A.test1() :ass1, 0, 1
+    A.test2() :ass2, after ass1, 2
+    B.test1() :bss1, after ass2, 3
+    B.test2() :bss2, after bss1, 4
 
     section (same_thread, concurrent)
-    A.test1() :asc1, 2019-01-01, 1d
-    A.test2() :asc2, after asc1, 1d
-    B.test1() :bsc1, 2019-01-01, 1d
-    B.test2() :bsc2, after bsc1, 1d
+    A.test1() :asc1, 0, 1
+    A.test2() :asc2, after asc1, 2
+    B.test1() :bsc1, 0, 1
+    B.test2() :bsc2, after bsc1, 2
 
     section (concurrent, same_thread)
-    A.test1() :acs1, 2019-01-01, 1d
-    A.test2() :acs2, 2019-01-01, 1d
-    B.test1() :bcs1, after acs2, 1d
-    B.test2() :bcs2, after acs2, 1d
+    A.test1() :acs1, 0, 1
+    A.test2() :acs2, 0, 1
+    B.test1() :bcs1, after acs1, 2
+    B.test2() :bcs2, after acs2, 2
 
     section (concurrent, concurrent)
-    A.test1() :acc1, 2019-01-01, 1d
-    A.test2() :acc2, 2019-01-01, 1d
-    B.test1() :bcc1, 2019-01-01, 1d
-    B.test2() :bcc2, 2019-01-01, 1d
+    A.test1() :acc1, 0, 1
+    A.test2() :acc2, 0, 1
+    B.test1() :bcc1, 0, 1
+    B.test2() :bcc2, 0, 1
 
 ////
 image::writing-tests_execution_mode.svg[caption='',title='Default execution mode configuration combinations']
