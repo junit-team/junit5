@@ -40,9 +40,9 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * <p>This class is thread-safe.
  *
  * @param <N> Namespace type
- * @since 5.10
+ * @since 1.10
  */
-@API(status = EXPERIMENTAL, since = "5.10")
+@API(status = EXPERIMENTAL, since = "1.10")
 public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private final AtomicInteger insertOrderSequence = new AtomicInteger();

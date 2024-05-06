@@ -18,9 +18,9 @@ import org.junit.platform.commons.JUnitException;
 /**
  * Exception thrown by failed {@link NamespacedHierarchicalStore} operations.
  *
- * @since 5.10
+ * @since 1.10
  */
-@API(status = EXPERIMENTAL, since = "5.10")
+@API(status = EXPERIMENTAL, since = "1.10")
 public class NamespacedHierarchicalStoreException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
