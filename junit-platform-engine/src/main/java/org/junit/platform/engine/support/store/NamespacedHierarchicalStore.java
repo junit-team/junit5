@@ -109,17 +109,22 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 */
 	@Override
 	public void close() {
-		if (this.closeAction == null || this.closed) {
-			return;
+		if (!this.closed) {
+			try {
+				if (this.closeAction != null) {
+					ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
+					this.storedValues.entrySet().stream() //
+							.map(e -> e.getValue().evaluateSafely(e.getKey())) //
+							.filter(it -> it != null && it.value != null) //
+							.sorted(EvaluatedValue.REVERSE_INSERT_ORDER) //
+							.forEach(it -> throwableCollector.execute(() -> it.close(this.closeAction)));
+					throwableCollector.assertEmpty();
+				}
+			}
+			finally {
+				this.closed = true;
+			}
 		}
-		ThrowableCollector throwableCollector = new ThrowableCollector(__ -> false);
-		this.storedValues.entrySet().stream() //
-				.map(e -> e.getValue().evaluateSafely(e.getKey())) //
-				.filter(it -> it != null && it.value != null) //
-				.sorted(EvaluatedValue.REVERSE_INSERT_ORDER) //
-				.forEach(it -> throwableCollector.execute(() -> it.close(this.closeAction)));
-		throwableCollector.assertEmpty();
-		this.closed = true;
 	}
 
 	/**
