@@ -697,7 +697,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
 					throws Exception {
-				return Files.createTempDirectory("junit");
+				return Files.createTempDirectory("junit-");
 			}
 		}
 
