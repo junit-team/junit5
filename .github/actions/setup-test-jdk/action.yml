@@ -12,5 +12,6 @@ runs:
       with:
         distribution: ${{ inputs.distribution }}
         java-version: 8
+        check-latest: true
     - shell: bash
       run: echo "JDK8=$JAVA_HOME" >> $GITHUB_ENV

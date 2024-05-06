@@ -70,6 +70,7 @@ jobs:
         with:
           distribution: semeru
           java-version: ${{ matrix.jdk }}
+          check-latest: true
       - name: 'Prepare JDK${{ matrix.jdk }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
