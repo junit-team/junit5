@@ -85,6 +85,18 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
+	 * Determine if this store has been {@linkplain #close() closed}.
+	 *
+	 * @return {@code true} if this store has been closed
+	 * @since 1.11
+	 * @see #close()
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public boolean isClosed() {
+		return this.closed;
+	}
+
+	/**
 	 * If a close action is configured, it will be called with all successfully
 	 * stored values in reverse insertion order.
 	 *
@@ -92,6 +104,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 *
 	 * <p>Invocations of this method after the store has already been closed will
 	 * be ignored.
+	 *
+	 * @see #isClosed()
 	 */
 	@Override
 	public void close() {
