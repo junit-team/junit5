@@ -98,7 +98,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * If a close action is configured, it will be called with all successfully
+	 * If a {@link CloseAction} is configured, it will be called with all successfully
 	 * stored values in reverse insertion order.
 	 *
 	 * <p>Closing a store does not close its parent or any of its children.
@@ -218,8 +218,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param key the key; never {@code null}
 	 * @param value the value to store; may be {@code null}
 	 * @return the previously stored value; may be {@code null}
-	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 * be cast to the required type
+	 * @throws NamespacedHierarchicalStoreException if an error occurs while
+	 * storing the value
 	 * @throws IllegalStateException if this store has already been closed
 	 */
 	public Object put(N namespace, Object key, Object value) throws NamespacedHierarchicalStoreException {
@@ -348,7 +348,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 		private <N> EvaluatedValue<N> evaluateSafely(CompositeKey<N> compositeKey) {
 			try {
-				return new EvaluatedValue<>(compositeKey, order, evaluate());
+				return new EvaluatedValue<>(compositeKey, this.order, evaluate());
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
@@ -357,7 +357,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 
 		private Object evaluate() {
-			return supplier.get();
+			return this.supplier.get();
 		}
 
 		static Object evaluateIfNotNull(StoredValue value) {
@@ -444,7 +444,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	/**
 	 * Called for each successfully stored non-null value in the store when a
 	 * {@link NamespacedHierarchicalStore} is
-	 * {@link NamespacedHierarchicalStore#close() closed}.
+	 * {@linkplain NamespacedHierarchicalStore#close() closed}.
 	 */
 	@FunctionalInterface
 	public interface CloseAction<N> {

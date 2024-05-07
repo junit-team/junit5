@@ -29,7 +29,6 @@ public class NamespacedHierarchicalStoreException extends JUnitException {
 		super(message);
 	}
 
-	@SuppressWarnings("unused")
 	public NamespacedHierarchicalStoreException(String message, Throwable cause) {
 		super(message, cause);
 	}
