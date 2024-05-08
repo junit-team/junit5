@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -35,7 +35,7 @@ import org.apiguardian.api.API;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@API(status = STABLE, since = "5.11")
+@API(status = EXPERIMENTAL, since = "5.11")
 public @interface FieldSources {
 
 	/**
