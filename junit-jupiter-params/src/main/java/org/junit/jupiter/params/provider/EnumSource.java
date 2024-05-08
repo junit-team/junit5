@@ -30,8 +30,8 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * {@code @EnumSource} is an {@link ArgumentsSource} for constants of
- * an {@link Enum}.
+ * {@code @EnumSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} for constants of an {@link Enum}.
  *
  * <p>The enum constants will be provided as arguments to the annotated
  * {@code @ParameterizedTest} method.

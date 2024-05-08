@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
- * comma-separated value (CSV) files from one or more classpath {@link #resources}
- * or {@link #files}.
+ * {@code @CsvFileSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which is used to load comma-separated value (CSV)
+ * files from one or more classpath {@link #resources} or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
  * arguments to the annotated {@code @ParameterizedTest} method. Note that the

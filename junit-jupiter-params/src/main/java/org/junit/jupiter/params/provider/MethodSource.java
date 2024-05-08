@@ -23,10 +23,11 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.params.ParameterizedTest;
 
 /**
- * {@code @MethodSource} is an {@link ArgumentsSource} which provides access
- * to values returned from {@linkplain #value() factory methods} of the class in
- * which this annotation is declared or from static factory methods in external
- * classes referenced by <em>fully qualified method name</em>.
+ * {@code @MethodSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which provides access to values returned from
+ * {@linkplain #value() factory methods} of the class in which this annotation
+ * is declared or from static factory methods in external classes referenced
+ * by <em>fully qualified method name</em>.
  *
  * <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical

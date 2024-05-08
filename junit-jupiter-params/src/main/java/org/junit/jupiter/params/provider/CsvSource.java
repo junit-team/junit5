@@ -22,9 +22,10 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @CsvSource} is an {@link ArgumentsSource} which reads comma-separated
- * values (CSV) from one or more CSV records supplied via the {@link #value}
- * attribute or {@link #textBlock} attribute.
+ * {@code @CsvSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which reads comma-separated values (CSV) from one
+ * or more CSV records supplied via the {@link #value} attribute or
+ * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
  * {@code @ParameterizedTest} method.

@@ -22,8 +22,8 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @ValueSource} is an {@link ArgumentsSource} which provides access to
- * an array of literal values.
+ * {@code @ValueSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which provides access to an array of literal values.
  *
  * <p>Supported types include {@link #shorts}, {@link #bytes}, {@link #ints},
  * {@link #longs}, {@link #floats}, {@link #doubles}, {@link #chars},
