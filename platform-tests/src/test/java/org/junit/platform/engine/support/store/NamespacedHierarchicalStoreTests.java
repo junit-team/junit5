@@ -524,9 +524,10 @@ public class NamespacedHierarchicalStoreTests {
 			store.close();
 			assertClosed();
 
-			assertThrows(IllegalStateException.class, () -> store.put(namespace, "key1", "value1"));
-			assertThrows(IllegalStateException.class, () -> store.remove(namespace, "key1"));
-			assertThrows(IllegalStateException.class, () -> store.remove(namespace, "key1", Number.class));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.put(namespace, "key1", "value1"));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.remove(namespace, "key1"));
+			assertThrows(NamespacedHierarchicalStoreException.class,
+				() -> store.remove(namespace, "key1", Number.class));
 		}
 
 		@Test
@@ -534,11 +535,11 @@ public class NamespacedHierarchicalStoreTests {
 			store.close();
 			assertClosed();
 
-			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1"));
-			assertThrows(IllegalStateException.class, () -> store.get(namespace, "key1", Integer.class));
-			assertThrows(IllegalStateException.class,
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1"));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1", Integer.class));
+			assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "value"));
-			assertThrows(IllegalStateException.class,
+			assertThrows(NamespacedHierarchicalStoreException.class,
 				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> 1337, Integer.class));
 		}
 

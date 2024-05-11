@@ -135,7 +135,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @return the stored value; may be {@code null}
-	 * @throws IllegalStateException if this store has already been closed
+	 * @throws NamespacedHierarchicalStoreException if this store has already been
+	 * closed
 	 */
 	public Object get(N namespace, Object key) {
 		rejectIfClosed();
@@ -152,8 +153,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 * be cast to the required type
-	 * @throws IllegalStateException if this store has already been closed
+	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <T> T get(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
 		rejectIfClosed();
@@ -170,7 +170,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param defaultCreator the function called with the supplied {@code key}
 	 * to create a new value; never {@code null} but may return {@code null}
 	 * @return the stored value; may be {@code null}
-	 * @throws IllegalStateException if this store has already been closed
+	 * @throws NamespacedHierarchicalStoreException if this store has already been
+	 * closed
 	 */
 	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
 		rejectIfClosed();
@@ -196,8 +197,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 * be cast to the required type
-	 * @throws IllegalStateException if this store has already been closed
+	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType)
 			throws NamespacedHierarchicalStoreException {
@@ -219,8 +219,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param value the value to store; may be {@code null}
 	 * @return the previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if an error occurs while
-	 * storing the value
-	 * @throws IllegalStateException if this store has already been closed
+	 * storing the value, or if this store has already been closed
 	 */
 	public Object put(N namespace, Object key, Object value) throws NamespacedHierarchicalStoreException {
 		rejectIfClosed();
@@ -238,7 +237,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param namespace the namespace; never {@code null}
 	 * @param key the key; never {@code null}
 	 * @return the previously stored value; may be {@code null}
-	 * @throws IllegalStateException if this store has already been closed
+	 * @throws NamespacedHierarchicalStoreException if this store has already been
+	 * closed
 	 */
 	public Object remove(N namespace, Object key) {
 		rejectIfClosed();
@@ -258,8 +258,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the previously stored value; may be {@code null}
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
-	 * be cast to the required type
-	 * @throws IllegalStateException if this store has already been closed
+	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <T> T remove(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
 		rejectIfClosed();
@@ -302,7 +301,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	private void rejectIfClosed() {
 		if (this.closed) {
-			throw new IllegalStateException(
+			throw new NamespacedHierarchicalStoreException(
 				"A NamespacedHierarchicalStore cannot be modified or queried after it has been closed");
 		}
 	}
