@@ -78,7 +78,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	}
 
 	/**
-	 * Create a child store with this store as its parent using the same close
+	 * Create a child store with this store as its parent and this store's close
 	 * action.
 	 */
 	public NamespacedHierarchicalStore<N> newChild() {
