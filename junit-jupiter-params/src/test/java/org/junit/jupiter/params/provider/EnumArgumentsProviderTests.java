@@ -56,21 +56,21 @@ class EnumArgumentsProviderTests {
 	@Test
 	void duplicateConstantNameIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, "FOO", "BAR", "FOO"));
+			() -> provideArguments(EnumWithTwoConstants.class, "FOO", "BAR", "FOO").findAny());
 		assertThat(exception).hasMessageContaining("Duplicate enum constant name(s) found");
 	}
 
 	@Test
 	void invalidConstantNameIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, "FO0", "B4R"));
+			() -> provideArguments(EnumWithTwoConstants.class, "FO0", "B4R").findAny());
 		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
 	}
 
 	@Test
 	void invalidPatternIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCH_ALL, "(", ")"));
+			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCH_ALL, "(", ")").findAny());
 		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
 
@@ -90,7 +90,7 @@ class EnumArgumentsProviderTests {
 			TestCase.class.getDeclaredMethod("methodWithIncorrectParameter", Object.class));
 
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(NullEnum.class));
+			() -> provideArguments(NullEnum.class).findAny());
 		assertThat(exception).hasMessageStartingWith("First parameter must reference an Enum type");
 	}
 
@@ -100,7 +100,7 @@ class EnumArgumentsProviderTests {
 			TestCase.class.getDeclaredMethod("methodWithoutParameters"));
 
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(NullEnum.class));
+			() -> provideArguments(NullEnum.class).findAny());
 		assertThat(exception).hasMessageStartingWith("Test method must declare at least one parameter");
 	}
 

@@ -98,7 +98,8 @@ class CsvFileArgumentsProviderTests {
 				.delimiterString(";")//
 				.build();
 
-		var exception = assertThrows(PreconditionViolationException.class, () -> provideArguments(annotation, "foo"));
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(annotation, "foo").findAny());
 
 		assertThat(exception)//
 				.hasMessageStartingWith("The delimiter and delimiterString attributes cannot be set simultaneously in")//
@@ -435,7 +436,7 @@ class CsvFileArgumentsProviderTests {
 				.build();
 
 		var exception = assertThrows(PreconditionViolationException.class, //
-			() -> provideArguments(new CsvFileArgumentsProvider(), annotation));
+			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).findAny());
 
 		assertThat(exception)//
 				.hasMessageStartingWith("maxCharsPerColumn must be a positive number: -1");

@@ -29,7 +29,7 @@ class ValueArgumentsProviderTests {
 	void multipleInputsAreNotAllowed() {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(new short[1], new byte[0], new int[1], new long[0], new float[0], new double[0],
-				new char[0], new boolean[0], new String[0], new Class<?>[0]));
+				new char[0], new boolean[0], new String[0], new Class<?>[0]).findAny());
 
 		assertThat(exception).hasMessageContaining(
 			"Exactly one type of input must be provided in the @ValueSource annotation, but there were 2");
@@ -39,7 +39,7 @@ class ValueArgumentsProviderTests {
 	void onlyEmptyInputsAreNotAllowed() {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(new short[0], new byte[0], new int[0], new long[0], new float[0], new double[0],
-				new char[0], new boolean[0], new String[0], new Class<?>[0]));
+				new char[0], new boolean[0], new String[0], new Class<?>[0]).findAny());
 
 		assertThat(exception).hasMessageContaining(
 			"Exactly one type of input must be provided in the @ValueSource annotation, but there were 0");

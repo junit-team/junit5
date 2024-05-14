@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,10 +23,11 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.params.ParameterizedTest;
 
 /**
- * {@code @FieldSource} is an {@link ArgumentsSource} which provides access to
- * values of {@linkplain #value() fields} of the class in which this annotation
- * is declared or from static fields in external classes referenced by
- * <em>fully qualified field name</em>.
+ * {@code @FieldSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which provides access to values of
+ * {@linkplain #value() fields} of the class in which this annotation is declared
+ * or from static fields in external classes referenced by <em>fully qualified
+ * field name</em>.
  *
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
@@ -112,6 +114,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(FieldSources.class)
 @API(status = EXPERIMENTAL, since = "5.11")
 @ArgumentsSource(FieldArgumentsProvider.class)
 @SuppressWarnings("exports")

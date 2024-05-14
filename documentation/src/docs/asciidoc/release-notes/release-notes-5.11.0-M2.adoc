@@ -58,8 +58,9 @@ repository on GitHub.
 [[release-notes-5.11.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
-
+* Support `@..Source` annotations as repeatable for parameterized tests. See the
+<<../user-guide/index.adoc#writing-tests-parameterized-repeatable-sources, User Guide>>
+for more details.
 
 [[release-notes-5.11.0-M2-junit-vintage]]
 === JUnit Vintage

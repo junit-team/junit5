@@ -542,4 +542,22 @@ class ParameterizedTestDemo {
 	}
 	// end::named_arguments[]
 	// @formatter:on
+
+	// tag::repeatable_annotations[]
+	@DisplayName("A parameterized test that makes use of repeatable annotations")
+	@ParameterizedTest
+	@MethodSource("someProvider")
+	@MethodSource("otherProvider")
+	void testWithRepeatedAnnotation(String argument) {
+		assertNotNull(argument);
+	}
+
+	static Stream<String> someProvider() {
+		return Stream.of("foo");
+	}
+
+	static Stream<String> otherProvider() {
+		return Stream.of("bar");
+	}
+	// end::repeatable_annotations[]
 }
