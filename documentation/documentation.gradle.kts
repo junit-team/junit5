@@ -123,8 +123,7 @@ val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
 val elementListsDir = layout.buildDirectory.dir("elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
-		// Temporarily disabled since javadoc.io is down
-		// "org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
+		"org.assertj.core" to "https://javadoc.io/doc/org.assertj/assertj-core/${libs.versions.assertj.get()}/",
 		"org.opentest4j" to "https://ota4j-team.github.io/opentest4j/docs/$ota4jDocVersion/api/"
 )
 require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
