@@ -2401,8 +2401,8 @@ implementations.
 `MethodSource` ::
   If the `URI` contains the `method` scheme and the fully qualified method name (FQMN) --
   for example, `method:org.junit.Foo#bar(java.lang.String, java.lang.String[])`. Please
-  refer to the Javadoc for `DiscoverySelectors.selectMethod(String)` for the supported
-  formats for a FQMN.
+  refer to the Javadoc for `{DiscoverySelectors}.{DiscoverySelectors_selectMethod}` for the
+  supported formats for a FQMN.
 
 `ClassSource` ::
   If the `URI` contains the `class` scheme and the fully qualified class name --

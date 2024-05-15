@@ -897,28 +897,28 @@ The JUnit Platform provides a rich set of discovery selectors that can be used t
 which tests should be discovered or executed.
 
 Discovery selectors can be created programmatically using the factory methods in the
-`DiscoverySelectors` class, declaratively via annotations when using the
-<<junit-platform-suite-engine>>, via the <<running-tests-console-launcher>>, or
+`{DiscoverySelectors}` class, specified declaratively via annotations when using the
+<<junit-platform-suite-engine>>, via options of the <<running-tests-console-launcher>>, or
 generically as strings via their identifiers.
 
 The following discovery selectors are provided out of the box:
 
 |===
-| Java Type                   | API                       | Annotation                             | Console Launcher                                 | Identifier
+| Java Type                     | API                                            | Annotation                             | Console Launcher                                 | Identifier
 
-| `ClasspathResourceSelector` | `selectClasspathResource` | `@SelectClasspathResource` | `--select-resource /foo.csv`                     | `resource:/foo.csv`
-| `ClasspathRootSelector`     | `selectClasspathRoots`    | --                         | `--scan-classpath bin`                           | `classpath-root:bin`
-| `ClassSelector`             | `selectClass`             | `@SelectClasses`           | `--select-class com.acme.Foo`                    | `class:com.acme.Foo`
-| `DirectorySelector`         | `selectDirectory`         | `@SelectDirectories`       | `--select-directory foo/bar`                     | `directory:foo/bar`
-| `FileSelector`              | `selectFile`              | `@SelectFile`              | `--select-file dir/foo.txt`                      | `file:dir/foo.txt`
-| `IterationSelector`         | `selectIteration`         | --                         | `--select-iteration method=com.acme.Foo#m[1..2]` | `iteration:method:com.acme.Foo#m[1..2]`
-| `MethodSelector`            | `selectMethod`            | `@SelectMethod`            | `--select-method com.acme.Foo#m`                 | `method:com.acme.Foo#m`
-| `ModuleSelector`            | `selectModule`            | `@SelectModules`           | `--select-module com.acme`                       | `module:com.acme`
-| `NestedClassSelector`       | `selectNestedClass`       | --                         | `--select <identifier>`                          | `nested-class:com.acme.Foo/Bar`
-| `NestedMethodSelector`      | `selectNestedMethod`      | --                         | `--select <identifier>`                          | `nested-method:com.acme.Foo/Bar#m`
-| `PackageSelector`           | `selectPackage`           | `@SelectPackages`          | `--select-package com.acme.foo`                  | `package:com.acme.foo`
-| `UniqueIdSelector`          | `selectUniqueId`          | --                         | `--select <identifier>`                          | `uid:...`
-| `UriSelector`               | `selectUri`               | `@SelectUris`              | `--select-uri \file:///foo.txt`                   | `uri:file:///foo.txt`
+| `{ClasspathResourceSelector}` | `{DiscoverySelectors_selectClasspathResource}` | `@SelectClasspathResource` | `--select-resource /foo.csv`                     | `resource:/foo.csv`
+| `{ClasspathRootSelector}`     | `{DiscoverySelectors_selectClasspathRoots}`    | --                         | `--scan-classpath bin`                           | `classpath-root:bin`
+| `{ClassSelector}`             | `{DiscoverySelectors_selectClass}`             | `@SelectClasses`           | `--select-class com.acme.Foo`                    | `class:com.acme.Foo`
+| `{DirectorySelector}`         | `{DiscoverySelectors_selectDirectory}`         | `@SelectDirectories`       | `--select-directory foo/bar`                     | `directory:foo/bar`
+| `{FileSelector}`              | `{DiscoverySelectors_selectFile}`              | `@SelectFile`              | `--select-file dir/foo.txt`                      | `file:dir/foo.txt`
+| `{IterationSelector}`         | `{DiscoverySelectors_selectIteration}`         | --                         | `--select-iteration method=com.acme.Foo#m[1..2]` | `iteration:method:com.acme.Foo#m[1..2]`
+| `{MethodSelector}`            | `{DiscoverySelectors_selectMethod}`            | `@SelectMethod`            | `--select-method com.acme.Foo#m`                 | `method:com.acme.Foo#m`
+| `{ModuleSelector}`            | `{DiscoverySelectors_selectModule}`            | `@SelectModules`           | `--select-module com.acme`                       | `module:com.acme`
+| `{NestedClassSelector}`       | `{DiscoverySelectors_selectNestedClass}`       | --                         | `--select <identifier>`                          | `nested-class:com.acme.Foo/Bar`
+| `{NestedMethodSelector}`      | `{DiscoverySelectors_selectNestedMethod}`      | --                         | `--select <identifier>`                          | `nested-method:com.acme.Foo/Bar#m`
+| `{PackageSelector}`           | `{DiscoverySelectors_selectPackage}`           | `@SelectPackages`          | `--select-package com.acme.foo`                  | `package:com.acme.foo`
+| `{UniqueIdSelector}`          | `{DiscoverySelectors_selectUniqueId}`          | --                         | `--select <identifier>`                          | `uid:...`
+| `{UriSelector}`               | `{DiscoverySelectors_selectUri}`               | `@SelectUris`              | `--select-uri \file:///foo.txt`                  | `uri:file:///foo.txt`
 |===
 
 
