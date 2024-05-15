@@ -953,7 +953,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Optional<? extends DiscoverySelector> parse(String identifier) {
-		return new DiscoverySelectorIdentifierParsers().parse(identifier);
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
 	}
 
 	/**
@@ -966,7 +966,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
-		return new DiscoverySelectorIdentifierParsers().parse(identifier);
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
 	}
 
 	/**
@@ -980,6 +980,6 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
-		return new DiscoverySelectorIdentifierParsers().parseAll(identifiers);
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
 	}
 }
