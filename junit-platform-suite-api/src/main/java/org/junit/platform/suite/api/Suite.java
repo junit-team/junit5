@@ -76,6 +76,8 @@ import org.junit.platform.commons.annotation.Testable;
 @Testable
 public @interface Suite {
 
+	// TODO add `@Select` annotation
+
 	/**
 	 * Fail suite if no tests were discovered.
 	 *
