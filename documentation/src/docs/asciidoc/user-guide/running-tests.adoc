@@ -704,18 +704,21 @@ The `{ConsoleLauncher}` provides the following subcommands:
 include::{consoleLauncherOptionsFile}[]
 ----
 
+[[running-tests-console-launcher-options-discovering-tests]]
 ===== Discovering tests
 
 ----
 include::{consoleLauncherDiscoverOptionsFile}[]
 ----
 
+[[running-tests-console-launcher-options-executing-tests]]
 ===== Executing tests
 
 ----
 include::{consoleLauncherExecuteOptionsFile}[]
 ----
 
+[[running-tests-console-launcher-options-listing-test-engines]]
 ===== Listing test engines
 
 ----
