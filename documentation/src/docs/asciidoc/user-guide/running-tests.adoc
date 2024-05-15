@@ -905,19 +905,20 @@ The following discovery selectors are provided out of the box:
 
 |===
 | Java Type                   | API                       | Annotation                             | Console Launcher                                 | Identifier
-| `ClasspathResourceSelector` | `selectClasspathResource` | `@SelectClasspathResource("/foo.csv")` | `--select-resource=/foo.csv`                     | `resource:/foo.csv`
-| `ClasspathRootSelector`     | `selectClasspathRoots`    | --                                     | `--scan-classpath=bin`                           | `classpath-root:bin`
-| `ClassSelector`             | `selectClass`             | `@SelectClasses("com.acme.Foo")`       | `--select-class=com.acme.Foo`                    | `class:com.acme.Foo`
-| `DirectorySelector`         | `selectDirectory`         | `@SelectDirectories("foo/bar")`        | `--select-directory=foo/bar`                     | `directory:foo/bar`
-| `FileSelector`              | `selectFile`              | `@SelectFile("dir/foo.txt")`           | `--select-file=dir/foo.txt`                      | `file:dir/foo.txt`
-| `IterationSelector`         | `selectIteration`         | --                                     | `--select-iteration=method=com.acme.Foo#m[1..2]` | `iteration:method:com.acme.Foo#m[1..2]`
-| `MethodSelector`            | `selectMethod`            | `@SelectMethod("com.acme.Foo#m")`      | `--select-method=com.acme.Foo#m`                 | `method:com.acme.Foo#m`
-| `ModuleSelector`            | `selectModule`            | `@SelectModules("com.acme")`           | `--select-module=com.acme`                       | `module:com.acme`
-| `NestedClassSelector`       | `selectNestedClass`       | --                                     | `--select=<identifier>`                          | `nested-class:com.acme.Foo/Bar`
-| `NestedMethodSelector`      | `selectNestedMethod`      | --                                     | `--select=<identifier>`                          | `nested-method:com.acme.Foo/Bar#m`
-| `PackageSelector`           | `selectPackage`           | `@SelectPackages`                      | `--select-package=com.acme.foo`                  | `package:com.acme.foo`
-| `UniqueIdSelector`          | `selectUniqueId`          | --                                     | `--select=<identifier>`                          | `uid:...`
-| `UriSelector`               | `selectUri`               | `@SelectUris`                          | `--select-uri=file:///foo.txt`                   | `uri:file:///foo.txt`
+
+| `ClasspathResourceSelector` | `selectClasspathResource` | `@SelectClasspathResource` | `--select-resource /foo.csv`                     | `resource:/foo.csv`
+| `ClasspathRootSelector`     | `selectClasspathRoots`    | --                         | `--scan-classpath bin`                           | `classpath-root:bin`
+| `ClassSelector`             | `selectClass`             | `@SelectClasses`           | `--select-class com.acme.Foo`                    | `class:com.acme.Foo`
+| `DirectorySelector`         | `selectDirectory`         | `@SelectDirectories`       | `--select-directory foo/bar`                     | `directory:foo/bar`
+| `FileSelector`              | `selectFile`              | `@SelectFile`              | `--select-file dir/foo.txt`                      | `file:dir/foo.txt`
+| `IterationSelector`         | `selectIteration`         | --                         | `--select-iteration method=com.acme.Foo#m[1..2]` | `iteration:method:com.acme.Foo#m[1..2]`
+| `MethodSelector`            | `selectMethod`            | `@SelectMethod`            | `--select-method com.acme.Foo#m`                 | `method:com.acme.Foo#m`
+| `ModuleSelector`            | `selectModule`            | `@SelectModules`           | `--select-module com.acme`                       | `module:com.acme`
+| `NestedClassSelector`       | `selectNestedClass`       | --                         | `--select <identifier>`                          | `nested-class:com.acme.Foo/Bar`
+| `NestedMethodSelector`      | `selectNestedMethod`      | --                         | `--select <identifier>`                          | `nested-method:com.acme.Foo/Bar#m`
+| `PackageSelector`           | `selectPackage`           | `@SelectPackages`          | `--select-package com.acme.foo`                  | `package:com.acme.foo`
+| `UniqueIdSelector`          | `selectUniqueId`          | --                         | `--select <identifier>`                          | `uid:...`
+| `UriSelector`               | `selectUri`               | `@SelectUris`              | `--select-uri \file:///foo.txt`                   | `uri:file:///foo.txt`
 |===
 
 
