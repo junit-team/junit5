@@ -318,6 +318,10 @@ public class MethodSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, fullyQualifiedMethodName));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for {@link MethodSelector
+	 * MethodSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

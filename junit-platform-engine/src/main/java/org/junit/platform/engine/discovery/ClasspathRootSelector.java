@@ -95,6 +95,10 @@ public class ClasspathRootSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.classpathRoot.toString()));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link ClasspathRootSelector ClasspathRootSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

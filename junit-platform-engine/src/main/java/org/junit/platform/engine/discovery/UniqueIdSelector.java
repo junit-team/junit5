@@ -82,6 +82,10 @@ public class UniqueIdSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.uniqueId.toString()));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link UniqueIdSelector UniqueIdSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

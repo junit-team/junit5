@@ -115,6 +115,10 @@ public class DirectorySelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.path));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link DirectorySelector DirectorySelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

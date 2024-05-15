@@ -141,6 +141,10 @@ public class ClassSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for {@link ClassSelector
+	 * ClassSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

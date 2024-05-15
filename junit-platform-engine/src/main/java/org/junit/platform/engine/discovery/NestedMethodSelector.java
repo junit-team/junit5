@@ -254,6 +254,10 @@ public class NestedMethodSelector implements DiscoverySelector {
 				});
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link NestedMethodSelector NestedMethodSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

@@ -157,6 +157,10 @@ public class NestedClassSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, allClassNames));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link NestedClassSelector NestedClassSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

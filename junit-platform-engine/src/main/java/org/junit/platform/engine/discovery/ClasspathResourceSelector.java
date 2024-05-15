@@ -115,6 +115,10 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link ClasspathResourceSelector ClasspathResourceSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

@@ -81,6 +81,10 @@ public class ModuleSelector implements DiscoverySelector {
 		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.moduleName));
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for {@link ModuleSelector
+	 * ModuleSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 

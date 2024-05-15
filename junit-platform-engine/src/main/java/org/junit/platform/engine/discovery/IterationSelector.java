@@ -110,6 +110,10 @@ public class IterationSelector implements DiscoverySelector {
 		);
 	}
 
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link IterationSelector IterationSelectors}.
+	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
 
