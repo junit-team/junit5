@@ -36,7 +36,7 @@ public interface DiscoverySelector {
 	 * <p>
 	 * The returned identifier has to be parsable by a corresponding
 	 * {@link DiscoverySelectorIdentifierParser}.
-	 * <p>
+	 *
 	 * @return the identifier of this selector or empty if it is not supported;
 	 * never {@code null}
 	 * @since 1.11
