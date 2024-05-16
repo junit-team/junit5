@@ -14,11 +14,14 @@ import picocli.CommandLine;
 
 class ManifestVersionProvider implements CommandLine.IVersionProvider {
 
+	public static String getImplementationVersion() {
+		return ManifestVersionProvider.class.getPackage().getImplementationVersion();
+	}
+
 	@Override
 	public String[] getVersion() {
-		String version = getClass().getPackage().getImplementationVersion();
 		return new String[] { //
-				"@|bold JUnit Platform Console Launcher " + version + "|@", //
+				String.format("@|bold JUnit Platform Console Launcher %s|@", getImplementationVersion()), //
 				"JVM: ${java.version} (${java.vendor} ${java.vm.name} ${java.vm.version})", //
 				"OS: ${os.name} ${os.version} ${os.arch}" //
 		};
