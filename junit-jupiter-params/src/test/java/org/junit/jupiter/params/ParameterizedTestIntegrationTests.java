@@ -272,7 +272,8 @@ class ParameterizedTestIntegrationTests {
 
 		var results = execute("testWithMessageFormat", double.class);
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(test(), displayName("3.1416"), finishedWithFailure(message(String.valueOf(Math.PI)))));
+				.haveExactly(1,
+					event(test(), displayName("3.1416"), finishedWithFailure(message(String.valueOf(Math.PI)))));
 	}
 
 	/**
