@@ -51,6 +51,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.NavigableSet;
@@ -117,6 +118,13 @@ import org.opentest4j.TestAbortedException;
  * @since 5.0
  */
 class ParameterizedTestIntegrationTests {
+
+	private final Locale originalLocale = Locale.getDefault(Locale.Category.FORMAT);
+
+	@AfterEach
+	void restoreLocale() {
+		Locale.setDefault(Locale.Category.FORMAT, originalLocale);
+	}
 
 	@ParameterizedTest
 	@CsvSource(textBlock = """
@@ -256,6 +264,15 @@ class ParameterizedTestIntegrationTests {
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), displayName("foo and 23"), finishedWithFailure(message("foo, 23")))) //
 				.haveExactly(1, event(test(), displayName("bar and 42"), finishedWithFailure(message("bar, 42"))));
+	}
+
+	@Test
+	void executesWithMessageFormat() {
+		Locale.setDefault(Locale.Category.FORMAT, Locale.ROOT);
+
+		var results = execute("testWithMessageFormat", double.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), displayName("3.1416"), finishedWithFailure(message(String.valueOf(Math.PI)))));
 	}
 
 	/**
@@ -1238,6 +1255,12 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(ints = 42)
 		void testWithErroneousConverter(@ConvertWith(ErroneousConverter.class) Object ignored) {
 			fail("this should never be called");
+		}
+
+		@ParameterizedTest(name = "{0,number,#.####}")
+		@ValueSource(doubles = Math.PI)
+		void testWithMessageFormat(double argument) {
+			fail(String.valueOf(argument));
 		}
 
 		@ParameterizedTest
