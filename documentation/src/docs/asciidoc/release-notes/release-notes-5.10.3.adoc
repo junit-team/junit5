@@ -1,0 +1,31 @@
+[[release-notes-5.10.3]]
+== 5.10.3
+
+*Date of Release:* 
+
+*Scope:* minor bug fixes and changes since 5.10.2.
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/73?closed=1+[5.10.3] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.10.3-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Fixed a bug where `TestIdentifier` could cause a `NullPointerException` on deserialize when there is no parent identifier.
+  - See issue link:https://github.com/junit-team/junit5/issues/3819[#3819] for details.
+
+
+[[release-notes-5.10.3-junit-jupiter]]
+=== JUnit Jupiter
+
+No changes.
+
+
+[[release-notes-5.10.3-junit-vintage]]
+=== JUnit Vintage
+
+No changes.
