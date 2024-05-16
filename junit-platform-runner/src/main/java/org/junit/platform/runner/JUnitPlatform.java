@@ -38,6 +38,7 @@ import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
+import org.junit.platform.suite.api.Select;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
@@ -87,6 +88,7 @@ import org.junit.runner.notification.RunNotifier;
  * ClassNameFilter#STANDARD_INCLUDE_PATTERN}).
  *
  * @since 1.0
+ * @see Select
  * @see SelectClasses
  * @see SelectClasspathResource
  * @see SelectDirectories

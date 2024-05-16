@@ -44,6 +44,11 @@ repository on GitHub.
   This change will allow build tools and IDEs to provide generic mechanisms for specifying
   selectors on the command line or in configuration files without having to support each
   selector type individually.
+  - The Console Launcher supports specifying selectors via their identifiers using the
+    `--select` option. For example, `--select class:foo.Bar` will run all tests in the
+    `foo.Bar` class.
+  - Similarly, the JUnit Platform Suite engine provides a new `@Select("<identifier>)`
+    annotation.
 * `NamespacedHierarchicalStore` now throws an `IllegalStateException` for any attempt to
   modify or query the store after it has been closed. In addition, an attempt to close a
   store that has already been closed will have no effect.

@@ -46,6 +46,7 @@ import org.junit.platform.commons.annotation.Testable;
  * configuration parameters are taken into account.
  *
  * @since 1.8
+ * @see Select
  * @see SelectClasses
  * @see SelectClasspathResource
  * @see SelectDirectories
@@ -75,8 +76,6 @@ import org.junit.platform.commons.annotation.Testable;
 @API(status = STABLE, since = "1.10")
 @Testable
 public @interface Suite {
-
-	// TODO add `@Select` annotation
 
 	/**
 	 * Fail suite if no tests were discovered.

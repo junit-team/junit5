@@ -970,6 +970,20 @@ public final class DiscoverySelectors {
 	}
 
 	/**
+	 * Parse the supplied string representations of
+	 * {@link DiscoverySelectorIdentifier DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the string representations of
+	 * {@code DiscoverySelectorIdentifiers} to parse; never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Stream<? extends DiscoverySelector> parseAll(String... identifiers) {
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
+	}
+
+	/**
 	 * Parse the supplied {@link DiscoverySelectorIdentifier
 	 * DiscoverySelectorIdentifiers}.
 	 *

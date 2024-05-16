@@ -55,6 +55,7 @@ import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
+import org.junit.platform.suite.api.Select;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
@@ -392,6 +393,9 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				.ifPresent(this::selectors);
 		findAnnotationValues(suiteClass, SelectPackages.class, SelectPackages::value)
 				.map(AdditionalDiscoverySelectors::selectPackages)
+				.ifPresent(this::selectors);
+		findAnnotationValues(suiteClass, Select.class, Select::value)
+				.map(AdditionalDiscoverySelectors::parseIdentifiers)
 				.ifPresent(this::selectors);
 		// @formatter:on
 		return this;

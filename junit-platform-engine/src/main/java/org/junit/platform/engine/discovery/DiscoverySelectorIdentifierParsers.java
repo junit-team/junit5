@@ -33,6 +33,14 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  */
 class DiscoverySelectorIdentifierParsers {
 
+	static Stream<? extends DiscoverySelector> parseAll(String... identifiers) {
+		Preconditions.notNull(identifiers, "identifiers must not be null");
+		return Stream.of(identifiers) //
+				.map(DiscoverySelectorIdentifierParsers::parse) //
+				.filter(Optional::isPresent) //
+				.map(Optional::get);
+	}
+
 	static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		Preconditions.notNull(identifiers, "identifiers must not be null");
 		return identifiers.stream() //

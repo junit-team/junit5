@@ -67,6 +67,7 @@ import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
+import org.junit.platform.suite.api.Select;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
@@ -583,6 +584,28 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		// @formatter:on
 		var configurationParameters = request.getConfigurationParameters();
 		assertEquals(Optional.empty(), configurationParameters.get("parent"));
+	}
+
+	@Test
+	void selectByIdentifier() {
+		// @formatter:off
+		@Select({
+				"class:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase",
+				"method:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod"
+		})
+		// @formatter:on
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
+		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+		assertEquals(NonLocalTestCase.class, exactlyOne(classSelectors).getJavaClass());
+		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+		// @formatter:off
+		assertThat(exactlyOne(methodSelectors))
+				.extracting(MethodSelector::getJavaClass, MethodSelector::getMethodName)
+				.containsExactly(NoParameterTestCase.class, "testMethod");
+		// @formatter:on
 	}
 
 	private static <T> T exactlyOne(List<T> list) {
