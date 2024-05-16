@@ -119,7 +119,7 @@ val experimentalApisTableFile = generatedAsciiDocPath.map { it.file("experimenta
 val deprecatedApisTableFile = generatedAsciiDocPath.map { it.file("deprecated-apis-table.adoc") }
 val standaloneConsoleLauncherShadowedArtifactsFile = generatedAsciiDocPath.map { it.file("console-launcher-standalone-shadowed-artifacts.adoc") }
 
-val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/11/docs/api"
+val jdkJavadocBaseUrl = "https://docs.oracle.com/en/java/javase/${JavaVersion.current().majorVersion}/docs/api"
 val elementListsDir = layout.buildDirectory.dir("elementLists")
 val externalModulesWithoutModularJavadoc = mapOf(
 		"org.apiguardian.api" to "https://apiguardian-team.github.io/apiguardian/docs/$apiGuardianDocVersion/api/",
