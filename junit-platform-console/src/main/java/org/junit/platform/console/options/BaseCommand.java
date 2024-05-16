@@ -34,6 +34,10 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
 	private boolean helpRequested;
 
+	@SuppressWarnings("unused")
+	@Option(names = "--version", versionHelp = true, description = "Display version information.")
+	private boolean versionHelpRequested;
+
 	void execute(String... args) {
 		toCommandLine().execute(args);
 	}
