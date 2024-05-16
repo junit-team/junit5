@@ -39,7 +39,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private static final String METHOD_CONTEXT_KEY = "context";
 	static final String ARGUMENT_MAX_LENGTH_KEY = "junit.jupiter.params.displayname.argument.maxlength";
-	private static final String DEFAULT_DISPLAY_NAME = "{default_display_name}";
+	static final String DEFAULT_DISPLAY_NAME = "{default_display_name}";
 	static final String DISPLAY_NAME_PATTERN_KEY = "junit.jupiter.params.displayname.default";
 
 	@Override

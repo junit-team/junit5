@@ -196,9 +196,10 @@ public @interface ParameterizedTest {
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to <code>{default_display_name}</code>.
+	 * <p>Defaults to <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>.
 	 *
-	 * <p>If the default display name flag (<code>{default_display_name}</code>)
+	 * <p>If the default display name flag
+	 * (<code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>)
 	 * is not overridden, JUnit will:
 	 * <ul>
 	 * <li>Look up the {@value ParameterizedTestExtension#DISPLAY_NAME_PATTERN_KEY}
@@ -207,30 +208,30 @@ public @interface ParameterizedTest {
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
 	 * the class path). Consult the User Guide for further information.</li>
-	 * <li>Otherwise, the value of the {@link #DEFAULT_DISPLAY_NAME} constant will
-	 * be used.</li>
+	 * <li>Otherwise, <code>{@value #DEFAULT_DISPLAY_NAME}</code> will be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li>{@link #DISPLAY_NAME_PLACEHOLDER}</li>
-	 * <li>{@link #INDEX_PLACEHOLDER}</li>
-	 * <li>{@link #ARGUMENTS_PLACEHOLDER}</li>
-	 * <li>{@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</li>
-	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
+	 * <li><code>{@value #DISPLAY_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #INDEX_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENTS_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>"{0}"</code>, <code>"{1}"</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
-	 * to customize formatting. Please note that the original arguments are
-	 * passed when formatting, regardless of any implicit or explicit argument
-	 * conversions.
+	 * to customize formatting (for example, {@code {0,number,#.###}}). Please
+	 * note that the original arguments are passed when formatting, regardless
+	 * of any implicit or explicit argument conversions.
 	 *
-	 * <p>Note that <code>{default_display_name}</code> is a flag rather than a
-	 * placeholder.
+	 * <p>Note that
+	 * <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code> is
+	 * a flag rather than a placeholder.
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default "{default_display_name}";
+	String name() default ParameterizedTestExtension.DEFAULT_DISPLAY_NAME;
 
 	/**
 	 * Configure whether all arguments of the parameterized test that implement {@link AutoCloseable}
