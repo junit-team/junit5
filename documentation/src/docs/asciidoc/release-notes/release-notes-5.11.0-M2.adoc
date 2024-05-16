@@ -26,6 +26,7 @@ repository on GitHub.
 [[release-notes-5.11.0-M2-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
+* Fixed a bug where `TestIdentifier` could cause a `NullPointerException` on deserialize when there is no parent identifier. See link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
 * ❓
 
 [[release-notes-5.11.0-M2-junit-platform-deprecations-and-breaking-changes]]
