@@ -16,8 +16,10 @@ import static java.util.stream.Collectors.toCollection;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.SortedSet;
@@ -102,12 +104,45 @@ public class IterationSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		// TODO Collapse ranges using start..end notation
 		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
-			String.format("%s[%s]", parentSelectorString,
-				iterationIndices.stream().map(String::valueOf).collect(joining(",")))) //
+			String.format("%s[%s]", parentSelectorString, formatIterationIndicesAsRanges())) //
 		);
+	}
+
+	private String formatIterationIndicesAsRanges() {
+		class Range {
+			final int start;
+			int end;
+
+			Range(int start) {
+				this.start = start;
+				this.end = start;
+			}
+		}
+		List<Range> ranges = new ArrayList<>();
+		Range current = new Range(iterationIndices.first());
+		ranges.add(current);
+		for (int n : iterationIndices.tailSet(current.start + 1)) {
+			if (n == current.end + 1) {
+				current.end = n;
+			}
+			else {
+				current = new Range(n);
+				ranges.add(current);
+			}
+		}
+		return ranges.stream() //
+				.map(r -> {
+					if (r.start == r.end) {
+						return String.valueOf(r.start);
+					}
+					if (r.start == r.end - 1) {
+						return r.start + "," + r.end;
+					}
+					return r.start + ".." + r.end;
+				}) //
+				.collect(joining(","));
 	}
 
 	/**
