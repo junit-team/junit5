@@ -35,7 +35,7 @@ public class CommandFacade {
 	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
 		String version = ManifestVersionProvider.getImplementationVersion();
 		System.setProperty("junit.docs.version",
-				version == null ? "current" : (version.endsWith("-SNAPSHOT") ? "snapshot" : version));
+			version == null ? "current" : (version.endsWith("-SNAPSHOT") ? "snapshot" : version));
 		return new MainCommand(consoleTestExecutorFactory).run(out, err, args);
 	}
 }
