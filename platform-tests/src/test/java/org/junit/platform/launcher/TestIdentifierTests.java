@@ -16,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.SerializationUtils.deserialize;
 import static org.junit.platform.commons.util.SerializationUtils.serialize;
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -70,6 +72,74 @@ class TestIdentifierTests {
 			var deserializedIdentifier = (TestIdentifier) deserialize(bytes);
 			assertDeepEquals(createOriginalTestIdentifier(), deserializedIdentifier);
 		}
+	}
+
+	@Test
+	void identifierWithNoParentCanBeSerializedAndDeserialized() throws Exception {
+		TestIdentifier ti = TestIdentifier.from(new TestDescriptor() {
+			@Override
+			public UniqueId getUniqueId() {
+				return UniqueId.root("example", "id");
+			}
+
+			@Override
+			public String getDisplayName() {
+				return "displayName";
+			}
+
+			@Override
+			public Set<TestTag> getTags() {
+				return Set.of();
+			}
+
+			@Override
+			public Optional<TestSource> getSource() {
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<TestDescriptor> getParent() {
+				return Optional.empty();
+			}
+
+			@Override
+			public void setParent(TestDescriptor parent) {
+				// ignore
+			}
+
+			@Override
+			public Set<? extends TestDescriptor> getChildren() {
+				return Set.of();
+			}
+
+			@Override
+			public void addChild(TestDescriptor descriptor) {
+				// ignore
+			}
+
+			@Override
+			public void removeChild(TestDescriptor descriptor) {
+				// ignore
+			}
+
+			@Override
+			public void removeFromHierarchy() {
+				// ignore
+			}
+
+			@Override
+			public Type getType() {
+				return Type.TEST;
+			}
+
+			@Override
+			public Optional<? extends TestDescriptor> findByUniqueId(UniqueId uniqueId) {
+				return Optional.empty();
+			}
+		});
+		byte[] bytes = serialize(ti);
+		TestIdentifier dti = (TestIdentifier) deserialize(bytes);
+		assertEquals(ti, dti);
 	}
 
 	private static void assertDeepEquals(TestIdentifier first, TestIdentifier second) {
