@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
@@ -31,14 +32,26 @@ class ConsoleLauncherTests {
 	private final StringWriter stringWriter = new StringWriter();
 	private final PrintWriter printSink = new PrintWriter(stringWriter);
 
-	@ParameterizedTest(name = "{0}")
+	@ParameterizedTest(name = "cmd={0}")
+	@EmptySource
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayHelp(String command) {
 		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
 		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
-		assertThat(stringWriter.toString()).contains("--help", "--disable-banner" /* ... */);
+		assertThat(output()).contains("--help");
+	}
+
+	@ParameterizedTest(name = "cmd={0}")
+	@EmptySource
+	@MethodSource("commandsWithEmptyOptionExitCodes")
+	void displayVersion(String command) {
+		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
+		var exitCode = consoleLauncher.run(command, "--version").getExitCode();
+
+		assertEquals(0, exitCode);
+		assertThat(output()).contains("JUnit Platform Console Launcher");
 	}
 
 	@ParameterizedTest(name = "{0}")
@@ -47,7 +60,7 @@ class ConsoleLauncherTests {
 		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
 		consoleLauncher.run(command);
 
-		assertThat(stringWriter.toString()).contains("Thanks for using JUnit!");
+		assertThat(output()).contains("Thanks for using JUnit!");
 	}
 
 	@ParameterizedTest(name = "{0}")
@@ -57,7 +70,7 @@ class ConsoleLauncherTests {
 		var exitCode = consoleLauncher.run(command, "--disable-banner").getExitCode();
 
 		assertEquals(expectedExitCode, exitCode);
-		assertThat(stringWriter.toString()).doesNotContain("Thanks for using JUnit!");
+		assertThat(output()).doesNotContain("Thanks for using JUnit!");
 	}
 
 	@ParameterizedTest(name = "{0}")
@@ -67,7 +80,11 @@ class ConsoleLauncherTests {
 		var exitCode = consoleLauncher.run(command, "--all").getExitCode();
 
 		assertEquals(-1, exitCode);
-		assertThat(stringWriter.toString()).contains("Unknown option: '--all'").contains("Usage:");
+		assertThat(output()).contains("Unknown option: '--all'").contains("Usage:");
+	}
+
+	private String output() {
+		return stringWriter.toString();
 	}
 
 	@ParameterizedTest(name = "{0}")

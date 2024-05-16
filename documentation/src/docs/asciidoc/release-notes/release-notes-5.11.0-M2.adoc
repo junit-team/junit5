@@ -40,7 +40,7 @@ repository on GitHub.
   modify or query the store after it has been closed. In addition, an attempt to close a
   store that has already been closed will have no effect.
   - See link:https://github.com/junit-team/junit5/issues/3614[issue 3614] for details.
-
+* The Console Launcher now provides a `--version` option.
 
 [[release-notes-5.11.0-M2-junit-jupiter]]
 === JUnit Jupiter
