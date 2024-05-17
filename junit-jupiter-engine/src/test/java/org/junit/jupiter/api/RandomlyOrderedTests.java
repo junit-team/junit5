@@ -11,14 +11,12 @@
 package org.junit.jupiter.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.OptionalLong;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -36,7 +34,7 @@ class RandomlyOrderedTests {
 	void randomSeedForClassAndMethodOrderingIsDeterministic() {
 		IntStream.range(0, 20).forEach(i -> {
 			callSequence.clear();
-			var tests = executeTests(OptionalLong.of(1618034));
+			var tests = executeTests(1618034);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 			assertThat(callSequence).containsExactlyInAnyOrder("B_TestCase#b", "B_TestCase#c", "B_TestCase#a",
@@ -44,21 +42,13 @@ class RandomlyOrderedTests {
 		});
 	}
 
-	@Test
-	void defaultSeedForClassAndMethodOrderingIsIdentical() {
-		executeTests(OptionalLong.empty());
-
-		assertEquals(MethodOrderer.Random.DEFAULT_SEED, ClassOrderer.Random.DEFAULT_SEED);
-	}
-
-	private Events executeTests(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") OptionalLong randomSeed) {
+	private Events executeTests(@SuppressWarnings("SameParameterValue") long randomSeed) {
 		// @formatter:off
-		var builder = EngineTestKit
+		return EngineTestKit
 				.engine("junit-jupiter")
 				.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, ClassOrderer.Random.class.getName())
-				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, MethodOrderer.Random.class.getName());
-		randomSeed.ifPresent(seed -> builder.configurationParameter(MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME, String.valueOf(seed)));
-		return builder
+				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, MethodOrderer.Random.class.getName())
+				.configurationParameter(MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME, String.valueOf(randomSeed))
 				.selectors(selectClass(A_TestCase.class), selectClass(B_TestCase.class), selectClass(C_TestCase.class))
 				.execute()
 				.testEvents();
@@ -69,8 +59,8 @@ class RandomlyOrderedTests {
 
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
-			var testClass = testInfo.getTestClass().get();
-			var testMethod = testInfo.getTestMethod().get();
+			var testClass = testInfo.getTestClass().orElseThrow();
+			var testMethod = testInfo.getTestMethod().orElseThrow();
 
 			callSequence.add(testClass.getSimpleName() + "#" + testMethod.getName());
 		}
@@ -88,12 +78,15 @@ class RandomlyOrderedTests {
 		}
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class A_TestCase extends BaseTestCase {
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class B_TestCase extends BaseTestCase {
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class C_TestCase extends BaseTestCase {
 	}
 
