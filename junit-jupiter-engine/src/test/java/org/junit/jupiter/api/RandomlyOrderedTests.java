@@ -53,7 +53,7 @@ class RandomlyOrderedTests {
 
 	private Events executeTests(@SuppressWarnings("OptionalUsedAsFieldOrParameterType") OptionalLong randomSeed) {
 		// @formatter:off
-		EngineTestKit.Builder builder = EngineTestKit
+		var builder = EngineTestKit
 				.engine("junit-jupiter")
 				.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, ClassOrderer.Random.class.getName())
 				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, MethodOrderer.Random.class.getName());
