@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.engine.extension;
+package org.junit.jupiter.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME;
@@ -20,11 +20,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ClassOrderer;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 
@@ -39,7 +34,7 @@ class RandomlyOrderedTests {
 	void randomSeedForClassAndMethodOrderingIsDeterministic() {
 		IntStream.range(0, 20).forEach(i -> {
 			callSequence.clear();
-			var tests = executeTests(1618034L);
+			var tests = executeTests(1618034);
 
 			tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 			assertThat(callSequence).containsExactlyInAnyOrder("B_TestCase#b", "B_TestCase#c", "B_TestCase#a",
@@ -47,7 +42,7 @@ class RandomlyOrderedTests {
 		});
 	}
 
-	private Events executeTests(long randomSeed) {
+	private Events executeTests(@SuppressWarnings("SameParameterValue") long randomSeed) {
 		// @formatter:off
 		return EngineTestKit
 				.engine("junit-jupiter")
@@ -64,8 +59,8 @@ class RandomlyOrderedTests {
 
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
-			var testClass = testInfo.getTestClass().get();
-			var testMethod = testInfo.getTestMethod().get();
+			var testClass = testInfo.getTestClass().orElseThrow();
+			var testMethod = testInfo.getTestMethod().orElseThrow();
 
 			callSequence.add(testClass.getSimpleName() + "#" + testMethod.getName());
 		}
@@ -83,12 +78,15 @@ class RandomlyOrderedTests {
 		}
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class A_TestCase extends BaseTestCase {
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class B_TestCase extends BaseTestCase {
 	}
 
+	@SuppressWarnings("NewClassNamingConvention")
 	static class C_TestCase extends BaseTestCase {
 	}
 
