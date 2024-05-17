@@ -1,9 +1,15 @@
 [[release-notes-5.11.0-M2]]
 == 5.11.0-M2
 
-*Date of Release:* ❓
+*Date of Release:* May 17, 2024
 
-*Scope:* ❓
+*Scope:*
+
+* Repeatable `@..Source` annotations
+* Extensible syntax for specifying discovery selectors
+* Console Launcher `--version` option
+* Improvements to `NamespacedHierarchicalStore`
+* Bug fixes
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/74?closed=1+[5.11.0-M2] milestone page in the JUnit
@@ -27,12 +33,6 @@ repository on GitHub.
 ==== Bug Fixes
 
 * Fixed a bug where `TestIdentifier` could cause a `NullPointerException` on deserialize when there is no parent identifier. See link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
-* ❓
-
-[[release-notes-5.11.0-M2-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
 
 [[release-notes-5.11.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -65,32 +65,14 @@ repository on GitHub.
 * `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
   generated during class initialization.
 
-[[release-notes-5.11.0-M2-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-5.11.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * Support `@..Source` annotations as repeatable for parameterized tests. See the
-<<../user-guide/index.adoc#writing-tests-parameterized-repeatable-sources, User Guide>>
-for more details.
+  <<../user-guide/index.adoc#writing-tests-parameterized-repeatable-sources, User Guide>>
+  for more details.
 
 [[release-notes-5.11.0-M2-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.11.0-M2-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.0-M2-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.0-M2-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
