@@ -5,7 +5,7 @@
 
 *Scope:*
 
-* Repeatable `@..Source` annotations
+* Repeatable `@..Source` annotations for parameterized tests
 * Extensible syntax for specifying discovery selectors
 * Console Launcher `--version` option
 * Improvements to `NamespacedHierarchicalStore`
@@ -32,7 +32,9 @@ repository on GitHub.
 [[release-notes-5.11.0-M2-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Fixed a bug where `TestIdentifier` could cause a `NullPointerException` on deserialize when there is no parent identifier. See link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
+* Attempting to deserialize a `TestIdentifier` no longer causes a `NullPointerException`
+  when there is no parent identifier. See
+  link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
 
 [[release-notes-5.11.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -50,11 +52,12 @@ repository on GitHub.
     `foo.Bar` class.
   - Similarly, the JUnit Platform Suite engine provides a new `@Select("<identifier>)`
     annotation.
+* The Console Launcher now provides a `--version` option.
 * `NamespacedHierarchicalStore` now throws an `IllegalStateException` for any attempt to
   modify or query the store after it has been closed. In addition, an attempt to close a
   store that has already been closed will have no effect.
   - See link:https://github.com/junit-team/junit5/issues/3614[issue 3614] for details.
-* The Console Launcher now provides a `--version` option.
+
 
 [[release-notes-5.11.0-M2-junit-jupiter]]
 === JUnit Jupiter
@@ -68,9 +71,11 @@ repository on GitHub.
 [[release-notes-5.11.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* Support `@..Source` annotations as repeatable for parameterized tests. See the
+* `@..Source` annotations for parameterized tests can now be used as repeatable
+  annotations. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-repeatable-sources, User Guide>>
-  for more details.
+  for details.
+
 
 [[release-notes-5.11.0-M2-junit-vintage]]
 === JUnit Vintage

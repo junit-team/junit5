@@ -6,8 +6,8 @@
 *Scope:* ❓
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/77?closed=1+[5.11.0-M3] milestone page in the
-JUnit repository on GitHub.
+link:{junit5-repo}+/milestone/77?closed=1+[5.11.0-M3] milestone page in the JUnit
+repository on GitHub.
 
 
 [[release-notes-5.11.0-M3-junit-platform]]
