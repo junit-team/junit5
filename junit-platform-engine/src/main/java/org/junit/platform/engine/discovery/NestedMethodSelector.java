@@ -12,16 +12,21 @@ package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a nested {@link Method}
@@ -239,4 +244,45 @@ public class NestedMethodSelector implements DiscoverySelector {
 				.toString();
 	}
 
+	@Override
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return nestedClassSelector.toIdentifier() //
+				.map(parent -> {
+					String fullyQualifiedMethodName = ReflectionUtils.getFullyQualifiedMethodName(parent.getValue(),
+						methodSelector.getMethodName(), methodSelector.getParameterTypeNames());
+					return DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, fullyQualifiedMethodName);
+				});
+	}
+
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link NestedMethodSelector NestedMethodSelectors}.
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
+
+		private static final String PREFIX = "nested-method";
+
+		public IdentifierParser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return PREFIX;
+		}
+
+		@Override
+		public Optional<NestedMethodSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
+			List<String> enclosingClassNames = parts.subList(0, parts.size() - 1);
+
+			String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(parts.get(parts.size() - 1));
+			String nestedClassName = methodParts[0];
+			String methodName = methodParts[1];
+			String parameterTypeNames = methodParts[2];
+
+			return Optional.of(DiscoverySelectors.selectNestedMethod(enclosingClassNames, nestedClassName, methodName,
+				parameterTypeNames));
+		}
+	}
 }

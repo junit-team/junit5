@@ -52,6 +52,7 @@ import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestF
 import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
+import org.junit.platform.suite.engine.testsuites.SelectByIdentifierSuite;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 import org.junit.platform.suite.engine.testsuites.SelectMethodsSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteDisplayNameSuite;
@@ -419,6 +420,19 @@ class SuiteEngineTests {
 				.execute()
 				.allEvents()
 				.assertThatEvents()
+				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+	}
+
+	@Test
+	void selectByIdentifier() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SelectByIdentifierSuite.class))
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SelectByIdentifierSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}

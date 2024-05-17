@@ -26,6 +26,7 @@ dependencies {
 	testImplementation(testFixtures(projects.junitPlatformEngine))
 	testImplementation(testFixtures(projects.junitPlatformLauncher))
 	testImplementation(projects.junitJupiterEngine)
+	testImplementation(testFixtures(projects.junitJupiterEngine))
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit) {
 		exclude(group = "org.junit.vintage")

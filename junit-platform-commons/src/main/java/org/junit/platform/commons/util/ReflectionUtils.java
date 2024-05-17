@@ -929,13 +929,34 @@ public final class ReflectionUtils {
 	 * @param methodName the name of the method; never {@code null} or blank
 	 * @param parameterTypes the parameter types of the method; may be {@code null} or empty
 	 * @return fully qualified method name; never {@code null}
-	 * @see #getFullyQualifiedMethodName(Class, Method)
 	 */
 	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
-		return String.format("%s#%s(%s)", clazz.getName(), methodName, ClassUtils.nullSafeToString(parameterTypes));
+		return getFullyQualifiedMethodName(clazz.getName(), methodName, ClassUtils.nullSafeToString(parameterTypes));
+	}
+
+	/**
+	 * Build the <em>fully qualified method name</em> for the method described by the
+	 * supplied class, method name, and parameter types.
+	 *
+	 * <p>Note that the class is not necessarily the class in which the method is
+	 * declared.
+	 *
+	 * @param className the name of the class from which the method should be referenced; never {@code null}
+	 * @param methodName the name of the method; never {@code null} or blank
+	 * @param parameterTypeNames the parameter type names of the method; may be empty but not {@code null}
+	 * @return fully qualified method name; never {@code null}
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static String getFullyQualifiedMethodName(String className, String methodName, String parameterTypeNames) {
+		Preconditions.notBlank(className, "Class name must not be null or blank");
+		Preconditions.notBlank(methodName, "Method name must not be null or blank");
+		Preconditions.notNull(parameterTypeNames, "Parameter type names must not be null");
+
+		return String.format("%s#%s(%s)", className, methodName, parameterTypeNames);
 	}
 
 	/**

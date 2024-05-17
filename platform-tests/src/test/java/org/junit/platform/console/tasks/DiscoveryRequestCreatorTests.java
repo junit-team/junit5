@@ -304,6 +304,19 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
+	void propagatesSelectorIdentifiers() {
+		var methodSelector = selectMethod("com.acme.Foo#m()");
+		var classSelector = selectClass("com.example.Bar");
+		options.setSelectorIdentifiers(
+			List.of(methodSelector.toIdentifier().orElseThrow(), classSelector.toIdentifier().orElseThrow()));
+
+		var request = convert();
+
+		assertThat(request.getSelectorsByType(MethodSelector.class)).containsExactly(methodSelector);
+		assertThat(request.getSelectorsByType(ClassSelector.class)).containsExactly(classSelector);
+	}
+
+	@Test
 	@SuppressWarnings("deprecation")
 	void convertsConfigurationParameters() {
 		options.setScanClasspath(true);
