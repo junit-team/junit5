@@ -185,8 +185,8 @@ public interface ClassOrderer {
 	 * <h2>Custom Seed</h2>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering classes is the
-	 * value returned by {@link System#nanoTime()} during static initialization
-	 * of this class. In order to support repeatable builds, the value of the
+	 * value returned by {@link System#nanoTime()} during static class
+	 * initialization. In order to support repeatable builds, the value of the
 	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
 	 * execution) may be specified via the {@value Random#RANDOM_SEED_PROPERTY_NAME}
@@ -203,13 +203,12 @@ public interface ClassOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
 
 		/**
-		 * Default seed, which is generated during initialization of this class
-		 * via {@link System#nanoTime()} for reproducibility of tests.
+		 * Default seed, which is generated during initialization of the
+		 * {@link MethodOrderer.Random} class for reproducibility of tests.
 		 */
-		private static final long DEFAULT_SEED;
+		static final long DEFAULT_SEED = MethodOrderer.Random.DEFAULT_SEED;
 
 		static {
-			DEFAULT_SEED = System.nanoTime();
 			logger.config(() -> "ClassOrderer.Random default seed: " + DEFAULT_SEED);
 		}
 

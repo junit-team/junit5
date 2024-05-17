@@ -269,7 +269,7 @@ public interface MethodOrderer {
 		 * Default seed, which is generated during initialization of this class
 		 * via {@link System#nanoTime()} for reproducibility of tests.
 		 */
-		private static final long DEFAULT_SEED;
+		static final long DEFAULT_SEED;
 
 		static {
 			DEFAULT_SEED = System.nanoTime();

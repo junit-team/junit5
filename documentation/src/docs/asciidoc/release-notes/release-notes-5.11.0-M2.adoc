@@ -62,7 +62,8 @@ repository on GitHub.
 [[release-notes-5.11.0-M2-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
+  generated during class initialization.
 
 [[release-notes-5.11.0-M2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
