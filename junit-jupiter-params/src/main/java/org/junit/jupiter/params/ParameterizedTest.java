@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -148,6 +149,7 @@ public @interface ParameterizedTest {
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @see #DEFAULT_DISPLAY_NAME
 	 */
 	String INDEX_PLACEHOLDER = "{index}";
 
@@ -173,8 +175,42 @@ public @interface ParameterizedTest {
 	 *
 	 * @since 5.6
 	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
+
+	/**
+	 * Placeholder for the name of the argument set for the current invocation
+	 * of a {@code @ParameterizedTest} method: <code>{argumentSetName}</code>.
+	 *
+	 * <p>This placeholder can be used when the current set of arguments was created via
+	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * argumentSet()}.
+	 *
+	 * @since 5.11
+	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}";
+
+	/**
+	 * Placeholder for either {@link #ARGUMENT_SET_NAME_PLACEHOLDER} or
+	 * {@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}, depending on whether the
+	 * current set of arguments was created via
+	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * argumentSet()}: <code>{argumentSetNameOrArgumentsWithNames}</code>.
+	 *
+	 * @since 5.11
+	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}";
 
 	/**
 	 * Default display name pattern for the current invocation of a
@@ -188,9 +224,10 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER
-	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] "
+			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**
 	 * The display name to be used for individual invocations of the
@@ -215,8 +252,10 @@ public @interface ParameterizedTest {
 	 * <ul>
 	 * <li><code>{@value #DISPLAY_NAME_PLACEHOLDER}</code></li>
 	 * <li><code>{@value #INDEX_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
 	 * <li><code>{@value #ARGUMENTS_PLACEHOLDER}</code></li>
 	 * <li><code>{@value #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
 	 * <li><code>"{0}"</code>, <code>"{1}"</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *

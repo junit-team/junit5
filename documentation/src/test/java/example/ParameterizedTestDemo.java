@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
@@ -549,6 +550,21 @@ class ParameterizedTestDemo {
 		);
 	}
 	// end::named_arguments[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::named_argument_set[]
+	@DisplayName("A parameterized test with named argument sets")
+	@ParameterizedTest
+	@FieldSource("argumentSets")
+	void testWithArgumentSets(File file1, File file2) {
+	}
+
+	static List<Arguments> argumentSets = Arrays.asList(
+		argumentSet("Important files", new File("path1"), new File("path2")),
+		argumentSet("Other files", new File("path3"), new File("path4"))
+	);
+	// end::named_argument_set[]
 	// @formatter:on
 
 	// tag::repeatable_annotations[]

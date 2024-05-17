@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnno
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -88,8 +87,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				.map(this::instantiateArgumentsProvider)
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, extensionContext))
-				.map(Arguments::get)
-				.map(arguments -> consumedArguments(arguments, methodContext))
 				.map(arguments -> {
 					invocationCount.incrementAndGet();
 					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
@@ -122,7 +119,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
+			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
 
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
@@ -149,14 +146,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		catch (Exception e) {
 			throw ExceptionUtils.throwAsUncheckedException(e);
 		}
-	}
-
-	private Object[] consumedArguments(Object[] arguments, ParameterizedTestMethodContext methodContext) {
-		if (methodContext.hasAggregator()) {
-			return arguments;
-		}
-		int parameterCount = methodContext.getParameterCount();
-		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
 	}
 
 }

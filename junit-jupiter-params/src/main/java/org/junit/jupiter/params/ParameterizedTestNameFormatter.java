@@ -13,6 +13,8 @@ package org.junit.jupiter.params;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 
@@ -22,6 +24,9 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.Arguments.ArgumentSet;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -47,9 +52,9 @@ class ParameterizedTestNameFormatter {
 		this.argumentMaxLength = argumentMaxLength;
 	}
 
-	String format(int invocationIndex, Object... arguments) {
+	String format(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
 		try {
-			return formatSafely(invocationIndex, arguments);
+			return formatSafely(invocationIndex, arguments, consumedArguments);
 		}
 		catch (Exception ex) {
 			String message = "The display name pattern defined for the parameterized test is invalid. "
@@ -58,9 +63,9 @@ class ParameterizedTestNameFormatter {
 		}
 	}
 
-	private String formatSafely(int invocationIndex, Object[] arguments) {
-		Object[] namedArguments = extractNamedArguments(arguments);
-		String pattern = prepareMessageFormatPattern(invocationIndex, namedArguments);
+	private String formatSafely(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
+		Object[] namedArguments = extractNamedArguments(consumedArguments);
+		String pattern = prepareMessageFormatPattern(invocationIndex, arguments, namedArguments);
 		MessageFormat format = new MessageFormat(pattern);
 		Object[] humanReadableArguments = makeReadable(format, namedArguments);
 		String formatted = format.format(humanReadableArguments);
@@ -73,17 +78,34 @@ class ParameterizedTestNameFormatter {
 				.toArray();
 	}
 
-	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
+	private String prepareMessageFormatPattern(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
 		String result = this.pattern//
 				.replace(DISPLAY_NAME_PLACEHOLDER, TEMPORARY_DISPLAY_NAME_PLACEHOLDER)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
+		if (result.contains(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
+			String placeholderToUse = (arguments instanceof ArgumentSet //
+					? ARGUMENT_SET_NAME_PLACEHOLDER
+					: ARGUMENTS_WITH_NAMES_PLACEHOLDER);
+			result = result.replace(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER, placeholderToUse);
+		}
+
+		if (result.contains(ARGUMENT_SET_NAME_PLACEHOLDER)) {
+			if (!(arguments instanceof ArgumentSet)) {
+				throw new ExtensionConfigurationException(
+					String.format("When the display name pattern for a @ParameterizedTest contains %s, "
+							+ "the arguments must be supplied as an ArgumentSet.",
+						ARGUMENT_SET_NAME_PLACEHOLDER));
+			}
+			result = result.replace(ARGUMENT_SET_NAME_PLACEHOLDER, ((ArgumentSet) arguments).getName());
+		}
+
 		if (result.contains(ARGUMENTS_WITH_NAMES_PLACEHOLDER)) {
-			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(arguments));
+			result = result.replace(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesPattern(consumedArguments));
 		}
 
 		if (result.contains(ARGUMENTS_PLACEHOLDER)) {
-			result = result.replace(ARGUMENTS_PLACEHOLDER, argumentsPattern(arguments));
+			result = result.replace(ARGUMENTS_PLACEHOLDER, argumentsPattern(consumedArguments));
 		}
 
 		return result;
