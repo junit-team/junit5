@@ -22,7 +22,7 @@ import org.junit.platform.commons.logging.Logger;
  * @see ClassOrderer.Random
  * @see MethodOrderer.Random
  */
-class SharedOrderingSeed {
+class RandomOrdererUtils {
 
 	static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
 
