@@ -39,6 +39,8 @@ on GitHub.
 
 * `TempDir` suppresses `NoSuchFileException` when deleting files that may have been deleted
   by another thread or process.
+* `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
+  generated during class initialization.
 
 ==== Deprecations and Breaking Changes
 
