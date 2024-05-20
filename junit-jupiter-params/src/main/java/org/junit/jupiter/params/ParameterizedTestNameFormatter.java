@@ -40,6 +40,7 @@ class ParameterizedTestNameFormatter {
 
 	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
 			int argumentMaxLength) {
+
 		this.pattern = pattern;
 		this.displayName = displayName;
 		this.methodContext = methodContext;
@@ -73,7 +74,7 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String prepareMessageFormatPattern(int invocationIndex, Object[] arguments) {
-		String result = pattern//
+		String result = this.pattern//
 				.replace(DISPLAY_NAME_PLACEHOLDER, TEMPORARY_DISPLAY_NAME_PLACEHOLDER)//
 				.replace(INDEX_PLACEHOLDER, String.valueOf(invocationIndex));
 
@@ -90,7 +91,7 @@ class ParameterizedTestNameFormatter {
 
 	private String argumentsWithNamesPattern(Object[] arguments) {
 		return IntStream.range(0, arguments.length) //
-				.mapToObj(index -> methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
+				.mapToObj(index -> this.methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
 						+ index + "}") //
 				.collect(joining(", "));
 	}
@@ -113,8 +114,8 @@ class ParameterizedTestNameFormatter {
 	}
 
 	private String truncateIfExceedsMaxLength(String argument) {
-		if (argument != null && argument.length() > argumentMaxLength) {
-			return argument.substring(0, argumentMaxLength - 1) + ELLIPSIS;
+		if (argument != null && argument.length() > this.argumentMaxLength) {
+			return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
 		}
 		return argument;
 	}

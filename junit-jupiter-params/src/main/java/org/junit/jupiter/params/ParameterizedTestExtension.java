@@ -123,11 +123,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,
 			ParameterizedTestMethodContext methodContext, Object[] arguments, int invocationIndex) {
+
 		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
 
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext, Method templateMethod,
 			ParameterizedTestMethodContext methodContext, String displayName, int argumentMaxLength) {
+
 		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
 		String pattern = parameterizedTest.name().equals(DEFAULT_DISPLAY_NAME)
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY).orElse(
