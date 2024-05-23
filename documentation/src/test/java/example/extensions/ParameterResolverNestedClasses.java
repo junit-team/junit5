@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015-2024 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
 package example.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,14 +57,12 @@ public class ParameterResolverNestedClasses {
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 1;
 		}
 	}
@@ -62,14 +70,12 @@ public class ParameterResolverNestedClasses {
 	static class SecondIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 2;
 		}
 	}
