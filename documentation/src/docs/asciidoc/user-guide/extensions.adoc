@@ -713,10 +713,10 @@ extension context lifecycle ends it closes its associated store. All stored valu
 that are instances of `CloseableResource` are notified by an invocation of their `close()`
 method in the inverse order they were added in.
 
-An example use-case of `ClosableResource` is shown below, using an `HttpServer` resource.
+An example use-case of `CloseableResource` is shown below, using an `HttpServer` resource.
 
 [source,java,indent=0]
-.HttpServer resource implementing `ClosableResource`
+.HttpServer resource implementing `CloseableResource`
 ----
 include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
 ----
