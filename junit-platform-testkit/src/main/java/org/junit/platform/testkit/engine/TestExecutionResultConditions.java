@@ -12,6 +12,7 @@ package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
@@ -22,6 +23,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
 
@@ -69,6 +71,9 @@ public final class TestExecutionResultConditions {
 	 * Create a new {@link Condition} that matches if and only if a
 	 * {@link Throwable}'s {@linkplain Throwable#getCause() cause} matches all
 	 * supplied conditions.
+	 *
+	 * @see #rootCause(Condition...)
+	 * @see #suppressed(int, Condition...)
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -82,8 +87,31 @@ public final class TestExecutionResultConditions {
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if a
+	 * {@link Throwable}'s root {@linkplain Throwable#getCause() cause} matches
+	 * all supplied conditions.
+	 *
+	 * @since 1.11
+	 * @see #cause(Condition...)
+	 * @see #suppressed(int, Condition...)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	public static Condition<Throwable> rootCause(Condition<Throwable>... conditions) {
+		List<Condition<Throwable>> list = Arrays.stream(conditions)//
+				.map(TestExecutionResultConditions::rootCause)//
+				.collect(toList());
+
+		return Assertions.allOf(list);
+	}
+
+	/**
+	 * Create a new {@link Condition} that matches if and only if a
 	 * {@link Throwable}'s {@linkplain Throwable#getSuppressed() suppressed
 	 * throwable} at the supplied index matches all supplied conditions.
+	 *
+	 * @see #cause(Condition...)
+	 * @see #rootCause(Condition...)
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")
@@ -133,6 +161,27 @@ public final class TestExecutionResultConditions {
 	private static Condition<Throwable> cause(Condition<Throwable> condition) {
 		return new Condition<>(throwable -> condition.matches(throwable.getCause()), "throwable cause matches %s",
 			condition);
+	}
+
+	private static Condition<Throwable> rootCause(Condition<Throwable> condition) {
+		Predicate<Throwable> predicate = throwable -> {
+			Preconditions.notNull(throwable, "Throwable must not be null");
+			Throwable cause = Preconditions.notNull(throwable.getCause(), "Throwable does not have a cause");
+			return condition.matches(getRootCause(cause));
+		};
+		return new Condition<>(predicate, "throwable root cause matches %s", condition);
+	}
+
+	/**
+	 * Get the root cause of the supplied {@link Throwable}, or the supplied
+	 * {@link Throwable} if it has no cause.
+	 */
+	private static Throwable getRootCause(Throwable throwable) {
+		Throwable cause = throwable.getCause();
+		if (cause == null) {
+			return throwable;
+		}
+		return getRootCause(cause);
 	}
 
 	private static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {
