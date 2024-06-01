@@ -693,7 +693,6 @@ Please refer to the implementations of <<writing-tests-repeated-tests>> or
 <<writing-tests-parameterized-tests>> which use this extension point to provide their
 functionality.
 
-
 [[extensions-keeping-state]]
 === Keeping State in Extensions
 
@@ -713,6 +712,26 @@ NOTE: An extension context store is bound to its extension context lifecycle. Wh
 extension context lifecycle ends it closes its associated store. All stored values
 that are instances of `CloseableResource` are notified by an invocation of their `close()`
 method in the inverse order they were added in.
+
+An example use-case of `ClosableResource` is shown below, using an `HttpServer` resource.
+
+[source,java,indent=0]
+.HttpServer resource implementing `ClosableResource`
+----
+include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
+----
+
+This resource can then be stored in the desired `ExtensionContext`.
+The resource can be stored at class- or method-level if needed,
+but this may add unnecessary overhead for this type of resource.
+For this example it might be prudent to store it at root level
+and instantiate it lazily to ensure it's only created once per execution.
+
+[source,java,indent=0]
+.Storing in root context with `Store.getOrComputeIfAbsent`
+----
+include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
+----
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
