@@ -2209,14 +2209,15 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_w
 ==== Customizing Display Names
 
 By default, the display name of a parameterized test invocation contains the invocation
-index and the `String` representation of all arguments for that specific invocation.
-Each of them is preceded by the parameter name (unless the argument is only available via
-an `ArgumentsAccessor` or `ArgumentAggregator`), if present in the bytecode (for Java,
-test code must be compiled with the `-parameters` compiler flag).
+index and the `String` representation of all arguments for that specific invocation. Each
+argument is preceded by its parameter name (unless the argument is only available via an
+`ArgumentsAccessor` or `ArgumentAggregator`), if the parameter name is present in the
+bytecode (for Java, test code must be compiled with the `-parameters` compiler flag).
 
 However, you can customize invocation display names via the `name` attribute of the
 `@ParameterizedTest` annotation like in the following example.
 
+======
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=custom_display_names]
@@ -2231,9 +2232,13 @@ Display name of container ✔
 ├─ 2 ==> the rank of 'banana' is 2 ✔
 └─ 3 ==> the rank of 'lemon, lime' is 3 ✔
 ....
+======
 
+[NOTE]
+====
 Please note that `name` is a `MessageFormat` pattern. Thus, a single quote (`'`) needs to
 be represented as a doubled single quote (`''`) in order to be displayed.
+====
 
 The following placeholders are supported within custom display names.
 
@@ -2257,16 +2262,30 @@ When using `@MethodSource`, `@FieldSource`, or `@ArgumentsSource`, you can provi
 names for arguments using the `{Named}` API. A custom name will be used if the argument is
 included in the invocation display name, like in the example below.
 
+======
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=named_arguments]
 ----
+
+When executing the above method using the `ConsoleLauncher` you will see output similar to
+the following.
 
 ....
 A parameterized test with named arguments ✔
 ├─ 1: An important file ✔
 └─ 2: Another file ✔
 ....
+======
+
+[NOTE]
+====
+Note that `arguments(Object...)` is a static factory method defined in the
+`org.junit.jupiter.params.provider.Arguments` interface.
+
+Similarly, `named(String, Object)` is a static factory method defined in the
+`org.junit.jupiter.api.Named` interface.
+====
 
 If you'd like to set a default name pattern for all parameterized tests in your project,
 you can declare the `junit.jupiter.params.displayname.default` configuration parameter in
