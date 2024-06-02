@@ -12,8 +12,8 @@ package org.junit.platform.testkit.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
-import java.util.function.Predicate;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.rootCause;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
@@ -30,14 +30,7 @@ class TestExecutionResultConditionsTests {
 
 	private static final String UNEXPECTED = "unexpected";
 
-	private static final Predicate<Throwable> messageEqualsExpected = //
-		throwable -> EXPECTED.equals(throwable.getMessage());
-
-	private static final Condition<Throwable> expectedMessageCondition = //
-		new Condition<>(messageEqualsExpected, "message matches %s", EXPECTED);
-
-	private static final Condition<Throwable> rootCauseCondition = //
-		TestExecutionResultConditions.rootCause(expectedMessageCondition);
+	private static final Condition<Throwable> rootCauseCondition = rootCause(message(EXPECTED));
 
 	@Test
 	void rootCauseFailsForNullThrowable() {
