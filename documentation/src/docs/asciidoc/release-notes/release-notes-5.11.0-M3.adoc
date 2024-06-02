@@ -26,7 +26,9 @@ repository on GitHub.
 [[release-notes-5.11.0-M3-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `rootCause()` condition in `TestExecutionResultConditions` that matches if an
+  exception's _root_ cause matches all supplied conditions, for use with the
+  `EngineTestKit`.
 
 
 [[release-notes-5.11.0-M3-junit-jupiter]]
