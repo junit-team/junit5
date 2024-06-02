@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -43,6 +44,7 @@ import org.junit.platform.commons.util.Preconditions;
  * to convert some of the arguments from one type to another.
  *
  * @since 5.0
+ * @see ArgumentSet
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
@@ -58,7 +60,7 @@ public interface Arguments {
 	 * @apiNote If you need a type-safe way to access some or all of the arguments,
 	 * please read the {@linkplain Arguments class-level API note}.
 	 *
-	 * @return the arguments; must not be {@code null}
+	 * @return the arguments; never {@code null}
 	 */
 	Object[] get();
 
@@ -70,9 +72,10 @@ public interface Arguments {
 	 * method; must not be {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
 	 * @see #arguments(Object...)
+	 * @see #argumentSet(String, Object...)
 	 */
 	static Arguments of(Object... arguments) {
-		Preconditions.notNull(arguments, "argument array must not be null");
+		Preconditions.notNull(arguments, "arguments array must not be null");
 		return () -> arguments;
 	}
 
@@ -88,9 +91,83 @@ public interface Arguments {
 	 * method; must not be {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
 	 * @since 5.3
+	 * @see #argumentSet(String, Object...)
 	 */
 	static Arguments arguments(Object... arguments) {
 		return of(arguments);
+	}
+
+	/**
+	 * Factory method for creating an {@link ArgumentSet} based on the supplied
+	 * {@code name} and {@code arguments}.
+	 *
+	 * <p>Favor this method over {@link Arguments#of Arguments.of(...)} and
+	 * {@link Arguments#arguments arguments(...)} when you wish to assign a name
+	 * to the entire set of arguments.
+	 *
+	 * <p>This method is well suited to be used as a static import &mdash; for
+	 * example, via:
+	 * {@code import static org.junit.jupiter.params.provider.Arguments.argumentSet;}.
+	 *
+	 * @param name the name of the argument set; must not be {@code null} or blank
+	 * @param arguments the arguments to be used for an invocation of the test
+	 * method; must not be {@code null}
+	 * @return an {@code ArgumentSet}; never {@code null}
+	 * @since 5.11
+	 * @see ArgumentSet
+	 * @see org.junit.jupiter.params.ParameterizedTest#ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see org.junit.jupiter.params.ParameterizedTest#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	static ArgumentSet argumentSet(String name, Object... arguments) {
+		return new ArgumentSet(name, arguments);
+	}
+
+	/**
+	 * Specialization of {@link Arguments} that associates a {@link #getName() name}
+	 * with a set of {@link #get() arguments}.
+	 *
+	 * @since 5.11
+	 * @see Arguments#argumentSet(String, Object...)
+	 * @see org.junit.jupiter.params.ParameterizedTest#ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see org.junit.jupiter.params.ParameterizedTest#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	final class ArgumentSet implements Arguments {
+
+		private final String name;
+
+		private final Object[] arguments;
+
+		private ArgumentSet(String name, Object[] arguments) {
+			Preconditions.notBlank(name, "name must not be null or blank");
+			Preconditions.notNull(arguments, "arguments array must not be null");
+			this.name = name;
+			this.arguments = arguments;
+		}
+
+		/**
+		 * Get the name of this {@code ArgumentSet}.
+		 * @return the name of this {@code ArgumentSet}; never {@code null} or blank
+		 */
+		public String getName() {
+			return this.name;
+		}
+
+		@Override
+		public Object[] get() {
+			return this.arguments;
+		}
+
+		/**
+		 * Return the {@link #getName() name} of this {@code ArgumentSet}.
+		 * @return the name of this {@code ArgumentSet}
+		 */
+		@Override
+		public String toString() {
+			return getName();
+		}
+
 	}
 
 }

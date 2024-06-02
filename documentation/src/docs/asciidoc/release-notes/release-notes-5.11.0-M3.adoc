@@ -47,7 +47,10 @@ repository on GitHub.
 [[release-notes-5.11.0-M3-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `argumentSet()` factory method for providing a custom name for an entire set of
+  arguments for a `@ParameterizedTest`. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names, User Guide>>
+  for details.
 
 
 [[release-notes-5.11.0-M3-junit-vintage]]
