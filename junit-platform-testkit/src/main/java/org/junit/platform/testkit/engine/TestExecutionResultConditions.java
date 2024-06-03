@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
@@ -166,8 +167,9 @@ public final class TestExecutionResultConditions {
 	private static Condition<Throwable> rootCause(Condition<Throwable> condition) {
 		Predicate<Throwable> predicate = throwable -> {
 			Preconditions.notNull(throwable, "Throwable must not be null");
-			Throwable cause = Preconditions.notNull(throwable.getCause(), "Throwable does not have a cause");
-			return condition.matches(getRootCause(cause));
+			Preconditions.notNull(throwable.getCause(), "Throwable does not have a cause");
+			Throwable rootCause = getRootCause(throwable, new ArrayList<>());
+			return condition.matches(rootCause);
 		};
 		return new Condition<>(predicate, "throwable root cause matches %s", condition);
 	}
@@ -176,12 +178,20 @@ public final class TestExecutionResultConditions {
 	 * Get the root cause of the supplied {@link Throwable}, or the supplied
 	 * {@link Throwable} if it has no cause.
 	 */
-	private static Throwable getRootCause(Throwable throwable) {
+	private static Throwable getRootCause(Throwable throwable, List<Throwable> causeChain) {
+		// If we have already seen the current Throwable, that means we have
+		// encountered recursion in the cause chain and therefore return the last
+		// Throwable in the cause chain, which was the root cause before the recursion.
+		if (causeChain.contains(throwable)) {
+			return causeChain.get(causeChain.size() - 1);
+		}
 		Throwable cause = throwable.getCause();
 		if (cause == null) {
 			return throwable;
 		}
-		return getRootCause(cause);
+		// Track current Throwable before recursing.
+		causeChain.add(throwable);
+		return getRootCause(cause, causeChain);
 	}
 
 	private static Condition<Throwable> suppressed(int index, Condition<Throwable> condition) {

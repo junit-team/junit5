@@ -12,8 +12,8 @@ package org.junit.platform.testkit.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-
-import java.util.function.Predicate;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.rootCause;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
@@ -30,14 +30,7 @@ class TestExecutionResultConditionsTests {
 
 	private static final String UNEXPECTED = "unexpected";
 
-	private static final Predicate<Throwable> messageEqualsExpected = //
-		throwable -> EXPECTED.equals(throwable.getMessage());
-
-	private static final Condition<Throwable> expectedMessageCondition = //
-		new Condition<>(messageEqualsExpected, "message matches %s", EXPECTED);
-
-	private static final Condition<Throwable> rootCauseCondition = //
-		TestExecutionResultConditions.rootCause(expectedMessageCondition);
+	private static final Condition<Throwable> rootCauseCondition = rootCause(message(EXPECTED));
 
 	@Test
 	void rootCauseFailsForNullThrowable() {
@@ -85,6 +78,44 @@ class TestExecutionResultConditionsTests {
 		RuntimeException rootCause = new RuntimeException(UNEXPECTED);
 		RuntimeException intermediateCause = new RuntimeException("intermediate cause", rootCause);
 		Throwable throwable = new Throwable(intermediateCause);
+
+		assertThat(rootCauseCondition.matches(throwable)).isFalse();
+	}
+
+	@Test
+	void rootCauseMatchesForRootCauseWithExpectedMessageAndSingleLevelRecursiveCauseChain() {
+		RuntimeException rootCause = new RuntimeException(EXPECTED);
+		Throwable throwable = new Throwable(rootCause);
+		rootCause.initCause(throwable);
+
+		assertThat(rootCauseCondition.matches(throwable)).isTrue();
+	}
+
+	@Test
+	void rootCauseDoesNotMatchForRootCauseWithDifferentMessageAndSingleLevelRecursiveCauseChain() {
+		RuntimeException rootCause = new RuntimeException(UNEXPECTED);
+		Throwable throwable = new Throwable(rootCause);
+		rootCause.initCause(throwable);
+
+		assertThat(rootCauseCondition.matches(throwable)).isFalse();
+	}
+
+	@Test
+	void rootCauseMatchesForRootCauseWithExpectedMessageAndDoubleLevelRecursiveCauseChain() {
+		RuntimeException rootCause = new RuntimeException(EXPECTED);
+		Exception intermediateCause = new Exception("intermediate cause", rootCause);
+		Throwable throwable = new Throwable(intermediateCause);
+		rootCause.initCause(throwable);
+
+		assertThat(rootCauseCondition.matches(throwable)).isTrue();
+	}
+
+	@Test
+	void rootCauseDoesNotMatchForRootCauseWithDifferentMessageAndDoubleLevelRecursiveCauseChain() {
+		RuntimeException rootCause = new RuntimeException(UNEXPECTED);
+		Exception intermediateCause = new Exception("intermediate cause", rootCause);
+		Throwable throwable = new Throwable(intermediateCause);
+		rootCause.initCause(throwable);
 
 		assertThat(rootCauseCondition.matches(throwable)).isFalse();
 	}
