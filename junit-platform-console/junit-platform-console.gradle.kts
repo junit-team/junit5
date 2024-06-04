@@ -43,7 +43,7 @@ tasks {
 		from(sourceSets.mainRelease9.get().output.classesDirs)
 		doLast(objects.newInstance(UpdateJarAction::class).apply {
 			javaLauncher = project.javaToolchains.launcherFor(java.toolchain)
-			args.appendAll(
+			args.addAll(
 				"--file", archiveFile.get().asFile.absolutePath,
 				"--main-class", "org.junit.platform.console.ConsoleLauncher",
 				"--release", "17",

@@ -29,11 +29,11 @@ abstract class UpdateJarAction @Inject constructor(private val operations: ExecO
     abstract val args: ListProperty<String>
 
     init {
-        args.convention(listOf(
+        args.addAll(
             "--update",
             // Use a constant time to make the JAR reproducible.
             "--date=$CONSTANT_TIME_FOR_ZIP_ENTRIES",
-        ))
+        )
     }
 
     override fun execute(t: Task) {
