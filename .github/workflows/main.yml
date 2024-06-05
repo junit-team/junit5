@@ -92,7 +92,7 @@ jobs:
     permissions:
       attestations: write
       id-token: write
-    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
+    # if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
