@@ -47,7 +47,7 @@ jobs:
     - name: Generate build provenance attestations
       uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
       with:
-        subject-path: '**/build/libs/*.jar'
+        subject-path: 'junit-jupiter/build/libs/junit-jupiter-*-SNAPSHOT.jar'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
