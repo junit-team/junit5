@@ -85,6 +85,24 @@ jobs:
       with:
         arguments: publish -x check
 
+  attest_artifacts:
+    name: Attest Build Provenance
+    needs: linux
+    runs-on: ubuntu-latest
+    permissions:
+      attestations: write
+      id-token: write
+    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Generate provenance attestations
+        uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
+        with:
+          subject-path: '**/build/libs/*.jar'
+
   update_documentation:
     name: Update Snapshot Documentation
     concurrency:
