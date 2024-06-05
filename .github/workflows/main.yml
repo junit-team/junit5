@@ -17,7 +17,9 @@ jobs:
   Linux:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # required for submitting a dependency graph
+      contents: write     # required for submitting a dependency graph
+      attestations: write # required for build provenance attestation
+      id-token: write     # required for build provenance attestation
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -42,6 +44,10 @@ jobs:
           build \
           jacocoRootReport \
           prepareDocsForUploadToGhPages
+    - name: Generate build provenance attestations
+      uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
+      with:
+        subject-path: '**/build/libs/*.jar'
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
@@ -84,24 +90,6 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
         arguments: publish -x check
-
-  attest_artifacts:
-    name: Attest Build Provenance
-    needs: linux
-    runs-on: ubuntu-latest
-    permissions:
-      attestations: write
-      id-token: write
-    # if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-      - name: Generate provenance attestations
-        uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
-        with:
-          subject-path: '**/build/libs/*.jar'
 
   update_documentation:
     name: Update Snapshot Documentation
