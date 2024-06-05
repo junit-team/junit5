@@ -43,13 +43,8 @@ jobs:
           -Ptesting.enableJaCoCo \
           build \
           jacocoRootReport \
-          prepareDocsForUploadToGhPages
-    - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
-      with:
-        subject-path: |
-          junit-jupiter/build/libs/junit-jupiter-*-SNAPSHOT.jar
-          junit-jupiter-api/build/libs/junit-jupiter-api-*-SNAPSHOT.jar
+          prepareDocsForUploadToGhPages \
+          prepareGitHubAttestation
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
@@ -92,6 +87,10 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
         arguments: publish -x check
+    - name: Generate build provenance attestations
+      uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
+      with:
+        subject-path: documentation/build/attestation/*.jar
 
   update_documentation:
     name: Update Snapshot Documentation
