@@ -55,12 +55,3 @@ spotless {
 	// https://github.com/diffplug/spotless/issues/1644
 	lineEndings = LineEnding.UNIX // or any other except GIT_ATTRIBUTES
 }
-
-tasks {
-	withType<SpotlessApply>().configureEach {
-		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
-	}
-	withType<SpotlessCheck>().configureEach {
-		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
-	}
-}
