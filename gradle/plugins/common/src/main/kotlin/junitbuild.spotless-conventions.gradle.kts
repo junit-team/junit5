@@ -1,7 +1,3 @@
-import com.diffplug.gradle.spotless.SpotlessApply
-import com.diffplug.gradle.spotless.SpotlessCheck
-import com.diffplug.spotless.LineEnding
-
 plugins {
 	id("com.diffplug.spotless")
 }
@@ -51,7 +47,4 @@ spotless {
 			endWithNewline()
 		}
 	}
-
-	// https://github.com/diffplug/spotless/issues/1644
-	lineEndings = LineEnding.UNIX // or any other except GIT_ATTRIBUTES
 }
