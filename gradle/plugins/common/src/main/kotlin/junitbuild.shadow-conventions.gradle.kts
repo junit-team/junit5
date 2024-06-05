@@ -2,7 +2,7 @@ import junitbuild.java.ModuleCompileOptions
 
 plugins {
 	id("junitbuild.java-library-conventions")
-	id("com.github.johnrengelman.shadow")
+	id("io.github.goooler.shadow")
 }
 
 val shadowed = configurations.dependencyScope("shadowed")
