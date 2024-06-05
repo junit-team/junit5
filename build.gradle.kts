@@ -67,10 +67,3 @@ nohttp {
 tasks.checkstyleNohttp {
 	notCompatibleWithConfigurationCache("https://github.com/spring-io/nohttp/issues/61")
 }
-
-prepareArtifactsForAttestations by registering(Copy::class) {
-		dependsOn(build)
-		outputs.dir("build/artifacts")
-
-		from(jar)
-}
