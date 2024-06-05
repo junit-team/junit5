@@ -17,9 +17,7 @@ jobs:
   Linux:
     runs-on: ubuntu-latest
     permissions:
-      contents: write     # required for submitting a dependency graph
-      attestations: write # required for build provenance attestation
-      id-token: write     # required for build provenance attestation
+      contents: write # required for submitting a dependency graph
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -74,6 +72,9 @@ jobs:
     name: Publish Snapshot Artifacts
     needs: linux
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - name: Check out repository
