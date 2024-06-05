@@ -129,8 +129,12 @@ if (project in mavenizedProjects) {
 tasks.withType<AbstractArchiveTask>().configureEach {
 	isPreserveFileTimestamps = false
 	isReproducibleFileOrder = true
-	dirMode = Integer.parseInt("0755", 8)
-	fileMode = Integer.parseInt("0644", 8)
+	dirPermissions {
+		unix("rwxr-xr-x")
+	}
+	filePermissions {
+		unix("rw-r--r--")
+	}
 }
 
 normalization {
