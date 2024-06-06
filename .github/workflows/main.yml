@@ -46,7 +46,7 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
     - name: Run Asciidoctor
-      uses: ./.github/actions/main-build
+      uses: ./.github/actions/run-gradle
       with:
         arguments: |
           prepareDocsForUploadToGhPages \
