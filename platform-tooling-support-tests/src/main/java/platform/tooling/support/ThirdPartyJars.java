@@ -23,11 +23,15 @@ public class ThirdPartyJars {
 	}
 
 	public static void copy(Path targetDir, String group, String artifact) throws Exception {
-		Path source = Stream.of(System.getProperty("thirdPartyJars").split(File.pathSeparator)) //
+		Path source = find(group, artifact);
+		Files.copy(source, targetDir.resolve(source.getFileName()), REPLACE_EXISTING);
+	}
+
+	public static Path find(String group, String artifact) {
+		return Stream.of(System.getProperty("thirdPartyJars").split(File.pathSeparator)) //
 				.filter(it -> it.replace(File.separator, "/").contains("/" + group + "/" + artifact + "/")) //
 				.map(Path::of) //
 				.findFirst() //
 				.orElseThrow(() -> new AssertionError("Failed to find JAR file for " + group + ":" + artifact));
-		Files.copy(source, targetDir.resolve(source.getFileName()), REPLACE_EXISTING);
 	}
 }
