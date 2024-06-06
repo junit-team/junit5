@@ -2,6 +2,7 @@ import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigur
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
+import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
 
 plugins {
@@ -224,7 +225,7 @@ class MavenDistribution(project: Project, sourceTask: TaskProvider<*>, distribut
 	@InputDirectory
 	@PathSensitive(RELATIVE)
 	val mavenDistribution: DirectoryProperty = project.objects.directoryProperty()
-		.fileProvider(project.files(distributionDir).builtBy(sourceTask).elements.map { it.single().asFile })
+		.fileProvider(project.files(distributionDir).builtBy(sourceTask).elements.map { it.single().asFile.listFilesOrdered().single() })
 
 	override fun asArguments() = listOf("-DmavenDistribution=${mavenDistribution.get().asFile.absolutePath}")
 }
