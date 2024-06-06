@@ -99,4 +99,22 @@ public final class PackageUtils {
 			return Optional.empty();
 		}
 	}
+
+	/**
+	 * Get the module or implementation version for the supplied {@code type}.
+	 * <p>
+	 * The former is only available if the type is part of a versioned module on
+	 * the module path; the latter only if the type is part of a JAR file with a
+	 * manifest that contains an {@code Implementation-Version} attribute.
+	 *
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Optional<String> getModuleOrImplementationVersion(Class<?> type) {
+		Optional<String> moduleVersion = ModuleUtils.getModuleVersion(type);
+		if (moduleVersion.isPresent()) {
+			return moduleVersion;
+		}
+		return getAttribute(type, Package::getImplementationVersion);
+	}
 }

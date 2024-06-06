@@ -186,12 +186,7 @@ public interface TestEngine {
 		if (standalone.isPresent()) {
 			return standalone;
 		}
-		String fallback = "DEVELOPMENT";
-		Optional<String> moduleVersion = ModuleUtils.getModuleVersion(getClass());
-		if (moduleVersion.isPresent()) {
-			return moduleVersion;
-		}
-		return Optional.of(PackageUtils.getAttribute(getClass(), Package::getImplementationVersion).orElse(fallback));
+		return Optional.of(PackageUtils.getModuleOrImplementationVersion(getClass()).orElse("DEVELOPMENT"));
 	}
 
 }
