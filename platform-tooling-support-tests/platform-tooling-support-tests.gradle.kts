@@ -2,6 +2,7 @@ import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigur
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
+import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
 
 plugins {
@@ -92,9 +93,11 @@ dependencies {
 	}
 }
 
+val mavenDistributionDir = layout.buildDirectory.dir("maven-distribution")
+
 val unzipMavenDistribution by tasks.registering(Sync::class) {
 	from(zipTree(mavenDistributionClasspath.flatMap { d -> d.elements.map { e -> e.single() } }))
-	into(layout.buildDirectory.dir("maven-distribution"))
+	into(mavenDistributionDir)
 }
 
 val normalizeMavenRepo by tasks.registering(Sync::class) {
@@ -137,7 +140,7 @@ tasks.test {
 
 	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
 	jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
-	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution)
+	jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution, mavenDistributionDir)
 
 	(options as JUnitPlatformOptions).apply {
 		includeEngines("archunit")
@@ -218,11 +221,11 @@ class JarPath(project: Project, configuration: Configuration, @Input val key: St
 	override fun asArguments() = listOf("-D${key}=${files.asPath}")
 }
 
-class MavenDistribution(project: Project, sourceTask: TaskProvider<*>) : CommandLineArgumentProvider {
+class MavenDistribution(project: Project, sourceTask: TaskProvider<*>, distributionDir: Provider<Directory>) : CommandLineArgumentProvider {
 	@InputDirectory
 	@PathSensitive(RELATIVE)
 	val mavenDistribution: DirectoryProperty = project.objects.directoryProperty()
-		.value(project.layout.dir(sourceTask.map { it.outputs.files.singleFile.listFiles()!!.single() }))
+		.fileProvider(project.files(distributionDir).builtBy(sourceTask).elements.map { it.single().asFile.listFilesOrdered().single() })
 
 	override fun asArguments() = listOf("-DmavenDistribution=${mavenDistribution.get().asFile.absolutePath}")
 }

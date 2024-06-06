@@ -40,12 +40,17 @@ jobs:
         arguments: |
           -Ptesting.enableJaCoCo \
           build \
-          jacocoRootReport \
-          prepareDocsForUploadToGhPages
+          jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run Asciidoctor
+      uses: ./.github/actions/run-gradle
+      with:
+        arguments: |
+          prepareDocsForUploadToGhPages \
+          --no-configuration-cache
 
   Windows:
     runs-on: windows-latest
@@ -114,6 +119,9 @@ jobs:
     - name: Upload Documentation
       uses: ./.github/actions/run-gradle
       with:
-        arguments: gitPublishPush -Dscan.tag.Documentation
+        arguments: |
+          gitPublishPush \
+          -Dscan.tag.Documentation \
+          --no-configuration-cache
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
