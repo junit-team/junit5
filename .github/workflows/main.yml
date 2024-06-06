@@ -41,7 +41,8 @@ jobs:
           -Ptesting.enableJaCoCo \
           build \
           jacocoRootReport \
-          prepareDocsForUploadToGhPages
+          prepareDocsForUploadToGhPages \
+          prepareGitHubAttestation
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
@@ -71,6 +72,9 @@ jobs:
     name: Publish Snapshot Artifacts
     needs: linux
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - name: Check out repository
@@ -84,6 +88,10 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
         arguments: publish -x check
+    - name: Generate build provenance attestations
+      uses: actions/attest-build-provenance@49df96e17e918a15956db358890b08e61c704919 # v1.2.0
+      with:
+        subject-path: documentation/build/attestation/*.jar
 
   update_documentation:
     name: Update Snapshot Documentation
