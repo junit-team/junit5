@@ -1,3 +1,5 @@
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.GenerateStandaloneConsoleLauncherShadowedArtifactsFile
@@ -90,6 +92,9 @@ asciidoctorj {
 	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
 }
 
+
+val datetime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.HH.mm"))
+var githubSha : String? = System.getenv("GITHUB_SHA")
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
@@ -516,6 +521,8 @@ tasks {
 	val prepareGitHubAttestation by registering(Sync::class) {
 		from(attestationClasspath)
 		into(layout.buildDirectory.dir("attestation"))
+		var suffix = githubSha ?: datetime
+		rename("(.*)-SNAPSHOT.jar", "$1-SNAPSHOT+" + suffix + ".jar")
 	}
 }
 
