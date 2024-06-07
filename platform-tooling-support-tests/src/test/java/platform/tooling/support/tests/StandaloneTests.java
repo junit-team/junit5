@@ -103,7 +103,7 @@ class StandaloneTests {
 				JUnit Platform Console Launcher %s
 				JVM: .*
 				OS: .*
-				""".formatted(version).lines(), //
+				""".formatted(version).stripIndent().lines(), //
 			result.getOutput("out").lines());
 	}
 
@@ -133,7 +133,7 @@ class StandaloneTests {
 				JUnit Platform Console Launcher %s
 				JVM: .*
 				OS: .*
-				""".formatted(version).lines(), //
+				""".formatted(version).stripIndent().lines(), //
 			result.getOutput("out").lines());
 	}
 
