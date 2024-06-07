@@ -134,7 +134,8 @@ class StandaloneTests {
 				JVM: .*
 				OS: .*
 				""".formatted(version).stripIndent().lines(), //
-			result.getOutput("out").lines());
+			result.getOutput("out").lines(), //
+			"+++" + result.getOutput("out") + "+++");
 	}
 
 	@Test
