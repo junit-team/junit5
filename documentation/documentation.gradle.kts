@@ -521,8 +521,7 @@ tasks {
 	val prepareGitHubAttestation by registering(Sync::class) {
 		from(attestationClasspath)
 		into(layout.buildDirectory.dir("attestation"))
-		var suffix = githubSha ?: datetime
-		rename("(.*)-SNAPSHOT.jar", "$1-SNAPSHOT+" + suffix + ".jar")
+		rename("(.*)-SNAPSHOT.jar", "$1-SNAPSHOT+${buildRevision}.jar")
 	}
 }
 
