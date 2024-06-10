@@ -5,22 +5,15 @@ plugins {
     java
 }
 
-val config = extensions.create("jreCodeGeneration", CodeGenerationConfiguration::class.java)
+val config = extensions.create("jreCodeGeneration", CodeGenerationConfiguration::class.java).apply {
+    mainTargetDir.convention(layout.buildDirectory.dir("generated/java/main"))
+}
 
-config.mainTargetDir.convention(layout.buildDirectory.dir("generated/java"))
-sourceSets.main.get().java.srcDir(config.mainTargetDir)
+val generateJreRelatedSourceCode by tasks.registering(GenerateJreRelatedSourceCode::class) {
+    jreYaml.convention(config.jreYaml)
+    mainTargetDir.convention(config.mainTargetDir)
+}
 
-tasks {
-    val generateJreRelatedSourceCode by registering(GenerateJreRelatedSourceCode::class) {
-        jreYaml.convention(config.jreYaml)
-        mainTargetDir.convention(config.mainTargetDir)
-    }
-    compileJava {
-        dependsOn(generateJreRelatedSourceCode)
-    }
-    pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
-        named("compileKotlin") {
-            dependsOn(generateJreRelatedSourceCode)
-        }
-    }
+sourceSets.main {
+    java.srcDir(files(config.mainTargetDir).builtBy(generateJreRelatedSourceCode))
 }
