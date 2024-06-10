@@ -94,7 +94,7 @@ asciidoctorj {
 
 
 val datetime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.HH.mm"))
-var githubSha : String? = System.getenv("GITHUB_SHA")
+val buildRevision: String by rootProject.extra
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
