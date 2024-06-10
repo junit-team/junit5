@@ -92,7 +92,7 @@ class StandaloneTests {
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("--version") //
+				.addArguments("--version", "--disable-ansi-colors") //
 				.build() //
 				.run();
 
@@ -122,7 +122,7 @@ class StandaloneTests {
 				.addArguments("--module-path", modulePath) //
 				.addArguments("--add-modules", "org.junit.platform.console") //
 				.addArguments("--module", "org.junit.platform.console") //
-				.addArguments("--version") //
+				.addArguments("--version", "--disable-ansi-colors") //
 				.build() //
 				.run();
 
