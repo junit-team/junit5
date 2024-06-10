@@ -90,6 +90,7 @@ asciidoctorj {
 	requires(file("src/docs/asciidoc/resources/themes/rouge_junit.rb"))
 }
 
+val buildRevision: String by rootProject.extra
 val snapshot = rootProject.version.toString().contains("SNAPSHOT")
 val docsVersion = if (snapshot) "snapshot" else rootProject.version
 val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
@@ -516,6 +517,7 @@ tasks {
 	val prepareGitHubAttestation by registering(Sync::class) {
 		from(attestationClasspath)
 		into(layout.buildDirectory.dir("attestation"))
+		rename("(.*)-SNAPSHOT.jar", "$1-SNAPSHOT+${buildRevision.substring(0, 7)}.jar")
 	}
 }
 
