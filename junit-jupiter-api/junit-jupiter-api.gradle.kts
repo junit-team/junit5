@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.code-generator")
 	`java-test-fixtures`
 }
 
@@ -16,6 +17,10 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+jreCodeGeneration {
+	jreYaml = layout.projectDirectory.file("src/generator/jre.yaml")
 }
 
 tasks {
