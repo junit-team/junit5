@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJav
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava21;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava22;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava23;
+import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava24;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
 import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
@@ -80,7 +81,7 @@ class EnabledForJreRangeIntegrationTests {
 	@Test
 	@EnabledForJreRange(min = JAVA_18)
 	void javaMin18() {
-		assertTrue(onJava18() || onJava19() || onJava20() || onJava21() || onJava22() || onJava23());
+		assertTrue(onJava18() || onJava19() || onJava20() || onJava21() || onJava22() || onJava23() || onJava24());
 		assertFalse(onJava17());
 	}
 

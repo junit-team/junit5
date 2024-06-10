@@ -226,4 +226,8 @@ class EnabledOnJreIntegrationTests {
 	static boolean onJava23() {
 		return JAVA_VERSION.startsWith("23");
 	}
+
+	static boolean onJava24() {
+		return JAVA_VERSION.startsWith("24");
+	}
 }
