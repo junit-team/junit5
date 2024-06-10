@@ -58,7 +58,7 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 	private boolean versionHelpRequested;
 
 	@Mixin
-	OutputOptionsMixin outputOptions;
+	AnsiColorOptionMixin ansiColorOption;
 
 	@Unmatched
 	private final List<String> allParameters = new ArrayList<>();
