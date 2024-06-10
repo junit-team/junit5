@@ -30,5 +30,5 @@ val buildTime: String by extra { timeFormatter.format(buildTimeAndDate) }
 val buildRevision: String by extra {
 	providers.exec {
 		commandLine("git", "rev-parse", "--verify", "HEAD")
-	}.standardOutput.asText.get()
+	}.standardOutput.asText.get().trim()
 }
