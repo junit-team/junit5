@@ -11,7 +11,8 @@ val config = extensions.create("jreCodeGeneration", CodeGenerationConfiguration:
 
 val generateJreRelatedSourceCode by tasks.registering(GenerateJreRelatedSourceCode::class) {
     jreYaml.convention(config.jreYaml)
-    mainTargetDir.convention(config.mainTargetDir)
+    targetDir.convention(config.mainTargetDir)
+    templateResourceDir.convention("jre-templates/main")
 }
 
 sourceSets.main {
