@@ -121,7 +121,6 @@ class StandaloneTests {
 				.setTool(new Java()) //
 				.setProject("standalone") //
 				.addArguments("--module-path", modulePath) //
-				.addArguments("--add-modules", "org.junit.platform.console") //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("--version", "--disable-ansi-colors") //
 				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
