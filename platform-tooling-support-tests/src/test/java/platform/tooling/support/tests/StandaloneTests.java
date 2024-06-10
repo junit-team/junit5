@@ -93,6 +93,7 @@ class StandaloneTests {
 				.setProject("standalone") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
 				.build() //
 				.run();
 
@@ -123,6 +124,7 @@ class StandaloneTests {
 				.addArguments("--add-modules", "org.junit.platform.console") //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
 				.build() //
 				.run();
 

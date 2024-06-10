@@ -22,6 +22,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Help.ColorScheme;
 import picocli.CommandLine.IExitCodeGenerator;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -55,6 +56,9 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	@Option(names = "--version", versionHelp = true, description = "Display version information.")
 	private boolean versionHelpRequested;
+
+	@Mixin
+	OutputOptionsMixin outputOptions;
 
 	@Unmatched
 	private final List<String> allParameters = new ArrayList<>();
