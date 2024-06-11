@@ -8,6 +8,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "plugins"
 
+includeBuild("../base")
+
 include("build-parameters")
 include("common")
 include("code-generator")

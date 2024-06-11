@@ -9,6 +9,7 @@ import gg.jte.TemplateEngine
 import gg.jte.output.FileOutput
 import gg.jte.resolve.ResourceCodeResolver
 import io.github.classgraph.ClassGraph
+import junitbuild.generator.model.JRE
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.file.RegularFileProperty

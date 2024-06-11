@@ -1,6 +1,6 @@
 @import java.util.List
 @import gg.jte.support.ForSupport
-@import junitbuild.generator.JRE
+@import junitbuild.generator.model.JRE
 
 @param List<JRE> jres
 @param String licenseHeader
