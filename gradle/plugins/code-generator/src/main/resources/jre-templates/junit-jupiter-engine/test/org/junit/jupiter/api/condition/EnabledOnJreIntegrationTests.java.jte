@@ -1,9 +1,9 @@
 @import java.util.List
-@import gg.jte.support.ForSupport
 @import junitbuild.generator.JRE
 
 @param List<JRE> jres
-
+@param String licenseHeader
+${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;

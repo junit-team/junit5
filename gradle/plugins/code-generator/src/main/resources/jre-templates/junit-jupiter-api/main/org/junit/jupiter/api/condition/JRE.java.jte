@@ -3,7 +3,8 @@
 @import junitbuild.generator.JRE
 
 @param List<JRE> jres
-
+@param String licenseHeader
+${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.apiguardian.api.API.Status.STABLE;
