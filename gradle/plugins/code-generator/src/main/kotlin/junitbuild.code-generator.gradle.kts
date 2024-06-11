@@ -6,15 +6,26 @@ plugins {
 }
 
 val config = extensions.create("jreCodeGeneration", CodeGenerationConfiguration::class.java).apply {
-    mainTargetDir.convention(layout.buildDirectory.dir("generated/java/main"))
+    targetDir.convention(layout.buildDirectory.dir("generated/java"))
 }
 
-val generateJreRelatedSourceCode by tasks.registering(GenerateJreRelatedSourceCode::class) {
-    jreYaml.convention(config.jreYaml)
-    targetDir.convention(config.mainTargetDir)
-    templateResourceDir.convention("jre-templates/main")
-}
+val generateCode by tasks.registering
 
-sourceSets.main {
-    java.srcDir(files(config.mainTargetDir).builtBy(generateJreRelatedSourceCode))
+sourceSets.configureEach {
+
+    val sourceSetName = name
+    val sourceSetTargetDir = config.targetDir.map { it.dir(sourceSetName) }
+
+    val task =
+        tasks.register(getTaskName("generate", "JreRelatedSourceCode"), GenerateJreRelatedSourceCode::class) {
+            jreYaml.convention(config.jreYaml)
+            targetDir.convention(sourceSetTargetDir)
+            templateResourceDir.convention("jre-templates/${sourceSetName}")
+        }
+
+    java.srcDir(files(sourceSetTargetDir).builtBy(task))
+
+    generateCode {
+        dependsOn(task)
+    }
 }

@@ -1,3 +1,3 @@
 package junitbuild.generator
 
-data class JRE(val version: String, val since: String?)
+data class JRE(val version: Int, val since: String?)

@@ -89,7 +89,7 @@ public enum JRE {
 			int major = (int) ReflectionUtils.invokeMethod(majorMethod, version);
 			switch (major) {<%--
 				--%>@for(var jre : jres)<%--
-					--%>@if(!jre.getVersion().equals("8"))
+					--%>@if(jre.getVersion() != 8)
 				case ${jre.getVersion()}:
 					return JAVA_${jre.getVersion()};<%--
 					--%>@endif<%--

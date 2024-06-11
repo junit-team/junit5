@@ -7,6 +7,6 @@ abstract class CodeGenerationConfiguration {
 
     abstract val jreYaml: RegularFileProperty
 
-    abstract val mainTargetDir: DirectoryProperty
+    abstract val targetDir: DirectoryProperty
 
 }
