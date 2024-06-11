@@ -62,7 +62,7 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
                 "licenseHeader" to licenseHeaderFile.asFile.get().readText()
             )
             templates.forEach {
-                val targetFile = mainTargetDir.toPath().resolve(it.nameWithoutExtension)
+                val targetFile = mainTargetDir.toPath().resolve(it.resolveSibling(it.nameWithoutExtension).path)
 
                 FileOutput(targetFile).use { output ->
                     templateEngine.render(it.path, params, output)
