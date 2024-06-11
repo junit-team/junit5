@@ -8,8 +8,14 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.condition.JRE.*;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.*;
+@for(var jre : jres)<%--
+--%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
+@endfor<%--
+--%>import static org.junit.jupiter.api.condition.JRE.OTHER;
+@for(var jre : jres)<%--
+--%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
+@endfor<%--
+--%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

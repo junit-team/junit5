@@ -4,4 +4,6 @@
 		files="junit-platform-commons[\\/]src[\\/]main[\\/]java.+?[\\/]org[\\/]junit[\\/]platform[\\/]commons[\\/]util[\\/]*"/>
 	<suppress checks="JavadocPackage"
 		files="junit-platform-console[\\/]src[\\/]main[\\/]java.+?[\\/]org[\\/]junit[\\/]platform[\\/]console[\\/]*"/>
+	<suppress checks="JavadocPackage"
+		files="junit-jupiter-api[\\/]build[\\/]generated[\\/]sources[\\/]jte[\\/]main[\\/]org[\\/]junit[\\/]jupiter[\\/]api[\\/]condition[\\/]*"/>
 </suppressions>
