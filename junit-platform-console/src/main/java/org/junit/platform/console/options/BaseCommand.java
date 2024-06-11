@@ -28,7 +28,10 @@ abstract class BaseCommand<T> implements Callable<T> {
 	CommandSpec commandSpec;
 
 	@Mixin
-	OutputOptionsMixin outputOptions;
+	AnsiColorOptionMixin ansiColorOption;
+
+	@Mixin
+	BannerOptionMixin bannerOption;
 
 	@SuppressWarnings("unused")
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
@@ -71,7 +74,7 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Override
 	public final T call() {
 		PrintWriter out = getOut();
-		if (!outputOptions.isDisableBanner()) {
+		if (!bannerOption.isDisableBanner()) {
 			displayBanner(out);
 		}
 		try {

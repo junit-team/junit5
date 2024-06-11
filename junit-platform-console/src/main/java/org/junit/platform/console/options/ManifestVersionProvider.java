@@ -10,18 +10,23 @@
 
 package org.junit.platform.console.options;
 
+import java.util.Optional;
+
+import org.junit.platform.commons.util.PackageUtils;
+
 import picocli.CommandLine;
 
 class ManifestVersionProvider implements CommandLine.IVersionProvider {
 
-	public static String getImplementationVersion() {
-		return ManifestVersionProvider.class.getPackage().getImplementationVersion();
+	public static Optional<String> getImplementationVersion() {
+		return PackageUtils.getModuleOrImplementationVersion(ManifestVersionProvider.class);
 	}
 
 	@Override
 	public String[] getVersion() {
 		return new String[] { //
-				String.format("@|bold JUnit Platform Console Launcher %s|@", getImplementationVersion()), //
+				String.format("@|bold JUnit Platform Console Launcher %s|@",
+					getImplementationVersion().orElse("<unknown>")), //
 				"JVM: ${java.version} (${java.vendor} ${java.vm.name} ${java.vm.version})", //
 				"OS: ${os.name} ${os.version} ${os.arch}" //
 		};
