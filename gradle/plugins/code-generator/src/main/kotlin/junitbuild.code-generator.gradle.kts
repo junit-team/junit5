@@ -4,7 +4,7 @@ plugins {
     java
 }
 
-val rootTargetDir = layout.buildDirectory.dir("generated/java")
+val rootTargetDir = layout.buildDirectory.dir("generated/sources/jte")
 
 val generateCode by tasks.registering
 
