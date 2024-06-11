@@ -49,7 +49,7 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
 
         val templates = templateDir.walkTopDown()
             .filter { it.extension == "jte" }
-            .map {  it.relativeTo(templateDir) }
+            .map { it.relativeTo(templateDir) }
             .toList()
 
         if (templates.isNotEmpty()) {
