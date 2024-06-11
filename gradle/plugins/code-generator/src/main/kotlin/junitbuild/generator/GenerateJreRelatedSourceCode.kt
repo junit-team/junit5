@@ -36,7 +36,6 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
     @get:PathSensitive(PathSensitivity.NONE)
     abstract val licenseHeaderFile: RegularFileProperty
 
-    // Generate java file based on YAML file
     @TaskAction
     fun generateSourceCode() {
         val mainTargetDir = targetDir.get().asFile
