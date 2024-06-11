@@ -4,6 +4,8 @@ plugins {
     java
 }
 
+val license: License by rootProject.extra
+
 val rootTargetDir = layout.buildDirectory.dir("generated/sources/jte")
 
 val generateCode by tasks.registering
@@ -23,7 +25,7 @@ sourceSets {
             tasks.register(getTaskName("generateJreRelated", "SourceCode"), GenerateJreRelatedSourceCode::class) {
                 templateDir.convention(layout.dir(templates.map { it.resources.srcDirs.single().resolve(sourceSetName) }))
                 targetDir.convention(sourceSetTargetDir)
-                licenseHeaderFile.convention(rootProject.layout.projectDirectory.file("gradle/config/spotless/eclipse-public-license-2.0.java"))
+                licenseHeaderFile.convention(license.headerFile)
             }
 
         java.srcDir(files(sourceSetTargetDir).builtBy(task))
