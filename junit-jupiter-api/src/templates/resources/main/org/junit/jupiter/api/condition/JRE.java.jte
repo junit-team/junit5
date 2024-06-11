@@ -56,9 +56,9 @@ public enum JRE {
 --%>@for(var jre : ForSupport.of(jres))<%--
 	--%>@if(jre.isLast())or @endif<%--
 	--%>{@link #JAVA_${jre.get().getVersion()}}<%--
-	--%>@if(jre.isLast()).@else, @endif<%--
+	--%>@if(jre.isLast()).@else,@endif<%--
 	--%>@if(jre.getIndex() % 3 == 1 && !jre.isLast())
-	 * @endif<%--
+	 * @elseif(!jre.isLast()) @endif<%--
 --%>@endfor
 	 */
 	OTHER;

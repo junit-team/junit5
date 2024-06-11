@@ -53,12 +53,14 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
             .toList()
 
         if (templates.isNotEmpty()) {
+            val jres = javaClass.getResourceAsStream("/jre.yaml").use { input ->
+                val mapper = ObjectMapper(YAMLFactory())
+                mapper.registerModule(KotlinModule.Builder().build())
+                mapper.readValue(input, object : TypeReference<List<JRE>>() {})
+            }
             val params = mapOf(
-                "jres" to javaClass.getResourceAsStream("/jre.yaml").use { input ->
-                    val mapper = ObjectMapper(YAMLFactory())
-                    mapper.registerModule(KotlinModule.Builder().build())
-                    mapper.readValue(input, object : TypeReference<List<JRE>>() {})
-                },
+                "jres" to jres,
+                "jresSortedByStringValue" to jres.sortedBy { it.version.toString() },
                 "licenseHeader" to licenseHeaderFile.asFile.get().readText()
             )
             templates.forEach {

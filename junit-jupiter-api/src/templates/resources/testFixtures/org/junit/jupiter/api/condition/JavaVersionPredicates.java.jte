@@ -16,6 +16,7 @@ public class JavaVersionPredicates {
 	}
 @endfor
 	static boolean onKnownVersion() {
-		return @for(var jre : ForSupport.of(jres))onJava${jre.get().getVersion()}()@if(!jre.isLast()) || @endif@endfor;
+		return @for(var jre : ForSupport.of(jres))onJava${jre.get().getVersion()}()@if(!jre.isLast()) //
+				|| @endif@endfor;
 	}
 }

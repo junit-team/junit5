@@ -2,13 +2,14 @@
 @import junitbuild.generator.model.JRE
 
 @param List<JRE> jres
+@param List<JRE> jresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-@for(var jre : jres)<%--
+@for(var jre : jresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;

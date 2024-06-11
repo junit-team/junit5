@@ -2,17 +2,18 @@
 @import junitbuild.generator.model.JRE
 
 @param List<JRE> jres
+@param List<JRE> jresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-@for(var jre : jres)<%--
+@for(var jre : jresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JRE.OTHER;
-@for(var jre : jres)<%--
+@for(var jre : jresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -39,7 +40,12 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnJre({ @for(var jre : jres)JAVA_${jre.getVersion()}, @endforOTHER })
+	@EnabledOnJre({ //
+@for(var jre : jres)<%--
+--%>			JAVA_${jre.getVersion()}, //
+@endfor<%--
+--%>			OTHER //
+	})
 	void enabledOnAllJavaVersions() {
 	}
 @for(var jre : jres)

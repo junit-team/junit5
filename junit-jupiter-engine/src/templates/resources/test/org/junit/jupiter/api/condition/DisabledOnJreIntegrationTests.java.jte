@@ -2,6 +2,7 @@
 @import junitbuild.generator.model.JRE
 
 @param List<JRE> jres
+@param List<JRE> jresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
@@ -9,11 +10,11 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-@for(var jre : jres)<%--
+@for(var jre : jresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JRE.OTHER;
-@for(var jre : jres)<%--
+@for(var jre : jresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -40,7 +41,12 @@ class DisabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@DisabledOnJre(value = { @for(var jre : jres)JAVA_${jre.getVersion()}, @endforOTHER }, disabledReason = "Disabled on every JRE")
+	@DisabledOnJre(disabledReason = "Disabled on every JRE", value = { //
+@for(var jre : jres)<%--
+--%>			JAVA_${jre.getVersion()}, //
+@endfor<%--
+--%>			OTHER //
+	})
 	void disabledOnAllJavaVersions() {
 		fail("should be disabled");
 	}
