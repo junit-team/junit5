@@ -21,12 +21,9 @@ import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava20;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava21;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -107,7 +104,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	@Test
 	void javaMin18() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(!(onJava17()));
+		assertDisabledOnCurrentJreIf(!onJava17());
 	}
 
 	/**
@@ -116,9 +113,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	@Test
 	void other() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
-				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20()
-				|| onJava21() || onJava22() || onJava23()));
+		assertDisabledOnCurrentJreIf(!onKnownVersion());
 	}
 
 	private void assertDisabledOnCurrentJreIf(boolean condition) {

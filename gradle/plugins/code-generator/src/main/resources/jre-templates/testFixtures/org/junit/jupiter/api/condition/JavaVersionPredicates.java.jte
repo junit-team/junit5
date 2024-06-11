@@ -1,4 +1,5 @@
 @import java.util.List
+@import gg.jte.support.ForSupport
 @import junitbuild.generator.JRE
 
 @param List<JRE> jres
@@ -13,4 +14,7 @@ public class JavaVersionPredicates {
 		return JAVA_VERSION.startsWith("@if(jre.getVersion() == 8)1.@endif${jre.getVersion()}");
 	}
 @endfor
+	static boolean onKnownVersion() {
+		return @for(var jre : ForSupport.of(jres))onJava${jre.get().getVersion()}()@if(!jre.isLast()) || @endif@endfor;
+	}
 }

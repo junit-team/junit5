@@ -45,6 +45,7 @@ import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -172,9 +173,7 @@ class EnabledOnJreIntegrationTests {
 	@Test
 	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
-		assertFalse(
-			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
-					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22());
+		assertFalse(onKnownVersion());
 	}
 
 }
