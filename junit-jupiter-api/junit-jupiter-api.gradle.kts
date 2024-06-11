@@ -19,10 +19,6 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
-jreCodeGeneration {
-	jreYaml = layout.projectDirectory.file("src/generator/jre.yaml")
-}
-
 tasks {
 	jar {
 		bundle {
