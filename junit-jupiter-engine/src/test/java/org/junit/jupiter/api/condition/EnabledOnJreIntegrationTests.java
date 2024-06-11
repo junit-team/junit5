@@ -29,6 +29,22 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_23;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava20;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava21;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -39,8 +55,6 @@ import org.junit.jupiter.api.Test;
  * @since 5.1
  */
 class EnabledOnJreIntegrationTests {
-
-	private static final String JAVA_VERSION = System.getProperty("java.version");
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
@@ -163,67 +177,4 @@ class EnabledOnJreIntegrationTests {
 					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22());
 	}
 
-	static boolean onJava8() {
-		return JAVA_VERSION.startsWith("1.8");
-	}
-
-	static boolean onJava9() {
-		return JAVA_VERSION.startsWith("9");
-	}
-
-	static boolean onJava10() {
-		return JAVA_VERSION.startsWith("10");
-	}
-
-	static boolean onJava11() {
-		return JAVA_VERSION.startsWith("11");
-	}
-
-	static boolean onJava12() {
-		return JAVA_VERSION.startsWith("12");
-	}
-
-	static boolean onJava13() {
-		return JAVA_VERSION.startsWith("13");
-	}
-
-	static boolean onJava14() {
-		return JAVA_VERSION.startsWith("14");
-	}
-
-	static boolean onJava15() {
-		return JAVA_VERSION.startsWith("15");
-	}
-
-	static boolean onJava16() {
-		return JAVA_VERSION.startsWith("16");
-	}
-
-	static boolean onJava17() {
-		return JAVA_VERSION.startsWith("17");
-	}
-
-	static boolean onJava18() {
-		return JAVA_VERSION.startsWith("18");
-	}
-
-	static boolean onJava19() {
-		return JAVA_VERSION.startsWith("19");
-	}
-
-	static boolean onJava20() {
-		return JAVA_VERSION.startsWith("20");
-	}
-
-	static boolean onJava21() {
-		return JAVA_VERSION.startsWith("21");
-	}
-
-	static boolean onJava22() {
-		return JAVA_VERSION.startsWith("22");
-	}
-
-	static boolean onJava23() {
-		return JAVA_VERSION.startsWith("23");
-	}
 }
