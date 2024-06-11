@@ -1,5 +1,4 @@
 @import java.util.List
-@import gg.jte.support.ForSupport
 @import junitbuild.generator.JRE
 
 @param List<JRE> jres
