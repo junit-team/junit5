@@ -20,7 +20,7 @@ sourceSets.configureEach {
         tasks.register(getTaskName("generate", "JreRelatedSourceCode"), GenerateJreRelatedSourceCode::class) {
             jreYaml.convention(config.jreYaml)
             targetDir.convention(sourceSetTargetDir)
-            templateResourceDir.convention("jre-templates/${sourceSetName}")
+            templateResourceDir.convention("jre-templates/${project.name}/${sourceSetName}")
         }
 
     java.srcDir(files(sourceSetTargetDir).builtBy(task))
