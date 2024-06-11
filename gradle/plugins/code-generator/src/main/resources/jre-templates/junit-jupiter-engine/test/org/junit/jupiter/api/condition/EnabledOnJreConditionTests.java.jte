@@ -1,12 +1,7 @@
-/*
- * Copyright 2015-2024 the original author or authors.
- *
- * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v2.0 which
- * accompanies this distribution and is available at
- *
- * https://www.eclipse.org/legal/epl-v20.html
- */
+@import java.util.List
+@import junitbuild.generator.JRE
+
+@param List<JRE> jres
 
 package org.junit.jupiter.api.condition;
 
@@ -81,151 +76,16 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 		evaluateCondition();
 		assertEnabledOnCurrentJreIf(true);
 	}
-
+@for(var jre : jres)
 	/**
-	 * @see EnabledOnJreIntegrationTests#java8()
+	 * @see EnabledOnJreIntegrationTests#java${jre.getVersion()}()
 	 */
 	@Test
-	void java8() {
+	void java${jre.getVersion()}() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava8());
+		assertEnabledOnCurrentJreIf(onJava${jre.getVersion()}());
 	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java9()
-	 */
-	@Test
-	void java9() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava9());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java10()
-	 */
-	@Test
-	void java10() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava10());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java11()
-	 */
-	@Test
-	void java11() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava11());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java12()
-	 */
-	@Test
-	void java12() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava12());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java13()
-	 */
-	@Test
-	void java13() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava13());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java14()
-	 */
-	@Test
-	void java14() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava14());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java15()
-	 */
-	@Test
-	void java15() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava15());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java16()
-	 */
-	@Test
-	void java16() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava16());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java17()
-	 */
-	@Test
-	void java17() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava17());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java18()
-	 */
-	@Test
-	void java18() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava18());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java19()
-	 */
-	@Test
-	void java19() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava19());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java20()
-	 */
-	@Test
-	void java20() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava20());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java21()
-	 */
-	@Test
-	void java21() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava21());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java22()
-	 */
-	@Test
-	void java22() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava22());
-	}
-
-	/**
-	 * @see EnabledOnJreIntegrationTests#java23()
-	 */
-	@Test
-	void java23() {
-		evaluateCondition();
-		assertEnabledOnCurrentJreIf(onJava23());
-	}
-
+@endfor
 	/**
 	 * @see EnabledOnJreIntegrationTests#other()
 	 */
