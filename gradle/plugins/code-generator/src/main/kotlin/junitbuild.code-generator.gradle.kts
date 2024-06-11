@@ -11,8 +11,8 @@ val generateCode by tasks.registering
 sourceSets {
     val templates by registering
     dependencies {
-        add(templates.get().implementationConfigurationName, "gg.jte:jte:3.1.12")
-        add(templates.get().implementationConfigurationName, "junitbuild.base:code-generator-model")
+        add(templates.get().compileOnlyConfigurationName, dependencyFromLibs("jte"))
+        add(templates.get().compileOnlyConfigurationName, "junitbuild.base:code-generator-model")
     }
     named { it != templates.name }.configureEach {
 

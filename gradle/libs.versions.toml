@@ -8,6 +8,7 @@ bnd = "7.0.0"
 checkstyle = "10.17.0"
 eclipse = "4.31.100"
 gradleVersionsPlugin = "0.51.0"
+jackson = "2.17.1"
 jacoco = "0.8.7"
 jmh = "1.37"
 junit4 = "4.13.2"
@@ -42,6 +43,8 @@ gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", vers
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.21" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
+jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
+jackson-module-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson" }
 jfrPolyfill = { module = "org.gradle.jfr.polyfill:jfr-polyfill", version = "1.0.2" }
 jfrunit = { module = "org.moditect.jfrunit:jfrunit-core", version = "1.0.0.Alpha2" }
 jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
@@ -49,6 +52,7 @@ jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.1" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
+jte = { module = "gg.jte:jte", version = "3.1.12" }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.8.1" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
