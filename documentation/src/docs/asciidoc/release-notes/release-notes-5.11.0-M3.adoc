@@ -51,6 +51,7 @@ repository on GitHub.
   arguments for a `@ParameterizedTest`. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names, User Guide>>
   for details.
+* `JAVA_24` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.11.0-M3-junit-vintage]]
