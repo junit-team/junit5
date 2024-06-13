@@ -11,7 +11,6 @@ jackson = "2.17.1"
 jacoco = "0.8.7"
 jmh = "1.37"
 junit4 = "4.13.2"
-junit4Osgi = "4.13.2_1"
 junit4Min = "4.12"
 ktlint = "0.48.2"
 log4j = "2.23.1"
@@ -66,6 +65,10 @@ testingAnnotations = { module = "com.gradle:develocity-testing-annotations", ver
 # Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
 eclipse-platform = { module = "org.eclipse.platform:org.eclipse.platform", version.ref = "eclipse" }
+jacoco = { module = "org.jacoco:jacoco", version.ref = "jacoco" }
+junit4-latest = { module = "junit:junit", version.ref = "junit4" }
+junit4-bundle = { module = "org.apache.servicemix.bundles:org.apache.servicemix.bundles.junit", version = "4.13.2_1" }
+ktlint-cli = { module = "com.pinterest.ktlint:ktlint-cli", version.ref = "ktlint" }
 
 [bundles]
 ant = ["ant", "ant-junit", "ant-junitlauncher"]
