@@ -435,7 +435,7 @@ public final class ReflectionSupport {
 	 * <p>Fields declared in the same class or interface will be ordered using
 	 * an algorithm that is deterministic but intentionally nonobvious.
 	 *
-	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * <p>The results will not contain fields that are
 	 * {@linkplain Field#isSynthetic() synthetic}.
 	 *
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
@@ -462,7 +462,7 @@ public final class ReflectionSupport {
 	 * <p>Fields declared in the same class or interface will be ordered using
 	 * an algorithm that is deterministic but intentionally nonobvious.
 	 *
-	 * <p>The results will not contain fields that are <em>hidden</em> or
+	 * <p>The results will not contain fields that are
 	 * {@linkplain Field#isSynthetic() synthetic}.
 	 *
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
@@ -547,8 +547,7 @@ public final class ReflectionSupport {
 	 * Find all distinct {@linkplain Method methods} of the supplied class or
 	 * interface that match the specified {@code predicate}.
 	 *
-	 * <p>The results will not contain instance methods that are <em>overridden</em>
-	 * or {@code static} methods that are <em>hidden</em>.
+	 * <p>The results will not contain methods that are <em>overridden</em>.
 	 *
 	 * <p>If you are looking for methods annotated with a certain annotation
 	 * type, consider using
@@ -573,8 +572,7 @@ public final class ReflectionSupport {
 	 * Find all distinct {@linkplain Method methods} of the supplied class or
 	 * interface that match the specified {@code predicate}.
 	 *
-	 * <p>The results will not contain instance methods that are <em>overridden</em>
-	 * or {@code static} methods that are <em>hidden</em>.
+	 * <p>The results will not contain methods that are <em>overridden</em>.
 	 *
 	 * <p>If you are looking for methods annotated with a certain annotation
 	 * type, consider using

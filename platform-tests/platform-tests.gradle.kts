@@ -6,7 +6,7 @@ plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
-	alias(libs.plugins.jmh)
+	id("junitbuild.jmh-conventions")
 }
 
 dependencies {
@@ -26,6 +26,7 @@ dependencies {
 	testImplementation(testFixtures(projects.junitPlatformEngine))
 	testImplementation(testFixtures(projects.junitPlatformLauncher))
 	testImplementation(projects.junitJupiterEngine)
+	testImplementation(testFixtures(projects.junitJupiterEngine))
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.jfrunit) {
 		exclude(group = "org.junit.vintage")
@@ -43,15 +44,11 @@ dependencies {
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh(libs.jmh.core)
 	jmh(projects.junitJupiterApi)
 	jmh(libs.junit4)
-	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
 
 jmh {
-	jmhVersion = libs.versions.jmh
-
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 1
 	warmupIterations = 1
@@ -64,10 +61,12 @@ tasks {
 			excludeTags("exclude")
 		}
 		jvmArgs("-Xmx1g")
-		distribution {
-			// Retry in a new JVM on Windows to improve chances of successful retries when
-			// cached resources are used (e.g. in ClasspathScannerTests)
-			retryInSameJvm = !OperatingSystem.current().isWindows
+		develocity {
+			testDistribution {
+				// Retry in a new JVM on Windows to improve chances of successful retries when
+				// cached resources are used (e.g. in ClasspathScannerTests)
+				retryInSameJvm = !OperatingSystem.current().isWindows
+			}
 		}
 	}
 	test {
@@ -80,19 +79,16 @@ tasks {
 			includeTags("junit4")
 		}
 	}
-	checkstyleJmh { // use same style rules as defined for tests
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
-	}
 }
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
+		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowed"])
+		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
 	}
 }

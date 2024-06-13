@@ -25,25 +25,29 @@ import org.junit.jupiter.api.assertTimeoutPreemptively
 import java.time.Duration
 
 class KotlinAssertionsDemo {
-
     private val person = Person("Jane", "Doe")
     private val people = setOf(person, Person("John", "Doe"))
 
     @Test
     fun `exception absence testing`() {
         val calculator = Calculator()
-        val result = assertDoesNotThrow("Should not throw an exception") {
-            calculator.divide(0, 1)
-        }
+        val result =
+            assertDoesNotThrow("Should not throw an exception") {
+                calculator.divide(0, 1)
+            }
         assertEquals(0, result)
     }
 
+    // end::user_guide[]
+    @extensions.DisabledOnOpenJ9
+    // tag::user_guide[]
     @Test
     fun `expected exception testing`() {
         val calculator = Calculator()
-        val exception = assertThrows<ArithmeticException> ("Should throw an exception") {
-            calculator.divide(1, 0)
-        }
+        val exception =
+            assertThrows<ArithmeticException> ("Should throw an exception") {
+                calculator.divide(1, 0)
+            }
         assertEquals("/ by zero", exception.message)
     }
 
@@ -83,9 +87,10 @@ class KotlinAssertionsDemo {
     @Test
     fun `timeout not exceeded testing`() {
         val fibonacciCalculator = FibonacciCalculator()
-        val result = assertTimeout(Duration.ofMillis(1000)) {
-            fibonacciCalculator.fib(14)
-        }
+        val result =
+            assertTimeout(Duration.ofMillis(1000)) {
+                fibonacciCalculator.fib(14)
+            }
         assertEquals(377, result)
     }
 

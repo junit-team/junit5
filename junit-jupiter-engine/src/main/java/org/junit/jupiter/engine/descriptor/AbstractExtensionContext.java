@@ -74,7 +74,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		// @formatter:on
 	}
 
-	private NamespacedHierarchicalStore<Namespace> createStore(ExtensionContext parent) {
+	private static NamespacedHierarchicalStore<Namespace> createStore(ExtensionContext parent) {
 		NamespacedHierarchicalStore<Namespace> parentStore = null;
 		if (parent != null) {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;

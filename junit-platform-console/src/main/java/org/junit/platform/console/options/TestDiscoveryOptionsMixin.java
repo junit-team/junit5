@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -39,7 +40,9 @@ class TestDiscoveryOptionsMixin {
 	@ArgGroup(validate = false, order = 2, heading = "%n@|bold SELECTORS|@%n%n")
 	SelectorOptions selectorOptions;
 
-	@ArgGroup(validate = false, order = 3, heading = "%n@|bold FILTERS|@%n%n")
+	@ArgGroup(validate = false, order = 3, heading = "%n  For more information on selectors including syntax examples, see"
+			+ "%n  @|underline https://junit.org/junit5/docs/current/user-guide/#running-tests-discovery-selectors|@"
+			+ "%n%n@|bold FILTERS|@%n%n")
 	FilterOptions filterOptions;
 
 	@ArgGroup(validate = false, order = 4, heading = "%n@|bold RUNTIME CONFIGURATION|@%n%n")
@@ -128,12 +131,20 @@ class TestDiscoveryOptionsMixin {
 		private final List<ClasspathResourceSelector> selectedClasspathResources2 = new ArrayList<>();
 
 		@Option(names = { "-i",
-				"--select-iteration" }, paramLabel = "TYPE:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]", arity = "1", converter = SelectorConverter.Iteration.class, description = "Select iterations for test discovery (e.g. method:com.acme.Foo#m()[1..2]). This option can be repeated.")
+				"--select-iteration" }, paramLabel = "PREFIX:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]", arity = "1", converter = SelectorConverter.Iteration.class, //
+				description = "Select iterations for test discovery via a prefixed identifier and a list of indexes or index ranges "
+						+ "(e.g. method:com.acme.Foo#m()[1..2] selects the first and second iteration of the m() method in the com.acme.Foo class). "
+						+ "This option can be repeated.")
 		private final List<IterationSelector> selectedIterations = new ArrayList<>();
 
 		@Option(names = { "--i",
 				"-select-iteration" }, arity = "1", hidden = true, converter = SelectorConverter.Iteration.class)
 		private final List<IterationSelector> selectedIterations2 = new ArrayList<>();
+
+		@Option(names = "--select", paramLabel = "PREFIX:VALUE", arity = "1", converter = SelectorConverter.Identifier.class, //
+				description = "Select via a prefixed identifier (e.g. method:com.acme.Foo#m selects the m() method in the com.acme.Foo class). "
+						+ "This option can be repeated.")
+		private final List<DiscoverySelectorIdentifier> selectorIdentifiers = new ArrayList<>();
 
 		SelectorOptions() {
 		}
@@ -152,6 +163,7 @@ class TestDiscoveryOptionsMixin {
 			result.setSelectedClasspathResources(
 				merge(this.selectedClasspathResources, this.selectedClasspathResources2));
 			result.setSelectedIterations(merge(this.selectedIterations, this.selectedIterations2));
+			result.setSelectorIdentifiers(this.selectorIdentifiers);
 		}
 	}
 

@@ -248,11 +248,11 @@ public interface MethodOrderer {
 	 * <h2>Custom Seed</h2>
 	 *
 	 * <p>By default, the random <em>seed</em> used for ordering methods is the
-	 * value returned by {@link System#nanoTime()} during static initialization
-	 * of this class. In order to support repeatable builds, the value of the
+	 * value returned by {@link System#nanoTime()} during static class
+	 * initialization. In order to support repeatable builds, the value of the
 	 * default random seed is logged at {@code CONFIG} level. In addition, a
 	 * custom seed (potentially the default seed from the previous test plan
-	 * execution) may be specified via the {@value ClassOrderer.Random#RANDOM_SEED_PROPERTY_NAME}
+	 * execution) may be specified via the {@value Random#RANDOM_SEED_PROPERTY_NAME}
 	 * <em>configuration parameter</em> which can be supplied via the {@code Launcher}
 	 * API, build tools (e.g., Gradle and Maven), a JVM system property, or the JUnit
 	 * Platform configuration file (i.e., a file named {@code junit-platform.properties}
@@ -265,15 +265,8 @@ public interface MethodOrderer {
 
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
 
-		/**
-		 * Default seed, which is generated during initialization of this class
-		 * via {@link System#nanoTime()} for reproducibility of tests.
-		 */
-		private static final long DEFAULT_SEED;
-
 		static {
-			DEFAULT_SEED = System.nanoTime();
-			logger.config(() -> "MethodOrderer.Random default seed: " + DEFAULT_SEED);
+			logger.config(() -> "MethodOrderer.Random default seed: " + RandomOrdererUtils.DEFAULT_SEED);
 		}
 
 		/**
@@ -294,7 +287,7 @@ public interface MethodOrderer {
 		 *
 		 * @see ClassOrderer.Random
 		 */
-		public static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
+		public static final String RANDOM_SEED_PROPERTY_NAME = RandomOrdererUtils.RANDOM_SEED_PROPERTY_NAME;
 
 		public Random() {
 		}
@@ -306,28 +299,9 @@ public interface MethodOrderer {
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
 			Collections.shuffle(context.getMethodDescriptors(),
-				new java.util.Random(getCustomSeed(context).orElse(DEFAULT_SEED)));
+				new java.util.Random(RandomOrdererUtils.getSeed(context::getConfigurationParameter, logger)));
 		}
 
-		private Optional<Long> getCustomSeed(MethodOrdererContext context) {
-			return context.getConfigurationParameter(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
-				Long seed = null;
-				try {
-					seed = Long.valueOf(configurationParameter);
-					logger.config(
-						() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-							RANDOM_SEED_PROPERTY_NAME, configurationParameter));
-				}
-				catch (NumberFormatException ex) {
-					logger.warn(ex,
-						() -> String.format(
-							"Failed to convert configuration parameter [%s] with value [%s] to a long. "
-									+ "Using default seed [%s] as fallback.",
-							RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
-				}
-				return seed;
-			});
-		}
 	}
 
 }

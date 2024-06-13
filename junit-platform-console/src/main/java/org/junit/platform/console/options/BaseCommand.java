@@ -28,11 +28,18 @@ abstract class BaseCommand<T> implements Callable<T> {
 	CommandSpec commandSpec;
 
 	@Mixin
-	OutputOptionsMixin outputOptions;
+	AnsiColorOptionMixin ansiColorOption;
+
+	@Mixin
+	BannerOptionMixin bannerOption;
 
 	@SuppressWarnings("unused")
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
 	private boolean helpRequested;
+
+	@SuppressWarnings("unused")
+	@Option(names = "--version", versionHelp = true, description = "Display version information.")
+	private boolean versionHelpRequested;
 
 	void execute(String... args) {
 		toCommandLine().execute(args);
@@ -67,7 +74,7 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Override
 	public final T call() {
 		PrintWriter out = getOut();
-		if (!outputOptions.isDisableBanner()) {
+		if (!bannerOption.isDisableBanner()) {
 			displayBanner(out);
 		}
 		try {

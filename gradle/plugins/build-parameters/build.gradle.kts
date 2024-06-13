@@ -11,8 +11,14 @@ buildParameters {
 		defaultValue = false
 		fromEnvironment()
 	}
-	integer("javaToolchainVersion") {
-		description = "Defines the Java toolchain version to use for compiling code"
+	group("javaToolchain") {
+		description = "Parameters controlling the Java toolchain used for compiling code and running tests"
+		integer("version") {
+			description = "JDK version"
+		}
+		string("implementation") {
+			description = "JDK implementation (for example, 'j9')"
+		}
 	}
 	group("documentation") {
 		description = "Parameters controlling how the documentation is built"

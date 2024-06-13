@@ -23,68 +23,73 @@ import java.util.stream.Stream
 /**
  * @see Assertions.fail
  */
-fun fail(message: String?, throwable: Throwable? = null): Nothing =
-    Assertions.fail<Nothing>(message, throwable)
+fun fail(
+    message: String?,
+    throwable: Throwable? = null
+): Nothing = Assertions.fail<Nothing>(message, throwable)
 
 /**
  * @see Assertions.fail
  */
-fun fail(message: (() -> String)?): Nothing =
-    Assertions.fail<Nothing>(message)
+fun fail(message: (() -> String)?): Nothing = Assertions.fail<Nothing>(message)
 
 /**
  * @see Assertions.fail
  */
-fun fail(throwable: Throwable?): Nothing =
-    Assertions.fail<Nothing>(throwable)
+fun fail(throwable: Throwable?): Nothing = Assertions.fail<Nothing>(throwable)
 
 /**
  * [Stream] of functions to be executed.
  */
 private typealias ExecutableStream = Stream<() -> Unit>
+
 private fun ExecutableStream.convert() = map { Executable(it) }
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(executables: ExecutableStream) =
-    Assertions.assertAll(executables.convert())
+fun assertAll(executables: ExecutableStream) = Assertions.assertAll(executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(heading: String?, executables: ExecutableStream) =
-    Assertions.assertAll(heading, executables.convert())
+fun assertAll(
+    heading: String?,
+    executables: ExecutableStream
+) = Assertions.assertAll(heading, executables.convert())
 
 /**
  * [Collection] of functions to be executed.
  */
 private typealias ExecutableCollection = Collection<() -> Unit>
+
 private fun ExecutableCollection.convert() = map { Executable(it) }
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(executables: ExecutableCollection) =
-    Assertions.assertAll(executables.convert())
+fun assertAll(executables: ExecutableCollection) = Assertions.assertAll(executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(heading: String?, executables: ExecutableCollection) =
-    Assertions.assertAll(heading, executables.convert())
+fun assertAll(
+    heading: String?,
+    executables: ExecutableCollection
+) = Assertions.assertAll(heading, executables.convert())
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(vararg executables: () -> Unit) =
-    assertAll(executables.toList().stream())
+fun assertAll(vararg executables: () -> Unit) = assertAll(executables.toList().stream())
 
 /**
  * @see Assertions.assertAll
  */
-fun assertAll(heading: String?, vararg executables: () -> Unit) =
-    assertAll(heading, executables.toList().stream())
+fun assertAll(
+    heading: String?,
+    vararg executables: () -> Unit
+) = assertAll(heading, executables.toList().stream())
 
 /**
  * Example usage:
@@ -97,11 +102,12 @@ fun assertAll(heading: String?, vararg executables: () -> Unit) =
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
-    val throwable: Throwable? = try {
-        executable()
-    } catch (caught: Throwable) {
-        caught
-    } as? Throwable
+    val throwable: Throwable? =
+        try {
+            executable()
+        } catch (caught: Throwable) {
+            caught
+        } as? Throwable
 
     return Assertions.assertThrows(T::class.java) {
         if (throwable != null) {
@@ -120,8 +126,10 @@ inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(message: String, executable: () -> Unit): T =
-    assertThrows({ message }, executable)
+inline fun <reified T : Throwable> assertThrows(
+    message: String,
+    executable: () -> Unit
+): T = assertThrows({ message }, executable)
 
 /**
  * Example usage:
@@ -133,16 +141,20 @@ inline fun <reified T : Throwable> assertThrows(message: String, executable: () 
  * ```
  * @see Assertions.assertThrows
  */
-inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, executable: () -> Unit): T {
-    val throwable: Throwable? = try {
-        executable()
-    } catch (caught: Throwable) {
-        caught
-    } as? Throwable
+inline fun <reified T : Throwable> assertThrows(
+    noinline message: () -> String,
+    executable: () -> Unit
+): T {
+    val throwable: Throwable? =
+        try {
+            executable()
+        } catch (caught: Throwable) {
+            caught
+        } as? Throwable
 
     return Assertions.assertThrows(
         T::class.java,
-        Executable {
+        {
             if (throwable != null) {
                 throw throwable
             }
@@ -162,8 +174,7 @@ inline fun <reified T : Throwable> assertThrows(noinline message: () -> String, 
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <R> assertDoesNotThrow(executable: () -> R): R =
-    Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
+inline fun <R> assertDoesNotThrow(executable: () -> R): R = Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
 
 /**
  * Example usage:
@@ -176,8 +187,10 @@ inline fun <R> assertDoesNotThrow(executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
-    assertDoesNotThrow({ message }, executable)
+inline fun <R> assertDoesNotThrow(
+    message: String,
+    executable: () -> R
+): R = assertDoesNotThrow({ message }, executable)
 
 /**
  * Example usage:
@@ -190,19 +203,23 @@ inline fun <R> assertDoesNotThrow(message: String, executable: () -> R): R =
  * @param R the result type of the [executable]
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-inline fun <R> assertDoesNotThrow(noinline message: () -> String, executable: () -> R): R =
+inline fun <R> assertDoesNotThrow(
+    noinline message: () -> String,
+    executable: () -> R
+): R =
     Assertions.assertDoesNotThrow(
         evaluateAndWrap(executable),
         Supplier(message)
     )
 
 @PublishedApi
-internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> = try {
-    val result = executable()
-    ThrowingSupplier { result }
-} catch (throwable: Throwable) {
-    ThrowingSupplier { throw throwable }
-}
+internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> =
+    try {
+        val result = executable()
+        ThrowingSupplier { result }
+    } catch (throwable: Throwable) {
+        ThrowingSupplier { throw throwable }
+    }
 
 /**
  * Example usage:
@@ -215,8 +232,10 @@ internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeout(timeout: Duration, executable: () -> R): R =
-    Assertions.assertTimeout(timeout, executable)
+fun <R> assertTimeout(
+    timeout: Duration,
+    executable: () -> R
+): R = Assertions.assertTimeout(timeout, executable)
 
 /**
  * Example usage:
@@ -229,8 +248,11 @@ fun <R> assertTimeout(timeout: Duration, executable: () -> R): R =
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeout(timeout: Duration, message: String, executable: () -> R): R =
-    Assertions.assertTimeout(timeout, executable, message)
+fun <R> assertTimeout(
+    timeout: Duration,
+    message: String,
+    executable: () -> R
+): R = Assertions.assertTimeout(timeout, executable, message)
 
 /**
  * Example usage:
@@ -243,8 +265,11 @@ fun <R> assertTimeout(timeout: Duration, message: String, executable: () -> R): 
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeout(timeout: Duration, message: () -> String, executable: () -> R): R =
-    Assertions.assertTimeout(timeout, executable, message)
+fun <R> assertTimeout(
+    timeout: Duration,
+    message: () -> String,
+    executable: () -> R
+): R = Assertions.assertTimeout(timeout, executable, message)
 
 /**
  * Example usage:
@@ -257,8 +282,10 @@ fun <R> assertTimeout(timeout: Duration, message: () -> String, executable: () -
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeoutPreemptively(timeout: Duration, executable: () -> R): R =
-    Assertions.assertTimeoutPreemptively(timeout, executable)
+fun <R> assertTimeoutPreemptively(
+    timeout: Duration,
+    executable: () -> R
+): R = Assertions.assertTimeoutPreemptively(timeout, executable)
 
 /**
  * Example usage:
@@ -271,8 +298,11 @@ fun <R> assertTimeoutPreemptively(timeout: Duration, executable: () -> R): R =
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeoutPreemptively(timeout: Duration, message: String, executable: () -> R): R =
-    Assertions.assertTimeoutPreemptively(timeout, executable, message)
+fun <R> assertTimeoutPreemptively(
+    timeout: Duration,
+    message: String,
+    executable: () -> R
+): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)
 
 /**
  * Example usage:
@@ -285,5 +315,8 @@ fun <R> assertTimeoutPreemptively(timeout: Duration, message: String, executable
  * @paramR the result of the [executable].
  */
 @API(status = EXPERIMENTAL, since = "5.5")
-fun <R> assertTimeoutPreemptively(timeout: Duration, message: () -> String, executable: () -> R): R =
-    Assertions.assertTimeoutPreemptively(timeout, executable, message)
+fun <R> assertTimeoutPreemptively(
+    timeout: Duration,
+    message: () -> String,
+    executable: () -> R
+): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)

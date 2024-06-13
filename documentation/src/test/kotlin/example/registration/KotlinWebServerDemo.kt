@@ -15,13 +15,14 @@ import org.junit.jupiter.api.extension.RegisterExtension
 
 // tag::user_guide[]
 class KotlinWebServerDemo {
-
     companion object {
-        @JvmStatic
+        @JvmField
         @RegisterExtension
-        val server = WebServerExtension.builder()
-            .enableSecurity(false)
-            .build()
+        val server =
+            WebServerExtension
+                .builder()
+                .enableSecurity(false)
+                .build()!!
     }
 
     @Test

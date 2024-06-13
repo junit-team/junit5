@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.subpackage;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,13 +20,16 @@ import org.junit.jupiter.api.Test;
  */
 public class SuperClassWithPackagePrivateLifecycleMethodInDifferentPackageTestCase {
 
+	protected boolean beforeEachInvoked = false;
+
 	@BeforeEach
 	void beforeEach() {
-		fail();
+		this.beforeEachInvoked = true;
 	}
 
 	@Test
 	void test() {
+		assertThat(this.beforeEachInvoked).isTrue();
 	}
 
 }

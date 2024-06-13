@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -21,9 +22,10 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @CsvSource} is an {@link ArgumentsSource} which reads comma-separated
- * values (CSV) from one or more CSV records supplied via the {@link #value}
- * attribute or {@link #textBlock} attribute.
+ * {@code @CsvSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which reads comma-separated values (CSV) from one
+ * or more CSV records supplied via the {@link #value} attribute or
+ * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
  * {@code @ParameterizedTest} method.
@@ -64,6 +66,7 @@ import org.apiguardian.api.API;
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
+@Repeatable(CsvSources.class)
 @Documented
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)

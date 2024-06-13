@@ -3070,7 +3070,11 @@ public class Assertions {
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}.
+	 * <p>Fails with the supplied failure {@code message}. Note that the supplied
+	 * {@code message} is <strong>not</strong> the expected message of the thrown
+	 * exception. To assert the expected message of the thrown exception, you must
+	 * use a separate, subsequent assertion against the exception returned from
+	 * this method.
 	 *
 	 * @since 5.8
 	 */
@@ -3088,7 +3092,11 @@ public class Assertions {
 	 * thrown, this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
@@ -3105,11 +3113,16 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
-	 * <p>If no exception is thrown, or if an exception of a different type is
-	 * thrown, this method will fail.
+	 * <p>The assertion passes if the thrown exception type is the same as
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
+	 * type use {@link #assertThrowsExactly(Class, Executable) assertThrowsExactly}.
+	 * If no exception is thrown, or if an exception of a different type is thrown,
+	 * this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
+	 *
+	 * @see #assertThrowsExactly(Class, Executable)
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable) {
 		return AssertThrows.assertThrows(expectedType, executable);
@@ -3119,13 +3132,22 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
-	 * <p>If no exception is thrown, or if an exception of a different type is
-	 * thrown, this method will fail.
+	 * <p>The assertion passes if the thrown exception type is the same as
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
+	 * type use {@link #assertThrowsExactly(Class, Executable, String) assertThrowsExactly}.
+	 * If no exception is thrown, or if an exception of a different type is thrown,
+	 * this method will fail.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
 	 *
-	 * <p>Fails with the supplied failure {@code message}.
+	 * <p>Fails with the supplied failure {@code message}. Note that the supplied
+	 * {@code message} is <strong>not</strong> the expected message of the thrown
+	 * exception. To assert the expected message of the thrown exception, you must
+	 * use a separate, subsequent assertion against the exception returned from
+	 * this method.
+	 *
+	 * @see #assertThrowsExactly(Class, Executable, String)
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
 		return AssertThrows.assertThrows(expectedType, executable, message);
@@ -3135,14 +3157,23 @@ public class Assertions {
 	 * <em>Assert</em> that execution of the supplied {@code executable} throws
 	 * an exception of the {@code expectedType} and return the exception.
 	 *
-	 * <p>If no exception is thrown, or if an exception of a different type is
-	 * thrown, this method will fail.
+	 * <p>The assertion passes if the thrown exception type is the same as
+	 * {@code expectedType} or a subtype thereof. To check for the exact thrown
+	 * type use {@link #assertThrowsExactly(Class, Executable, Supplier) assertThrowsExactly}.
+	 * If no exception is thrown, or if an exception of a different type is thrown,
+	 * this method will fail.
 	 *
 	 * <p>If necessary, the failure message will be retrieved lazily from the
-	 * supplied {@code messageSupplier}.
+	 * supplied {@code messageSupplier}. Note that the failure message is
+	 * <strong>not</strong> the expected message of the thrown exception. To
+	 * assert the expected message of the thrown exception, you must use a
+	 * separate, subsequent assertion against the exception returned from this
+	 * method.
 	 *
 	 * <p>If you do not want to perform additional checks on the exception instance,
 	 * ignore the return value.
+	 *
+	 * @see #assertThrowsExactly(Class, Executable, Supplier)
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
 			Supplier<String> messageSupplier) {

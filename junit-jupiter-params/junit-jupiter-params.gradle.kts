@@ -2,6 +2,7 @@ plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.testing-conventions")
+	id("junitbuild.jmh-conventions")
 }
 
 description = "JUnit Jupiter Params"

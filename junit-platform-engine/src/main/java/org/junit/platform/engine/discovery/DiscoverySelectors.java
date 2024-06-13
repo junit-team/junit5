@@ -21,14 +21,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -48,6 +52,7 @@ import org.junit.platform.engine.UniqueId;
  * @see NestedClassSelector
  * @see NestedMethodSelector
  * @see UniqueIdSelector
+ * @see DiscoverySelectorIdentifier
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
@@ -937,4 +942,58 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
+	/**
+	 * Parse the supplied string representation of a
+	 * {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the string representation of a {@code DiscoverySelectorIdentifier};
+	 * never {@code null} or blank
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Optional<? extends DiscoverySelector> parse(String identifier) {
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
+	}
+
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the {@code DiscoverySelectorIdentifier} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
+	}
+
+	/**
+	 * Parse the supplied string representations of
+	 * {@link DiscoverySelectorIdentifier DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the string representations of
+	 * {@code DiscoverySelectorIdentifiers} to parse; never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Stream<? extends DiscoverySelector> parseAll(String... identifiers) {
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
+	}
+
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier
+	 * DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the {@code DiscoverySelectorIdentifiers} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
+	}
 }

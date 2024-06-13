@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.jdk.Jar;
@@ -38,6 +40,7 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.ThirdPartyJars;
 
 /**
  * @since 1.4
@@ -81,6 +84,58 @@ class StandaloneTests {
 				junit-vintage (org.junit.vintage:junit-vintage-engine:%s)
 				""".formatted(jupiterVersion, suiteVersion, vintageVersion).lines(), //
 			result.getOutput("out").lines());
+	}
+
+	@Test
+	void printVersionViaJar() {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject("standalone") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.build() //
+				.run();
+
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+
+		var version = Helper.version("junit-platform-console");
+		assertLinesMatch("""
+				JUnit Platform Console Launcher %s
+				JVM: .*
+				OS: .*
+				""".formatted(version).lines(), //
+			result.getOutputLines("out").stream());
+	}
+
+	@Test
+	void printVersionViaModule() {
+		var junitJars = Stream.of("junit-platform-console", "junit-platform-reporting", "junit-platform-engine",
+			"junit-platform-launcher", "junit-platform-commons") //
+				.map(MavenRepo::jar);
+		var thirdPartyJars = Stream.of(ThirdPartyJars.find("org.opentest4j", "opentest4j"));
+		var modulePath = Stream.concat(junitJars, thirdPartyJars) //
+				.map(String::valueOf) //
+				.collect(joining(File.pathSeparator));
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject("standalone") //
+				.addArguments("--module-path", modulePath) //
+				.addArguments("--module", "org.junit.platform.console") //
+				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.build() //
+				.run();
+
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+
+		var version = Helper.version("junit-platform-console");
+		assertLinesMatch("""
+				JUnit Platform Console Launcher %s
+				JVM: .*
+				OS: .*
+				""".formatted(version).lines(), //
+			result.getOutputLines("out").stream());
 	}
 
 	@Test
@@ -358,7 +413,13 @@ class StandaloneTests {
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+		List<String> actualErrLines = result.getOutputLines("err");
+		if (actualErrLines.getFirst().contains("stty: /dev/tty: No such device or address")) {
+			// Happens intermittently on GitHub Actions on Windows
+			actualErrLines = new ArrayList<>(actualErrLines);
+			actualErrLines.removeFirst();
+		}
+		assertLinesMatch(expectedErrLines, actualErrLines);
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");

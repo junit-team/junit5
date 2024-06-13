@@ -85,6 +85,9 @@ class AssertionsDemo {
 		);
 	}
 
+	// end::user_guide[]
+	@extensions.DisabledOnOpenJ9
+	// tag::user_guide[]
 	@Test
 	void exceptionTesting() {
 		Exception exception = assertThrows(ArithmeticException.class, () ->

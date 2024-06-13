@@ -72,6 +72,21 @@ class TestIdentifierTests {
 		}
 	}
 
+	@Test
+	void identifierWithNoParentCanBeSerializedAndDeserialized() throws Exception {
+		TestIdentifier originalIdentifier = TestIdentifier.from(
+			new AbstractTestDescriptor(UniqueId.root("example", "id"), "Example") {
+				@Override
+				public Type getType() {
+					return Type.CONTAINER;
+				}
+			});
+
+		var deserializedIdentifier = (TestIdentifier) deserialize(serialize(originalIdentifier));
+
+		assertDeepEquals(originalIdentifier, deserializedIdentifier);
+	}
+
 	private static void assertDeepEquals(TestIdentifier first, TestIdentifier second) {
 		assertEquals(first, second);
 		assertEquals(first.getUniqueId(), second.getUniqueId());

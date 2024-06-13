@@ -67,6 +67,7 @@ import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.IncludeEngines;
 import org.junit.platform.suite.api.IncludePackages;
 import org.junit.platform.suite.api.IncludeTags;
+import org.junit.platform.suite.api.Select;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.SelectClasspathResource;
 import org.junit.platform.suite.api.SelectDirectories;
@@ -86,7 +87,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
 		ConfigurationParameters configuration = request.getConfigurationParameters();
 		Optional<String> parameter = configuration.get("com.example");
 		assertEquals(Optional.of("*"), parameter);
@@ -100,7 +101,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).excluded());
 	}
@@ -111,7 +112,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<EngineFilter> filters = request.getEngineFilters();
 		assertTrue(exactlyOne(filters).apply(new JupiterTestEngine()).excluded());
 	}
@@ -122,7 +123,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
 		assertTrue(exactlyOne(filters).apply("com.example.testcases").excluded());
 	}
@@ -133,7 +134,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 		TestDescriptor testDescriptor = new StubAbstractTestDescriptor();
 		assertTrue(exactlyOne(filters).apply(testDescriptor).excluded());
@@ -147,7 +148,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
 		assertTrue(exactlyOne(filters).apply(TestCase.class.getName()).included());
 		assertTrue(exactlyOne(filters).apply(Suite.class.getName()).excluded());
@@ -158,7 +159,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		assertTrue(request.getFiltersByType(ClassNameFilter.class).isEmpty());
 	}
 
@@ -172,7 +173,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		// @formatter:off
 		LauncherDiscoveryRequest request = builder
 				.filterStandardClassNamePatterns(true)
-				.suite(Suite.class)
+				.applySelectorsAndFiltersFromSuite(Suite.class)
 				.build();
 		// @formatter:on
 		List<ClassNameFilter> filters = request.getFiltersByType(ClassNameFilter.class);
@@ -186,7 +187,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<EngineFilter> filters = request.getEngineFilters();
 		assertTrue(exactlyOne(filters).apply(new JupiterTestEngine()).included());
 	}
@@ -197,7 +198,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PackageNameFilter> filters = request.getFiltersByType(PackageNameFilter.class);
 		assertTrue(exactlyOne(filters).apply("com.example.testcases").included());
 	}
@@ -208,7 +209,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PostDiscoveryFilter> filters = request.getPostDiscoveryFilters();
 		TestDescriptor testDescriptor = new StubAbstractTestDescriptor();
 		assertTrue(exactlyOne(filters).apply(testDescriptor).included());
@@ -222,7 +223,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 		assertFalse(selectors.isEmpty());
 		assertEquals(TestCase.class, exactlyOne(selectors).getJavaClass());
@@ -234,7 +235,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClassSelector> selectors = request.getSelectorsByType(ClassSelector.class);
 		assertEquals(NonLocalTestCase.class, exactlyOne(selectors).getJavaClass());
 	}
@@ -245,7 +246,8 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		var e = assertThrows(PreconditionViolationException.class, () -> builder.suite(Suite.class));
+		var e = assertThrows(PreconditionViolationException.class,
+			() -> builder.applySelectorsAndFiltersFromSuite(Suite.class));
 
 		assertThat(e).hasMessageMatching(
 			"@SelectClasses on class \\[" + Pattern.quote(SuiteLauncherDiscoveryRequestBuilderTests.class.getName())
@@ -269,7 +271,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		return Stream.of(SuiteA.class, SuiteB.class, SuiteC.class) //
 				.map(suiteClass -> dynamicTest(suiteClass.getSimpleName(), () -> {
-					LauncherDiscoveryRequest request = request().suite(suiteClass).build();
+					LauncherDiscoveryRequest request = request().applySelectorsAndFiltersFromSuite(suiteClass).build();
 					List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
 					assertEquals(DiscoverySelectors.selectMethod(NoParameterTestCase.class, "testMethod"),
 						exactlyOne(selectors));
@@ -302,7 +304,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		return Stream.of(SuiteA.class, SuiteB.class, SuiteC.class, SuiteD.class, SuiteE.class) //
 				.map(suiteClass -> dynamicTest(suiteClass.getSimpleName(), () -> {
-					LauncherDiscoveryRequest request = request().suite(suiteClass).build();
+					LauncherDiscoveryRequest request = request().applySelectorsAndFiltersFromSuite(suiteClass).build();
 					List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
 					assertEquals(DiscoverySelectors.selectMethod(OneParameterTestCase.class, "testMethod", "int"),
 						exactlyOne(selectors));
@@ -331,7 +333,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<MethodSelector> selectors = request.getSelectorsByType(MethodSelector.class);
 		assertEquals(2, selectors.size());
 		assertEquals(DiscoverySelectors.selectMethod(TestClass.class, "firstTestMethod", "int, java.lang.String"),
@@ -387,7 +389,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 					var expectedFailureMessage = entry.getValue();
 					return dynamicTest(suiteClassName.getSimpleName(), () -> {
 						var ex = assertThrows(PreconditionViolationException.class,
-							() -> request().suite(suiteClassName));
+							() -> request().applySelectorsAndFiltersFromSuite(suiteClassName));
 						assertEquals(
 							"@SelectMethod on class [" + suiteClassName.getName() + "]: " + expectedFailureMessage,
 							ex.getMessage());
@@ -401,7 +403,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClasspathResourceSelector> selectors = request.getSelectorsByType(ClasspathResourceSelector.class);
 		assertEquals("com.example.testcases", exactlyOne(selectors).getClasspathResourceName());
 	}
@@ -413,7 +415,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClasspathResourceSelector> selectors = request.getSelectorsByType(ClasspathResourceSelector.class);
 		assertEquals(Optional.of(FilePosition.from(42)), selectors.get(0).getPosition());
 		assertEquals(Optional.of(FilePosition.from(14, 15)), selectors.get(1).getPosition());
@@ -427,7 +429,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ClasspathResourceSelector> selectors = request.getSelectorsByType(ClasspathResourceSelector.class);
 		assertEquals(Optional.empty(), selectors.get(0).getPosition());
 		assertEquals(Optional.empty(), selectors.get(1).getPosition());
@@ -440,7 +442,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<DirectorySelector> selectors = request.getSelectorsByType(DirectorySelector.class);
 		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
 	}
@@ -451,7 +453,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		assertTrue(request.getSelectorsByType(DirectorySelector.class).isEmpty());
 	}
 
@@ -461,7 +463,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<FileSelector> selectors = request.getSelectorsByType(FileSelector.class);
 		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
 	}
@@ -473,7 +475,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<FileSelector> selectors = request.getSelectorsByType(FileSelector.class);
 		assertEquals(Optional.of(FilePosition.from(42)), selectors.get(0).getPosition());
 		assertEquals(Optional.of(FilePosition.from(14, 15)), selectors.get(1).getPosition());
@@ -487,7 +489,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<FileSelector> selectors = request.getSelectorsByType(FileSelector.class);
 		assertEquals(Optional.empty(), selectors.get(0).getPosition());
 		assertEquals(Optional.empty(), selectors.get(1).getPosition());
@@ -500,7 +502,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<ModuleSelector> selectors = request.getSelectorsByType(ModuleSelector.class);
 		assertEquals("com.example.testcases", exactlyOne(selectors).getModuleName());
 	}
@@ -511,7 +513,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<UriSelector> selectors = request.getSelectorsByType(UriSelector.class);
 		assertEquals(URI.create("path/to/root"), exactlyOne(selectors).getUri());
 	}
@@ -522,7 +524,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		assertTrue(request.getSelectorsByType(UriSelector.class).isEmpty());
 	}
 
@@ -532,7 +534,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PackageSelector> selectors = request.getSelectorsByType(PackageSelector.class);
 		assertEquals("com.example.testcases", exactlyOne(selectors).getPackageName());
 	}
@@ -548,7 +550,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<PackageSelector> pSelectors = request.getSelectorsByType(PackageSelector.class);
 		assertEquals("com.example.testcases", exactlyOne(pSelectors).getPackageName());
 	}
@@ -560,7 +562,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		}
 		// @formatter:off
 		var configuration = new ParentConfigurationParameters("parent", "parent parameters were used");
-		var request = builder.suite(Suite.class)
+		var request = builder.applyConfigurationParametersFromSuite(Suite.class)
 				.parentConfigurationParameters(configuration)
 				.build();
 		// @formatter:on
@@ -576,12 +578,34 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		}
 		// @formatter:off
 		var configuration = new ParentConfigurationParameters("parent", "parent parameters were used");
-		var request = builder.suite(Suite.class)
+		var request = builder.applyConfigurationParametersFromSuite(Suite.class)
 				.parentConfigurationParameters(configuration)
 				.build();
 		// @formatter:on
 		var configurationParameters = request.getConfigurationParameters();
 		assertEquals(Optional.empty(), configurationParameters.get("parent"));
+	}
+
+	@Test
+	void selectByIdentifier() {
+		// @formatter:off
+		@Select({
+				"class:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NonLocalTestCase",
+				"method:org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilderTests$NoParameterTestCase#testMethod"
+		})
+		// @formatter:on
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
+		List<ClassSelector> classSelectors = request.getSelectorsByType(ClassSelector.class);
+		assertEquals(NonLocalTestCase.class, exactlyOne(classSelectors).getJavaClass());
+		List<MethodSelector> methodSelectors = request.getSelectorsByType(MethodSelector.class);
+		// @formatter:off
+		assertThat(exactlyOne(methodSelectors))
+				.extracting(MethodSelector::getJavaClass, MethodSelector::getMethodName)
+				.containsExactly(NoParameterTestCase.class, "testMethod");
+		// @formatter:on
 	}
 
 	private static <T> T exactlyOne(List<T> list) {

@@ -11,14 +11,14 @@ on:
 
 env:
   JUNIT_DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
-  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
 jobs:
   openjdk:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [22, 23]
+        jdk: [ 22, 23, 24 ]
     name: "OpenJDK ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:
@@ -41,11 +41,45 @@ jobs:
         uses: ./.github/actions/run-gradle
         with:
           arguments: |
-            -PjavaToolchainVersion=${{ matrix.jdk }}
-            -Dscan.tag.JDK_${{ matrix.jdk }}
+            -PjavaToolchain.version=${{ matrix.jdk }} \
+            -Dscan.tag.JDK_${{ matrix.jdk }} \
             build
       - name: Upload Test Distribution trace files
         uses: actions/upload-artifact@v4
         with:
           name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
           path: '**/build/test-results/*/trace.json'
+  openj9:
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk: [ 21 ]
+    name: "OpenJ9 ${{ matrix.jdk }}"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Set up Test JDK
+        uses: ./.github/actions/setup-test-jdk
+        with:
+          distribution: semeru
+      - name: 'Set up JDK ${{ matrix.jdk }}'
+        uses: actions/setup-java@v4
+        with:
+          distribution: semeru
+          java-version: ${{ matrix.jdk }}
+          check-latest: true
+      - name: 'Prepare JDK${{ matrix.jdk }} env var'
+        shell: bash
+        run: echo "JDK${{ matrix.jdk }}=$JAVA_HOME" >> $GITHUB_ENV
+      - name: Build
+        uses: ./.github/actions/run-gradle
+        with:
+          arguments: |
+            -PjavaToolchain.version=${{ matrix.jdk }} \
+            -PjavaToolchain.implementation=j9 \
+            -Dscan.tag.JDK_${{ matrix.jdk }} \
+            -Dscan.tag.OpenJ9 \
+            build

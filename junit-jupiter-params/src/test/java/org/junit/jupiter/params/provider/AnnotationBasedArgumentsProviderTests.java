@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.MockCsvAnnotationBuilder.csvSource;
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,7 +31,7 @@ class AnnotationBasedArgumentsProviderTests {
 	private final AnnotationBasedArgumentsProvider<CsvSource> annotationBasedArgumentsProvider = new AnnotationBasedArgumentsProvider<>() {
 		@Override
 		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-			return Stream.empty();
+			return Stream.of(Arguments.of(annotation));
 		}
 	};
 
@@ -52,6 +53,23 @@ class AnnotationBasedArgumentsProviderTests {
 		annotationBasedArgumentsProvider.provideArguments(extensionContext);
 
 		verify(spiedProvider, atMostOnce()).provideArguments(eq(extensionContext), eq(annotation));
+	}
+
+	@Test
+	@DisplayName("should invoke the provideArguments template method for every accepted annotation")
+	void shouldInvokeTemplateMethodForEachAnnotationProvided() {
+		var extensionContext = mock(ExtensionContext.class);
+		var foo = csvSource("foo");
+		var bar = csvSource("bar");
+
+		annotationBasedArgumentsProvider.accept(foo);
+		annotationBasedArgumentsProvider.accept(bar);
+
+		var arguments = annotationBasedArgumentsProvider.provideArguments(extensionContext).toList();
+
+		assertThat(arguments).hasSize(2);
+		assertThat(arguments.getFirst().get()[0]).isEqualTo(foo);
+		assertThat(arguments.get(1).get()[0]).isEqualTo(bar);
 	}
 
 }

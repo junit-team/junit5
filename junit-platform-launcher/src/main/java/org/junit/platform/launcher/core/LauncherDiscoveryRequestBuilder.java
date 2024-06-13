@@ -58,7 +58,7 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
  *        selectMethod("org.example.order.OrderTests", "test4"),
  *        selectMethod(OrderTests.class, "test5"),
  *        selectMethod(OrderTests.class, testMethod),
- *        selectClasspathRoots(Collections.singleton(new File("/my/local/path1"))),
+ *        selectClasspathRoots(Collections.singleton(Paths.get("/my/local/path1"))),
  *        selectUniqueId("unique-id-1"),
  *        selectUniqueId("unique-id-2")
  *     )
@@ -124,7 +124,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied {@code selectors} to the request.
+	 * Add all supplied {@code selectors} to the request.
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
 	 * @return this builder for method chaining
@@ -136,7 +136,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied {@code selectors} to the request.
+	 * Add all supplied {@code selectors} to the request.
 	 *
 	 * @param selectors the {@code DiscoverySelectors} to add; never {@code null}
 	 * @return this builder for method chaining
@@ -149,7 +149,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied {@code filters} to the request.
+	 * Add all supplied {@code filters} to the request.
 	 *
 	 * <p>The {@code filters} are combined using AND semantics, i.e. all of them
 	 * have to include a resource for it to end up in the test plan.
@@ -185,7 +185,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	/**
-	 * Add all of the supplied configuration parameters to the request.
+	 * Add all supplied configuration parameters to the request.
 	 *
 	 * @param configurationParameters the map of configuration parameters to add;
 	 * never {@code null}
@@ -206,23 +206,46 @@ public final class LauncherDiscoveryRequestBuilder {
 	 * {@link #configurationParameters(Map)} takes precedence over the supplied
 	 * configuration parameters.
 	 *
-	 * @param configurationParameters the parent instance to be used for looking
+	 * @param parentConfigurationParameters the parent instance to use for looking
 	 * up configuration parameters that have not been explicitly configured;
 	 * never {@code null}
+	 * @return this builder for method chaining
 	 * @since 1.8
 	 * @see #configurationParameter(String, String)
 	 * @see #configurationParameters(Map)
 	 */
 	@API(status = STABLE, since = "1.10")
 	public LauncherDiscoveryRequestBuilder parentConfigurationParameters(
-			ConfigurationParameters configurationParameters) {
-		Preconditions.notNull(configurationParameters, "parent configuration parameters must not be null");
-		this.parentConfigurationParameters = configurationParameters;
+			ConfigurationParameters parentConfigurationParameters) {
+		Preconditions.notNull(parentConfigurationParameters, "parent configuration parameters must not be null");
+		this.parentConfigurationParameters = parentConfigurationParameters;
 		return this;
 	}
 
 	/**
-	 * Add all of the supplied discovery listeners to the request.
+	 * Configure whether implicit configuration parameters should be considered.
+	 *
+	 * <p>By default, in addition to those parameters that are passed explicitly
+	 * to this builder, configuration parameters are read from system properties
+	 * and from the {@code junit-platform.properties} classpath resource.
+	 * Passing {@code false} to this method, disables the latter two sources so
+	 * that only explicit configuration parameters are taken into account.
+	 *
+	 * @param enabled {@code true} if implicit configuration parameters should be
+	 * considered
+	 * @return this builder for method chaining
+	 * @since 1.7
+	 * @see #configurationParameter(String, String)
+	 * @see #configurationParameters(Map)
+	 */
+	@API(status = STABLE, since = "1.10")
+	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
+		this.implicitConfigurationParametersEnabled = enabled;
+		return this;
+	}
+
+	/**
+	 * Add all supplied discovery listeners to the request.
 	 *
 	 * <p>In addition to the {@linkplain LauncherDiscoveryListener listeners}
 	 * registered using this method, this builder will add a default listener
@@ -243,25 +266,6 @@ public final class LauncherDiscoveryRequestBuilder {
 		Preconditions.notNull(listeners, "discovery listener array must not be null");
 		Preconditions.containsNoNullElements(listeners, "individual discovery listeners must not be null");
 		this.discoveryListeners.addAll(Arrays.asList(listeners));
-		return this;
-	}
-
-	/**
-	 * Configure whether implicit configuration parameters should be considered.
-	 *
-	 * <p>By default, in addition to those parameters that are passed explicitly
-	 * to this builder, configuration parameters are read from system properties
-	 * and from the {@code junit-platform.properties} classpath resource.
-	 * Passing {@code false} to this method, disables the latter two sources so
-	 * that only explicit configuration parameters are taken into account.
-	 *
-	 * @since 1.7
-	 * @see #configurationParameter(String, String)
-	 * @see #configurationParameters(Map)
-	 */
-	@API(status = STABLE, since = "1.10")
-	public LauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
-		this.implicitConfigurationParametersEnabled = enabled;
 		return this;
 	}
 
@@ -298,7 +302,7 @@ public final class LauncherDiscoveryRequestBuilder {
 				.explicitParameters(this.configurationParameters) //
 				.enableImplicitProviders(this.implicitConfigurationParametersEnabled);
 
-		if (parentConfigurationParameters != null) {
+		if (this.parentConfigurationParameters != null) {
 			builder.parentConfigurationParameters(this.parentConfigurationParameters);
 		}
 
@@ -308,14 +312,14 @@ public final class LauncherDiscoveryRequestBuilder {
 	private LauncherDiscoveryListener getLauncherDiscoveryListener(ConfigurationParameters configurationParameters) {
 		LauncherDiscoveryListener defaultDiscoveryListener = getDefaultLauncherDiscoveryListener(
 			configurationParameters);
-		if (discoveryListeners.isEmpty()) {
+		if (this.discoveryListeners.isEmpty()) {
 			return defaultDiscoveryListener;
 		}
-		if (discoveryListeners.contains(defaultDiscoveryListener)) {
-			return LauncherDiscoveryListeners.composite(discoveryListeners);
+		if (this.discoveryListeners.contains(defaultDiscoveryListener)) {
+			return LauncherDiscoveryListeners.composite(this.discoveryListeners);
 		}
-		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(discoveryListeners.size() + 1);
-		allDiscoveryListeners.addAll(discoveryListeners);
+		List<LauncherDiscoveryListener> allDiscoveryListeners = new ArrayList<>(this.discoveryListeners.size() + 1);
+		allDiscoveryListeners.addAll(this.discoveryListeners);
 		allDiscoveryListeners.add(defaultDiscoveryListener);
 		return LauncherDiscoveryListeners.composite(allDiscoveryListeners);
 	}

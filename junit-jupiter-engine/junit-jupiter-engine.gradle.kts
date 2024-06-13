@@ -3,6 +3,7 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
+	id("junitbuild.code-generator")
 	groovy
 	`java-test-fixtures`
 }

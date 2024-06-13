@@ -13,10 +13,16 @@ package org.junit.jupiter.params.support;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.support.AnnotationConsumerInitializer.initialize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -52,9 +58,11 @@ class AnnotationConsumerInitializerTests {
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
-		initialisedAnnotationConsumer.provideArguments(mock());
+		initialisedAnnotationConsumer.provideArguments(mock()).findAny();
 
-		assertThat(initialisedAnnotationConsumer.annotation) //
+		assertThat(initialisedAnnotationConsumer.annotations) //
+				.hasSize(1) //
+				.element(0) //
 				.isInstanceOfSatisfying(CsvSource.class, //
 					source -> assertThat(source.value()).containsExactly("a", "b"));
 	}
@@ -93,13 +101,23 @@ class AnnotationConsumerInitializerTests {
 		assertThatThrownBy(() -> initialize(parameter, instance)).isInstanceOf(JUnitException.class);
 	}
 
+	@Test
+	void shouldInitializeForEachAnnotations() throws NoSuchMethodException {
+		var instance = spy(new SomeAnnotationBasedArgumentsProvider());
+		var method = SubjectClass.class.getDeclaredMethod("repeatableAnnotation", String.class);
+
+		initialize(method, instance);
+
+		verify(instance, times(2)).accept(any(CsvSource.class));
+	}
+
 	private static class SomeAnnotationBasedArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
-		CsvSource annotation;
+		List<CsvSource> annotations = new ArrayList<>();
 
 		@Override
 		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
-			this.annotation = annotation;
+			annotations.add(annotation);
 			return Stream.empty();
 		}
 	}
@@ -137,6 +155,11 @@ class AnnotationConsumerInitializerTests {
 		}
 
 		void noAnnotation(String param) {
+		}
+
+		@CsvSource("a")
+		@CsvSource("b")
+		void repeatableAnnotation(String param) {
 		}
 	}
 

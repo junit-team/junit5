@@ -10,18 +10,24 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a nested {@link Class}
@@ -143,4 +149,36 @@ public class NestedClassSelector implements DiscoverySelector {
 				.toString();
 	}
 
+	@Override
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		String allClassNames = Stream.concat(enclosingClassSelectors.stream(), Stream.of(nestedClassSelector)) //
+				.map(ClassSelector::getClassName) //
+				.collect(joining("/"));
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, allClassNames));
+	}
+
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link NestedClassSelector NestedClassSelectors}.
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
+
+		static final String PREFIX = "nested-class";
+
+		public IdentifierParser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return PREFIX;
+		}
+
+		@Override
+		public Optional<NestedClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			List<String> parts = Arrays.asList(identifier.getValue().split("/"));
+			return Optional.of(
+				DiscoverySelectors.selectNestedClass(parts.subList(0, parts.size() - 1), parts.get(parts.size() - 1)));
+		}
+	}
 }

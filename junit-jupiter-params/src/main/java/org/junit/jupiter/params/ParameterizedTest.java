@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -79,6 +80,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * to create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @ParameterizedTest}.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>{@code @ParameterizedTest} methods are inherited from superclasses as long
+ * as they are not <em>overridden</em> according to the visibility rules of the
+ * Java language. Similarly, {@code @ParameterizedTest} methods declared as
+ * <em>interface default methods</em> are inherited as long as they are not
+ * overridden.
+ *
  * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is
@@ -140,6 +149,7 @@ public @interface ParameterizedTest {
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @see #DEFAULT_DISPLAY_NAME
 	 */
 	String INDEX_PLACEHOLDER = "{index}";
 
@@ -165,8 +175,42 @@ public @interface ParameterizedTest {
 	 *
 	 * @since 5.6
 	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
+
+	/**
+	 * Placeholder for the name of the argument set for the current invocation
+	 * of a {@code @ParameterizedTest} method: <code>{argumentSetName}</code>.
+	 *
+	 * <p>This placeholder can be used when the current set of arguments was created via
+	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * argumentSet()}.
+	 *
+	 * @since 5.11
+	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}";
+
+	/**
+	 * Placeholder for either {@link #ARGUMENT_SET_NAME_PLACEHOLDER} or
+	 * {@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}, depending on whether the
+	 * current set of arguments was created via
+	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * argumentSet()}: <code>{argumentSetNameOrArgumentsWithNames}</code>.
+	 *
+	 * @since 5.11
+	 * @see #name
+	 * @see #ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}";
 
 	/**
 	 * Default display name pattern for the current invocation of a
@@ -180,17 +224,19 @@ public @interface ParameterizedTest {
 	 * @see #name
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER
-	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] " + ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] "
+			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 	/**
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to <code>{default_display_name}</code>.
+	 * <p>Defaults to <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>.
 	 *
-	 * <p>If the default display name flag (<code>{default_display_name}</code>)
+	 * <p>If the default display name flag
+	 * (<code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>)
 	 * is not overridden, JUnit will:
 	 * <ul>
 	 * <li>Look up the {@value ParameterizedTestExtension#DISPLAY_NAME_PATTERN_KEY}
@@ -199,30 +245,32 @@ public @interface ParameterizedTest {
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
 	 * the class path). Consult the User Guide for further information.</li>
-	 * <li>Otherwise, the value of the {@link #DEFAULT_DISPLAY_NAME} constant will
-	 * be used.</li>
+	 * <li>Otherwise, <code>{@value #DEFAULT_DISPLAY_NAME}</code> will be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li>{@link #DISPLAY_NAME_PLACEHOLDER}</li>
-	 * <li>{@link #INDEX_PLACEHOLDER}</li>
-	 * <li>{@link #ARGUMENTS_PLACEHOLDER}</li>
-	 * <li>{@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</li>
-	 * <li><code>{0}</code>, <code>{1}</code>, etc.: an individual argument (0-based)</li>
+	 * <li><code>{@value #DISPLAY_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #INDEX_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENTS_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>"{0}"</code>, <code>"{1}"</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
 	 * <p>For the latter, you may use {@link java.text.MessageFormat} patterns
-	 * to customize formatting. Please note that the original arguments are
-	 * passed when formatting, regardless of any implicit or explicit argument
-	 * conversions.
+	 * to customize formatting (for example, {@code {0,number,#.###}}). Please
+	 * note that the original arguments are passed when formatting, regardless
+	 * of any implicit or explicit argument conversions.
 	 *
-	 * <p>Note that <code>{default_display_name}</code> is a flag rather than a
-	 * placeholder.
+	 * <p>Note that
+	 * <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code> is
+	 * a flag rather than a placeholder.
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default "{default_display_name}";
+	String name() default ParameterizedTestExtension.DEFAULT_DISPLAY_NAME;
 
 	/**
 	 * Configure whether all arguments of the parameterized test that implement {@link AutoCloseable}
