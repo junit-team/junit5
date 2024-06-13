@@ -186,9 +186,7 @@ class ParameterizedTestNameFormatterTests {
 
 	@Test
 	void throwsReadableExceptionForInvalidPattern() {
-		var formatter = formatter("{index", "enigma");
-
-		var exception = assertThrows(JUnitException.class, () -> format(formatter, 1, arguments()));
+		var exception = assertThrows(JUnitException.class, () -> formatter("{index", "enigma"));
 		assertNotNull(exception.getCause());
 		assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
 	}
@@ -219,13 +217,13 @@ class ParameterizedTestNameFormatterTests {
 			""")
 	void customFormattingExpressionsAreSupported(Locale locale, String expectedValue) {
 		var pattern = "[{index}] {1,number,#.##} is {1,choice,0<positive} on {0,date} at {0,time} even though {2}";
-		var formatter = formatter(pattern, "enigma");
 		Locale.setDefault(Locale.US);
 
 		var date = Date.from(
 			LocalDate.of(2019, 1, 13).atTime(LocalTime.of(12, 34, 56)).atZone(ZoneId.systemDefault()).toInstant());
 		Locale.setDefault(locale);
 
+		var formatter = formatter(pattern, "enigma");
 		var formattedName = format(formatter, 1,
 			arguments(date, new BigDecimal("42.23"), new ToStringThrowsException()));
 
