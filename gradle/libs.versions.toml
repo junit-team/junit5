@@ -40,6 +40,7 @@ gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd
 gradle-shadow = { module = "io.github.goooler.shadow:shadow-gradle-plugin", version = "8.1.7" }
 gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.0.0.BETA1" }
 gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleVersionsPlugin" }
+gradle-jmh = { module = "me.champeau.jmh:jmh-gradle-plugin", version = "0.7.2" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.21" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
@@ -89,4 +90,5 @@ jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.6" }
+spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA1" }
 versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }
