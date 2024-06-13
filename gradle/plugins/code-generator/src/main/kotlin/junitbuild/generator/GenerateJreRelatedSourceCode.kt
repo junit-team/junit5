@@ -66,7 +66,9 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
                 val targetFile = mainTargetDir.toPath().resolve(it.resolveSibling(it.nameWithoutExtension).path)
 
                 FileOutput(targetFile).use { output ->
-                    templateEngine.render(it.path, params, output)
+                    // JTE does not support Windows paths, so we need to replace them
+                    val safePath = it.path.replace('\\', '/')
+                    templateEngine.render(safePath, params, output)
                 }
             }
         }
