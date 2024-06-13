@@ -282,7 +282,6 @@ public class ModuleUtils {
 				try (Stream<String> names = reader.list()) {
 					// @formatter:off
 					return names.filter(name -> !name.endsWith(".class"))
-							.filter(resourceFilter::match)
 							.map(this::loadResourceUnchecked)
 							// Always use ".filter(resourceFilter)" to include future predicates.
 							.filter(resourceFilter)
