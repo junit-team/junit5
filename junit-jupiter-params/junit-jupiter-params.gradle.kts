@@ -2,6 +2,7 @@ plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.testing-conventions")
+	alias(libs.plugins.jmh)
 }
 
 description = "JUnit Jupiter Params"
@@ -26,6 +27,13 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+
+	jmh(libs.jmh.core)
+	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
+}
+
+jmh {
+	jmhVersion = libs.versions.jmh
 }
 
 tasks {
@@ -55,5 +63,8 @@ tasks {
 			"--add-modules", "univocity.parsers",
 			"--add-reads", "${javaModuleName}=univocity.parsers"
 		))
+	}
+	checkstyleJmh { // use same style rules as defined for tests
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
