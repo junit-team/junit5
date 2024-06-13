@@ -9,16 +9,16 @@ repositories {
 dependencies {
 	implementation(projects.buildParameters)
 	implementation(kotlin("gradle-plugin"))
-	implementation(libs.gradle.bnd)
-	implementation(libs.gradle.commonCustomUserData)
-	implementation(libs.gradle.develocity)
-	implementation(libs.gradle.foojayResolver)
-	implementation(libs.plugins.jmh.map { it.markerCoordinates })
-	implementation(libs.gradle.shadow)
-	implementation(libs.gradle.spotless)
-	implementation(libs.gradle.versions)
+	implementation(libs.plugins.bnd.markerCoordinates)
+	implementation(libs.plugins.commonCustomUserData.markerCoordinates)
+	implementation(libs.plugins.develocity.markerCoordinates)
+	implementation(libs.plugins.foojayResolver.markerCoordinates)
+	implementation(libs.plugins.jmh.markerCoordinates)
+	implementation(libs.plugins.shadow.markerCoordinates)
+	implementation(libs.plugins.spotless.markerCoordinates)
+	implementation(libs.plugins.versions.markerCoordinates)
 }
 
 // see https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_markers
-val PluginDependency.markerCoordinates: String
-	get() = "${pluginId}:${pluginId}.gradle.plugin:${version}"
+val Provider<PluginDependency>.markerCoordinates: Provider<String>
+	get() = map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }

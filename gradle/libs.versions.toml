@@ -7,7 +7,6 @@ assertj = "3.26.0"
 bnd = "7.0.0"
 checkstyle = "10.17.0"
 eclipse = "4.31.100"
-gradleVersionsPlugin = "0.51.0"
 jackson = "2.17.1"
 jacoco = "0.8.7"
 jmh = "1.37"
@@ -33,14 +32,6 @@ bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.173" }
 commons-io = { module = "commons-io:commons-io", version = "2.16.1" }
-gradle-commonCustomUserData = { module = "com.gradle:common-custom-user-data-gradle-plugin", version = "2.0.1" }
-gradle-foojayResolver = { module = "org.gradle.toolchains:foojay-resolver", version = "0.8.0" }
-gradle-develocity = { module = "com.gradle:develocity-gradle-plugin", version = "3.17.4" }
-gradle-bnd = { module = "biz.aQute.bnd:biz.aQute.bnd.gradle", version.ref = "bnd" }
-gradle-shadow = { module = "io.github.goooler.shadow:shadow-gradle-plugin", version = "8.1.7" }
-gradle-spotless = { module = "com.diffplug.spotless:spotless-plugin-gradle", version = "7.0.0.BETA1" }
-gradle-versions = { module = "com.github.ben-manes:gradle-versions-plugin", version.ref = "gradleVersionsPlugin" }
-gradle-jmh = { module = "me.champeau.jmh:jmh-gradle-plugin", version = "0.7.2" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.21" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "2.2" }
@@ -84,11 +75,16 @@ xmlunit = ["xmlunit-assertj", "xmlunit-placeholders"]
 [plugins]
 asciidoctorConvert = { id = "org.asciidoctor.jvm.convert", version.ref = "asciidoctor-plugins" }
 asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-plugins" }
+bnd = { id = "biz.aQute.bnd", version.ref = "bnd" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
+commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.0.1" }
+develocity = { id = "com.gradle.develocity", version = "3.17.4" }
+foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.8.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
-nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
+nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 plantuml = { id = "io.freefair.plantuml", version = "8.6" }
+shadow = { id = "io.github.goooler.shadow", version = "8.1.7" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA1" }
-versions = { id = "com.github.ben-manes.versions", version.ref = "gradleVersionsPlugin" }
+versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
