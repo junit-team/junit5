@@ -220,7 +220,6 @@ class ClasspathScannerTests {
 					.containsExactlyInAnyOrder("org/junit/platform/jartest/notincluded/not-included.resource",
 						"org/junit/platform/jartest/included/included.resource",
 						"org/junit/platform/jartest/included/recursive/recursively-included.resource",
-						// TODO: This is interesting. Would we also scan classes in META-INF/versions?
 						"META-INF/MANIFEST.MF");
 		}
 	}
