@@ -33,29 +33,27 @@ import org.apiguardian.api.API;
  * be {@code static} by default. Consequently, {@code @BeforeAll} methods are
  * not supported in {@link Nested @Nested} test classes or as <em>interface
  * default methods</em> unless the test class is annotated with
- * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
- * However, beginning with Java 16 {@code @BeforeAll} methods may be declared as
- * {@code static} in {@link Nested @Nested} test classes, and the
- * {@code Lifecycle.PER_CLASS} restriction no longer applies. {@code @BeforeAll}
- * methods may optionally declare parameters to be resolved by
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}. However, beginning
+ * with Java 16 {@code @BeforeAll} methods may be declared as {@code static} in
+ * {@link Nested @Nested} test classes, in which case the {@code Lifecycle.PER_CLASS}
+ * restriction no longer applies. In addition, {@code @BeforeAll} methods may
+ * optionally declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <p>Using {@code private} visibility for {@code @BeforeAll} methods is
- * strongly discouraged and will be disallowed in a future release.
+ * <p>Using {@code private} visibility for {@code @BeforeAll} methods is strongly
+ * discouraged and will be disallowed in a future release.
  *
  * <h2>Inheritance and Execution Order</h2>
  *
- * <p>{@code @BeforeAll} methods are inherited from superclasses as long as
- * they are not <em>hidden</em> (default mode with {@code static} modifier),
- * <em>overridden</em>, or <em>superseded</em> (i.e., replaced based on
- * signature only, irrespective of Java's visibility rules). Furthermore,
- * {@code @BeforeAll} methods from superclasses will be executed before
- * {@code @BeforeAll} methods in subclasses.
+ * <p>{@code @BeforeAll} methods are inherited from superclasses as long as they
+ * are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Furthermore, {@code @BeforeAll} methods from superclasses will be
+ * executed before {@code @BeforeAll} methods in subclasses.
  *
- * <p>Similarly, {@code @BeforeAll} methods declared in an interface are
- * inherited as long as they are not <em>hidden</em> or <em>overridden</em>,
- * and {@code @BeforeAll} methods from an interface will be executed before
- * {@code @BeforeAll} methods in the class that implements the interface.
+ * <p>Similarly, {@code @BeforeAll} methods declared in an interface are inherited
+ * as long as they are not overridden, and {@code @BeforeAll} methods from an
+ * interface will be executed before {@code @BeforeAll} methods in the class that
+ * implements the interface.
  *
  * <p>JUnit Jupiter does not guarantee the execution order of multiple
  * {@code @BeforeAll} methods that are declared within a single test class or

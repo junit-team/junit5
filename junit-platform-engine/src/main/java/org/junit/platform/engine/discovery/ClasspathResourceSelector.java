@@ -11,6 +11,7 @@
 package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
@@ -21,8 +22,10 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects the name of a <em>classpath resource</em>
@@ -132,4 +135,43 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 			this.position).toString();
 	}
 
+	@Override
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		if (this.position == null) {
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.classpathResourceName));
+		}
+		else {
+			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
+				String.format("%s?%s", this.classpathResourceName, this.position.toQueryPart())));
+		}
+	}
+
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for
+	 * {@link ClasspathResourceSelector ClasspathResourceSelectors}.
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
+
+		private static final String PREFIX = "resource";
+
+		public IdentifierParser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return PREFIX;
+		}
+
+		@Override
+		public Optional<ClasspathResourceSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(StringUtils.splitIntoTwo('?', identifier.getValue()).map( //
+				DiscoverySelectors::selectClasspathResource, //
+				(resourceName, query) -> {
+					FilePosition position = FilePosition.fromQuery(query).orElse(null);
+					return DiscoverySelectors.selectClasspathResource(resourceName, position);
+				} //
+			));
+		}
+	}
 }

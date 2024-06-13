@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -21,9 +22,9 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @CsvFileSource} is an {@link ArgumentsSource} which is used to load
- * comma-separated value (CSV) files from one or more classpath {@link #resources}
- * or {@link #files}.
+ * {@code @CsvFileSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which is used to load comma-separated value (CSV)
+ * files from one or more classpath {@link #resources} or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
  * arguments to the annotated {@code @ParameterizedTest} method. Note that the
@@ -63,6 +64,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(CsvFileSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvFileArgumentsProvider.class)
 @SuppressWarnings("exports")

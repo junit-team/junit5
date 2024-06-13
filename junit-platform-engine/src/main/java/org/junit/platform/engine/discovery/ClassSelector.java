@@ -11,9 +11,11 @@
 package org.junit.platform.engine.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -21,6 +23,7 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
  * A {@link DiscoverySelector} that selects a {@link Class} or class name so
@@ -133,4 +136,31 @@ public class ClassSelector implements DiscoverySelector {
 		// @formatter:on
 	}
 
+	@Override
+	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
+		return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX, this.className));
+	}
+
+	/**
+	 * The {@link DiscoverySelectorIdentifierParser} for {@link ClassSelector
+	 * ClassSelectors}.
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static class IdentifierParser implements DiscoverySelectorIdentifierParser {
+
+		private static final String PREFIX = "class";
+
+		public IdentifierParser() {
+		}
+
+		@Override
+		public String getPrefix() {
+			return PREFIX;
+		}
+
+		@Override
+		public Optional<ClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
+			return Optional.of(DiscoverySelectors.selectClass(identifier.getValue()));
+		}
+	}
 }

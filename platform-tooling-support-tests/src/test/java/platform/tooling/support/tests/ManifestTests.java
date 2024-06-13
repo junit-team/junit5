@@ -56,8 +56,8 @@ class ManifestTests {
 				MavenVersion.parseMavenString(version).getOSGiVersion().toString());
 			switch (module) {
 				case "junit-platform-commons" -> assertValue(attributes, "Multi-Release", "true");
-				case "junit-platform-console" ->
-					assertValue(attributes, "Main-Class", "org.junit.platform.console.ConsoleLauncher");
+				case "junit-platform-console" -> assertValue(attributes, "Main-Class",
+					"org.junit.platform.console.ConsoleLauncher");
 			}
 			var domain = Domain.domain(manifest);
 			domain.getExportPackage().forEach((pkg, attrs) -> {

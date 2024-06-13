@@ -29,18 +29,19 @@ import org.apiguardian.api.API;
  * <h2>Method Signatures</h2>
  *
  * <p>{@code @AfterEach} methods must have a {@code void} return type and must
- * not be {@code static}. Using {@code private} visibility is strongly
- * discouraged and will be disallowed in a future release.
- * They may optionally declare parameters to be resolved by
+ * not be {@code static}. In addition, {@code @AfterEach} methods may optionally
+ * declare parameters to be resolved by
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
+ *
+ * <p>Using {@code private} visibility for {@code @AfterEach} methods is strongly
+ * discouraged and will be disallowed in a future release.
  *
  * <h2>Inheritance and Execution Order</h2>
  *
  * <p>{@code @AfterEach} methods are inherited from superclasses as long as they
- * are not <em>overridden</em> or <em>superseded</em> (i.e., replaced based on
- * signature only, irrespective of Java's visibility rules). Furthermore,
- * {@code @AfterEach} methods from superclasses will be executed after
- * {@code @AfterEach} methods in subclasses.
+ * are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Furthermore, {@code @AfterEach} methods from superclasses will be
+ * executed after {@code @AfterEach} methods in subclasses.
  *
  * <p>Similarly, {@code @AfterEach} methods declared as <em>interface default
  * methods</em> are inherited as long as they are not overridden, and

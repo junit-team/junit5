@@ -13,7 +13,6 @@ package org.junit.jupiter.params.provider;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
 import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
@@ -26,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -54,7 +52,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 				.map(factoryMethod -> validateFactoryMethod(factoryMethod, testInstance))
 				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
 				.flatMap(CollectionUtils::toStream)
-				.map(MethodArgumentsProvider::toArguments);
+				.map(ArgumentsUtils::toArguments);
 		// @formatter:on
 	}
 
@@ -68,12 +66,12 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 			return findFactoryMethodBySimpleName(testClass, testMethod, factoryMethodName);
 		}
 
-		// Convert local factory method name to fully-qualified method name.
+		// Convert local factory method name to fully qualified method name.
 		if (!looksLikeAFullyQualifiedMethodName(factoryMethodName)) {
 			factoryMethodName = testClass.getName() + "#" + factoryMethodName;
 		}
 
-		// Find factory method using fully-qualified name.
+		// Find factory method using fully qualified name.
 		Method factoryMethod = findFactoryMethodByFullyQualifiedName(testClass, testMethod, factoryMethodName);
 
 		// Ensure factory method has a valid return type and is not a test method.
@@ -98,9 +96,9 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 			return indexOfFirstDot < indexOfLastOpeningParenthesis;
 		}
 		// If we get this far, we conclude the supplied factory method name "looks"
-		// like it was intended to be a fully-qualified method name, even if the
+		// like it was intended to be a fully qualified method name, even if the
 		// syntax is invalid. We do this in order to provide better diagnostics for
-		// the user when a fully-qualified method name is in fact invalid.
+		// the user when a fully qualified method name is in fact invalid.
 		return true;
 	}
 
@@ -112,7 +110,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		String methodName = methodParts[1];
 		String methodParameters = methodParts[2];
 		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
-		Class<?> clazz = loadRequiredClass(className, classLoader);
+		Class<?> clazz = ReflectionUtils.loadRequiredClass(className, classLoader);
 
 		// Attempt to find an exact match first.
 		Method factoryMethod = ReflectionUtils.findMethod(clazz, methodName, methodParameters).orElse(null);
@@ -174,11 +172,6 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 				|| isAnnotated(candidate, TestFactory.class);
 	}
 
-	private static Class<?> loadRequiredClass(String className, ClassLoader classLoader) {
-		return ReflectionUtils.tryToLoadClass(className, classLoader).getOrThrow(
-			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
-	}
-
 	private static Method validateFactoryMethod(Method factoryMethod, Object testInstance) {
 		Preconditions.condition(
 			factoryMethod.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(factoryMethod),
@@ -187,29 +180,6 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 					+ "external factory methods must always be static.",
 				factoryMethod.toGenericString()));
 		return factoryMethod;
-	}
-
-	private static Arguments toArguments(Object item) {
-
-		// Nothing to do except cast.
-		if (item instanceof Arguments) {
-			return (Arguments) item;
-		}
-
-		// Pass all multidimensional arrays "as is", in contrast to Object[].
-		// See https://github.com/junit-team/junit5/issues/1665
-		if (ReflectionUtils.isMultidimensionalArray(item)) {
-			return arguments(item);
-		}
-
-		// Special treatment for one-dimensional reference arrays.
-		// See https://github.com/junit-team/junit5/issues/1665
-		if (item instanceof Object[]) {
-			return arguments((Object[]) item);
-		}
-
-		// Pass everything else "as is".
-		return arguments(item);
 	}
 
 }

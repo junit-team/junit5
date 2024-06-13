@@ -39,8 +39,8 @@ class DiscoverTestsCommand extends BaseCommand<Void> {
 	protected Void execute(PrintWriter out) {
 		TestDiscoveryOptions discoveryOptions = this.discoveryOptions.toTestDiscoveryOptions();
 		TestConsoleOutputOptions testOutputOptions = this.testOutputOptions.toTestConsoleOutputOptions();
-		testOutputOptions.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
-		consoleTestExecutorFactory.create(discoveryOptions, testOutputOptions).discover(out);
+		testOutputOptions.setAnsiColorOutputDisabled(this.ansiColorOption.isDisableAnsiColors());
+		this.consoleTestExecutorFactory.create(discoveryOptions, testOutputOptions).discover(out);
 		return null;
 	}
 }

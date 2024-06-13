@@ -13,6 +13,7 @@ package org.junit.platform.console.options;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.PrintWriter;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
@@ -33,6 +34,9 @@ public class CommandFacade {
 	}
 
 	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+		Optional<String> version = ManifestVersionProvider.getImplementationVersion();
+		System.setProperty("junit.docs.version",
+			version.map(it -> it.endsWith("-SNAPSHOT") ? "snapshot" : it).orElse("current"));
 		return new MainCommand(consoleTestExecutorFactory).run(out, err, args);
 	}
 }

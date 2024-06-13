@@ -25,9 +25,11 @@ import java.util.Map;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
@@ -56,6 +58,7 @@ public class TestDiscoveryOptions {
 	private List<MethodSelector> selectedMethods = emptyList();
 	private List<ClasspathResourceSelector> selectedClasspathResources = emptyList();
 	private List<IterationSelector> selectedIterations = emptyList();
+	private List<DiscoverySelectorIdentifier> selectorIdentifiers = emptyList();
 
 	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
 	private List<String> excludedClassNamePatterns = emptyList();
@@ -176,6 +179,14 @@ public class TestDiscoveryOptions {
 		this.selectedIterations = selectedIterations;
 	}
 
+	public List<DiscoverySelectorIdentifier> getSelectorIdentifiers() {
+		return selectorIdentifiers;
+	}
+
+	public void setSelectorIdentifiers(List<DiscoverySelectorIdentifier> selectorIdentifiers) {
+		this.selectorIdentifiers = selectorIdentifiers;
+	}
+
 	public List<DiscoverySelector> getExplicitSelectors() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
 		selectors.addAll(getSelectedUris());
@@ -187,6 +198,7 @@ public class TestDiscoveryOptions {
 		selectors.addAll(getSelectedMethods());
 		selectors.addAll(getSelectedClasspathResources());
 		selectors.addAll(getSelectedIterations());
+		DiscoverySelectors.parseAll(getSelectorIdentifiers()).forEach(selectors::add);
 		return selectors;
 	}
 

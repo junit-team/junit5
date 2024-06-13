@@ -284,7 +284,8 @@ public final class TestIdentifier implements Serializable {
 		source = serializedForm.source;
 		tags = serializedForm.tags;
 		type = serializedForm.type;
-		parentId = UniqueId.parse(serializedForm.parentId);
+		String parentId = serializedForm.parentId;
+		this.parentId = parentId == null ? null : UniqueId.parse(parentId);
 		legacyReportingName = serializedForm.legacyReportingName;
 	}
 
@@ -307,7 +308,8 @@ public final class TestIdentifier implements Serializable {
 
 		SerializedForm(TestIdentifier testIdentifier) {
 			this.uniqueId = testIdentifier.uniqueId.toString();
-			this.parentId = testIdentifier.parentId.toString();
+			UniqueId parentId = testIdentifier.parentId;
+			this.parentId = parentId == null ? null : parentId.toString();
 			this.displayName = testIdentifier.displayName;
 			this.legacyReportingName = testIdentifier.legacyReportingName;
 			this.source = testIdentifier.source;

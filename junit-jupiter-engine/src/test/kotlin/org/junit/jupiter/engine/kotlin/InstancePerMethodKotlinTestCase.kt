@@ -16,7 +16,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class InstancePerMethodKotlinTestCase {
-
     companion object {
         @JvmField
         val TEST_INSTANCES: MutableMap<Any, MutableMap<String, Int>> = LinkedHashMap()
@@ -33,8 +32,12 @@ class InstancePerMethodKotlinTestCase {
             increment(this, "afterAll")
         }
 
-        private fun increment(instance: Any, name: String) {
-            TEST_INSTANCES.computeIfAbsent(instance, { _ -> LinkedHashMap() })
+        private fun increment(
+            instance: Any,
+            name: String
+        ) {
+            TEST_INSTANCES
+                .computeIfAbsent(instance, { _ -> LinkedHashMap() })
                 .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
         }
     }

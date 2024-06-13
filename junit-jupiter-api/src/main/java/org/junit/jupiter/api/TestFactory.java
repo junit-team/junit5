@@ -43,6 +43,13 @@ import org.junit.platform.commons.annotation.Testable;
  * resolved by {@link org.junit.jupiter.api.extension.ParameterResolver
  * ParameterResolvers}.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>{@code @TestFactory} methods are inherited from superclasses as long as
+ * they are not <em>overridden</em> according to the visibility rules of the Java
+ * language. Similarly, {@code @TestFactory} methods declared as <em>interface
+ * default methods</em> are inherited as long as they are not overridden.
+ *
  * <h2>Test Execution Order</h2>
  *
  * <p>By default, test methods will be ordered using an algorithm that is

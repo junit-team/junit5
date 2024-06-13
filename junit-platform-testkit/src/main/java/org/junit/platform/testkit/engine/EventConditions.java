@@ -141,7 +141,7 @@ public final class EventConditions {
 	 * {@link Event}'s {@linkplain Event#getTestDescriptor() test descriptor} is
 	 * a {@linkplain TestDescriptor#isContainer() container} and its
 	 * {@linkplain TestDescriptor#getUniqueId() unique id} contains the
-	 * fully-qualified name of the supplied {@link Class}.
+	 * fully qualified name of the supplied {@link Class}.
 	 */
 	public static Condition<Event> container(Class<?> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");

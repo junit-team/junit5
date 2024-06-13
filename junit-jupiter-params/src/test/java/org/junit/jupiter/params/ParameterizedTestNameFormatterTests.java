@@ -11,14 +11,20 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedTest.DEFAULT_DISPLAY_NAME;
 import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
@@ -31,11 +37,14 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -56,8 +65,8 @@ class ParameterizedTestNameFormatterTests {
 	void formatsDisplayName() {
 		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, "enigma");
 
-		assertEquals("enigma", formatter.format(1));
-		assertEquals("enigma", formatter.format(2));
+		assertEquals("enigma", format(formatter, 1, arguments()));
+		assertEquals("enigma", format(formatter, 2, arguments()));
 	}
 
 	@Test
@@ -65,8 +74,8 @@ class ParameterizedTestNameFormatterTests {
 		String displayName = "display'Zero";
 		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, "display'Zero");
 
-		assertEquals(displayName, formatter.format(1));
-		assertEquals(displayName, formatter.format(2));
+		assertEquals(displayName, format(formatter, 1, arguments()));
+		assertEquals(displayName, format(formatter, 2, arguments()));
 	}
 
 	@Test
@@ -74,23 +83,32 @@ class ParameterizedTestNameFormatterTests {
 		String displayName = "{enigma} {0} '{1}'";
 		var formatter = formatter(DISPLAY_NAME_PLACEHOLDER, displayName);
 
-		assertEquals(displayName, formatter.format(1));
-		assertEquals(displayName, formatter.format(2));
+		assertEquals(displayName, format(formatter, 1, arguments()));
+		assertEquals(displayName, format(formatter, 2, arguments()));
 	}
 
 	@Test
 	void formatsInvocationIndex() {
 		var formatter = formatter(INDEX_PLACEHOLDER, "enigma");
 
-		assertEquals("1", formatter.format(1));
-		assertEquals("2", formatter.format(2));
+		assertEquals("1", format(formatter, 1, arguments()));
+		assertEquals("2", format(formatter, 2, arguments()));
+	}
+
+	@Test
+	void defaultDisplayName() {
+		var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
+
+		var formattedName = format(formatter, 1, arguments("apple", "banana"));
+
+		assertThat(formattedName).isEqualTo("[1] apple, banana");
 	}
 
 	@Test
 	void formatsIndividualArguments() {
 		var formatter = formatter("{0} -> {1}", "enigma");
 
-		assertEquals("foo -> 42", formatter.format(1, "foo", 42));
+		assertEquals("foo -> 42", format(formatter, 1, arguments("foo", 42)));
 	}
 
 	@Test
@@ -98,17 +116,18 @@ class ParameterizedTestNameFormatterTests {
 		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
 		// @formatter:off
-		assertEquals("42, 99, enigma, null, [1, 2, 3], [foo, bar], [[2, 4], [3, 9]]",
-			formatter.format(1,
-				42,
-				99,
-				"enigma",
-				null,
-				new int[] { 1, 2, 3 },
-				new String[] { "foo", "bar" },
-				new Integer[][] { { 2, 4 }, { 3, 9 } }
-			));
+		Arguments args = arguments(
+			42,
+			99,
+			"enigma",
+			null,
+			new int[] { 1, 2, 3 },
+			new String[] { "foo", "bar" },
+			new Integer[][] { { 2, 4 }, { 3, 9 } }
+		);
 		// @formatter:on
+
+		assertEquals("42, 99, enigma, null, [1, 2, 3], [foo, bar], [[2, 4], [3, 9]]", format(formatter, 1, args));
 	}
 
 	@Test
@@ -116,7 +135,7 @@ class ParameterizedTestNameFormatterTests {
 		var testMethod = ParameterizedTestCases.getMethod("parameterizedTest", int.class, String.class, Object[].class);
 		var formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
-		var formattedName = formatter.format(1, 42, "enigma", new Object[] { "foo", 1 });
+		var formattedName = format(formatter, 1, arguments(42, "enigma", new Object[] { "foo", 1 }));
 		assertEquals("someNumber=42, someString=enigma, someArray=[foo, 1]", formattedName);
 	}
 
@@ -125,7 +144,7 @@ class ParameterizedTestNameFormatterTests {
 		var testMethod = ParameterizedTestCases.getMethod("parameterizedTestWithAggregator", int.class, String.class);
 		var formatter = formatter(ARGUMENTS_WITH_NAMES_PLACEHOLDER, "enigma", testMethod);
 
-		var formattedName = formatter.format(1, 42, "foo", "bar");
+		var formattedName = format(formatter, 1, arguments(42, "foo", "bar"));
 		assertEquals("someNumber=42, foo, bar", formattedName);
 	}
 
@@ -134,9 +153,9 @@ class ParameterizedTestNameFormatterTests {
 		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
 		// Explicit test for https://github.com/junit-team/junit5/issues/814
-		assertEquals("[foo, bar]", formatter.format(1, (Object) new String[] { "foo", "bar" }));
+		assertEquals("[foo, bar]", format(formatter, 1, arguments((Object) new String[] { "foo", "bar" })));
 
-		assertEquals("[foo, bar], 42, true", formatter.format(1, new String[] { "foo", "bar" }, 42, true));
+		assertEquals("[foo, bar], 42, true", format(formatter, 1, arguments(new String[] { "foo", "bar" }, 42, true)));
 	}
 
 	@Test
@@ -144,16 +163,16 @@ class ParameterizedTestNameFormatterTests {
 		var pattern = DISPLAY_NAME_PLACEHOLDER + " " + INDEX_PLACEHOLDER + " :: " + ARGUMENTS_PLACEHOLDER + " :: {1}";
 		var formatter = formatter(pattern, "enigma");
 
-		assertEquals("enigma 1 :: foo, bar :: bar", formatter.format(1, "foo", "bar"));
-		assertEquals("enigma 2 :: foo, 42 :: 42", formatter.format(2, "foo", 42));
+		assertEquals("enigma 1 :: foo, bar :: bar", format(formatter, 1, arguments("foo", "bar")));
+		assertEquals("enigma 2 :: foo, 42 :: 42", format(formatter, 2, arguments("foo", 42)));
 	}
 
 	@Test
 	void formatDoesNotAlterArgumentsArray() {
-		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 		Object[] actual = { 1, "two", Byte.valueOf("-128"), new Integer[][] { { 2, 4 }, { 3, 9 } } };
+		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 		var expected = Arrays.copyOf(actual, actual.length);
-		assertEquals("1, two, -128, [[2, 4], [3, 9]]", formatter.format(1, actual));
+		assertEquals("1, two, -128, [[2, 4], [3, 9]]", format(formatter, 1, arguments(actual)));
 		assertArrayEquals(expected, actual);
 	}
 
@@ -162,14 +181,12 @@ class ParameterizedTestNameFormatterTests {
 		var formatter = formatter("{0} -> {1}", "enigma");
 
 		Object[] arguments = new Number[] { 1, 2 };
-		assertEquals("1 -> 2", formatter.format(1, arguments));
+		assertEquals("1 -> 2", format(formatter, 1, arguments(arguments)));
 	}
 
 	@Test
 	void throwsReadableExceptionForInvalidPattern() {
-		var formatter = formatter("{index", "enigma");
-
-		var exception = assertThrows(JUnitException.class, () -> formatter.format(1));
+		var exception = assertThrows(JUnitException.class, () -> formatter("{index", "enigma"));
 		assertNotNull(exception.getCause());
 		assertEquals(IllegalArgumentException.class, exception.getCause().getClass());
 	}
@@ -178,7 +195,7 @@ class ParameterizedTestNameFormatterTests {
 	void formattingDoesNotFailIfArgumentToStringImplementationReturnsNull() {
 		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
-		var formattedName = formatter.format(1, new ToStringReturnsNull(), "foo");
+		var formattedName = format(formatter, 1, arguments(new ToStringReturnsNull(), "foo"));
 
 		assertThat(formattedName).isEqualTo("null, foo");
 	}
@@ -187,24 +204,28 @@ class ParameterizedTestNameFormatterTests {
 	void formattingDoesNotFailIfArgumentToStringImplementationThrowsAnException() {
 		var formatter = formatter(ARGUMENTS_PLACEHOLDER, "enigma");
 
-		var formattedName = formatter.format(1, new ToStringThrowsException(), "foo");
+		var formattedName = format(formatter, 1, arguments(new ToStringThrowsException(), "foo"));
 
 		assertThat(formattedName).startsWith(ToStringThrowsException.class.getName() + "@");
 		assertThat(formattedName).endsWith("foo");
 	}
 
 	@ParameterizedTest(name = "{0}")
-	@CsvSource(delimiter = '|', value = { "US | 42.23 is positive on 2019 Jan 13 at 12:34:56",
-			"DE | 42,23 is positive on 13.01.2019 at 12:34:56" })
+	@CsvSource(delimiter = '|', textBlock = """
+			US | 42.23 is positive on 2019 Jan 13 at 12:34:56
+			DE | 42,23 is positive on 13.01.2019 at 12:34:56
+			""")
 	void customFormattingExpressionsAreSupported(Locale locale, String expectedValue) {
 		var pattern = "[{index}] {1,number,#.##} is {1,choice,0<positive} on {0,date} at {0,time} even though {2}";
-		var formatter = formatter(pattern, "enigma");
 		Locale.setDefault(Locale.US);
 
 		var date = Date.from(
 			LocalDate.of(2019, 1, 13).atTime(LocalTime.of(12, 34, 56)).atZone(ZoneId.systemDefault()).toInstant());
 		Locale.setDefault(locale);
-		var formattedName = formatter.format(1, date, new BigDecimal("42.23"), new ToStringThrowsException());
+
+		var formatter = formatter(pattern, "enigma");
+		var formattedName = format(formatter, 1,
+			arguments(date, new BigDecimal("42.23"), new ToStringThrowsException()));
 
 		assertThat(formattedName).startsWith(
 			"[1] " + expectedValue + " even though " + ToStringThrowsException.class.getName() + "@");
@@ -214,7 +235,7 @@ class ParameterizedTestNameFormatterTests {
 	void ignoresExcessPlaceholders() {
 		var formatter = formatter("{0}, {1}", "enigma");
 
-		var formattedName = formatter.format(1, "foo");
+		var formattedName = format(formatter, 1, arguments("foo"));
 
 		assertThat(formattedName).isEqualTo("foo, {1}");
 	}
@@ -223,7 +244,7 @@ class ParameterizedTestNameFormatterTests {
 	void placeholdersCanBeOmitted() {
 		var formatter = formatter("{0}", "enigma");
 
-		var formattedName = formatter.format(1, "foo", "bar");
+		var formattedName = format(formatter, 1, arguments("foo", "bar"));
 
 		assertThat(formattedName).isEqualTo("foo");
 	}
@@ -232,26 +253,80 @@ class ParameterizedTestNameFormatterTests {
 	void placeholdersCanBeSkipped() {
 		var formatter = formatter("{0}, {2}", "enigma");
 
-		var formattedName = formatter.format(1, "foo", "bar", "baz");
+		var formattedName = format(formatter, 1, arguments("foo", "bar", "baz"));
 
 		assertThat(formattedName).isEqualTo("foo, baz");
 	}
 
 	@Test
 	void truncatesArgumentsThatExceedMaxLength() {
-		var formatter = formatter("{arguments}", 3);
+		var formatter = formatter("{arguments}", "display name", 3);
 
-		var formattedName = formatter.format(1, "fo", "foo", "fooo");
+		var formattedName = format(formatter, 1, arguments("fo", "foo", "fooo"));
 
 		assertThat(formattedName).isEqualTo("fo, foo, fo…");
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, mock(), 512);
+	@Nested
+	class ArgumentSetTests {
+
+		@Test
+		void throwsExceptionForArgumentSetNamePlaceholderWithoutArgumentSet() {
+			var formatter = formatter(ARGUMENT_SET_NAME_PLACEHOLDER, "IGNORED");
+
+			// @formatter:off
+			assertThatExceptionOfType(JUnitException.class)
+				.isThrownBy(() -> format(formatter, 1, arguments()))
+				.havingCause()
+					.isExactlyInstanceOf(ExtensionConfigurationException.class)
+					.withMessage("When the display name pattern for a @ParameterizedTest contains %s, "
+						+ "the arguments must be supplied as an ArgumentSet.", ARGUMENT_SET_NAME_PLACEHOLDER);
+			// @formatter:on
+		}
+
+		@Test
+		void defaultDisplayName() {
+			var formatter = formatter(DEFAULT_DISPLAY_NAME, "IGNORED");
+
+			var formattedName = format(formatter, 42, argumentSet("Fruits", "apple", "banana"));
+
+			assertThat(formattedName).isEqualTo("[42] Fruits");
+		}
+
+		@Test
+		void argumentSetNameAndArgumentsPlaceholders() {
+			var pattern = ARGUMENT_SET_NAME_PLACEHOLDER + " :: " + ARGUMENTS_PLACEHOLDER;
+			var formatter = formatter(pattern, "IGNORED");
+
+			var formattedName = format(formatter, -1, argumentSet("Fruits", "apple", "banana"));
+
+			assertThat(formattedName).isEqualTo("Fruits :: apple, banana");
+		}
+
+		@Test
+		void mixedTypesOfArgumentsImplementationsAndCustomDisplayNamePattern() {
+			var pattern = "[%s] %s :: %s".formatted(INDEX_PLACEHOLDER, DISPLAY_NAME_PLACEHOLDER,
+				ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER);
+			var testMethod = ParameterizedTestCases.getMethod("processFruits", String.class, String.class);
+			var formatter = formatter(pattern, "Mixed Arguments Types", testMethod);
+
+			var name1 = format(formatter, 1, argumentSet("Fruits", "apple", "banana"));
+			var name2 = format(formatter, 2, arguments("apple", "banana"));
+
+			assertThat(name1).isEqualTo("[1] Mixed Arguments Types :: Fruits");
+			assertThat(name2).isEqualTo("[2] Mixed Arguments Types :: fruit1=apple, fruit2=banana");
+		}
+
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, int argumentMaxLength) {
-		return new ParameterizedTestNameFormatter(pattern, "display name", mock(), argumentMaxLength);
+	// -------------------------------------------------------------------------
+
+	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
+		return formatter(pattern, displayName, 512);
+	}
+
+	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, int argumentMaxLength) {
+		return new ParameterizedTestNameFormatter(pattern, displayName, mock(), argumentMaxLength);
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
@@ -259,7 +334,9 @@ class ParameterizedTestNameFormatterTests {
 			512);
 	}
 
-	// -------------------------------------------------------------------
+	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {
+		return formatter.format(invocationIndex, arguments, arguments.get());
+	}
 
 	private static class ToStringReturnsNull {
 
@@ -290,6 +367,10 @@ class ParameterizedTestNameFormatterTests {
 		@SuppressWarnings("unused")
 		void parameterizedTestWithAggregator(int someNumber,
 				@AggregateWith(CustomAggregator.class) String someAggregatedString) {
+		}
+
+		@SuppressWarnings("unused")
+		void processFruits(String fruit1, String fruit2) {
 		}
 
 		private static class CustomAggregator implements ArgumentsAggregator {

@@ -22,7 +22,6 @@ import org.junit.jupiter.params.provider.CsvSource
 import org.opentest4j.AssertionFailedError
 
 class ExtensionFunctionsTests {
-
     @Test
     fun `assertDoesNotThrow() and assertAll`() {
         assertDoesNotThrow {

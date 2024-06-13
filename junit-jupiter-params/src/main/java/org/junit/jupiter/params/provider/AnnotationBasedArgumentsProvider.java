@@ -13,6 +13,8 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -39,17 +41,17 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	public AnnotationBasedArgumentsProvider() {
 	}
 
-	private A annotation;
+	private final List<A> annotations = new ArrayList<>();
 
 	@Override
 	public final void accept(A annotation) {
 		Preconditions.notNull(annotation, "annotation must not be null");
-		this.annotation = annotation;
+		annotations.add(annotation);
 	}
 
 	@Override
 	public final Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		return provideArguments(context, this.annotation);
+		return annotations.stream().flatMap(annotation -> provideArguments(context, annotation));
 	}
 
 	/**

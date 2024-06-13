@@ -22,6 +22,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Help.ColorScheme;
 import picocli.CommandLine.IExitCodeGenerator;
+import picocli.CommandLine.Mixin;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
@@ -37,20 +38,27 @@ import picocli.CommandLine.Unmatched;
 		description = "Launches the JUnit Platform for test discovery and execution.", //
 		footerHeading = "%n", //
 		footer = "For more information, please refer to the JUnit User Guide at%n" //
-				+ "@|underline https://junit.org/junit5/docs/current/user-guide/|@", //
+				+ "@|underline https://junit.org/junit5/docs/${junit.docs.version}/user-guide/|@", //
 		scope = CommandLine.ScopeType.INHERIT, //
 		exitCodeOnInvalidInput = CommandResult.FAILURE, //
-		exitCodeOnExecutionException = CommandResult.FAILURE //
+		exitCodeOnExecutionException = CommandResult.FAILURE, //
+		versionProvider = ManifestVersionProvider.class //
 )
 class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
-	@Option(names = { "-h", "--help" }, help = true, hidden = true)
+	@Option(names = { "-h", "--help" }, help = true, description = "Display help information.")
 	private boolean helpRequested;
 
 	@Option(names = { "--h", "-help" }, help = true, hidden = true)
 	private boolean helpRequested2;
+
+	@Option(names = "--version", versionHelp = true, description = "Display version information.")
+	private boolean versionHelpRequested;
+
+	@Mixin
+	AnsiColorOptionMixin ansiColorOption;
 
 	@Unmatched
 	private final List<String> allParameters = new ArrayList<>();
@@ -68,6 +76,11 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 	public Object call() {
 		if (helpRequested || helpRequested2) {
 			commandSpec.commandLine().usage(commandSpec.commandLine().getOut());
+			commandResult = CommandResult.success();
+			return null;
+		}
+		if (versionHelpRequested) {
+			commandSpec.commandLine().printVersionHelp(commandSpec.commandLine().getOut());
 			commandResult = CommandResult.success();
 			return null;
 		}

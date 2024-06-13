@@ -129,8 +129,12 @@ if (project in mavenizedProjects) {
 tasks.withType<AbstractArchiveTask>().configureEach {
 	isPreserveFileTimestamps = false
 	isReproducibleFileOrder = true
-	dirMode = Integer.parseInt("0755", 8)
-	fileMode = Integer.parseInt("0644", 8)
+	dirPermissions {
+		unix("rwxr-xr-x")
+	}
+	filePermissions {
+		unix("rw-r--r--")
+	}
 }
 
 normalization {
@@ -238,7 +242,9 @@ tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror" // Terminates compilation when warnings occur.
+			"-Werror", // Terminates compilation when warnings occur.
+			// Required for compatibility with Java 8's reflection APIs (see https://github.com/junit-team/junit5/issues/3797).
+			"-parameters", // Generates metadata for reflection on method parameters.
 	))
 }
 

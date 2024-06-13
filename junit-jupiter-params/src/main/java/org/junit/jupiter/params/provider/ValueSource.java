@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -21,8 +22,8 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @ValueSource} is an {@link ArgumentsSource} which provides access to
- * an array of literal values.
+ * {@code @ValueSource} is a {@linkplain Repeatable repeatable}
+ * {@link ArgumentsSource} which provides access to an array of literal values.
  *
  * <p>Supported types include {@link #shorts}, {@link #bytes}, {@link #ints},
  * {@link #longs}, {@link #floats}, {@link #doubles}, {@link #chars},
@@ -40,6 +41,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Repeatable(ValueSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(ValueArgumentsProvider.class)
 @SuppressWarnings("exports")
