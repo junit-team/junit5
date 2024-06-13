@@ -19,7 +19,6 @@ import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 
 @TestInstance(PER_CLASS)
 class InstancePerClassKotlinTestCase {
-
     companion object {
         @JvmField
         val TEST_INSTANCES: MutableMap<Any, MutableMap<String, Int>> = HashMap()
@@ -56,7 +55,8 @@ class InstancePerClassKotlinTestCase {
     }
 
     private fun increment(name: String) {
-        TEST_INSTANCES.computeIfAbsent(this, { _ -> HashMap() })
+        TEST_INSTANCES
+            .computeIfAbsent(this, { _ -> HashMap() })
             .compute(name, { _, oldValue -> (oldValue ?: 0) + 1 })
     }
 }
