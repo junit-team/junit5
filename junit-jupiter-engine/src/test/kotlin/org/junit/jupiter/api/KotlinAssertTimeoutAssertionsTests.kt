@@ -26,7 +26,6 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @since 5.5
  */
 internal class KotlinAssertTimeoutAssertionsTests {
-
     // --- executable ----------------------------------------------------------
 
     @Test
@@ -40,43 +39,48 @@ internal class KotlinAssertTimeoutAssertionsTests {
 
     @Test
     fun assertTimeoutForExecutableThatThrowsAnException() {
-        val exception = assertThrows<RuntimeException> {
-            assertTimeout<Any>(ofMillis(500)) {
-                throw RuntimeException("not this time")
+        val exception =
+            assertThrows<RuntimeException> {
+                assertTimeout<Any>(ofMillis(500)) {
+                    throw RuntimeException("not this time")
+                }
             }
-        }
         assertMessageEquals(exception, "not this time")
     }
 
     @Test
     fun assertTimeoutForExecutableThatThrowsAnAssertionFailedError() {
-        val exception = assertThrows<AssertionFailedError> {
-            assertTimeout<Any>(ofMillis(500)) { fail("enigma") }
-        }
+        val exception =
+            assertThrows<AssertionFailedError> {
+                assertTimeout<Any>(ofMillis(500)) { fail("enigma") }
+            }
         assertMessageEquals(exception, "enigma")
     }
 
     @Test
     fun assertTimeoutForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10)) { this.nap() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10)) { this.nap() }
+            }
         assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by")
     }
 
     @Test
     fun assertTimeoutWithMessageForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10), "Tempus Fugit") { this.nap() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10), "Tempus Fugit") { this.nap() }
+            }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
     }
 
     @Test
     fun assertTimeoutWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10), { "Tempus" + " " + "Fugit" }) { this.nap() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10), { "Tempus" + " " + "Fugit" }) { this.nap() }
+            }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
     }
 
@@ -85,10 +89,11 @@ internal class KotlinAssertTimeoutAssertionsTests {
     @Test
     fun assertTimeoutForSupplierThatCompletesBeforeTheTimeout() {
         changed.get().set(false)
-        val result = assertTimeout(ofMillis(500)) {
-            changed.get().set(true)
-            "Tempus Fugit"
-        }
+        val result =
+            assertTimeout(ofMillis(500)) {
+                changed.get().set(true)
+                "Tempus Fugit"
+            }
         assertTrue(changed.get().get(), "should have executed in the same thread")
         assertEquals("Tempus Fugit", result)
         assertEquals("Tempus Fugit", assertTimeout(ofMillis(500), "message") { "Tempus Fugit" })
@@ -97,51 +102,56 @@ internal class KotlinAssertTimeoutAssertionsTests {
 
     @Test
     fun assertTimeoutForSupplierThatThrowsAnException() {
-        val exception = assertThrows<RuntimeException> {
-            assertTimeout(ofMillis(500)) {
-                ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
+        val exception =
+            assertThrows<RuntimeException> {
+                assertTimeout(ofMillis(500)) {
+                    ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
+                }
             }
-        }
         assertMessageEquals(exception, "not this time")
     }
 
     @Test
     fun assertTimeoutForSupplierThatThrowsAnAssertionFailedError() {
-        val exception = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(500)) {
-                fail("enigma")
+        val exception =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(500)) {
+                    fail("enigma")
+                }
             }
-        }
         assertMessageEquals(exception, "enigma")
     }
 
     @Test
     fun assertTimeoutForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10)) {
-                nap()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10)) {
+                    nap()
+                }
             }
-        }
         assertMessageStartsWith(error, "execution exceeded timeout of 10 ms by")
     }
 
     @Test
     fun assertTimeoutWithMessageForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10), "Tempus Fugit") {
-                nap()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10), "Tempus Fugit") {
+                    nap()
+                }
             }
-        }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
     }
 
     @Test
     fun assertTimeoutWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeout(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
-                nap()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeout(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
+                    nap()
+                }
             }
-        }
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
     }
 
@@ -158,41 +168,46 @@ internal class KotlinAssertTimeoutAssertionsTests {
 
     @Test
     fun assertTimeoutPreemptivelyForExecutableThatThrowsAnException() {
-        val exception = assertThrows<RuntimeException> {
-            assertTimeoutPreemptively<Any>(ofMillis(500)) { throw RuntimeException("not this time") }
-        }
+        val exception =
+            assertThrows<RuntimeException> {
+                assertTimeoutPreemptively<Any>(ofMillis(500)) { throw RuntimeException("not this time") }
+            }
         assertMessageEquals(exception, "not this time")
     }
 
     @Test
     fun assertTimeoutPreemptivelyForExecutableThatThrowsAnAssertionFailedError() {
-        val exception = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively<Any>(ofMillis(500)) { fail("enigma") }
-        }
+        val exception =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively<Any>(ofMillis(500)) { fail("enigma") }
+            }
         assertMessageEquals(exception, "enigma")
     }
 
     @Test
     fun assertTimeoutPreemptivelyForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10)) { waitForInterrupt() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10)) { waitForInterrupt() }
+            }
         assertMessageEquals(error, "execution timed out after 10 ms")
     }
 
     @Test
     fun assertTimeoutPreemptivelyWithMessageForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") { waitForInterrupt() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") { waitForInterrupt() }
+            }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
 
     @Test
     fun assertTimeoutPreemptivelyWithMessageSupplierForExecutableThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) { waitForInterrupt() }
-        }
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) { waitForInterrupt() }
+            }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
 
@@ -206,10 +221,11 @@ internal class KotlinAssertTimeoutAssertionsTests {
     @Test
     fun assertTimeoutPreemptivelyForSupplierThatCompletesBeforeTheTimeout() {
         changed.get().set(false)
-        val result = assertTimeoutPreemptively(ofMillis(500)) {
-            changed.get().set(true)
-            "Tempus Fugit"
-        }
+        val result =
+            assertTimeoutPreemptively(ofMillis(500)) {
+                changed.get().set(true)
+                "Tempus Fugit"
+            }
         assertFalse(changed.get().get(), "should have executed in a different thread")
         assertEquals("Tempus Fugit", result)
         assertEquals("Tempus Fugit", assertTimeoutPreemptively(ofMillis(500), "message") { "Tempus Fugit" })
@@ -218,51 +234,56 @@ internal class KotlinAssertTimeoutAssertionsTests {
 
     @Test
     fun assertTimeoutPreemptivelyForSupplierThatThrowsAnException() {
-        val exception = assertThrows<RuntimeException> {
-            assertTimeoutPreemptively(ofMillis(500)) {
-                ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
+        val exception =
+            assertThrows<RuntimeException> {
+                assertTimeoutPreemptively(ofMillis(500)) {
+                    ExceptionUtils.throwAsUncheckedException(RuntimeException("not this time"))
+                }
             }
-        }
         assertMessageEquals(exception, "not this time")
     }
 
     @Test
     fun assertTimeoutPreemptivelyForSupplierThatThrowsAnAssertionFailedError() {
-        val exception = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(500)) {
-                fail("enigma")
+        val exception =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(500)) {
+                    fail("enigma")
+                }
             }
-        }
         assertMessageEquals(exception, "enigma")
     }
 
     @Test
     fun assertTimeoutPreemptivelyForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10)) {
-                waitForInterrupt()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10)) {
+                    waitForInterrupt()
+                }
             }
-        }
         assertMessageEquals(error, "execution timed out after 10 ms")
     }
 
     @Test
     fun assertTimeoutPreemptivelyWithMessageForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") {
-                waitForInterrupt()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10), "Tempus Fugit") {
+                    waitForInterrupt()
+                }
             }
-        }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
 
     @Test
     fun assertTimeoutPreemptivelyWithMessageSupplierForSupplierThatCompletesAfterTheTimeout() {
-        val error = assertThrows<AssertionFailedError> {
-            assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
-                waitForInterrupt()
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertTimeoutPreemptively(ofMillis(10), { "Tempus" + " " + "Fugit" }) {
+                    waitForInterrupt()
+                }
             }
-        }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
     }
 
