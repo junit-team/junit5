@@ -32,42 +32,20 @@ import org.junit.platform.commons.support.Resource;
 public class ResourceFilter implements Predicate<Resource> {
 
 	/**
-	 * Create a {@link ResourceFilter} instance that accepts all names but filters resources.
+	 * Create a {@link ResourceFilter} instance that filters resources.
 	 */
 	public static ResourceFilter of(Predicate<Resource> resourcePredicate) {
-		return of(name -> true, resourcePredicate);
+		return new ResourceFilter(resourcePredicate);
 	}
 
-	/**
-	 * Create a {@link ResourceFilter} instance that filters by resource names and resources.
-	 */
-	public static ResourceFilter of(Predicate<String> namePredicate, Predicate<Resource> resourcePredicate) {
-		return new ResourceFilter(namePredicate, resourcePredicate);
-	}
-
-	private final Predicate<String> namePredicate;
 	private final Predicate<Resource> resourcePredicate;
 
-	private ResourceFilter(Predicate<String> namePredicate, Predicate<Resource> resourcePredicate) {
-		this.namePredicate = Preconditions.notNull(namePredicate, "name predicate must not be null");
+	private ResourceFilter(Predicate<Resource> resourcePredicate) {
 		this.resourcePredicate = Preconditions.notNull(resourcePredicate, "resource predicate must not be null");
 	}
 
-	public boolean match(String name) {
-		return namePredicate.test(name);
-	}
-
-	public boolean match(Resource resource) {
-		return resourcePredicate.test(resource);
-	}
-
-	/**
-	 * @implNote This implementation combines all tests stored in the predicates
-	 * of this instance. Any new predicate must be added to this test method as
-	 * well.
-	 */
 	@Override
 	public boolean test(Resource resource) {
-		return match(resource.getName()) && match(resource);
+		return resourcePredicate.test(resource);
 	}
 }

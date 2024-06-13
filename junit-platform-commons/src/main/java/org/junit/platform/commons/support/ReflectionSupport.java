@@ -147,17 +147,14 @@ public final class ReflectionSupport {
 	 * @param root the URI for the classpath root in which to scan; never
 	 * {@code null}
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such resources found; never {@code null}
 	 * but potentially empty
-	 * @see #findAllResourcesInPackage(String, Predicate, Predicate)
-	 * @see #findAllResourcesInModule(String, Predicate, Predicate)
+	 * @see #findAllResourcesInPackage(String, Predicate)
+	 * @see #findAllResourcesInModule(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
-			Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter, resourceNameFilter);
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter);
 	}
 
 	/**
@@ -196,18 +193,15 @@ public final class ReflectionSupport {
 	 * @param root the URI for the classpath root in which to scan; never
 	 * {@code null}
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resources name filter; never {@code null}
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #streamAllResourcesInPackage(String, Predicate, Predicate)
-	 * @see #streamAllResourcesInModule(String, Predicate, Predicate)
+	 * @see #streamAllResourcesInPackage(String, Predicate)
+	 * @see #streamAllResourcesInModule(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
-			Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter, resourceNameFilter);
+	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter);
 	}
 
 	/**
@@ -230,7 +224,6 @@ public final class ReflectionSupport {
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
-
 		return ReflectionUtils.findAllClassesInPackage(basePackageName, classFilter, classNameFilter);
 	}
 
@@ -246,17 +239,14 @@ public final class ReflectionSupport {
 	 * scanning; must not be {@code null} and must be valid in terms of Java
 	 * syntax
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
-	 * @see #findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #findAllResourcesInModule(String, Predicate, Predicate)
+	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see #findAllResourcesInModule(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter,
-			Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter, resourceNameFilter);
+	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter);
 	}
 
 	/**
@@ -297,18 +287,16 @@ public final class ReflectionSupport {
 	 * scanning; must not be {@code null} and must be valid in terms of Java
 	 * syntax
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return a stream of all such resources found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #streamAllResourcesInModule(String, Predicate, Predicate)
+	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see #streamAllResourcesInModule(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
-			Predicate<Resource> resourceFilter, Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.streamAllResourcesInPackage(basePackageName, resourceFilter, resourceNameFilter);
+			Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.streamAllResourcesInPackage(basePackageName, resourceFilter);
 	}
 
 	/**
@@ -346,18 +334,15 @@ public final class ReflectionSupport {
 	 * @param moduleName the name of the module to scan; never {@code null} or
 	 * <em>empty</em>
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such resources found; never {@code null}
 	 * but potentially empty
 	 * @since 1.1.1
-	 * @see #findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #findAllResourcesInPackage(String, Predicate, Predicate)
+	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see #findAllResourcesInPackage(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
-			Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter, resourceNameFilter);
+	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter);
 	}
 
 	/**
@@ -396,18 +381,15 @@ public final class ReflectionSupport {
 	 * @param moduleName the name of the module to scan; never {@code null} or
 	 * <em>empty</em>
 	 * @param resourceFilter the resource type filter; never {@code null}
-	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return a stream of all such resources found; never {@code null}
 	 * but potentially empty
 	 * @since 1.10
-	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
-	 * @see #streamAllResourcesInPackage(String, Predicate, Predicate)
+	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see #streamAllResourcesInPackage(String, Predicate)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
-			Predicate<String> resourceNameFilter) {
-
-		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter, resourceNameFilter);
+	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter);
 	}
 
 	/**
