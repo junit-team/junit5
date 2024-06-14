@@ -158,8 +158,8 @@ class ReflectionSupportTests {
 				displayName = "..." + displayName.substring(displayName.length() - 42);
 			}
 			tests.add(DynamicTest.dynamicTest(displayName,
-				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources),
-					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources))));
+				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources, allNames),
+					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources, allNames))));
 		}
 		return tests;
 	}
@@ -168,9 +168,11 @@ class ReflectionSupportTests {
 	void findAllResourcesInClasspathRootPreconditions() {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",
-			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources));
-		assertPreconditionViolationException("resourceFilter",
-			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null));
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources, allNames));
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, allResources, null));
 	}
 
 	@Test
@@ -192,18 +194,20 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllResourcesInPackageDelegates() {
-		assertNotEquals(0, ReflectionSupport.findAllResourcesInPackage("org.junit", allResources).size());
+		assertNotEquals(0, ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames).size());
 
-		assertEquals(ReflectionUtils.findAllResourcesInPackage("org.junit", allResources),
-			ReflectionSupport.findAllResourcesInPackage("org.junit", allResources));
+		assertEquals(ReflectionUtils.findAllResourcesInPackage("org.junit", allResources, allNames),
+			ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames));
 	}
 
 	@Test
 	void findAllResourcesInPackagePreconditions() {
 		assertPreconditionViolationExceptionForString("basePackageName",
-			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources));
-		assertPreconditionViolationException("resourceFilter",
-			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null));
+			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources, allNames));
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, null));
 	}
 
 	@Test
@@ -225,17 +229,19 @@ class ReflectionSupportTests {
 
 	@Test
 	void findAllResourcesInModuleDelegates() {
-		assertEquals(ReflectionUtils.findAllResourcesInModule("org.junit.platform.commons", allResources),
-			ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources));
+		assertEquals(ReflectionUtils.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames),
+			ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames));
 	}
 
 	@Test
 	void findAllResourcesInModulePreconditions() {
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionSupport.findAllResourcesInModule(null, allResources));
+			() -> ReflectionSupport.findAllResourcesInModule(null, allResources, allNames));
 		assertEquals("Module name must not be null or empty", exception.getMessage());
-		assertPreconditionViolationException("Resource filter",
-			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null));
+		assertPreconditionViolationException("resource predicate",
+			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null, allNames));
+		assertPreconditionViolationException("name predicate",
+			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, null));
 	}
 
 	@Test

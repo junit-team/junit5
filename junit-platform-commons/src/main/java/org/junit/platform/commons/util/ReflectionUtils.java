@@ -148,7 +148,7 @@ public final class ReflectionUtils {
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
-		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass, ReflectionUtils::tryToLoadResource);
 
 	/**
 	 * Cache for equivalent methods on an interface implemented by the declaring class.
@@ -895,17 +895,28 @@ public final class ReflectionUtils {
 	/**
 	 * Tries to load the {@link Resource} for the supplied classpath resource name.
 	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)}
+	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)
+	 */
+	@API(status = INTERNAL, since = "1.4")
+	public static Try<Resource> tryToLoadResource(String classpathResourceName) {
+		return tryToLoadResource(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
+	}
+
+	/**
+	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)}
 	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName) {
+	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
-		ClassLoader classLoader = ClassLoaderUtils.getDefaultClassLoader();
-
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		URL resource = classLoader.getResource(startsWithSlash ? "/" + classpathResourceName : classpathResourceName);
 		if (resource == null) {
@@ -1077,12 +1088,31 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
+	 */
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		// unmodifiable since returned by public, non-internal method(s)
+		return findAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceNameFilter, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 */
 	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		return streamAllClassesInClasspathRoot(root, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
+	 */
+	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1095,8 +1125,8 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter));
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, ResourceFilter classFilter) {
+		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, classFilter));
 	}
 
 	/**
@@ -1109,7 +1139,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, ResourceFilter resourceFilter) {
 		return findAllResourcesInClasspathRoot(root, resourceFilter).stream();
 	}
 
@@ -1123,12 +1153,31 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInPackage(String, Predicate, Predicate)
+	 */
+	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		// unmodifiable since returned by public, non-internal method(s)
+		return findAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceNameFilter, resourceFilter));
+	}
+
+	/**
 	 * since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInPackage(String, Predicate, Predicate)
 	 */
 	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		return streamAllClassesInPackage(basePackageName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
+	 * since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInPackage(String, Predicate, Predicate)
+	 */
+	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
+			Predicate<Resource> resourceFilter, Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1141,7 +1190,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+	public static List<Resource> findAllResourcesInPackage(String basePackageName, ResourceFilter resourceFilter) {
 		return Collections.unmodifiableList(
 			classpathScanner.scanForResourcesInPackage(basePackageName, resourceFilter));
 	}
@@ -1156,8 +1205,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
-			Predicate<Resource> resourceFilter) {
+	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName, ResourceFilter resourceFilter) {
 		return findAllResourcesInPackage(basePackageName, resourceFilter).stream();
 	}
 
@@ -1172,12 +1220,31 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllResourcesInModule(String, Predicate, Predicate)
+	 */
+	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		// unmodifiable since returned by public, non-internal method(s)
+		return findAllResourcesInModule(moduleName, ResourceFilter.of(resourceNameFilter, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllClassesInModule(String, Predicate, Predicate)
 	 */
 	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 		return streamAllClassesInModule(moduleName, ClassFilter.of(classNameFilter, classFilter));
+	}
+
+	/**
+	 * @since 1.11
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInModule(String, Predicate, Predicate)
+	 */
+	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInModule(moduleName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1190,7 +1257,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+	public static List<Resource> findAllResourcesInModule(String moduleName, ResourceFilter resourceFilter) {
 		return Collections.unmodifiableList(ModuleUtils.findAllResourcesInModule(moduleName, resourceFilter));
 	}
 
@@ -1204,7 +1271,7 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+	public static Stream<Resource> streamAllResourcesInModule(String moduleName, ResourceFilter resourceFilter) {
 		return findAllResourcesInModule(moduleName, resourceFilter).stream();
 	}
 

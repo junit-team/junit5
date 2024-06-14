@@ -127,7 +127,7 @@ public class ModuleUtils {
 	 * but potentially empty
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> filter) {
+	public static List<Resource> findAllResourcesInModule(String moduleName, ResourceFilter filter) {
 		Preconditions.notBlank(moduleName, "Module name must not be null or empty");
 		Preconditions.notNull(filter, "Resource filter must not be null");
 
@@ -185,8 +185,7 @@ public class ModuleUtils {
 	 * Scan for classes using the supplied set of module references, class
 	 * filter, and loader.
 	 */
-	private static List<Resource> scan(Set<ModuleReference> references, Predicate<Resource> filter,
-			ClassLoader loader) {
+	private static List<Resource> scan(Set<ModuleReference> references, ResourceFilter filter, ClassLoader loader) {
 		logger.debug(() -> "Scanning " + references.size() + " module references: " + references);
 		ModuleReferenceResourceScanner scanner = new ModuleReferenceResourceScanner(filter, loader);
 		List<Resource> classes = new ArrayList<>();
@@ -267,10 +266,10 @@ public class ModuleUtils {
 	 */
 	static class ModuleReferenceResourceScanner {
 
-		private final Predicate<Resource> resourceFilter;
+		private final ResourceFilter resourceFilter;
 		private final ClassLoader classLoader;
 
-		ModuleReferenceResourceScanner(Predicate<Resource> resourceFilter, ClassLoader classLoader) {
+		ModuleReferenceResourceScanner(ResourceFilter resourceFilter, ClassLoader classLoader) {
 			this.resourceFilter = resourceFilter;
 			this.classLoader = classLoader;
 		}
@@ -283,6 +282,7 @@ public class ModuleUtils {
 				try (Stream<String> names = reader.list()) {
 					// @formatter:off
 					return names.filter(name -> !name.endsWith(".class"))
+							.filter(resourceFilter::match)
 							.map(this::loadResourceUnchecked)
 							// Always use ".filter(resourceFilter)" to include future predicates.
 							.filter(resourceFilter)

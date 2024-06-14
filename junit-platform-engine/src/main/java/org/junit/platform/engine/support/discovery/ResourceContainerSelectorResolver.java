@@ -34,10 +34,11 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 	public static final String DEFAULT_PACKAGE_NAME = "";
 	private final Predicate<Resource> resourceFilter;
+	private final Predicate<String> resourceNameFilter;
 
 	ResourceContainerSelectorResolver(Predicate<Resource> resourceFilter, Predicate<String> resourcePackageFilter) {
-		Predicate<Resource> packageFilter = adaptPackageFilter(resourcePackageFilter);
-		this.resourceFilter = packageFilter.and(resourceFilter);
+		this.resourceFilter = resourceFilter;
+		this.resourceNameFilter = adaptPackageFilter(resourcePackageFilter);
 	}
 
 	/**
@@ -45,8 +46,8 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 	 * Resources however have {@code /} separated paths. By rewriting the path
 	 * of the resource into a package name, we can make the package filter work.
 	 */
-	private static Predicate<Resource> adaptPackageFilter(Predicate<String> packageFilter) {
-		return resource -> packageFilter.test(packageName(resource.getName()));
+	private static Predicate<String> adaptPackageFilter(Predicate<String> packageFilter) {
+		return resource -> packageFilter.test(packageName(resource));
 	}
 
 	private static String packageName(String classpathResourceName) {
@@ -61,17 +62,20 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(ClasspathRootSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInClasspathRoot(selector.getClasspathRoot(), resourceFilter));
+		return resourceSelectors(
+			findAllResourcesInClasspathRoot(selector.getClasspathRoot(), resourceFilter, resourceNameFilter));
 	}
 
 	@Override
 	public Resolution resolve(ModuleSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInModule(selector.getModuleName(), resourceFilter));
+		return resourceSelectors(
+			findAllResourcesInModule(selector.getModuleName(), resourceFilter, resourceNameFilter));
 	}
 
 	@Override
 	public Resolution resolve(PackageSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInPackage(selector.getPackageName(), resourceFilter));
+		return resourceSelectors(
+			findAllResourcesInPackage(selector.getPackageName(), resourceFilter, resourceNameFilter));
 	}
 
 	private Resolution resourceSelectors(List<Resource> resources) {
