@@ -10,7 +10,6 @@ on:
       - '*'
 
 env:
-  JUNIT_DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
 jobs:

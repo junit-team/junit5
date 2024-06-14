@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 
 import de.sormuras.bartholdy.jdk.Jar;
 
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -34,15 +36,17 @@ import platform.tooling.support.Request;
 /**
  * @since 1.3
  */
+@Order(Integer.MAX_VALUE)
 class JarDescribeModuleTests {
 
+	@ResourceLock(Projects.JAR_DESCRIBE_MODULE)
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void describeModule(String module) throws Exception {
 		var modulePath = MavenRepo.jar(module);
 		var result = Request.builder() //
 				.setTool(new Jar()) //
-				.setProject("jar-describe-module") //
+				.setProject(Projects.JAR_DESCRIBE_MODULE) //
 				.setProjectToWorkspaceCopyFileFilter(file -> file.getName().startsWith(module)) //
 				.setWorkspace("jar-describe-module/" + module) //
 				.addArguments("--describe-module", "--file", modulePath) //

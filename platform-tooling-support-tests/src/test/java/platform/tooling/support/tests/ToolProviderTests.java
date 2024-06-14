@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 
@@ -46,6 +47,7 @@ import platform.tooling.support.ThirdPartyJars;
 /**
  * @since 1.6
  */
+@Order(Integer.MAX_VALUE)
 class ToolProviderTests {
 
 	private static final Path LIB = Request.WORKSPACE.resolve("tool-provider-tests/lib");
