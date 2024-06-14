@@ -335,11 +335,11 @@ public final class DiscoverySelectors {
 	 * {@linkplain Thread thread} that uses the resulting selector.
 	 *
 	 * @param classpathResource the classpath resource; never {@code null}
+	 * @since 1.11
 	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)
-	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {
