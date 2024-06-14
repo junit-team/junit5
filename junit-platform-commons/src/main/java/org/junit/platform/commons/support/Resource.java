@@ -21,7 +21,7 @@ import org.apiguardian.api.API;
 
 /**
  * Represents a resource on the classpath.
- *
+ * @since 1.11
  * @see ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
  * @see ReflectionSupport#findAllResourcesInPackage(String, Predicate, Predicate)
  * @see ReflectionSupport#findAllResourcesInModule(String, Predicate, Predicate)
