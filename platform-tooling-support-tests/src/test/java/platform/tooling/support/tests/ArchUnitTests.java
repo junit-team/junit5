@@ -40,7 +40,9 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.Order;
 
+@Order(Integer.MAX_VALUE)
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
 

@@ -19,6 +19,7 @@ import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.opentest4j.TestAbortedException;
@@ -32,6 +33,7 @@ import platform.tooling.support.Request;
  */
 class MavenSurefireCompatibilityTests {
 
+	@ResourceLock(Projects.MAVEN_SUREFIRE_COMPATIBILITY)
 	@ParameterizedTest
 	@CsvSource(delimiter = '|', nullValues = "<none>", textBlock = """
 			2.22.2   | --activate-profiles=manual-platform-dependency
@@ -41,7 +43,7 @@ class MavenSurefireCompatibilityTests {
 		var extraArgs = extraArg == null ? new Object[0] : new Object[] { extraArg };
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
-				.setProject("maven-surefire-compatibility") //
+				.setProject(Projects.MAVEN_SUREFIRE_COMPATIBILITY) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //

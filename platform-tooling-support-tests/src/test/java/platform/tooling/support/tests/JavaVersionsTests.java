@@ -51,7 +51,7 @@ class JavaVersionsTests {
 	List<String> execute(String version, Path javaHome) {
 		var result = Request.builder() //
 				.setTool(Request.maven()) //
-				.setProject("java-versions") //
+				.setProject(Projects.JAVA_VERSIONS) //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //

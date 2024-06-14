@@ -20,10 +20,12 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Order(Integer.MAX_VALUE)
 class HelperTests {
 
 	@Test
