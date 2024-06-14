@@ -215,7 +215,7 @@ class ClasspathScanner {
 					// @formatter:off
 					loadResource.apply(fullyQualifiedResourceName, getClassLoader())
 							.toOptional()
-							// Always use ".filter(classFilter)" to include future predicates.
+							// Always use ".filter(resourceFilter)" to include future predicates.
 							.filter(resourceFilter)
 							.ifPresent(resourceConsumer);
 					// @formatter:on
