@@ -339,6 +339,7 @@ public final class DiscoverySelectors {
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)
+	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {

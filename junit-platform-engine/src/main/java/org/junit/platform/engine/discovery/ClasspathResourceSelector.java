@@ -83,6 +83,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * method attempts to lazily load the {@link Resource} based on its name and
 	 * throws a {@link PreconditionViolationException} if the resource cannot
 	 * be loaded.
+	 *
+	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public Resource getClasspathResource() {

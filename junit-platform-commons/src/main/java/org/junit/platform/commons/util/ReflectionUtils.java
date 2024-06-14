@@ -899,7 +899,7 @@ public final class ReflectionUtils {
 	 * @since 1.11
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)
 	 */
-	@API(status = INTERNAL, since = "1.4")
+	@API(status = INTERNAL, since = "1.11")
 	public static Try<Resource> tryToLoadResource(String classpathResourceName) {
 		return tryToLoadResource(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
 	}

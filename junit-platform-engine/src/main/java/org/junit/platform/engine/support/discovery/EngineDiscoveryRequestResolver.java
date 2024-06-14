@@ -173,6 +173,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 * @param resourceFilter predicate the resolved classes must satisfy; never
 		 * {@code null}
 		 * @return this builder for method chaining
+		 * @since 1.11
 		 */
 		@API(status = EXPERIMENTAL, since = "1.11")
 		public Builder<T> addResourceContainerSelectorResolver(Predicate<Resource> resourceFilter) {
@@ -275,6 +276,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 *
 		 * @return the predicate for filtering the resolved resource names; never
 		 * {@code null}
+		 * @since 1.11
 		 */
 		@API(status = EXPERIMENTAL, since = "1.11")
 		Predicate<String> getPackageFilter();
