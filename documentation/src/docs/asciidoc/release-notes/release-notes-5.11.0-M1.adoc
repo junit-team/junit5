@@ -60,8 +60,6 @@ page in the Wiki.
   actual type and value in addition to the required type.
 * Updated `open-test-reporting` dependency to `0.1.0-M2`.
 
-* `ReflectionSupport` now supports scanning for classpath resources.
-
 [[release-notes-5.11.0-M1-junit-jupiter]]
 === JUnit Jupiter
 
