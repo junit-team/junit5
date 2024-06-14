@@ -30,7 +30,9 @@ repository on GitHub.
   exception's _root_ cause matches all supplied conditions, for use with the
   `EngineTestKit`.
 * `ReflectionSupport` now supports scanning for classpath resources.
-* `ReflectionSupport` now supports scanning for classpath resources.
+* New `addResourceContainerSelectorResolver()` in `EngineDiscoveryRequestResolver.Builder` to
+  support the discovery of class path resource based tests, analogous to the
+  `addClassContainerSelectorResolver()`.
 
 
 [[release-notes-5.11.0-M3-junit-jupiter]]
