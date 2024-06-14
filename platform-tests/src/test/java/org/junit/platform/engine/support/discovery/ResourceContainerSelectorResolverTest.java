@@ -17,9 +17,7 @@ import static org.junit.platform.engine.discovery.PackageNameFilter.includePacka
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Match.exact;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.match;
 
-import java.io.IOException;
 import java.net.URI;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
@@ -31,7 +29,6 @@ import org.junit.platform.commons.support.Resource;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
-import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;

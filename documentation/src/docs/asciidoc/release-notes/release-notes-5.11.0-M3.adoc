@@ -30,6 +30,7 @@ repository on GitHub.
   exception's _root_ cause matches all supplied conditions, for use with the
   `EngineTestKit`.
 * `ReflectionSupport` now supports scanning for classpath resources.
+* `ReflectionSupport` now supports scanning for classpath resources.
 
 
 [[release-notes-5.11.0-M3-junit-jupiter]]
