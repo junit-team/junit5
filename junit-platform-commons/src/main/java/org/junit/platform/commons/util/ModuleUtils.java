@@ -106,6 +106,7 @@ public class ModuleUtils {
 	 * @param filter the class filter to apply; never {@code null}
 	 * @return an immutable list of all such resources found; never {@code null}
 	 * but potentially empty
+	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
 	public static List<Resource> findAllResourcesInModule(String moduleName, ResourceFilter filter) {

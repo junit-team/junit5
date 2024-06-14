@@ -191,6 +191,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such resources found; never {@code null}
 	 * but potentially empty
+	 * @since 1.11
 	 * @see #findAllResourcesInPackage(String, Predicate, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate, Predicate)
 	 */
@@ -240,7 +241,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resources name filter; never {@code null}
 	 * @return a stream of all such classes found; never {@code null}
 	 * but potentially empty
-	 * @since 1.10
+	 * @since 1.11
 	 * @see #streamAllResourcesInPackage(String, Predicate, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate, Predicate)
 	 */
@@ -290,6 +291,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such classes found; never {@code null}
 	 * but potentially empty
+	 * @since 1.11
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllResourcesInModule(String, Predicate, Predicate)
 	 */
@@ -341,7 +343,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return a stream of all such resources found; never {@code null}
 	 * but potentially empty
-	 * @since 1.10
+	 * @since 1.11
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #streamAllResourcesInModule(String, Predicate, Predicate)
 	 */
@@ -390,7 +392,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return an immutable list of all such resources found; never {@code null}
 	 * but potentially empty
-	 * @since 1.1.1
+	 * @since 1.11
 	 * @see #findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllResourcesInPackage(String, Predicate, Predicate)
 	 */
@@ -440,7 +442,7 @@ public final class ReflectionSupport {
 	 * @param resourceNameFilter the resource name filter; never {@code null}
 	 * @return a stream of all such resources found; never {@code null}
 	 * but potentially empty
-	 * @since 1.10
+	 * @since 1.11
 	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #streamAllResourcesInPackage(String, Predicate, Predicate)
 	 */

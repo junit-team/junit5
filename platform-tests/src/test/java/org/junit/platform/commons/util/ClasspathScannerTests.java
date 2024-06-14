@@ -241,9 +241,10 @@ class ClasspathScannerTests {
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(shadowedJarFile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName).containsExactlyInAnyOrder(
-				"org/junit/platform/jartest/included/unique.resource",
-				"org/junit/platform/jartest/included/included.resource",
-				"org/junit/platform/jartest/included/recursive/recursively-included.resource", "META-INF/MANIFEST.MF");
+				"org/junit/platform/jartest/included/unique.resource", //
+				"org/junit/platform/jartest/included/included.resource", //
+				"org/junit/platform/jartest/included/recursive/recursively-included.resource", //
+				"META-INF/MANIFEST.MF");
 
 			assertThat(resources).extracting(Resource::getUri) //
 					.map(ClasspathScannerTests::jarFileAndEntry) //
@@ -342,14 +343,10 @@ class ClasspathScannerTests {
 			assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
 				"FileSystem should be closed");
 
-			// @formatter:off
-			results.forEach(classes -> assertThat(classes)
-					.hasSize(2)
-					.extracting(Class::getSimpleName).containsExactlyInAnyOrder(
-							"Included",
-							"RecursivelyIncluded"
-					));
-			// @formatter:on
+			results.forEach(classes -> assertThat(classes) //
+					.hasSize(2) //
+					.extracting(Class::getSimpleName) //
+					.containsExactlyInAnyOrder("Included", "RecursivelyIncluded"));
 		}
 	}
 
