@@ -197,6 +197,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
 			Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter, resourceNameFilter);
 	}
 
@@ -246,6 +247,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
 			Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter, resourceNameFilter);
 	}
 
@@ -269,6 +271,7 @@ public final class ReflectionSupport {
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
+
 		return ReflectionUtils.findAllClassesInPackage(basePackageName, classFilter, classNameFilter);
 	}
 
@@ -293,6 +296,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter,
 			Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter, resourceNameFilter);
 	}
 
@@ -344,6 +348,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
 			Predicate<Resource> resourceFilter, Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.streamAllResourcesInPackage(basePackageName, resourceFilter, resourceNameFilter);
 	}
 
@@ -392,6 +397,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
 			Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter, resourceNameFilter);
 	}
 
@@ -441,6 +447,7 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
 			Predicate<String> resourceNameFilter) {
+
 		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter, resourceNameFilter);
 	}
 
