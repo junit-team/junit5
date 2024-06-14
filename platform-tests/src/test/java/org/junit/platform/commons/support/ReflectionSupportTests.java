@@ -157,7 +157,7 @@ class ReflectionSupportTests {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",
 			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources));
-		assertPreconditionViolationException("resource predicate",
+		assertPreconditionViolationException("resourceFilter",
 			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null));
 	}
 
@@ -190,7 +190,7 @@ class ReflectionSupportTests {
 	void findAllResourcesInPackagePreconditions() {
 		assertPreconditionViolationExceptionForString("basePackageName",
 			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources));
-		assertPreconditionViolationException("resource predicate",
+		assertPreconditionViolationException("resourceFilter",
 			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null));
 	}
 
@@ -222,7 +222,7 @@ class ReflectionSupportTests {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> ReflectionSupport.findAllResourcesInModule(null, allResources));
 		assertEquals("Module name must not be null or empty", exception.getMessage());
-		assertPreconditionViolationException("resource predicate",
+		assertPreconditionViolationException("Resource filter",
 			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null));
 	}
 
