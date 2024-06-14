@@ -58,9 +58,9 @@ class VintageGradleIntegrationTests {
 		var result = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.setProject("vintage") //
+				.setProject(Projects.VINTAGE) //
 				.setWorkspace("vintage-gradle-" + version) //
-				.addArguments("build", "--no-daemon", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(TOOL_TIMEOUT) //

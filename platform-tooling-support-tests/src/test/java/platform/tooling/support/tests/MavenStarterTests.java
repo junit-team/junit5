@@ -18,6 +18,7 @@ import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -29,11 +30,12 @@ import platform.tooling.support.Request;
  */
 class MavenStarterTests {
 
+	@ResourceLock(Projects.MAVEN_STARTER)
 	@Test
 	void verifyMavenStarterProject() {
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
-				.setProject("maven-starter") //
+				.setProject(Projects.MAVEN_STARTER) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //

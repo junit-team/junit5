@@ -22,6 +22,7 @@ import java.nio.file.Paths;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -33,13 +34,14 @@ import platform.tooling.support.Request;
  */
 class GradleStarterTests {
 
+	@ResourceLock(Projects.GRADLE_STARTER)
 	@Test
 	void gradle_wrapper() {
 		var request = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
-				.setProject("gradle-starter") //
+				.setProject(Projects.GRADLE_STARTER) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.build();

@@ -19,9 +19,11 @@ import java.time.Duration;
 
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
@@ -29,17 +31,19 @@ import platform.tooling.support.Request;
 /**
  * @since 1.9.1
  */
+@Order(Integer.MIN_VALUE)
 @DisabledOnOpenJ9
 @EnabledIfEnvironmentVariable(named = "GRAALVM_HOME", matches = ".+")
 class GraalVmStarterTests {
 
+	@ResourceLock(Projects.GRAALVM_STARTER)
 	@Test
 	void runsTestsInNativeImage() {
 		var request = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
-				.setProject("graalvm-starter") //
+				.setProject(Projects.GRAALVM_STARTER) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace") //
+				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache") //
 				.setTimeout(Duration.ofMinutes(10)) //
 				.build();
 
