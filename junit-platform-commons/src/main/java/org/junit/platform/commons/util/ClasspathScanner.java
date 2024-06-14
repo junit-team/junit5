@@ -68,12 +68,15 @@ class ClasspathScanner {
 	private final Supplier<ClassLoader> classLoaderSupplier;
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> loadClass;
+	private final BiFunction<String, ClassLoader, Try<Resource>> loadResource;
 
 	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
-			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass) {
+			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass,
+			BiFunction<String, ClassLoader, Try<Resource>> loadResource) {
 
 		this.classLoaderSupplier = classLoaderSupplier;
 		this.loadClass = loadClass;
+		this.loadResource = loadResource;
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
@@ -208,10 +211,17 @@ class ClasspathScanner {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
 			if (resourceFilter.match(fullyQualifiedResourceName)) {
-				Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
-				// Always use "resourceFilter.test" to include future predicates.
-				if (resourceFilter.test(resource)) {
-					resourceConsumer.accept(resource);
+				try {
+					// @formatter:off
+					loadResource.apply(fullyQualifiedResourceName, getClassLoader())
+							.toOptional()
+							// Always use ".filter(classFilter)" to include future predicates.
+							.filter(resourceFilter)
+							.ifPresent(resourceConsumer);
+					// @formatter:on
+				}
+				catch (InternalError internalError) {
+					handleInternalError(resourceFile, fullyQualifiedResourceName, internalError);
 				}
 			}
 		}

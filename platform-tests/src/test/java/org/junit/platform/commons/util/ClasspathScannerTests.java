@@ -63,12 +63,16 @@ class ClasspathScannerTests {
 	private static final ResourceFilter allResources = ResourceFilter.of(type -> true);
 
 	private final List<Class<?>> loadedClasses = new ArrayList<>();
+	private final List<Resource> loadedResources = new ArrayList<>();
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> trackingClassLoader = (name,
 			classLoader) -> ReflectionUtils.tryToLoadClass(name, classLoader).ifSuccess(loadedClasses::add);
 
+	private final BiFunction<String, ClassLoader, Try<Resource>> trackingResourceLoader = (name,
+			classLoader) -> ReflectionUtils.tryToLoadResource(name, classLoader).ifSuccess(loadedResources::add);
+
 	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
-		trackingClassLoader);
+		trackingClassLoader, trackingResourceLoader);
 
 	@Test
 	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage(
@@ -189,7 +193,8 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
+				ReflectionUtils::tryToLoadResource);
 
 			var classes = classpathScanner.scanForClassesInClasspathRoot(jarfile.toURI(), allClasses);
 			assertThat(classes).extracting(Class::getName) //
@@ -213,7 +218,8 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
+				ReflectionUtils::tryToLoadResource);
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(jarfile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName) //
@@ -270,7 +276,8 @@ class ClasspathScannerTests {
 		var parent = ClassLoader.getPlatformClassLoader();
 		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
 
-		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass);
+		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass,
+			ReflectionUtils::tryToLoadResource);
 		{
 			var classes = classpathScanner.scanForClassesInPackage("foo", allClasses);
 			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
@@ -289,7 +296,8 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
+				ReflectionUtils::tryToLoadResource);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included", allClasses));
@@ -314,7 +322,8 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
+				ReflectionUtils::tryToLoadResource);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included", allResources));
@@ -416,14 +425,16 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
+		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass,
+			ReflectionUtils::tryToLoadResource);
 		var classes = scanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
 		assertThat(classes).isEmpty();
 	}
 
 	@Test
 	void scanForResourcesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
+		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass,
+			ReflectionUtils::tryToLoadResource);
 		var classes = scanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
 		assertThat(classes).isEmpty();
 	}
@@ -436,6 +447,17 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInPackage("org.junit.platform.commons", classFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+	}
+
+	@Test
+	void scanForResourcesInPackageOnlyLoadsResourcesThatAreIncludedByTheResourceNameFilter() {
+		Predicate<String> resourceNameFilter = name -> name.endsWith("/example.resource");
+		var resourceFilter = ResourceFilter.of(resourceNameFilter, type -> true);
+
+		classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", resourceFilter);
+
+		assertThat(loadedResources).extracting(Resource::getName).containsExactly(
+			"org/junit/platform/commons/example.resource");
 	}
 
 	@Test
@@ -517,6 +539,18 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInClasspathRoot(root, classFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+	}
+
+	@Test
+	void onlyLoadsResourcesInClasspathRootThatAreIncludedByTheResourceNameFilter() {
+		Predicate<String> resourceNameFilter = name -> name.endsWith("/example.resource");
+		var resourceFilter = ResourceFilter.of(resourceNameFilter, type -> true);
+		var root = getTestClasspathResourceRoot();
+
+		classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter);
+
+		assertThat(loadedResources).extracting(Resource::getName).containsExactly(
+			"org/junit/platform/commons/example.resource");
 	}
 
 	private static URI uriOf(String name) {

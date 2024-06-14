@@ -35,6 +35,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -56,6 +57,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -146,7 +148,7 @@ public final class ReflectionUtils {
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
 	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
-		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass, ReflectionUtils::tryToLoadResource);
 
 	/**
 	 * Cache for equivalent methods on an interface implemented by the declaring class.
@@ -888,6 +890,27 @@ public final class ReflectionUtils {
 			// Fallback to standard VM class loading
 			return Class.forName(trimmedName, false, classLoader);
 		});
+	}
+
+	/**
+	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)}
+	 * for details.
+	 *
+	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @since 1.11
+	 */
+	@API(status = INTERNAL, since = "1.11")
+	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
+		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
+		boolean startsWithSlash = classpathResourceName.startsWith("/");
+		URL resource = classLoader.getResource(startsWithSlash ? "/" + classpathResourceName : classpathResourceName);
+		if (resource == null) {
+			return Try.failure(new PreconditionViolationException("classLoader.getResource returned null"));
+		}
+		return Try.call(() -> new ClasspathResource(classpathResourceName, resource.toURI()));
 	}
 
 	private static Class<?> loadArrayType(ClassLoader classLoader, String componentTypeName, int dimensions)

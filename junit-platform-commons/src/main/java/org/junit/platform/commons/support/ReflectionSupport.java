@@ -114,6 +114,27 @@ public final class ReflectionSupport {
 	}
 
 	/**
+	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 *
+	 * <p>The name of a <em>classpath resource</em> must follow the semantics
+	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
+	 *
+	 * <p>If the supplied classpath resource name is prefixed with a slash
+	 * ({@code /}), the slash will be removed.
+	 *
+	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @return a successful {@code Try} containing the loaded class or a failed
+	 * {@code Try} containing the exception if no such resource could be loaded;
+	 * never {@code null}
+	 * @since 1.11
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
+		return ReflectionUtils.tryToLoadResource(classpathResourceName, classLoader);
+	}
+
+	/**
 	 * Find all {@linkplain Class classes} in the supplied classpath {@code root}
 	 * that match the specified {@code classFilter} and {@code classNameFilter}
 	 * predicates.
