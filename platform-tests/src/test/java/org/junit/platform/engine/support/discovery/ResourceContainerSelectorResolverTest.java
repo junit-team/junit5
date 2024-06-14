@@ -17,7 +17,9 @@ import static org.junit.platform.engine.discovery.PackageNameFilter.includePacka
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Match.exact;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.match;
 
+import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
@@ -29,6 +31,7 @@ import org.junit.platform.commons.support.Resource;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
+import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -38,12 +41,11 @@ class ResourceContainerSelectorResolverTest {
 	final TestDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("resource-engine"),
 		"Resource Engine");
 	final Predicate<Resource> isResource = resource -> resource.getName().endsWith(".resource");
-	// @formatter:off
-    final EngineDiscoveryRequestResolver<TestDescriptor> resolver = EngineDiscoveryRequestResolver.builder()
-		    .addResourceContainerSelectorResolver(isResource)
-		    .addSelectorResolver(new ResourceSelectorResolver())
-		    .build();
-    // @formatter:on
+
+	final EngineDiscoveryRequestResolver<TestDescriptor> resolver = EngineDiscoveryRequestResolver.builder() //
+			.addResourceContainerSelectorResolver(isResource) //
+			.addSelectorResolver(new ResourceSelectorResolver()) //
+			.build();
 
 	@Test
 	void shouldDiscoverAllResourcesInPackage() {
@@ -130,11 +132,9 @@ class ResourceContainerSelectorResolverTest {
 	private static class ResourceSelectorResolver implements SelectorResolver {
 		@Override
 		public Resolution resolve(ClasspathResourceSelector selector, Context context) {
-			// @formatter:off
-		    return context.addToParent(parent -> createTestDescriptor(parent, selector.getClasspathResourceName()))
-				    .map(testDescriptor -> match(exact(testDescriptor)))
-				    .orElseGet(Resolution::unresolved);
-		    // @formatter:on
+			return context.addToParent(parent -> createTestDescriptor(parent, selector.getClasspathResourceName())) //
+					.map(testDescriptor -> match(exact(testDescriptor))) //
+					.orElseGet(Resolution::unresolved);
 		}
 
 		private static Optional<TestDescriptorStub> createTestDescriptor(TestDescriptor parent,
