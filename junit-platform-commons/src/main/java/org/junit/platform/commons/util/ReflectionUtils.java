@@ -1054,11 +1054,12 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.11
-	 * @see #findAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 */
-	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return findAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceFilter));
+		return findAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1072,10 +1073,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.11
-	 * @see #streamAllResourcesInClasspathRoot(URI, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
 	 */
-	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-		return streamAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceFilter));
+	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInClasspathRoot(root, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1088,8 +1090,8 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static List<Resource> findAllResourcesInClasspathRoot(URI root, ResourceFilter resourceFilter) {
-		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter));
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, ResourceFilter classFilter) {
+		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, classFilter));
 	}
 
 	/**
@@ -1119,9 +1121,10 @@ public final class ReflectionUtils {
 	 * @since 1.11
 	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllClassesInPackage(String, Predicate, Predicate)
 	 */
-	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return findAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceFilter));
+		return findAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1135,11 +1138,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * since 1.11
-	 * @see #streamAllResourcesInPackage(String, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInPackage(String, Predicate, Predicate)
 	 */
 	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
-			Predicate<Resource> resourceFilter) {
-		return streamAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceFilter));
+			Predicate<Resource> resourceFilter, Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInPackage(basePackageName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1183,11 +1186,12 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.11
-	 * @see #findAllResourcesInModule(String, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#findAllResourcesInModule(String, Predicate, Predicate)
 	 */
-	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
 		// unmodifiable since returned by public, non-internal method(s)
-		return findAllResourcesInModule(moduleName, ResourceFilter.of(resourceFilter));
+		return findAllResourcesInModule(moduleName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**
@@ -1201,10 +1205,11 @@ public final class ReflectionUtils {
 
 	/**
 	 * @since 1.11
-	 * @see #streamAllResourcesInModule(String, Predicate)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#streamAllResourcesInModule(String, Predicate, Predicate)
 	 */
-	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-		return streamAllResourcesInModule(moduleName, ResourceFilter.of(resourceFilter));
+	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter,
+			Predicate<String> resourceNameFilter) {
+		return streamAllResourcesInModule(moduleName, ResourceFilter.of(resourceNameFilter, resourceFilter));
 	}
 
 	/**

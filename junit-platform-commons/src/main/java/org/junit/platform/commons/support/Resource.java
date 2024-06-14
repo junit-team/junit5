@@ -22,12 +22,12 @@ import org.apiguardian.api.API;
 /**
  * Represents a resource on the classpath.
  *
- * @see ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate)
- * @see ReflectionSupport#findAllResourcesInPackage(String, Predicate)
- * @see ReflectionSupport#findAllResourcesInModule(String, Predicate)
- * @see ReflectionSupport#streamAllResourcesInClasspathRoot(URI, Predicate)
- * @see ReflectionSupport#streamAllResourcesInPackage(String, Predicate)
- * @see ReflectionSupport#streamAllResourcesInModule(String, Predicate)
+ * @see ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate, Predicate)
+ * @see ReflectionSupport#findAllResourcesInPackage(String, Predicate, Predicate)
+ * @see ReflectionSupport#findAllResourcesInModule(String, Predicate, Predicate)
+ * @see ReflectionSupport#streamAllResourcesInClasspathRoot(URI, Predicate, Predicate)
+ * @see ReflectionSupport#streamAllResourcesInPackage(String, Predicate, Predicate)
+ * @see ReflectionSupport#streamAllResourcesInModule(String, Predicate, Predicate)
  */
 @API(status = EXPERIMENTAL, since = "1.11")
 public interface Resource {

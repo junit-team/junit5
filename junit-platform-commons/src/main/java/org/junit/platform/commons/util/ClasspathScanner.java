@@ -207,10 +207,12 @@ class ClasspathScanner {
 		try {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
-			Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
-			// Always use "resourceFilter.test" to include future predicates.
-			if (resourceFilter.test(resource)) {
-				resourceConsumer.accept(resource);
+			if (resourceFilter.match(fullyQualifiedResourceName)) {
+				Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
+				// Always use "resourceFilter.test" to include future predicates.
+				if (resourceFilter.test(resource)) {
+					resourceConsumer.accept(resource);
+				}
 			}
 		}
 		catch (Throwable throwable) {
