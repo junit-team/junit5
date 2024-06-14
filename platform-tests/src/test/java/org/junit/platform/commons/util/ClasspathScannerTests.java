@@ -192,7 +192,7 @@ class ClasspathScannerTests {
 	private void scanForClassesInClasspathRootWithinJarFile(String resourceName) throws Exception {
 		var jarfile = getClass().getResource(resourceName);
 
-		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
+		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
 			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
 				ReflectionUtils::tryToLoadResource);
 
@@ -217,7 +217,7 @@ class ClasspathScannerTests {
 	private void scanForResourcesInClasspathRootWithinJarFile(String resourceName) throws Exception {
 		var jarfile = getClass().getResource(resourceName);
 
-		try (var classLoader = new URLClassLoader(new URL[] { jarfile })) {
+		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
 			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
 				ReflectionUtils::tryToLoadResource);
 
@@ -228,6 +228,43 @@ class ClasspathScannerTests {
 						"org/junit/platform/jartest/included/recursive/recursively-included.resource",
 						"META-INF/MANIFEST.MF");
 		}
+	}
+
+	@Test
+	void scanForResourcesInShadowedClassPathRoot() throws Exception {
+		var jarFile = getClass().getResource("/jartest.jar");
+		var shadowedJarFile = getClass().getResource("/jartest-shadowed.jar");
+
+		try (var classLoader = new URLClassLoader(new URL[] { jarFile, shadowedJarFile }, null)) {
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
+				ReflectionUtils::tryToLoadResource);
+
+			var resources = classpathScanner.scanForResourcesInClasspathRoot(shadowedJarFile.toURI(), allResources);
+			assertThat(resources).extracting(Resource::getName).containsExactlyInAnyOrder(
+				"org/junit/platform/jartest/included/unique.resource",
+				"org/junit/platform/jartest/included/included.resource",
+				"org/junit/platform/jartest/included/recursive/recursively-included.resource", "META-INF/MANIFEST.MF");
+
+			assertThat(resources).extracting(Resource::getUri) //
+					.map(ClasspathScannerTests::jarFileAndEntry) //
+					.containsExactlyInAnyOrder(
+						// This resource only exists in the shadowed jar file
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/unique.resource",
+						// These resources exist in both the jar and shadowed jar file.
+						// So they're discovered in the shadowed jar, but loaded from the regular jar.
+						"jartest.jar!/org/junit/platform/jartest/included/included.resource",
+						"jartest.jar!/org/junit/platform/jartest/included/recursive/recursively-included.resource",
+						"jartest.jar!/META-INF/MANIFEST.MF");
+		}
+	}
+
+	private static String jarFileAndEntry(URI uri) {
+		var uriString = uri.toString();
+		int lastJarUriSeparator = uriString.lastIndexOf("!/");
+		var jarUri = uriString.substring(0, lastJarUriSeparator);
+		var jarEntry = uriString.substring(lastJarUriSeparator + 1);
+		var fileName = jarUri.substring(jarUri.lastIndexOf("/") + 1);
+		return fileName + "!" + jarEntry;
 	}
 
 	@Test
