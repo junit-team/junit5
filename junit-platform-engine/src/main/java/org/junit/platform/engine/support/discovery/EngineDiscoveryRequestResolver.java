@@ -270,7 +270,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		Predicate<String> getClassNameFilter();
 
 		/**
-		 * Get the class package filter built from the {@link PackageNameFilter
+		 * Get the package name filter built from the {@link PackageNameFilter
 		 * PackageNameFilters} in the {@link EngineDiscoveryRequest} that is
 		 * about to be resolved.
 		 *
