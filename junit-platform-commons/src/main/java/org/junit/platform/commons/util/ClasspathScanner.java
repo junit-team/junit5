@@ -94,7 +94,7 @@ class ClasspathScanner {
 		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
 	}
 
-	List<Resource> scanForResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+	List<Resource> scanForResourcesInPackage(String basePackageName, ResourceFilter resourceFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
@@ -105,7 +105,7 @@ class ClasspathScanner {
 		return findResourcesForUris(roots, basePackageName, resourceFilter);
 	}
 
-	List<Resource> scanForResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+	List<Resource> scanForResourcesInClasspathRoot(URI root, ResourceFilter resourceFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
 
@@ -139,7 +139,7 @@ class ClasspathScanner {
 	 * Recursively scan for resources in all the supplied source directories.
 	 */
 	private List<Resource> findResourcesForUris(List<URI> baseUris, String basePackageName,
-			Predicate<Resource> resourceFilter) {
+			ResourceFilter resourceFilter) {
 		// @formatter:off
 		return baseUris.stream()
 				.map(baseUri -> findResourcesForUri(baseUri, basePackageName, resourceFilter))
@@ -149,8 +149,7 @@ class ClasspathScanner {
 		// @formatter:on
 	}
 
-	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName,
-			Predicate<Resource> resourceFilter) {
+	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName, ResourceFilter resourceFilter) {
 		List<Resource> resources = new ArrayList<>();
 		// @formatter:off
 		walkFilesForUri(baseUri, ClasspathFilters.resourceFiles(),
@@ -203,7 +202,7 @@ class ClasspathScanner {
 		}
 	}
 
-	private void processResourceFileSafely(Path baseDir, String basePackageName, Predicate<Resource> resourceFilter,
+	private void processResourceFileSafely(Path baseDir, String basePackageName, ResourceFilter resourceFilter,
 			Path resourceFile, Consumer<Resource> resourceConsumer) {
 		try {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
