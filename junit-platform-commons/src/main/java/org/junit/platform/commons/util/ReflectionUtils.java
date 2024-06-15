@@ -905,12 +905,15 @@ public final class ReflectionUtils {
 	@API(status = INTERNAL, since = "1.11")
 	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
+		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
-		URL resource = classLoader.getResource(startsWithSlash ? "/" + classpathResourceName : classpathResourceName);
+		String canonicalClasspathResourceName = (startsWithSlash ? classpathResourceName.substring(1)
+				: classpathResourceName);
+		URL resource = classLoader.getResource(canonicalClasspathResourceName);
 		if (resource == null) {
-			return Try.failure(new PreconditionViolationException("classLoader.getResource returned null"));
+			return Try.failure(new NullPointerException("classLoader.getResource returned null"));
 		}
-		return Try.call(() -> new ClasspathResource(classpathResourceName, resource.toURI()));
+		return Try.call(() -> new ClasspathResource(canonicalClasspathResourceName, resource.toURI()));
 	}
 
 	private static Class<?> loadArrayType(ClassLoader classLoader, String componentTypeName, int dimensions)
