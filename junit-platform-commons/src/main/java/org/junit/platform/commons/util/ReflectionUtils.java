@@ -909,11 +909,14 @@ public final class ReflectionUtils {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		String canonicalClasspathResourceName = (startsWithSlash ? classpathResourceName.substring(1)
 				: classpathResourceName);
-		URL resource = classLoader.getResource(canonicalClasspathResourceName);
-		if (resource == null) {
-			return Try.failure(new NullPointerException("classLoader.getResource returned null"));
-		}
-		return Try.call(() -> new ClasspathResource(canonicalClasspathResourceName, resource.toURI()));
+
+		return Try.call(() -> {
+			URL resource = classLoader.getResource(canonicalClasspathResourceName);
+			if (resource == null) {
+				throw new NullPointerException("classLoader.getResource returned null");
+			}
+			return new ClasspathResource(canonicalClasspathResourceName, resource.toURI());
+		});
 	}
 
 	private static Class<?> loadArrayType(ClassLoader classLoader, String componentTypeName, int dimensions)
