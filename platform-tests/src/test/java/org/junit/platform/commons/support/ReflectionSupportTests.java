@@ -148,12 +148,18 @@ class ReflectionSupportTests {
 		return tests;
 	}
 
+	/**
+	 * @since 1.11
+	 */
 	@Test
 	void tryToLoadResourcePreconditions() {
 		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(null));
 		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToLoadResource(""));
 	}
 
+	/**
+	 * @since 1.11
+	 */
 	@Test
 	void tryToLoadResourceDelegates() {
 		assertEquals(ReflectionUtils.tryToLoadResource("default-package.resource").toOptional(),
