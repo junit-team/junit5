@@ -211,18 +211,13 @@ class ClasspathScanner {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
 			if (resourceFilter.match(fullyQualifiedResourceName)) {
-				try {
-					// @formatter:off
-					loadResource.apply(fullyQualifiedResourceName, getClassLoader())
-							.toOptional()
-							// Always use ".filter(resourceFilter)" to include future predicates.
-							.filter(resourceFilter)
-							.ifPresent(resourceConsumer);
-					// @formatter:on
-				}
-				catch (InternalError internalError) {
-					handleInternalError(resourceFile, fullyQualifiedResourceName, internalError);
-				}
+				// @formatter:off
+				loadResource.apply(fullyQualifiedResourceName, getClassLoader())
+						.toOptional()
+						// Always use ".filter(resourceFilter)" to include future predicates.
+						.filter(resourceFilter)
+						.ifPresent(resourceConsumer);
+				// @formatter:on
 			}
 		}
 		catch (Throwable throwable) {
