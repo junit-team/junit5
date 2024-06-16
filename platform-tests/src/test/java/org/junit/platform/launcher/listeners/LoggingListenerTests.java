@@ -66,7 +66,7 @@ public class LoggingListenerTests {
 		inOrder.verify(logger).accept(isNull(), eq(
 			"Execution Finished: success() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[test-factory:success()] - TestExecutionResult [status = SUCCESSFUL, throwable = null]"));
 		inOrder.verify(logger).accept(isNull(), eq(
-			"Execution Skipped: skipped() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:skipped()]"));
+			"Execution Skipped: skipped() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:skipped()] - void org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase.skipped() is @Disabled"));
 		inOrder.verify(logger).accept(isNull(), eq(
 			"Execution Started: failed() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:failed()]"));
 		inOrder.verify(logger).accept(ArgumentMatchers.notNull(AssertionFailedError.class), eq(
