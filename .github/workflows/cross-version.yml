@@ -43,11 +43,6 @@ jobs:
             -PjavaToolchain.version=${{ matrix.jdk }} \
             -Dscan.tag.JDK_${{ matrix.jdk }} \
             build
-      - name: Upload Test Distribution trace files
-        uses: actions/upload-artifact@v4
-        with:
-          name: "Test Distribution trace files (OpenJDK ${{ matrix.jdk }})"
-          path: '**/build/test-results/*/trace.json'
   openj9:
     strategy:
       fail-fast: false
