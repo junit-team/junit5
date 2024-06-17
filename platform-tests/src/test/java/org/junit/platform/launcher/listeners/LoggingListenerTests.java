@@ -25,6 +25,7 @@ import static org.mockito.Mockito.mock;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -65,9 +66,7 @@ public class LoggingListenerTests {
 		inOrder.verify(logger).accept(isNull(), eq(
 			"Execution Finished: success() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[test-factory:success()] - TestExecutionResult [status = SUCCESSFUL, throwable = null]"));
 		inOrder.verify(logger).accept(isNull(), eq(
-			"Execution Started: skipped() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:skipped()]"));
-		inOrder.verify(logger).accept(isNull(), eq(
-			"Execution Finished: skipped() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:skipped()] - TestExecutionResult [status = SUCCESSFUL, throwable = null]"));
+			"Execution Skipped: skipped() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:skipped()] - void org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase.skipped() is @Disabled"));
 		inOrder.verify(logger).accept(isNull(), eq(
 			"Execution Started: failed() - [engine:junit-jupiter]/[class:org.junit.platform.launcher.listeners.LoggingListenerTests$TestCase]/[method:failed()]"));
 		inOrder.verify(logger).accept(ArgumentMatchers.notNull(AssertionFailedError.class), eq(
@@ -108,6 +107,7 @@ public class LoggingListenerTests {
 		}
 
 		@Test
+		@Disabled
 		@Order(2)
 		void skipped() {
 		}
