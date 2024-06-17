@@ -18,6 +18,7 @@ val classesView = configurations["aggregateCodeCoverageReportResults"].incoming.
 tasks {
 	val reportTask = named<JacocoReport>(jacocoRootReport.reportTask.name)
 	val jacocoRootCoverageVerification by registering(JacocoCoverageVerification::class) {
+		enabled = !buildParameters.junit.develocity.predictiveTestSelection.enabled
 		executionData.from(reportTask.map { it.executionData })
 		classDirectories.from(reportTask.map { it.classDirectories })
 		sourceDirectories.from(reportTask.map { it.sourceDirectories })
