@@ -23,14 +23,6 @@ on GitHub.
   when there is no parent identifier. See
   link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.10.3-junit-jupiter]]
 === JUnit Jupiter
@@ -42,26 +34,8 @@ on GitHub.
 * `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
   generated during class initialization.
 
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
-
 
 = [[release-notes-5.10.3-junit-vintage]]
 === JUnit Vintage
 
-==== Bug Fixes
-
-* ❓
-
-==== Deprecations and Breaking Changes
-
-* ❓
-
-==== New Features and Improvements
-
-* ❓
+No changes.
