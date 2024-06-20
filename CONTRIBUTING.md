@@ -160,7 +160,8 @@ To deprecate an item:
 
 ## Building the Project
 
-Please refer to [the readme](README.md) for the most common build commands.
+Please refer to [the readme](README.md#building-from-source) for the most common
+build commands.
 
 ### Build Parameters
 
