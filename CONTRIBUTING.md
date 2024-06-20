@@ -157,3 +157,15 @@ To deprecate an item:
   an eventual replacement.
 - If the item is used in existing code, add `@SuppressWarnings("deprecation")`
   to make the build pass.
+
+## Building the Project
+
+Please refer to [the readme](README.md) for the most common build commands.
+
+### Build Parameters
+
+The build can be influenced by a number of parameters. For example, measuring
+JaCoCo code coverage of Test tasks can be enabled, or Predictive Test Selection
+disabled. To see the full list, please run the following task:
+
+`./gradlew :plugins:build-parameters:parameters`
