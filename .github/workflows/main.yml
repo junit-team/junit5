@@ -95,7 +95,7 @@ jobs:
           prepareGitHubAttestation \
           --no-configuration-cache
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@534b352d658f90498fd148d231fdbf88f3886a3a # v1.3.1
+      uses: actions/attest-build-provenance@bdd51370e0416ac948727f861e03c2f05d32d78e # v1.3.2
       with:
         subject-path: documentation/build/attestation/*.jar
 
