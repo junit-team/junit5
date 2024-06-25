@@ -23,7 +23,7 @@ jobs:
         - version: 24
         - version: 24
           release: leyden
-    name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'regular' }})"
+    name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -32,7 +32,7 @@ jobs:
           fetch-depth: 1
       - name: Set up Test JDK
         uses: ./.github/actions/setup-test-jdk
-      - name: 'Set up JDK ${{ matrix.jdk.release || matrix.jdk.version }}'
+      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
         uses: oracle-actions/setup-java@v1
         with:
           website: jdk.java.net
