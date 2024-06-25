@@ -23,7 +23,7 @@ jobs:
         - version: 24
         - version: 24
           release: leyden
-    name: "OpenJDK ${{ matrix.jdk }}"
+    name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'regular' }})"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
