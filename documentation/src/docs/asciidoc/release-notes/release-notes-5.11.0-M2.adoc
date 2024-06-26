@@ -34,7 +34,8 @@ repository on GitHub.
 
 * Attempting to deserialize a `TestIdentifier` no longer causes a `NullPointerException`
   when there is no parent identifier. See
-  link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
+  link:https://github.com/junit-team/junit5/issues/3819[issue 3819] (backported to
+  5.10.3).
 
 [[release-notes-5.11.0-M2-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -66,7 +67,7 @@ repository on GitHub.
 ==== Bug Fixes
 
 * `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
-  generated during class initialization.
+  generated during class initialization (backported to 5.10.3).
 
 [[release-notes-5.11.0-M2-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
