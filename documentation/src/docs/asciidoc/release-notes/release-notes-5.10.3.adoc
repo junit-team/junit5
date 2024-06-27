@@ -35,7 +35,7 @@ on GitHub.
   generated during class initialization.
 
 
-= [[release-notes-5.10.3-junit-vintage]]
+[[release-notes-5.10.3-junit-vintage]]
 === JUnit Vintage
 
 No changes.
