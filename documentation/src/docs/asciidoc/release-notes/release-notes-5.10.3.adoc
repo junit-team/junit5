@@ -1,7 +1,7 @@
 [[release-notes-5.10.3]]
 == 5.10.3
 
-*Date of Release:* ❓
+*Date of Release:* June 27, 2024
 
 *Scope:* Bug fixes and enhancements since 5.10.2
 
