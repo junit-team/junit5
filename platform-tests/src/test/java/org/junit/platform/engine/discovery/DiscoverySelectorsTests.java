@@ -53,6 +53,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -287,10 +288,11 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void selectClasspathResources() {
-			assertViolatesPrecondition(() -> selectClasspathResource(null));
+			assertViolatesPrecondition(() -> selectClasspathResource((String) null));
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
 			assertViolatesPrecondition(() -> selectClasspathResource("    "));
 			assertViolatesPrecondition(() -> selectClasspathResource("\t"));
+			assertViolatesPrecondition(() -> selectClasspathResource((Resource) null));
 
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");
@@ -299,6 +301,9 @@ class DiscoverySelectorsTests {
 			// standard use case
 			selector = selectClasspathResource("A/B/C/spec.json");
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+
+			selector = selectClasspathResource("org/junit/platform/commons/example.resource");
+			assertEquals("org/junit/platform/commons/example.resource", selector.getClasspathResource().getName());
 		}
 
 		@Test

@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -707,6 +708,40 @@ class ReflectionUtilsTests {
 			}
 		}
 
+	}
+
+	@Nested
+	class ResourceLoadingTests {
+
+		@Test
+		void tryToLoadResourcePreconditions() {
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource(""));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource("   "));
+
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource(null));
+			assertThrows(PreconditionViolationException.class,
+				() -> ReflectionUtils.tryToLoadResource("org/junit/platform/commons/example.resource", null));
+		}
+
+		@Test
+		void tryToLoadResource() {
+			var tryToLoadResource = ReflectionUtils.tryToLoadResource("org/junit/platform/commons/example.resource");
+			var resource = assertDoesNotThrow(tryToLoadResource::get);
+			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
+		}
+
+		@Test
+		void tryToLoadResourceWithPrefixedSlash() {
+			var tryToLoadResource = ReflectionUtils.tryToLoadResource("/org/junit/platform/commons/example.resource");
+			var resource = assertDoesNotThrow(tryToLoadResource::get);
+			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
+		}
+
+		@Test
+		void tryToLoadResourceWhenResourceNotFound() {
+			var tryToLoadResource = ReflectionUtils.tryToLoadResource("org/junit/platform/commons/no-such.resource");
+			assertThrows(NullPointerException.class, tryToLoadResource::get);
+		}
 	}
 
 	@Nested
