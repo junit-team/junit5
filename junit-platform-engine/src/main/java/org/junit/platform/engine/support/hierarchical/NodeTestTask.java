@@ -70,6 +70,16 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	@Override
+	public String getDisplayName() {
+		return testDescriptor.getDisplayName();
+	}
+
+	@Override
+	public TestDescriptor.Type getType() {
+		return testDescriptor.getType();
+	}
+
+	@Override
 	public ResourceLock getResourceLock() {
 		return taskContext.getExecutionAdvisor().getResourceLock(testDescriptor);
 	}

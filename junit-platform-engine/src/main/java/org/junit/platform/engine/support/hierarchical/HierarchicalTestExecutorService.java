@@ -17,6 +17,7 @@ import java.util.concurrent.Future;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ExecutionRequest;
+import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
 /**
@@ -83,6 +84,16 @@ public interface HierarchicalTestExecutorService extends AutoCloseable {
 	 * An executable task that represents a single test or container.
 	 */
 	interface TestTask {
+
+		/**
+		 * @return the display name of this task.
+		 */
+		String getDisplayName();
+
+		/**
+		 * @return the {@link TestDescriptor.Type} of this task.
+		 */
+		TestDescriptor.Type getType();
 
 		/**
 		 * Get the {@linkplain ExecutionMode execution mode} of this task.

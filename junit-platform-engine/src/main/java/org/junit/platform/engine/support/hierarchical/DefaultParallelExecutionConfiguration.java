@@ -24,15 +24,17 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	private final int corePoolSize;
 	private final int keepAliveSeconds;
 	private final Predicate<? super ForkJoinPool> saturate;
+	private final TestExecutor testExecutor;
 
 	DefaultParallelExecutionConfiguration(int parallelism, int minimumRunnable, int maxPoolSize, int corePoolSize,
-			int keepAliveSeconds, Predicate<? super ForkJoinPool> saturate) {
+			int keepAliveSeconds, Predicate<? super ForkJoinPool> saturate, TestExecutor testExecutor) {
 		this.parallelism = parallelism;
 		this.minimumRunnable = minimumRunnable;
 		this.maxPoolSize = maxPoolSize;
 		this.corePoolSize = corePoolSize;
 		this.keepAliveSeconds = keepAliveSeconds;
 		this.saturate = saturate;
+		this.testExecutor = testExecutor;
 	}
 
 	@Override
@@ -63,5 +65,10 @@ class DefaultParallelExecutionConfiguration implements ParallelExecutionConfigur
 	@Override
 	public Predicate<? super ForkJoinPool> getSaturatePredicate() {
 		return saturate;
+	}
+
+	@Override
+	public TestExecutor getTestExecutor() {
+		return testExecutor;
 	}
 }
