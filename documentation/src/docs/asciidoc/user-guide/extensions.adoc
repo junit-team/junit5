@@ -484,6 +484,48 @@ constructor invocations, using the `{ExecutableInvoker}` available via the
 `getExecutableInvoker()` method in the `ExtensionContext`.
 ====
 
+[[extensions-parameter-resolution-conflicts]]
+==== Parameter Conflicts
+
+If multiple implementations of `ParameterResolver` that support the same type are
+declared within a test class, a `ParameterResolutionException` will be thrown, with a
+message to indicate that competing types have been discovered. See the following example:
+
+[source,java,indent=0]
+.Conflicting parameter resolution due to duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverDuplicateTypeInteger.java[tags=user_guide]
+----
+
+If the conflicting `ParameterResolver` implementations are applied to different test
+methods, the methods can be separated into <<writing-tests-nested, `nested tests`>>
+as follows:
+
+[source,java,indent=0]
+.Nested parameter resolution to resolve duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverNestedClasses.java[tags=user_guide]
+----
+
+If the conflicting `ParameterResolver` implementations are applied within the same test
+method, consider a wrapper class for the one of the conflicting types as follows:
+
+[source,java,indent=0]
+.Wrapped parameter resolution to resolve duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverWrappedType.java[tags=user_guide]
+----
+
+JUnit includes some built-in parameter resolvers that can cause conflicts if an attempt
+is made to redefine their supported types. For example, `{TestInfo}` provides metadata
+about tests. See <<writing-tests-dependency-injection>> for details. Third-party
+frameworks such as Spring may also define parameter resolvers. Apply one of the
+techniques in this section to resolve any conflicts.
+
+Parameterized tests are another potential source of conflict. Ensure that tests annotated
+with `@ParameterizedTest` are not also annotated with `@Test` and see
+<<writing-tests-parameterized-tests-consuming-arguments>> for more details.
+
 [[extensions-test-result-processing]]
 === Test Result Processing
 
