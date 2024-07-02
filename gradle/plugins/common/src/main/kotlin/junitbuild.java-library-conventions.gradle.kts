@@ -4,6 +4,7 @@ import junitbuild.java.ModulePathArgumentProvider
 import junitbuild.java.PatchModuleArgumentProvider
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
+import org.gradle.plugins.ide.eclipse.model.ProjectDependency
 
 plugins {
 	`java-library`
@@ -42,6 +43,10 @@ eclipse {
 		// Remove classpath entries for non-existent libraries added by various
 		// plugins, such as "junit-jupiter-api/build/classes/kotlin/testFixtures".
 		entries.removeIf { it is Library && !file(it.path).exists() }
+		// Remove classpath entries for the code generator model used by the
+		// Java Template Engine (JTE) which is used to generate the JRE enum and
+		// dependent tests.
+		entries.removeIf { it is ProjectDependency && it.path.equals("/code-generator-model") }
 	}
 }
 
