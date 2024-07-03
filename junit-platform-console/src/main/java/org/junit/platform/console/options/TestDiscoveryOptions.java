@@ -276,7 +276,7 @@ public class TestDiscoveryOptions {
 	}
 
 	public List<String> getConfigurationParametersResources() {
-		return configurationParametersResources;
+		return this.configurationParametersResources;
 	}
 
 	public TestDiscoveryOptions setConfigurationParametersResources(List<String> configurationParametersResources) {

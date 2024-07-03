@@ -261,7 +261,7 @@ class TestDiscoveryOptionsMixin {
 		private final Map<String, String> configurationParameters = new LinkedHashMap<>();
 
 		@Option(names = {
-				"--config-resource" }, paramLabel = "PATH", arity = "1", description = "Set configuration parameters for test discovery and execution, from a resource file. This option can be repeated.")
+				"--config-resource" }, paramLabel = "PATH", arity = "1", description = "Set configuration parameters for test discovery and execution via a classpath resource. This option can be repeated.")
 		private List<String> configurationParametersResources = new ArrayList<>();
 
 		@Option(names = { "-config-resource" }, arity = "1", hidden = true)

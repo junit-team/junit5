@@ -943,14 +943,14 @@ engines running on the JUnit Platform via one of the following mechanisms.
   `LauncherDiscoveryRequestBuilder` which is used to build a request supplied to the
   <<launcher-api, `Launcher` API>>. When running tests via one of the tools provided
   by the JUnit Platform you can specify configuration parameters as follows:
-  * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
+  * <<running-tests-console-launcher,Console Launcher>>: use the `--config` or `--config-resource`
     command-line option.
   * <<running-tests-build-gradle-config-params,Gradle>>: use the
     `systemProperty` or `systemProperties` DSL.
   * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
     `configurationParameters` property.
-2. The `configurationParametersResource()` and `configurationParametersResources()`
-  methods in the `LauncherDiscoveryRequestBuilder` which are used to select a `.properties`
+2. The `configurationParametersResources()`
+  method in the `LauncherDiscoveryRequestBuilder` which is used to select a `.properties`
   file on the classpath with configuration parameters.
 3. JVM system properties.
 4. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
@@ -958,7 +958,8 @@ engines running on the JUnit Platform via one of the following mechanisms.
 
 NOTE: Configuration parameters are looked up in the exact order defined above.
 Consequently, configuration parameters supplied directly to the `Launcher` take
-precedence over those supplied via system properties, the specified properties files, and the platform configuration file.
+precedence over those supplied via system properties, custom properties files,
+and the platform configuration file.
 Similarly, configuration parameters supplied via system properties take precedence over
 those supplied via the configuration file.
 

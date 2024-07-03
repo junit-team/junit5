@@ -216,7 +216,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String resourceFile) {
-		this.delegate.configurationParametersResource(resourceFile);
+		this.delegate.configurationParametersResources(resourceFile);
 		return this;
 	}
 
