@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 // tag::user_guide[]
 public class ParameterResolverNestedClasses {
@@ -33,10 +33,8 @@ public class ParameterResolverNestedClasses {
 	@Nested
 	class FirstResolution {
 
-		@RegisterExtension
-		final FirstIntegerResolver firstIntegerResolver = new FirstIntegerResolver();
-
 		@Test
+		@ExtendWith(FirstIntegerResolver.class)
 		void testIntNested(int i) {
 			assertEquals(1, i);
 		}
@@ -45,10 +43,8 @@ public class ParameterResolverNestedClasses {
 	@Nested
 	class SecondResolution {
 
-		@RegisterExtension
-		final SecondIntegerResolver secondIntegerResolver = new SecondIntegerResolver();
-
 		@Test
+		@ExtendWith(SecondIntegerResolver.class)
 		void testIntNested(int i) {
 			assertEquals(2, i);
 		}

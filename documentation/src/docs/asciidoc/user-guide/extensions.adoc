@@ -488,8 +488,8 @@ constructor invocations, using the `{ExecutableInvoker}` available via the
 ==== Parameter Conflicts
 
 If multiple implementations of `ParameterResolver` that support the same type are
-declared within a test class, a `ParameterResolutionException` will be thrown, with a
-message to indicate that competing types have been discovered. See the following example:
+registered for a test, a `ParameterResolutionException` will be thrown, with a
+message to indicate that competing resolvers have been discovered. See the following example:
 
 [source,java,indent=0]
 .Conflicting parameter resolution due to duplicate types
@@ -508,12 +508,22 @@ include::{testDir}/example/extensions/ParameterResolverNestedClasses.java[tags=u
 ----
 
 If the conflicting `ParameterResolver` implementations are applied within the same test
-method, consider a wrapper class for the one of the conflicting types as follows:
+method, implement a custom type or custom annotation as illustrated by
+`{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`. A custom type
+wraps the duplicate type:
 
 [source,java,indent=0]
-.Wrapped parameter resolution to resolve duplicate types
+.Custom type to resolve duplicate types
 ----
-include::{testDir}/example/extensions/ParameterResolverWrappedType.java[tags=user_guide]
+include::{testDir}/example/extensions/ParameterResolverCustomType.java[tags=user_guide]
+----
+
+A custom annotation makes the duplicate type distinguishable from its counterpart:
+
+[source,java,indent=0]
+.Custom annotation to resolve duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverCustomAnnotation.java[tags=user_guide]
 ----
 
 JUnit includes some built-in parameter resolvers that can cause conflicts if an attempt

@@ -12,6 +12,11 @@ package example.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -19,13 +24,13 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 // tag::user_guide[]
-public class ParameterResolverDuplicateTypeInteger {
+public class ParameterResolverCustomAnnotation {
 
 	@Test
 	@ExtendWith({FirstIntegerResolver.class, SecondIntegerResolver.class})
-	void testInt(int i) {
-		// Test will not run due to ParameterResolutionException
+	void testInt(Integer i, @AnnotatedInteger Integer annotatedInteger) {
 		assertEquals(1, i);
+		assertEquals(2, annotatedInteger);
 	}
 
 	static class FirstIntegerResolver implements ParameterResolver {
@@ -33,7 +38,8 @@ public class ParameterResolverDuplicateTypeInteger {
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext,
 				ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == int.class;
+			return parameterContext.getParameter().getType().equals(Integer.class)
+					&& !parameterContext.isAnnotated(AnnotatedInteger.class);
 		}
 
 		@Override
@@ -48,7 +54,7 @@ public class ParameterResolverDuplicateTypeInteger {
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext,
 				ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == int.class;
+			return parameterContext.isAnnotated(AnnotatedInteger.class);
 		}
 
 		@Override
@@ -57,4 +63,8 @@ public class ParameterResolverDuplicateTypeInteger {
 			return 2;
 		}
 	}
+
+	@Target(ElementType.PARAMETER)
+	@Retention(RetentionPolicy.RUNTIME)
+	public @interface AnnotatedInteger {}
 }

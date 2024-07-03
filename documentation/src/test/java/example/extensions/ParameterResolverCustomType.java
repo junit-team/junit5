@@ -13,22 +13,17 @@ package example.extensions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 // tag::user_guide[]
-public class ParameterResolverWrappedType {
-
-	@RegisterExtension
-	static final FirstIntegerResolver firstIntegerResolver = new FirstIntegerResolver();
-
-	@RegisterExtension
-	static final SecondIntegerResolver secondIntegerResolver = new SecondIntegerResolver();
+public class ParameterResolverCustomType {
 
 	@Test
-	void testInt(int i, WrappedInteger wrappedInteger) {
+	@ExtendWith({FirstIntegerResolver.class, SecondIntegerResolver.class})
+	void testInt(Integer i, WrappedInteger wrappedInteger) {
 		assertEquals(1, i);
 		assertEquals(2, wrappedInteger.getValue());
 	}
@@ -36,12 +31,14 @@ public class ParameterResolverWrappedType {
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == int.class;
+		public boolean supportsParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType().equals(Integer.class);
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
 			return 1;
 		}
 	}
@@ -49,12 +46,14 @@ public class ParameterResolverWrappedType {
 	static class SecondIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == WrappedInteger.class;
+		public boolean supportsParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
+			return parameterContext.getParameter().getType().equals(WrappedInteger.class);
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext,
+				ExtensionContext extensionContext) {
 			return new WrappedInteger(2);
 		}
 	}
