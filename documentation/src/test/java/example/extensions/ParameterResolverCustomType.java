@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public class ParameterResolverCustomType {
 
 	@Test
-	@ExtendWith({FirstIntegerResolver.class, SecondIntegerResolver.class})
+	@ExtendWith({ FirstIntegerResolver.class, SecondIntegerResolver.class })
 	void testInt(Integer i, WrappedInteger wrappedInteger) {
 		assertEquals(1, i);
 		assertEquals(2, wrappedInteger.getValue());
@@ -31,14 +31,12 @@ public class ParameterResolverCustomType {
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType().equals(Integer.class);
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 1;
 		}
 	}
@@ -46,14 +44,12 @@ public class ParameterResolverCustomType {
 	static class SecondIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType().equals(WrappedInteger.class);
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return new WrappedInteger(2);
 		}
 	}

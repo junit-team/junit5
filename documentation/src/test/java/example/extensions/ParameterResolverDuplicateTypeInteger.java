@@ -22,7 +22,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 public class ParameterResolverDuplicateTypeInteger {
 
 	@Test
-	@ExtendWith({FirstIntegerResolver.class, SecondIntegerResolver.class})
+	@ExtendWith({ FirstIntegerResolver.class, SecondIntegerResolver.class })
 	void testInt(int i) {
 		// Test will not run due to ParameterResolutionException
 		assertEquals(1, i);
@@ -31,14 +31,12 @@ public class ParameterResolverDuplicateTypeInteger {
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 1;
 		}
 	}
@@ -46,14 +44,12 @@ public class ParameterResolverDuplicateTypeInteger {
 	static class SecondIntegerResolver implements ParameterResolver {
 
 		@Override
-		public boolean supportsParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext,
-				ExtensionContext extensionContext) {
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return 2;
 		}
 	}
