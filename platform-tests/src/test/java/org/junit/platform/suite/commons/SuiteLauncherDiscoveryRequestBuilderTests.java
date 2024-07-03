@@ -100,7 +100,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
 		ConfigurationParameters configuration = request.getConfigurationParameters();
 		Optional<String> parameter = configuration.get("com.example.prop.first");
 		assertEquals(Optional.of("first value"), parameter);
@@ -113,7 +113,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
 		ConfigurationParameters configuration = request.getConfigurationParameters();
 		Optional<String> parameterOne = configuration.get("com.example.prop.first");
 		assertEquals(Optional.of("first value from override file"), parameterOne);
@@ -128,7 +128,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		class Suite {
 		}
 
-		LauncherDiscoveryRequest request = builder.suite(Suite.class).build();
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
 		ConfigurationParameters configuration = request.getConfigurationParameters();
 		Optional<String> parameterOne = configuration.get("com.example.prop.first");
 		assertEquals(Optional.of("first value from explicit parameter"), parameterOne);
