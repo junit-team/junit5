@@ -136,7 +136,7 @@ public class Assertions {
 	 */
 	public static <V> V fail(String message) {
 		if (message.isBlank()) {
-			message = "Something went wrong...";
+			message = "Assertions.fail() called";
 		}
 		AssertionUtils.fail(message);
 		return null; // appeasing the compiler: this line will never be executed.
@@ -151,7 +151,7 @@ public class Assertions {
 	 */
 	public static <V> V fail(String message, Throwable cause) {
 		if (message.isBlank()) {
-			message = "Something went wrong...";
+			message = "Assertions.fail() called";
 		}
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.

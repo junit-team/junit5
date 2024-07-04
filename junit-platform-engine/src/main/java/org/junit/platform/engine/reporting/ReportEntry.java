@@ -62,7 +62,7 @@ public final class ReportEntry {
 	/**
 	 * Factory for creating a new {@code ReportEntry} from a key-value pair.
 	 *
-	 * @param key the key under which the value should published; never
+	 * @param key the key under which the value should be published; never
 	 * {@code null} or blank
 	 * @param value the value to publish; never {@code null} or blank
 	 */
