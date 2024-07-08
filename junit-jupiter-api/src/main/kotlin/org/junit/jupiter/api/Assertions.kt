@@ -19,6 +19,8 @@ import org.junit.jupiter.api.function.ThrowingSupplier
 import java.time.Duration
 import java.util.function.Supplier
 import java.util.stream.Stream
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 /**
  * @see Assertions.fail
@@ -320,3 +322,39 @@ fun <R> assertTimeoutPreemptively(
     message: () -> String,
     executable: () -> R
 ): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)
+
+/**
+ * Example usage:
+ * ```kotlin
+ * assertInstanceOf<RandomAccess>(list, "List should support fast random access")
+ * ```
+ * @see Assertions.assertInstanceOf
+ * @since 5.11
+ */
+@OptIn(ExperimentalContracts::class)
+@API(status = EXPERIMENTAL, since = "5.11")
+inline fun <reified T : Any> assertInstanceOf(
+    actualValue: Any?,
+    message: String? = null
+): T {
+    contract {
+        returns() implies (actualValue is T)
+    }
+    return Assertions.assertInstanceOf(T::class.java, actualValue, message)
+}
+
+/*
+ * @see Assertions.assertInstanceOf
+ * @since 5.11
+ */
+@OptIn(ExperimentalContracts::class)
+@API(status = EXPERIMENTAL, since = "5.11")
+inline fun <reified T : Any> assertInstanceOf(
+    actualValue: Any?,
+    noinline message: () -> String
+): T {
+    contract {
+        returns() implies (actualValue is T)
+    }
+    return Assertions.assertInstanceOf(T::class.java, actualValue, message)
+}

@@ -52,6 +52,8 @@ repository on GitHub.
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names, User Guide>>
   for details.
 * `JAVA_24` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* New `assertInstanceOf` methods added for Kotlin following up with similar Java
+  `assertInstanceOf` methods introduced in `5.8` version.
 
 
 [[release-notes-5.11.0-M3-junit-vintage]]
