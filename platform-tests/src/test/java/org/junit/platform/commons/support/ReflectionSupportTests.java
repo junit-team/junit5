@@ -472,9 +472,11 @@ class ReflectionSupportTests {
 
 	static class ClassWithNestedClasses {
 
+		@SuppressWarnings({ "InnerClassMayBeStatic", "unused" })
 		class Nested1 {
 		}
 
+		@SuppressWarnings("unused")
 		static class Nested2 {
 		}
 
