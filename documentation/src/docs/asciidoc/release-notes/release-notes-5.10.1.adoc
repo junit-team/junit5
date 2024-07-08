@@ -51,6 +51,7 @@ JUnit repository on GitHub.
 * Documentation for `@Disabled` and conditional annotations now explicitly explains that
   such annotations are not inherited by subclasses.
 
+
 [[release-notes-5.10.1-junit-vintage]]
 === JUnit Vintage
 
