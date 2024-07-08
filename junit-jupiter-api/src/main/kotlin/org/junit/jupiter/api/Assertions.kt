@@ -175,7 +175,7 @@ inline fun <reified T : Throwable> assertThrows(
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(executable: () -> R): R = Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
 
 /**
@@ -188,7 +188,7 @@ inline fun <R> assertDoesNotThrow(executable: () -> R): R = Assertions.assertDoe
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(
     message: String,
     executable: () -> R
@@ -204,7 +204,7 @@ inline fun <R> assertDoesNotThrow(
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(
     noinline message: () -> String,
     executable: () -> R
@@ -233,7 +233,7 @@ internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R
  * @see Assertions.assertTimeout
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     executable: () -> R
@@ -249,7 +249,7 @@ fun <R> assertTimeout(
  * @see Assertions.assertTimeout
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     message: String,
@@ -266,7 +266,7 @@ fun <R> assertTimeout(
  * @see Assertions.assertTimeout
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     message: () -> String,
@@ -283,7 +283,7 @@ fun <R> assertTimeout(
  * @see Assertions.assertTimeoutPreemptively
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     executable: () -> R
@@ -299,7 +299,7 @@ fun <R> assertTimeoutPreemptively(
  * @see Assertions.assertTimeoutPreemptively
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     message: String,
@@ -316,7 +316,7 @@ fun <R> assertTimeoutPreemptively(
  * @see Assertions.assertTimeoutPreemptively
  * @paramR the result of the [executable].
  */
-@API(status = EXPERIMENTAL, since = "5.5")
+@API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     message: () -> String,
