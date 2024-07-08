@@ -231,17 +231,19 @@ class KotlinAssertionsTests {
 
     @Test
     fun `assertInstanceOf fails wrong type value`() {
-        val result = assertThrows<AssertionError> {
-            assertInstanceOf<String>(StringBuilder(), "Should be a String")
-        }
+        val result =
+            assertThrows<AssertionError> {
+                assertInstanceOf<String>(StringBuilder(), "Should be a String")
+            }
         assertMessageStartsWith(result, "Should be a String")
     }
 
     @Test
     fun `assertInstanceOf fails null value`() {
-        val result = assertThrows<AssertionError> {
-            assertInstanceOf<String>(null, "Should be a String")
-        }
+        val result =
+            assertThrows<AssertionError> {
+                assertInstanceOf<String>(null, "Should be a String")
+            }
         assertMessageStartsWith(result, "Should be a String")
     }
 

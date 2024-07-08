@@ -333,7 +333,10 @@ fun <R> assertTimeoutPreemptively(
  */
 @OptIn(ExperimentalContracts::class)
 @API(status = EXPERIMENTAL, since = "5.11")
-inline fun <reified T : Any> assertInstanceOf(actualValue: Any?, message: String? = null): T {
+inline fun <reified T : Any> assertInstanceOf(
+    actualValue: Any?,
+    message: String? = null
+): T {
     contract {
         returns() implies (actualValue is T)
     }
@@ -346,7 +349,10 @@ inline fun <reified T : Any> assertInstanceOf(actualValue: Any?, message: String
  */
 @OptIn(ExperimentalContracts::class)
 @API(status = EXPERIMENTAL, since = "5.11")
-inline fun <reified T : Any> assertInstanceOf(actualValue: Any?, noinline message: () -> String): T {
+inline fun <reified T : Any> assertInstanceOf(
+    actualValue: Any?,
+    noinline message: () -> String
+): T {
     contract {
         returns() implies (actualValue is T)
     }
