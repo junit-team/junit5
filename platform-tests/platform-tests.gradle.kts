@@ -6,7 +6,7 @@ plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
-	alias(libs.plugins.jmh)
+	id("junitbuild.jmh-conventions")
 }
 
 dependencies {
@@ -44,15 +44,11 @@ dependencies {
 	}
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
-	jmh(libs.jmh.core)
 	jmh(projects.junitJupiterApi)
 	jmh(libs.junit4)
-	jmhAnnotationProcessor(libs.jmh.generator.annprocess)
 }
 
 jmh {
-	jmhVersion = libs.versions.jmh
-
 	duplicateClassesStrategy = DuplicatesStrategy.WARN
 	fork = 1
 	warmupIterations = 1
@@ -82,9 +78,6 @@ tasks {
 		useJUnitPlatform {
 			includeTags("junit4")
 		}
-	}
-	checkstyleJmh { // use same style rules as defined for tests
-		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
 

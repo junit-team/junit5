@@ -48,9 +48,11 @@ val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProje
 val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
 
 dependencies {
-	(modularProjects + listOf(projects.platformTests.dependencyProject)).forEach {
-		jacocoAggregation(project(it.path))
+	modularProjects.forEach {
+		jacocoAggregation(it)
 	}
+	jacocoAggregation(projects.documentation)
+	jacocoAggregation(projects.platformTests)
 }
 
 nexusPublishing {

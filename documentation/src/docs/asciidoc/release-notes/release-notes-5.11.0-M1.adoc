@@ -35,9 +35,10 @@ page in the Wiki.
 * Fixed parsing of recursive jar URIs which allows the JUnit Platform Launcher to be used
   inside Spring Boot executable jars for Spring Boot 3.2 and later.
 * The `junit-platform-suite-engine` now includes configuration provided via
-  `@ConfigurationParameter` when selecting tests by `UniqueId`.
+  `@ConfigurationParameter` when selecting tests by `UniqueId` (backported to 5.10.3).
 * In order to support using `@EnabledInNativeImage` on test classes,
-  `UniqueIdTrackingListener` now tracks descendants of skipped test containers.
+  `UniqueIdTrackingListener` now tracks descendants of skipped test containers (backported
+  to 5.10.3).
 
 [[release-notes-5.11.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

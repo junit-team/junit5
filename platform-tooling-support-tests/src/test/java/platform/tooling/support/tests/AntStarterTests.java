@@ -21,6 +21,7 @@ import de.sormuras.bartholdy.tool.Java;
 
 import org.apache.tools.ant.Main;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.Request;
 
@@ -29,11 +30,12 @@ import platform.tooling.support.Request;
  */
 class AntStarterTests {
 
+	@ResourceLock(Projects.ANT_STARTER)
 	@Test
 	void ant_starter() {
 		var request = Request.builder() //
 				.setTool(new Java()) //
-				.setProject("ant-starter") //
+				.setProject(Projects.ANT_STARTER) //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
 				.addArguments("-verbose") //
 				.build();

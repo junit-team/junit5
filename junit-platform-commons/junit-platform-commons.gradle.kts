@@ -19,7 +19,7 @@ tasks.jar {
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
 	doLast(objects.newInstance(UpdateJarAction::class).apply {
 		javaLauncher = javaToolchains.launcherFor(java.toolchain)
-		args.appendAll(
+		args.addAll(
 			"--file", archiveFile.get().asFile.absolutePath,
 			"--release", "9",
 			"-C", release9ClassesDir.absolutePath, "."

@@ -19,17 +19,22 @@ import org.junit.jupiter.params.provider.MethodSource
 // https://github.com/junit-team/junit5/issues/1836
 object DisplayNameTests {
     @JvmStatic
-    fun data() = arrayOf(
-        arrayOf("A", 1),
-        arrayOf("B", 2),
-        arrayOf("C", 3),
-        arrayOf("", 4), // empty is okay
-        arrayOf(null, 5) // null was the problem
-    )
+    fun data() =
+        arrayOf(
+            arrayOf("A", 1),
+            arrayOf("B", 2),
+            arrayOf("C", 3),
+            arrayOf("", 4), // empty is okay
+            arrayOf(null, 5) // null was the problem
+        )
 
     @ParameterizedTest
     @MethodSource("data")
-    fun test(char: String?, number: Int, info: TestInfo) {
+    fun test(
+        char: String?,
+        number: Int,
+        info: TestInfo
+    ) {
         assertEquals("[$number] $char, $number", info.displayName)
     }
 }

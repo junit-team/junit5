@@ -1,13 +1,10 @@
-/*
- * Copyright 2015-2024 the original author or authors.
- *
- * All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v2.0 which
- * accompanies this distribution and is available at
- *
- * https://www.eclipse.org/legal/epl-v20.html
- */
+@import java.util.List
+@import gg.jte.support.ForSupport
+@import junitbuild.generator.model.JRE
 
+@param List<JRE> jres
+@param String licenseHeader
+${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.apiguardian.api.API.Status.STABLE;
@@ -30,22 +27,10 @@ import org.junit.platform.commons.util.StringUtils;
  * {@linkplain #isCurrentVersion current JRE version}.
  *
  * @since 5.1
- * @see #JAVA_8
- * @see #JAVA_9
- * @see #JAVA_10
- * @see #JAVA_11
- * @see #JAVA_12
- * @see #JAVA_13
- * @see #JAVA_14
- * @see #JAVA_15
- * @see #JAVA_16
- * @see #JAVA_17
- * @see #JAVA_18
- * @see #JAVA_19
- * @see #JAVA_20
- * @see #JAVA_21
- * @see #JAVA_22
- * @see #OTHER
+@for(JRE jre : jres)<%--
+--%> * @see #JAVA_${jre.getVersion()}
+@endfor<%--
+--%> * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
  * @see EnabledForJreRange
@@ -53,130 +38,28 @@ import org.junit.platform.commons.util.StringUtils;
  */
 @API(status = STABLE, since = "5.1")
 public enum JRE {
-
+@for(var jre : jres)
 	/**
-	 * Java 8.
-	 */
-	JAVA_8,
-
+	 * Java ${jre.getVersion()}.
+	@if(jre.getSince() != null)<%--
+--%> *
+	 * @since ${jre.getSince()}
+	@endif<%--
+--%> */
+	@if(jre.getSince() != null)<%--
+--%>@API(status = STABLE, since = "${jre.getSince()}")
+	@endif<%--
+--%>JAVA_${jre.getVersion()},
+@endfor
 	/**
-	 * Java 9.
-	 */
-	JAVA_9,
-
-	/**
-	 * Java 10.
-	 */
-	JAVA_10,
-
-	/**
-	 * Java 11.
-	 */
-	JAVA_11,
-
-	/**
-	 * Java 12.
-	 *
-	 * @since 5.4
-	 */
-	@API(status = STABLE, since = "5.4")
-	JAVA_12,
-
-	/**
-	 * Java 13.
-	 *
-	 * @since 5.4
-	 */
-	@API(status = STABLE, since = "5.4")
-	JAVA_13,
-
-	/**
-	 * Java 14.
-	 *
-	 * @since 5.5
-	 */
-	@API(status = STABLE, since = "5.5")
-	JAVA_14,
-
-	/**
-	 * Java 15.
-	 *
-	 * @since 5.6
-	 */
-	@API(status = STABLE, since = "5.6")
-	JAVA_15,
-
-	/**
-	 * Java 16.
-	 *
-	 * @since 5.7
-	 */
-	@API(status = STABLE, since = "5.7")
-	JAVA_16,
-
-	/**
-	 * Java 17.
-	 *
-	 * @since 5.7.1
-	 */
-	@API(status = STABLE, since = "5.7.1")
-	JAVA_17,
-
-	/**
-	 * Java 18.
-	 *
-	 * @since 5.8.1
-	 */
-	@API(status = STABLE, since = "5.8.1")
-	JAVA_18,
-
-	/**
-	 * Java 19.
-	 *
-	 * @since 5.9
-	 */
-	@API(status = STABLE, since = "5.9")
-	JAVA_19,
-
-	/**
-	 * Java 20.
-	 *
-	 * @since 5.9
-	 */
-	@API(status = STABLE, since = "5.9")
-	JAVA_20,
-
-	/**
-	 * Java 21.
-	 *
-	 * @since 5.9.2
-	 */
-	@API(status = STABLE, since = "5.9.2")
-	JAVA_21,
-
-	/**
-	 * Java 22.
-	 *
-	 * @since 5.10
-	 */
-	@API(status = STABLE, since = "5.10")
-	JAVA_22,
-
-	/**
-	 * Java 23.
-	 *
-	 * @since 5.11
-	 */
-	@API(status = STABLE, since = "5.11")
-	JAVA_23,
-
-	/**
-	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
-	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
-	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
-	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18},
-	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21},
-	 * {@link #JAVA_22}, or {@link #JAVA_23}.
+	 * A JRE version other than <%--
+--%>@for(var jre : ForSupport.of(jres))<%--
+	--%>@if(jre.isLast())or @endif<%--
+	--%>{@link #JAVA_${jre.get().getVersion()}}<%--
+	--%>@if(jre.isLast()).@else,@endif<%--
+	--%>@if(jre.getIndex() % 3 == 1 && !jre.isLast())
+	 * @elseif(!jre.isLast()) @endif<%--
+--%>@endfor
 	 */
 	OTHER;
 
@@ -205,37 +88,13 @@ public enum JRE {
 			Object version = ReflectionUtils.invokeMethod(versionMethod, null);
 			Method majorMethod = version.getClass().getMethod("major");
 			int major = (int) ReflectionUtils.invokeMethod(majorMethod, version);
-			switch (major) {
-				case 9:
-					return JAVA_9;
-				case 10:
-					return JAVA_10;
-				case 11:
-					return JAVA_11;
-				case 12:
-					return JAVA_12;
-				case 13:
-					return JAVA_13;
-				case 14:
-					return JAVA_14;
-				case 15:
-					return JAVA_15;
-				case 16:
-					return JAVA_16;
-				case 17:
-					return JAVA_17;
-				case 18:
-					return JAVA_18;
-				case 19:
-					return JAVA_19;
-				case 20:
-					return JAVA_20;
-				case 21:
-					return JAVA_21;
-				case 22:
-					return JAVA_22;
-				case 23:
-					return JAVA_23;
+			switch (major) {<%--
+				--%>@for(var jre : jres)<%--
+					--%>@if(jre.getVersion() != 8)
+				case ${jre.getVersion()}:
+					return JAVA_${jre.getVersion()};<%--
+					--%>@endif<%--
+				--%>@endfor
 				default:
 					return OTHER;
 			}

@@ -21,6 +21,7 @@ import aQute.bnd.osgi.Domain;
 import aQute.bnd.osgi.Jar;
 import aQute.bnd.version.MavenVersion;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.osgi.framework.Version;
@@ -32,6 +33,7 @@ import platform.tooling.support.MavenRepo;
 /**
  * @since 1.5
  */
+@Order(Integer.MAX_VALUE)
 class ManifestTests {
 
 	@ParameterizedTest

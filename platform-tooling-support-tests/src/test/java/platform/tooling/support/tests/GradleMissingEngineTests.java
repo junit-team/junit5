@@ -22,6 +22,7 @@ import de.sormuras.bartholdy.Tool;
 import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -33,19 +34,18 @@ import platform.tooling.support.Request;
  */
 class GradleMissingEngineTests {
 
+	@ResourceLock(Projects.GRADLE_MISSING_ENGINE)
 	@Test
 	void gradle_wrapper() {
 		test(new GradleWrapper(Paths.get("..")));
 	}
 
 	private void test(Tool gradle) {
-		var project = "gradle-missing-engine";
 		var result = Request.builder() //
-				.setProject(project) //
-				.setWorkspace(project + "-wrapper") //
+				.setProject(Projects.GRADLE_MISSING_ENGINE) //
 				.setTool(gradle) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--debug", "--stacktrace") //
+				.addArguments("build", "--no-daemon", "--debug", "--stacktrace", "--no-build-cache") //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.setTimeout(TOOL_TIMEOUT).build() //
 				.run();

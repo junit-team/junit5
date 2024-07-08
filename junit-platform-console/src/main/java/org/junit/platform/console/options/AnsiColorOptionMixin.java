@@ -18,22 +18,12 @@ import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Spec;
 
-class OutputOptionsMixin {
+class AnsiColorOptionMixin {
 
 	@Spec(MIXEE)
 	CommandSpec commandSpec;
 
-	@Option(names = "--disable-banner", description = "Disable print out of the welcome message.")
-	private boolean disableBanner;
-
-	@Option(names = "-disable-banner", hidden = true)
-	private boolean disableBanner2;
-
 	private boolean disableAnsiColors;
-
-	public boolean isDisableBanner() {
-		return disableBanner || disableBanner2;
-	}
 
 	public boolean isDisableAnsiColors() {
 		return disableAnsiColors;

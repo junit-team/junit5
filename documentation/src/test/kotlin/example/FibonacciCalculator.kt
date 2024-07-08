@@ -10,20 +10,19 @@
 package example
 
 class FibonacciCalculator {
-
-    private val fibonacci = sequence {
-        yield(0) // 0th Fibonacci number
-        yield(1) // first Fibonacci number
-        var cur = 1
-        var next = 1
-        while (true) {
-            yield(next) // next Fibonacci number
-            val tmp = cur + next
-            cur = next
-            next = tmp
+    private val fibonacci =
+        sequence {
+            yield(0) // 0th Fibonacci number
+            yield(1) // first Fibonacci number
+            var cur = 1
+            var next = 1
+            while (true) {
+                yield(next) // next Fibonacci number
+                val tmp = cur + next
+                cur = next
+                next = tmp
+            }
         }
-    }
 
-    fun fib(fibonacciNumber: Int) =
-        fibonacci.elementAt(fibonacciNumber)
+    fun fib(fibonacciNumber: Int) = fibonacci.elementAt(fibonacciNumber)
 }

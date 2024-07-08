@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.nio.file.Files;
 import java.util.jar.JarInputStream;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
@@ -25,6 +26,7 @@ import platform.tooling.support.MavenRepo;
 /**
  * @since 1.8
  */
+@Order(Integer.MAX_VALUE)
 class JarContainsManifestFirstTests {
 
 	@ParameterizedTest

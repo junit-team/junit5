@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import de.sormuras.bartholdy.Result;
 import de.sormuras.bartholdy.jdk.Jar;
@@ -33,11 +35,13 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.ThirdPartyJars;
 
 /**
  * @since 1.4
@@ -45,6 +49,7 @@ import platform.tooling.support.Request;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class StandaloneTests {
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	void jarFileWithoutCompiledModuleDescriptorClass() throws Exception {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
@@ -61,11 +66,12 @@ class StandaloneTests {
 		assertTrue(found.isEmpty(), jar + " must not contain any " + name + " files: " + found);
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	void listAllObservableEngines() {
 		var result = Request.builder() //
 				.setTool(new Java()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("engines", "--disable-ansi-colors", "--disable-banner").build() //
 				.run(false);
@@ -83,13 +89,68 @@ class StandaloneTests {
 			result.getOutput("out").lines());
 	}
 
+	@ResourceLock(Projects.STANDALONE)
+	@Test
+	void printVersionViaJar() {
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject(Projects.STANDALONE) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.build() //
+				.run();
+
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+
+		var version = Helper.version("junit-platform-console");
+		assertLinesMatch("""
+				JUnit Platform Console Launcher %s
+				JVM: .*
+				OS: .*
+				""".formatted(version).lines(), //
+			result.getOutputLines("out").stream());
+	}
+
+	@ResourceLock(Projects.STANDALONE)
+	@Test
+	void printVersionViaModule() {
+		var junitJars = Stream.of("junit-platform-console", "junit-platform-reporting", "junit-platform-engine",
+			"junit-platform-launcher", "junit-platform-commons") //
+				.map(MavenRepo::jar);
+		var thirdPartyJars = Stream.of(ThirdPartyJars.find("org.opentest4j", "opentest4j"));
+		var modulePath = Stream.concat(junitJars, thirdPartyJars) //
+				.map(String::valueOf) //
+				.collect(joining(File.pathSeparator));
+		var result = Request.builder() //
+				.setTool(new Java()) //
+				.setProject(Projects.STANDALONE) //
+				.addArguments("--module-path", modulePath) //
+				.addArguments("--module", "org.junit.platform.console") //
+				.addArguments("--version", "--disable-ansi-colors") //
+				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.build() //
+				.run();
+
+		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+
+		var version = Helper.version("junit-platform-console");
+		assertLinesMatch("""
+				JUnit Platform Console Launcher %s
+				JVM: .*
+				OS: .*
+				""".formatted(version).lines(), //
+			result.getOutputLines("out").stream());
+	}
+
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(1)
 	void compile() throws Exception {
-		var workspace = Request.WORKSPACE.resolve("standalone");
+		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var result = Request.builder() //
 				.setTool(new Javac()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("-Xlint:-options") //
 				.addArguments("--release", "8") //
 				.addArguments("-proc:none") //
@@ -109,7 +170,7 @@ class StandaloneTests {
 		var jarFolder = Files.createDirectories(workspace.resolve("jar"));
 		var jarResult = Request.builder() //
 				.setTool(new Jar()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("--create") //
 				.addArguments("--file", jarFolder.resolve("tests.jar")) //
 				.addArguments("-C", workspace.resolve("bin"), ".") //
@@ -117,6 +178,7 @@ class StandaloneTests {
 		assertEquals(0, jarResult.getExitCode(), String.join("\n", jarResult.getOutputLines("out")));
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
 	void discoverTree() {
@@ -152,6 +214,7 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
 	void discoverFlat() {
@@ -270,6 +333,7 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
 	void discoverNone() {
@@ -278,6 +342,7 @@ class StandaloneTests {
 		assertThat(result.getOutputLines("out")).isEmpty();
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
 	void discoverSummary() {
@@ -292,6 +357,7 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
 	void discoverTestFeed() {
@@ -318,7 +384,7 @@ class StandaloneTests {
 	private static Result discover(String... args) {
 		var result = Request.builder() //
 				.setTool(new Java()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("discover") //
 				.addArguments("--scan-class-path") //
@@ -334,12 +400,13 @@ class StandaloneTests {
 		return result;
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(3)
 	void execute() throws IOException {
 		var result = Request.builder() //
 				.setTool(new Java()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
@@ -354,7 +421,7 @@ class StandaloneTests {
 
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
-		var workspace = Request.WORKSPACE.resolve("standalone");
+		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
@@ -374,6 +441,7 @@ class StandaloneTests {
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(4)
 	void executeOnJava8() throws IOException {
@@ -381,7 +449,7 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(java8) //
 				.setJavaHome(java8.getHome()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
@@ -396,7 +464,7 @@ class StandaloneTests {
 
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
-		var workspace = Request.WORKSPACE.resolve("standalone");
+		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
@@ -410,6 +478,7 @@ class StandaloneTests {
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(5)
 	// https://github.com/junit-team/junit5/issues/2600
@@ -418,14 +487,14 @@ class StandaloneTests {
 		var result = Request.builder() //
 				.setTool(java8) //
 				.setJavaHome(java8.getHome()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("execute") //
-				.addArguments("--select-package", "standalone") //
+				.addArguments("--select-package", Projects.STANDALONE) //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin").build() //
@@ -433,7 +502,7 @@ class StandaloneTests {
 
 		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
 
-		var workspace = Request.WORKSPACE.resolve("standalone");
+		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
@@ -454,6 +523,7 @@ class StandaloneTests {
 		return expectedErrLines;
 	}
 
+	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(6)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
@@ -465,7 +535,7 @@ class StandaloneTests {
 		path.add(jar.toString());
 		var result = Request.builder() //
 				.setTool(new Java()) //
-				.setProject("standalone") //
+				.setProject(Projects.STANDALONE) //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //

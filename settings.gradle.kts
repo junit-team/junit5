@@ -72,6 +72,8 @@ buildCache {
 	}
 }
 
+includeBuild("gradle/base")
+
 rootProject.name = "junit5"
 
 include("documentation")
