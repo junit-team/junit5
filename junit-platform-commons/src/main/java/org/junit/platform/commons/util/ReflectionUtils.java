@@ -1172,7 +1172,8 @@ public final class ReflectionUtils {
 	/**
 	 * @since 1.11
 	 */
-	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
+			Predicate<Resource> resourceFilter) {
 		return findAllResourcesInPackage(basePackageName, resourceFilter).stream();
 	}
 

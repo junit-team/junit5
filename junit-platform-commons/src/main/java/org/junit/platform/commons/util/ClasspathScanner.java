@@ -149,7 +149,8 @@ class ClasspathScanner {
 		// @formatter:on
 	}
 
-	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName, Predicate<Resource> resourceFilter) {
+	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName,
+			Predicate<Resource> resourceFilter) {
 		List<Resource> resources = new ArrayList<>();
 		// @formatter:off
 		walkFilesForUri(baseUri, ClasspathFilters.resourceFiles(),
@@ -205,7 +206,8 @@ class ClasspathScanner {
 	private void processResourceFileSafely(Path baseDir, String basePackageName, Predicate<Resource> resourceFilter,
 			Path resourceFile, Consumer<Resource> resourceConsumer) {
 		try {
-			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName, resourceFile);
+			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
+				resourceFile);
 			Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
 			if (resourceFilter.test(resource)) {
 				resourceConsumer.accept(resource);

@@ -186,7 +186,8 @@ public class ModuleUtils {
 	 * Scan for classes using the supplied set of module references, class
 	 * filter, and loader.
 	 */
-	private static List<Resource> scan(Set<ModuleReference> references, Predicate<Resource> filter, ClassLoader loader) {
+	private static List<Resource> scan(Set<ModuleReference> references, Predicate<Resource> filter,
+			ClassLoader loader) {
 		logger.debug(() -> "Scanning " + references.size() + " module references: " + references);
 		ModuleReferenceResourceScanner scanner = new ModuleReferenceResourceScanner(filter, loader);
 		List<Resource> classes = new ArrayList<>();

@@ -216,8 +216,7 @@ class ReflectionSupportTests {
 		for (var path : paths) {
 			var root = path.toUri();
 			tests.add(DynamicTest.dynamicTest(createDisplayName(root),
-				() -> assertEquals(
-					ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources).toList(),
+				() -> assertEquals(ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources).toList(),
 					ReflectionSupport.streamAllResourcesInClasspathRoot(root, allResources).toList())));
 		}
 		return tests;
@@ -339,8 +338,7 @@ class ReflectionSupportTests {
 	 */
 	@Test
 	void streamAllResourcesInModuleDelegates() {
-		assertEquals(
-			ReflectionUtils.streamAllResourcesInModule("org.junit.platform.commons", allResources).toList(),
+		assertEquals(ReflectionUtils.streamAllResourcesInModule("org.junit.platform.commons", allResources).toList(),
 			ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", allResources).toList());
 	}
 

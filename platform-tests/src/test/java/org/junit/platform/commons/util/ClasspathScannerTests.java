@@ -393,8 +393,8 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForResourcesInPackageWithFilter() {
-		Predicate<Resource> thisResourceOnly = resource -> "org/junit/platform/commons/example.resource"
-				.equals(resource.getName());
+		Predicate<Resource> thisResourceOnly = resource -> "org/junit/platform/commons/example.resource".equals(
+			resource.getName());
 		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
 		assertThat(resources).extracting(Resource::getName).containsExactly(
 			"org/junit/platform/commons/example.resource");

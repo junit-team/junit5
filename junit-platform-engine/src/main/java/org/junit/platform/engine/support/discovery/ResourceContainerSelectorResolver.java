@@ -14,8 +14,8 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInClasspathRoot;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInPackage;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllResourcesInModule;
-import static org.junit.platform.commons.util.ResourceFilter.packageName;
 import static org.junit.platform.commons.util.ResourceFilter.loadClasspathResource;
+import static org.junit.platform.commons.util.ResourceFilter.packageName;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.selectors;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
@@ -46,20 +46,17 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(ClasspathRootSelector selector, Context context) {
-		return resourceSelectors(
-			findAllResourcesInClasspathRoot(selector.getClasspathRoot(), packageFilter));
+		return resourceSelectors(findAllResourcesInClasspathRoot(selector.getClasspathRoot(), packageFilter));
 	}
 
 	@Override
 	public Resolution resolve(ModuleSelector selector, Context context) {
-		return resourceSelectors(
-			findAllResourcesInModule(selector.getModuleName(), packageFilter));
+		return resourceSelectors(findAllResourcesInModule(selector.getModuleName(), packageFilter));
 	}
 
 	@Override
 	public Resolution resolve(PackageSelector selector, Context context) {
-		return resourceSelectors(
-			findAllResourcesInPackage(selector.getPackageName(), packageFilter));
+		return resourceSelectors(findAllResourcesInPackage(selector.getPackageName(), packageFilter));
 	}
 
 	private Resolution resourceSelectors(List<Resource> resources) {

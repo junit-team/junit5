@@ -38,6 +38,7 @@ public class ResourceFilter {
 	public static Function<Resource, Resource> loadClasspathResource() {
 		return loadClasspathResource(ReflectionSupport::tryToLoadResource);
 	}
+
 	/**
 	 * TODO: Improve or reconsider.
 	 *
@@ -63,8 +64,7 @@ public class ResourceFilter {
 					}
 					return candidate;
 
-				})
-				.orElse(candidate);
+				}).orElse(candidate);
 	}
 
 	/**
