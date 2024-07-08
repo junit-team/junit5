@@ -68,15 +68,12 @@ class ClasspathScanner {
 	private final Supplier<ClassLoader> classLoaderSupplier;
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> loadClass;
-	private final BiFunction<String, ClassLoader, Try<Resource>> loadResource;
 
 	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
-			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass,
-			BiFunction<String, ClassLoader, Try<Resource>> loadResource) {
+			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass) {
 
 		this.classLoaderSupplier = classLoaderSupplier;
 		this.loadClass = loadClass;
-		this.loadResource = loadResource;
 	}
 
 	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
@@ -97,7 +94,7 @@ class ClasspathScanner {
 		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
 	}
 
-	List<Resource> scanForResourcesInPackage(String basePackageName, ResourceFilter resourceFilter) {
+	List<Resource> scanForResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
@@ -108,7 +105,7 @@ class ClasspathScanner {
 		return findResourcesForUris(roots, basePackageName, resourceFilter);
 	}
 
-	List<Resource> scanForResourcesInClasspathRoot(URI root, ResourceFilter resourceFilter) {
+	List<Resource> scanForResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
 
@@ -142,7 +139,7 @@ class ClasspathScanner {
 	 * Recursively scan for resources in all the supplied source directories.
 	 */
 	private List<Resource> findResourcesForUris(List<URI> baseUris, String basePackageName,
-			ResourceFilter resourceFilter) {
+			Predicate<Resource> resourceFilter) {
 		// @formatter:off
 		return baseUris.stream()
 				.map(baseUri -> findResourcesForUri(baseUri, basePackageName, resourceFilter))
@@ -152,7 +149,8 @@ class ClasspathScanner {
 		// @formatter:on
 	}
 
-	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName, ResourceFilter resourceFilter) {
+	private List<Resource> findResourcesForUri(URI baseUri, String basePackageName,
+			Predicate<Resource> resourceFilter) {
 		List<Resource> resources = new ArrayList<>();
 		// @formatter:off
 		walkFilesForUri(baseUri, ClasspathFilters.resourceFiles(),
@@ -205,20 +203,16 @@ class ClasspathScanner {
 		}
 	}
 
-	private void processResourceFileSafely(Path baseDir, String basePackageName, ResourceFilter resourceFilter,
+	private void processResourceFileSafely(Path baseDir, String basePackageName, Predicate<Resource> resourceFilter,
 			Path resourceFile, Consumer<Resource> resourceConsumer) {
 		try {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
-			if (resourceFilter.match(fullyQualifiedResourceName)) {
-				// @formatter:off
-				loadResource.apply(fullyQualifiedResourceName, getClassLoader())
-						.toOptional()
-						// Always use ".filter(resourceFilter)" to include future predicates.
-						.filter(resourceFilter)
-						.ifPresent(resourceConsumer);
-				// @formatter:on
+			Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
+			if (resourceFilter.test(resource)) {
+				resourceConsumer.accept(resource);
 			}
+			// @formatter:on
 		}
 		catch (Throwable throwable) {
 			handleThrowable(resourceFile, throwable);
