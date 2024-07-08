@@ -10,64 +10,88 @@
 
 package org.junit.platform.commons.util;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 
 /**
- * Resource-related predicate used by reflection utilities.
- *
- * <h2>DISCLAIMER</h2>
- *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
- * Use at your own risk!
+ * Resource-related predicates for use with {@link org.junit.platform.commons.support.ReflectionSupport}.
  *
  * @since 1.11
  */
-@API(status = INTERNAL, since = "1.11")
-public class ResourceFilter implements Predicate<Resource> {
+@API(status = EXPERIMENTAL, since = "1.11")
+public class ResourceFilter {
+
+	public static final String DEFAULT_PACKAGE_NAME = "";
+	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
+	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 
 	/**
-	 * Create a {@link ResourceFilter} instance that accepts all names but filters resources.
+	 * TODO:
 	 */
-	public static ResourceFilter of(Predicate<Resource> resourcePredicate) {
-		return of(name -> true, resourcePredicate);
+	public static Function<Resource, Resource> loadClasspathResource() {
+		return loadClasspathResource(ReflectionSupport::tryToLoadResource);
+	}
+	/**
+	 * TODO: Improve or reconsider.
+	 *
+	 * Include only resources that can be loaded by a class loader.
+	 * <p>
+	 * Resources discovered by {@link org.junit.platform.commons.support.ReflectionSupport}
+	 * may include identically named resources from different class
+	 * path roots. To get
+	 *
+	 * @param loadResource function to load the resource, e.g. {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)}.
+	 * @return a function that for a given resource, returns the resource as it would bye loaded by {@link ClassLoader#getResource(String)}
+	 *
+	 * @see ReflectionUtils#tryToLoadResource(String)
+	 * @see ReflectionUtils#tryToLoadResource(String, ClassLoader)
+	 */
+
+	public static Function<Resource, Resource> loadClasspathResource(Function<String, Try<Resource>> loadResource) {
+		return candidate -> loadResource.apply(candidate.getName()) //
+				.toOptional() //
+				.map(loaded -> {
+					if (!loaded.getUri().equals(candidate.getUri())) {
+						return new ClasspathResource(candidate.getName(), loaded.getUri());
+					}
+					return candidate;
+
+				})
+				.orElse(candidate);
 	}
 
 	/**
-	 * Create a {@link ResourceFilter} instance that filters by resource names and resources.
+	 * TODO: Doc
+	 *
+	 * A package filter is written to test {@code .} separated package names.
+	 * Resources however have {@code /} separated paths. By rewriting the path
+	 * of the resource into a package name, we can make the package filter work.
 	 */
-	public static ResourceFilter of(Predicate<String> namePredicate, Predicate<Resource> resourcePredicate) {
-		return new ResourceFilter(namePredicate, resourcePredicate);
+	public static Predicate<Resource> packageName(Predicate<String> packageFilter) {
+
+		// TODO: Filter out invalid package names?
+		return resource -> packageFilter.test(packageName(resource.getName()));
 	}
 
-	private final Predicate<String> namePredicate;
-	private final Predicate<Resource> resourcePredicate;
-
-	private ResourceFilter(Predicate<String> namePredicate, Predicate<Resource> resourcePredicate) {
-		this.namePredicate = Preconditions.notNull(namePredicate, "name predicate must not be null");
-		this.resourcePredicate = Preconditions.notNull(resourcePredicate, "resource predicate must not be null");
+	private static String packageName(String classpathResourceName) {
+		int lastIndexOf = classpathResourceName.lastIndexOf(CLASSPATH_RESOURCE_PATH_SEPARATOR);
+		if (lastIndexOf < 0) {
+			return DEFAULT_PACKAGE_NAME;
+		}
+		// classpath resource names do not start with /
+		String resourcePackagePath = classpathResourceName.substring(0, lastIndexOf);
+		return resourcePackagePath.replace(CLASSPATH_RESOURCE_PATH_SEPARATOR, PACKAGE_SEPARATOR_CHAR);
 	}
 
-	public boolean match(String name) {
-		return namePredicate.test(name);
+	private ResourceFilter() {
+
 	}
 
-	public boolean match(Resource resource) {
-		return resourcePredicate.test(resource);
-	}
-
-	/**
-	 * @implNote This implementation combines all tests stored in the predicates
-	 * of this instance. Any new predicate must be added to this test method as
-	 * well.
-	 */
-	@Override
-	public boolean test(Resource resource) {
-		return match(resource.getName()) && match(resource);
-	}
 }

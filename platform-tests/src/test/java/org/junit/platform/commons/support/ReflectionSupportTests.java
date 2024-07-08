@@ -186,8 +186,8 @@ class ReflectionSupportTests {
 		for (var path : paths) {
 			var root = path.toUri();
 			tests.add(DynamicTest.dynamicTest(createDisplayName(root),
-				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources, allNames),
-					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources, allNames))));
+				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources),
+					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources))));
 		}
 		return tests;
 	}
@@ -199,11 +199,9 @@ class ReflectionSupportTests {
 	void findAllResourcesInClasspathRootPreconditions() {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",
-			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources, allNames));
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, allResources, null));
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(null, allResources));
+		assertPreconditionViolationException("resourceFilter",
+			() -> ReflectionSupport.findAllResourcesInClasspathRoot(path, null));
 	}
 
 	/**
@@ -219,8 +217,8 @@ class ReflectionSupportTests {
 			var root = path.toUri();
 			tests.add(DynamicTest.dynamicTest(createDisplayName(root),
 				() -> assertEquals(
-					ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources, allNames).toList(),
-					ReflectionSupport.streamAllResourcesInClasspathRoot(root, allResources, allNames).toList())));
+					ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources).toList(),
+					ReflectionSupport.streamAllResourcesInClasspathRoot(root, allResources).toList())));
 		}
 		return tests;
 	}
@@ -232,11 +230,9 @@ class ReflectionSupportTests {
 	void streamAllResourcesInClasspathRootPreconditions() {
 		var path = Path.of(".").toUri();
 		assertPreconditionViolationException("root",
-			() -> ReflectionSupport.streamAllResourcesInClasspathRoot(null, allResources, allNames));
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.streamAllResourcesInClasspathRoot(path, null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.streamAllResourcesInClasspathRoot(path, allResources, null));
+			() -> ReflectionSupport.streamAllResourcesInClasspathRoot(null, allResources));
+		assertPreconditionViolationException("resourceFilter",
+			() -> ReflectionSupport.streamAllResourcesInClasspathRoot(path, null));
 	}
 
 	@Test
@@ -261,10 +257,10 @@ class ReflectionSupportTests {
 	 */
 	@Test
 	void findAllResourcesInPackageDelegates() {
-		assertNotEquals(0, ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames).size());
+		assertNotEquals(0, ReflectionSupport.findAllResourcesInPackage("org.junit", allResources).size());
 
-		assertEquals(ReflectionUtils.findAllResourcesInPackage("org.junit", allResources, allNames),
-			ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, allNames));
+		assertEquals(ReflectionUtils.findAllResourcesInPackage("org.junit", allResources),
+			ReflectionSupport.findAllResourcesInPackage("org.junit", allResources));
 	}
 
 	/**
@@ -273,11 +269,9 @@ class ReflectionSupportTests {
 	@Test
 	void findAllResourcesInPackagePreconditions() {
 		assertPreconditionViolationExceptionForString("basePackageName",
-			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources, allNames));
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", allResources, null));
+			() -> ReflectionSupport.findAllResourcesInPackage(null, allResources));
+		assertPreconditionViolationException("resourceFilter",
+			() -> ReflectionSupport.findAllResourcesInPackage("org.junit", null));
 	}
 
 	/**
@@ -285,10 +279,10 @@ class ReflectionSupportTests {
 	 */
 	@Test
 	void streamAllResourcesInPackageDelegates() {
-		assertNotEquals(0, ReflectionSupport.streamAllResourcesInPackage("org.junit", allResources, allNames).count());
+		assertNotEquals(0, ReflectionSupport.streamAllResourcesInPackage("org.junit", allResources).count());
 
-		assertEquals(ReflectionUtils.streamAllResourcesInPackage("org.junit", allResources, allNames).toList(),
-			ReflectionSupport.streamAllResourcesInPackage("org.junit", allResources, allNames).toList());
+		assertEquals(ReflectionUtils.streamAllResourcesInPackage("org.junit", allResources).toList(),
+			ReflectionSupport.streamAllResourcesInPackage("org.junit", allResources).toList());
 	}
 
 	/**
@@ -297,11 +291,9 @@ class ReflectionSupportTests {
 	@Test
 	void streamAllResourcesInPackagePreconditions() {
 		assertPreconditionViolationExceptionForString("basePackageName",
-			() -> ReflectionSupport.streamAllResourcesInPackage(null, allResources, allNames));
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.streamAllResourcesInPackage("org.junit", null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.streamAllResourcesInPackage("org.junit", allResources, null));
+			() -> ReflectionSupport.streamAllResourcesInPackage(null, allResources));
+		assertPreconditionViolationException("resourceFilter",
+			() -> ReflectionSupport.streamAllResourcesInPackage("org.junit", null));
 	}
 
 	@Test
@@ -326,8 +318,8 @@ class ReflectionSupportTests {
 	 */
 	@Test
 	void findAllResourcesInModuleDelegates() {
-		assertEquals(ReflectionUtils.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames),
-			ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, allNames));
+		assertEquals(ReflectionUtils.findAllResourcesInModule("org.junit.platform.commons", allResources),
+			ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources));
 	}
 
 	/**
@@ -336,12 +328,10 @@ class ReflectionSupportTests {
 	@Test
 	void findAllResourcesInModulePreconditions() {
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionSupport.findAllResourcesInModule(null, allResources, allNames));
+			() -> ReflectionSupport.findAllResourcesInModule(null, allResources));
 		assertEquals("Module name must not be null or empty", exception.getMessage());
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", allResources, null));
+		assertPreconditionViolationException("Resource filter",
+			() -> ReflectionSupport.findAllResourcesInModule("org.junit.platform.commons", null));
 	}
 
 	/**
@@ -350,9 +340,8 @@ class ReflectionSupportTests {
 	@Test
 	void streamAllResourcesInModuleDelegates() {
 		assertEquals(
-			ReflectionUtils.streamAllResourcesInModule("org.junit.platform.commons", allResources, allNames).toList(),
-			ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", allResources,
-				allNames).toList());
+			ReflectionUtils.streamAllResourcesInModule("org.junit.platform.commons", allResources).toList(),
+			ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", allResources).toList());
 	}
 
 	/**
@@ -361,12 +350,10 @@ class ReflectionSupportTests {
 	@Test
 	void streamAllResourcesInModulePreconditions() {
 		var exception = assertThrows(PreconditionViolationException.class,
-			() -> ReflectionSupport.streamAllResourcesInModule(null, allResources, allNames));
+			() -> ReflectionSupport.streamAllResourcesInModule(null, allResources));
 		assertEquals("Module name must not be null or empty", exception.getMessage());
-		assertPreconditionViolationException("resource predicate",
-			() -> ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", null, allNames));
-		assertPreconditionViolationException("name predicate",
-			() -> ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", allResources, null));
+		assertPreconditionViolationException("Resource filter",
+			() -> ReflectionSupport.streamAllResourcesInModule("org.junit.platform.commons", null));
 	}
 
 	@Test

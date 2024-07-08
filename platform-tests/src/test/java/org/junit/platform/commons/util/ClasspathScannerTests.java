@@ -60,19 +60,15 @@ import org.junit.platform.commons.support.Resource;
 class ClasspathScannerTests {
 
 	private static final ClassFilter allClasses = ClassFilter.of(type -> true);
-	private static final ResourceFilter allResources = ResourceFilter.of(type -> true);
+	private static final Predicate<Resource> allResources = type -> true;
 
 	private final List<Class<?>> loadedClasses = new ArrayList<>();
-	private final List<Resource> loadedResources = new ArrayList<>();
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> trackingClassLoader = (name,
 			classLoader) -> ReflectionUtils.tryToLoadClass(name, classLoader).ifSuccess(loadedClasses::add);
 
-	private final BiFunction<String, ClassLoader, Try<Resource>> trackingResourceLoader = (name,
-			classLoader) -> ReflectionUtils.tryToLoadResource(name, classLoader).ifSuccess(loadedResources::add);
-
 	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
-		trackingClassLoader, trackingResourceLoader);
+		trackingClassLoader);
 
 	@Test
 	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage(
@@ -150,9 +146,7 @@ class ClasspathScannerTests {
 	}
 
 	private void assertResourcesScannedWhenExceptionIsThrown(Predicate<Resource> filter) {
-		var resourceFilter = ResourceFilter.of(filter);
-		var resources = this.classpathScanner.scanForResourcesInClasspathRoot(getTestClasspathResourceRoot(),
-			resourceFilter);
+		var resources = this.classpathScanner.scanForResourcesInClasspathRoot(getTestClasspathResourceRoot(), filter);
 		assertThat(resources).hasSizeGreaterThanOrEqualTo(150);
 	}
 
@@ -193,8 +187,7 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
-				ReflectionUtils::tryToLoadResource);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var classes = classpathScanner.scanForClassesInClasspathRoot(jarfile.toURI(), allClasses);
 			assertThat(classes).extracting(Class::getName) //
@@ -218,8 +211,7 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
-				ReflectionUtils::tryToLoadResource);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(jarfile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName) //
@@ -236,8 +228,7 @@ class ClasspathScannerTests {
 		var shadowedJarFile = getClass().getResource("/jartest-shadowed.jar");
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile, shadowedJarFile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
-				ReflectionUtils::tryToLoadResource);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(shadowedJarFile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName).containsExactlyInAnyOrder(
@@ -252,10 +243,10 @@ class ClasspathScannerTests {
 						// This resource only exists in the shadowed jar file
 						"jartest-shadowed.jar!/org/junit/platform/jartest/included/unique.resource",
 						// These resources exist in both the jar and shadowed jar file.
-						// So they're discovered in the shadowed jar, but loaded from the regular jar.
-						"jartest.jar!/org/junit/platform/jartest/included/included.resource",
-						"jartest.jar!/org/junit/platform/jartest/included/recursive/recursively-included.resource",
-						"jartest.jar!/META-INF/MANIFEST.MF");
+						// They must be discovered in the shadowed jar as we're searching in that classpath root.
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/included.resource",
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/recursive/recursively-included.resource",
+						"jartest-shadowed.jar!/META-INF/MANIFEST.MF");
 		}
 	}
 
@@ -314,8 +305,7 @@ class ClasspathScannerTests {
 		var parent = ClassLoader.getPlatformClassLoader();
 		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
 
-		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass,
-			ReflectionUtils::tryToLoadResource);
+		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass);
 		{
 			var classes = classpathScanner.scanForClassesInPackage("foo", allClasses);
 			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
@@ -334,8 +324,7 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
-				ReflectionUtils::tryToLoadResource);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included", allClasses));
@@ -356,8 +345,7 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass,
-				ReflectionUtils::tryToLoadResource);
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included", allResources));
@@ -388,7 +376,7 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForResourcesInDefaultPackage() {
-		var resourceFilter = ResourceFilter.of(this::inDefaultPackage);
+		Predicate<Resource> resourceFilter = this::inDefaultPackage;
 		var resources = classpathScanner.scanForResourcesInPackage("", resourceFilter);
 
 		assertThat(resources).as("number of resources found in default package").isNotEmpty();
@@ -405,8 +393,8 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForResourcesInPackageWithFilter() {
-		var thisResourceOnly = ResourceFilter.of(
-			resource -> "org/junit/platform/commons/example.resource".equals(resource.getName()));
+		Predicate<Resource> thisResourceOnly = resource -> "org/junit/platform/commons/example.resource"
+				.equals(resource.getName());
 		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
 		assertThat(resources).extracting(Resource::getName).containsExactly(
 			"org/junit/platform/commons/example.resource");
@@ -414,8 +402,8 @@ class ClasspathScannerTests {
 
 	@Test
 	void resourcesCanBeRead() throws IOException {
-		var thisResourceOnly = ResourceFilter.of(
-			resource -> "org/junit/platform/commons/example.resource".equals(resource.getName()));
+		Predicate<Resource> thisResourceOnly = resource -> "org/junit/platform/commons/example.resource".equals(
+			resource.getName());
 		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
 		Resource resource = resources.get(0);
 
@@ -459,16 +447,14 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass,
-			ReflectionUtils::tryToLoadResource);
+		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
 		var classes = scanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
 		assertThat(classes).isEmpty();
 	}
 
 	@Test
 	void scanForResourcesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass,
-			ReflectionUtils::tryToLoadResource);
+		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
 		var classes = scanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
 		assertThat(classes).isEmpty();
 	}
@@ -481,17 +467,6 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInPackage("org.junit.platform.commons", classFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
-	}
-
-	@Test
-	void scanForResourcesInPackageOnlyLoadsResourcesThatAreIncludedByTheResourceNameFilter() {
-		Predicate<String> resourceNameFilter = name -> name.endsWith("/example.resource");
-		var resourceFilter = ResourceFilter.of(resourceNameFilter, type -> true);
-
-		classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", resourceFilter);
-
-		assertThat(loadedResources).extracting(Resource::getName).containsExactly(
-			"org/junit/platform/commons/example.resource");
 	}
 
 	@Test
@@ -573,18 +548,6 @@ class ClasspathScannerTests {
 		classpathScanner.scanForClassesInClasspathRoot(root, classFilter);
 
 		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
-	}
-
-	@Test
-	void onlyLoadsResourcesInClasspathRootThatAreIncludedByTheResourceNameFilter() {
-		Predicate<String> resourceNameFilter = name -> name.endsWith("/example.resource");
-		var resourceFilter = ResourceFilter.of(resourceNameFilter, type -> true);
-		var root = getTestClasspathResourceRoot();
-
-		classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter);
-
-		assertThat(loadedResources).extracting(Resource::getName).containsExactly(
-			"org/junit/platform/commons/example.resource");
 	}
 
 	private static URI uriOf(String name) {
