@@ -19,7 +19,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -112,27 +111,6 @@ public final class ReflectionSupport {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static Try<Class<?>> tryToLoadClass(String name, ClassLoader classLoader) {
 		return ReflectionUtils.tryToLoadClass(name, classLoader);
-	}
-
-	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
-	 *
-	 * <p>The name of a <em>classpath resource</em> must follow the semantics
-	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
-	 *
-	 * <p>If the supplied classpath resource name is prefixed with a slash
-	 * ({@code /}), the slash will be removed.
-	 *
-	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @return a successful {@code Try} containing the loaded class or a failed
-	 * {@code Try} containing the exception if no such resource could be loaded;
-	 * never {@code null}
-	 * @since 1.11
-	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
-		return ReflectionUtils.tryToLoadResource(classpathResourceName, classLoader);
 	}
 
 	/**

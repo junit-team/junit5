@@ -35,7 +35,6 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -888,33 +887,6 @@ public final class ReflectionUtils {
 
 			// Fallback to standard VM class loading
 			return Class.forName(trimmedName, false, classLoader);
-		});
-	}
-
-	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
-	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)}
-	 * for details.
-	 *
-	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @since 1.11
-	 */
-	@API(status = INTERNAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
-		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
-		Preconditions.notNull(classLoader, "ClassLoader must not be null");
-		boolean startsWithSlash = classpathResourceName.startsWith("/");
-		String canonicalClasspathResourceName = (startsWithSlash ? classpathResourceName.substring(1)
-				: classpathResourceName);
-
-		return Try.call(() -> {
-			URL resource = classLoader.getResource(canonicalClasspathResourceName);
-			if (resource == null) {
-				throw new NullPointerException("classLoader.getResource returned null");
-			}
-			return new ClasspathResource(canonicalClasspathResourceName, resource.toURI());
 		});
 	}
 
