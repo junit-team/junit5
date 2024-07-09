@@ -1,3 +1,6 @@
+:testDir: ../../../../src/test/java
+:kotlinTestDir: ../../../../src/test/kotlin
+
 [[extensions]]
 == Extension Model
 
@@ -693,7 +696,6 @@ Please refer to the implementations of <<writing-tests-repeated-tests>> or
 <<writing-tests-parameterized-tests>> which use this extension point to provide their
 functionality.
 
-
 [[extensions-keeping-state]]
 === Keeping State in Extensions
 
@@ -713,6 +715,35 @@ NOTE: An extension context store is bound to its extension context lifecycle. Wh
 extension context lifecycle ends it closes its associated store. All stored values
 that are instances of `CloseableResource` are notified by an invocation of their `close()`
 method in the inverse order they were added in.
+
+An example implementation of `CloseableResource` is shown below, using an `HttpServer`
+resource.
+
+[source,java,indent=0]
+.`HttpServer` resource implementing `CloseableResource`
+----
+include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
+----
+
+This resource can then be stored in the desired `ExtensionContext`. It may be stored at
+class or method level, if desired, but this may add unnecessary overhead for this type of
+resource. For this example it might be prudent to store it at root level and instantiate
+it lazily to ensure it's only created once per test run and reused across different test
+classes and methods.
+
+[source,java,indent=0]
+.Lazily storing in root context with `Store.getOrComputeIfAbsent`
+----
+include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
+----
+
+[source,java,indent=0]
+.A test case using the `HttpServerExtension`
+----
+include::{testDir}/example/HttpServerDemo.java[tags=user_guide]
+----
+
+[[extensions-conditional-test-execution]]
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
