@@ -10,8 +10,11 @@
 
 package example.extensions;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
@@ -22,10 +25,12 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
  * Demonstrates an implementation of {@link CloseableResource} using an {@link HttpServer}.
  */
 // tag::user_guide[]
-public class HttpServerResource implements CloseableResource {
+class HttpServerResource implements CloseableResource {
+
 	private final HttpServer httpServer;
 
 	// end::user_guide[]
+
 	/**
 	 * Initializes the Http server resource, using the given port.
 	 *
@@ -33,8 +38,13 @@ public class HttpServerResource implements CloseableResource {
 	 * @throws IOException if an IOException occurs during initialization.
 	 */
 	// tag::user_guide[]
-	public HttpServerResource(int port) throws IOException {
-		this.httpServer = HttpServer.create(new InetSocketAddress(port), 0);
+	HttpServerResource(int port) throws IOException {
+		InetAddress loopbackAddress = InetAddress.getLoopbackAddress();
+		this.httpServer = HttpServer.create(new InetSocketAddress(loopbackAddress, port), 0);
+	}
+
+	HttpServer getHttpServer() {
+		return httpServer;
 	}
 
 	// end::user_guide[]
@@ -43,13 +53,13 @@ public class HttpServerResource implements CloseableResource {
 	 * Starts the Http server with an example handler.
 	 */
 	// tag::user_guide[]
-	public void start() {
-		//Example handler
+	void start() {
+		// Example handler
 		httpServer.createContext("/example", exchange -> {
-			String test = "This is a test.";
-			exchange.sendResponseHeaders(200, test.length());
+			String body = "This is a test";
+			exchange.sendResponseHeaders(200, body.length());
 			try (OutputStream os = exchange.getResponseBody()) {
-				os.write(test.getBytes());
+				os.write(body.getBytes(UTF_8));
 			}
 		});
 		httpServer.setExecutor(null);
@@ -57,7 +67,7 @@ public class HttpServerResource implements CloseableResource {
 	}
 
 	@Override
-	public void close() throws Throwable {
+	public void close() {
 		httpServer.stop(0);
 	}
 }

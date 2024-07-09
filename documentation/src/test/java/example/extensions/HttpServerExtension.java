@@ -11,27 +11,40 @@
 package example.extensions;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 
-import org.junit.jupiter.api.extension.BeforeAllCallback;
+import com.sun.net.httpserver.HttpServer;
+
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 // tag::user_guide[]
-public class HttpServerExtension implements BeforeAllCallback {
+public class HttpServerExtension implements ParameterResolver {
+
 	@Override
-	public void beforeAll(ExtensionContext context) throws Exception {
-		HttpServerResource resource = context.getRoot().getStore(Namespace.GLOBAL).getOrComputeIfAbsent(
-			HttpServerResource.class.getName(), key -> {
-				try {
-					HttpServerResource serverResource = new HttpServerResource(8080);
-					serverResource.start();
-					return serverResource;
-				}
-				catch (IOException e) {
-					throw new RuntimeException("Failed to create HttpServerResource", e);
-				}
-			}, HttpServerResource.class);
-		// Now you can use the resource within your tests
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		return HttpServer.class.equals(parameterContext.getParameter().getType());
+	}
+
+	@Override
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+
+		ExtensionContext rootContext = extensionContext.getRoot();
+		ExtensionContext.Store store = rootContext.getStore(Namespace.GLOBAL);
+		String key = HttpServerResource.class.getName();
+		HttpServerResource resource = store.getOrComputeIfAbsent(key, __ -> {
+			try {
+				HttpServerResource serverResource = new HttpServerResource(0);
+				serverResource.start();
+				return serverResource;
+			}
+			catch (IOException e) {
+				throw new UncheckedIOException("Failed to create HttpServerResource", e);
+			}
+		}, HttpServerResource.class);
+		return resource.getHttpServer();
 	}
 }
 // end::user_guide[]
