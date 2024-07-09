@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.concurrent.ForkJoinPool;
@@ -69,7 +68,7 @@ public interface ParallelExecutionConfiguration {
 	 * @see ForkJoinPool#ForkJoinPool(int, ForkJoinPool.ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler,
 	 * boolean, int, int, int, Predicate, long, TimeUnit)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.9")
+	@API(status = STABLE, since = "1.11")
 	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
 		return null;
 	}

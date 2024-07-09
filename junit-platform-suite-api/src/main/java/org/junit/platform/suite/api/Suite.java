@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.annotation.Testable;
 
 /**
@@ -82,7 +81,7 @@ public @interface Suite {
 	 *
 	 * @since 1.9
 	 */
-	@API(status = Status.EXPERIMENTAL, since = "1.9")
+	@API(status = STABLE, since = "1.11")
 	boolean failIfNoTests() default true;
 
 }
