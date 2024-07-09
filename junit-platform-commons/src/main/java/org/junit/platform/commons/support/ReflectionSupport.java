@@ -138,8 +138,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied classpath {@code root}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
 	 * beginning with the root of the classpath.
@@ -186,8 +185,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied classpath {@code root}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
 	 * beginning with the root of the classpath.
@@ -233,8 +231,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied {@code basePackageName}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
 	 * beginning within the supplied base package.
@@ -283,8 +280,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied {@code basePackageName}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
 	 * beginning within the supplied base package.
@@ -332,8 +328,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied {@code moduleName}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The module-path scanning algorithm searches recursively in all
 	 * packages contained in the module.
@@ -380,8 +375,7 @@ public final class ReflectionSupport {
 
 	/**
 	 * Find all {@linkplain Resource resources} in the supplied {@code moduleName}
-	 * that match the specified {@code resourceFilter} and {@code resourceNameFilter}
-	 * predicates.
+	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The module-path scanning algorithm searches recursively in all
 	 * packages contained in the module.
