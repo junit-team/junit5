@@ -1,7 +1,7 @@
 import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
-
+#forzar segundo análisis
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
