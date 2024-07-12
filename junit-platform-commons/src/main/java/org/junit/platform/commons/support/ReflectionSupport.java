@@ -282,7 +282,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting list may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link ResourceUtils#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClassLoaderResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -310,7 +310,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link ResourceUtils#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClassLoaderResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -339,7 +339,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link ResourceUtils#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClassLoaderResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java

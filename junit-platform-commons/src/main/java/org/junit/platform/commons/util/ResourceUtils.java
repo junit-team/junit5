@@ -33,35 +33,37 @@ public class ResourceUtils {
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 
 	/**
-	 * Maps a resource to its "canonical" version.
+	 * Maps a resource to its class loader version.
+	 *
+	 * <p>The class loader version of a resource has the uri that
+	 * would be produced by calling {@link ClassLoader#getResource(String)}.
 	 *
 	 * <p>Resources discovered by {@link ReflectionSupport}
 	 * may include identically named resources from different class
-	 * path roots.
-	 *
-	 * <p>The canonical version of a resource has the uri that
-	 * would be produced by calling {@link ClassLoader#getResource(String)}.
+	 * path roots. After mapping these to their class loader version
+	 * these can be deduplicated.
 	 *
 	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
-	public static Function<Resource, Resource> getClasspathResource() {
-		return getClasspathResource(ReflectionSupport::tryToGetResource);
+	public static Function<Resource, Resource> getClassLoaderResource() {
+		return getClassLoaderResource(ReflectionSupport::tryToGetResource);
 	}
 
 	/**
 	 * Maps a resource to its "canonical" version.
 	 *
+	 * <p>The class loader version of a resource has the uri that
+	 * would be produced by calling {@link ClassLoader#getResource(String)}.
+	 *
 	 * <p>Resources discovered by {@link ReflectionSupport}
 	 * may include identically named resources from different class
-	 * path roots.
-	 *
-	 * <p>The canonical version of a resource has the uri that
-	 * would be produced by calling {@link ClassLoader#getResource(String)}.
+	 * path roots. After mapping these to their class loader version
+	 * these can be deduplicated.
 	 *
 	 * @param loadResource function to load the resource, e.g. {@link ReflectionSupport#tryToGetResource(String)}.
 	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
-	public static Function<Resource, Resource> getClasspathResource(Function<String, Try<Resource>> loadResource) {
+	public static Function<Resource, Resource> getClassLoaderResource(Function<String, Try<Resource>> loadResource) {
 		return candidate -> loadResource.apply(candidate.getName()) //
 				.toOptional() //
 				.map(loaded -> {
