@@ -115,7 +115,7 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 * Tries to get the {@link Resource} for the supplied classpath resource name.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
 	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
@@ -135,7 +135,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 * Tries to load the {@link Resource} for the supplied classpath resource name,
+	 * using the supplied {@link ClassLoader}.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
 	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.

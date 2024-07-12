@@ -892,7 +892,10 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 * Try to get a {@link Resource} by its name, using the {@link ClassLoaderUtils#getDefaultClassLoader()}.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String)}
+	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
 	 * @since 1.11
@@ -904,7 +907,7 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Tries to load the {@link Resource} for the supplied classpath resource name.
+	 * Try to get a {@link Resource} by its name, using the supplied {@link ClassLoader}.
 	 *
 	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)}
 	 * for details.
