@@ -10,7 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -87,7 +87,7 @@ import org.junit.platform.launcher.TestPlan;
  *
  * @since 1.8
  */
-@API(status = EXPERIMENTAL, since = "1.8")
+@API(status = STABLE, since = "1.11")
 public class UniqueIdTrackingListener implements TestExecutionListener {
 
 	/**

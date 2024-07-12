@@ -250,6 +250,30 @@ class ClasspathScannerTests {
 		}
 	}
 
+	@Test
+	void scanForResourcesInPackageWithDuplicateResources() throws Exception {
+		var jarFile = getClass().getResource("/jartest.jar");
+		var shadowedJarFile = getClass().getResource("/jartest-shadowed.jar");
+
+		try (var classLoader = new URLClassLoader(new URL[] { jarFile, shadowedJarFile }, null)) {
+			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+
+			var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included",
+				allResources);
+
+			assertThat(resources).extracting(Resource::getUri) //
+					.map(ClasspathScannerTests::jarFileAndEntry) //
+					.containsExactlyInAnyOrder(
+						// This resource only exists in the shadowed jar file
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/unique.resource",
+						// These resources exist in both the jar and shadowed jar file.
+						"jartest.jar!/org/junit/platform/jartest/included/included.resource",
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/included.resource",
+						"jartest.jar!/org/junit/platform/jartest/included/recursive/recursively-included.resource",
+						"jartest-shadowed.jar!/org/junit/platform/jartest/included/recursive/recursively-included.resource");
+		}
+	}
+
 	private static String jarFileAndEntry(URI uri) {
 		var uriString = uri.toString();
 		int lastJarUriSeparator = uriString.lastIndexOf("!/");

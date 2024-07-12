@@ -92,17 +92,6 @@ class ReflectionSupportTests {
 	}
 
 	/**
-	 * @since 1.11
-	 */
-	@Test
-	void tryToLoadResourcesWithExplicitClassLoaderDelegates() {
-		var classLoader = getClass().getClassLoader();
-		var resource = "org/junit/platform/commons/example.resource";
-		assertEquals(ReflectionUtils.tryToLoadResource(resource, classLoader).toOptional(),
-			ReflectionSupport.tryToLoadResource(resource, classLoader).toOptional());
-	}
-
-	/**
 	 * @since 1.10
 	 */
 	@Test
@@ -113,21 +102,6 @@ class ReflectionSupportTests {
 		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.tryToLoadClass("", cl));
 
 		assertPreconditionViolationException("ClassLoader", () -> ReflectionSupport.tryToLoadClass("int", null));
-	}
-
-	/**
-	 * @since 1.11
-	 */
-	@Test
-	void tryToLoadResourceWithExplicitClassLoaderPreconditions() {
-		ClassLoader cl = getClass().getClassLoader();
-
-		assertPreconditionViolationExceptionForString("Resource name",
-			() -> ReflectionSupport.tryToLoadResource(null, cl));
-		assertPreconditionViolationExceptionForString("Resource name",
-			() -> ReflectionSupport.tryToLoadResource("", cl));
-
-		assertPreconditionViolationException("ClassLoader", () -> ReflectionSupport.tryToLoadResource("int", null));
 	}
 
 	@TestFactory
@@ -516,9 +490,11 @@ class ReflectionSupportTests {
 
 	static class ClassWithNestedClasses {
 
+		@SuppressWarnings({ "InnerClassMayBeStatic", "unused" })
 		class Nested1 {
 		}
 
+		@SuppressWarnings("unused")
 		static class Nested2 {
 		}
 

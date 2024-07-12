@@ -1,0 +1,41 @@
+[[release-notes-5.10.3]]
+== 5.10.3
+
+*Date of Release:* June 27, 2024
+
+*Scope:* Bug fixes and enhancements since 5.10.2
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/78?closed=1+[5.10.3] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.10.3-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* The `junit-platform-suite-engine` now includes configuration provided via
+  `@ConfigurationParameter` when selecting tests by `UniqueId`.
+* In order to support using `@EnabledInNativeImage` on test classes,
+  `UniqueIdTrackingListener` now tracks descendants of skipped test containers.
+* Attempting to deserialize a `TestIdentifier` no longer causes a `NullPointerException`
+  when there is no parent identifier. See
+  link:https://github.com/junit-team/junit5/issues/3819[issue 3819].
+
+
+[[release-notes-5.10.3-junit-jupiter]]
+=== JUnit Jupiter
+
+==== Bug Fixes
+
+* `TempDir` suppresses `NoSuchFileException` when deleting files that may have been deleted
+  by another thread or process.
+* `MethodOrderer.Random` and `ClassOrderer.Random` now use the same default seed that is
+  generated during class initialization.
+
+
+[[release-notes-5.10.3-junit-vintage]]
+=== JUnit Vintage
+
+No changes.

@@ -172,7 +172,7 @@ public @interface TempDir {
 	 *
 	 * @since 5.9
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = STABLE, since = "5.11")
 	CleanupMode cleanup() default CleanupMode.DEFAULT;
 
 }

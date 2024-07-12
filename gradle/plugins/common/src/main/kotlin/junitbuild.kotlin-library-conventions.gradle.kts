@@ -14,6 +14,9 @@ tasks.withType<KotlinCompile>().configureEach {
 		apiVersion = "1.6"
 		languageVersion = "1.6"
 		allWarningsAsErrors = false
+		// Compiler arg is required for Kotlin 1.6 and below
+		// see https://kotlinlang.org/docs/whatsnew17.html#stable-opt-in-requirements
+		freeCompilerArgs += "-opt-in=kotlin.RequiresOptIn"
 	}
 }
 
