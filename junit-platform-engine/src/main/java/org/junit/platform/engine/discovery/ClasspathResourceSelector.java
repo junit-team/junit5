@@ -39,6 +39,10 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * {@linkplain Thread#getContextClassLoader() context class loader} of the
  * {@linkplain Thread thread} that uses it.
  *
+ * <p>Note: Since Java 9, all resources are on the module path. Either in
+ * named or unnamed modules. These resources are also considered to be
+ * classpath resources.
+ *
  * @since 1.0
  * @see DiscoverySelectors#selectClasspathResource(String)
  * @see ClasspathRootSelector

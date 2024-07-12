@@ -335,6 +335,10 @@ public final class DiscoverySelectors {
 	 * {@linkplain Thread#getContextClassLoader() context class loader} of the
 	 * {@linkplain Thread thread} that uses the resulting selector.
 	 *
+	 * <p>Note: Since Java 9, all resources are on the module path. Either in
+	 * named or unnamed modules. These resources are also considered to be
+	 * classpath resources.
+	 *
 	 * @param classpathResource the classpath resource; never {@code null}
 	 * @since 1.11
 	 * @see #selectClasspathResource(String, FilePosition)
