@@ -29,6 +29,7 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.util.ResourceUtils;
 
 /**
  * {@code ReflectionSupport} provides static utility methods for common
@@ -281,7 +282,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting list may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -309,7 +310,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -338,7 +339,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
+	 * {@link ResourceUtils#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java

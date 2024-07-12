@@ -21,40 +21,46 @@ import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 
 /**
- * Resource-related predicates for use with {@link ReflectionSupport}.
+ * Resource-related utilities to be used in conjunction with {@link ReflectionSupport}.
  *
  * @since 1.11
  */
 @API(status = EXPERIMENTAL, since = "1.11")
-public class ResourceFilter {
+public class ResourceUtils {
 
 	public static final String DEFAULT_PACKAGE_NAME = "";
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final char PACKAGE_SEPARATOR_CHAR = '.';
 
 	/**
-	 * TODO:
+	 * Maps a resource to its "canonical" version.
+	 *
+	 * <p>Resources discovered by {@link ReflectionSupport}
+	 * may include identically named resources from different class
+	 * path roots.
+	 *
+	 * <p>The canonical version of a resource has the uri that
+	 * would be produced by calling {@link ClassLoader#getResource(String)}.
+	 *
+	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
 	public static Function<Resource, Resource> getClasspathResource() {
 		return getClasspathResource(ReflectionSupport::tryToGetResource);
 	}
 
 	/**
-	 * TODO: Improve or reconsider.
+	 * Maps a resource to its "canonical" version.
 	 *
-	 * Include only resources that can be loaded by a class loader.
-	 * <p>
-	 * Resources discovered by {@link ReflectionSupport}
+	 * <p>Resources discovered by {@link ReflectionSupport}
 	 * may include identically named resources from different class
-	 * path roots. To get
+	 * path roots.
+	 *
+	 * <p>The canonical version of a resource has the uri that
+	 * would be produced by calling {@link ClassLoader#getResource(String)}.
 	 *
 	 * @param loadResource function to load the resource, e.g. {@link ReflectionSupport#tryToGetResource(String)}.
-	 * @return a function that for a given resource, returns the resource as it would bye loaded by {@link ClassLoader#getResource(String)}
-	 *
-	 * @see ReflectionUtils#tryToGetResource(String)
-	 * @see ReflectionUtils#tryToGetResource(String, ClassLoader)
+	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
-
 	public static Function<Resource, Resource> getClasspathResource(Function<String, Try<Resource>> loadResource) {
 		return candidate -> loadResource.apply(candidate.getName()) //
 				.toOptional() //
@@ -68,15 +74,14 @@ public class ResourceFilter {
 	}
 
 	/**
-	 * TODO: Doc
+	 * Match resources against a package filter.
 	 *
-	 * A package filter is written to test {@code .} separated package names.
-	 * Resources however have {@code /} separated paths. By rewriting the path
-	 * of the resource into a package name, we can make the package filter work.
+	 * <p>The {@code /} separated path of a resource is rewritten to a
+	 * {@code .} separated package names. The package filter is applied to that
+	 * package name.
 	 */
 	public static Predicate<Resource> packageName(Predicate<String> packageFilter) {
-
-		// TODO: Filter out invalid package names?
+		// TODO: Filter out invalid package names? META-INF and such?
 		return resource -> packageFilter.test(packageName(resource.getName()));
 	}
 
@@ -90,7 +95,7 @@ public class ResourceFilter {
 		return resourcePackagePath.replace(CLASSPATH_RESOURCE_PATH_SEPARATOR, PACKAGE_SEPARATOR_CHAR);
 	}
 
-	private ResourceFilter() {
+	private ResourceUtils() {
 
 	}
 

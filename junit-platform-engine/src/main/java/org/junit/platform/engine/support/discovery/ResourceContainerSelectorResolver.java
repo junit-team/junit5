@@ -14,8 +14,8 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInClasspathRoot;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInPackage;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllResourcesInModule;
-import static org.junit.platform.commons.util.ResourceFilter.getClasspathResource;
-import static org.junit.platform.commons.util.ResourceFilter.packageName;
+import static org.junit.platform.commons.util.ResourceUtils.getClasspathResource;
+import static org.junit.platform.commons.util.ResourceUtils.packageName;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.selectors;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
@@ -25,7 +25,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.util.ResourceFilter;
+import org.junit.platform.commons.util.ResourceUtils;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -36,7 +36,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.11
  */
 class ResourceContainerSelectorResolver implements SelectorResolver {
-	private static final Function<Resource, Resource> classpathResource = ResourceFilter.getClasspathResource();
+	private static final Function<Resource, Resource> classpathResource = ResourceUtils.getClasspathResource();
 	private final Predicate<Resource> packageFilter;
 	private final Predicate<Resource> resourceFilter;
 
@@ -63,6 +63,7 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 	private Resolution resourceSelectors(List<Resource> resources) {
 		Set<ClasspathResourceSelector> classpathResources = resources.stream() //
 				.map(classpathResource) //
+				.distinct() // Ensure the resourceFilter only sees unique resources
 				.filter(resourceFilter) //
 				.map(DiscoverySelectors::selectClasspathResource) //
 				.collect(toSet());
