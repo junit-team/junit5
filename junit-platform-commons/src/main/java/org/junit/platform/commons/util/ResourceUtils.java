@@ -10,13 +10,17 @@
 
 package org.junit.platform.commons.util;
 
+import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 
@@ -27,6 +31,7 @@ import org.junit.platform.commons.support.Resource;
  */
 @API(status = EXPERIMENTAL, since = "1.11")
 public class ResourceUtils {
+	private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
 	public static final String DEFAULT_PACKAGE_NAME = "";
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
@@ -45,7 +50,7 @@ public class ResourceUtils {
 	 *
 	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
-	public static Function<Resource, Resource> getClassLoaderResource() {
+	public static Function<Resource, Optional<Resource>> getClassLoaderResource() {
 		return getClassLoaderResource(ReflectionSupport::tryToGetResource);
 	}
 
@@ -60,19 +65,21 @@ public class ResourceUtils {
 	 * path roots. After mapping these to their class loader version
 	 * these can be deduplicated.
 	 *
-	 * @param loadResource function to load the resource, e.g. {@link ReflectionSupport#tryToGetResource(String)}.
+	 * @param getResource function to get the resource, e.g. {@link ReflectionSupport#tryToGetResource(String)}.
 	 * @return a function that for a given resource, returns the "canonical" resource.
 	 */
-	public static Function<Resource, Resource> getClassLoaderResource(Function<String, Try<Resource>> loadResource) {
-		return candidate -> loadResource.apply(candidate.getName()) //
-				.toOptional() //
-				.map(loaded -> {
-					if (!loaded.getUri().equals(candidate.getUri())) {
-						return new ClasspathResource(candidate.getName(), loaded.getUri());
+	public static Function<Resource, Optional<Resource>> getClassLoaderResource(
+			Function<String, Try<Resource>> getResource) {
+		return candidate -> getResource.apply(candidate.getName()) //
+				.andThenTry(loaded -> {
+					if (loaded.getUri().equals(candidate.getUri())) {
+						return candidate;
 					}
-					return candidate;
-
-				}).orElse(candidate);
+					return new ClasspathResource(candidate.getName(), loaded.getUri());
+				}) //
+				.ifFailure(
+					throwable -> logger.debug(throwable, () -> format("Failed to load [%s].", candidate.getName()))) //
+				.toOptional();
 	}
 
 	/**

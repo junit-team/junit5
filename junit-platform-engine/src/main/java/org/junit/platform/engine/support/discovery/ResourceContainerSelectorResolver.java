@@ -20,6 +20,7 @@ import static org.junit.platform.engine.support.discovery.SelectorResolver.Resol
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -35,7 +36,7 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.11
  */
 class ResourceContainerSelectorResolver implements SelectorResolver {
-	private final Function<Resource, Resource> classLoaderResource = getClassLoaderResource();
+	private final Function<Resource, Optional<Resource>> classLoaderResource = getClassLoaderResource();
 	private final Predicate<Resource> packageFilter;
 	private final Predicate<Resource> resourceFilter;
 
@@ -62,6 +63,8 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 	private Resolution resourceSelectors(List<Resource> resources) {
 		Set<ClasspathResourceSelector> classpathResources = resources.stream() //
 				.map(classLoaderResource) //
+				.filter(Optional::isPresent) //
+				.map(Optional::get) //
 				.distinct() // Ensure the resourceFilter only sees unique resources
 				.filter(resourceFilter) //
 				.map(DiscoverySelectors::selectClasspathResource) //
