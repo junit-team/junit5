@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -339,7 +340,7 @@ public final class DiscoverySelectors {
 	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
-	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)
+	 * @see ReflectionSupport#tryToGetResource(String)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {

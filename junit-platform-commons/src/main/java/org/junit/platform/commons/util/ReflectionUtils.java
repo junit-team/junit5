@@ -896,17 +896,17 @@ public final class ReflectionUtils {
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
 	 * @since 1.11
-	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName) {
-		return tryToLoadResource(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
+	public static Try<Resource> tryToGetResource(String classpathResourceName) {
+		return tryToGetResource(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
 	}
 
 	/**
 	 * Tries to load the {@link Resource} for the supplied classpath resource name.
 	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String, ClassLoader)}
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)}
 	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
@@ -914,7 +914,7 @@ public final class ReflectionUtils {
 	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
+	public static Try<Resource> tryToGetResource(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");

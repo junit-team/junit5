@@ -714,33 +714,33 @@ class ReflectionUtilsTests {
 	class ResourceLoadingTests {
 
 		@Test
-		void tryToLoadResourcePreconditions() {
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource(""));
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource("   "));
+		void tryToGetResourcePreconditions() {
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource(""));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource("   "));
 
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadResource(null));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource(null));
 			assertThrows(PreconditionViolationException.class,
-				() -> ReflectionUtils.tryToLoadResource("org/junit/platform/commons/example.resource", null));
+				() -> ReflectionUtils.tryToGetResource("org/junit/platform/commons/example.resource", null));
 		}
 
 		@Test
-		void tryToLoadResource() {
-			var tryToLoadResource = ReflectionUtils.tryToLoadResource("org/junit/platform/commons/example.resource");
-			var resource = assertDoesNotThrow(tryToLoadResource::get);
+		void tryToGetResource() {
+			var tryToGetResource = ReflectionUtils.tryToGetResource("org/junit/platform/commons/example.resource");
+			var resource = assertDoesNotThrow(tryToGetResource::get);
 			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
 		}
 
 		@Test
-		void tryToLoadResourceWithPrefixedSlash() {
-			var tryToLoadResource = ReflectionUtils.tryToLoadResource("/org/junit/platform/commons/example.resource");
-			var resource = assertDoesNotThrow(tryToLoadResource::get);
+		void tryToGetResourceWithPrefixedSlash() {
+			var tryToGetResource = ReflectionUtils.tryToGetResource("/org/junit/platform/commons/example.resource");
+			var resource = assertDoesNotThrow(tryToGetResource::get);
 			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
 		}
 
 		@Test
-		void tryToLoadResourceWhenResourceNotFound() {
-			var tryToLoadResource = ReflectionUtils.tryToLoadResource("org/junit/platform/commons/no-such.resource");
-			assertThrows(NullPointerException.class, tryToLoadResource::get);
+		void tryToGetResourceWhenResourceNotFound() {
+			var tryToGetResource = ReflectionUtils.tryToGetResource("org/junit/platform/commons/no-such.resource");
+			assertThrows(NullPointerException.class, tryToGetResource::get);
 		}
 	}
 

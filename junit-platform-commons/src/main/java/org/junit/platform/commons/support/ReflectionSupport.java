@@ -130,8 +130,8 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName) {
-		return ReflectionUtils.tryToLoadResource(classpathResourceName);
+	public static Try<Resource> tryToGetResource(String classpathResourceName) {
+		return ReflectionUtils.tryToGetResource(classpathResourceName);
 	}
 
 	/**
@@ -151,8 +151,8 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
-	public static Try<Resource> tryToLoadResource(String classpathResourceName, ClassLoader classLoader) {
-		return ReflectionUtils.tryToLoadResource(classpathResourceName, classLoader);
+	public static Try<Resource> tryToGetResource(String classpathResourceName, ClassLoader classLoader) {
+		return ReflectionUtils.tryToGetResource(classpathResourceName, classLoader);
 	}
 
 	/**
@@ -280,7 +280,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting list may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#loadClasspathResource(Function)}.
+	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -308,7 +308,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#loadClasspathResource(Function)}.
+	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -337,7 +337,7 @@ public final class ReflectionSupport {
 	 *
 	 * <p>The resulting stream may include identically named resources from different
 	 * classpath roots. These can be filtered out using
-	 * {@link org.junit.platform.commons.util.ResourceFilter#loadClasspathResource(Function)}.
+	 * {@link org.junit.platform.commons.util.ResourceFilter#getClasspathResource(Function)}.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java

@@ -21,7 +21,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.Resource;
 
 /**
- * Resource-related predicates for use with {@link org.junit.platform.commons.support.ReflectionSupport}.
+ * Resource-related predicates for use with {@link ReflectionSupport}.
  *
  * @since 1.11
  */
@@ -35,8 +35,8 @@ public class ResourceFilter {
 	/**
 	 * TODO:
 	 */
-	public static Function<Resource, Resource> loadClasspathResource() {
-		return loadClasspathResource(ReflectionSupport::tryToLoadResource);
+	public static Function<Resource, Resource> getClasspathResource() {
+		return getClasspathResource(ReflectionSupport::tryToGetResource);
 	}
 
 	/**
@@ -44,18 +44,18 @@ public class ResourceFilter {
 	 *
 	 * Include only resources that can be loaded by a class loader.
 	 * <p>
-	 * Resources discovered by {@link org.junit.platform.commons.support.ReflectionSupport}
+	 * Resources discovered by {@link ReflectionSupport}
 	 * may include identically named resources from different class
 	 * path roots. To get
 	 *
-	 * @param loadResource function to load the resource, e.g. {@link org.junit.platform.commons.support.ReflectionSupport#tryToLoadResource(String)}.
+	 * @param loadResource function to load the resource, e.g. {@link ReflectionSupport#tryToGetResource(String)}.
 	 * @return a function that for a given resource, returns the resource as it would bye loaded by {@link ClassLoader#getResource(String)}
 	 *
-	 * @see ReflectionUtils#tryToLoadResource(String)
-	 * @see ReflectionUtils#tryToLoadResource(String, ClassLoader)
+	 * @see ReflectionUtils#tryToGetResource(String)
+	 * @see ReflectionUtils#tryToGetResource(String, ClassLoader)
 	 */
 
-	public static Function<Resource, Resource> loadClasspathResource(Function<String, Try<Resource>> loadResource) {
+	public static Function<Resource, Resource> getClasspathResource(Function<String, Try<Resource>> loadResource) {
 		return candidate -> loadResource.apply(candidate.getName()) //
 				.toOptional() //
 				.map(loaded -> {
