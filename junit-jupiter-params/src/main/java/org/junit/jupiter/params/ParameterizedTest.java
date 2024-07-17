@@ -291,4 +291,17 @@ public @interface ParameterizedTest {
 	@API(status = STABLE, since = "5.10")
 	boolean autoCloseArguments() default true;
 
+	/**
+	 * Configure whether a test requires at least one set of arguments.
+	 * Override this value if the absence of arguments is expected in some cases and
+	 * should not cause the test framework errors.
+	 *
+	 * <p>Defaults to {@code true}.
+	 *
+	 * <p></p>
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	boolean requireArguments() default true;
+
 }
