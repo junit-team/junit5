@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,28 +37,6 @@ import org.opentest4j.AssertionFailedError;
  * @since 5.0
  */
 class DynamicTestTests {
-
-	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer) implements NamedExecutable<DummyNamedExecutableForTests> {
-
-	@Override
-	public String toString() {
-		return getName().toLowerCase();
-	}
-
-	@Override
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public DummyNamedExecutableForTests getPayload() {
-		return this;
-	}
-
-	@Override
-	public void execute() throws Throwable {
-		consumer.accept(getPayload().toString());
-	}}
 
 	private static final Executable nix = () -> {
 	};
@@ -115,13 +94,13 @@ class DynamicTestTests {
 	@Test
 	void streamFromStreamWithNamedExecutablesPreconditions() {
 		assertThrows(PreconditionViolationException.class,
-				() -> DynamicTest.stream((Stream<NamedExecutable<DummyNamedExecutableForTests>>)null));
+			() -> DynamicTest.stream((Stream<DummyNamedExecutableForTests>) null));
 	}
 
 	@Test
 	void streamFromIteratorWithNamedExecutablesPreconditions() {
 		assertThrows(PreconditionViolationException.class,
-				() -> DynamicTest.stream((Iterator<DummyNamedExecutableForTests>)null));
+			() -> DynamicTest.stream((Iterator<DummyNamedExecutableForTests>) null));
 	}
 
 	@Test
@@ -156,8 +135,9 @@ class DynamicTestTests {
 	@Test
 	void streamFromStreamWithNamedExecutables() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(
-			Stream.of(new DummyNamedExecutableForTests("FOO", this::throwingConsumer), new DummyNamedExecutableForTests("BAR", this::throwingConsumer), new DummyNamedExecutableForTests("BAZ", this::throwingConsumer))
-		);
+			Stream.of(new DummyNamedExecutableForTests("foo", this::throwingConsumer),
+				new DummyNamedExecutableForTests("bar", this::throwingConsumer),
+				new DummyNamedExecutableForTests("baz", this::throwingConsumer)));
 
 		assertStream(stream);
 	}
@@ -165,8 +145,9 @@ class DynamicTestTests {
 	@Test
 	void streamFromIteratorWithNamedExecutables() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(
-			List.of(new DummyNamedExecutableForTests("FOO", this::throwingConsumer), new DummyNamedExecutableForTests("BAR", this::throwingConsumer), new DummyNamedExecutableForTests("BAZ", this::throwingConsumer)).iterator()
-		);
+			List.of(new DummyNamedExecutableForTests("foo", this::throwingConsumer),
+				new DummyNamedExecutableForTests("bar", this::throwingConsumer),
+				new DummyNamedExecutableForTests("baz", this::throwingConsumer)).iterator());
 
 		assertStream(stream);
 	}
@@ -251,5 +232,19 @@ class DynamicTestTests {
 		Method method = Assertions.class.getMethod("assertEquals", int.class, int.class);
 		method.invoke(null, 1, 50);
 	}
+
+	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer)
+			implements NamedExecutable {
+
+	@Override
+	public String getName() {
+		return name.toUpperCase(Locale.ROOT);
+	}
+
+	@Override
+	public void execute() throws Throwable {
+		consumer.accept(name);
+	}
+}
 
 }

@@ -12,6 +12,7 @@ package org.junit.jupiter.api;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.net.URI;
@@ -227,32 +228,33 @@ public class DynamicTest extends DynamicNode {
 	}
 
 	/**
-	 * Generate a stream of dynamic tests based on the given input stream.
+	 * Generate a stream of dynamic tests based on the given iterator.
 	 *
 	 * <p>Use this method when the set of dynamic tests is nondeterministic in
 	 * nature or when the input comes from an existing {@link Iterator}. See
 	 * {@link #stream(Stream)} as an alternative.
 	 *
-	 * <p>The given {@code inputGenerator} is responsible for supplying input values,
-	 * display names, and an executor that executes a test. A {@link DynamicTest} will be
-	 * added to the resulting stream for each dynamically supplied input value.
+	 * <p>The given {@code iterator} is responsible for supplying
+	 * {@link Named} input values that provide an {@link Executable} code block.
+	 * A {@link DynamicTest} comprised of both parts will be added to the
+	 * resulting stream for each dynamically supplied input value.
 	 *
-	 * @param inputGenerator an {@code Iterator} with {@code NamedExecutable} values
-	 * that serves as a dynamic <em>input generator</em>; never {@code null}
+	 * @param iterator an {@code Iterator} that supplies named executables;
+	 * never {@code null}
 	 * @param <T> the type of <em>input</em> supplied by the {@code inputStream}
-	 * @return a stream of dynamic tests based on the given generator; never {@code null}
+	 * @return a stream of dynamic tests based on the given iterator; never
+	 * {@code null}
 	 * @since 5.11
-	 *
 	 * @see #dynamicTest(String, Executable)
 	 * @see #stream(Stream)
 	 * @see NamedExecutable
 	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	public static <T extends Named<E>, E extends Executable> Stream<DynamicTest> stream(
+			Iterator<? extends T> iterator) {
+		Preconditions.notNull(iterator, "iterator must not be null");
 
-	public static <T extends NamedExecutable<T>> Stream<DynamicTest> stream(
-			Iterator<? extends NamedExecutable<T>> inputGenerator) {
-		Preconditions.notNull(inputGenerator, "inputGenerator must not be null");
-
-		return stream(StreamSupport.stream(spliteratorUnknownSize(inputGenerator, ORDERED), false));
+		return stream(StreamSupport.stream(spliteratorUnknownSize(iterator, ORDERED), false));
 	}
 
 	/**
@@ -262,27 +264,28 @@ public class DynamicTest extends DynamicNode {
 	 * nature or when the input comes from an existing {@link Stream}. See
 	 * {@link #stream(Iterator)} as an alternative.
 	 *
-	 * <p>The given {@code inputStream} is responsible for supplying input values,
-	 * display names, and an executor that executes a test. A {@link DynamicTest} will be
-	 * added to the resulting stream for each dynamically supplied input value.
+	 * <p>The given {@code inputStream} is responsible for supplying
+	 * {@link Named} input values that provide an {@link Executable} code block.
+	 * A {@link DynamicTest} comprised of both parts will be added to the
+	 * resulting stream for each dynamically supplied input value.
 	 *
-	 * @param inputStream a {@code Stream} that supplies dynamic {@code NamedExecutable}
-	 * input values; never {@code null}
+	 * @param inputStream a {@code Stream} that supplies named executables;
+	 * never {@code null}
 	 * @param <T> the type of <em>input</em> supplied by the {@code inputStream}
-	 * @return a stream of dynamic tests based on the given generator; never {@code null}
+	 * @return a stream of dynamic tests based on the given stream; never
+	 * {@code null}
 	 * @since 5.11
-	 *
 	 * @see #dynamicTest(String, Executable)
 	 * @see #stream(Iterator)
 	 * @see NamedExecutable
 	 */
-
-	public static <T extends NamedExecutable<T>> Stream<DynamicTest> stream(
-			Stream<? extends NamedExecutable<T>> inputStream) {
+	@API(status = EXPERIMENTAL, since = "5.11")
+	public static <T extends Named<E>, E extends Executable> Stream<DynamicTest> stream(
+			Stream<? extends T> inputStream) {
 		Preconditions.notNull(inputStream, "inputStream must not be null");
 
 		return inputStream. //
-				map((input) -> dynamicTest(input.getName(), input));
+				map(input -> dynamicTest(input.getName(), input.getPayload()));
 	}
 
 	private final Executable executable;

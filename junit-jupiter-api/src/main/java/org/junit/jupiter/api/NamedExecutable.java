@@ -10,23 +10,39 @@
 
 package org.junit.jupiter.api;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 
+import java.util.Iterator;
+import java.util.stream.Stream;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 /**
- * {@code NamedExecutable} is a container that associates a name, a payload and an
- * {@link Executable}
+ * {@code NamedExecutable} joins {@code Executable} and {@code Named} in a
+ * one self-typed functional interface.
  *
- * @param <T> the type of the payload
+ * <p>The default implementation of {@link #getName()} returns the result of
+ * calling {@link Object#toString()} on the implementing instance but may be
+ * overridden by concrete implementations to provide a more meaningful name.
+ *
+ * <p>On Java 16 or later, it is recommended to implement this interface using
+ * a record type.
  *
  * @since 5.11
+ * @see DynamicTest#stream(Stream)
+ * @see DynamicTest#stream(Iterator)
  */
+@FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.11")
-public interface NamedExecutable<T extends NamedExecutable<T>> extends Named<T>, Executable {
+public interface NamedExecutable extends Named<Executable>, Executable {
 	@Override
 	default String getName() {
 		return toString();
+	}
+
+	@Override
+	default Executable getPayload() {
+		return this;
 	}
 }
