@@ -353,9 +353,38 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
 				event(container("templateWithSupportingProviderButNoInvocations"),
-					finishedWithFailure(message("None of the supporting TestTemplateInvocationContextProviders ["
+					finishedWithFailure(message("Provider ["
 							+ InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName()
-							+ "] provided a non-empty stream")))));
+							+ "] did not provide invocation contexts, but is expected to do so")))));
+	}
+
+	@Test
+	void templateWithSupportingProviderAllowingNoInvocationsDoesNotFail() {
+		LauncherDiscoveryRequest request = request().selectors(
+			selectMethod(MyTestTemplateTestCase.class, "templateWithSupportingProviderAllowingNoInvocations")).build();
+
+		EngineExecutionResults executionResults = executeTests(request);
+
+		executionResults.allEvents().assertEventsMatchExactly( //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class,
+				event(container("templateWithSupportingProviderAllowingNoInvocations"), started()),
+				event(container("templateWithSupportingProviderAllowingNoInvocations"), finishedSuccessfully())));
+	}
+
+	@Test
+	void templateWithMixedProvidersNoInvocationReportsFailure() {
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(MyTestTemplateTestCase.class,
+			"templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing")).build();
+
+		EngineExecutionResults executionResults = executeTests(request);
+
+		executionResults.allEvents().assertEventsMatchExactly( //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing"), started()), //
+				event(container("templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing"),
+					finishedWithFailure(message("Provider ["
+							+ InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName()
+							+ "] did not provide invocation contexts, but is expected to do so")))));
 	}
 
 	@Test
@@ -467,6 +496,19 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		@ExtendWith(InvocationContextProviderThatSupportsEverythingButProvidesNothing.class)
 		@TestTemplate
 		void templateWithSupportingProviderButNoInvocations() {
+			fail("never called");
+		}
+
+		@ExtendWith(InvocationContextProviderThatSupportsEverythingAllowsProvideNothing.class)
+		@TestTemplate
+		void templateWithSupportingProviderAllowingNoInvocations() {
+			fail("never called");
+		}
+
+		@ExtendWith(InvocationContextProviderThatSupportsEverythingButProvidesNothing.class)
+		@ExtendWith(InvocationContextProviderThatSupportsEverythingAllowsProvideNothing.class)
+		@TestTemplate
+		void templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing() {
 			fail("never called");
 		}
 
@@ -766,6 +808,25 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 			return Stream.empty();
+		}
+	}
+
+	private static class InvocationContextProviderThatSupportsEverythingAllowsProvideNothing
+			implements TestTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supportsTestTemplate(ExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+			return Stream.empty();
+		}
+
+		@Override
+		public boolean mayReturnZeroInvocationContexts(ExtensionContext extensionContext) {
+			return true;
 		}
 	}
 

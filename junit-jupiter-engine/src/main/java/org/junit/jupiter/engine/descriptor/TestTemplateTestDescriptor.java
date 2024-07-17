@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
@@ -102,13 +101,17 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		for (TestTemplateInvocationContextProvider provider : providers) {
+			int initialValue = invocationIndex.get();
 			try (Stream<TestTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
 				stream.forEach(
 					invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
 							.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
 			}
+			Preconditions.condition(
+					invocationIndex.get() != initialValue || provider.mayReturnZeroInvocationContexts(extensionContext),
+					"Provider [" + provider.getClass().getSimpleName() //
+							+ "] did not provide invocation contexts, but is expected to do so");
 		}
-		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
 	}
 
@@ -144,15 +147,4 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		testDescriptor.setParent(this);
 		dynamicTestExecutor.execute(testDescriptor);
 	}
-
-	private void validateWasAtLeastInvokedOnce(int invocationIndex,
-			List<TestTemplateInvocationContextProvider> providers) {
-
-		Preconditions.condition(invocationIndex > 0,
-			() -> "None of the supporting " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
-					+ providers.stream().map(provider -> provider.getClass().getSimpleName()).collect(
-						joining(", ", "[", "]"))
-					+ " provided a non-empty stream");
-	}
-
 }

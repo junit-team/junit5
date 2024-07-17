@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.stream.Stream;
@@ -85,5 +86,23 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * @see ExtensionContext
 	 */
 	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context);
+
+	/**
+	 * Signals that in the supplied {@linkplain ExtensionContext context} the provider may return zero
+	 * {@linkplain TestTemplateInvocationContext invocation contexts}.
+	 *
+	 * <p>If provider returns empty stream from {@link #provideTestTemplateInvocationContexts(ExtensionContext)}
+	 * this will be considered an execution error. Override this method to ignore the absence of invocation contexts.
+	 *
+	 * @param context the extension context for the test template method about
+	 * to be invoked; never {@code null}
+	 * @return {@code true} to allow zero contexts, {@code false} (default) to fail execution in case of zero contexts.
+	 *
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	default boolean mayReturnZeroInvocationContexts(ExtensionContext context) {
+		return false;
+	}
 
 }

@@ -77,6 +77,8 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		ParameterizedTestNameFormatter formatter = createNameFormatter(extensionContext, templateMethod, methodContext,
 			displayName, argumentMaxLength);
 		AtomicLong invocationCount = new AtomicLong(0);
+		ParameterizedTest parameterizedTest = findAnnotation(templateMethod, ParameterizedTest.class).get();
+		boolean ignoreZeroInvocations = !parameterizedTest.requireArguments();
 
 		// @formatter:off
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
@@ -90,9 +92,17 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
-						Preconditions.condition(invocationCount.get() > 0,
+						Preconditions.condition(invocationCount.get() > 0 || ignoreZeroInvocations,
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
+	}
+
+	@Override
+	public boolean mayReturnZeroInvocationContexts(ExtensionContext extensionContext) {
+		Method templateMethod = extensionContext.getRequiredTestMethod();
+		return findAnnotation(templateMethod, ParameterizedTest.class) //
+				.map(parameterizedTest -> !parameterizedTest.requireArguments()) //
+				.orElse(false);
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
