@@ -59,6 +59,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.Resource;
 
 /**
  * Collection of utilities for working with the Java reflection APIs.
@@ -1068,10 +1069,24 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 */
+	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 */
 	public static Stream<Class<?>> streamAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		return findAllClassesInClasspathRoot(root, classFilter).stream();
+	}
+
+	/**
+	 * @since 1.11
+	 */
+	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+		return findAllResourcesInClasspathRoot(root, resourceFilter).stream();
 	}
 
 	/**
@@ -1100,10 +1115,26 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 */
+	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+		return Collections.unmodifiableList(
+			classpathScanner.scanForResourcesInPackage(basePackageName, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 */
 	public static Stream<Class<?>> streamAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		return findAllClassesInPackage(basePackageName, classFilter).stream();
+	}
+
+	/**
+	 * @since 1.11
+	 */
+	public static Stream<Resource> streamAllResourcesInPackage(String basePackageName,
+			Predicate<Resource> resourceFilter) {
+		return findAllResourcesInPackage(basePackageName, resourceFilter).stream();
 	}
 
 	/**
@@ -1133,10 +1164,24 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * @since 1.11
+	 */
+	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+		return Collections.unmodifiableList(ModuleUtils.findAllResourcesInModule(moduleName, resourceFilter));
+	}
+
+	/**
 	 * @since 1.10
 	 */
 	public static Stream<Class<?>> streamAllClassesInModule(String moduleName, ClassFilter classFilter) {
 		return findAllClassesInModule(moduleName, classFilter).stream();
+	}
+
+	/**
+	 * @since 1.11
+	 */
+	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
+		return findAllResourcesInModule(moduleName, resourceFilter).stream();
 	}
 
 	/**

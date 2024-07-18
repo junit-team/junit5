@@ -1,0 +1,79 @@
+[[release-notes-5.11.0-RC1]]
+== 5.11.0-RC1
+
+*Date of Release:* ❓
+
+*Scope:* ❓
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/77?closed=1+[5.11.0-RC1] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.11.0-RC1-junit-platform]]
+=== JUnit Platform
+
+[[release-notes-5.11.0-RC1-junit-platform-bug-fixes]]
+==== Bug Fixes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-platform-deprecations-and-breaking-changes]]
+==== Deprecations and Breaking Changes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-platform-new-features-and-improvements]]
+==== New Features and Improvements
+
+* New `rootCause()` condition in `TestExecutionResultConditions` that matches if an
+  exception's _root_ cause matches all supplied conditions, for use with the
+  `EngineTestKit`.
+* `ReflectionSupport` now supports scanning for classpath resources.
+
+
+[[release-notes-5.11.0-RC1-junit-jupiter]]
+=== JUnit Jupiter
+
+[[release-notes-5.11.0-RC1-junit-jupiter-bug-fixes]]
+==== Bug Fixes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
+==== Deprecations and Breaking Changes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-jupiter-new-features-and-improvements]]
+==== New Features and Improvements
+
+* New `argumentSet()` factory method for providing a custom name for an entire set of
+  arguments for a `@ParameterizedTest`. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names, User Guide>>
+  for details.
+* `JAVA_24` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* New `assertInstanceOf` methods added for Kotlin following up with similar Java
+  `assertInstanceOf` methods introduced in `5.8` version.
+* New generators in `DynamicTest` that take a `Stream`/`Iterator` of `Named<Executable>`
+  along with a convenient `NamedExecutable` interface that can simplify writing dynamic
+  tests, in particular in recent version of Java that support records.
+
+
+[[release-notes-5.11.0-RC1-junit-vintage]]
+=== JUnit Vintage
+
+[[release-notes-5.11.0-RC1-junit-vintage-bug-fixes]]
+==== Bug Fixes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-vintage-deprecations-and-breaking-changes]]
+==== Deprecations and Breaking Changes
+
+* ❓
+
+[[release-notes-5.11.0-RC1-junit-vintage-new-features-and-improvements]]
+==== New Features and Improvements
+
+* ❓

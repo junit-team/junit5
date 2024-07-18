@@ -17,32 +17,33 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
 /**
- * @since 1.0
+ * @since 1.11
  */
-class ClassFileVisitor extends SimpleFileVisitor<Path> {
+class ClasspathFileVisitor extends SimpleFileVisitor<Path> {
 
-	private static final Logger logger = LoggerFactory.getLogger(ClassFileVisitor.class);
+	private static final Logger logger = LoggerFactory.getLogger(ClasspathFileVisitor.class);
 
-	static final String CLASS_FILE_SUFFIX = ".class";
-	private static final String PACKAGE_INFO_FILE_NAME = "package-info" + CLASS_FILE_SUFFIX;
-	private static final String MODULE_INFO_FILE_NAME = "module-info" + CLASS_FILE_SUFFIX;
+	private final Path basePath;
+	private final BiConsumer<Path, Path> consumer;
+	private final Predicate<Path> filter;
 
-	private final Consumer<Path> classFileConsumer;
-
-	ClassFileVisitor(Consumer<Path> classFileConsumer) {
-		this.classFileConsumer = classFileConsumer;
+	ClasspathFileVisitor(Path basePath, Predicate<Path> filter, BiConsumer<Path, Path> consumer) {
+		this.basePath = basePath;
+		this.filter = filter;
+		this.consumer = consumer;
 	}
 
 	@Override
 	public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-		if (isNotPackageInfo(file) && isNotModuleInfo(file) && isClassFile(file)) {
-			classFileConsumer.accept(file);
+		if (filter.test(file)) {
+			consumer.accept(basePath, file);
 		}
 		return CONTINUE;
 	}
@@ -59,18 +60,6 @@ class ClassFileVisitor extends SimpleFileVisitor<Path> {
 			logger.warn(ex, () -> "I/O error visiting directory: " + dir);
 		}
 		return CONTINUE;
-	}
-
-	private static boolean isNotPackageInfo(Path path) {
-		return !path.endsWith(PACKAGE_INFO_FILE_NAME);
-	}
-
-	private static boolean isNotModuleInfo(Path path) {
-		return !path.endsWith(MODULE_INFO_FILE_NAME);
-	}
-
-	private static boolean isClassFile(Path file) {
-		return file.getFileName().toString().endsWith(CLASS_FILE_SUFFIX);
 	}
 
 }

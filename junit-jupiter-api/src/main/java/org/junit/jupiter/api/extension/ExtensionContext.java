@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -399,7 +398,7 @@ public interface ExtensionContext {
 	 *
 	 * @since 5.9
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = STABLE, since = "5.11")
 	ExecutableInvoker getExecutableInvoker();
 
 	/**

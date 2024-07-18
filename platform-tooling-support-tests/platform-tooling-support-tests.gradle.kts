@@ -1,6 +1,6 @@
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
+import junitbuild.extensions.capitalized
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.gradle.configurationcache.extensions.capitalized
 import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration

@@ -3015,9 +3015,10 @@ they are instantiated, but they can assume that their `createTempDirectory(...)`
 `close()` methods will both be called once per instance, in this order, and from the same
 thread.
 
-The default implementation available in Jupiter delegates the directory creation to
-`java.nio.file.Files::createTempDirectory`, passing `junit` as the prefix string to be
-used in generating the directory's name.
+The default implementation available in Jupiter delegates directory creation to
+`java.nio.file.Files::createTempDirectory` which uses the default file system and the
+system's temporary directory as the parent directory. It passes `junit-` as the prefix
+string of the generated directory name to help identify it as a created by JUnit.
 
 The following example defines a factory that uses the test name as the directory name
 prefix instead of the `junit` constant value.
