@@ -55,6 +55,9 @@ repository on GitHub.
 * `JAVA_24` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * New `assertInstanceOf` methods added for Kotlin following up with similar Java
   `assertInstanceOf` methods introduced in `5.8` version.
+* New generators in `DynamicTest` that take a `Stream`/`Iterator` of `Named<Executable>`
+  along with a convenient `NamedExecutable` interface that can simplify writing dynamic
+  tests, in particular in recent version of Java that support records.
 
 
 [[release-notes-5.11.0-RC1-junit-vintage]]

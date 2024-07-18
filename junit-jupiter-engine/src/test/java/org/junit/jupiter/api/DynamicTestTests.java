@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,6 +92,18 @@ class DynamicTestTests {
 	}
 
 	@Test
+	void streamFromStreamWithNamedExecutablesPreconditions() {
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Stream<DummyNamedExecutableForTests>) null));
+	}
+
+	@Test
+	void streamFromIteratorWithNamedExecutablesPreconditions() {
+		assertThrows(PreconditionViolationException.class,
+			() -> DynamicTest.stream((Iterator<DummyNamedExecutableForTests>) null));
+	}
+
+	@Test
 	void streamFromStream() throws Throwable {
 		Stream<DynamicTest> stream = DynamicTest.stream(Stream.of("foo", "bar", "baz"), String::toUpperCase,
 			this::throwingConsumer);
@@ -116,6 +129,26 @@ class DynamicTestTests {
 		Stream<DynamicTest> stream = DynamicTest.stream(
 			List.of(Named.of("FOO", "foo"), Named.of("BAR", "bar"), Named.of("BAZ", "baz")).iterator(),
 			this::throwingConsumer);
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromStreamWithNamedExecutables() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			Stream.of(new DummyNamedExecutableForTests("foo", this::throwingConsumer),
+				new DummyNamedExecutableForTests("bar", this::throwingConsumer),
+				new DummyNamedExecutableForTests("baz", this::throwingConsumer)));
+
+		assertStream(stream);
+	}
+
+	@Test
+	void streamFromIteratorWithNamedExecutables() throws Throwable {
+		Stream<DynamicTest> stream = DynamicTest.stream(
+			List.of(new DummyNamedExecutableForTests("foo", this::throwingConsumer),
+				new DummyNamedExecutableForTests("bar", this::throwingConsumer),
+				new DummyNamedExecutableForTests("baz", this::throwingConsumer)).iterator());
+
 		assertStream(stream);
 	}
 
@@ -198,6 +231,19 @@ class DynamicTestTests {
 	private void assert1Equals50Reflectively() throws Throwable {
 		Method method = Assertions.class.getMethod("assertEquals", int.class, int.class);
 		method.invoke(null, 1, 50);
+	}
+
+	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer) implements NamedExecutable {
+
+		@Override
+		public String getName() {
+			return name.toUpperCase(Locale.ROOT);
+		}
+
+		@Override
+		public void execute() throws Throwable {
+			consumer.accept(name);
+		}
 	}
 
 }

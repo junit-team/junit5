@@ -35,6 +35,7 @@ import example.util.Calculator;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.NamedExecutable;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -157,15 +158,45 @@ class DynamicTestsDemo {
 	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNames() {
 		// Stream of palindromes to check
 		Stream<Named<String>> inputStream = Stream.of(
-				named("racecar is a palindrome", "racecar"),
-				named("radar is also a palindrome", "radar"),
-				named("mom also seems to be a palindrome", "mom"),
-				named("dad is yet another palindrome", "dad")
-			);
+			named("racecar is a palindrome", "racecar"),
+			named("radar is also a palindrome", "radar"),
+			named("mom also seems to be a palindrome", "mom"),
+			named("dad is yet another palindrome", "dad")
+		);
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputStream,
 			text -> assertTrue(isPalindrome(text)));
+	}
+
+	@TestFactory
+	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNamedExecutables() {
+		// Stream of palindromes to check
+		Stream<PalindromeNamedExecutable> inputStream = Stream.of("racecar", "radar", "mom", "dad")
+				.map(PalindromeNamedExecutable::new);
+
+		// Returns a stream of dynamic tests based on NamedExecutables.
+		return DynamicTest.stream(inputStream);
+	}
+
+	// Can be a record in Java 16 and later
+	static class PalindromeNamedExecutable implements NamedExecutable {
+
+		private final String text;
+
+		public PalindromeNamedExecutable(String text) {
+			this.text = text;
+		}
+
+		@Override
+		public String getName() {
+			return String.format("'%s' is a palindrome", text);
+		}
+
+		@Override
+		public void execute() {
+			assertTrue(isPalindrome(text));
+		}
 	}
 
 	@TestFactory
@@ -192,6 +223,5 @@ class DynamicTestsDemo {
 				.map(text -> dynamicTest(text, () -> assertTrue(isPalindrome(text)))
 		));
 	}
-
 }
 // end::user_guide[]
