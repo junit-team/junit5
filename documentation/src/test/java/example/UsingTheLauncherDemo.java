@@ -55,6 +55,9 @@ class UsingTheLauncherDemo {
 			.filters(
 				includeClassNamePatterns(".*Tests")
 			)
+			// end::discovery[]
+			.configurationParameter("enableHttpServer", "false")
+			// tag::discovery[]
 			.build();
 
 		try (LauncherSession session = LauncherFactory.openSession()) {
@@ -80,6 +83,9 @@ class UsingTheLauncherDemo {
 			.filters(
 				includeClassNamePatterns(".*Tests")
 			)
+			// end::execution[]
+			.configurationParameter("enableHttpServer", "false")
+			// tag::execution[]
 			.build();
 
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();

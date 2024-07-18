@@ -5,7 +5,12 @@ import org.gradle.api.Named
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.InputFiles
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.PathSensitive
+import org.gradle.api.tasks.PathSensitivity
+import org.gradle.api.tasks.SourceSetContainer
 import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.CommandLineArgumentProvider
@@ -28,7 +33,7 @@ abstract class PatchModuleArgumentProvider @Inject constructor(compiledProject: 
                 compiledProject.files(compiledProject.the<SourceSetContainer>().matching { it.name.startsWith("main") }
                     .map { it.output })
             else
-                patchModuleProject.files(patchModuleProject.the<SourceSetContainer>()["main"].java.srcDirs)
+                patchModuleProject.files(patchModuleProject.the<SourceSetContainer>()["main"].java.sourceDirectories)
         })
     }
 

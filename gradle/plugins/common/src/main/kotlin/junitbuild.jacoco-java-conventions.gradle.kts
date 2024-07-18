@@ -22,10 +22,7 @@ val codeCoverageClassesJar by tasks.registering(Jar::class) {
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
-configurations.create("codeCoverageReportClasses") {
-	isCanBeResolved = false
-	isCanBeConsumed = true
-	isTransitive = false
+configurations.consumable("codeCoverageReportClasses") {
 	attributes.attribute(LIBRARY_ELEMENTS_ATTRIBUTE, objects.named(LibraryElements::class, CLASSES))
 	outgoing.artifact(codeCoverageClassesJar)
 }

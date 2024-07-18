@@ -35,7 +35,7 @@ final class CloseablePath implements Closeable {
 	private static final String FILE_URI_SCHEME = "file";
 	static final String JAR_URI_SCHEME = "jar";
 	private static final String JAR_FILE_EXTENSION = ".jar";
-	private static final String JAR_URI_SEPARATOR = "!";
+	private static final String JAR_URI_SEPARATOR = "!/";
 
 	private static final Closeable NULL_CLOSEABLE = () -> {
 	};
@@ -53,9 +53,11 @@ final class CloseablePath implements Closeable {
 
 	static CloseablePath create(URI uri, FileSystemProvider fileSystemProvider) throws URISyntaxException {
 		if (JAR_URI_SCHEME.equals(uri.getScheme())) {
-			String[] parts = uri.toString().split(JAR_URI_SEPARATOR);
-			String jarUri = parts[0];
-			String jarEntry = parts[1];
+			// Parsing: jar:<url>!/[<entry>], see java.net.JarURLConnection
+			String uriString = uri.toString();
+			int lastJarUriSeparator = uriString.lastIndexOf(JAR_URI_SEPARATOR);
+			String jarUri = uriString.substring(0, lastJarUriSeparator);
+			String jarEntry = uriString.substring(lastJarUriSeparator + 1);
 			return createForJarFileSystem(new URI(jarUri), fileSystem -> fileSystem.getPath(jarEntry),
 				fileSystemProvider);
 		}

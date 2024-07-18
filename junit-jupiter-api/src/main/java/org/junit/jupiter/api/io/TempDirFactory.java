@@ -81,7 +81,7 @@ public interface TempDirFactory extends Closeable {
 
 		public static final TempDirFactory INSTANCE = new Standard();
 
-		private static final String TEMP_DIR_PREFIX = "junit";
+		private static final String TEMP_DIR_PREFIX = "junit-";
 
 		public Standard() {
 		}

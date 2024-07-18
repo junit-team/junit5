@@ -66,30 +66,15 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		throwExceptionAfterAll = true;
 		handlerCalls.clear();
 
-		SwallowExceptionHandler.beforeAllCalls = 0;
-		SwallowExceptionHandler.beforeEachCalls = 0;
-		SwallowExceptionHandler.afterEachCalls = 0;
-		SwallowExceptionHandler.afterAllCalls = 0;
+		SwallowExceptionHandler.callCounter.reset();
 
-		RethrowExceptionHandler.beforeAllCalls = 0;
-		RethrowExceptionHandler.beforeEachCalls = 0;
-		RethrowExceptionHandler.afterEachCalls = 0;
-		RethrowExceptionHandler.afterAllCalls = 0;
+		RethrowExceptionHandler.callCounter.reset();
 
-		ConvertExceptionHandler.beforeAllCalls = 0;
-		ConvertExceptionHandler.beforeEachCalls = 0;
-		ConvertExceptionHandler.afterEachCalls = 0;
-		ConvertExceptionHandler.afterAllCalls = 0;
+		ConvertExceptionHandler.callCounter.reset();
 
-		UnrecoverableExceptionHandler.beforeAllCalls = 0;
-		UnrecoverableExceptionHandler.beforeEachCalls = 0;
-		UnrecoverableExceptionHandler.afterEachCalls = 0;
-		UnrecoverableExceptionHandler.afterAllCalls = 0;
+		UnrecoverableExceptionHandler.callCounter.reset();
 
-		ShouldNotBeCalledHandler.beforeAllCalls = 0;
-		ShouldNotBeCalledHandler.beforeEachCalls = 0;
-		ShouldNotBeCalledHandler.afterEachCalls = 0;
-		ShouldNotBeCalledHandler.afterAllCalls = 0;
+		ShouldNotBeCalledHandler.callCounter.reset();
 	}
 
 	@Test
@@ -97,8 +82,8 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(RethrowingTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		assertEquals(1, RethrowExceptionHandler.beforeAllCalls, "Exception should handled in @BeforeAll");
-		assertEquals(1, RethrowExceptionHandler.afterAllCalls, "Exception should handled in @AfterAll");
+		assertEquals(1, RethrowExceptionHandler.callCounter.beforeAllCalls, "Exception should handled in @BeforeAll");
+		assertEquals(1, RethrowExceptionHandler.callCounter.afterAllCalls, "Exception should handled in @AfterAll");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -114,8 +99,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(RethrowingTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		assertEquals(1, RethrowExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
-		assertEquals(1, RethrowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
+		assertEquals(1, RethrowExceptionHandler.callCounter.beforeEachCalls,
+			"Exception should be handled in @BeforeEach");
+		assertEquals(1, RethrowExceptionHandler.callCounter.afterEachCalls,
+			"Exception should be handled in @AfterEach");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -131,8 +118,8 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(ConvertingTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		assertEquals(1, ConvertExceptionHandler.beforeAllCalls, "Exception should handled in @BeforeAll");
-		assertEquals(1, ConvertExceptionHandler.afterAllCalls, "Exception should handled in @AfterAll");
+		assertEquals(1, ConvertExceptionHandler.callCounter.beforeAllCalls, "Exception should handled in @BeforeAll");
+		assertEquals(1, ConvertExceptionHandler.callCounter.afterAllCalls, "Exception should handled in @AfterAll");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -148,8 +135,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(ConvertingTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		assertEquals(1, ConvertExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
-		assertEquals(1, ConvertExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
+		assertEquals(1, ConvertExceptionHandler.callCounter.beforeEachCalls,
+			"Exception should be handled in @BeforeEach");
+		assertEquals(1, ConvertExceptionHandler.callCounter.afterEachCalls,
+			"Exception should be handled in @AfterEach");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -165,10 +154,13 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		LauncherDiscoveryRequest request = request().selectors(selectClass(SwallowingTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
 
-		assertEquals(1, SwallowExceptionHandler.beforeAllCalls, "Exception should be handled in @BeforeAll");
-		assertEquals(1, SwallowExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
-		assertEquals(1, SwallowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
-		assertEquals(1, SwallowExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
+		assertEquals(1, SwallowExceptionHandler.callCounter.beforeAllCalls,
+			"Exception should be handled in @BeforeAll");
+		assertEquals(1, SwallowExceptionHandler.callCounter.beforeEachCalls,
+			"Exception should be handled in @BeforeEach");
+		assertEquals(1, SwallowExceptionHandler.callCounter.afterEachCalls,
+			"Exception should be handled in @AfterEach");
+		assertEquals(1, SwallowExceptionHandler.callCounter.afterAllCalls, "Exception should be handled in @AfterAll");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -183,10 +175,13 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 	void perClassLifecycleMethodsAreHandled() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(PerClassLifecycleTestCase.class)).build();
 		EngineExecutionResults executionResults = executeTests(request);
-		assertEquals(2, SwallowExceptionHandler.beforeAllCalls, "Exception should be handled in @BeforeAll");
-		assertEquals(1, SwallowExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
-		assertEquals(1, SwallowExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
-		assertEquals(2, SwallowExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
+		assertEquals(2, SwallowExceptionHandler.callCounter.beforeAllCalls,
+			"Exception should be handled in @BeforeAll");
+		assertEquals(1, SwallowExceptionHandler.callCounter.beforeEachCalls,
+			"Exception should be handled in @BeforeEach");
+		assertEquals(1, SwallowExceptionHandler.callCounter.afterEachCalls,
+			"Exception should be handled in @AfterEach");
+		assertEquals(2, SwallowExceptionHandler.callCounter.afterAllCalls, "Exception should be handled in @AfterAll");
 
 		executionResults.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -237,8 +232,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 
 		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
 		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
-		assertEquals(1, UnrecoverableExceptionHandler.beforeAllCalls, "Exception should be handled in @BeforeAll");
-		assertEquals(0, ShouldNotBeCalledHandler.beforeAllCalls, "Exception should not propagate in @BeforeAll");
+		assertEquals(1, UnrecoverableExceptionHandler.callCounter.beforeAllCalls,
+			"Exception should be handled in @BeforeAll");
+		assertEquals(0, ShouldNotBeCalledHandler.callCounter.beforeAllCalls,
+			"Exception should not propagate in @BeforeAll");
 	}
 
 	@Test
@@ -250,8 +247,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 
 		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
 		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
-		assertEquals(1, UnrecoverableExceptionHandler.beforeEachCalls, "Exception should be handled in @BeforeEach");
-		assertEquals(0, ShouldNotBeCalledHandler.beforeEachCalls, "Exception should not propagate in @BeforeEach");
+		assertEquals(1, UnrecoverableExceptionHandler.callCounter.beforeEachCalls,
+			"Exception should be handled in @BeforeEach");
+		assertEquals(0, ShouldNotBeCalledHandler.callCounter.beforeEachCalls,
+			"Exception should not propagate in @BeforeEach");
 	}
 
 	@Test
@@ -263,8 +262,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 
 		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
 		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
-		assertEquals(1, UnrecoverableExceptionHandler.afterEachCalls, "Exception should be handled in @AfterEach");
-		assertEquals(0, ShouldNotBeCalledHandler.afterEachCalls, "Exception should not propagate in @AfterEach");
+		assertEquals(1, UnrecoverableExceptionHandler.callCounter.afterEachCalls,
+			"Exception should be handled in @AfterEach");
+		assertEquals(0, ShouldNotBeCalledHandler.callCounter.afterEachCalls,
+			"Exception should not propagate in @AfterEach");
 	}
 
 	@Test
@@ -276,8 +277,10 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 
 		boolean unrecoverableExceptionThrown = executeThrowingOutOfMemoryException();
 		assertTrue(unrecoverableExceptionThrown, "Unrecoverable Exception should be thrown");
-		assertEquals(1, UnrecoverableExceptionHandler.afterAllCalls, "Exception should be handled in @AfterAll");
-		assertEquals(0, ShouldNotBeCalledHandler.afterAllCalls, "Exception should not propagate in @AfterAll");
+		assertEquals(1, UnrecoverableExceptionHandler.callCounter.afterAllCalls,
+			"Exception should be handled in @AfterAll");
+		assertEquals(0, ShouldNotBeCalledHandler.callCounter.afterAllCalls,
+			"Exception should not propagate in @AfterAll");
 	}
 
 	private boolean executeThrowingOutOfMemoryException() {
@@ -382,15 +385,12 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 	// ------------------------------------------
 
 	static class RethrowExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
-		static int beforeAllCalls = 0;
-		static int beforeEachCalls = 0;
-		static int afterEachCalls = 0;
-		static int afterAllCalls = 0;
+		static HandlerCallCounter callCounter = new HandlerCallCounter();
 
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			beforeAllCalls++;
+			callCounter.incrementBeforeAllCalls();
 			handlerCalls.add("RethrowExceptionBeforeAll");
 			throw throwable;
 		}
@@ -398,7 +398,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			beforeEachCalls++;
+			callCounter.incrementBeforeEachCalls();
 			handlerCalls.add("RethrowExceptionBeforeEach");
 			throw throwable;
 		}
@@ -406,7 +406,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterEachCalls++;
+			callCounter.incrementAfterEachCalls();
 			handlerCalls.add("RethrowExceptionAfterEach");
 			throw throwable;
 		}
@@ -414,57 +414,51 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterAllCalls++;
+			callCounter.incrementAfterAllCalls();
 			handlerCalls.add("RethrowExceptionAfterAll");
 			throw throwable;
 		}
 	}
 
 	static class SwallowExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
-		static int beforeAllCalls = 0;
-		static int beforeEachCalls = 0;
-		static int afterEachCalls = 0;
-		static int afterAllCalls = 0;
+		static HandlerCallCounter callCounter = new HandlerCallCounter();
 
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			beforeAllCalls++;
+			callCounter.incrementBeforeAllCalls();
 			handlerCalls.add("SwallowExceptionBeforeAll");
 			// Do not rethrow
 		}
 
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			beforeEachCalls++;
+			callCounter.incrementBeforeEachCalls();
 			handlerCalls.add("SwallowExceptionBeforeEach");
 			// Do not rethrow
 		}
 
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			afterEachCalls++;
+			callCounter.incrementAfterEachCalls();
 			handlerCalls.add("SwallowExceptionAfterEach");
 			// Do not rethrow
 		}
 
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			afterAllCalls++;
+			callCounter.incrementAfterAllCalls();
 			handlerCalls.add("SwallowExceptionAfterAll");
 			// Do not rethrow
 		}
 	}
 
 	static class ConvertExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
-		static int beforeAllCalls = 0;
-		static int beforeEachCalls = 0;
-		static int afterEachCalls = 0;
-		static int afterAllCalls = 0;
+		static HandlerCallCounter callCounter = new HandlerCallCounter();
 
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			beforeAllCalls++;
+			callCounter.incrementBeforeAllCalls();
 			handlerCalls.add("ConvertExceptionBeforeAll");
 			throw new IOException(throwable);
 		}
@@ -472,7 +466,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			beforeEachCalls++;
+			callCounter.incrementBeforeEachCalls();
 			handlerCalls.add("ConvertExceptionBeforeEach");
 			throw new IOException(throwable);
 		}
@@ -480,7 +474,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterEachCalls++;
+			callCounter.incrementAfterEachCalls();
 			handlerCalls.add("ConvertExceptionAfterEach");
 			throw new IOException(throwable);
 		}
@@ -488,57 +482,51 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterAllCalls++;
+			callCounter.incrementAfterAllCalls();
 			handlerCalls.add("ConvertExceptionAfterAll");
 			throw new IOException(throwable);
 		}
 	}
 
 	static class UnrecoverableExceptionHandler implements LifecycleMethodExecutionExceptionHandler {
-		static int beforeAllCalls = 0;
-		static int beforeEachCalls = 0;
-		static int afterEachCalls = 0;
-		static int afterAllCalls = 0;
+		static HandlerCallCounter callCounter = new HandlerCallCounter();
 
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			beforeAllCalls++;
+			callCounter.incrementBeforeAllCalls();
 			handlerCalls.add("UnrecoverableExceptionBeforeAll");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			beforeEachCalls++;
+			callCounter.incrementBeforeEachCalls();
 			handlerCalls.add("UnrecoverableExceptionBeforeEach");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			afterEachCalls++;
+			callCounter.incrementAfterEachCalls();
 			handlerCalls.add("UnrecoverableExceptionAfterEach");
 			throw new OutOfMemoryError();
 		}
 
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable) {
-			afterAllCalls++;
+			callCounter.incrementAfterAllCalls();
 			handlerCalls.add("UnrecoverableExceptionAfterAll");
 			throw new OutOfMemoryError();
 		}
 	}
 
 	static class ShouldNotBeCalledHandler implements LifecycleMethodExecutionExceptionHandler {
-		static int beforeAllCalls = 0;
-		static int beforeEachCalls = 0;
-		static int afterEachCalls = 0;
-		static int afterAllCalls = 0;
+		static HandlerCallCounter callCounter = new HandlerCallCounter();
 
 		@Override
 		public void handleBeforeAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			beforeAllCalls++;
+			callCounter.incrementBeforeAllCalls();
 			handlerCalls.add("ShouldNotBeCalledBeforeAll");
 			throw throwable;
 		}
@@ -546,7 +534,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleBeforeEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			ShouldNotBeCalledHandler.beforeEachCalls++;
+			ShouldNotBeCalledHandler.callCounter.incrementBeforeEachCalls();
 			handlerCalls.add("ShouldNotBeCalledBeforeEach");
 			throw throwable;
 		}
@@ -554,7 +542,7 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterEachMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterEachCalls++;
+			callCounter.incrementAfterEachCalls();
 			handlerCalls.add("ShouldNotBeCalledAfterEach");
 			throw throwable;
 		}
@@ -562,9 +550,44 @@ class LifecycleMethodExecutionExceptionHandlerTests extends AbstractJupiterTestE
 		@Override
 		public void handleAfterAllMethodExecutionException(ExtensionContext context, Throwable throwable)
 				throws Throwable {
-			afterAllCalls++;
+			callCounter.incrementAfterAllCalls();
 			handlerCalls.add("ShouldNotBeCalledAfterAll");
 			throw throwable;
 		}
+	}
+
+	static class HandlerCallCounter {
+		private int beforeAllCalls;
+		private int beforeEachCalls;
+		private int afterEachCalls;
+		private int afterAllCalls;
+
+		public HandlerCallCounter() {
+			reset();
+		}
+
+		public void reset() {
+			this.beforeAllCalls = 0;
+			this.beforeEachCalls = 0;
+			this.afterEachCalls = 0;
+			this.afterAllCalls = 0;
+		}
+
+		public void incrementBeforeAllCalls() {
+			beforeAllCalls++;
+		}
+
+		public void incrementBeforeEachCalls() {
+			beforeEachCalls++;
+		}
+
+		public void incrementAfterEachCalls() {
+			afterEachCalls++;
+		}
+
+		public void incrementAfterAllCalls() {
+			afterAllCalls++;
+		}
+
 	}
 }

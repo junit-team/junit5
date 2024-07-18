@@ -23,6 +23,7 @@ import java.util.List;
 import de.sormuras.bartholdy.Result;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
@@ -32,6 +33,7 @@ import platform.tooling.support.Request;
  */
 class MultiReleaseJarTests {
 
+	@ResourceLock(Projects.MULTI_RELEASE_JAR)
 	@Test
 	void checkDefault() throws Exception {
 		var variant = "default";
@@ -82,7 +84,7 @@ class MultiReleaseJarTests {
 	private Result mvn(String variant) {
 		var result = Request.builder() //
 				.setTool(Request.maven()) //
-				.setProject("multi-release-jar") //
+				.setProject(Projects.MULTI_RELEASE_JAR) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode", "--file", variant,
 					"test") //

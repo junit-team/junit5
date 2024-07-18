@@ -1,7 +1,3 @@
-import com.diffplug.gradle.spotless.SpotlessApply
-import com.diffplug.gradle.spotless.SpotlessCheck
-import com.diffplug.spotless.LineEnding
-
 plugins {
 	id("com.diffplug.spotless")
 }
@@ -34,7 +30,9 @@ spotless {
 		java {
 			licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
 			importOrderFile(importOrderConfigFile)
-			eclipse().configFile(javaFormatterConfigFile)
+			val fullVersion = requiredVersionFromLibs("eclipse")
+			val majorMinorVersion = "([0-9]+\\.[0-9]+).*".toRegex().matchEntire(fullVersion)!!.let { it.groups[1]!!.value }
+			eclipse(majorMinorVersion).configFile(javaFormatterConfigFile)
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
@@ -48,17 +46,5 @@ spotless {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
-	}
-
-	// https://github.com/diffplug/spotless/issues/1644
-	lineEndings = LineEnding.UNIX // or any other except GIT_ATTRIBUTES
-}
-
-tasks {
-	withType<SpotlessApply>().configureEach {
-		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
-	}
-	withType<SpotlessCheck>().configureEach {
-		notCompatibleWithConfigurationCache("https://github.com/diffplug/spotless/issues/644")
 	}
 }

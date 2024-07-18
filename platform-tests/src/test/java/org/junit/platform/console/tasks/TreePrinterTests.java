@@ -19,7 +19,6 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -39,13 +38,8 @@ class TreePrinterTests {
 	private final PrintWriter out = new PrintWriter(new OutputStreamWriter(stream, charset));
 
 	private List<String> actual() {
-		try {
-			out.flush();
-			return List.of(stream.toString(charset.name()).split("\\R"));
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new AssertionError(charset.name() + " is an unsupported encoding?!", e);
-		}
+		out.flush();
+		return List.of(stream.toString(charset).split("\\R"));
 	}
 
 	@Test

@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Named.named;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.EXCLUDE;
 import static org.junit.jupiter.params.provider.EnumSource.Mode.MATCH_ALL;
@@ -29,8 +31,10 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalUnit;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -46,6 +50,7 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -61,12 +66,19 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@Execution(SAME_THREAD)
 class ParameterizedTestDemo {
+
+	@BeforeEach
+	void printDisplayName(TestInfo testInfo) {
+		System.out.println(testInfo.getDisplayName());
+	}
 
 	// tag::first_example[]
 	@ParameterizedTest
@@ -204,6 +216,78 @@ class ParameterizedTestDemo {
 		);
 	}
 	// end::multi_arg_MethodSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::default_field_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource
+	void arrayOfFruits(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final String[] arrayOfFruits = { "apple", "banana" };
+	// end::default_field_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::explicit_field_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource("listOfFruits")
+	void singleFieldSource(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final List<String> listOfFruits = Arrays.asList("apple", "banana");
+	// end::explicit_field_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::multiple_fields_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource({ "listOfFruits", "additionalFruits" })
+	void multipleFieldSources(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final Collection<String> additionalFruits = Arrays.asList("cherry", "dewberry");
+	// end::multiple_fields_FieldSource_example[]
+	// @formatter:on
+
+	// @formatter:off
+	// tag::named_arguments_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource
+	void namedArgumentsSupplier(String fruit) {
+		assertFruit(fruit);
+	}
+
+	static final Supplier<Stream<Arguments>> namedArgumentsSupplier = () -> Stream.of(
+		arguments(named("Apple", "apple")),
+		arguments(named("Banana", "banana"))
+	);
+	// end::named_arguments_FieldSource_example[]
+	// @formatter:on
+
+	private static void assertFruit(String fruit) {
+		assertTrue(Arrays.asList("apple", "banana", "cherry", "dewberry").contains(fruit));
+	}
+
+	// @formatter:off
+	// tag::multi_arg_FieldSource_example[]
+	@ParameterizedTest
+	@FieldSource("stringIntAndListArguments")
+	void testWithMultiArgFieldSource(String str, int num, List<String> list) {
+		assertEquals(5, str.length());
+		assertTrue(num >=1 && num <=2);
+		assertEquals(2, list.size());
+	}
+
+	static List<Arguments> stringIntAndListArguments = Arrays.asList(
+		arguments("apple", 1, Arrays.asList("a", "b")),
+		arguments("lemon", 2, Arrays.asList("x", "y"))
+	);
+	// end::multi_arg_FieldSource_example[]
 	// @formatter:on
 
 	// @formatter:off
@@ -467,4 +551,37 @@ class ParameterizedTestDemo {
 	}
 	// end::named_arguments[]
 	// @formatter:on
+
+	// @formatter:off
+	// tag::named_argument_set[]
+	@DisplayName("A parameterized test with named argument sets")
+	@ParameterizedTest
+	@FieldSource("argumentSets")
+	void testWithArgumentSets(File file1, File file2) {
+	}
+
+	static List<Arguments> argumentSets = Arrays.asList(
+		argumentSet("Important files", new File("path1"), new File("path2")),
+		argumentSet("Other files", new File("path3"), new File("path4"))
+	);
+	// end::named_argument_set[]
+	// @formatter:on
+
+	// tag::repeatable_annotations[]
+	@DisplayName("A parameterized test that makes use of repeatable annotations")
+	@ParameterizedTest
+	@MethodSource("someProvider")
+	@MethodSource("otherProvider")
+	void testWithRepeatedAnnotation(String argument) {
+		assertNotNull(argument);
+	}
+
+	static Stream<String> someProvider() {
+		return Stream.of("foo");
+	}
+
+	static Stream<String> otherProvider() {
+		return Stream.of("bar");
+	}
+	// end::repeatable_annotations[]
 }

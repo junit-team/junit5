@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
@@ -110,6 +111,11 @@ class AdditionalDiscoverySelectors {
 			return DiscoverySelectors.selectClasspathResource(classpathResourceName, FilePosition.from(line));
 		}
 		return DiscoverySelectors.selectClasspathResource(classpathResourceName, FilePosition.from(line, column));
+	}
+
+	static List<DiscoverySelector> parseIdentifiers(String[] identifiers) {
+		return DiscoverySelectors.parseAll(identifiers) //
+				.collect(Collectors.toList());
 	}
 
 	private static <T> Stream<T> uniqueStreamOf(T[] elements) {

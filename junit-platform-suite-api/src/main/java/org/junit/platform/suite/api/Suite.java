@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.annotation.Testable;
 
 /**
@@ -46,6 +45,7 @@ import org.junit.platform.commons.annotation.Testable;
  * configuration parameters are taken into account.
  *
  * @since 1.8
+ * @see Select
  * @see SelectClasses
  * @see SelectClasspathResource
  * @see SelectDirectories
@@ -81,7 +81,7 @@ public @interface Suite {
 	 *
 	 * @since 1.9
 	 */
-	@API(status = Status.EXPERIMENTAL, since = "1.9")
+	@API(status = STABLE, since = "1.11")
 	boolean failIfNoTests() default true;
 
 }

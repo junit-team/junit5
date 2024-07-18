@@ -4,6 +4,7 @@ import junitbuild.java.ModulePathArgumentProvider
 import junitbuild.java.PatchModuleArgumentProvider
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
+import org.gradle.plugins.ide.eclipse.model.ProjectDependency
 
 plugins {
 	`java-library`
@@ -26,7 +27,6 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
 val combinedModuleSourceDir = layout.buildDirectory.dir("module")
 val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
-val javaVersion = JavaVersion.current()
 
 eclipse {
 	jdt {
@@ -43,6 +43,10 @@ eclipse {
 		// Remove classpath entries for non-existent libraries added by various
 		// plugins, such as "junit-jupiter-api/build/classes/kotlin/testFixtures".
 		entries.removeIf { it is Library && !file(it.path).exists() }
+		// Remove classpath entries for the code generator model used by the
+		// Java Template Engine (JTE) which is used to generate the JRE enum and
+		// dependent tests.
+		entries.removeIf { it is ProjectDependency && it.path.equals("/code-generator-model") }
 	}
 }
 
@@ -130,8 +134,12 @@ if (project in mavenizedProjects) {
 tasks.withType<AbstractArchiveTask>().configureEach {
 	isPreserveFileTimestamps = false
 	isReproducibleFileOrder = true
-	dirMode = Integer.parseInt("0755", 8)
-	fileMode = Integer.parseInt("0644", 8)
+	dirPermissions {
+		unix("rwxr-xr-x")
+	}
+	filePermissions {
+		unix("rw-r--r--")
+	}
 }
 
 normalization {
@@ -155,7 +163,7 @@ val allMainClasses by tasks.registering {
 
 val prepareModuleSourceDir by tasks.registering(Sync::class) {
     from(moduleSourceDir)
-    from(sourceSets.matching { it.name.startsWith("main") }.map { it.allJava })
+    from(sourceSets.named { it.startsWith("main") }.map { it.allJava })
     into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -239,7 +247,9 @@ tasks.compileJava {
 	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror" // Terminates compilation when warnings occur.
+			"-Werror", // Terminates compilation when warnings occur.
+			// Required for compatibility with Java 8's reflection APIs (see https://github.com/junit-team/junit5/issues/3797).
+			"-parameters", // Generates metadata for reflection on method parameters.
 	))
 }
 

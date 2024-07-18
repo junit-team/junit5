@@ -70,14 +70,14 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(Class<?> suiteClass) {
 		Preconditions.condition(launcherDiscoveryResult == null,
-			"discovery request can not be modified after discovery");
-		discoveryRequestBuilder.suite(suiteClass);
+			"discovery request cannot be modified after discovery");
+		discoveryRequestBuilder.applySelectorsAndFiltersFromSuite(suiteClass);
 		return this;
 	}
 
 	SuiteTestDescriptor addDiscoveryRequestFrom(UniqueId uniqueId) {
 		Preconditions.condition(launcherDiscoveryResult == null,
-			"discovery request can not be modified after discovery");
+			"discovery request cannot be modified after discovery");
 		discoveryRequestBuilder.selectors(DiscoverySelectors.selectUniqueId(uniqueId));
 		return this;
 	}
@@ -92,6 +92,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 				.filterStandardClassNamePatterns(true)
 				.enableImplicitConfigurationParameters(false)
 				.parentConfigurationParameters(configurationParameters)
+				.applyConfigurationParametersFromSuite(suiteClass)
 				.build();
 		// @formatter:on
 		this.launcher = SuiteLauncher.create();
@@ -122,7 +123,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		parentEngineExecutionListener.executionStarted(this);
 		// #2838: The discovery result from a suite may have been filtered by
 		// post discovery filters from the launcher. The discovery result should
-		// be pruned accordingly
+		// be pruned accordingly.
 		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult.withRetainedEngines(
 			getChildren()::contains);
 		TestExecutionSummary summary = launcher.execute(discoveryResult, parentEngineExecutionListener);
@@ -139,8 +140,8 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	@Override
 	public boolean mayRegisterTests() {
 		// While a suite will not register new tests after discovery, we pretend
-		// it does. This allows the suite to fail if not tests were discovered.
-		// If not, the empty suite would be pruned.
+		// it does. This allows the suite to fail if no tests were discovered.
+		// Otherwise, the empty suite would be pruned.
 		return true;
 	}
 

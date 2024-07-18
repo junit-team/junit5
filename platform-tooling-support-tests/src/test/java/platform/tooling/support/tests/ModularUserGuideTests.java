@@ -27,6 +27,7 @@ import java.util.spi.ToolProvider;
 
 import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
 
 import platform.tooling.support.Helper;
@@ -35,6 +36,7 @@ import platform.tooling.support.ThirdPartyJars;
 /**
  * @since 1.5
  */
+@DisabledOnOpenJ9
 class ModularUserGuideTests {
 
 	private static final String DOCUMENTATION_MODULE_DESCRIPTOR = """

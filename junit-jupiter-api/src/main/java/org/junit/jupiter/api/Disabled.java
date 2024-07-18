@@ -34,11 +34,13 @@ import org.apiguardian.api.API;
  * Consequently, if you wish to apply the same semantics to a subclass, this
  * annotation must be redeclared on the subclass.
  *
- * <p>When applied at the method level, the presence of this annotation does not
- * prevent the test class from being instantiated. Rather, it prevents the
- * execution of the test method and method-level lifecycle callbacks such as
+ * <p>If a test method is disabled via this annotation, that prevents execution
+ * of the test method and method-level lifecycle callbacks such as
  * {@code @BeforeEach} methods, {@code @AfterEach} methods, and corresponding
- * extension APIs.
+ * extension APIs. However, that does not prevent the test class from being
+ * instantiated, and it does not prevent the execution of class-level lifecycle
+ * callbacks such as {@code @BeforeAll} methods, {@code @AfterAll} methods, and
+ * corresponding extension APIs.
  *
  * @since 5.0
  * @see #value

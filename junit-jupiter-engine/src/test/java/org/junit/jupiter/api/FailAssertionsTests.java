@@ -113,7 +113,7 @@ class FailAssertionsTests {
 	@Test
 	void failWithStringAndNullThrowable() {
 		try {
-			fail("message", (Throwable) null);
+			fail("message", null);
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
@@ -127,7 +127,7 @@ class FailAssertionsTests {
 	@Test
 	void failWithNullStringAndThrowable() {
 		try {
-			fail((String) null, new Throwable("cause"));
+			fail(null, new Throwable("cause"));
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {

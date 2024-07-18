@@ -97,7 +97,7 @@ class AssertLinesMatchAssertionsTests {
 	@Test
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void assertLinesMatchWithNullFails() {
-		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch((List) null, (List) null));
+		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, (List) null));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(null, Collections.emptyList()));
 		assertThrows(PreconditionViolationException.class, () -> assertLinesMatch(Collections.emptyList(), null));
 	}

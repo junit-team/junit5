@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import java.nio.file.Files;
 import java.util.List;
 
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 
 import platform.tooling.support.MavenRepo;
@@ -22,6 +23,7 @@ import platform.tooling.support.MavenRepo;
 /**
  * @since 1.4
  */
+@Order(Integer.MAX_VALUE)
 class MavenPomFileTests {
 
 	@Test

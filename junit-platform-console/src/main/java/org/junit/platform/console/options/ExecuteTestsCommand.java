@@ -77,7 +77,7 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 
 	TestConsoleOutputOptions toTestConsoleOutputOptions() {
 		TestConsoleOutputOptions testOutputOptions = this.testOutputOptions.toTestConsoleOutputOptions();
-		testOutputOptions.setAnsiColorOutputDisabled(outputOptions.isDisableAnsiColors());
+		testOutputOptions.setAnsiColorOutputDisabled(this.ansiColorOption.isDisableAnsiColors());
 		return testOutputOptions;
 	}
 

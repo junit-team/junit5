@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.9
  */
-@API(status = EXPERIMENTAL, since = "5.9")
+@API(status = STABLE, since = "5.11")
 public interface ExecutableInvoker {
 
 	/**

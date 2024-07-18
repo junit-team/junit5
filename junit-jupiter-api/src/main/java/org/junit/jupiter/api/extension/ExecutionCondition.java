@@ -24,10 +24,12 @@ import org.apiguardian.api.API;
  * supplied {@link ExtensionContext}.
  *
  * <p>If an {@code ExecutionCondition} {@linkplain ConditionEvaluationResult#disabled
- * disables} a test method, that does not prevent the test class from being
- * instantiated. Rather, it prevents the execution of the test method and
+ * disables} a test method, that prevents execution of the test method and
  * method-level lifecycle callbacks such as {@code @BeforeEach} methods,
- * {@code @AfterEach} methods, and corresponding extension APIs.
+ * {@code @AfterEach} methods, and corresponding extension APIs. However, that
+ * does not prevent the test class from being instantiated, and it does not prevent
+ * the execution of class-level lifecycle callbacks such as {@code @BeforeAll}
+ * methods, {@code @AfterAll} methods, and corresponding extension APIs.
  *
  * <h2>Constructor Requirements</h2>
  *

@@ -23,7 +23,6 @@ import java.lang.reflect.Method
  * Unit tests for using [ArgumentsAccessor] from Kotlin.
  */
 class ArgumentsAccessorKotlinTests {
-
     @Test
     fun `get() with reified type and index`() {
         assertEquals(1, defaultArgumentsAccessor(1, 1).get<Int>(0))
@@ -32,9 +31,10 @@ class ArgumentsAccessorKotlinTests {
 
     @Test
     fun `get() with reified type and index for incompatible type`() {
-        val exception = assertThrows<ArgumentAccessException> {
-            defaultArgumentsAccessor(1, Integer.valueOf(1)).get<Char>(0)
-        }
+        val exception =
+            assertThrows<ArgumentAccessException> {
+                defaultArgumentsAccessor(1, Integer.valueOf(1)).get<Char>(0)
+            }
 
         assertThat(exception).hasMessage(
             "Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [java.lang.Character]."
@@ -53,14 +53,15 @@ class ArgumentsAccessorKotlinTests {
         assertEquals('A', defaultArgumentsAccessor(1, 'A').get(0, Character::class.java))
     }
 
-    fun defaultArgumentsAccessor(invocationIndex: Int, vararg arguments: Any): DefaultArgumentsAccessor {
-        return DefaultArgumentsAccessor(parameterContext(), invocationIndex, *arguments)
-    }
+    fun defaultArgumentsAccessor(
+        invocationIndex: Int,
+        vararg arguments: Any
+    ): DefaultArgumentsAccessor = DefaultArgumentsAccessor(parameterContext(), invocationIndex, *arguments)
 
     fun parameterContext(): ParameterContext {
         val declaringExecutable: Method = ReflectionUtils.findMethod(DefaultArgumentsAccessorTests::class.java, "foo").get()
         val parameterContext: ParameterContext = mock()
-        `when`(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable)
+        `when`(parameterContext.declaringExecutable).thenReturn(declaringExecutable)
         return parameterContext
     }
 

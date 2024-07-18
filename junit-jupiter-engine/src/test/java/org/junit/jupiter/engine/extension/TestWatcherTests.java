@@ -290,7 +290,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		@TestFactory
 		@Disabled
 		Stream<DynamicTest> skippedTest() {
-			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> assertTrue(false)));
+			return Stream.of("A", "B").map(text -> dynamicTest(text, () -> fail()));
 		}
 
 	}

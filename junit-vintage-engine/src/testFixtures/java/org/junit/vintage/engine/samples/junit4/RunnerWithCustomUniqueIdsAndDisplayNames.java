@@ -66,8 +66,7 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof CustomUniqueId) {
-				var that = (CustomUniqueId) obj;
+			if (obj instanceof CustomUniqueId that) {
 				return Objects.equals(this.testName, that.testName);
 			}
 			return false;

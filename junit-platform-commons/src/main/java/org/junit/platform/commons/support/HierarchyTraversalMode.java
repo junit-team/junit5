@@ -33,6 +33,6 @@ public enum HierarchyTraversalMode {
 	/**
 	 * Traverse the hierarchy using bottom-up semantics.
 	 */
-	BOTTOM_UP;
+	BOTTOM_UP
 
 }

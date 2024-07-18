@@ -2,12 +2,18 @@
 
 This repository is the home of _JUnit 5_.
 
+## Sponsors
+
 [![Support JUnit](https://img.shields.io/badge/%F0%9F%92%9A-Support%20JUnit-brightgreen.svg)](https://junit.org/sponsoring)
+
+* **Gold Sponsors:** [JetBrains](https://jb.gg/junit-logo)
+* **Silver Sponsors:** [Micromata](https://www.micromata.de), [Quo Card](https://quo-digital.jp)
+* **Bronze Sponsors:** [Premium Minds](https://www.premium-minds.com), [Testmo](https://www.testmo.com), [codefortynine](https://codefortynine.com), [Info Support](https://www.infosupport.com), [Stiltsoft](https://stiltsoft.com), [Code Intelligence](https://www.code-intelligence.com)
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.10.1](https://github.com/junit-team/junit5/releases/tag/r5.10.1) (November 5, 2023)
-- Preview (Milestone/Release Candidate): N/A
+- General Availability (GA): [JUnit 5.10.3](https://github.com/junit-team/junit5/releases/tag/r5.10.3) (June 27, 2024)
+- Preview (Milestone/Release Candidate): [JUnit 5.11.0-M2](https://github.com/junit-team/junit5/releases/tag/r5.11.0-M2) (May 17, 2024)
 
 ## Documentation
 
@@ -51,12 +57,11 @@ in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 [![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
 
 JUnit 5 utilizes [Develocity](https://gradle.com/) for [Build Scans](https://scans.gradle.com/),
-[Build Cache](https://docs.gradle.org/current/userguide/build_cache.html),
-[Predictive Test Selection](https://docs.gradle.com/enterprise/predictive-test-selection/), and
-[Test Distribution](https://docs.gradle.com/enterprise/test-distribution/).
+[Build Cache](https://docs.gradle.org/current/userguide/build_cache.html), and
+[Predictive Test Selection](https://docs.gradle.com/enterprise/predictive-test-selection/).
 
 The latest Build Scans are available on [ge.junit.org](https://ge.junit.org/). Currently,
-only core team members can publish Build Scans and use Test Distribution on that server.
+only core team members can publish Build Scans on that server.
 You can, however, publish a Build Scan to [scans.gradle.com](https://scans.gradle.com/) by
 using the `--scan` parameter explicitly.
 

@@ -11,14 +11,15 @@
 package org.junit.platform.engine.support.store;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -370,6 +372,11 @@ public class NamespacedHierarchicalStoreTests {
 	@Nested
 	class CloseActionTests {
 
+		@BeforeEach
+		void prerequisites() {
+			assertNotClosed();
+		}
+
 		@Test
 		void callsCloseActionInReverseInsertionOrderWhenClosingStore() throws Throwable {
 			store.put(namespace, "key1", "value1");
@@ -378,10 +385,14 @@ public class NamespacedHierarchicalStoreTests {
 			verifyNoInteractions(closeAction);
 
 			store.close();
+			assertClosed();
+
 			var inOrder = inOrder(closeAction);
 			inOrder.verify(closeAction).close(namespace, "key3", "value3");
 			inOrder.verify(closeAction).close(namespace, "key2", "value2");
 			inOrder.verify(closeAction).close(namespace, "key1", "value1");
+
+			verifyNoMoreInteractions(closeAction);
 		}
 
 		@Test
@@ -390,6 +401,7 @@ public class NamespacedHierarchicalStoreTests {
 			store.remove(namespace, key);
 
 			store.close();
+			assertClosed();
 
 			verifyNoInteractions(closeAction);
 		}
@@ -400,6 +412,7 @@ public class NamespacedHierarchicalStoreTests {
 			store.put(namespace, key, "value2");
 
 			store.close();
+			assertClosed();
 
 			verify(closeAction).close(namespace, key, "value2");
 			verifyNoMoreInteractions(closeAction);
@@ -410,34 +423,137 @@ public class NamespacedHierarchicalStoreTests {
 			store.put(namespace, key, null);
 
 			store.close();
+			assertClosed();
 
 			verifyNoInteractions(closeAction);
 		}
 
 		@Test
-		void ignoresStoredValuesThatThrewExceptionsDuringCleanup() {
-			assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
+		void doesNotCallCloseActionForValuesThatThrowExceptionsDuringCleanup() throws Throwable {
+			store.put(namespace, "key1", "value1");
+			assertThrows(RuntimeException.class, () -> store.getOrComputeIfAbsent(namespace, "key2", __ -> {
 				throw new RuntimeException("boom");
 			}));
+			store.put(namespace, "key3", "value3");
 
-			assertDoesNotThrow(store::close);
+			store.close();
+			assertClosed();
 
-			verifyNoInteractions(closeAction);
+			var inOrder = inOrder(closeAction);
+			inOrder.verify(closeAction).close(namespace, "key3", "value3");
+			inOrder.verify(closeAction).close(namespace, "key1", "value1");
+
+			verifyNoMoreInteractions(closeAction);
 		}
 
 		@Test
-		void doesNotIgnoreStoredValuesThatThrewUnrecoverableFailuresDuringCleanup() {
-			assertThrows(OutOfMemoryError.class, () -> store.getOrComputeIfAbsent(namespace, key, __ -> {
-				throw new OutOfMemoryError();
+		void abortsCloseIfAnyStoredValueThrowsAnUnrecoverableExceptionDuringCleanup() throws Throwable {
+			store.put(namespace, "key1", "value1");
+			assertThrows(OutOfMemoryError.class, () -> store.getOrComputeIfAbsent(namespace, "key2", __ -> {
+				throw new OutOfMemoryError("boom");
 			}));
+			store.put(namespace, "key3", "value3");
 
 			assertThrows(OutOfMemoryError.class, store::close);
+			assertClosed();
 
 			verifyNoInteractions(closeAction);
+
+			store.close();
+			assertClosed();
 		}
+
+		@Test
+		void closesStoreEvenIfCloseActionThrowsException() throws Throwable {
+			store.put(namespace, key, value);
+			doThrow(IllegalStateException.class).when(closeAction).close(namespace, key, value);
+
+			assertThrows(IllegalStateException.class, store::close);
+			assertClosed();
+
+			verify(closeAction).close(namespace, key, value);
+			verifyNoMoreInteractions(closeAction);
+
+			store.close();
+			assertClosed();
+		}
+
+		@Test
+		void closesStoreEvenIfCloseActionThrowsUnrecoverableException() throws Throwable {
+			store.put(namespace, key, value);
+			doThrow(OutOfMemoryError.class).when(closeAction).close(namespace, key, value);
+
+			assertThrows(OutOfMemoryError.class, store::close);
+			assertClosed();
+
+			verify(closeAction).close(namespace, key, value);
+			verifyNoMoreInteractions(closeAction);
+
+			store.close();
+			assertClosed();
+		}
+
+		@Test
+		void closesStoreEvenIfNoCloseActionIsConfigured() {
+			@SuppressWarnings("resource")
+			var localStore = new NamespacedHierarchicalStore<>(null);
+			assertThat(localStore.isClosed()).isFalse();
+			localStore.close();
+			assertThat(localStore.isClosed()).isTrue();
+		}
+
+		@Test
+		void closeIsIdempotent() throws Throwable {
+			store.put(namespace, key, value);
+
+			verifyNoInteractions(closeAction);
+
+			store.close();
+			assertClosed();
+
+			verify(closeAction, times(1)).close(namespace, key, value);
+
+			store.close();
+			assertClosed();
+
+			verifyNoMoreInteractions(closeAction);
+		}
+
+		@Test
+		void rejectsModificationAfterClose() {
+			store.close();
+			assertClosed();
+
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.put(namespace, "key1", "value1"));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.remove(namespace, "key1"));
+			assertThrows(NamespacedHierarchicalStoreException.class,
+				() -> store.remove(namespace, "key1", Number.class));
+		}
+
+		@Test
+		void rejectsQueryAfterClose() {
+			store.close();
+			assertClosed();
+
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1"));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1", Integer.class));
+			assertThrows(NamespacedHierarchicalStoreException.class,
+				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "value"));
+			assertThrows(NamespacedHierarchicalStoreException.class,
+				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> 1337, Integer.class));
+		}
+
+		private void assertNotClosed() {
+			assertThat(store.isClosed()).as("closed").isFalse();
+		}
+
+		private void assertClosed() {
+			assertThat(store.isClosed()).as("closed").isTrue();
+		}
+
 	}
 
-	private Object createObject(final String display) {
+	private static Object createObject(String display) {
 		return new Object() {
 
 			@Override

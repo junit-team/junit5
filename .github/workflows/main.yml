@@ -10,8 +10,7 @@ on:
       - '*'
 
 env:
-  DEVELOCITY_TESTDISTRIBUTION_ENABLED: true
-  GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
 jobs:
   Linux:
@@ -37,14 +36,20 @@ jobs:
     - name: Build
       uses: ./.github/actions/main-build
       with:
-        dependency-graph: generate-and-submit
         arguments: |
-          -Ptesting.enableJaCoCo
-          build
+          -Ptesting.enableJaCoCo \
+          build \
           jacocoRootReport
-          prepareDocsForUploadToGhPages
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+    - name: Run Asciidoctor
+      uses: ./.github/actions/run-gradle
+      with:
+        arguments: |
+          prepareDocsForUploadToGhPages \
+          --no-configuration-cache
 
   Windows:
     runs-on: windows-latest
@@ -70,6 +75,9 @@ jobs:
     name: Publish Snapshot Artifacts
     needs: linux
     runs-on: ubuntu-latest
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - name: Check out repository
@@ -82,7 +90,14 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
-        arguments: publish -x check
+        arguments: |
+          publish -x check \
+          prepareGitHubAttestation \
+          --no-configuration-cache
+    - name: Generate build provenance attestations
+      uses: actions/attest-build-provenance@5e9cb68e95676991667494a6a4e59b8a2f13e1d0 # v1.3.3
+      with:
+        subject-path: documentation/build/attestation/*.jar
 
   update_documentation:
     name: Update Snapshot Documentation
@@ -104,6 +119,9 @@ jobs:
     - name: Upload Documentation
       uses: ./.github/actions/run-gradle
       with:
-        arguments: gitPublishPush -Dscan.tag.Documentation
+        arguments: |
+          gitPublishPush \
+          -Dscan.tag.Documentation \
+          --no-configuration-cache
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}

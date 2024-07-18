@@ -74,7 +74,7 @@ tasks {
 			!it.name.startsWith("junit-4")
 		}
 	}
-	withType<Test>().matching { it.name != testWithoutJUnit4.name }.configureEach {
+	withType<Test>().named { it != testWithoutJUnit4.name }.configureEach {
 		(options as JUnitPlatformOptions).apply {
 			excludeTags("missing-junit4")
 		}

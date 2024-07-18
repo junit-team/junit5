@@ -11,12 +11,13 @@ buildParameters {
 		defaultValue = false
 		fromEnvironment()
 	}
-	integer("javaToolchainVersion") {
-		description = "Defines the Java toolchain version to use for compiling code"
-	}
-	group("buildCache") {
-		string("server") {
-			description = "Remote build cache server address (protocol and hostname), e.g. https://eu-build-cache-ge.junit.org"
+	group("javaToolchain") {
+		description = "Parameters controlling the Java toolchain used for compiling code and running tests"
+		integer("version") {
+			description = "JDK version"
+		}
+		string("implementation") {
+			description = "JDK implementation (for example, 'j9')"
 		}
 	}
 	group("documentation") {
@@ -26,26 +27,34 @@ buildParameters {
 			defaultValue = false
 		}
 	}
-	group("develocity") {
-		description = "Parameters controlling Gradle Enterprise features"
-		group("predictiveTestSelection") {
-			bool("enabled") {
-				description = "Whether or not to use Predictive Test Selection for selecting tests to execute"
-				defaultValue = true
+	group("junit") {
+		group("develocity") {
+			description = "Parameters controlling Develocity features"
+			group("buildCache") {
+				string("server") {
+					description =
+						"Remote build cache server address (protocol and hostname), e.g. https://eu-build-cache-ge.junit.org"
+				}
 			}
-		}
-		group("testDistribution") {
-			bool("enabled") {
-				description = "Whether or not to use Test Distribution for executing tests"
-				defaultValue = false
-				fromEnvironment()
+			group("predictiveTestSelection") {
+				bool("enabled") {
+					description = "Whether or not to use Predictive Test Selection for selecting tests to execute"
+					defaultValue = true
+				}
 			}
-			integer("maxLocalExecutors") {
-				description = "How many local executors to use for executing tests"
-				defaultValue = 1
-			}
-			integer("maxRemoteExecutors") {
-				description = "How many remote executors to request for executing tests"
+			group("testDistribution") {
+				bool("enabled") {
+					description = "Whether or not to use Test Distribution for executing tests"
+					defaultValue = false
+					fromEnvironment()
+				}
+				integer("maxLocalExecutors") {
+					description = "How many local executors to use for executing tests"
+					defaultValue = 1
+				}
+				integer("maxRemoteExecutors") {
+					description = "How many remote executors to request for executing tests"
+				}
 			}
 		}
 	}

@@ -239,7 +239,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void getJavaMethodFromStringShouldFindMethodWithParameter() throws Exception {
-		var testMethod = getClass().getDeclaredMethod("method3", Integer.TYPE);
+		var testMethod = getClass().getDeclaredMethod("method3", int.class);
 		var source = MethodSource.from(getClass().getName(), testMethod.getName(), testMethod.getParameterTypes());
 
 		assertThat(source.getJavaMethod()).isEqualTo(testMethod);
@@ -254,7 +254,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 
 	@Test
 	void getJavaMethodFromStringShouldThrowExceptionIfParameterTypesDoNotMatch() {
-		var source = MethodSource.from(getClass().getName(), "method3", Double.TYPE);
+		var source = MethodSource.from(getClass().getName(), "method3", double.class);
 
 		assertThrows(PreconditionViolationException.class, source::getJavaMethod);
 	}

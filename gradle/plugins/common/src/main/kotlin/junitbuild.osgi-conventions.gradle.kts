@@ -12,8 +12,8 @@ val projectDescription = objects.property<String>().convention(provider { projec
 // This task enhances `jar` and `shadowJar` tasks with the bnd
 // `BundleTaskExtension` extension which allows for generating OSGi
 // metadata into the jar
-tasks.withType<Jar>().matching { task: Jar ->
-	task.name == "jar" || task.name == "shadowJar"
+tasks.withType<Jar>().named {
+	it == "jar" || it == "shadowJar"
 }.all { // configure tasks eagerly as workaround for https://github.com/bndtools/bnd/issues/5695
 	extra["importAPIGuardian"] = importAPIGuardian
 
@@ -89,8 +89,10 @@ val osgiProperties by tasks.registering(WriteProperties::class) {
 	property("-runblacklist", "org.apiguardian.api")
 }
 
-val osgiVerification by configurations.creatingResolvable {
+val osgiVerification = configurations.dependencyScope("osgiVerification")
+val osgiVerificationClasspath = configurations.resolvable("osgiVerificationClasspath") {
 	extendsFrom(configurations.runtimeClasspath.get())
+	extendsFrom(osgiVerification.get())
 }
 
 // Bnd's Resolve task is what verifies that a jar can be used in OSGi and
@@ -107,7 +109,7 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 	// This adds jars defined in `osgiVerification` also so that bnd
 	// can use them to validate the metadata without causing those to
 	// end up in the dependencies of those projects.
-	bundles(osgiVerification)
+	bundles(osgiVerificationClasspath)
 	properties.empty()
 	outputs.doNotCacheIf("https://github.com/bndtools/bnd/issues/5666") { true }
 }

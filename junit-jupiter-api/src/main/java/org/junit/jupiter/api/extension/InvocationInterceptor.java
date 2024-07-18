@@ -11,7 +11,6 @@
 package org.junit.jupiter.api.extension;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Constructor;
@@ -178,7 +177,7 @@ public interface InvocationInterceptor extends Extension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	@API(status = EXPERIMENTAL, since = "5.8")
+	@API(status = STABLE, since = "5.11")
 	default void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
 			ExtensionContext extensionContext) throws Throwable {
 		// by default call the old interceptDynamicTest(Invocation, ExtensionContext) method so that existing extensions still work

@@ -21,14 +21,18 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -48,6 +52,7 @@ import org.junit.platform.engine.UniqueId;
  * @see NestedClassSelector
  * @see NestedMethodSelector
  * @see UniqueIdSelector
+ * @see DiscoverySelectorIdentifier
  */
 @API(status = STABLE, since = "1.0")
 public final class DiscoverySelectors {
@@ -389,7 +394,7 @@ public final class DiscoverySelectors {
 	 * @see ClassSelector
 	 */
 	public static ClassSelector selectClass(String className) {
-		return selectClass((ClassLoader) null, className);
+		return selectClass(null, className);
 	}
 
 	/**
@@ -524,7 +529,7 @@ public final class DiscoverySelectors {
 	 * @see MethodSelector
 	 */
 	public static MethodSelector selectMethod(String className, String methodName, String parameterTypeNames) {
-		return selectMethod((ClassLoader) null, className, methodName, parameterTypeNames);
+		return selectMethod(null, className, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -608,7 +613,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new MethodSelector((ClassLoader) null, className, methodName, parameterTypes);
+		return new MethodSelector(null, className, methodName, parameterTypes);
 	}
 
 	/**
@@ -673,7 +678,7 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = STABLE, since = "1.6")
 	public static NestedClassSelector selectNestedClass(List<String> enclosingClassNames, String nestedClassName) {
-		return selectNestedClass((ClassLoader) null, enclosingClassNames, nestedClassName);
+		return selectNestedClass(null, enclosingClassNames, nestedClassName);
 	}
 
 	/**
@@ -707,7 +712,7 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName) {
-		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName);
+		return selectNestedMethod(null, enclosingClassNames, nestedClassName, methodName);
 	}
 
 	/**
@@ -752,8 +757,7 @@ public final class DiscoverySelectors {
 	@API(status = STABLE, since = "1.6")
 	public static NestedMethodSelector selectNestedMethod(List<String> enclosingClassNames, String nestedClassName,
 			String methodName, String parameterTypeNames) {
-		return selectNestedMethod((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
-			parameterTypeNames);
+		return selectNestedMethod(null, enclosingClassNames, nestedClassName, methodName, parameterTypeNames);
 	}
 
 	/**
@@ -807,8 +811,7 @@ public final class DiscoverySelectors {
 		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 		Preconditions.notNull(parameterTypes, "Parameter types array must not be null");
 		Preconditions.containsNoNullElements(parameterTypes, "Parameter types array must not contain null elements");
-		return new NestedMethodSelector((ClassLoader) null, enclosingClassNames, nestedClassName, methodName,
-			parameterTypes);
+		return new NestedMethodSelector(null, enclosingClassNames, nestedClassName, methodName, parameterTypes);
 	}
 
 	/**
@@ -939,4 +942,58 @@ public final class DiscoverySelectors {
 		return new IterationSelector(parentSelector, iterationIndices);
 	}
 
+	/**
+	 * Parse the supplied string representation of a
+	 * {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the string representation of a {@code DiscoverySelectorIdentifier};
+	 * never {@code null} or blank
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Optional<? extends DiscoverySelector> parse(String identifier) {
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
+	}
+
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier}.
+	 *
+	 * @param identifier the {@code DiscoverySelectorIdentifier} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
+		return DiscoverySelectorIdentifierParsers.parse(identifier);
+	}
+
+	/**
+	 * Parse the supplied string representations of
+	 * {@link DiscoverySelectorIdentifier DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the string representations of
+	 * {@code DiscoverySelectorIdentifiers} to parse; never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Stream<? extends DiscoverySelector> parseAll(String... identifiers) {
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
+	}
+
+	/**
+	 * Parse the supplied {@link DiscoverySelectorIdentifier
+	 * DiscoverySelectorIdentifiers}.
+	 *
+	 * @param identifiers the {@code DiscoverySelectorIdentifiers} to parse;
+	 * never {@code null}
+	 * @since 1.11
+	 * @see DiscoverySelectorIdentifierParser
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
+		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
+	}
 }

@@ -35,7 +35,9 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
@@ -45,6 +47,7 @@ import platform.tooling.support.ThirdPartyJars;
 /**
  * @since 1.6
  */
+@Order(Integer.MAX_VALUE)
 class ToolProviderTests {
 
 	private static final Path LIB = Request.WORKSPACE.resolve("tool-provider-tests/lib");
@@ -87,6 +90,7 @@ class ToolProviderTests {
 	}
 
 	@Test
+	@DisabledOnOpenJ9
 	void findAndRunJUnitOnTheModulePath() {
 		var finder = ModuleFinder.of(LIB);
 		var modules = finder.findAll().stream() //

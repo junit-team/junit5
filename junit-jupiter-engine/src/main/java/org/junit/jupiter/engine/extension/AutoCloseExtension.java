@@ -80,12 +80,20 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 		}
 	}
 
-	private static void invokeCloseMethod(Field field, Object target, String methodName) {
+	private static void invokeCloseMethod(Field field, Object target, String methodName) throws Exception {
+		// Avoid reflection if we can directly invoke close() via AutoCloseable.
+		if (target instanceof AutoCloseable && "close".equals(methodName)) {
+			((AutoCloseable) target).close();
+			return;
+		}
+
 		Class<?> targetType = target.getClass();
 		Method closeMethod = ReflectionUtils.findMethod(targetType, methodName).orElseThrow(
 			() -> new ExtensionConfigurationException(
 				String.format("Cannot @AutoClose field %s because %s does not define method %s().",
 					getQualifiedName(field), targetType.getName(), methodName)));
+
+		closeMethod = ReflectionUtils.getInterfaceMethodIfPossible(closeMethod, targetType);
 		ReflectionUtils.invokeMethod(closeMethod, target);
 	}
 
