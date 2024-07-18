@@ -73,8 +73,8 @@ public final class ReportEntry {
 	}
 
 	private void add(String key, String value) {
-		Preconditions.notBlank(key, "Key must not be null or blank");
-		Preconditions.notBlank(value, "Value must not be null or blank");
+		Preconditions.notBlank(key, "key must not be null or blank");
+		Preconditions.notBlank(value, "value must not be null or blank");
 		this.keyValuePairs.put(key, value);
 	}
 
