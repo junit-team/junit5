@@ -59,9 +59,6 @@ page in the Wiki.
   -- for use in third-party extensions and test engines.
 * Error messages for type mismatches in `NamespacedHierarchicalStore` now include the
   actual type and value in addition to the required type.
-* New `NamedExecutable` interface that associates a name, a payload and an Executable.
-* New DynamicTests generators in DynamicTest class that takes one Stream/Iterator of NamedExecutables,
-  this helps simplify the generation of DynamicTests Stream.
 * Updated `open-test-reporting` dependency to `0.1.0-M2`.
 
 
