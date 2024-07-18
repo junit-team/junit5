@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.api;
 
-import org.apiguardian.api.API;
-import org.junit.jupiter.api.function.Executable;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import org.apiguardian.api.API;
+import org.junit.jupiter.api.function.Executable;
 
 /**
  * {@code NamedExecutable} joins {@code Executable} and {@code Named} in a

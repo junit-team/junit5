@@ -233,18 +233,17 @@ class DynamicTestTests {
 		method.invoke(null, 1, 50);
 	}
 
-	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer)
-			implements NamedExecutable {
+	record DummyNamedExecutableForTests(String name, ThrowingConsumer<String> consumer) implements NamedExecutable {
 
-	@Override
-	public String getName() {
-		return name.toUpperCase(Locale.ROOT);
-	}
+		@Override
+		public String getName() {
+			return name.toUpperCase(Locale.ROOT);
+		}
 
-	@Override
-	public void execute() throws Throwable {
-		consumer.accept(name);
+		@Override
+		public void execute() throws Throwable {
+			consumer.accept(name);
+		}
 	}
-}
 
 }
