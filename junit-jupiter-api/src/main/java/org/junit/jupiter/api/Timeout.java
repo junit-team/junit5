@@ -354,7 +354,7 @@ public @interface Timeout {
 	 * @since 5.9
 	 * @see ThreadMode
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = STABLE, since = "5.11")
 	ThreadMode threadMode() default ThreadMode.INFERRED;
 
 	/**
@@ -363,7 +363,7 @@ public @interface Timeout {
 	 *
 	 * @since 5.9
 	 */
-	@API(status = EXPERIMENTAL, since = "5.9")
+	@API(status = STABLE, since = "5.11")
 	enum ThreadMode {
 		/**
 		 * The thread mode is determined using the parameter configured in property

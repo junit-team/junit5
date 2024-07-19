@@ -1,4 +1,4 @@
-import org.gradle.configurationcache.extensions.capitalized
+import junitbuild.extensions.capitalized
 
 plugins {
 	id("junitbuild.java-library-conventions")

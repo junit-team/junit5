@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -39,7 +38,7 @@ import org.junit.platform.engine.UniqueId;
  * @see LauncherDiscoveryRequest#getDiscoveryListener()
  * @see org.junit.platform.launcher.core.LauncherConfig.Builder#addLauncherDiscoveryListeners
  */
-@API(status = EXPERIMENTAL, since = "1.6")
+@API(status = STABLE, since = "1.11")
 public interface LauncherDiscoveryListener extends EngineDiscoveryListener {
 
 	/**

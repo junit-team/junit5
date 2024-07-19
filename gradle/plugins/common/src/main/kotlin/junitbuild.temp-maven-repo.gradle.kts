@@ -1,4 +1,4 @@
-import org.gradle.configurationcache.extensions.capitalized
+import junitbuild.extensions.capitalized
 
 val tempRepoName by extra("temp")
 val tempRepoDir by extra {

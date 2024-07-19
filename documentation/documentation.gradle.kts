@@ -266,11 +266,14 @@ tasks {
 		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
 		inputs.dir(sourceDir).withPropertyName("sourceDir").withPathSensitivity(RELATIVE)
 
+		val platformVersion: String by project
+		val vintageVersion: String by project
+
 		attributeProviders += AsciidoctorAttributeProvider {
 			mapOf(
 				"jupiter-version" to version,
-				"platform-version" to project.property("platformVersion"),
-				"vintage-version" to project.property("vintageVersion"),
+				"platform-version" to platformVersion,
+				"vintage-version" to vintageVersion,
 				"bom-version" to version,
 				"junit4-version" to libs.versions.junit4.get(),
 				"apiguardian-version" to libs.versions.apiguardian.get(),
