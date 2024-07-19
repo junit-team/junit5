@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageContains;
 import static org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals;
 import static org.junit.jupiter.api.AssertionTestUtils.expectAssertionFailedError;
@@ -36,7 +35,7 @@ class FailAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertEmptyMessage(ex);
+			assertMessageEquals(ex, "Assertion.fail() called");
 		}
 	}
 
@@ -69,7 +68,7 @@ class FailAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertEmptyMessage(ex);
+			assertMessageEquals(ex, "Assertion.fail() called");
 		}
 	}
 
@@ -80,7 +79,7 @@ class FailAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertEmptyMessage(ex);
+			assertMessageEquals(ex, "Assertion.fail() called");
 		}
 	}
 
@@ -104,7 +103,7 @@ class FailAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertEmptyMessage(ex);
+			assertMessageEquals(ex, "Assertion.fail() called");
 			Throwable cause = ex.getCause();
 			assertMessageContains(cause, "cause");
 		}
@@ -131,7 +130,7 @@ class FailAssertionsTests {
 			expectAssertionFailedError();
 		}
 		catch (AssertionFailedError ex) {
-			assertEmptyMessage(ex);
+			assertMessageEquals(ex, "Assertion.fail() called");
 			Throwable cause = ex.getCause();
 			assertMessageContains(cause, "cause");
 		}

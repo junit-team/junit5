@@ -10,7 +10,6 @@
 package org.junit.jupiter.api
 
 import org.junit.jupiter.api.AssertEquals.assertEquals
-import org.junit.jupiter.api.AssertionTestUtils.assertEmptyMessage
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageContains
 import org.junit.jupiter.api.AssertionTestUtils.assertMessageEquals
 import org.opentest4j.AssertionFailedError
@@ -43,7 +42,7 @@ class KotlinFailAssertionsTests {
             assertThrows<AssertionFailedError> {
                 fail(null as String?)
             }
-        assertEmptyMessage(ex)
+        assertMessageEquals(ex, "Assertion.fail() called")
     }
 
     @Test
@@ -52,7 +51,7 @@ class KotlinFailAssertionsTests {
             assertThrows<AssertionFailedError> {
                 fail(null as (() -> String)?)
             }
-        assertEmptyMessage(ex)
+        assertMessageEquals(ex, "Assertion.fail() called")
     }
 
     @Test
@@ -75,7 +74,7 @@ class KotlinFailAssertionsTests {
             assertThrows<AssertionFailedError> {
                 fail(Throwable(throwableCause))
             }
-        assertEmptyMessage(ex)
+        assertMessageEquals(ex, "Assertion.fail() called")
         val cause = ex.cause
         assertMessageContains(cause, throwableCause)
     }
@@ -100,7 +99,7 @@ class KotlinFailAssertionsTests {
             assertThrows<AssertionFailedError> {
                 fail(null, Throwable(throwableCause))
             }
-        assertEmptyMessage(ex)
+        assertMessageEquals(ex, "Assertion.fail() called")
         val cause = ex.cause
         assertMessageContains(cause, throwableCause)
     }
