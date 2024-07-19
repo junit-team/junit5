@@ -46,6 +46,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.ConfigurationParametersResource;
 import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -214,6 +215,11 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String resourceFile) {
+		this.delegate.configurationParametersResources(resourceFile);
+		return this;
+	}
+
 	/**
 	 * Set the parent configuration parameters to use for the request.
 	 *
@@ -295,6 +301,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		// @formatter:off
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
+		findRepeatableAnnotations(suiteClass, ConfigurationParametersResource.class)
+				.forEach(configResource -> configurationParametersResource(configResource.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
 				.ifPresent(__ -> this.enableParentConfigurationParameters = false);
 		// @formatter:on

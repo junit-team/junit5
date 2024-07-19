@@ -313,6 +313,48 @@ class LauncherDiscoveryRequestBuilderTests {
 			assertThat(configParams.get("key1")).contains("value1");
 			assertThat(configParams.get("key2")).contains("value2");
 		}
+
+		@Test
+		void configurationParametersResource_areStoredInDiscoveryRequest() {
+			// @formatter:off
+			var discoveryRequest = request()
+					.configurationParametersResources("config-test.properties")
+					.build();
+			// @formatter:on
+
+			var configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("com.example.prop.first")).contains("first value");
+			assertThat(configParams.get("com.example.prop.second")).contains("second value");
+			assertThat(configParams.get("com.example.prop.third")).contains("third value");
+		}
+
+		@Test
+		void configurationParametersResource_explicitConfigParametersOverrideResource() {
+			// @formatter:off
+			var discoveryRequest = request()
+					.configurationParametersResources("config-test.properties")
+					.configurationParameter("com.example.prop.first", "first value override")
+					.build();
+			// @formatter:on
+
+			var configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("com.example.prop.first")).contains("first value override");
+			assertThat(configParams.get("com.example.prop.second")).contains("second value");
+		}
+
+		@Test
+		void configurationParametersResource_lastDeclaredResourceFileWins() {
+			// @formatter:off
+			var discoveryRequest = request()
+					.configurationParametersResources("config-test.properties")
+					.configurationParametersResources("config-test-override.properties")
+					.build();
+			// @formatter:on
+
+			var configParams = discoveryRequest.getConfigurationParameters();
+			assertThat(configParams.get("com.example.prop.first")).contains("first value from override file");
+			assertThat(configParams.get("com.example.prop.second")).contains("second value");
+		}
 	}
 
 	@Nested

@@ -26,6 +26,9 @@ repository on GitHub.
 [[release-notes-5.11.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* Introduce `@ConfigurationParametersResource` for `@Suite` classes and
+  `--config-resource` option for ConsoleLauncher that allow specifying additional
+  properties files on the classpath as sources of configuration parameters.
 * New `rootCause()` condition in `TestExecutionResultConditions` that matches if an
   exception's _root_ cause matches all supplied conditions, for use with the
   `EngineTestKit`.

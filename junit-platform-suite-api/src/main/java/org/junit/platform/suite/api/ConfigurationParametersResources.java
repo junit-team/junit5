@@ -10,7 +10,7 @@
 
 package org.junit.platform.suite.api;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,26 +22,27 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * Disable parent configuration parameters.
+ * {@code @ConfigurationParametersResources} is a container for one or more
+ * {@link ConfigurationParametersResource @ConfigurationParametersResource} declarations.
  *
- * <p>By default, a suite discovers tests using the configuration parameters
- * explicitly configured via {@link ConfigurationParameter @ConfigurationParameter}
- * and {@link ConfigurationParametersResource} as well as the configuration
- * parameters from the discovery request that was used to discover the suite.
+ * <p>Note, however, that use of the {@code @ConfigurationParametersResources} container
+ * is completely optional since {@code @ConfigurationParametersResource} is a
+ * {@linkplain java.lang.annotation.Repeatable repeatable} annotation.
  *
- * <p>Annotating a suite with this annotation disables the latter source so
- * that only explicit configuration parameters and resources are taken into
- * account.
- *
- * @since 1.8
- * @see ConfigurationParameter
+ * @since 1.11
  * @see ConfigurationParametersResource
- * @see Suite
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Inherited
 @Documented
-@API(status = STABLE, since = "1.10")
-public @interface DisableParentConfigurationParameters {
+@API(status = EXPERIMENTAL, since = "1.11")
+public @interface ConfigurationParametersResources {
+
+	/**
+	 * An array of one or more {@link ConfigurationParametersResource @ConfigurationParameterResource}
+	 * declarations.
+	 */
+	ConfigurationParametersResource[] value();
+
 }

@@ -58,6 +58,7 @@ import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.ConfigurationParametersResource;
 import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -91,6 +92,48 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 		ConfigurationParameters configuration = request.getConfigurationParameters();
 		Optional<String> parameter = configuration.get("com.example");
 		assertEquals(Optional.of("*"), parameter);
+	}
+
+	@Test
+	void configurationParametersResource() {
+		@ConfigurationParametersResource("config-test.properties")
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
+		ConfigurationParameters configuration = request.getConfigurationParameters();
+		Optional<String> parameter = configuration.get("com.example.prop.first");
+		assertEquals(Optional.of("first value"), parameter);
+	}
+
+	@Test
+	void configurationParametersResources() {
+		@ConfigurationParametersResource("config-test.properties")
+		@ConfigurationParametersResource("config-test-override.properties")
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
+		ConfigurationParameters configuration = request.getConfigurationParameters();
+		Optional<String> parameterOne = configuration.get("com.example.prop.first");
+		assertEquals(Optional.of("first value from override file"), parameterOne);
+		Optional<String> parameterTwo = configuration.get("com.example.prop.second");
+		assertEquals(Optional.of("second value"), parameterTwo);
+	}
+
+	@Test
+	void configurationParametersResource_explicitParametersTakePrecedence() {
+		@ConfigurationParametersResource("config-test.properties")
+		@ConfigurationParameter(key = "com.example.prop.first", value = "first value from explicit parameter")
+		class Suite {
+		}
+
+		LauncherDiscoveryRequest request = builder.applyConfigurationParametersFromSuite(Suite.class).build();
+		ConfigurationParameters configuration = request.getConfigurationParameters();
+		Optional<String> parameterOne = configuration.get("com.example.prop.first");
+		assertEquals(Optional.of("first value from explicit parameter"), parameterOne);
+		Optional<String> parameterTwo = configuration.get("com.example.prop.second");
+		assertEquals(Optional.of("second value"), parameterTwo);
 	}
 
 	@Test

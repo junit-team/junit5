@@ -63,6 +63,7 @@ import org.junit.platform.commons.annotation.Testable;
  * @see ExcludeTags
  * @see SuiteDisplayName
  * @see ConfigurationParameter
+ * @see ConfigurationParametersResource
  * @see DisableParentConfigurationParameters
  * @see org.junit.platform.launcher.LauncherDiscoveryRequest
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder

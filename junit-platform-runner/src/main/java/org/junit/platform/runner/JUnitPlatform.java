@@ -30,6 +30,7 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.ConfigurationParametersResource;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
 import org.junit.platform.suite.api.ExcludePackages;
@@ -107,6 +108,7 @@ import org.junit.runner.notification.RunNotifier;
  * @see SuiteDisplayName
  * @see org.junit.platform.suite.api.UseTechnicalNames UseTechnicalNames
  * @see ConfigurationParameter
+ * @see ConfigurationParametersResource
  * @deprecated since 1.8, in favor of the {@link Suite @Suite} support provided by
  * the {@code junit-platform-suite-engine} module; to be removed in JUnit Platform 2.0
  */
