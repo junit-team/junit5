@@ -23,15 +23,16 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 
 /**
- * {@code @ConfigurationParametersResource} is an annotation that specifies
- * a configuration file in property format to be added to the discovery request when running
- * a test suite on the JUnit Platform.
+ * {@code @ConfigurationParametersResource} is a
+ * {@linkplain Repeatable repeatable} annotation that specifies a configuration
+ * file in Java's properties format on the classpath to be added to the
+ * discovery request when running a test suite on the JUnit Platform.
  *
  * @since 1.11
+ * @see ConfigurationParameter
  * @see DisableParentConfigurationParameters
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform
- * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParameter(String, String)
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParametersResources(String...)
  */
 @Retention(RetentionPolicy.RUNTIME)
