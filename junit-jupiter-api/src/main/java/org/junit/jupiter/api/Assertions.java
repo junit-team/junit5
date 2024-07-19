@@ -135,7 +135,7 @@ public class Assertions {
 	 * }</pre>
 	 */
 	public static <V> V fail(String message) {
-		if (message.isEmpty()|| message.equals(null)) {
+		if (message.isEmpty()) {
 			AssertionUtils.fail("Assertion.fail() called");
 		}
 		AssertionUtils.fail(message);
@@ -150,7 +150,7 @@ public class Assertions {
 	 * generic return type {@code V}.
 	 */
 	public static <V> V fail(String message, Throwable cause) {
-		if (message.isEmpty() || message.equals(null)) {
+		if (message.isEmpty()) {
 			AssertionUtils.fail("Assertion.fail() called", cause);
 		}
 		AssertionUtils.fail(message, cause);
