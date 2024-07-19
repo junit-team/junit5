@@ -87,19 +87,23 @@ final class ExtensionUtils {
 	 * @param instance the instance of the supplied class; may be {@code null}
 	 * when searching for {@code static} fields in the class
 	 */
-	static void registerExtensionsFromFields(ExtensionRegistrar registrar, Class<?> clazz, Object instance) {
+	static void registerExtensionsFromFields(ExtensionRegistrar registrar, Class<?> clazz, Object instance,
+			boolean registerOnlyViaExtendWith) {
 		Preconditions.notNull(registrar, "ExtensionRegistrar must not be null");
 		Preconditions.notNull(clazz, "Class must not be null");
 
-		Predicate<Field> predicate = (instance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
+		Predicate<Field> predicate = (instance == null && !registerOnlyViaExtendWith ? ReflectionUtils::isStatic
+				: ReflectionUtils::isNotStatic);
 
 		streamFields(clazz, predicate, TOP_DOWN)//
 				.sorted(orderComparator)//
 				.forEach(field -> {
 					List<Class<? extends Extension>> extensionTypes = streamExtensionTypes(field).collect(toList());
-					boolean isExtendWithPresent = !extensionTypes.isEmpty();
-					boolean isRegisterExtensionPresent = isAnnotated(field, RegisterExtension.class);
+					boolean isExtendWithPresent = registerOnlyViaExtendWith && !extensionTypes.isEmpty();
+					boolean isRegisterExtensionPresent = !registerOnlyViaExtendWith
+							&& isAnnotated(field, RegisterExtension.class);
 					if (isExtendWithPresent) {
+						extensionTypes.forEach(System.out::println);
 						extensionTypes.forEach(registrar::registerExtension);
 					}
 					if (isRegisterExtensionPresent) {

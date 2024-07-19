@@ -152,7 +152,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		// Register extensions from static fields here, at the class level but
 		// after extensions registered via @ExtendWith.
-		registerExtensionsFromFields(registry, this.testClass, null);
+		registerExtensionsFromFields(registry, this.testClass, null, false);
+		registerExtensionsFromFields(registry, this.testClass, null, true);
 
 		// Resolve the TestInstanceFactory at the class level in order to fail
 		// the entire class in case of configuration errors (e.g., more than
@@ -291,7 +292,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			// In addition, we register extensions from instance fields here since the
 			// best time to do that is immediately following test class instantiation
 			// and post processing.
-			registerExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance());
+			registerExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance(), false);
 		});
 		return instances;
 	}
