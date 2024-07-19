@@ -264,9 +264,6 @@ class TestDiscoveryOptionsMixin {
 				"--config-resource" }, paramLabel = "PATH", arity = "1", description = "Set configuration parameters for test discovery and execution via a classpath resource. This option can be repeated.")
 		private List<String> configurationParametersResources = new ArrayList<>();
 
-		@Option(names = { "-config-resource" }, arity = "1", hidden = true)
-		private List<String> configurationParametersResources2 = new ArrayList<>();
-
 		@CommandLine.Spec
 		private CommandLine.Model.CommandSpec spec;
 
@@ -303,8 +300,7 @@ class TestDiscoveryOptionsMixin {
 
 		private void applyTo(TestDiscoveryOptions result) {
 			result.setAdditionalClasspathEntries(merge(additionalClasspathEntries, additionalClasspathEntries2));
-			result.setConfigurationParametersResources(
-				merge(configurationParametersResources, configurationParametersResources2));
+			result.setConfigurationParametersResources(configurationParametersResources);
 			result.setConfigurationParameters(configurationParameters);
 		}
 	}

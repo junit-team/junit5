@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
  * is completely optional since {@code @ConfigurationParametersResource} is a
  * {@linkplain java.lang.annotation.Repeatable repeatable} annotation.
  *
- * @since 1.8
+ * @since 1.11
  * @see ConfigurationParametersResource
  */
 @Retention(RetentionPolicy.RUNTIME)
