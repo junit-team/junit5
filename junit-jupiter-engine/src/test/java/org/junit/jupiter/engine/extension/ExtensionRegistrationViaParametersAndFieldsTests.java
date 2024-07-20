@@ -75,6 +75,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  *
  * @since 5.8
  */
+@SuppressWarnings("JUnitMalformedDeclaration")
 class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
@@ -165,6 +166,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
 					"StaticField1", // @ExtendWith on static field
+					"InstanceField1", // @ExtendWith on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
 					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
@@ -172,9 +175,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
 					"TestParameter", // @ExtendWith on parameter in @Test method
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceLevelExtension2", // @RegisterExtension on instance field
-					"InstanceField2" // @ExtendWith on instance field
+					"InstanceLevelExtension2" // @RegisterExtension on instance field
 				);
 
 		listener.clear();
@@ -185,15 +186,15 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
 					"StaticField1", // @ExtendWith on static field
+					"InstanceField1", // @ExtendWith on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
 					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
-					"InstanceField1", // @ExtendWith on instance field
 					"InstanceLevelExtension2", // @RegisterExtension on instance field
-					"InstanceField2", // @ExtendWith on instance field
 					"TestParameter" // @ExtendWith on parameter in @Test method
 				);
 	}
@@ -580,6 +581,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	 */
 	static class StaticFieldTestCase {
 
+		@SuppressWarnings("unused")
 		@MagicField
 		private static String staticField1;
 

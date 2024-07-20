@@ -99,14 +99,12 @@ final class ExtensionUtils {
 				.sorted(orderComparator)//
 				.forEach(field -> {
 					List<Class<? extends Extension>> extensionTypes = streamExtensionTypes(field).collect(toList());
-					boolean isExtendWithPresent = registerOnlyViaExtendWith && !extensionTypes.isEmpty();
-					boolean isRegisterExtensionPresent = !registerOnlyViaExtendWith
-							&& isAnnotated(field, RegisterExtension.class);
+					boolean isExtendWithPresent = !extensionTypes.isEmpty();
+					boolean isRegisterExtensionPresent = isAnnotated(field, RegisterExtension.class);
 					if (isExtendWithPresent) {
-						extensionTypes.forEach(System.out::println);
 						extensionTypes.forEach(registrar::registerExtension);
 					}
-					if (isRegisterExtensionPresent) {
+					if (isRegisterExtensionPresent && !registerOnlyViaExtendWith) {
 						tryToReadFieldValue(field, instance).ifSuccess(value -> {
 							Preconditions.condition(value instanceof Extension, () -> String.format(
 								"Failed to register extension via @RegisterExtension field [%s]: field value's type [%s] must implement an [%s] API.",
