@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.util.stream.Stream.concat;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -110,7 +112,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
-	private final List<Extension> registeredExtensions = new ArrayList<>();
+	private final List<ExtensionProxy> registeredExtensions = new ArrayList<>();
 
 	private MutableExtensionRegistry(MutableExtensionRegistry parent) {
 		this.parent = parent;
@@ -134,10 +136,15 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 */
 	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
 		// @formatter:off
-		return this.registeredExtensions.stream()
+		return locallyRegisteredExtensions()
 				.filter(extensionType::isInstance)
 				.map(extensionType::cast);
 		// @formatter:on
+	}
+
+	private Stream<Extension> locallyRegisteredExtensions() {
+		return this.registeredExtensions.stream() //
+				.map(p -> p.getExtension().orElse(null)).filter(Objects::nonNull);
 	}
 
 	@Override
@@ -167,6 +174,18 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		registerExtension("synthetic", extension, source);
 	}
 
+	@Override
+	public void registerExtensionProxy(ExtensionProxy extensionProxy, Field source) {
+		logger.trace(() -> String.format("Registering local extension proxy [%s]%s", source.getType().getName(),
+			buildSourceInfo(source)));
+		this.registeredExtensions.add(extensionProxy);
+	}
+
+	@Override
+	public void updateRegisteredExtensionTypes() {
+		locallyRegisteredExtensions().map(Extension::getClass).forEach(registeredExtensionTypes::add);
+	}
+
 	private void registerDefaultExtension(Extension extension) {
 		registerExtension("default", extension);
 	}
@@ -185,12 +204,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private void registerExtension(String category, Extension extension, Object source) {
 		Preconditions.notBlank(category, "category must not be null or blank");
-		Preconditions.notNull(extension, "Extension must not be null");
+		Preconditions.notNull(extension, "extension must not be null");
 
 		logger.trace(
 			() -> String.format("Registering %s extension [%s]%s", category, extension, buildSourceInfo(source)));
 
-		this.registeredExtensions.add(extension);
+		this.registeredExtensions.add(ExtensionProxy.of(extension));
 		this.registeredExtensionTypes.add(extension.getClass());
 	}
 

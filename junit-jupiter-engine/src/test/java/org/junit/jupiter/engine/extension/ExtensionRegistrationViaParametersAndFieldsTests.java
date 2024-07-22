@@ -10,10 +10,10 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -64,11 +64,13 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for extension registration via
@@ -158,62 +160,56 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			finishedWithFailure(instanceOf(PreconditionViolationException.class), message(expectedMessage)));
 	}
 
-	@Test
-	void registrationOrder(@TrackLogRecords LogRecordListener listener) {
-		assertOneTestSucceeded(AllInOneWithTestInstancePerMethodTestCase.class);
+	@ParameterizedTest
+	@MethodSource("allInOneTestCases")
+	void registrationOrder(Class<?> testClass, @TrackLogRecords LogRecordListener listener) {
+		assertOneTestSucceeded(testClass);
 		assertThat(getRegisteredLocalExtensions(listener))//
 				.containsExactly(//
 					"ClassLevelExtension2", // @RegisterExtension on static field
 					"StaticField2", // @ExtendWith on static field
 					"ClassLevelExtension1", // @RegisterExtension on static field
 					"StaticField1", // @ExtendWith on static field
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceField2", // @ExtendWith on instance field
-					"ConstructorParameter", // @ExtendWith on parameter in constructor
-					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
-					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
-					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
-					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
-					"TestParameter", // @ExtendWith on parameter in @Test method
-					"InstanceLevelExtension1", // @RegisterExtension on instance field
-					"InstanceLevelExtension2" // @RegisterExtension on instance field
-				);
-
-		listener.clear();
-		assertOneTestSucceeded(AllInOneWithTestInstancePerClassTestCase.class);
-		assertThat(getRegisteredLocalExtensions(listener))//
-				.containsExactly(//
-					"ClassLevelExtension2", // @RegisterExtension on static field
-					"StaticField2", // @ExtendWith on static field
-					"ClassLevelExtension1", // @RegisterExtension on static field
-					"StaticField1", // @ExtendWith on static field
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceField2", // @ExtendWith on instance field
 					"ConstructorParameter", // @ExtendWith on parameter in constructor
 					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
 					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
 					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
 					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
 					"InstanceLevelExtension1", // @RegisterExtension on instance field
+					"InstanceField1", // @ExtendWith on instance field
 					"InstanceLevelExtension2", // @RegisterExtension on instance field
+					"InstanceField2", // @ExtendWith on instance field
 					"TestParameter" // @ExtendWith on parameter in @Test method
 				);
 	}
 
+	static Stream<Arguments> allInOneTestCases() {
+		return Stream.of( //
+			argumentSet("per-method", AllInOneWithTestInstancePerMethodTestCase.class), //
+			argumentSet("per-class", AllInOneWithTestInstancePerClassTestCase.class) //
+		);
+	}
+
 	private List<String> getRegisteredLocalExtensions(LogRecordListener listener) {
-		// @formatter:off
-		return listener.stream(MutableExtensionRegistry.class, Level.FINER)
-			.map(LogRecord::getMessage)
-			.filter(message -> message.contains("local extension"))
-			.map(message -> {
-				message = message.replaceAll("from source .+", "");
-				int indexOfDollarSign = message.indexOf("$");
-				int indexOfAtSign = message.indexOf("@");
-				int endIndex = (indexOfDollarSign > 1 ? indexOfDollarSign : indexOfAtSign);
-				return message.substring(message.lastIndexOf('.') + 1, endIndex);
-			})
-			.collect(toList());
-		// @formatter:on
+		return listener.stream(MutableExtensionRegistry.class, Level.FINER) //
+				.map(LogRecord::getMessage) //
+				.filter(message -> message.contains("local extension")) //
+				.peek(System.out::println) //
+				.map(message -> {
+					message = message.replaceAll(" from source .+", "");
+					int beginIndex = message.lastIndexOf('.') + 1;
+					if (message.contains("proxy")) {
+						return message.substring(beginIndex, message.indexOf("]"));
+					}
+					else {
+						int indexOfDollarSign = message.indexOf("$");
+						int indexOfAtSign = message.indexOf("@");
+						int endIndex = (indexOfDollarSign > 1 ? indexOfDollarSign
+								: (indexOfAtSign > 0 ? indexOfAtSign : message.length()));
+						return message.substring(beginIndex, endIndex);
+					}
+				}) //
+				.toList();
 	}
 
 	private void assertOneTestSucceeded(Class<?> testClass) {
@@ -221,9 +217,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	private void assertTestsSucceeded(Class<?> testClass, int expected) {
-		EngineExecutionResults results = executeTestsForClass(testClass);
-		results.allEvents().debug();
-		results.testEvents().assertStatistics(
+		executeTestsForClass(testClass).testEvents().assertStatistics(
 			stats -> stats.started(expected).succeeded(expected).skipped(0).aborted(0).failed(0));
 	}
 
@@ -561,7 +555,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@ExtendWith(LongParameterResolver.class)
 		@RegisterExtension
-		Extension dummy = new DummyExtension();
+		DummyExtension dummy = new DummyExtension();
 
 		@Test
 		void test() {
@@ -677,11 +671,11 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@RegisterExtension
 		@Order(1)
-		private Extension instanceLevelExtension1 = new InstanceLevelExtension1();
+		private InstanceLevelExtension1 instanceLevelExtension1 = new InstanceLevelExtension1();
 
 		@RegisterExtension
 		@Order(3)
-		Extension instanceLevelExtension2 = new InstanceLevelExtension2();
+		InstanceLevelExtension2 instanceLevelExtension2 = new InstanceLevelExtension2();
 
 		AllInOneWithTestInstancePerMethodTestCase(@ConstructorParameter String text) {
 			assertThat(text).isEqualTo("enigma");
@@ -865,7 +859,7 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Tes
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 		injectFields("postProcessTestInstance", context.getRequiredTestClass(), testInstance,
-				ReflectionUtils::isNotStatic);
+			ReflectionUtils::isNotStatic);
 	}
 
 	private void injectFields(String trigger, Class<?> testClass, Object instance, Predicate<Field> predicate) {
