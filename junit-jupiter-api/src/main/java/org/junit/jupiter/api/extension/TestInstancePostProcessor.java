@@ -23,7 +23,9 @@ import org.apiguardian.api.API;
  * etc.
  *
  * <p>Extensions that implement {@code TestInstancePostProcessor} must be
- * registered at the class level or via static fields of the test class.
+ * registered at the class level, {@linkplain ExtendWith declaratively} via a
+ * field of the test class, or {@linkplain RegisterExtension programmatically}
+ * via a <em>static</em> field of the test class.
  *
  * <h2>Constructor Requirements</h2>
  *
