@@ -260,11 +260,8 @@ will be registered after the test class has been instantiated and after each reg
 (potentially injecting the instance of the extension to be used into the annotated
 field). Thus, if such an _instance extension_ implements class-level or instance-level
 extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, or
-`TestInstancePostProcessor`, those APIs will not be honored. By default, an instance
-extension will be registered _after_ extensions that are registered at the method level
-via `@ExtendWith`; however, if the test class is configured with
-`@TestInstance(Lifecycle.PER_CLASS)` semantics, an instance extension will be registered
-_before_ extensions that are registered at the method level via `@ExtendWith`.
+`TestInstancePostProcessor`, those APIs will not be honored. Instance extensions will be
+registered _before_ extensions that are registered at the method level via `@ExtendWith`.
 
 In the following example, the `docs` field in the test class is initialized
 programmatically by invoking a custom `lookUpDocsDir()` method and supplying the result
