@@ -290,12 +290,11 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext,
 			throwableCollector);
 		throwableCollector.execute(() -> {
-			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
-			// In addition, we initialize programmatic extensions from instance fields here since the
+			// We complete programmatic extension registration from instance fields here since the
 			// best time to do that is immediately following test class instantiation
-			// and post processing.
-			registration.init(instances.getInnermostInstance());
-			registrar.updateRegisteredExtensionTypes();
+			// and before post-processing.
+			registration.complete(instances.getInnermostInstance());
+			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
 		});
 		return instances;
 	}

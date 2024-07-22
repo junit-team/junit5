@@ -190,15 +190,19 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		);
 	}
 
+	@Test
+	void registersProgrammaticTestInstancePostProcessors() {
+		assertOneTestSucceeded(ProgrammaticTestInstancePostProcessorTestCase.class);
+	}
+
 	private List<String> getRegisteredLocalExtensions(LogRecordListener listener) {
 		return listener.stream(MutableExtensionRegistry.class, Level.FINER) //
 				.map(LogRecord::getMessage) //
 				.filter(message -> message.contains("local extension")) //
-				.peek(System.out::println) //
 				.map(message -> {
 					message = message.replaceAll(" from source .+", "");
 					int beginIndex = message.lastIndexOf('.') + 1;
-					if (message.contains("proxy")) {
+					if (message.contains("token")) {
 						return message.substring(beginIndex, message.indexOf("]"));
 					}
 					else {
@@ -732,8 +736,18 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
-	static class ExtendWithOnFieldTestCase {
+	static class ProgrammaticTestInstancePostProcessorTestCase {
 
+		@RegisterExtension
+		Extension resolver = new InstanceField2.Extension();
+
+		@InstanceField2
+		String instanceField2;
+
+		@Test
+		void test() {
+			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
+		}
 	}
 
 }

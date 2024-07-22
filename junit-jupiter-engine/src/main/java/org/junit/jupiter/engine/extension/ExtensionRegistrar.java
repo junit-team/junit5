@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
@@ -71,17 +70,10 @@ public interface ExtensionRegistrar {
 	 */
 	void registerSyntheticExtension(Extension extension, Object source);
 
-	void registerExtensionProxy(ExtensionProxy extensionProxy, Field source);
+	RegistrationToken registerExtensionToken(Field source);
 
-	interface ExtensionProxy {
-
-		static ExtensionProxy of(Extension extension) {
-			Optional<Extension> result = Optional.of(extension);
-			return () -> result;
-		}
-
-		Optional<Extension> getExtension();
+	interface RegistrationToken {
+		void complete(Extension extension);
 	}
 
-	void updateRegisteredExtensionTypes();
 }

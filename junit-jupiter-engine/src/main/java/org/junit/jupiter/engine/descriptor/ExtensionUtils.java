@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.engine.extension.ExtensionRegistrar.ExtensionProxy;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -38,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
+import org.junit.jupiter.engine.extension.ExtensionRegistrar.RegistrationToken;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -134,44 +133,14 @@ final class ExtensionUtils {
 						extensionTypes.forEach(registrar::registerExtension);
 					}
 					if (isAnnotated(field, RegisterExtension.class)) {
-						LateInitExtensionProxy extensionProxy = new LateInitExtensionProxy(
-							instance -> readAndValidateExtensionFromField(field, instance, extensionTypes));
-						registrar.registerExtensionProxy(extensionProxy, field);
-						registration.proxies.add(extensionProxy);
+						registration.proxies.add(new LateInitExtensionProxy( //
+							registrar.registerExtensionToken(field), //
+							instance -> readAndValidateExtensionFromField(field, instance, extensionTypes) //
+						));
 					}
 				});
 
 		return registration;
-	}
-
-	static class ProgrammaticExtensionRegistration {
-		private final List<LateInitExtensionProxy> proxies = new ArrayList<>();
-
-		void init(Object instance) {
-			proxies.forEach(proxy -> proxy.init(instance));
-		}
-	}
-
-	static class LateInitExtensionProxy implements ExtensionProxy {
-
-		private final Function<Object, Extension> initializer;
-
-		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-		private Optional<Extension> extension = Optional.empty();
-
-		LateInitExtensionProxy(Function<Object, Extension> initializer) {
-			this.initializer = initializer;
-		}
-
-		void init(Object instance) {
-			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
-			this.extension = Optional.of(initializer.apply(instance));
-		}
-
-		@Override
-		public Optional<Extension> getExtension() {
-			return extension;
-		}
 	}
 
 	private static Extension readAndValidateExtensionFromField(Field field, Object instance,
@@ -271,6 +240,35 @@ final class ExtensionUtils {
 	 */
 	private static int getOrder(Field field) {
 		return findAnnotation(field, Order.class).map(Order::value).orElse(Order.DEFAULT);
+	}
+
+	/**
+	 * @since 5.11
+	 */
+	static class ProgrammaticExtensionRegistration {
+		private final List<LateInitExtensionProxy> proxies = new ArrayList<>();
+
+		void complete(Object instance) {
+			proxies.forEach(proxy -> proxy.complete(instance));
+		}
+	}
+
+	/**
+	 * @since 5.11
+	 */
+	private static class LateInitExtensionProxy {
+
+		private final RegistrationToken token;
+		private final Function<Object, Extension> initializer;
+
+		LateInitExtensionProxy(RegistrationToken token, Function<Object, Extension> initializer) {
+			this.token = token;
+			this.initializer = initializer;
+		}
+
+		void complete(Object instance) {
+			token.complete(initializer.apply(instance));
+		}
 	}
 
 }

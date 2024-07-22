@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -112,7 +113,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
 
-	private final List<ExtensionProxy> registeredExtensions = new ArrayList<>();
+	private final List<Entry> registeredExtensions = new ArrayList<>();
 
 	private MutableExtensionRegistry(MutableExtensionRegistry parent) {
 		this.parent = parent;
@@ -135,16 +136,11 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * @param extensionType the type of {@link Extension} to stream
 	 */
 	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
-		// @formatter:off
-		return locallyRegisteredExtensions()
-				.filter(extensionType::isInstance)
-				.map(extensionType::cast);
-		// @formatter:on
-	}
-
-	private Stream<Extension> locallyRegisteredExtensions() {
 		return this.registeredExtensions.stream() //
-				.map(p -> p.getExtension().orElse(null)).filter(Objects::nonNull);
+				.map(p -> p.getExtension().orElse(null)) //
+				.filter(Objects::nonNull) //
+				.filter(extensionType::isInstance) //
+				.map(extensionType::cast);
 	}
 
 	@Override
@@ -175,15 +171,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	}
 
 	@Override
-	public void registerExtensionProxy(ExtensionProxy extensionProxy, Field source) {
-		logger.trace(() -> String.format("Registering local extension proxy [%s]%s", source.getType().getName(),
+	public RegistrationToken registerExtensionToken(Field source) {
+		logger.trace(() -> String.format("Registering local extension token for [%s]%s", source.getType().getName(),
 			buildSourceInfo(source)));
-		this.registeredExtensions.add(extensionProxy);
-	}
-
-	@Override
-	public void updateRegisteredExtensionTypes() {
-		locallyRegisteredExtensions().map(Extension::getClass).forEach(registeredExtensionTypes::add);
+		TokenBasedEntry token = new TokenBasedEntry();
+		this.registeredExtensions.add(token);
+		return token;
 	}
 
 	private void registerDefaultExtension(Extension extension) {
@@ -209,7 +202,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		logger.trace(
 			() -> String.format("Registering %s extension [%s]%s", category, extension, buildSourceInfo(source)));
 
-		this.registeredExtensions.add(ExtensionProxy.of(extension));
+		this.registeredExtensions.add(Entry.of(extension));
 		this.registeredExtensionTypes.add(extension.getClass());
 	}
 
@@ -223,6 +216,34 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			source = String.format("%s %s.%s", type, member.getDeclaringClass().getName(), member.getName());
 		}
 		return " from source [" + source + "]";
+	}
+
+	private interface Entry {
+
+		static Entry of(Extension extension) {
+			Optional<Extension> value = Optional.of(extension);
+			return () -> value;
+		}
+
+		Optional<Extension> getExtension();
+	}
+
+	private class TokenBasedEntry implements Entry, RegistrationToken {
+
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+		private Optional<Extension> extension = Optional.empty();
+
+		@Override
+		public Optional<Extension> getExtension() {
+			return extension;
+		}
+
+		@Override
+		public void complete(Extension value) {
+			Preconditions.condition(!extension.isPresent(), "Registration was already completed");
+			extension = Optional.of(value);
+			registeredExtensionTypes.add(value.getClass());
+		}
 	}
 
 }
