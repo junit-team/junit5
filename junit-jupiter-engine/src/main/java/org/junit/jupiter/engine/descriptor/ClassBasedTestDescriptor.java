@@ -13,9 +13,10 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerClassLevelExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromConstructorParameters;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
-import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerInstanceLevelExtensionsFromFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
@@ -152,8 +153,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		// Register extensions from static fields here, at the class level but
 		// after extensions registered via @ExtendWith.
-		registerExtensionsFromFields(registry, this.testClass, null, false);
-		registerExtensionsFromFields(registry, this.testClass, null, true);
+		registerClassLevelExtensionsFromFields(registry, this.testClass);
 
 		// Resolve the TestInstanceFactory at the class level in order to fail
 		// the entire class in case of configuration errors (e.g., more than
@@ -289,10 +289,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			throwableCollector);
 		throwableCollector.execute(() -> {
 			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
-			// In addition, we register extensions from instance fields here since the
+			// In addition, we register programmatic extensions from instance fields here since the
 			// best time to do that is immediately following test class instantiation
 			// and post processing.
-			registerExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance(), false);
+			registerInstanceLevelExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance());
 		});
 		return instances;
 	}
