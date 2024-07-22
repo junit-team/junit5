@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -42,6 +41,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -64,9 +64,6 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -160,34 +157,33 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			finishedWithFailure(instanceOf(PreconditionViolationException.class), message(expectedMessage)));
 	}
 
-	@ParameterizedTest
-	@MethodSource("allInOneTestCases")
-	void registrationOrder(Class<?> testClass, @TrackLogRecords LogRecordListener listener) {
-		assertOneTestSucceeded(testClass);
-		assertThat(getRegisteredLocalExtensions(listener))//
-				.containsExactly(//
-					"ClassLevelExtension2", // @RegisterExtension on static field
-					"StaticField2", // @ExtendWith on static field
-					"ClassLevelExtension1", // @RegisterExtension on static field
-					"StaticField1", // @ExtendWith on static field
-					"ConstructorParameter", // @ExtendWith on parameter in constructor
-					"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
-					"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
-					"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
-					"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
-					"InstanceLevelExtension1", // @RegisterExtension on instance field
-					"InstanceField1", // @ExtendWith on instance field
-					"InstanceLevelExtension2", // @RegisterExtension on instance field
-					"InstanceField2", // @ExtendWith on instance field
-					"TestParameter" // @ExtendWith on parameter in @Test method
-				);
-	}
-
-	static Stream<Arguments> allInOneTestCases() {
+	@TestFactory
+	Stream<DynamicTest> registrationOrder(@TrackLogRecords LogRecordListener listener) {
 		return Stream.of( //
-			argumentSet("per-method", AllInOneWithTestInstancePerMethodTestCase.class), //
-			argumentSet("per-class", AllInOneWithTestInstancePerClassTestCase.class) //
-		);
+			Named.named("per-method", AllInOneWithTestInstancePerMethodTestCase.class), //
+			Named.named("per-class", AllInOneWithTestInstancePerClassTestCase.class) //
+		) //
+				.map(it -> dynamicTest(it.getName(), () -> {
+					listener.clear();
+					assertOneTestSucceeded(it.getPayload());
+					assertThat(getRegisteredLocalExtensions(listener))//
+							.containsExactly(//
+								"ClassLevelExtension2", // @RegisterExtension on static field
+								"StaticField2", // @ExtendWith on static field
+								"ClassLevelExtension1", // @RegisterExtension on static field
+								"StaticField1", // @ExtendWith on static field
+								"ConstructorParameter", // @ExtendWith on parameter in constructor
+								"BeforeAllParameter", // @ExtendWith on parameter in static @BeforeAll method
+								"BeforeEachParameter", // @ExtendWith on parameter in @BeforeEach method
+								"AfterEachParameter", // @ExtendWith on parameter in @AfterEach method
+								"AfterAllParameter", // @ExtendWith on parameter in static @AfterAll method
+								"InstanceLevelExtension1", // @RegisterExtension on instance field
+								"InstanceField1", // @ExtendWith on instance field
+								"InstanceLevelExtension2", // @RegisterExtension on instance field
+								"InstanceField2", // @ExtendWith on instance field
+								"TestParameter" // @ExtendWith on parameter in @Test method
+					);
+				}));
 	}
 
 	@Test

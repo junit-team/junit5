@@ -21,7 +21,6 @@ dependencies {
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
-	testImplementation(projects.junitJupiterParams)
 	testImplementation(kotlin("stdlib"))
 	testImplementation(libs.jimfs)
 	testImplementation(libs.junit4)
