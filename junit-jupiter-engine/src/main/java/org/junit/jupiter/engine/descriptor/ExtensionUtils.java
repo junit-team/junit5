@@ -143,6 +143,9 @@ final class ExtensionUtils {
 		return registration;
 	}
 
+	/**
+	 * @since 5.11
+	 */
 	private static Extension readAndValidateExtensionFromField(Field field, Object instance,
 			List<Class<? extends Extension>> declarativeExtensionTypes) {
 		Object value = tryToReadFieldValue(field, instance) //
