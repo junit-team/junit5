@@ -51,7 +51,6 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -59,6 +58,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -68,6 +68,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for extension registration via
@@ -220,7 +221,9 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	private void assertTestsSucceeded(Class<?> testClass, int expected) {
-		executeTestsForClass(testClass).testEvents().assertStatistics(
+		EngineExecutionResults results = executeTestsForClass(testClass);
+		results.allEvents().debug();
+		results.testEvents().assertStatistics(
 			stats -> stats.started(expected).succeeded(expected).skipped(0).aborted(0).failed(0));
 	}
 
@@ -614,8 +617,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 		@Test
 		void test() {
-			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
-			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
+			assertThat(instanceField1).isEqualTo("postProcessTestInstance - instanceField1");
+			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
 		}
 	}
 
@@ -635,13 +638,13 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		@BeforeAll
 		void beforeAll() {
 			assertThat(staticField).isEqualTo("beforeAll - staticField");
-			assertThat(instanceField).isNull();
+			assertThat(instanceField).isEqualTo("postProcessTestInstance - instanceField");
 		}
 
 		@Test
 		void test() {
 			assertThat(staticField).isEqualTo("beforeAll - staticField");
-			assertThat(instanceField).isEqualTo("beforeEach - instanceField");
+			assertThat(instanceField).isEqualTo("postProcessTestInstance - instanceField");
 		}
 	}
 
@@ -696,8 +699,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(text).isEqualTo("enigma");
 			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
 			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
-			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
-			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
+			assertThat(instanceField1).isEqualTo("postProcessTestInstance - instanceField1");
+			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
 		}
 
 		@Test
@@ -705,8 +708,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(text).isEqualTo("enigma");
 			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
 			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
-			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
-			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
+			assertThat(instanceField1).isEqualTo("postProcessTestInstance - instanceField1");
+			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
 		}
 
 		@AfterEach
@@ -714,8 +717,8 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			assertThat(text).isEqualTo("enigma");
 			assertThat(staticField1).isEqualTo("beforeAll - staticField1");
 			assertThat(staticField2).isEqualTo("beforeAll - staticField2");
-			assertThat(instanceField1).isEqualTo("beforeEach - instanceField1");
-			assertThat(instanceField2).isEqualTo("beforeEach - instanceField2");
+			assertThat(instanceField1).isEqualTo("postProcessTestInstance - instanceField1");
+			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
 		}
 
 		@AfterAll
@@ -733,6 +736,10 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		AllInOneWithTestInstancePerClassTestCase(@ConstructorParameter String text) {
 			super(text);
 		}
+	}
+
+	static class ExtendWithOnFieldTestCase {
+
 	}
 
 }
@@ -840,7 +847,7 @@ class BaseParameterExtension<T extends Annotation> implements ParameterResolver 
 class DummyExtension implements Extension {
 }
 
-class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, BeforeEachCallback {
+class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, TestInstancePostProcessor {
 
 	private final Class<T> annotationType;
 
@@ -851,14 +858,14 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Bef
 	}
 
 	@Override
-	public final void beforeAll(ExtensionContext context) throws Exception {
+	public final void beforeAll(ExtensionContext context) {
 		injectFields("beforeAll", context.getRequiredTestClass(), null, ReflectionUtils::isStatic);
 	}
 
 	@Override
-	public final void beforeEach(ExtensionContext context) throws Exception {
-		injectFields("beforeEach", context.getRequiredTestClass(), context.getRequiredTestInstance(),
-			ReflectionUtils::isNotStatic);
+	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+		injectFields("postProcessTestInstance", context.getRequiredTestClass(), testInstance,
+				ReflectionUtils::isNotStatic);
 	}
 
 	private void injectFields(String trigger, Class<?> testClass, Object instance, Predicate<Field> predicate) {
