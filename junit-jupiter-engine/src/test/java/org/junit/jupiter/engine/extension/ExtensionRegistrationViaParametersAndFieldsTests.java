@@ -867,7 +867,7 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Tes
 	}
 
 	@Override
-	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
+	public final void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 		injectFields("postProcessTestInstance", context.getRequiredTestClass(), testInstance,
 			ReflectionUtils::isNotStatic);
 	}
