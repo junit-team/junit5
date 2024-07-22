@@ -138,7 +138,6 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
 		return this.registeredExtensions.stream() //
 				.map(p -> p.getExtension().orElse(null)) //
-				.filter(Objects::nonNull) //
 				.filter(extensionType::isInstance) //
 				.map(extensionType::cast);
 	}
