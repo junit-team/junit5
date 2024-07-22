@@ -38,12 +38,15 @@ repository on GitHub.
 [[release-notes-5.11.0-RC1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* `TestInstancePostProcessor` extensions can now be registered via the `@ExtendWith`
+  annotation on non-static fields.
 
 [[release-notes-5.11.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The registration order of extensions was changed to allow non-static fields to be
+  processed earlier. This change may affect extensions that rely on the order of
+  registration.
 
 [[release-notes-5.11.0-RC1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
