@@ -739,7 +739,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	static class ProgrammaticTestInstancePostProcessorTestCase {
 
 		@RegisterExtension
-		Extension resolver = new InstanceField2.Extension();
+		static Extension resolver = new InstanceField2.Extension();
 
 		@InstanceField2
 		String instanceField2;
