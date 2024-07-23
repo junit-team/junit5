@@ -43,7 +43,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
@@ -200,7 +199,6 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	@Test
-	@Disabled("not yet implemented")
 	void createsExtensionPerInstance() {
 		var results = executeTests(r -> r //
 				.selectors(selectClass(InitializationPerInstanceTestCase.class)) //
@@ -216,7 +214,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 				.map(message -> {
 					message = message.replaceAll(" from source .+", "");
 					int beginIndex = message.lastIndexOf('.') + 1;
-					if (message.contains("token")) {
+					if (message.contains("late-init")) {
 						return message.substring(beginIndex, message.indexOf("]"));
 					}
 					else {

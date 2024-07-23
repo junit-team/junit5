@@ -22,12 +22,10 @@ import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValu
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -36,7 +34,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
-import org.junit.jupiter.engine.extension.ExtensionRegistrar.RegistrationToken;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -120,9 +117,7 @@ final class ExtensionUtils {
 	 * @param clazz the class or interface in which to find the fields; never {@code null}
 	 * @since 5.11
 	 */
-	static ProgrammaticExtensionRegistration registerExtensionsFromInstanceFields(ExtensionRegistrar registrar,
-			Class<?> clazz) {
-		ProgrammaticExtensionRegistration registration = new ProgrammaticExtensionRegistration();
+	static void registerExtensionsFromInstanceFields(ExtensionRegistrar registrar, Class<?> clazz) {
 		streamExtensionRegisteringFields(clazz, ReflectionUtils::isNotStatic) //
 				.forEach(field -> {
 					List<Class<? extends Extension>> extensionTypes = streamDeclarativeExtensionTypes(field).collect(
@@ -133,14 +128,10 @@ final class ExtensionUtils {
 						extensionTypes.forEach(registrar::registerExtension);
 					}
 					if (isAnnotated(field, RegisterExtension.class)) {
-						registration.proxies.add(new LateInitExtensionProxy( //
-							registrar.registerExtensionToken(field), //
-							instance -> readAndValidateExtensionFromField(field, instance, extensionTypes) //
-						));
+						registrar.registerUninitializedExtension(clazz, field,
+							instance -> readAndValidateExtensionFromField(field, instance, extensionTypes));
 					}
 				});
-
-		return registration;
 	}
 
 	/**
@@ -243,35 +234,6 @@ final class ExtensionUtils {
 	 */
 	private static int getOrder(Field field) {
 		return findAnnotation(field, Order.class).map(Order::value).orElse(Order.DEFAULT);
-	}
-
-	/**
-	 * @since 5.11
-	 */
-	static class ProgrammaticExtensionRegistration {
-		private final List<LateInitExtensionProxy> proxies = new ArrayList<>();
-
-		void complete(Object instance) {
-			proxies.forEach(proxy -> proxy.complete(instance));
-		}
-	}
-
-	/**
-	 * @since 5.11
-	 */
-	private static class LateInitExtensionProxy {
-
-		private final RegistrationToken token;
-		private final Function<Object, Extension> initializer;
-
-		LateInitExtensionProxy(RegistrationToken token, Function<Object, Extension> initializer) {
-			this.token = token;
-			this.initializer = initializer;
-		}
-
-		void complete(Object instance) {
-			token.complete(initializer.apply(instance));
-		}
 	}
 
 }

@@ -20,11 +20,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -107,6 +110,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes;
 	private final List<Entry> registeredExtensions;
+	private final Map<Class<?>, List<LateInitEntry>> lateInitExtensions;
 
 	private MutableExtensionRegistry() {
 		this(emptySet(), emptyList());
@@ -119,7 +123,18 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	private MutableExtensionRegistry(Set<Class<? extends Extension>> registeredExtensionTypes,
 			List<Entry> registeredExtensions) {
 		this.registeredExtensionTypes = new LinkedHashSet<>(registeredExtensionTypes);
-		this.registeredExtensions = new ArrayList<>(registeredExtensions);
+		this.registeredExtensions = new ArrayList<>(registeredExtensions.size());
+		this.lateInitExtensions = new LinkedHashMap<>();
+		registeredExtensions.forEach(entry -> {
+			Entry newEntry = entry;
+			if (entry instanceof LateInitEntry) {
+				LateInitEntry lateInitEntry = ((LateInitEntry) entry).copy();
+				this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()).add(
+					lateInitEntry);
+				newEntry = lateInitEntry;
+			}
+			this.registeredExtensions.add(newEntry);
+		});
 	}
 
 	@Override
@@ -157,12 +172,21 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	}
 
 	@Override
-	public RegistrationToken registerExtensionToken(Field source) {
-		logger.trace(() -> String.format("Registering local extension token for [%s]%s", source.getType().getName(),
-			buildSourceInfo(source)));
-		TokenBasedEntry token = new TokenBasedEntry();
-		this.registeredExtensions.add(token);
-		return token;
+	public void registerUninitializedExtension(Class<?> testClass, Field source,
+			Function<Object, ? extends Extension> initializer) {
+		logger.trace(() -> String.format("Registering local extension (late-init) for [%s]%s",
+			source.getType().getName(), buildSourceInfo(source)));
+		LateInitEntry entry = new LateInitEntry(testClass, initializer);
+		lateInitExtensions.computeIfAbsent(testClass, __ -> new ArrayList<>()).add(entry);
+		this.registeredExtensions.add(entry);
+	}
+
+	@Override
+	public void initializeExtensions(Class<?> testClass, Object testInstance) {
+		List<LateInitEntry> entries = lateInitExtensions.remove(testClass);
+		if (entries != null) {
+			entries.forEach(entry -> entry.initialize(testInstance));
+		}
 	}
 
 	private void registerDefaultExtension(Extension extension) {
@@ -214,22 +238,36 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		Optional<Extension> getExtension();
 	}
 
-	private class TokenBasedEntry implements Entry, RegistrationToken {
+	private static class LateInitEntry implements Entry {
+
+		private final Class<?> testClass;
+		private final Function<Object, ? extends Extension> initializer;
 
 		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 		private Optional<Extension> extension = Optional.empty();
+
+		public LateInitEntry(Class<?> testClass, Function<Object, ? extends Extension> initializer) {
+			this.testClass = testClass;
+			this.initializer = initializer;
+		}
 
 		@Override
 		public Optional<Extension> getExtension() {
 			return extension;
 		}
 
-		@Override
-		public void complete(Extension value) {
-			if (!extension.isPresent()) {
-				extension = Optional.of(value);
-				registeredExtensionTypes.add(value.getClass());
-			}
+		public Class<?> getTestClass() {
+			return testClass;
+		}
+
+		void initialize(Object testInstance) {
+			extension = Optional.of(initializer.apply(testInstance));
+		}
+
+		LateInitEntry copy() {
+			LateInitEntry copy = new LateInitEntry(testClass, initializer);
+			copy.extension = this.extension;
+			return copy;
 		}
 	}
 

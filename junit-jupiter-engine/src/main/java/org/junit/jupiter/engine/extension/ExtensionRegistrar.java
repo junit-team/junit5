@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Field;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
@@ -70,10 +71,9 @@ public interface ExtensionRegistrar {
 	 */
 	void registerSyntheticExtension(Extension extension, Object source);
 
-	RegistrationToken registerExtensionToken(Field source);
+	void registerUninitializedExtension(Class<?> testClass, Field source,
+			Function<Object, ? extends Extension> initializer);
 
-	interface RegistrationToken {
-		void complete(Extension extension);
-	}
+	void initializeExtensions(Class<?> testClass, Object testInstance);
 
 }

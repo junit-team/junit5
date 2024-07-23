@@ -54,7 +54,6 @@ import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ExtensionUtils.ProgrammaticExtensionRegistration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
@@ -177,7 +176,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 		this.afterAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
-		ProgrammaticExtensionRegistration registration = registerExtensionsFromInstanceFields(registry, this.testClass);
+		registerExtensionsFromInstanceFields(registry, this.testClass);
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
@@ -187,7 +186,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		// @formatter:off
 		return context.extend()
-				.withTestInstancesProvider(testInstancesProvider(context, extensionContext, registration))
+				.withTestInstancesProvider(testInstancesProvider(context, extensionContext))
 				.withExtensionRegistry(registry)
 				.withExtensionContext(extensionContext)
 				.withThrowableCollector(throwableCollector)
@@ -276,25 +275,25 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ClassExtensionContext extensionContext, ProgrammaticExtensionRegistration registration) {
+			ClassExtensionContext extensionContext) {
 
 		return (registry, registrar, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
 			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
-				throwableCollector, registration));
+				throwableCollector));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContext extensionContext, ExtensionRegistry registry, ExtensionRegistrar registrar,
-			ThrowableCollector throwableCollector, ProgrammaticExtensionRegistration registration) {
+			ThrowableCollector throwableCollector) {
 
 		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext,
 			throwableCollector);
 		throwableCollector.execute(() -> {
 			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
-			// In addition, we complete programmatic extension registration from instance fields here since the
-			// best time to do that is immediately following test class instantiation
-			// and post processing.
-			registration.complete(instances.getInnermostInstance());
+			// In addition, we initialize extension registered programmatically from instance fields here
+			// since the best time to do that is immediately following test class instantiation
+			// and post-processing.
+			registrar.initializeExtensions(this.testClass, instances.getInnermostInstance());
 		});
 		return instances;
 	}

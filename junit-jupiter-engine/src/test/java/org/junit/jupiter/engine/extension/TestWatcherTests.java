@@ -152,8 +152,10 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = TestInstancePerMethodInstanceLevelTestWatcherTestCase.class;
 		assertStatsForAbstractDisabledMethodsTestCase(testClass);
 
-		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
-		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
+		// Since the TestWatcher is registered at the instance level with test instance
+		// lifecycle per-method semantics, we get a "testDisabled" event only for the @Test
+		// method and NOT for the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test");
 	}
 
 	@Test

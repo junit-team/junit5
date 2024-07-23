@@ -74,7 +74,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
 			context.getExtensionRegistry(), getTestMethod());
 
