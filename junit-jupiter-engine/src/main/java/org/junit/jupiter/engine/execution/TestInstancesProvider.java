@@ -14,7 +14,9 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -24,6 +26,12 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 @API(status = INTERNAL, since = "5.0")
 public interface TestInstancesProvider {
 
-	TestInstances getTestInstances(ExtensionRegistry extensionRegistry, ThrowableCollector throwableCollector);
+	default TestInstances getTestInstances(MutableExtensionRegistry extensionRegistry,
+			ThrowableCollector throwableCollector) {
+		return getTestInstances(extensionRegistry, extensionRegistry, throwableCollector);
+	}
+
+	TestInstances getTestInstances(ExtensionRegistry extensionRegistry, ExtensionRegistrar extensionRegistrar,
+			ThrowableCollector throwableCollector);
 
 }
