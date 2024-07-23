@@ -12,9 +12,12 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -40,10 +43,12 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
@@ -62,12 +67,15 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.injection.sample.LongParameterResolver;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
  * Integration tests that verify support for extension registration via
@@ -191,6 +199,16 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		assertOneTestSucceeded(ProgrammaticTestInstancePostProcessorTestCase.class);
 	}
 
+	@Test
+	@Disabled("not yet implemented")
+	void createsExtensionPerInstance() {
+		var results = executeTests(r -> r //
+				.selectors(selectClass(InitializationPerInstanceTestCase.class)) //
+				.configurationParameter(JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
+		);
+		assertTestsSucceeded(results, 100);
+	}
+
 	private List<String> getRegisteredLocalExtensions(LogRecordListener listener) {
 		return listener.stream(MutableExtensionRegistry.class, Level.FINER) //
 				.map(LogRecord::getMessage) //
@@ -217,7 +235,11 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	private void assertTestsSucceeded(Class<?> testClass, int expected) {
-		executeTestsForClass(testClass).testEvents().assertStatistics(
+		assertTestsSucceeded(executeTestsForClass(testClass), expected);
+	}
+
+	private static void assertTestsSucceeded(EngineExecutionResults results, int expected) {
+		results.testEvents().assertStatistics(
 			stats -> stats.started(expected).succeeded(expected).skipped(0).aborted(0).failed(0));
 	}
 
@@ -743,6 +765,41 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		@Test
 		void test() {
 			assertThat(instanceField2).isEqualTo("postProcessTestInstance - instanceField2");
+		}
+	}
+
+	@Execution(CONCURRENT)
+	static class InitializationPerInstanceTestCase {
+		@RegisterExtension
+		Extension extension = new InstanceParameterResolver<>(this);
+
+		@Nested
+		class Wrapper {
+
+			@RegisterExtension
+			Extension extension = new InstanceParameterResolver<>(this);
+
+			@RepeatedTest(100)
+			void test(InitializationPerInstanceTestCase outerInstance, Wrapper innerInstance) {
+				assertSame(InitializationPerInstanceTestCase.this, outerInstance);
+				assertSame(Wrapper.this, innerInstance);
+			}
+
+		}
+
+		private record InstanceParameterResolver<T>(T instance) implements ParameterResolver {
+
+			@Override
+			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return instance.getClass().equals(parameterContext.getParameter().getType());
+			}
+
+			@Override
+			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return instance;
+			}
 		}
 	}
 
