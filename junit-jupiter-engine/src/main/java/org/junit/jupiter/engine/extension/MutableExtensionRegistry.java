@@ -129,8 +129,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			Entry newEntry = entry;
 			if (entry instanceof LateInitEntry) {
 				LateInitEntry lateInitEntry = ((LateInitEntry) entry).copy();
-				this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()).add(
-					lateInitEntry);
+				this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()) //
+						.add(lateInitEntry);
 				newEntry = lateInitEntry;
 			}
 			this.registeredExtensions.add(newEntry);
@@ -177,7 +177,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		logger.trace(() -> String.format("Registering local extension (late-init) for [%s]%s",
 			source.getType().getName(), buildSourceInfo(source)));
 		LateInitEntry entry = new LateInitEntry(testClass, initializer);
-		lateInitExtensions.computeIfAbsent(testClass, __ -> new ArrayList<>()).add(entry);
+		this.lateInitExtensions.computeIfAbsent(testClass, __ -> new ArrayList<>()) //
+				.add(entry);
 		this.registeredExtensions.add(entry);
 	}
 

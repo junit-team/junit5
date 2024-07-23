@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedFields;
 import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -200,7 +201,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 
 	@Test
 	void createsExtensionPerInstance() {
-		var results = executeTests(r -> r //
+		var results = executeTests(request() //
 				.selectors(selectClass(InitializationPerInstanceTestCase.class)) //
 				.configurationParameter(JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
 		);

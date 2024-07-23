@@ -16,7 +16,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.Set;
-import java.util.function.Consumer;
 
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
@@ -36,17 +35,15 @@ public abstract class AbstractJupiterTestEngineTests {
 	private final JupiterTestEngine engine = new JupiterTestEngine();
 
 	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
-		return executeTests(r -> r.selectors(selectClass(testClass)));
+		return executeTests(selectClass(testClass));
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
-		return executeTests(r -> r.selectors(selectors));
+		return executeTests(request().selectors(selectors));
 	}
 
-	protected EngineExecutionResults executeTests(Consumer<LauncherDiscoveryRequestBuilder> config) {
-		LauncherDiscoveryRequestBuilder builder = request();
-		config.accept(builder);
-		return EngineTestKit.execute(this.engine, builder.build());
+	protected EngineExecutionResults executeTests(LauncherDiscoveryRequestBuilder builder) {
+		return executeTests(builder.build());
 	}
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequest request) {
