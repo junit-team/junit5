@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -60,10 +59,10 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
-	private static final List<String> testWatcherMethodNames = Arrays.stream(TestWatcher.class.getDeclaredMethods())//
-			.filter(not(Method::isSynthetic))//
-			.map(Method::getName)//
-			.collect(toUnmodifiableList());
+	private static final List<String> testWatcherMethodNames = Arrays.stream(TestWatcher.class.getDeclaredMethods()) //
+			.filter(not(Method::isSynthetic)) //
+			.map(Method::getName) //
+			.toList();
 
 	@BeforeEach
 	void clearResults() {
@@ -153,10 +152,8 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		Class<?> testClass = TestInstancePerMethodInstanceLevelTestWatcherTestCase.class;
 		assertStatsForAbstractDisabledMethodsTestCase(testClass);
 
-		// Since the TestWatcher is registered at the instance level with test instance
-		// lifecycle per-method semantics, we get a "testDisabled" event only for the @Test
-		// method and NOT for the @RepeatedTest container.
-		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test");
+		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
+		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
 	}
 
 	@Test

@@ -238,9 +238,10 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 		@Override
 		public void complete(Extension value) {
-			Preconditions.condition(!extension.isPresent(), "Registration was already completed");
-			extension = Optional.of(value);
-			registeredExtensionTypes.add(value.getClass());
+			if (!extension.isPresent()) {
+				extension = Optional.of(value);
+				registeredExtensionTypes.add(value.getClass());
+			}
 		}
 	}
 
