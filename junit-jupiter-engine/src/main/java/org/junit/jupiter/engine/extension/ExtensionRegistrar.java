@@ -17,6 +17,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.RegisterExtension;
 
 /**
  * An {@code ExtensionRegistrar} is used to register extensions.
@@ -48,7 +49,7 @@ public interface ExtensionRegistrar {
 	 * {@link org.junit.jupiter.api.extension.ExtendWith @ExtendWith}, the
 	 * {@code source} and the {@code extension} should be the same object.
 	 * However, if an extension is registered <em>programmatically</em> via
-	 * {@link org.junit.jupiter.api.extension.RegisterExtension @RegisterExtension},
+	 * {@link RegisterExtension @RegisterExtension},
 	 * the {@code source} object should be the {@link java.lang.reflect.Field}
 	 * that is annotated with {@code @RegisterExtension}. Similarly, if an
 	 * extension is registered <em>programmatically</em> as a lambda expression
@@ -71,9 +72,34 @@ public interface ExtensionRegistrar {
 	 */
 	void registerSyntheticExtension(Extension extension, Object source);
 
+	/**
+	 * Register an uninitialized extension for the supplied {@code testClass} to
+	 * be initialized using the supplied {@code initializer} when an instance of
+	 * the test class is created.
+	 *
+	 * <p>Uninitialized extensions are typically registered for fields annotated
+	 * with {@link RegisterExtension @RegisterExtension} that cannot be
+	 * initialized until an instance of the test class is created. Until they
+	 * are initialized, such extensions are not available for use.
+	 *
+	 * @param testClass the test class for which the extension is registered;
+	 * never {@code null}
+	 * @param source the source of the extension; never {@code null}
+	 * @param initializer the initializer function to be used to create the
+	 * extension; never {@code null}
+	 */
 	void registerUninitializedExtension(Class<?> testClass, Field source,
 			Function<Object, ? extends Extension> initializer);
 
+	/**
+	 * Initialize all registered extensions for the supplied {@code testClass}
+	 * using the supplied {@code testInstance}.
+	 *
+	 * @param testClass the test class for which the extensions are initialized;
+	 * never {@code null}
+	 * @param testInstance the test instance to be used to initialize the
+	 * extensions; never {@code null}
+	 */
 	void initializeExtensions(Class<?> testClass, Object testInstance);
 
 }
