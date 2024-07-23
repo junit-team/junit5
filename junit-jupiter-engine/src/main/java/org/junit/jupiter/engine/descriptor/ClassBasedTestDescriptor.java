@@ -278,16 +278,16 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
 			ClassExtensionContext extensionContext, ProgrammaticExtensionRegistration registration) {
 
-		return (registry, registrar, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
-			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
+		return (registry, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
+			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry,
 				throwableCollector, registration));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionContext extensionContext, ExtensionRegistry registry, ExtensionRegistrar registrar,
-			ThrowableCollector throwableCollector, ProgrammaticExtensionRegistration registration) {
+			ExtensionContext extensionContext, ExtensionRegistry registry, ThrowableCollector throwableCollector,
+			ProgrammaticExtensionRegistration registration) {
 
-		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext,
+		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, extensionContext,
 			throwableCollector);
 		throwableCollector.execute(() -> {
 			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
@@ -300,8 +300,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	protected abstract TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext,
-			ThrowableCollector throwableCollector);
+			ExtensionRegistry registry, ExtensionContext extensionContext, ThrowableCollector throwableCollector);
 
 	protected TestInstances instantiateTestClass(Optional<TestInstances> outerInstances, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {
