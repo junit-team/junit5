@@ -10,7 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.stream.Stream.concat;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Field;
@@ -37,10 +38,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Default, mutable implementation of {@link ExtensionRegistry}.
- *
- * <p>A registry has a reference to its parent registry, and all lookups are
- * performed first in the current registry itself and then recursively in its
- * ancestors.
  *
  * @since 5.5
  */
@@ -71,7 +68,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
-		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
+		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry();
 
 		DEFAULT_STATELESS_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
@@ -108,33 +105,25 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		return registry;
 	}
 
-	private final MutableExtensionRegistry parent;
+	private final Set<Class<? extends Extension>> registeredExtensionTypes;
+	private final List<Entry> registeredExtensions;
 
-	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
-
-	private final List<Entry> registeredExtensions = new ArrayList<>();
+	private MutableExtensionRegistry() {
+		this(emptySet(), emptyList());
+	}
 
 	private MutableExtensionRegistry(MutableExtensionRegistry parent) {
-		this.parent = parent;
+		this(parent.registeredExtensionTypes, parent.registeredExtensions);
+	}
+
+	private MutableExtensionRegistry(Set<Class<? extends Extension>> registeredExtensionTypes,
+			List<Entry> registeredExtensions) {
+		this.registeredExtensionTypes = new LinkedHashSet<>(registeredExtensionTypes);
+		this.registeredExtensions = new ArrayList<>(registeredExtensions);
 	}
 
 	@Override
 	public <E extends Extension> Stream<E> stream(Class<E> extensionType) {
-		if (this.parent == null) {
-			return streamLocal(extensionType);
-		}
-		return concat(this.parent.stream(extensionType), streamLocal(extensionType));
-	}
-
-	/**
-	 * Stream all {@code Extensions} of the specified type that are present
-	 * in this registry.
-	 *
-	 * <p>Extensions in ancestors are ignored.
-	 *
-	 * @param extensionType the type of {@link Extension} to stream
-	 */
-	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
 		return this.registeredExtensions.stream() //
 				.map(p -> p.getExtension().orElse(null)) //
 				.filter(extensionType::isInstance) //
@@ -153,8 +142,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * parent registry.
 	 */
 	private boolean isAlreadyRegistered(Class<? extends Extension> extensionType) {
-		return (this.registeredExtensionTypes.contains(extensionType)
-				|| (this.parent != null && this.parent.isAlreadyRegistered(extensionType)));
+		return this.registeredExtensionTypes.contains(extensionType);
 	}
 
 	@Override
