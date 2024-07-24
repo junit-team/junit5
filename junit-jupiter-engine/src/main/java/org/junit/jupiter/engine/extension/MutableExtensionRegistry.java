@@ -128,10 +128,13 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		registeredExtensions.forEach(entry -> {
 			Entry newEntry = entry;
 			if (entry instanceof LateInitEntry) {
-				LateInitEntry lateInitEntry = ((LateInitEntry) entry).copy();
-				this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()) //
-						.add(lateInitEntry);
-				newEntry = lateInitEntry;
+				LateInitEntry lateInitEntry = (LateInitEntry) entry;
+				newEntry = lateInitEntry.getExtension().map(Entry::of).orElseGet(() -> {
+					LateInitEntry copy = lateInitEntry.reset();
+					this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()) //
+							.add(copy);
+					return copy;
+				});
 			}
 			this.registeredExtensions.add(newEntry);
 		});
@@ -262,13 +265,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		}
 
 		void initialize(Object testInstance) {
+			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
 			extension = Optional.of(initializer.apply(testInstance));
 		}
 
-		LateInitEntry copy() {
-			LateInitEntry copy = new LateInitEntry(testClass, initializer);
-			copy.extension = this.extension;
-			return copy;
+		LateInitEntry reset() {
+			return new LateInitEntry(testClass, initializer);
 		}
 	}
 
