@@ -39,6 +39,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsBooleanArrays() {
+		boolean[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new boolean[] {}, new boolean[] {});
 		assertArrayEquals(new boolean[] {}, new boolean[] {}, "message");
 		assertArrayEquals(new boolean[] {}, new boolean[] {}, () -> "message");
@@ -180,6 +182,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsCharArrays() {
+		char[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new char[] {}, new char[] {});
 		assertArrayEquals(new char[] {}, new char[] {}, "message");
 		assertArrayEquals(new char[] {}, new char[] {}, () -> "message");
@@ -320,6 +324,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsByteArrays() {
+		byte[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new byte[] {}, new byte[] {});
 		assertArrayEquals(new byte[] {}, new byte[] {}, "message");
 		assertArrayEquals(new byte[] {}, new byte[] {}, () -> "message");
@@ -461,6 +467,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsShortArrays() {
+		short[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new short[] {}, new short[] {});
 		assertArrayEquals(new short[] {}, new short[] {}, "message");
 		assertArrayEquals(new short[] {}, new short[] {}, () -> "message");
@@ -602,6 +610,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsIntArrays() {
+		int[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new int[] {}, new int[] {});
 		assertArrayEquals(new int[] {}, new int[] {}, "message");
 		assertArrayEquals(new int[] {}, new int[] {}, () -> "message");
@@ -746,6 +756,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsLongArrays() {
+		long[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new long[] {}, new long[] {});
 		assertArrayEquals(new long[] {}, new long[] {}, "message");
 		assertArrayEquals(new long[] {}, new long[] {}, () -> "message");
@@ -888,6 +900,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsFloatArrays() {
+		float[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new float[] {}, new float[] {});
 		assertArrayEquals(new float[] {}, new float[] {}, "message");
 		assertArrayEquals(new float[] {}, new float[] {}, () -> "message");
@@ -1043,6 +1057,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsDeltaFloatArrays() {
+		float[] array = {};
+		assertArrayEquals(array, array, 0.001F);
 		assertArrayEquals(new float[] {}, new float[] {}, 0.001F);
 		assertArrayEquals(new float[] {}, new float[] {}, 0.001F, "message");
 		assertArrayEquals(new float[] {}, new float[] {}, 0.001F, () -> "message");
@@ -1231,6 +1247,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsDoubleArrays() {
+		double[] array = {};
+		assertArrayEquals(array, array);
 		assertArrayEquals(new double[] {}, new double[] {});
 		assertArrayEquals(new double[] {}, new double[] {}, "message");
 		assertArrayEquals(new double[] {}, new double[] {}, () -> "message");
@@ -1386,6 +1404,8 @@ class AssertArrayEqualsAssertionsTests {
 
 	@Test
 	void assertArrayEqualsDeltaDoubleArrays() {
+		double[] array = {};
+		assertArrayEquals(array, array, 0.5);
 		assertArrayEquals(new double[] {}, new double[] {}, 0.5);
 		assertArrayEquals(new double[] {}, new double[] {}, 0.5, "message");
 		assertArrayEquals(new double[] {}, new double[] {}, 0.5, () -> "message");
@@ -1624,9 +1644,11 @@ class AssertArrayEqualsAssertionsTests {
 					new int[] { 8 }, new Object[] { new long[] { 9 } } });
 
 		assertArrayEquals(
-			new Object[] { "a", new char[] { 'b', 'c' }, new int[] { 'd' },
+			new Object[] { "a", new byte[] { 42 }, new short[] { 42 }, new char[] { 'b', 'c' }, new float[] { 42.23f },
+					new double[] { 42.23 }, new boolean[] { true },
 					new Object[] { new Object[] { new String[] { "ef" }, new Object[] { new String[] { "ghi" } } } } },
-			new Object[] { "a", new char[] { 'b', 'c' }, new int[] { 'd' },
+			new Object[] { "a", new byte[] { 42 }, new short[] { 42 }, new char[] { 'b', 'c' }, new float[] { 42.23f },
+					new double[] { 42.23 }, new boolean[] { true },
 					new Object[] { new Object[] { new String[] { "ef" }, new Object[] { new String[] { "ghi" } } } } });
 	}
 
