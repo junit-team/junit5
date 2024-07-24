@@ -110,7 +110,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private final Set<Class<? extends Extension>> registeredExtensionTypes;
 	private final List<Entry> registeredExtensions;
-	private final Map<Class<?>, List<LateInitEntry>> lateInitExtensions;
+	private final Map<Class<?>, LateInitExtensions> lateInitExtensions;
 
 	private MutableExtensionRegistry() {
 		this(emptySet(), emptyList());
@@ -129,12 +129,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			Entry newEntry = entry;
 			if (entry instanceof LateInitEntry) {
 				LateInitEntry lateInitEntry = (LateInitEntry) entry;
-				newEntry = lateInitEntry.getExtension().map(Entry::of).orElseGet(() -> {
-					LateInitEntry copy = lateInitEntry.reset();
-					this.lateInitExtensions.computeIfAbsent(lateInitEntry.getTestClass(), __ -> new ArrayList<>()) //
-							.add(copy);
-					return copy;
-				});
+				newEntry = lateInitEntry.getExtension() //
+						.map(Entry::of) //
+						.orElseGet(() -> getLateInitExtensions(lateInitEntry.getTestClass()).add(lateInitEntry.copy()));
 			}
 			this.registeredExtensions.add(newEntry);
 		});
@@ -177,20 +174,31 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	@Override
 	public void registerUninitializedExtension(Class<?> testClass, Field source,
 			Function<Object, ? extends Extension> initializer) {
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(source, "source must not be null");
+		Preconditions.notNull(initializer, "initializer must not be null");
+
 		logger.trace(() -> String.format("Registering local extension (late-init) for [%s]%s",
 			source.getType().getName(), buildSourceInfo(source)));
-		LateInitEntry entry = new LateInitEntry(testClass, initializer);
-		this.lateInitExtensions.computeIfAbsent(testClass, __ -> new ArrayList<>()) //
-				.add(entry);
+
+		LateInitEntry entry = getLateInitExtensions(testClass) //
+				.add(new LateInitEntry(testClass, initializer));
 		this.registeredExtensions.add(entry);
 	}
 
 	@Override
 	public void initializeExtensions(Class<?> testClass, Object testInstance) {
-		List<LateInitEntry> entries = lateInitExtensions.remove(testClass);
-		if (entries != null) {
-			entries.forEach(entry -> entry.initialize(testInstance));
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(testInstance, "testInstance must not be null");
+
+		LateInitExtensions extensions = lateInitExtensions.remove(testClass);
+		if (extensions != null) {
+			extensions.initialize(testInstance);
 		}
+	}
+
+	private LateInitExtensions getLateInitExtensions(Class<?> testClass) {
+		return this.lateInitExtensions.computeIfAbsent(testClass, __ -> new LateInitExtensions());
 	}
 
 	private void registerDefaultExtension(Extension extension) {
@@ -269,9 +277,25 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			extension = Optional.of(initializer.apply(testInstance));
 		}
 
-		LateInitEntry reset() {
+		LateInitEntry copy() {
+			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
 			return new LateInitEntry(testClass, initializer);
 		}
+	}
+
+	private static class LateInitExtensions {
+
+		private final List<LateInitEntry> entries = new ArrayList<>();
+
+		LateInitEntry add(LateInitEntry entry) {
+			entries.add(entry);
+			return entry;
+		}
+
+		void initialize(Object testInstance) {
+			entries.forEach(entry -> entry.initialize(testInstance));
+		}
+
 	}
 
 }
