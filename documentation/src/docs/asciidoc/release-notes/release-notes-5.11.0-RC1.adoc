@@ -33,6 +33,7 @@ repository on GitHub.
   exception's _root_ cause matches all supplied conditions, for use with the
   `EngineTestKit`.
 * `ReflectionSupport` now supports scanning for classpath resources.
+* Introduce `@BeforeSuite` and `@AfterSuite` annotations.
 
 
 [[release-notes-5.11.0-RC1-junit-jupiter]]

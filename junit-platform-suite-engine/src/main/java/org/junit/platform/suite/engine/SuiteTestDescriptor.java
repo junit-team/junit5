@@ -13,8 +13,12 @@ package org.junit.platform.suite.engine;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -24,6 +28,8 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -121,16 +127,58 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	void execute(EngineExecutionListener parentEngineExecutionListener) {
 		parentEngineExecutionListener.executionStarted(this);
+		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
+
+		List<Method> beforeSuiteMethods = LifecycleMethodUtils.findBeforeSuiteMethods(suiteClass, throwableCollector);
+		List<Method> afterSuiteMethods = LifecycleMethodUtils.findAfterSuiteMethods(suiteClass, throwableCollector);
+
+		executeBeforeSuiteMethods(beforeSuiteMethods, throwableCollector);
+
+		TestExecutionSummary summary = executeTests(parentEngineExecutionListener, throwableCollector);
+
+		executeAfterSuiteMethods(afterSuiteMethods, throwableCollector);
+
+		TestExecutionResult testExecutionResult = computeTestExecutionResult(summary, throwableCollector);
+		parentEngineExecutionListener.executionFinished(this, testExecutionResult);
+	}
+
+	private void executeBeforeSuiteMethods(List<Method> beforeSuiteMethods, ThrowableCollector throwableCollector) {
+		if (throwableCollector.isNotEmpty()) {
+			return;
+		}
+		for (Method beforeSuiteMethod : beforeSuiteMethods) {
+			throwableCollector.execute(() -> ReflectionUtils.invokeMethod(beforeSuiteMethod, null));
+			if (throwableCollector.isNotEmpty()) {
+				return;
+			}
+		}
+	}
+
+	private TestExecutionSummary executeTests(EngineExecutionListener parentEngineExecutionListener,
+			ThrowableCollector throwableCollector) {
+		if (throwableCollector.isNotEmpty()) {
+			return null;
+		}
+
 		// #2838: The discovery result from a suite may have been filtered by
 		// post discovery filters from the launcher. The discovery result should
 		// be pruned accordingly.
 		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult.withRetainedEngines(
 			getChildren()::contains);
-		TestExecutionSummary summary = launcher.execute(discoveryResult, parentEngineExecutionListener);
-		parentEngineExecutionListener.executionFinished(this, computeTestExecutionResult(summary));
+		return launcher.execute(discoveryResult, parentEngineExecutionListener);
 	}
 
-	private TestExecutionResult computeTestExecutionResult(TestExecutionSummary summary) {
+	private void executeAfterSuiteMethods(List<Method> afterSuiteMethods, ThrowableCollector throwableCollector) {
+		for (Method afterSuiteMethod : afterSuiteMethods) {
+			throwableCollector.execute(() -> ReflectionUtils.invokeMethod(afterSuiteMethod, null));
+		}
+	}
+
+	private TestExecutionResult computeTestExecutionResult(TestExecutionSummary summary,
+			ThrowableCollector throwableCollector) {
+		if (throwableCollector.isNotEmpty()) {
+			return TestExecutionResult.failed(throwableCollector.getThrowable());
+		}
 		if (failIfNoTests && summary.getTestsFoundCount() == 0) {
 			return TestExecutionResult.failed(new NoTestsDiscoveredException(suiteClass));
 		}
