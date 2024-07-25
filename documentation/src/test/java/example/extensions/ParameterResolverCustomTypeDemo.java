@@ -12,49 +12,27 @@ package example.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 // tag::user_guide[]
-public class ParameterResolverNestedClasses {
+public class ParameterResolverCustomTypeDemo {
 
 	@Test
-	@DisplayName("Outer class test")
-	void testOuterClass(TestInfo testInfo) {
-		assertEquals("Outer class test", testInfo.getDisplayName());
-	}
-
-	@Nested
-	class FirstResolution {
-
-		@Test
-		@ExtendWith(FirstIntegerResolver.class)
-		void testIntNested(int i) {
-			assertEquals(1, i);
-		}
-	}
-
-	@Nested
-	class SecondResolution {
-
-		@Test
-		@ExtendWith(SecondIntegerResolver.class)
-		void testIntNested(int i) {
-			assertEquals(2, i);
-		}
+	@ExtendWith({ FirstIntegerResolver.class, SecondIntegerResolver.class })
+	void testInt(Integer i, WrappedInteger wrappedInteger) {
+		assertEquals(1, i);
+		assertEquals(2, wrappedInteger.value);
 	}
 
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == int.class;
+			return parameterContext.getParameter().getType().equals(Integer.class);
 		}
 
 		@Override
@@ -67,13 +45,23 @@ public class ParameterResolverNestedClasses {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType() == int.class;
+			return parameterContext.getParameter().getType().equals(WrappedInteger.class);
 		}
 
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return 2;
+			return new WrappedInteger(2);
 		}
+	}
+
+	static class WrappedInteger {
+
+		private final int value;
+
+		public WrappedInteger(int value) {
+			this.value = value;
+		}
+
 	}
 }
 // end::user_guide[]

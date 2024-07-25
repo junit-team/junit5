@@ -19,13 +19,18 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 // tag::user_guide[]
-public class ParameterResolverDuplicateTypeInteger {
+public class ParameterResolverNoConflictDemo {
 
 	@Test
-	@ExtendWith({ FirstIntegerResolver.class, SecondIntegerResolver.class })
-	void testInt(int i) {
-		// Test will not run due to ParameterResolutionException
+	@ExtendWith(FirstIntegerResolver.class)
+	void firstResolution(int i) {
 		assertEquals(1, i);
+	}
+
+	@Test
+	@ExtendWith(SecondIntegerResolver.class)
+	void secondResolution(int i) {
+		assertEquals(2, i);
 	}
 
 	static class FirstIntegerResolver implements ParameterResolver {

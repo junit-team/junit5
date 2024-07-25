@@ -12,6 +12,8 @@ package example.extensions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import extensions.ExpectToFail;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -19,20 +21,23 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
 // tag::user_guide[]
-public class ParameterResolverCustomType {
+public class ParameterResolverConflictDemo {
 
+	// end::user_guide[]
+	@ExpectToFail
+	// tag::user_guide[]
 	@Test
 	@ExtendWith({ FirstIntegerResolver.class, SecondIntegerResolver.class })
-	void testInt(Integer i, WrappedInteger wrappedInteger) {
+	void testInt(int i) {
+		// Test will not run due to ParameterResolutionException
 		assertEquals(1, i);
-		assertEquals(2, wrappedInteger.getValue());
 	}
 
 	static class FirstIntegerResolver implements ParameterResolver {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType().equals(Integer.class);
+			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
@@ -45,25 +50,12 @@ public class ParameterResolverCustomType {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return parameterContext.getParameter().getType().equals(WrappedInteger.class);
+			return parameterContext.getParameter().getType() == int.class;
 		}
 
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-			return new WrappedInteger(2);
-		}
-	}
-
-	static class WrappedInteger {
-
-		private int value;
-
-		public WrappedInteger(int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
+			return 2;
 		}
 	}
 }
