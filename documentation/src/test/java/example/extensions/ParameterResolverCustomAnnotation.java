@@ -65,3 +65,4 @@ public class ParameterResolverCustomAnnotation {
 	public @interface AnnotatedInteger {
 	}
 }
+// end::user_guide[]

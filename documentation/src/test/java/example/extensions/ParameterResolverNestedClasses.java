@@ -76,3 +76,4 @@ public class ParameterResolverNestedClasses {
 		}
 	}
 }
+// end::user_guide[]

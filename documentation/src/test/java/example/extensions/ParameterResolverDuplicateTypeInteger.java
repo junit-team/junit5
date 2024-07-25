@@ -54,3 +54,4 @@ public class ParameterResolverDuplicateTypeInteger {
 		}
 	}
 }
+// end::user_guide[]

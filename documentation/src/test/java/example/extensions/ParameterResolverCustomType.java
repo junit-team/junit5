@@ -67,3 +67,4 @@ public class ParameterResolverCustomType {
 		}
 	}
 }
+// end::user_guide[]
