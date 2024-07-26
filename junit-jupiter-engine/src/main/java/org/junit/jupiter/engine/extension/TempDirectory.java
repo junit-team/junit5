@@ -286,7 +286,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
 				ExtensionContext extensionContext) throws Exception {
-			this.dir = factory.createTempDirectory(elementContext, extensionContext);
+			this.dir = Preconditions.notNull(factory.createTempDirectory(elementContext, extensionContext),
+				"temp directory must not be null");
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
 			this.extensionContext = extensionContext;

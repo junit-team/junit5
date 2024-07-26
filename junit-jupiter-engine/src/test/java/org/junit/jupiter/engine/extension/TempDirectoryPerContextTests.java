@@ -54,14 +54,15 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
+import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
-import org.junit.platform.testkit.engine.Events;
 
 /**
  * Integration tests for the legacy behavior of the {@link TempDirectory}
- * extension to create a single temp directory per context, i.e. test class or
+ * extension to create a single temp directory per context, i.e., test class or
  * method.
  *
  * @since 5.4
@@ -72,6 +73,13 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	@Override
 	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
 		return executeTests(requestBuilder(testClass).build());
+	}
+
+	private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
+			Class<? extends TempDirFactory> factoryClass) {
+		return executeTests(requestBuilder(testClass) //
+				.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
+				.build());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -295,25 +303,20 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 	@TestMethodOrder(OrderAnnotation.class)
 	class DefaultFactory {
 
-		private Events executeTestsForClassWithDefaultFactory(Class<?> testClass,
-				Class<? extends TempDirFactory> factoryClass) {
-			return TempDirectoryPerContextTests.super.executeTests(requestBuilder(testClass) //
-					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
-					.build()).testEvents();
-		}
-
 		@Test
 		@DisplayName("set to Jupiter's default")
 		void supportsStandardDefaultFactory() {
-			executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, TempDirFactory.Standard.class) //
-					.assertStatistics(stats -> stats.started(1).succeeded(1));
+			var results = executeTestsForClassWithDefaultFactory(StandardDefaultFactoryTestCase.class, Standard.class);
+
+			results.testEvents().assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 		@Test
 		@DisplayName("set to custom factory")
 		void supportsCustomDefaultFactory() {
-			executeTestsForClassWithDefaultFactory(NonStandardDefaultFactoryTestCase.class, Factory.class) //
-					.assertStatistics(stats -> stats.started(1).succeeded(1));
+			var results = executeTestsForClassWithDefaultFactory(CustomDefaultFactoryTestCase.class, Factory.class);
+
+			results.testEvents().assertStatistics(stats -> stats.started(1).succeeded(1));
 		}
 
 		private static class Factory implements TempDirFactory {
@@ -359,8 +362,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			var results = executeTestsForClass(InvalidTestCase.class);
 
 			// @formatter:off
-			TempDirectoryPerContextTests.assertSingleFailedTest(results,
-				instanceOf(ParameterResolutionException.class),
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
 				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+] in method \\[.+]: .+")),
 				cause(
 					instanceOf(ExtensionConfigurationException.class),
@@ -389,20 +391,48 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when @TempDir factory is not Standard")
+		@DisplayName("when non-default @TempDir factory is set")
 		@Order(32)
-		void onlySupportsStandardTempDirFactory() {
-			var results = executeTestsForClass(NonStandardFactoryTestCase.class);
+		void doesNotSupportNonDefaultTempDirFactory() {
+			var results = executeTestsForClass(NonDefaultFactoryTestCase.class);
 
 			// @formatter:off
-			TempDirectoryPerContextTests.assertSingleFailedTest(results,
-					instanceOf(ParameterResolutionException.class),
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
 					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
 					cause(
 							instanceOf(ExtensionConfigurationException.class),
 							message("Custom @TempDir factory is not supported with junit.jupiter.tempdir.scope=per_context. "
 									+ "Use junit.jupiter.tempdir.factory.default instead.")));
 			// @formatter:on
+		}
+
+		@Test
+		@DisplayName("when default @TempDir factory returns null")
+		@Order(33)
+		void doesNotSupportCustomDefaultTempDirFactoryReturningNull() {
+			var results = executeTestsForClassWithDefaultFactory(CustomDefaultFactoryReturningNullTestCase.class,
+				FactoryReturningNull.class);
+
+			// @formatter:off
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Failed to create default temp directory"),
+							cause(
+									instanceOf(PreconditionViolationException.class),
+									message("temp directory must not be null")
+							)
+					));
+			// @formatter:on
+		}
+
+		private static class FactoryReturningNull implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
+				return null;
+			}
 		}
 
 	}
@@ -685,7 +715,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class NonStandardFactoryTestCase {
+	static class NonDefaultFactoryTestCase {
 
 		@Test
 		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) Path tempDir) {
@@ -712,11 +742,20 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class NonStandardDefaultFactoryTestCase {
+	static class CustomDefaultFactoryTestCase {
 
 		@Test
 		void test(@TempDir Path tempDir1, @TempDir Path tempDir2) {
 			assertSame(tempDir1, tempDir2);
+		}
+
+	}
+
+	static class CustomDefaultFactoryReturningNullTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir Path tempDir) {
+			// never called
 		}
 
 	}
