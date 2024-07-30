@@ -48,3 +48,14 @@ include::{testDir}/example/SuiteDemo.java[tags=user_guide]
 NOTE: There are numerous configuration options for discovering and filtering tests in a
 test suite. Please consult the Javadoc of the `{suite-api-package}` package for a full
 list of supported annotations and further details.
+
+==== @BeforeSuite and @AfterSuite
+
+`@BeforeSuite` and `@AfterSuite` annotations can be used on methods inside a
+`@Suite`-annotated class. They will be executed respectively before and after
+all tests of the test suite.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/BeforeAndAfterSuiteDemo.java[tags=user_guide]
+----
