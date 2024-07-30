@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -122,11 +123,8 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		void factoryReturnsNull() {
 			TempDirFactory factory = (elementContext, extensionContext) -> null;
 
-			assertThatExceptionOfType(ExtensionConfigurationException.class)//
-					.isThrownBy(() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext))//
-					.withMessage("Failed to create default temp directory")//
-					.withCauseInstanceOf(PreconditionViolationException.class)//
-					.havingCause().withMessage("temp directory must be a directory");
+			assertThatExtensionConfigurationExceptionIsThrownBy(
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
 		}
 
 		@Test
@@ -135,11 +133,8 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			Path file = createFile(root.resolve("file"));
 			TempDirFactory factory = (elementContext, extensionContext) -> file;
 
-			assertThatExceptionOfType(ExtensionConfigurationException.class)//
-					.isThrownBy(() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext))//
-					.withMessage("Failed to create default temp directory")//
-					.withCauseInstanceOf(PreconditionViolationException.class)//
-					.havingCause().withMessage("temp directory must be a directory");
+			assertThatExtensionConfigurationExceptionIsThrownBy(
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
 
 			delete(file);
 		}
@@ -151,14 +146,19 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			Path symbolicLink = createSymbolicLink(root.resolve("symbolicLink"), file);
 			TempDirFactory factory = (elementContext, extensionContext) -> symbolicLink;
 
-			assertThatExceptionOfType(ExtensionConfigurationException.class)//
-					.isThrownBy(() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext))//
-					.withMessage("Failed to create default temp directory")//
-					.withCauseInstanceOf(PreconditionViolationException.class)//
-					.havingCause().withMessage("temp directory must be a directory");
+			assertThatExtensionConfigurationExceptionIsThrownBy(
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
 
 			delete(symbolicLink);
 			delete(file);
+		}
+
+		private static void assertThatExtensionConfigurationExceptionIsThrownBy(ThrowingCallable callable) {
+			assertThatExceptionOfType(ExtensionConfigurationException.class)//
+					.isThrownBy(callable)//
+					.withMessage("Failed to create default temp directory")//
+					.withCauseInstanceOf(PreconditionViolationException.class)//
+					.havingCause().withMessage("temp directory must be a directory");
 		}
 
 	}
