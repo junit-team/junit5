@@ -142,7 +142,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("fails if the factory returns a symbolic link to a file")
 		void factoryReturnsSymbolicLinkToFile() throws IOException {
-			Path file = createFile(root.resolve("directory"));
+			Path file = createFile(root.resolve("file"));
 			Path symbolicLink = createSymbolicLink(root.resolve("symbolicLink"), file);
 			TempDirFactory factory = (elementContext, extensionContext) -> symbolicLink;
 
