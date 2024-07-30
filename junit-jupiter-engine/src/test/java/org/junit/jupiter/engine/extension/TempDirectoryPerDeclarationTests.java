@@ -310,10 +310,10 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when @TempDir factory returns null")
+		@DisplayName("when @TempDir factory does not return directory")
 		@Order(32)
-		void doesNotSupportTempDirFactoryReturningNull() {
-			var results = executeTestsForClass(FactoryReturningNullTestCase.class);
+		void doesNotSupportTempDirFactoryNotReturningDirectory() {
+			var results = executeTestsForClass(FactoryNotReturningDirectoryTestCase.class);
 
 			// @formatter:off
 			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
@@ -323,18 +323,18 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 							message("Failed to create default temp directory"),
 							cause(
 									instanceOf(PreconditionViolationException.class),
-									message("temp directory must not be null")
+									message("temp directory must be a directory")
 							)
 					));
 			// @formatter:on
 		}
 
 		@Test
-		@DisplayName("when default @TempDir factory returns null")
+		@DisplayName("when default @TempDir factory does not return directory")
 		@Order(33)
 		void doesNotSupportCustomDefaultTempDirFactoryReturningNull() {
-			var results = executeTestsForClassWithDefaultFactory(CustomDefaultFactoryReturningNullTestCase.class,
-				FactoryReturningNull.class);
+			var results = executeTestsForClassWithDefaultFactory(
+				CustomDefaultFactoryNotReturningDirectoryTestCase.class, FactoryNotReturningDirectory.class);
 
 			// @formatter:off
 			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
@@ -344,13 +344,13 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 							message("Failed to create default temp directory"),
 							cause(
 									instanceOf(PreconditionViolationException.class),
-									message("temp directory must not be null")
+									message("temp directory must be a directory")
 							)
 					));
 			// @formatter:on
 		}
 
-		private static class FactoryReturningNull implements TempDirFactory {
+		private static class FactoryNotReturningDirectory implements TempDirFactory {
 
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
@@ -1418,7 +1418,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class FactoryReturningNullTestCase {
+	static class FactoryNotReturningDirectoryTestCase {
 
 		@Test
 		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) Path tempDir) {
@@ -1468,7 +1468,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class CustomDefaultFactoryReturningNullTestCase {
+	static class CustomDefaultFactoryNotReturningDirectoryTestCase {
 
 		@Test
 		void test(@SuppressWarnings("unused") @TempDir Path tempDir) {

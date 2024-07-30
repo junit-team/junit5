@@ -407,11 +407,11 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		@DisplayName("when default @TempDir factory returns null")
+		@DisplayName("when default @TempDir factory does not return directory")
 		@Order(33)
-		void doesNotSupportCustomDefaultTempDirFactoryReturningNull() {
-			var results = executeTestsForClassWithDefaultFactory(CustomDefaultFactoryReturningNullTestCase.class,
-				FactoryReturningNull.class);
+		void doesNotSupportCustomDefaultTempDirFactoryNotReturningDirectory() {
+			var results = executeTestsForClassWithDefaultFactory(
+				CustomDefaultFactoryNotReturningDirectoryTestCase.class, FactoryNotReturningDirectory.class);
 
 			// @formatter:off
 			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
@@ -421,13 +421,13 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 							message("Failed to create default temp directory"),
 							cause(
 									instanceOf(PreconditionViolationException.class),
-									message("temp directory must not be null")
+									message("temp directory must be a directory")
 							)
 					));
 			// @formatter:on
 		}
 
-		private static class FactoryReturningNull implements TempDirFactory {
+		private static class FactoryNotReturningDirectory implements TempDirFactory {
 
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
@@ -751,7 +751,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class CustomDefaultFactoryReturningNullTestCase {
+	static class CustomDefaultFactoryNotReturningDirectoryTestCase {
 
 		@Test
 		void test(@SuppressWarnings("unused") @TempDir Path tempDir) {
