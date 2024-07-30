@@ -44,6 +44,9 @@ repository on GitHub.
 
 * `TestInstancePostProcessor` extensions can now be registered via the `@ExtendWith`
   annotation on non-static fields.
+* Methods and constructors invoked via `ExecutableInvoker` now use the same extensions as
+  the context they are invoked from and the same `ExtensionContext` is passed to
+  registered instances of `ParameterResolver`.
 
 [[release-notes-5.11.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
