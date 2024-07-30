@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
@@ -38,21 +39,23 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
 	 *
 	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor,
-	 * Lifecycle, JupiterConfiguration, ThrowableCollector, ExecutableInvoker)
+	 * Lifecycle, JupiterConfiguration, ThrowableCollector, Function)
 	 */
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector, ExecutableInvoker executableInvoker) {
+			ThrowableCollector throwableCollector,
+			Function<ExtensionContext, ExecutableInvoker> executableInvokerFactory) {
 
 		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, throwableCollector,
-			executableInvoker);
+			executableInvokerFactory);
 	}
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
-			ThrowableCollector throwableCollector, ExecutableInvoker executableInvoker) {
+			ThrowableCollector throwableCollector,
+			Function<ExtensionContext, ExecutableInvoker> executableInvokerFactory) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvokerFactory);
 
 		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;
