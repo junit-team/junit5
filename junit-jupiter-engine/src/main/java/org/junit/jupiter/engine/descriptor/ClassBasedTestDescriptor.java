@@ -15,7 +15,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromConstructorParameters;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
-import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromFields;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromInstanceFields;
+import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromStaticFields;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterAllMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findAfterEachMethods;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods;
@@ -152,7 +153,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 		// Register extensions from static fields here, at the class level but
 		// after extensions registered via @ExtendWith.
-		registerExtensionsFromFields(registry, this.testClass, null);
+		registerExtensionsFromStaticFields(registry, this.testClass);
 
 		// Resolve the TestInstanceFactory at the class level in order to fail
 		// the entire class in case of configuration errors (e.g., more than
@@ -175,6 +176,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
 		this.afterAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		registerExtensionsFromInstanceFields(registry, this.testClass);
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
@@ -288,10 +290,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			throwableCollector);
 		throwableCollector.execute(() -> {
 			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
-			// In addition, we register extensions from instance fields here since the
-			// best time to do that is immediately following test class instantiation
-			// and post processing.
-			registerExtensionsFromFields(registrar, this.testClass, instances.getInnermostInstance());
+			// In addition, we initialize extension registered programmatically from instance fields here
+			// since the best time to do that is immediately following test class instantiation
+			// and post-processing.
+			registrar.initializeExtensions(this.testClass, instances.getInnermostInstance());
 		});
 		return instances;
 	}

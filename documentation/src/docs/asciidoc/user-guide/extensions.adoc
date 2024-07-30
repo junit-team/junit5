@@ -129,20 +129,8 @@ important to note which extension APIs are implemented and for what reasons.
 Specifically, `RandomNumberExtension` implements the following extension APIs:
 
 - `BeforeAllCallback`: to support static field injection
-- `BeforeEachCallback`: to support non-static field injection
+- `TestInstancePostProcessor`: to support non-static field injection
 - `ParameterResolver`: to support constructor and method injection
-
-[NOTE]
-====
-Ideally, the `RandomNumberExtension` would implement `TestInstancePostProcessor` instead
-of `BeforeEachCallback` in order to support non-static field injection immediately after
-the test class has been instantiated.
-
-However, JUnit Jupiter currently does not allow a `TestInstancePostProcessor` to be
-registered via `@ExtendWith` on a non-static field (see
-link:{junit5-repo}/issues/3437[issue 3437]). In light of that, the `RandomNumberExtension`
-implements `BeforeEachCallback` as an alternative approach.
-====
 
 [source,java,indent=0]
 ----
@@ -272,11 +260,8 @@ will be registered after the test class has been instantiated and after each reg
 (potentially injecting the instance of the extension to be used into the annotated
 field). Thus, if such an _instance extension_ implements class-level or instance-level
 extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, or
-`TestInstancePostProcessor`, those APIs will not be honored. By default, an instance
-extension will be registered _after_ extensions that are registered at the method level
-via `@ExtendWith`; however, if the test class is configured with
-`@TestInstance(Lifecycle.PER_CLASS)` semantics, an instance extension will be registered
-_before_ extensions that are registered at the method level via `@ExtendWith`.
+`TestInstancePostProcessor`, those APIs will not be honored. Instance extensions will be
+registered _before_ extensions that are registered at the method level via `@ExtendWith`.
 
 In the following example, the `docs` field in the test class is initialized
 programmatically by invoking a custom `lookUpDocsDir()` method and supplying the result

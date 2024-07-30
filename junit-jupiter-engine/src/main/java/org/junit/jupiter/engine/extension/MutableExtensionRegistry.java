@@ -10,18 +10,24 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static java.util.stream.Stream.concat;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -35,10 +41,6 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Default, mutable implementation of {@link ExtensionRegistry}.
- *
- * <p>A registry has a reference to its parent registry, and all lookups are
- * performed first in the current registry itself and then recursively in its
- * ancestors.
  *
  * @since 5.5
  */
@@ -69,7 +71,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
 	 */
 	public static MutableExtensionRegistry createRegistryWithDefaultExtensions(JupiterConfiguration configuration) {
-		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry(null);
+		MutableExtensionRegistry extensionRegistry = new MutableExtensionRegistry();
 
 		DEFAULT_STATELESS_EXTENSIONS.forEach(extensionRegistry::registerDefaultExtension);
 
@@ -106,38 +108,41 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		return registry;
 	}
 
-	private final MutableExtensionRegistry parent;
+	private final Set<Class<? extends Extension>> registeredExtensionTypes;
+	private final List<Entry> registeredExtensions;
+	private final Map<Class<?>, LateInitExtensions> lateInitExtensions;
 
-	private final Set<Class<? extends Extension>> registeredExtensionTypes = new LinkedHashSet<>();
-
-	private final List<Extension> registeredExtensions = new ArrayList<>();
+	private MutableExtensionRegistry() {
+		this(emptySet(), emptyList());
+	}
 
 	private MutableExtensionRegistry(MutableExtensionRegistry parent) {
-		this.parent = parent;
+		this(parent.registeredExtensionTypes, parent.registeredExtensions);
+	}
+
+	private MutableExtensionRegistry(Set<Class<? extends Extension>> registeredExtensionTypes,
+			List<Entry> registeredExtensions) {
+		this.registeredExtensionTypes = new LinkedHashSet<>(registeredExtensionTypes);
+		this.registeredExtensions = new ArrayList<>(registeredExtensions.size());
+		this.lateInitExtensions = new LinkedHashMap<>();
+		registeredExtensions.forEach(entry -> {
+			Entry newEntry = entry;
+			if (entry instanceof LateInitEntry) {
+				LateInitEntry lateInitEntry = (LateInitEntry) entry;
+				newEntry = lateInitEntry.getExtension() //
+						.map(Entry::of) //
+						.orElseGet(() -> getLateInitExtensions(lateInitEntry.getTestClass()).add(lateInitEntry.copy()));
+			}
+			this.registeredExtensions.add(newEntry);
+		});
 	}
 
 	@Override
 	public <E extends Extension> Stream<E> stream(Class<E> extensionType) {
-		if (this.parent == null) {
-			return streamLocal(extensionType);
-		}
-		return concat(this.parent.stream(extensionType), streamLocal(extensionType));
-	}
-
-	/**
-	 * Stream all {@code Extensions} of the specified type that are present
-	 * in this registry.
-	 *
-	 * <p>Extensions in ancestors are ignored.
-	 *
-	 * @param extensionType the type of {@link Extension} to stream
-	 */
-	private <E extends Extension> Stream<E> streamLocal(Class<E> extensionType) {
-		// @formatter:off
-		return this.registeredExtensions.stream()
-				.filter(extensionType::isInstance)
+		return this.registeredExtensions.stream() //
+				.map(p -> p.getExtension().orElse(null)) //
+				.filter(extensionType::isInstance) //
 				.map(extensionType::cast);
-		// @formatter:on
 	}
 
 	@Override
@@ -152,8 +157,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * parent registry.
 	 */
 	private boolean isAlreadyRegistered(Class<? extends Extension> extensionType) {
-		return (this.registeredExtensionTypes.contains(extensionType)
-				|| (this.parent != null && this.parent.isAlreadyRegistered(extensionType)));
+		return this.registeredExtensionTypes.contains(extensionType);
 	}
 
 	@Override
@@ -165,6 +169,36 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	@Override
 	public void registerSyntheticExtension(Extension extension, Object source) {
 		registerExtension("synthetic", extension, source);
+	}
+
+	@Override
+	public void registerUninitializedExtension(Class<?> testClass, Field source,
+			Function<Object, ? extends Extension> initializer) {
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(source, "source must not be null");
+		Preconditions.notNull(initializer, "initializer must not be null");
+
+		logger.trace(() -> String.format("Registering local extension (late-init) for [%s]%s",
+			source.getType().getName(), buildSourceInfo(source)));
+
+		LateInitEntry entry = getLateInitExtensions(testClass) //
+				.add(new LateInitEntry(testClass, initializer));
+		this.registeredExtensions.add(entry);
+	}
+
+	@Override
+	public void initializeExtensions(Class<?> testClass, Object testInstance) {
+		Preconditions.notNull(testClass, "testClass must not be null");
+		Preconditions.notNull(testInstance, "testInstance must not be null");
+
+		LateInitExtensions extensions = lateInitExtensions.remove(testClass);
+		if (extensions != null) {
+			extensions.initialize(testInstance);
+		}
+	}
+
+	private LateInitExtensions getLateInitExtensions(Class<?> testClass) {
+		return this.lateInitExtensions.computeIfAbsent(testClass, __ -> new LateInitExtensions());
 	}
 
 	private void registerDefaultExtension(Extension extension) {
@@ -185,12 +219,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private void registerExtension(String category, Extension extension, Object source) {
 		Preconditions.notBlank(category, "category must not be null or blank");
-		Preconditions.notNull(extension, "Extension must not be null");
+		Preconditions.notNull(extension, "extension must not be null");
 
 		logger.trace(
 			() -> String.format("Registering %s extension [%s]%s", category, extension, buildSourceInfo(source)));
 
-		this.registeredExtensions.add(extension);
+		this.registeredExtensions.add(Entry.of(extension));
 		this.registeredExtensionTypes.add(extension.getClass());
 	}
 
@@ -204,6 +238,64 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			source = String.format("%s %s.%s", type, member.getDeclaringClass().getName(), member.getName());
 		}
 		return " from source [" + source + "]";
+	}
+
+	private interface Entry {
+
+		static Entry of(Extension extension) {
+			Optional<Extension> value = Optional.of(extension);
+			return () -> value;
+		}
+
+		Optional<Extension> getExtension();
+	}
+
+	private static class LateInitEntry implements Entry {
+
+		private final Class<?> testClass;
+		private final Function<Object, ? extends Extension> initializer;
+
+		@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+		private Optional<Extension> extension = Optional.empty();
+
+		public LateInitEntry(Class<?> testClass, Function<Object, ? extends Extension> initializer) {
+			this.testClass = testClass;
+			this.initializer = initializer;
+		}
+
+		@Override
+		public Optional<Extension> getExtension() {
+			return extension;
+		}
+
+		public Class<?> getTestClass() {
+			return testClass;
+		}
+
+		void initialize(Object testInstance) {
+			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
+			extension = Optional.of(initializer.apply(testInstance));
+		}
+
+		LateInitEntry copy() {
+			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
+			return new LateInitEntry(testClass, initializer);
+		}
+	}
+
+	private static class LateInitExtensions {
+
+		private final List<LateInitEntry> entries = new ArrayList<>();
+
+		LateInitEntry add(LateInitEntry entry) {
+			entries.add(entry);
+			return entry;
+		}
+
+		void initialize(Object testInstance) {
+			entries.forEach(entry -> entry.initialize(testInstance));
+		}
+
 	}
 
 }

@@ -21,6 +21,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
@@ -38,7 +39,11 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
-		return executeTests(request().selectors(selectors).build());
+		return executeTests(request().selectors(selectors));
+	}
+
+	protected EngineExecutionResults executeTests(LauncherDiscoveryRequestBuilder builder) {
+		return executeTests(builder.build());
 	}
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequest request) {
