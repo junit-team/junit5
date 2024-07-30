@@ -36,11 +36,11 @@ import org.apiguardian.api.API;
  * language. Furthermore, {@code @AfterSuite} methods from superclasses will be
  * executed after {@code @AfterSuite} methods in subclasses.
  *
- * <p>JUnit Jupiter does not guarantee the execution order of multiple
- * {@code @AfterSuite} methods that are declared within a single test class or
- * test interface. While it may at times appear that these methods are invoked
- * in alphabetical order, they are in fact sorted using an algorithm that is
- * deterministic but intentionally non-obvious.
+ * <p>The JUnit Platform Suite Engine does not guarantee the execution order of
+ * multiple {@code @AfterSuite} methods that are declared within a single test
+ * class or test interface. While it may at times appear that these methods are
+ * invoked in alphabetical order, they are in fact sorted using an algorithm
+ * that is deterministic but intentionally non-obvious.
  *
  * <p>In addition, {@code @AfterSuite} methods are in no way linked to
  * {@code @BeforeSuite} methods. Consequently, there are no guarantees with regard
