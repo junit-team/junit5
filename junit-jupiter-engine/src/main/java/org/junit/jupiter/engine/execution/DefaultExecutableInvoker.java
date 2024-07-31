@@ -37,10 +37,6 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 		this.extensionRegistry = extensionRegistry;
 	}
 
-	public DefaultExecutableInvoker(JupiterEngineExecutionContext context) {
-		this(context.getExtensionContext(), context.getExtensionRegistry());
-	}
-
 	@Override
 	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
 		Object[] arguments = resolveParameters(constructor, Optional.empty(), Optional.ofNullable(outerInstance),

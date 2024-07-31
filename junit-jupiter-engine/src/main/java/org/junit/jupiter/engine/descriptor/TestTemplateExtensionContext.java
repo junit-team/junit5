@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
@@ -31,9 +32,9 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration, TestInstances testInstances,
-			ExecutableInvoker executableInvoker) {
+			Function<ExtensionContext, ExecutableInvoker> executableInvokerFactory) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvoker);
+		super(parent, engineExecutionListener, testDescriptor, configuration, executableInvokerFactory);
 		this.testInstances = testInstances;
 	}
 

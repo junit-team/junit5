@@ -45,8 +45,10 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 		static int testInvocations = 0;
 
 		@Test
-		void testWithResolvedParameter(TestInfo testInfo) {
+		void testWithResolvedParameter(TestInfo testInfo,
+				@ExtendWith(ExtensionContextParameterResolver.class) ExtensionContext extensionContext) {
 			assertNotNull(testInfo);
+			assertEquals(testInfo.getTestMethod().orElseThrow(), extensionContext.getRequiredTestMethod());
 			testInvocations++;
 		}
 
@@ -57,14 +59,15 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 
 		static int constructorInvocations = 0;
 
-		public ExecuteConstructorTwiceTestCase(TestInfo testInfo) {
+		public ExecuteConstructorTwiceTestCase(TestInfo testInfo,
+				@ExtendWith(ExtensionContextParameterResolver.class) ExtensionContext extensionContext) {
 			assertNotNull(testInfo);
+			assertEquals(testInfo.getTestClass().orElseThrow(), extensionContext.getRequiredTestClass());
 			constructorInvocations++;
 		}
 
 		@Test
 		void test() {
-
 		}
 
 	}
@@ -84,9 +87,24 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 		@Override
 		public void beforeAll(ExtensionContext context) throws Exception {
 			context.getExecutableInvoker() //
-					.invoke(context.getRequiredTestClass().getConstructor(TestInfo.class));
+					.invoke(context.getRequiredTestClass().getConstructor(TestInfo.class, ExtensionContext.class));
 		}
 
+	}
+
+	static class ExtensionContextParameterResolver implements ParameterResolver {
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return ExtensionContext.class.equals(parameterContext.getParameter().getType());
+		}
+
+		@Override
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return extensionContext;
+		}
 	}
 
 }

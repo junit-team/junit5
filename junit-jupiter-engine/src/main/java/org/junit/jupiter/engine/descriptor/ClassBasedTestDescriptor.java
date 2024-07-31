@@ -39,7 +39,6 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -179,10 +178,9 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		registerExtensionsFromInstanceFields(registry, this.testClass);
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
-		ExecutableInvoker executableInvoker = new DefaultExecutableInvoker(context);
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, this.lifecycle, context.getConfiguration(), throwableCollector,
-			executableInvoker);
+			it -> new DefaultExecutableInvoker(it, registry));
 
 		// @formatter:off
 		return context.extend()

@@ -55,8 +55,9 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final ExecutableInvoker executableInvoker;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
-			JupiterConfiguration configuration, ExecutableInvoker executableInvoker) {
-		this.executableInvoker = executableInvoker;
+			JupiterConfiguration configuration,
+			Function<ExtensionContext, ExecutableInvoker> executableInvokerFactory) {
+		this.executableInvoker = executableInvokerFactory.apply(this);
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		Preconditions.notNull(configuration, "JupiterConfiguration must not be null");
