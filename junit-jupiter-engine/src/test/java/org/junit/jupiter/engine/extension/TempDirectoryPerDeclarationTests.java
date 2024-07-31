@@ -83,6 +83,7 @@ import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
@@ -94,6 +95,14 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 @DisplayName("TempDirectory extension (per declaration)")
 class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
+
+	private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
+			Class<? extends TempDirFactory> factoryClass) {
+		return executeTests(request() //
+				.selectors(selectClass(testClass)) //
+				.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
+				.build());
+	}
 
 	@BeforeEach
 	@AfterEach
@@ -272,8 +281,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			var results = executeTestsForClass(InvalidTestCase.class);
 
 			// @formatter:off
-			TempDirectoryPerDeclarationTests.assertSingleFailedTest(results,
-				instanceOf(ParameterResolutionException.class),
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
 				message(m -> m.matches("Failed to resolve parameter \\[java.lang.String .+] in method \\[.+]: .+")),
 				cause(
 					instanceOf(ExtensionConfigurationException.class),
@@ -299,6 +307,55 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 			assertSingleFailedContainer(results, ParameterResolutionException.class,
 				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
+		}
+
+		@Test
+		@DisplayName("when @TempDir factory does not return directory")
+		@Order(32)
+		void doesNotSupportTempDirFactoryNotReturningDirectory() {
+			var results = executeTestsForClass(FactoryNotReturningDirectoryTestCase.class);
+
+			// @formatter:off
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Failed to create default temp directory"),
+							cause(
+									instanceOf(PreconditionViolationException.class),
+									message("temp directory must be a directory")
+							)
+					));
+			// @formatter:on
+		}
+
+		@Test
+		@DisplayName("when default @TempDir factory does not return directory")
+		@Order(33)
+		void doesNotSupportCustomDefaultTempDirFactoryReturningNull() {
+			var results = executeTestsForClassWithDefaultFactory(
+				CustomDefaultFactoryNotReturningDirectoryTestCase.class, FactoryNotReturningDirectory.class);
+
+			// @formatter:off
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Failed to create default temp directory"),
+							cause(
+									instanceOf(PreconditionViolationException.class),
+									message("temp directory must be a directory")
+							)
+					));
+			// @formatter:on
+		}
+
+		private static class FactoryNotReturningDirectory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
+				return null;
+			}
 		}
 
 	}
@@ -378,14 +435,6 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	@DisplayName("supports default factory")
 	@TestMethodOrder(OrderAnnotation.class)
 	class DefaultFactory {
-
-		private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
-				Class<? extends TempDirFactory> factoryClass) {
-			return TempDirectoryPerDeclarationTests.super.executeTests(request() //
-					.selectors(selectClass(testClass)) //
-					.configurationParameter(TempDir.DEFAULT_FACTORY_PROPERTY_NAME, factoryClass.getName()) //
-					.build());
-		}
 
 		@Test
 		@DisplayName("set to Jupiter's default")
@@ -1369,6 +1418,23 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	static class FactoryNotReturningDirectoryTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) Path tempDir) {
+			// never called
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
+				return null;
+			}
+		}
+
+	}
+
 	static class StandardDefaultFactoryTestCase {
 
 		@Test
@@ -1398,6 +1464,15 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			assertNotSame(tempDir1, tempDir2);
 			assertThat(tempDir1.getFileName()).asString().startsWith("custom");
 			assertThat(tempDir2.getFileName()).asString().startsWith("junit");
+		}
+
+	}
+
+	static class CustomDefaultFactoryNotReturningDirectoryTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir Path tempDir) {
+			// never called
 		}
 
 	}

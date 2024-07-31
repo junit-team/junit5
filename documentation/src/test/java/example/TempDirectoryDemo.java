@@ -137,7 +137,7 @@ class TempDirectoryDemo {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
 					throws IOException {
-				return Files.createTempDirectory(fileSystem.getPath("/"), "junit");
+				return Files.createTempDirectory(fileSystem.getPath("/"), "junit-");
 			}
 
 			@Override
