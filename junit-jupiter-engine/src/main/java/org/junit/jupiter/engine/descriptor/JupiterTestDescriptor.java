@@ -12,19 +12,21 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
 import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
@@ -33,6 +35,8 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLocksFrom;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -41,6 +45,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -180,11 +185,24 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
+	Stream<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, ResourceLock.class).stream()
-				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
-				.collect(toSet());
+				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())));
+		// @formatter:on
+	}
+
+	@SuppressWarnings("Convert2MethodRef")
+	Stream<ExclusiveResource> getExclusiveResourcesFromProvider(Class<?> testClass,
+			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
+		// @formatter:off
+		return findAnnotation(testClass, ResourceLocksFrom.class)
+				.map(annotation -> Stream.of(annotation.value()))
+				.orElseGet(Stream::empty)
+				.map(providerClass -> ReflectionUtils.newInstance(providerClass))
+				.map(providerToLocks)
+				.flatMap(Collection::stream)
+				.map(lock -> new ExclusiveResource(lock.getKey(), toLockMode(lock.getAccessMode())));
 		// @formatter:on
 	}
 

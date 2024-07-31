@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -81,7 +83,15 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestMethod());
+		// @formatter:off
+		return Stream.concat(
+				getExclusiveResourcesFromAnnotation(getTestMethod()),
+				getExclusiveResourcesFromProvider(
+						getTestClass(),
+						provider -> provider.provideForMethod(getTestClass(), getTestMethod())
+				)
+		).collect(toSet());
+		// @formatter:on
 	}
 
 	@Override
