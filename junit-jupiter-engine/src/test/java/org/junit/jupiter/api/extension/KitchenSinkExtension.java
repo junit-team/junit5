@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api.extension;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -177,4 +179,67 @@ public class KitchenSinkExtension implements
 	public void testFailed(ExtensionContext context, Throwable cause) {
 	}
 
+	// --- InvocationInterceptor -----------------------------------------------
+
+	@Override
+	public <T> T interceptTestClassConstructor(Invocation<T> invocation,
+			ReflectiveInvocationContext<Constructor<T>> invocationContext, ExtensionContext extensionContext)
+			throws Throwable {
+		return InvocationInterceptor.super.interceptTestClassConstructor(invocation, invocationContext,
+			extensionContext);
+	}
+
+	@Override
+	public void interceptBeforeAllMethod(Invocation<Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptBeforeAllMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public void interceptBeforeEachMethod(Invocation<Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptBeforeEachMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+			ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptTestMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public <T> T interceptTestFactoryMethod(Invocation<T> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		return InvocationInterceptor.super.interceptTestFactoryMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public void interceptTestTemplateMethod(Invocation<Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptTestTemplateMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@SuppressWarnings("deprecation")
+	@Override
+	public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptDynamicTest(invocation, extensionContext);
+	}
+
+	@Override
+	public void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
+			ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptDynamicTest(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public void interceptAfterEachMethod(Invocation<Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptAfterEachMethod(invocation, invocationContext, extensionContext);
+	}
+
+	@Override
+	public void interceptAfterAllMethod(Invocation<Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+		InvocationInterceptor.super.interceptAfterAllMethod(invocation, invocationContext, extensionContext);
+	}
 }

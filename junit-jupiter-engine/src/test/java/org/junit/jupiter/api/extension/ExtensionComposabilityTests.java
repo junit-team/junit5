@@ -14,6 +14,9 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
 import java.lang.reflect.Method;
@@ -21,8 +24,12 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -43,8 +50,7 @@ class ExtensionComposabilityTests {
 	void ensureJupiterExtensionApisAreComposable() {
 
 		// 1) Find all existing top-level Extension APIs
-		List<Class<?>> extensionApis = ReflectionUtils.findAllClassesInPackage(Extension.class.getPackage().getName(),
-			this::isExtensionApi, name -> true);
+		List<Class<?>> extensionApis = findExtensionApis();
 
 		// 2) Determine which methods we expect the kitchen sink to implement...
 
@@ -108,6 +114,34 @@ class ExtensionComposabilityTests {
 				() -> assertThat(actualMethodNames).isEqualTo(expectedMethodNames)
 		);
 		// @formatter:on
+	}
+
+	@TestFactory
+	Stream<DynamicContainer> kitchenSinkExtensionImplementsAllExtensionApis() {
+		var declaredMethods = List.of(KitchenSinkExtension.class.getDeclaredMethods());
+		return findExtensionApis().stream() //
+				.map(c -> dynamicContainer( //
+					c.getSimpleName(), //
+					Stream.concat( //
+						Stream.of(
+							dynamicTest("implements interface", () -> c.isAssignableFrom(KitchenSinkExtension.class))), //
+						Arrays.stream(c.getMethods()) //
+								.filter(ModifierSupport::isNotStatic).map(m -> dynamicTest( //
+									"overrides " + m.getName(), //
+									() -> assertTrue( //
+										declaredMethods.stream().anyMatch(it -> //
+										it.getName().equals(m.getName()) //
+												&& it.getReturnType().equals(m.getReturnType()) //
+												&& Arrays.equals(it.getParameterTypes(), m.getParameterTypes()) //
+										))) //
+								) //
+					) //
+				));
+	}
+
+	private List<Class<?>> findExtensionApis() {
+		return ReflectionUtils.findAllClassesInPackage(Extension.class.getPackage().getName(), this::isExtensionApi,
+			name -> true);
 	}
 
 	private boolean isExtensionApi(Class<?> candidate) {
