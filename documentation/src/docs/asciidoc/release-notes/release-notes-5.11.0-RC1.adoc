@@ -61,7 +61,8 @@ repository on GitHub.
 * New generators in `DynamicTest` that take a `Stream`/`Iterator` of `Named<Executable>`
   along with a convenient `NamedExecutable` interface that can simplify writing dynamic
   tests, in particular in recent versions of Java that support records.
-* `@TempDir` now fails fast when `TempDirFactory::createTempDirectory` returns `null`.
+* `@TempDir` now fails fast in case `TempDirFactory::createTempDirectory` returns
+  `null`, a file, or a symbolic link to a file.
 
 
 [[release-notes-5.11.0-RC1-junit-vintage]]
