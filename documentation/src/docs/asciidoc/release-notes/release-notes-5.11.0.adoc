@@ -35,7 +35,8 @@ JUnit repository on GitHub.
 [[release-notes-5.11.0-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* The `org.junit.jupiter.api.extension.support` package is now exported from the
+  `org.junit.jupiter.api` module
 
 [[release-notes-5.11.0-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
