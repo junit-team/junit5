@@ -57,6 +57,7 @@ import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.config.EnumConfigurationParameterConverter;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -286,10 +287,16 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
 				ExtensionContext extensionContext) throws Exception {
-			this.dir = validateTempDirectory(factory.createTempDirectory(elementContext, extensionContext));
-			this.factory = factory;
-			this.cleanupMode = cleanupMode;
-			this.extensionContext = extensionContext;
+			try {
+				this.dir = validateTempDirectory(factory.createTempDirectory(elementContext, extensionContext));
+				this.factory = factory;
+				this.cleanupMode = cleanupMode;
+				this.extensionContext = extensionContext;
+			}
+			catch (PreconditionViolationException e) {
+				factory.close();
+				throw e;
+			}
 		}
 
 		private static Path validateTempDirectory(Path dir) {
