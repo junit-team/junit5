@@ -38,6 +38,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -106,6 +108,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("succeeds if the factory returns a symbolic link to a directory")
+		@DisabledOnOs(OS.WINDOWS)
 		void factoryReturnsSymbolicLinkToDirectory() throws Exception {
 			Path directory = createDirectory(root.resolve("directory"));
 			TempDirFactory factory = (elementContext,
@@ -141,6 +144,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("fails if the factory returns a symbolic link to a file")
+		@DisabledOnOs(OS.WINDOWS)
 		void factoryReturnsSymbolicLinkToFile() throws IOException {
 			Path file = createFile(root.resolve("file"));
 			Path symbolicLink = createSymbolicLink(root.resolve("symbolicLink"), file);
