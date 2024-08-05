@@ -14,7 +14,7 @@ runs:
         distribution: temurin
         java-version: 21
         check-latest: true
-    - uses: gradle/actions/setup-gradle@v3
+    - uses: gradle/actions/setup-gradle@v4
     - shell: bash
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
