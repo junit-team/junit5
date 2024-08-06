@@ -20,15 +20,23 @@ import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.L
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.locks.Lock;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLocksFrom;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.JupiterTestEngine;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -40,9 +48,19 @@ class NodeTreeWalkerIntegrationTests {
 	LockManager lockManager = new LockManager();
 	NodeTreeWalker nodeTreeWalker = new NodeTreeWalker(lockManager);
 
-	@Test
-	void pullUpExclusiveChildResourcesToTestClass() {
-		var engineDescriptor = discover(TestCaseWithResourceLock.class);
+	static Stream<?> pullUpExclusiveChildResourcesToTestClassCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation", TestCaseWithResourceLockFromAnnotation.class),
+				Named.of("locks from provider", TestCaseWithResourceLockFromProvider.class)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("pullUpExclusiveChildResourcesToTestClassCases")
+	void pullUpExclusiveChildResourcesToTestClass(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -56,9 +74,19 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
-	@Test
-	void setsForceExecutionModeForChildrenWithWriteLocksOnClass() {
-		var engineDescriptor = discover(TestCaseWithResourceWriteLockOnClass.class);
+	static Stream<?> setsForceExecutionModeForChildrenWithWriteLocksOnClassCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation", TestCaseWithResourceWriteLockOnClassFromAnnotation.class),
+				Named.of("locks from provider", TestCaseWithResourceWriteLockOnClassFromProvider.class)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("setsForceExecutionModeForChildrenWithWriteLocksOnClassCases")
+	void setsForceExecutionModeForChildrenWithWriteLocksOnClass(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -72,9 +100,19 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
-	@Test
-	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClass() {
-		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClass.class);
+	static Stream<?> doesntSetForceExecutionModeForChildrenWithReadLocksOnClassCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation", TestCaseWithResourceReadLockOnClassFromAnnotation.class),
+				Named.of("locks from provider", TestCaseWithResourceReadLockOnClassFromProvider.class)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("doesntSetForceExecutionModeForChildrenWithReadLocksOnClassCases")
+	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClass(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -88,9 +126,23 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
 	}
 
-	@Test
-	void setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTest() {
-		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCase.class);
+	static Stream<?> setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTestCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation",
+						TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCaseFromAnnotation.class
+				),
+				Named.of("locks from provider",
+						TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCaseFromProvider.class
+				)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTestCases")
+	void setsForceExecutionModeForChildrenWithReadLocksOnClassAndWriteLockOnTest(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -104,9 +156,23 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
-	@Test
-	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTest() {
-		var engineDescriptor = discover(TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase.class);
+	static Stream<?> doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTestCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation",
+						TestCaseWithResourceReadLockOnClassAndReadClockOnTestCaseFromAnnotation.class
+				),
+				Named.of("locks from provider",
+						TestCaseWithResourceReadLockOnClassAndReadClockOnTestCaseFromProvider.class
+				)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTestCases")
+	void doesntSetForceExecutionModeForChildrenWithReadLocksOnClassAndReadLockOnTest(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -120,9 +186,19 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).isEmpty();
 	}
 
-	@Test
-	void leavesResourceLockOnTestMethodWhenClassDoesNotUseResource() {
-		var engineDescriptor = discover(TestCaseWithoutResourceLock.class);
+	static Stream<?> leavesResourceLockOnTestMethodWhenClassDoesNotUseResourceCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation", TestCaseWithoutResourceLockFromAnnotation.class),
+				Named.of("locks from provider", TestCaseWithoutResourceLockFromProvider.class)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("leavesResourceLockOnTestMethodWhenClassDoesNotUseResourceCases")
+	void leavesResourceLockOnTestMethodWhenClassDoesNotUseResource(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -148,9 +224,19 @@ class NodeTreeWalkerIntegrationTests {
 		assertThat(advisor.getForcedExecutionMode(nestedTestMethodDescriptor)).contains(SAME_THREAD);
 	}
 
-	@Test
-	void coarsensGlobalLockToEngineDescriptorChild() {
-		var engineDescriptor = discover(TestCaseWithGlobalLockRequiringChild.class);
+	static Stream<?> coarsensGlobalLockToEngineDescriptorChildCases() {
+		// @formatter:off
+		return Stream.of(
+				Named.of("locks from annotation", TestCaseWithGlobalLockRequiringChildFromAnnotation.class),
+				Named.of("locks from provider", TestCaseWithGlobalLockRequiringChildFromProvider.class)
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("coarsensGlobalLockToEngineDescriptorChildCases")
+	void coarsensGlobalLockToEngineDescriptorChild(Class<?> testCase) {
+		var engineDescriptor = discover(testCase);
 
 		var advisor = nodeTreeWalker.walk(engineDescriptor);
 
@@ -192,14 +278,33 @@ class NodeTreeWalkerIntegrationTests {
 	}
 
 	@ResourceLock("a")
-	static class TestCaseWithResourceLock {
+	static class TestCaseWithResourceLockFromAnnotation {
 		@Test
 		@ResourceLock("b")
 		void test() {
 		}
 	}
 
-	static class TestCaseWithoutResourceLock {
+	@ResourceLocksFrom(TestCaseWithResourceLockFromProvider.Provider.class)
+	static class TestCaseWithResourceLockFromProvider {
+		@Test
+		void test() {
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				return Set.of(new Lock("a"));
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				return Set.of(new Lock("b"));
+			}
+		}
+	}
+
+	static class TestCaseWithoutResourceLockFromAnnotation {
 		@Test
 		@ResourceLock("a")
 		void test() {
@@ -215,7 +320,41 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
-	static class TestCaseWithGlobalLockRequiringChild {
+	@ResourceLocksFrom(TestCaseWithoutResourceLockFromProvider.Provider.class)
+	static class TestCaseWithoutResourceLockFromProvider {
+		@Test
+		void test() {
+		}
+
+		@Nested
+		@ResourceLocksFrom(TestCaseWithoutResourceLockFromProvider.Provider.class)
+		class NestedTestCaseWithResourceLock {
+			@Test
+			void test() {
+			}
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+
+			@Override
+			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+				return Set.of(new Lock("c"));
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				if (testClass == TestCaseWithoutResourceLockFromProvider.class) {
+					return Set.of(new Lock("a"));
+				}
+				else if (testClass == TestCaseWithoutResourceLockFromProvider.NestedTestCaseWithResourceLock.class) {
+					return Set.of(new Lock("b"));
+				}
+				return Set.of();
+			}
+		}
+	}
+
+	static class TestCaseWithGlobalLockRequiringChildFromAnnotation {
 		@Nested
 		class NestedTestCaseWithResourceLock {
 			@Test
@@ -225,33 +364,117 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	static class TestCaseWithGlobalLockRequiringChildFromProvider {
+		@Nested
+		@ResourceLocksFrom(TestCaseWithGlobalLockRequiringChildFromProvider.Provider.class)
+		class NestedTestCaseWithResourceLock {
+			@Test
+			void test() {
+			}
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				return Set.of(new Lock(ExclusiveResource.GLOBAL_KEY));
+			}
+		}
+	}
+
 	@ResourceLock("a")
-	static class TestCaseWithResourceWriteLockOnClass {
+	static class TestCaseWithResourceWriteLockOnClassFromAnnotation {
 		@Test
 		void test() {
 		}
 	}
 
+	@ResourceLocksFrom(TestCaseWithResourceWriteLockOnClassFromProvider.Provider.class)
+	static class TestCaseWithResourceWriteLockOnClassFromProvider {
+		@Test
+		void test() {
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				return Set.of(new Lock("a"));
+			}
+		}
+	}
+
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClass {
+	static class TestCaseWithResourceReadLockOnClassFromAnnotation {
 		@Test
 		void test() {
 		}
 	}
 
+	@ResourceLocksFrom(TestCaseWithResourceReadLockOnClassFromProvider.Provider.class)
+	static class TestCaseWithResourceReadLockOnClassFromProvider {
+		@Test
+		void test() {
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				return Set.of(new Lock("a", ResourceAccessMode.READ));
+			}
+		}
+	}
+
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCase {
+	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCaseFromAnnotation {
 		@Test
 		@ResourceLock("a")
 		void test() {
 		}
 	}
 
+	@ResourceLocksFrom(TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCaseFromProvider.Provider.class)
+	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCaseFromProvider {
+		@Test
+		void test() {
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				return Set.of(new Lock("a", ResourceAccessMode.READ));
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				return Set.of(new Lock("a"));
+			}
+		}
+	}
+
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
-	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase {
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCaseFromAnnotation {
 		@Test
 		@ResourceLock(value = "b", mode = ResourceAccessMode.READ)
 		void test() {
 		}
 	}
+
+	@ResourceLocksFrom(TestCaseWithResourceReadLockOnClassAndReadClockOnTestCaseFromProvider.Provider.class)
+	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCaseFromProvider {
+		@Test
+		void test() {
+		}
+
+		static final class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				return Set.of(new Lock("a", ResourceAccessMode.READ));
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				return Set.of(new Lock("b", ResourceAccessMode.READ));
+			}
+		}
+	}
+
 }
