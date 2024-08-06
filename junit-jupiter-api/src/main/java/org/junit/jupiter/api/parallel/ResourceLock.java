@@ -52,6 +52,9 @@ import org.junit.jupiter.api.BeforeEach;
  * @see Resources
  * @see ResourceAccessMode
  * @see ResourceLocks
+ * @see ResourceLocksFrom
+ * @see ResourceLocksProvider
+ * @see ResourceLocksProvider.Lock
  * @since 5.3
  */
 @API(status = STABLE, since = "5.10")

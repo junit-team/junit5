@@ -31,6 +31,9 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 
+/**
+ * @since 5.12
+ */
 class ResourceLocksProviderIntegrationTests {
 
 	@Test

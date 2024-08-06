@@ -68,7 +68,6 @@ import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
