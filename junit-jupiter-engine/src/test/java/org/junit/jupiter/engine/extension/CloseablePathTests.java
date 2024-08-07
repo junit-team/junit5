@@ -98,7 +98,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("succeeds if the factory returns a directory")
 		void factoryReturnsDirectory() throws Exception {
-			TempDirFactory factory = (elementContext, extensionContext) -> createDirectory(root.resolve("directory"));
+			TempDirFactory factory = spy(new Factory(createDirectory(root.resolve("directory"))));
 
 			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
@@ -111,8 +111,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		@DisabledOnOs(OS.WINDOWS)
 		void factoryReturnsSymbolicLinkToDirectory() throws Exception {
 			Path directory = createDirectory(root.resolve("directory"));
-			TempDirFactory factory = (elementContext,
-					extensionContext) -> createSymbolicLink(root.resolve("symbolicLink"), directory);
+			TempDirFactory factory = spy(new Factory(createSymbolicLink(root.resolve("symbolicLink"), directory)));
 
 			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
@@ -123,23 +122,26 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		@DisplayName("fails if the factory returns null")
-		void factoryReturnsNull() {
-			TempDirFactory factory = (elementContext, extensionContext) -> null;
+		void factoryReturnsNull() throws IOException {
+			TempDirFactory factory = spy(new Factory(null));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
+
+			verify(factory).close();
 		}
 
 		@Test
 		@DisplayName("fails if the factory returns a file")
 		void factoryReturnsFile() throws IOException {
 			Path file = createFile(root.resolve("file"));
-			TempDirFactory factory = (elementContext, extensionContext) -> file;
+			TempDirFactory factory = spy(new Factory(file));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
 
-			delete(file);
+			verify(factory).close();
+			assertThat(file).doesNotExist();
 		}
 
 		@Test
@@ -148,13 +150,25 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		void factoryReturnsSymbolicLinkToFile() throws IOException {
 			Path file = createFile(root.resolve("file"));
 			Path symbolicLink = createSymbolicLink(root.resolve("symbolicLink"), file);
-			TempDirFactory factory = (elementContext, extensionContext) -> symbolicLink;
+			TempDirFactory factory = spy(new Factory(symbolicLink));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
 
-			delete(symbolicLink);
+			verify(factory).close();
+			assertThat(symbolicLink).doesNotExist();
+
 			delete(file);
+		}
+
+		// Mockito spying a lambda fails with: VM does not support modification of given type
+		private record Factory(Path path) implements TempDirFactory {
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
+				return path;
+			}
+
 		}
 
 		private static void assertThatExtensionConfigurationExceptionIsThrownBy(ThrowingCallable callable) {
@@ -194,8 +208,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).doesNotExist();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).doesNotExist();
 		}
 
 		@Test
@@ -205,8 +220,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).exists();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).exists();
 		}
 
 		@Test
@@ -218,8 +234,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).exists();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).exists();
 		}
 
 		@Test
@@ -231,8 +248,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).doesNotExist();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).doesNotExist();
 		}
 
 	}
