@@ -287,21 +287,22 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
 				ExtensionContext extensionContext) throws Exception {
+			this.dir = factory.createTempDirectory(elementContext, extensionContext);
+			this.factory = factory;
+			this.cleanupMode = cleanupMode;
+			this.extensionContext = extensionContext;
+
 			try {
-				this.dir = validateTempDirectory(factory.createTempDirectory(elementContext, extensionContext));
-				this.factory = factory;
-				this.cleanupMode = cleanupMode;
-				this.extensionContext = extensionContext;
+				validateTempDirectory(this.dir);
 			}
 			catch (PreconditionViolationException e) {
-				factory.close();
+				close();
 				throw e;
 			}
 		}
 
-		private static Path validateTempDirectory(Path dir) {
+		private static void validateTempDirectory(Path dir) {
 			Preconditions.condition(dir != null && Files.isDirectory(dir), "temp directory must be a directory");
-			return dir;
 		}
 
 		Path get() {
@@ -331,7 +332,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)
 				throws IOException {
-			if (Files.notExists(dir)) {
+			if (dir == null || Files.notExists(dir)) {
 				return Collections.emptySortedMap();
 			}
 

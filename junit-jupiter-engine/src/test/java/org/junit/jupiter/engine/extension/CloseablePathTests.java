@@ -124,6 +124,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
+
 			verify(factory).close();
 		}
 
@@ -135,9 +136,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
-			verify(factory).close();
 
-			delete(file);
+			verify(factory).close();
+			assertThat(file).doesNotExist();
 		}
 
 		@Test
@@ -149,9 +150,10 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
 				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
-			verify(factory).close();
 
-			delete(symbolicLink);
+			verify(factory).close();
+			assertThat(symbolicLink).doesNotExist();
+
 			delete(file);
 		}
 
@@ -202,8 +204,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).doesNotExist();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).doesNotExist();
 		}
 
 		@Test
@@ -213,8 +216,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).exists();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).exists();
 		}
 
 		@Test
@@ -226,8 +230,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).exists();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).exists();
 		}
 
 		@Test
@@ -239,8 +244,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
-			assertThat(closeablePath.get()).doesNotExist();
+
 			verify(factory).close();
+			assertThat(closeablePath.get()).doesNotExist();
 		}
 
 	}
