@@ -292,17 +292,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			this.cleanupMode = cleanupMode;
 			this.extensionContext = extensionContext;
 
-			try {
-				validateTempDirectory(this.dir);
-			}
-			catch (PreconditionViolationException e) {
+			if (dir == null || !Files.isDirectory(dir)) {
 				close();
-				throw e;
+				throw new PreconditionViolationException("temp directory must be a directory");
 			}
-		}
-
-		private static void validateTempDirectory(Path dir) {
-			Preconditions.condition(dir != null && Files.isDirectory(dir), "temp directory must be a directory");
 		}
 
 		Path get() {
