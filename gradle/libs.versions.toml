@@ -88,6 +88,6 @@ jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 plantuml = { id = "io.freefair.plantuml", version = "8.6" }
-shadow = { id = "io.github.goooler.shadow", version = "8.1.8" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.0" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA1" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
