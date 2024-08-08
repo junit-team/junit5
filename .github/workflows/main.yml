@@ -44,12 +44,6 @@ jobs:
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-    - name: Run Asciidoctor
-      uses: ./.github/actions/run-gradle
-      with:
-        arguments: |
-          prepareDocsForUploadToGhPages \
-          --no-configuration-cache
 
   Windows:
     runs-on: windows-latest
@@ -99,14 +93,13 @@ jobs:
       with:
         subject-path: documentation/build/attestation/*.jar
 
-  update_documentation:
-    name: Update Snapshot Documentation
+  documentation:
+    name: Build Documentation
     concurrency:
       group: github-pages
       cancel-in-progress: true
     needs: Linux
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -116,7 +109,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
+    - name: Build Documentation
+      uses: ./.github/actions/run-gradle
+      with:
+        arguments: |
+          prepareDocsForUploadToGhPages \
+          -Dscan.tag.Documentation \
+          --no-configuration-cache
     - name: Upload Documentation
+      if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
       with:
         arguments: |
