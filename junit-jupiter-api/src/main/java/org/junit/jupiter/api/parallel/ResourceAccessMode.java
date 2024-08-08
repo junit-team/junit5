@@ -19,6 +19,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.3
  * @see ResourceLock
+ * @see ResourceLocksProvider.Lock
  */
 @API(status = STABLE, since = "5.10")
 public enum ResourceAccessMode {

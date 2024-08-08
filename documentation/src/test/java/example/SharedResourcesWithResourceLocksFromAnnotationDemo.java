@@ -17,17 +17,23 @@ import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 
+import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceAccessMode;
+import org.junit.jupiter.api.parallel.ResourceLocksFrom;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 
 // tag::user_guide[]
 @Execution(CONCURRENT)
-class SharedResourcesDemo {
+@ResourceLocksFrom(SharedResourcesWithResourceLocksFromAnnotationDemo.Provider.class)
+class SharedResourcesWithResourceLocksFromAnnotationDemo {
 
 	private Properties backup;
 
@@ -43,23 +49,37 @@ class SharedResourcesDemo {
 	}
 
 	@Test
-	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
 	void customPropertyIsNotSetByDefault() {
 		assertNull(System.getProperty("my.prop"));
 	}
 
 	@Test
-	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToApple() {
 		System.setProperty("my.prop", "apple");
 		assertEquals("apple", System.getProperty("my.prop"));
 	}
 
 	@Test
-	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	void canSetCustomPropertyToBanana() {
 		System.setProperty("my.prop", "banana");
 		assertEquals("banana", System.getProperty("my.prop"));
+	}
+
+	static final class Provider implements ResourceLocksProvider {
+
+		@Override
+		public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			ResourceAccessMode mode;
+			if (testMethod.getName().equals("customPropertyIsNotSetByDefault")) {
+				mode = READ;
+			}
+			else {
+				mode = READ_WRITE;
+			}
+			Set<Lock> locks = new HashSet<>();
+			locks.add(new Lock(SYSTEM_PROPERTIES, mode));
+			return locks;
+		}
 	}
 
 }

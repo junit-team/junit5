@@ -32,6 +32,7 @@ import org.apiguardian.api.API;
  * @since 5.7
  * @see ExecutionMode
  * @see ResourceLock
+ * @see ResourceLocksFrom
  */
 @API(status = STABLE, since = "5.10")
 @Retention(RetentionPolicy.RUNTIME)
