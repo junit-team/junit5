@@ -81,6 +81,11 @@ public @interface TestInstance {
 		 * When using this mode, a new test instance will be created once per
 		 * test class.
 		 *
+		 * <p>Note: Test methods in classes using this mode are executed in
+		 * the same thread by default. To enable concurrent execution,
+		 * annotate the test class or methods with
+		 * {@code @Execution(CONCURRENT)}.
+		 *
 		 * @see #PER_METHOD
 		 */
 		PER_CLASS,
