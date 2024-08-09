@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
 
@@ -34,9 +36,22 @@ import org.apiguardian.api.API;
 public interface ParallelExecutionConfiguration {
 
 	/**
+	 * Available test executors for different threading models.
+	 *
+	 * @see #getTestExecutor()
+	 */
+	enum TestExecutor {
+
+		FORK_JOIN,
+
+		FIXED_THREADS
+	}
+
+	/**
 	 * Get the parallelism to be used.
 	 *
 	 * @see ForkJoinPool#getParallelism()
+	 * @see Executors#newFixedThreadPool(int)
 	 */
 	int getParallelism();
 
@@ -71,6 +86,20 @@ public interface ParallelExecutionConfiguration {
 	@API(status = STABLE, since = "1.11")
 	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
 		return null;
+	}
+
+	/**
+	 * Get the type of test executor to use. By default, a {@link ForkJoinPool} is used.
+	 * Since this can cause conflicts with consumers that also rely on the fork-join framework,
+	 * an {@link ExecutorService} with a fixed number of threads can also be used.
+	 *
+	 * @return The configured {@link TestExecutor}.
+	 * @since 1.11
+	 * @see Executors#newFixedThreadPool(int)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	default TestExecutor getTestExecutor() {
+		return TestExecutor.FORK_JOIN;
 	}
 
 }

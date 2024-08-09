@@ -15,9 +15,11 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_SATURATE_PROPERTY_NAME;
+import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_STRATEGY_PROPERTY_NAME;
 
 import org.apiguardian.api.API;
@@ -176,7 +178,7 @@ public final class Constants {
 	 * {@value #PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME}; defaults to
 	 * {@code 256 + fixed.parallelism}.
 	 *
-	 * <p>Note: This property only takes affect on Java 9+.
+	 * <p>Note: This property only takes effect on Java 9+.
 	 *
 	 * @since 5.10
 	 */
@@ -194,13 +196,26 @@ public final class Constants {
 
 	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
 	 *
-	 * <p>Note: This property only takes affect on Java 9+.
+	 * <p>Note: This property only takes effect on Java 9+.
 	 *
 	 * @since 5.10
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	public static final String PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_FIXED_SATURATE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the type of test executor
+	 * (which directly relates to the type of thread pool used)
+	 * for the {@code fixed} configuration strategy: {@value}
+	 *
+	 * <p>Value must be either {@code fork_join} or {@code fixed_threads}; defaults to {@code fork_join}.
+	 *
+	 * @since 5.11
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	public static final String PARALLEL_CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the factor to be multiplied with the number of
@@ -214,6 +229,19 @@ public final class Constants {
 	@API(status = STABLE, since = "5.10")
 	public static final String PARALLEL_CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
 			+ CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the type of test executor
+	 * (which directly relates to the type of thread pool used)
+	 * for the {@code dynamic} configuration strategy: {@value}
+	 *
+	 * <p>Value must be either {@code fork_join} or {@code fixed_threads}; defaults to {@code fork_join}.
+	 *
+	 * @since 5.11
+	 */
+	@API(status = EXPERIMENTAL, since = "5.11")
+	public static final String PARALLEL_CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME = PARALLEL_CONFIG_PREFIX
+			+ CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME;
 
 	/**
 	 * Property name used to specify the fully qualified class name of the
