@@ -1283,13 +1283,13 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@ParameterizedTest
-		@CsvFileSource(resources = "/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = false)
+		@CsvFileSource(resources = "provider/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = false)
 		void testWithIgnoreLeadingAndTrailingWhitespaceSetToFalseForCsvFileSource(String argument1, String argument2) {
 			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
 
 		@ParameterizedTest
-		@CsvFileSource(resources = "/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = true)
+		@CsvFileSource(resources = "provider/leading-trailing-spaces.csv", ignoreLeadingAndTrailingWhitespace = true)
 		void testWithIgnoreLeadingAndTrailingWhitespaceSetToTrueForCsvFileSource(String argument1, String argument2) {
 			fail("arguments: '" + argument1 + "', '" + argument2 + "'");
 		}
