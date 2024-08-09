@@ -14,6 +14,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.Timeout.ThreadMode.SAME_THREAD;
@@ -32,7 +33,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.time.Duration;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
@@ -52,6 +52,10 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.RuntimeUtils;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -159,29 +163,27 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.hasMessage("testFactoryMethod() timed out after 10 milliseconds");
 	}
 
-	@TestFactory
+	@ParameterizedTest(name = "{0}")
+	@ValueSource(classes = { TimeoutAnnotatedClassTestCase.class, InheritedTimeoutAnnotatedClassTestCase.class })
 	@DisplayName("is applied on testable methods in annotated classes")
-	Stream<DynamicTest> appliesTimeoutOnTestableMethodsInAnnotatedClasses() {
-		return Stream.of(TimeoutAnnotatedClassTestCase.class, InheritedTimeoutAnnotatedClassTestCase.class).map(
-			testClass -> dynamicTest(testClass.getSimpleName(), () -> {
-				EngineExecutionResults results = executeTests(request() //
-						.selectors(selectClass(testClass)) //
-						.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-						.configurationParameter(DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-						.configurationParameter(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
-						.build());
+	void appliesTimeoutOnTestableMethodsInAnnotatedClasses(Class<?> testClass) {
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectClass(testClass)) //
+				.configurationParameter(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.configurationParameter(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "42ns") //
+				.build());
 
-				Stream.of("testMethod()", "repetition 1", "repetition 2", "testFactoryMethod()").forEach(
-					displayName -> {
-						Execution execution = findExecution(results.allEvents(), displayName);
-						assertThat(execution.getDuration()) //
-								.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
-								.isLessThan(Duration.ofSeconds(1));
-						assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
-								.isInstanceOf(TimeoutException.class) //
-								.hasMessageEndingWith("timed out after 10000000 nanoseconds");
-					});
-			}));
+		assertAll(Stream.of("testMethod()", "repetition 1", "repetition 2", "testFactoryMethod()") //
+				.map(displayName -> () -> {
+					Execution execution = findExecution(results.allEvents(), displayName);
+					assertThat(execution.getDuration()) //
+							.isGreaterThanOrEqualTo(Duration.ofMillis(10)) //
+							.isLessThan(Duration.ofSeconds(1));
+					assertThat(execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+							.isInstanceOf(TimeoutException.class) //
+							.hasMessageEndingWith("timed out after 10000000 nanoseconds");
+				}));
 	}
 
 	@Test
@@ -269,28 +271,32 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 				.hasMessage("tearDown() timed out after 10 milliseconds");
 	}
 
-	@TestFactory
+	@ParameterizedTest(name = "{0}")
+	@MethodSource
 	@DisplayName("is applied from configuration parameters by default")
-	Stream<DynamicTest> appliesDefaultTimeoutsFromConfigurationParameters() {
-		return Map.of(DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "beforeAll()", //
-			DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "beforeEach()", //
-			DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "test()", //
-			DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "testTemplate()", //
-			DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "testFactory()", //
-			DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "afterEach()", //
-			DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "afterAll()" //
-		).entrySet().stream().map(entry -> dynamicTest("uses " + entry.getKey() + " config param", () -> {
-			PlainTestCase.slowMethod = entry.getValue();
-			EngineExecutionResults results = executeTests(request() //
-					.selectors(selectClass(PlainTestCase.class)) //
-					.configurationParameter(entry.getKey(), "1ns") //
-					.build());
-			var failure = results.allEvents().executions().failed() //
-					.map(execution -> execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
-					.findFirst();
-			assertThat(failure).containsInstanceOf(TimeoutException.class);
-			assertThat(failure.get()).hasMessage(entry.getValue() + " timed out after 1 nanosecond");
-		}));
+	void appliesDefaultTimeoutsFromConfigurationParameters(String propertyName, String slowMethod) {
+		PlainTestCase.slowMethod = slowMethod;
+		EngineExecutionResults results = executeTests(request() //
+				.selectors(selectClass(PlainTestCase.class)) //
+				.configurationParameter(propertyName, "1ns") //
+				.build());
+		var failure = results.allEvents().executions().failed() //
+				.map(execution -> execution.getTerminationInfo().getExecutionResult().getThrowable().orElseThrow()) //
+				.findFirst();
+		assertThat(failure).containsInstanceOf(TimeoutException.class);
+		assertThat(failure.orElseThrow()).hasMessage(slowMethod + " timed out after 1 nanosecond");
+	}
+
+	static Stream<Arguments> appliesDefaultTimeoutsFromConfigurationParameters() {
+		return Stream.of( //
+			Arguments.of(DEFAULT_BEFORE_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "beforeAll()"), //
+			Arguments.of(DEFAULT_BEFORE_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "beforeEach()"), //
+			Arguments.of(DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, "test()"), //
+			Arguments.of(DEFAULT_TEST_TEMPLATE_METHOD_TIMEOUT_PROPERTY_NAME, "testTemplate()"), //
+			Arguments.of(DEFAULT_TEST_FACTORY_METHOD_TIMEOUT_PROPERTY_NAME, "testFactory()"), //
+			Arguments.of(DEFAULT_AFTER_EACH_METHOD_TIMEOUT_PROPERTY_NAME, "afterEach()"), //
+			Arguments.of(DEFAULT_AFTER_ALL_METHOD_TIMEOUT_PROPERTY_NAME, "afterAll()") //
+		);
 	}
 
 	@Test

@@ -22,7 +22,6 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
@@ -43,6 +42,8 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -126,17 +127,16 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@TestFactory
-	Stream<DynamicTest> callsInterceptors() {
+	@ParameterizedTest(name = "{0}")
+	@EnumSource(InvocationType.class)
+	void callsInterceptors(InvocationType invocationType) {
 		var results = executeTestsForClass(TestCaseWithThreeInterceptors.class);
 
 		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(3));
-		return Arrays.stream(InvocationType.values()) //
-				.map(invocationType -> dynamicTest(invocationType.name(), () -> {
-					assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
-							.containsExactly("before:foo", "before:bar", "before:baz", "test", "after:baz", "after:bar",
-								"after:foo");
-				}));
+
+		assertThat(getEvents(results, EnumSet.of(invocationType)).distinct()) //
+				.containsExactly("before:foo", "before:bar", "before:baz", "test", "after:baz", "after:bar",
+					"after:foo");
 	}
 
 	private Stream<String> getEvents(EngineExecutionResults results, EnumSet<InvocationType> types) {
