@@ -22,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -43,11 +42,9 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
 import com.google.common.jimfs.Configuration;
@@ -59,12 +56,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -83,6 +78,9 @@ import org.junit.jupiter.api.io.TempDirFactory.Standard;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.extension.TempDirectory.FileOperations;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -110,51 +108,48 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		AllPossibleDeclarationLocationsTestCase.tempDirs.clear();
 	}
 
-	@TestFactory
+	@ParameterizedTest(name = "{0}")
+	@EnumSource(TestInstance.Lifecycle.class)
 	@DisplayName("resolves separate temp dirs for each annotation declaration")
-	Stream<DynamicTest> resolvesSeparateTempDirsForEachAnnotationDeclaration() {
-		return Arrays.stream(TestInstance.Lifecycle.values()).map(
-			lifecycle -> dynamicTest("with " + lifecycle + " lifecycle", () -> {
+	void resolvesSeparateTempDirsForEachAnnotationDeclaration(TestInstance.Lifecycle lifecycle) {
+		var results = executeTests(request() //
+				.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
+				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
+					lifecycle.name()).build());
 
-				var results = executeTests(request() //
-						.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
-						.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
-							lifecycle.name()).build());
+		results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 
-				results.containerEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
-				results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+		assertThat(AllPossibleDeclarationLocationsTestCase.tempDirs).hasSize(3);
 
-				assertThat(AllPossibleDeclarationLocationsTestCase.tempDirs).hasSize(3);
+		var classTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("class");
+		assertThat(classTempDirs).containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2",
+			"afterAll1", "afterAll2");
+		assertThat(classTempDirs.values()).hasSize(6).doesNotHaveDuplicates();
 
-				var classTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("class");
-				assertThat(classTempDirs).containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2",
-					"afterAll1", "afterAll2");
-				assertThat(classTempDirs.values()).hasSize(6).doesNotHaveDuplicates();
+		var testATempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testA");
+		assertThat(testATempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1", "instanceField2",
+			"beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+		assertThat(testATempDirs.values()).hasSize(10).doesNotHaveDuplicates();
 
-				var testATempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testA");
-				assertThat(testATempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
-					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
-				assertThat(testATempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+		var testBTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testB");
+		assertThat(testBTempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1", "instanceField2",
+			"beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
+		assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
 
-				var testBTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testB");
-				assertThat(testBTempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1",
-					"instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
-				assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+		assertThat(testATempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+		assertThat(testBTempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
+		assertThat(testATempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
+		assertThat(testBTempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
 
-				assertThat(testATempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
-				assertThat(testBTempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
-				assertThat(testATempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
-				assertThat(testBTempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
-
-				assertThat(testATempDirs).doesNotContainEntry("instanceField1", testBTempDirs.get("instanceField1"));
-				assertThat(testATempDirs).doesNotContainEntry("instanceField2", testBTempDirs.get("instanceField2"));
-				assertThat(testATempDirs).doesNotContainEntry("beforeEach1", testBTempDirs.get("beforeEach1"));
-				assertThat(testATempDirs).doesNotContainEntry("beforeEach2", testBTempDirs.get("beforeEach2"));
-				assertThat(testATempDirs).doesNotContainEntry("test1", testBTempDirs.get("test1"));
-				assertThat(testATempDirs).doesNotContainEntry("test2", testBTempDirs.get("test2"));
-				assertThat(testATempDirs).doesNotContainEntry("afterEach1", testBTempDirs.get("afterEach1"));
-				assertThat(testATempDirs).doesNotContainEntry("afterEach2", testBTempDirs.get("afterEach2"));
-			}));
+		assertThat(testATempDirs).doesNotContainEntry("instanceField1", testBTempDirs.get("instanceField1"));
+		assertThat(testATempDirs).doesNotContainEntry("instanceField2", testBTempDirs.get("instanceField2"));
+		assertThat(testATempDirs).doesNotContainEntry("beforeEach1", testBTempDirs.get("beforeEach1"));
+		assertThat(testATempDirs).doesNotContainEntry("beforeEach2", testBTempDirs.get("beforeEach2"));
+		assertThat(testATempDirs).doesNotContainEntry("test1", testBTempDirs.get("test1"));
+		assertThat(testATempDirs).doesNotContainEntry("test2", testBTempDirs.get("test2"));
+		assertThat(testATempDirs).doesNotContainEntry("afterEach1", testBTempDirs.get("afterEach1"));
+		assertThat(testATempDirs).doesNotContainEntry("afterEach2", testBTempDirs.get("afterEach2"));
 	}
 
 	@Test
@@ -222,16 +217,10 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				.assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
 
-	@TestFactory
+	@ParameterizedTest(name = "{0}")
+	@ValueSource(classes = { UndeletableDirectoryTestCase.class, UndeletableFileTestCase.class })
 	@DisplayName("only attempts to delete undeletable paths once")
-	Stream<DynamicTest> onlyAttemptsToDeleteUndeletablePathsOnce() {
-		return Stream.of( //
-			dynamicTest("directory", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableDirectoryTestCase.class)), //
-			dynamicTest("file", () -> onlyAttemptsToDeleteUndeletablePathOnce(UndeletableFileTestCase.class)) //
-		);
-	}
-
-	private void onlyAttemptsToDeleteUndeletablePathOnce(Class<? extends UndeletableTestCase> testClass) {
+	void onlyAttemptsToDeleteUndeletablePathsOnce(Class<?> testClass) {
 		var results = executeTestsForClass(testClass);
 
 		var tempDir = results.testEvents().reportingEntryPublished().stream().map(
