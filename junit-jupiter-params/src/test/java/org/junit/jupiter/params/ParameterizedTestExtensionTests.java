@@ -141,6 +141,18 @@ class ParameterizedTestExtensionTests {
 	}
 
 	@Test
+	void doesNotThrowExceptionWhenParametrizedTestDoesNotRequireArguments() {
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+			new TestCaseAllowNoArgumentsMethod());
+
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContextWithAnnotatedTestMethod);
+		// cause the stream to be evaluated
+		stream.toArray();
+		stream.close();
+	}
+
+	@Test
 	void throwsExceptionWhenArgumentsProviderIsNotStatic() {
 		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new NonStaticArgumentsProviderTestCase());
@@ -294,6 +306,13 @@ class ParameterizedTestExtensionTests {
 	static class TestCaseWithAnnotatedMethod {
 
 		@ParameterizedTest
+		void method() {
+		}
+	}
+
+	static class TestCaseAllowNoArgumentsMethod {
+
+		@ParameterizedTest(requireArguments = false)
 		void method() {
 		}
 	}

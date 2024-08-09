@@ -108,7 +108,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				.map(Optional::get)
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
-		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
+		boolean allProvidersMayBeEmpty = providers.stream().allMatch(
+			p -> p.mayReturnEmptyInvocationContext(extensionContext));
+		if (!allProvidersMayBeEmpty) {
+			validateWasAtLeastInvokedOnce(invocationIndex.get(), extensionContext, providers);
+		}
 		return context;
 	}
 
@@ -141,13 +145,16 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		dynamicTestExecutor.execute(testDescriptor);
 	}
 
-	private void validateWasAtLeastInvokedOnce(int invocationIndex,
+	private void validateWasAtLeastInvokedOnce(int invocationIndex, ExtensionContext extensionContext,
 			List<TestTemplateInvocationContextProvider> providers) {
 
-		Preconditions.condition(invocationIndex > 0,
+		boolean allMayReturnEmptyContext = providers.stream().allMatch(
+			p -> p.mayReturnEmptyInvocationContext(extensionContext));
+
+		Preconditions.condition(invocationIndex > 0 || allMayReturnEmptyContext,
 			() -> "None of the supporting " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
-					+ providers.stream().map(provider -> provider.getClass().getSimpleName()).collect(
-						joining(", ", "[", "]"))
+					+ providers.stream().filter(p -> !p.mayReturnEmptyInvocationContext(extensionContext)).map(
+						provider -> provider.getClass().getSimpleName()).collect(joining(", ", "[", "]"))
 					+ " provided a non-empty stream");
 	}
 
