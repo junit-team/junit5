@@ -1,14 +1,16 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 
 plugins {
-	id("junitbuild.kotlin-library-conventions")
-	id("junitbuild.testing-conventions")
 	id("junitbuild.code-generator")
+	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.junit4-compatibility")
+	id("junitbuild.testing-conventions")
 	groovy
 }
 
 dependencies {
 	testImplementation(projects.junitJupiter)
+	testImplementation(projects.junitJupiterMigrationsupport)
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
@@ -27,5 +29,10 @@ tasks {
 	test {
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
 		systemProperty("developmentVersion", version)
+	}
+	test_4_12 {
+		filter {
+			includeTestsMatching("org.junit.jupiter.migrationsupport.*")
+		}
 	}
 }
