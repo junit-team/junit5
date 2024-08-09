@@ -20,6 +20,7 @@
 module org.junit.jupiter.engine {
 	requires static org.apiguardian.api;
 	requires org.junit.jupiter.api;
+	requires org.junit.jupiter.params;
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
 	requires org.opentest4j;
