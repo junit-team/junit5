@@ -52,6 +52,7 @@ dependencies {
 		jacocoAggregation(it)
 	}
 	jacocoAggregation(projects.documentation)
+	jacocoAggregation(projects.jupiterTests)
 	jacocoAggregation(projects.platformTests)
 }
 
