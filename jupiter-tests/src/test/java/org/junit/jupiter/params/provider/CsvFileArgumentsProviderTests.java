@@ -158,7 +158,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromSingleClasspathResource() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.build();
 
 		var arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
@@ -168,7 +168,7 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromSingleFileWithAbsolutePath(@TempDir Path tempDir) throws Exception {
-		var csvFile = writeClasspathResourceToFile("/single-column.csv", tempDir.resolve("single-column.csv"));
+		var csvFile = writeClasspathResourceToFile("single-column.csv", tempDir.resolve("single-column.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
 				.files(csvFile.toAbsolutePath().toString())//
@@ -181,10 +181,10 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromClasspathResourcesAndFiles(@TempDir Path tempDir) throws Exception {
-		var csvFile = writeClasspathResourceToFile("/single-column.csv", tempDir.resolve("single-column.csv"));
+		var csvFile = writeClasspathResourceToFile("single-column.csv", tempDir.resolve("single-column.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
@@ -195,7 +195,7 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsFromSingleFileWithRelativePath() throws Exception {
-		var csvFile = writeClasspathResourceToFile("/single-column.csv", Path.of("single-column.csv"));
+		var csvFile = writeClasspathResourceToFile("single-column.csv", Path.of("single-column.csv"));
 		try {
 			var annotation = csvFileSource()//
 					.encoding("ISO-8859-1")//
@@ -215,7 +215,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromSingleClasspathResourceWithCustomEmptyValue() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.emptyValue("EMPTY")//
 				.build();
 
@@ -228,7 +228,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromMultipleClasspathResources() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv", "/single-column.csv")//
+				.resources("single-column.csv", "single-column.csv")//
 				.build();
 
 		var arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
@@ -240,7 +240,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromSingleClasspathResourceWithHeaders() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.numLinesToSkip(1)//
 				.build();
 
@@ -253,7 +253,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromSingleClasspathResourceWithMoreHeadersThanLines() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.numLinesToSkip(10)//
 				.build();
 
@@ -266,7 +266,7 @@ class CsvFileArgumentsProviderTests {
 	void readsFromMultipleClasspathResourcesWithHeaders() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv", "/single-column.csv")//
+				.resources("single-column.csv", "single-column.csv")//
 				.numLinesToSkip(1)//
 				.build();
 
@@ -280,7 +280,7 @@ class CsvFileArgumentsProviderTests {
 	void supportsCsvHeadersInDisplayNames() {
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/single-column.csv")//
+				.resources("single-column.csv")//
 				.useHeadersInDisplayName(true)//
 				.build();
 
@@ -370,7 +370,7 @@ class CsvFileArgumentsProviderTests {
 	@Test
 	void throwsExceptionForInvalidCsvFormat() {
 		var annotation = csvFileSource()//
-				.resources("/broken.csv")//
+				.resources("broken.csv")//
 				.build();
 
 		var exception = assertThrows(CsvParsingException.class,
@@ -397,10 +397,10 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsLineFromDefaultMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws Exception {
-		var csvFile = writeClasspathResourceToFile("/default-max-chars.csv", tempDir.resolve("default-max-chars.csv"));
+		var csvFile = writeClasspathResourceToFile("default-max-chars.csv", tempDir.resolve("default-max-chars.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/default-max-chars.csv")//
+				.resources("default-max-chars.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
@@ -411,11 +411,11 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void readsLineFromExceedsMaxCharsFileWithCustomConfig(@TempDir Path tempDir) throws java.io.IOException {
-		var csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/exceeds-default-max-chars.csv")//
+				.resources("exceeds-default-max-chars.csv")//
 				.maxCharsPerColumn(4097)//
 				.files(csvFile.toAbsolutePath().toString())//
 				.build();
@@ -427,11 +427,11 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber(@TempDir Path tempDir) throws java.io.IOException {
-		var csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/exceeds-default-max-chars.csv")//
+				.resources("exceeds-default-max-chars.csv")//
 				.maxCharsPerColumn(-1).files(csvFile.toAbsolutePath().toString())//
 				.build();
 
@@ -444,11 +444,11 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void throwsExceptionForExceedsMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws java.io.IOException {
-		var csvFile = writeClasspathResourceToFile("/exceeds-default-max-chars.csv",
+		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/exceeds-default-max-chars.csv")//
+				.resources("exceeds-default-max-chars.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
@@ -462,11 +462,11 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
-		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+		var csvFile = writeClasspathResourceToFile("leading-trailing-spaces.csv",
 			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/leading-trailing-spaces.csv")//
+				.resources("leading-trailing-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.ignoreLeadingAndTrailingWhitespace(true)//
 				.build();
@@ -478,11 +478,11 @@ class CsvFileArgumentsProviderTests {
 
 	@Test
 	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
-		var csvFile = writeClasspathResourceToFile("/leading-trailing-spaces.csv",
+		var csvFile = writeClasspathResourceToFile("leading-trailing-spaces.csv",
 			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
-				.resources("/leading-trailing-spaces.csv")//
+				.resources("leading-trailing-spaces.csv")//
 				.files(csvFile.toAbsolutePath().toString())//
 				.delimiter(',')//
 				.ignoreLeadingAndTrailingWhitespace(false)//
