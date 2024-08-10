@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static com.google.common.jimfs.Configuration.unix;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static java.nio.file.Files.createDirectory;
 import static java.nio.file.Files.createFile;
 import static java.nio.file.Files.createSymbolicLink;
@@ -18,19 +21,27 @@ import static java.nio.file.Files.delete;
 import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.Optional;
+
+import com.google.common.jimfs.Jimfs;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.AfterEach;
@@ -39,7 +50,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
-import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -49,6 +59,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
@@ -64,6 +76,12 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 	private final ExtensionContext extensionContext = mock();
 
 	private TempDirectory.CloseablePath closeablePath;
+
+	@Target(METHOD)
+	@Retention(RUNTIME)
+	@ValueSource(classes = { File.class, Path.class })
+	private @interface ElementTypeSource {
+	}
 
 	@BeforeEach
 	void setUpExtensionContext() {
@@ -95,70 +113,105 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			delete(root);
 		}
 
-		@Test
 		@DisplayName("succeeds if the factory returns a directory")
-		void factoryReturnsDirectory() throws Exception {
-			TempDirFactory factory = spy(new Factory(createDirectory(root.resolve("directory"))));
+		@ParameterizedTest
+		@ElementTypeSource
+		void factoryReturnsDirectoryDynamic(Class<?> elementType) throws IOException {
+			TempDirFactory factory = (elementContext, extensionContext) -> createDirectory(root.resolve("directory"));
 
-			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext);
+			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementType, elementContext,
+				extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			delete(closeablePath.get());
 		}
 
-		@Test
 		@DisplayName("succeeds if the factory returns a symbolic link to a directory")
-		@DisabledOnOs(OS.WINDOWS)
-		void factoryReturnsSymbolicLinkToDirectory() throws Exception {
+		@ParameterizedTest
+		@ElementTypeSource
+		@DisabledOnOs(WINDOWS)
+		void factoryReturnsSymbolicLinkToDirectory(Class<?> elementType) throws IOException {
 			Path directory = createDirectory(root.resolve("directory"));
-			TempDirFactory factory = spy(new Factory(createSymbolicLink(root.resolve("symbolicLink"), directory)));
+			TempDirFactory factory = (elementContext,
+					extensionContext) -> createSymbolicLink(root.resolve("symbolicLink"), directory);
 
-			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext);
+			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, elementType, elementContext,
+				extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			delete(closeablePath.get());
 			delete(directory);
 		}
 
+		@DisplayName("succeeds if the factory returns a directory on a non-default file system for a Path annotated element")
 		@Test
+		void factoryReturnsDirectoryOnNonDefaultFileSystemWithPath() throws IOException {
+			TempDirFactory factory = spy(new JimfsFactory());
+
+			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, Path.class, elementContext, extensionContext);
+			assertThat(closeablePath.get()).isDirectory();
+
+			delete(closeablePath.get());
+		}
+
 		@DisplayName("fails if the factory returns null")
-		void factoryReturnsNull() throws IOException {
+		@ParameterizedTest
+		@ElementTypeSource
+		void factoryReturnsNull(Class<?> elementType) throws IOException {
 			TempDirFactory factory = spy(new Factory(null));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
-				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementType, elementContext, extensionContext));
 
 			verify(factory).close();
 		}
 
-		@Test
 		@DisplayName("fails if the factory returns a file")
-		void factoryReturnsFile() throws IOException {
+		@ParameterizedTest
+		@ElementTypeSource
+		void factoryReturnsFile(Class<?> elementType) throws IOException {
 			Path file = createFile(root.resolve("file"));
 			TempDirFactory factory = spy(new Factory(file));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
-				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementType, elementContext, extensionContext));
 
 			verify(factory).close();
 			assertThat(file).doesNotExist();
 		}
 
-		@Test
 		@DisplayName("fails if the factory returns a symbolic link to a file")
-		@DisabledOnOs(OS.WINDOWS)
-		void factoryReturnsSymbolicLinkToFile() throws IOException {
+		@ParameterizedTest
+		@ElementTypeSource
+		@DisabledOnOs(WINDOWS)
+		void factoryReturnsSymbolicLinkToFile(Class<?> elementType) throws IOException {
 			Path file = createFile(root.resolve("file"));
 			Path symbolicLink = createSymbolicLink(root.resolve("symbolicLink"), file);
 			TempDirFactory factory = spy(new Factory(symbolicLink));
 
 			assertThatExtensionConfigurationExceptionIsThrownBy(
-				() -> TempDirectory.createTempDir(factory, DEFAULT, elementContext, extensionContext));
+				() -> TempDirectory.createTempDir(factory, DEFAULT, elementType, elementContext, extensionContext));
 
 			verify(factory).close();
 			assertThat(symbolicLink).doesNotExist();
 
 			delete(file);
+		}
+
+		@DisplayName("fails if the factory returns a directory on a non-default file system for a File annotated element")
+		@Test
+		void factoryReturnsDirectoryOnNonDefaultFileSystemWithFile() throws IOException {
+			TempDirFactory factory = spy(new JimfsFactory());
+
+			assertThatExceptionOfType(ExtensionConfigurationException.class)//
+					.isThrownBy(() -> TempDirectory.createTempDir(factory, DEFAULT, File.class, elementContext,
+						extensionContext))//
+					.withMessage("Failed to create default temp directory")//
+					.withCauseInstanceOf(PreconditionViolationException.class)//
+					.havingCause().withMessage("temp directory with non-default file system cannot be injected into "
+							+ File.class.getName() + " target");
+
+			verify(factory).close();
 		}
 
 		// Mockito spying a lambda fails with: VM does not support modification of given type
@@ -169,6 +222,22 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 				return path;
 			}
 
+		}
+
+		private static class JimfsFactory implements TempDirFactory {
+
+			private final FileSystem fileSystem = Jimfs.newFileSystem(unix());
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return createDirectory(fileSystem.getPath("/").resolve("directory"));
+			}
+
+			@Override
+			public void close() throws IOException {
+				TempDirFactory.super.close();
+			}
 		}
 
 		private static void assertThatExtensionConfigurationExceptionIsThrownBy(ThrowingCallable callable) {
@@ -201,10 +270,13 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			deleteIfExists(closeablePath.get());
 		}
 
-		@Test
 		@DisplayName("is done for a cleanup mode of ALWAYS")
-		void always() throws IOException {
-			closeablePath = TempDirectory.createTempDir(factory, ALWAYS, elementContext, extensionContext);
+		@ParameterizedTest
+		@ElementTypeSource
+		void always(Class<?> elementType) throws IOException {
+			reset(factory);
+
+			closeablePath = TempDirectory.createTempDir(factory, ALWAYS, elementType, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
@@ -213,10 +285,13 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).doesNotExist();
 		}
 
-		@Test
 		@DisplayName("is not done for a cleanup mode of NEVER")
-		void never() throws IOException {
-			closeablePath = TempDirectory.createTempDir(factory, NEVER, elementContext, extensionContext);
+		@ParameterizedTest
+		@ElementTypeSource
+		void never(Class<?> elementType) throws IOException {
+			reset(factory);
+
+			closeablePath = TempDirectory.createTempDir(factory, NEVER, elementType, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
@@ -225,12 +300,16 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).exists();
 		}
 
-		@Test
 		@DisplayName("is not done for a cleanup mode of ON_SUCCESS, if there is an exception")
-		void onSuccessWithException() throws IOException {
+		@ParameterizedTest
+		@ElementTypeSource
+		void onSuccessWithException(Class<?> elementType) throws IOException {
+			reset(factory);
+
 			when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
 
-			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementContext, extensionContext);
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementType, elementContext,
+				extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();
@@ -239,12 +318,16 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			assertThat(closeablePath.get()).exists();
 		}
 
-		@Test
 		@DisplayName("is done for a cleanup mode of ON_SUCCESS, if there is no exception")
-		void onSuccessWithNoException() throws IOException {
+		@ParameterizedTest
+		@ElementTypeSource
+		void onSuccessWithNoException(Class<?> elementType) throws IOException {
+			reset(factory);
+
 			when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
 
-			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementContext, extensionContext);
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementType, elementContext,
+				extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
 
 			closeablePath.close();

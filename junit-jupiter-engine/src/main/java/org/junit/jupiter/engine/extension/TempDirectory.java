@@ -26,6 +26,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
+import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -145,7 +146,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
 				TempDirFactory factory = determineTempDirFactoryForField(field, scope);
 				makeAccessible(field).set(testInstance,
-					getPathOrFile(new FieldContext(field), field.getType(), factory, cleanupMode, scope, context));
+					getPathOrFile(field.getType(), new FieldContext(field), factory, cleanupMode, scope, context));
 			}
 			catch (Throwable t) {
 				throw ExceptionUtils.throwAsUncheckedException(t);
@@ -178,7 +179,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
 		Scope scope = getScope(extensionContext);
 		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext, scope);
-		return getPathOrFile(parameterContext, parameterType, factory, cleanupMode, scope, extensionContext);
+		return getPathOrFile(parameterType, parameterContext, factory, cleanupMode, scope, extensionContext);
 	}
 
 	private CleanupMode determineCleanupModeForField(Field field) {
@@ -248,23 +249,24 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private Object getPathOrFile(AnnotatedElementContext elementContext, Class<?> type, TempDirFactory factory,
+	private Object getPathOrFile(Class<?> elementType, AnnotatedElementContext elementContext, TempDirFactory factory,
 			CleanupMode cleanupMode, Scope scope, ExtensionContext extensionContext) {
 		Namespace namespace = scope == Scope.PER_DECLARATION //
 				? NAMESPACE.append(elementContext) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY, __ -> createTempDir(factory, cleanupMode, elementContext, extensionContext),
+				.getOrComputeIfAbsent(KEY,
+					__ -> createTempDir(factory, cleanupMode, elementType, elementContext, extensionContext),
 					CloseablePath.class) //
 				.get();
 
-		return (type == Path.class) ? path : path.toFile();
+		return (elementType == Path.class) ? path : path.toFile();
 	}
 
-	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode,
+	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode, Class<?> elementType,
 			AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 		try {
-			return new CloseablePath(factory, cleanupMode, elementContext, extensionContext);
+			return new CloseablePath(factory, cleanupMode, elementType, elementContext, extensionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -285,8 +287,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private final CleanupMode cleanupMode;
 		private final ExtensionContext extensionContext;
 
-		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, AnnotatedElementContext elementContext,
-				ExtensionContext extensionContext) throws Exception {
+		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, Class<?> elementType,
+				AnnotatedElementContext elementContext, ExtensionContext extensionContext) throws Exception {
 			this.dir = factory.createTempDirectory(elementContext, extensionContext);
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
@@ -295,6 +297,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			if (dir == null || !Files.isDirectory(dir)) {
 				close();
 				throw new PreconditionViolationException("temp directory must be a directory");
+			}
+
+			if (elementType == File.class && !dir.getFileSystem().equals(FileSystems.getDefault())) {
+				close();
+				throw new PreconditionViolationException(
+					"temp directory with non-default file system cannot be injected into " + File.class.getName()
+							+ " target");
 			}
 		}
 
