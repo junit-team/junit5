@@ -13,6 +13,7 @@ plugins {
 	alias(libs.plugins.gitPublish)
 	alias(libs.plugins.plantuml)
 	id("junitbuild.build-parameters")
+	id("junitbuild.java-multi-release-test-sources")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }
@@ -311,6 +312,13 @@ tasks {
 			inputs.dir(resources.srcDirs.first())
 			attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
 			inputs.dir(kotlin.srcDirs.first())
+		}
+
+		sourceSets["testRelease21"].apply {
+			attributes(mapOf(
+				"testRelease21Dir" to java.srcDirs.first()
+			))
+			inputs.dir(java.srcDirs.first())
 		}
 
 		jvm {
