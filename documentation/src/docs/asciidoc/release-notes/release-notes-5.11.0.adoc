@@ -112,7 +112,7 @@ on GitHub.
 ==== Bug Fixes
 
 * Due to changes in the JUnit Platform regarding field and method search algorithms (see
-  <<release-notes-5.11.0-M1-junit-platform-bug-fixes>> above), numerous bugs have been
+  <<release-notes-5.11.0-junit-platform-bug-fixes>> above), numerous bugs have been
   addressed within JUnit Jupiter, including but not limited to the following.
   ** Two `@TempDir` fields with the same name in a superclass and subclass will now both
     be injected.
