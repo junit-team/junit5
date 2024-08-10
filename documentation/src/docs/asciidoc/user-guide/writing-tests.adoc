@@ -2467,6 +2467,20 @@ a nested hierarchy of dynamic tests utilizing `DynamicContainer`.
 include::{testDir}/example/DynamicTestsDemo.java[tags=user_guide]
 ----
 
+[[writing-tests-dynamic-tests-named-support]]
+==== Dynamic Tests and Named
+
+In some cases, it can be more natural to specify inputs together with a descriptive name
+using the {Named} API and the corresponding `stream()` factory methods on `DynamicTest` as
+shown in the first example below. The second example takes it one step further and allows
+to provide the code block that should be executed by implementing the `Executable`
+interface along with `Named` via the `NamedExecutable` base class.
+
+[source,java]
+----
+include::{testRelease21Dir}/example/DynamicTestsNamedDemo.java[tags=user_guide]
+----
+
 [[writing-tests-dynamic-tests-uri-test-source]]
 ==== URI Test Sources for Dynamic Tests
 

@@ -176,6 +176,10 @@ tasks {
 		}
 	}
 
+	testRelease21 {
+		include("**/*Demo.class")
+	}
+
 	check {
 		dependsOn(consoleLauncherTest)
 	}
