@@ -27,9 +27,18 @@ public class DynamicTestsNamedDemo {
 	@TestFactory
 	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNames() {
 		// Stream of palindromes to check
-		var inputStream = Stream.of(named("racecar is a palindrome", "racecar"),
-			named("radar is also a palindrome", "radar"), named("mom also seems to be a palindrome", "mom"),
-			named("dad is yet another palindrome", "dad"));
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		var inputStream = Stream.of(
+			named("racecar is a palindrome", "racecar"),
+			named("radar is also a palindrome", "radar"),
+			named("mom also seems to be a palindrome", "mom"),
+			named("dad is yet another palindrome", "dad")
+		);
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 
 		// Returns a stream of dynamic tests.
 		return DynamicTest.stream(inputStream, text -> assertTrue(isPalindrome(text)));
@@ -38,7 +47,14 @@ public class DynamicTestsNamedDemo {
 	@TestFactory
 	Stream<DynamicTest> dynamicTestsFromStreamFactoryMethodWithNamedExecutables() {
 		// Stream of palindromes to check
-		var inputStream = Stream.of("racecar", "radar", "mom", "dad").map(PalindromeNamedExecutable::new);
+		// end::user_guide[]
+		// @formatter:off
+		// tag::user_guide[]
+		var inputStream = Stream.of("racecar", "radar", "mom", "dad")
+				.map(PalindromeNamedExecutable::new);
+		// end::user_guide[]
+		// @formatter:on
+		// tag::user_guide[]
 
 		// Returns a stream of dynamic tests based on NamedExecutables.
 		return DynamicTest.stream(inputStream);
