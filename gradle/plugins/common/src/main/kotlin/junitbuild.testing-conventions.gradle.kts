@@ -76,10 +76,7 @@ dependencies {
 	testImplementation(dependencyFromLibs("assertj"))
 	testImplementation(dependencyFromLibs("mockito"))
 	testImplementation(dependencyFromLibs("testingAnnotations"))
-
-	if (!project.name.startsWith("junit-jupiter")) {
-		testImplementation(project(":junit-jupiter"))
-	}
+	testImplementation(project(":junit-jupiter"))
 
 	testRuntimeOnly(project(":junit-platform-engine"))
 	testRuntimeOnly(project(":junit-platform-jfr"))
