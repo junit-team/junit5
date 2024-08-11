@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.parallel.Execution;
 
 /**
  * {@code @TestMethodOrder} is a type-level annotation that is used to configure
@@ -63,6 +64,11 @@ import org.apiguardian.api.API;
  *     void validValues() {}
  * }
  * </pre>
+ *
+ * <h2>Parallel Execution</h2>
+ * <p>Using a {@link MethodOrderer} disables parallel execution unless the test
+ * class or test method is annotated with
+ * {@link Execution @Execution(CONCURRENT)}.
  *
  * @since 5.4
  * @see MethodOrderer

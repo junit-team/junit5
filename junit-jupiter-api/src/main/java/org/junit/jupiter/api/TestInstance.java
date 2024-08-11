@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.parallel.Execution;
 
 /**
  * {@code @TestInstance} is a type-level annotation that is used to configure
@@ -59,8 +60,14 @@ import org.apiguardian.api.API;
  * create a custom <em>composed annotation</em> that inherits the semantics
  * of {@code @TestInstance}.
  *
+ * <h2>Parallel Execution</h2>
+ * <p>Using the {@link Lifecycle#PER_CLASS PER_CLASS} lifecycle mode disables
+ * parallel execution unless the test class or test method is annotated with
+ * {@link Execution @Execution(CONCURRENT)}.
+ *
  * @since 5.0
  * @see Nested @Nested
+ * @see Execution @Execution
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

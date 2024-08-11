@@ -20,6 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * {@code @Execution} is used to configure the parallel execution
@@ -43,6 +45,12 @@ import org.apiguardian.api.API;
  *
  * <p>{@value #DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME} overrides
  * {@value #DEFAULT_EXECUTION_MODE_PROPERTY_NAME} for top-level classes.
+ *
+ * <p>The default execution mode is not applied to classes that use the
+ * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle or a
+ * {@link MethodOrderer}. In both cases, test methods in such test classes are
+ * only executed concurrently if the {@code @Execution(CONCURRENT)} annotation
+ * is present on the test class or method.
  *
  * @see Isolated
  * @see ResourceLock
