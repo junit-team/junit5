@@ -71,7 +71,7 @@ tasks {
 		classpath -= sourceSets.main.get().output
 		classpath += files(shadowJar.map { it.archiveFile })
 	}
-    named<JavaCompile>("compileModule") {
-        the<ModuleCompileOptions>().modulePath.from(shadowedClasspath.get())
-    }
+	named<JavaCompile>("compileModule") {
+		the<ModuleCompileOptions>().modulePath.from(shadowedClasspath.get())
+	}
 }
