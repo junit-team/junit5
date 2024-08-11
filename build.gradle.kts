@@ -64,7 +64,7 @@ nexusPublishing {
 }
 
 nohttp {
-	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**", "buildSrc/build/**")
+	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**")
 }
 
 tasks.checkstyleNohttp {
