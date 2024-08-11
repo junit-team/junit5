@@ -48,3 +48,12 @@ spotless {
 		}
 	}
 }
+
+tasks {
+	named("spotlessDocumentation") {
+		outputs.doNotCacheIf("negative avoidance savings") { true }
+	}
+	named("spotlessMisc") {
+		outputs.doNotCacheIf("negative avoidance savings") { true }
+	}
+}
