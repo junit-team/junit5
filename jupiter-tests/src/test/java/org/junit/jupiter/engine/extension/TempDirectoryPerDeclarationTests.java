@@ -321,7 +321,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		@Test
 		@DisplayName("when default @TempDir factory does not return directory")
 		@Order(33)
-		void doesNotSupportCustomDefaultTempDirFactoryReturningNull() {
+		void doesNotSupportCustomDefaultTempDirFactoryNotReturningDirectory() {
 			var results = executeTestsForClassWithDefaultFactory(
 				CustomDefaultFactoryNotReturningDirectoryTestCase.class, FactoryNotReturningDirectory.class);
 
@@ -345,6 +345,28 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 				return null;
 			}
+		}
+
+		@Test
+		@DisplayName("when @TempDir factory returns a non-default file system path for a File annotated element")
+		@Order(34)
+		void doesNotSupportNonDefaultFileSystemTempDirFactoryOnFileAnnotatedElement() {
+			var results = executeTestsForClass(
+				FactoryReturningNonDefaultFileSystemPathForFileAnnotatedElementTestCase.class);
+
+			// @formatter:off
+			assertSingleFailedTest(results, instanceOf(ParameterResolutionException.class),
+					message(m -> m.matches("Failed to resolve parameter \\[.+] in method \\[.+]: .+")),
+					cause(
+							instanceOf(ExtensionConfigurationException.class),
+							message("Failed to create default temp directory"),
+							cause(
+									instanceOf(PreconditionViolationException.class),
+									message("temp directory with non-default file system cannot be injected into "
+											+ File.class.getName() + " target")
+							)
+					));
+			// @formatter:on
 		}
 
 	}
@@ -1419,6 +1441,31 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 				return null;
+			}
+		}
+
+	}
+
+	static class FactoryReturningNonDefaultFileSystemPathForFileAnnotatedElementTestCase {
+
+		@Test
+		void test(@SuppressWarnings("unused") @TempDir(factory = Factory.class) File tempDir) {
+			// never called
+		}
+
+		private static class Factory implements TempDirFactory {
+
+			private final FileSystem fileSystem = Jimfs.newFileSystem(Configuration.unix());
+
+			@Override
+			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+					throws Exception {
+				return Files.createTempDirectory(fileSystem.getPath("/"), "prefix");
+			}
+
+			@Override
+			public void close() throws IOException {
+				fileSystem.close();
 			}
 		}
 
