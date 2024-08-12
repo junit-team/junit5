@@ -41,16 +41,20 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * <p>The temporary directory is only created if a field in a test class or a
  * parameter in a lifecycle method or test method is annotated with
  * {@code @TempDir}.
- * An {@link ExtensionConfigurationException} or a {@link ParameterResolutionException}
- * will be thrown in one of the following cases:
+ * An {@link ExtensionConfigurationException} or a
+ * {@link ParameterResolutionException} will be thrown in one of the following
+ * cases:
  *
  * <ul>
- * <li>If the field type or parameter type is neither {@link Path} nor {@link File}.</li>
+ * <li>If the field type or parameter type is neither {@link Path} nor
+       {@link File}.</li>
  * <li>If a field is declared as {@code final}.</li>
  * <li>If the temporary directory cannot be created.</li>
  * <li>If the field type or parameter type is {@code File} and a custom
- *     {@link TempDir#factory() factory} is used, which creates a temporary directory that does
- *     not belong to the {@link java.nio.file.FileSystems#getDefault() default file system}.</li>
+ *     {@linkplain TempDir#factory() factory} is used, which creates a temporary
+ *     directory that does not belong to the
+ *     {@linkplain java.nio.file.FileSystems#getDefault() default file system}.
+ * </li>
  * </ul>
  *
  * In addition, a {@code ParameterResolutionException} will be thrown for a
