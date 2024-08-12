@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -29,23 +30,23 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * <p>Each shared resource is represented by an instance of {@link Lock}.
  *
- * <p>This interface (in conjunction with {@link ResourceLocksFrom})
- * serves the same purpose as {@link ResourceLock} annotation
- * but for certain cases may be a more flexible and less verbose alternative
- * since it allows to add shared resources programmatically.
+ * <p>Adding shared resources using this interface has the same semantics
+ * as declaring them via {@code @ResourceLock(value, mode)} annotation
+ * but for some cases may be a more flexible and less verbose alternative
+ * since it allows to add resources programmatically.
  *
- * @apiNote If both {@code @ResourceLock} and {@code ResourceLocksProvider}
- * are used then shared resources from them are summed up.
- * It means that if resource 'A' is declared via {@code @ResourceLock}
- * and resource 'B' added via {@code ResourceLocksProvider}
- * then a test class or test method will have both resources: 'A' and 'B'.
+ * @implNote If both {@code @ResourceLock(value, mode)}
+ * and {@code ResourceLocksProvider} are used
+ * then shared resources from them are summed up.
+ * It means that if resource "A" is declared via {@code @ResourceLock("A")}
+ * and resource "B" added via {@code new Lock("B")}
+ * then a test class or test method will have both resources: "A" and "B".
  *
  * @since 5.12
  * @see Isolated
  * @see Resources
  * @see ResourceAccessMode
  * @see ResourceLock
- * @see ResourceLocksFrom
  * @see Lock
  */
 @API(status = EXPERIMENTAL, since = "5.12")
@@ -54,22 +55,34 @@ public interface ResourceLocksProvider {
 	/**
 	 * Add shared resources to a test class.
 	 *
+	 * <p>Invoked for a test class annotated with
+	 * {@code @ResourceLock(providers)} and for its child classes.
+	 *
+	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
+	 * has the same semantics as annotating a test class
+	 * with analogous {@code @ResourceLock(value, mode)}.
+	 *
 	 * @param testClass a test class to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 *
-	 * @apiNote has the same semantics as adding {@code @ResourceLock} to a test class.
 	 */
 	default Set<Lock> provideForClass(Class<?> testClass) {
 		return emptySet();
 	}
 
 	/**
-	 * Add shared resources to a nested test class.
+	 * Add shared resources to a {@linkplain Nested nested} test class.
+	 *
+	 * <p>Invoked for a nested test class
+	 * annotated with {@code @ResourceLock(providers)}
+	 * and for its child classes.
+	 *
+	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
+	 * has the same semantics as annotating a nested test class
+	 * with analogous {@code @ResourceLock(value, mode)}.
 	 *
 	 * @param testClass a nested test class to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 *
-	 * @apiNote has the same semantics as adding {@code @ResourceLock} to a nested test class.
+	 * @see	Nested
 	 */
 	default Set<Lock> provideForNestedClass(Class<?> testClass) {
 		return emptySet();
@@ -78,11 +91,22 @@ public interface ResourceLocksProvider {
 	/**
 	 * Add shared resources to a test method.
 	 *
-	 * @param testClass a test class containing the {@code testMethod}
+	 * <p>Invoked in case:
+	 * <ul>
+	 *     <li>an enclosing test class or its parent class
+	 *     is annotated with {@code @ResourceLock(providers)}.</li>
+	 *     <li>a test method
+	 *     is annotated with {@code @ResourceLock(providers)}.</li>
+	 * </ul>
+	 *
+	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
+	 * has the same semantics as annotating a test method
+	 * with analogous {@code @ResourceLock(value, mode)}.
+	 *
+	 * @param testClass a test class
+	 * or {@linkplain Nested nested} test class containing the {@code testMethod}
 	 * @param testMethod a test method to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 *
-	 * @apiNote has the same semantics as adding {@code @ResourceLock} to a test method.
 	 */
 	default Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
 		return emptySet();
@@ -110,12 +134,15 @@ public interface ResourceLocksProvider {
 	 * {@link BeforeEach @BeforeEach} methods are executed and released after all
 	 * {@link AfterEach @AfterEach} methods have been executed.
 	 *
+	 * @apiNote {@link Lock#key} and {@link Lock#accessMode} have the same
+	 * semantics as {@link ResourceLock#value()} and {@link ResourceLock#mode()}
+	 * respectively.
+	 *
 	 * @since 5.12
 	 * @see Isolated
 	 * @see Resources
 	 * @see ResourceAccessMode
 	 * @see ResourceLock
-	 * @see ResourceLocksFrom
 	 * @see ResourceLocksProvider
 	 */
 	final class Lock {
@@ -128,6 +155,7 @@ public interface ResourceLocksProvider {
 		 * Create a new {@code Lock} with {@code accessMode = READ_WRITE}.
 		 *
 		 * @param key the identifier of the resource; never {@code null} or blank
+		 * @see ResourceLock#value()
 		 */
 		public Lock(String key) {
 			this(key, ResourceAccessMode.READ_WRITE);
@@ -138,6 +166,8 @@ public interface ResourceLocksProvider {
 		 *
 		 * @param key the identifier of the resource; never {@code null} or blank
 		 * @param accessMode the lock mode to use to synchronize access to the resource; never {@code null}
+		 * @see ResourceLock#value()
+		 * @see ResourceLock#mode()
 		 */
 		public Lock(String key, ResourceAccessMode accessMode) {
 			this.key = Preconditions.notBlank(key, "key must not be null or blank");
@@ -146,6 +176,8 @@ public interface ResourceLocksProvider {
 
 		/**
 		 * Get the key of this lock.
+		 *
+		 * @see ResourceLock#value()
 		 */
 		public String getKey() {
 			return key;
@@ -153,6 +185,8 @@ public interface ResourceLocksProvider {
 
 		/**
 		 * Get the access mode of this lock.
+		 *
+		 * @see ResourceLock#mode()
 		 */
 		public ResourceAccessMode getAccessMode() {
 			return accessMode;

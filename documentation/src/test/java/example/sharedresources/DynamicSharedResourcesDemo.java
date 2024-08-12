@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package example;
+package example.sharedresources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,13 +27,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLocksFrom;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 
 // tag::user_guide[]
 @Execution(CONCURRENT)
-@ResourceLocksFrom(SharedResourcesWithResourceLocksFromAnnotationDemo.Provider.class)
-class SharedResourcesWithResourceLocksFromAnnotationDemo {
+@ResourceLock(providers = DynamicSharedResourcesDemo.Provider.class)
+class DynamicSharedResourcesDemo {
 
 	private Properties backup;
 

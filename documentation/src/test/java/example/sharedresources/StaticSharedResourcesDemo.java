@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package example;
+package example.sharedresources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -27,7 +27,7 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 // tag::user_guide[]
 @Execution(CONCURRENT)
-class SharedResourcesWithResourceLockAnnotationDemo {
+class StaticSharedResourcesDemo {
 
 	private Properties backup;
 

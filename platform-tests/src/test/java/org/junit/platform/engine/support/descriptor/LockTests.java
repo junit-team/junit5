@@ -10,10 +10,12 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.ResourceLocksProvider.Lock;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.platform.AbstractEqualsAndHashCodeTests;
 
 /**
@@ -22,13 +24,22 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
 class LockTests extends AbstractEqualsAndHashCodeTests {
 
 	@Test
+	void readWriteModeSetByDefault() {
+		assertEquals(READ_WRITE, new Lock("a").getAccessMode());
+	}
+
+	@Test
 	void equalsAndHashCode() {
-		assertEqualsAndHashCode(new Lock("a"), new Lock("a"), new Lock("b"));
 		// @formatter:off
 		assertEqualsAndHashCode(
-				new Lock("a", ResourceAccessMode.READ_WRITE),
-				new Lock("a", ResourceAccessMode.READ_WRITE),
-				new Lock("a", ResourceAccessMode.READ)
+				new Lock("a", READ_WRITE),
+				new Lock("a", READ_WRITE),
+				new Lock("b", READ_WRITE)
+		);
+		assertEqualsAndHashCode(
+				new Lock("a", READ_WRITE),
+				new Lock("a", READ_WRITE),
+				new Lock("a", READ)
 		);
 		// @formatter:on
 	}

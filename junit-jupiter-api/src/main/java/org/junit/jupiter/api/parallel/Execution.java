@@ -46,7 +46,6 @@ import org.apiguardian.api.API;
  *
  * @see Isolated
  * @see ResourceLock
- * @see ResourceLocksFrom
  * @since 5.3
  */
 @API(status = STABLE, since = "5.10")

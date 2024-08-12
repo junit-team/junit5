@@ -10,22 +10,26 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.logging.Logger;
@@ -84,13 +88,22 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
 		// @formatter:off
+		Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks =
+				p -> p.provideForMethod(getTestClass(), getTestMethod());
+
+		Set<ExclusiveResource> fromMethodLevelAnnotation = getExclusiveResourcesFromAnnotation(
+				getTestMethod(),
+				providerToLocks
+		);
+		Stream<ExclusiveResource> fromProvidersInClassLevelAnnotation = getExclusiveResourcesFromAnnotationProviders(
+				getTestClass(),
+				providerToLocks
+		);
+
 		return Stream.concat(
-				getExclusiveResourcesFromAnnotation(getTestMethod()),
-				getExclusiveResourcesFromProvider(
-						getTestClass(),
-						provider -> provider.provideForMethod(getTestClass(), getTestMethod())
-				)
-		).collect(toSet());
+				fromMethodLevelAnnotation.stream(),
+				fromProvidersInClassLevelAnnotation
+		).collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
 		// @formatter:on
 	}
 

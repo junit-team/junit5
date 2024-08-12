@@ -128,7 +128,7 @@ endif::[]
 :Execution:                                  {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Execution.html[@Execution]
 :Isolated:                                   {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Isolated.html[@Isolated]
 :ResourceLock:                               {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLock.html[@ResourceLock]
-:ResourceLocksFrom:                          {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLocksFrom.html[@ResourceLocksFrom]
+:ResourceLocksProvider:                      {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/ResourceLocksProvider.html[ResourceLocksProvider]
 :Resources:                                  {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/parallel/Resources.html[Resources]
 // Jupiter Extension APIs
 :extension-api-package:                      {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html[org.junit.jupiter.api.extension]

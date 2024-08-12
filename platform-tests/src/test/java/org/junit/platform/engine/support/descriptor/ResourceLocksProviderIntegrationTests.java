@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.descriptor;
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -25,7 +26,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceLocksFrom;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.testkit.engine.EngineTestKit;
@@ -37,14 +38,20 @@ import org.junit.platform.testkit.engine.Event;
 class ResourceLocksProviderIntegrationTests {
 
 	@Test
-	void provideLocksForClassAndMethod() {
-		var events = execute(ProvideForClassAndMethodTestCase.class);
+	void provideForClassAndProvideForMethodCalledWithCorrectArguments() {
+		var events = execute(ProvideForClassAndProvideForMethodTestCase.class);
 		assertThat(events.filter(event(test(), finishedSuccessfully())::matches)).hasSize(2);
 	}
 
 	@Test
-	void provideLocksForNestedClassAndMethod() {
-		var events = execute(ProvideForNestedClassAndMethodTestCase.class);
+	void provideForNestedClassAndProvideForMethodCalledWithCorrectArguments() {
+		var events = execute(ProvideForNestedClassAndProvideForMethodTestCase.class);
+		assertThat(events.filter(event(test(), finishedSuccessfully())::matches)).hasSize(2);
+	}
+
+	@Test
+	void provideForMethodCalledWithCorrectArguments() {
+		var events = execute(ProvideForMethodTestCase.class);
 		assertThat(events.filter(event(test(), finishedSuccessfully())::matches)).hasSize(2);
 	}
 
@@ -61,25 +68,36 @@ class ResourceLocksProviderIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
-	@ResourceLocksFrom(ProvideForClassAndMethodTestCase.Provider.class)
-	static class ProvideForClassAndMethodTestCase {
+	@ResourceLock(providers = ProvideForClassAndProvideForMethodTestCase.Provider.class)
+	static class ProvideForClassAndProvideForMethodTestCase {
 
 		@Test
-		void classMethod() {
+		void test() {
+			assertTrue(Provider.isProvideForClassCalled, "'provideForClass' was not called");
+			Provider.isProvideForClassCalled = false;
+
+			assertTrue(Provider.isProvideForMethodCalled, "'provideForMethod' was not called");
+			Provider.isProvideForMethodCalled = false;
 		}
 
 		@Nested
 		class NestedClass {
+
 			@Test
-			void nestedClassMethod() {
+			void nestedTest() {
 			}
 		}
 
-		static final class Provider implements ResourceLocksProvider {
+		static class Provider implements ResourceLocksProvider {
+
+			private static boolean isProvideForClassCalled = false;
+
+			private static boolean isProvideForMethodCalled = false;
 
 			@Override
 			public Set<Lock> provideForClass(Class<?> testClass) {
-				assertEquals(ProvideForClassAndMethodTestCase.class, testClass);
+				isProvideForClassCalled = true;
+				assertEquals(ProvideForClassAndProvideForMethodTestCase.class, testClass);
 				return emptySet();
 			}
 
@@ -91,28 +109,39 @@ class ResourceLocksProviderIntegrationTests {
 
 			@Override
 			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
-				assertEquals(ProvideForClassAndMethodTestCase.class, testClass);
-				assertEquals("classMethod", testMethod.getName());
+				isProvideForMethodCalled = true;
+				assertEquals(ProvideForClassAndProvideForMethodTestCase.class, testClass);
+				assertEquals("test", testMethod.getName());
 				return emptySet();
 			}
 		}
 	}
 
-	static class ProvideForNestedClassAndMethodTestCase {
+	static class ProvideForNestedClassAndProvideForMethodTestCase {
 
 		@Test
-		void classMethod() {
+		void test() {
 		}
 
-		@ResourceLocksFrom(ProvideForNestedClassAndMethodTestCase.Provider.class)
 		@Nested
+		@ResourceLock(providers = ProvideForNestedClassAndProvideForMethodTestCase.Provider.class)
 		class NestedClass {
+
 			@Test
-			void nestedClassMethod() {
+			void nestedTest() {
+				assertTrue(Provider.isProvideForNestedClassCalled, "'provideForNestedClass' was not called");
+				Provider.isProvideForNestedClassCalled = false;
+
+				assertTrue(Provider.isProvideForMethodCalled, "'provideForMethod' was not called");
+				Provider.isProvideForMethodCalled = false;
 			}
 		}
 
-		static final class Provider implements ResourceLocksProvider {
+		static class Provider implements ResourceLocksProvider {
+
+			private static boolean isProvideForNestedClassCalled = false;
+
+			private static boolean isProvideForMethodCalled = false;
 
 			@Override
 			public Set<Lock> provideForClass(Class<?> testClass) {
@@ -122,14 +151,59 @@ class ResourceLocksProviderIntegrationTests {
 
 			@Override
 			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+				isProvideForNestedClassCalled = true;
 				assertEquals(NestedClass.class, testClass);
 				return emptySet();
 			}
 
 			@Override
 			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
-				assertEquals(NestedClass.class, testClass);
-				assertEquals("nestedClassMethod", testMethod.getName());
+				isProvideForMethodCalled = true;
+				assertEquals(ProvideForNestedClassAndProvideForMethodTestCase.NestedClass.class, testClass);
+				assertEquals("nestedTest", testMethod.getName());
+				return emptySet();
+			}
+		}
+	}
+
+	static class ProvideForMethodTestCase {
+
+		@Test
+		@ResourceLock(providers = ProvideForMethodTestCase.Provider.class)
+		void test() {
+			assertTrue(Provider.isProvideForMethodCalled, "'provideForMethod' was not called");
+			Provider.isProvideForMethodCalled = false;
+		}
+
+		@Nested
+		class NestedClass {
+
+			@Test
+			void nestedTest() {
+			}
+		}
+
+		static class Provider implements ResourceLocksProvider {
+
+			private static boolean isProvideForMethodCalled = false;
+
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				fail("'provideForClass' should not be called");
+				return emptySet();
+			}
+
+			@Override
+			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+				fail("'provideForNestedClass' should not be called");
+				return emptySet();
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				isProvideForMethodCalled = true;
+				assertEquals(ProvideForMethodTestCase.class, testClass);
+				assertEquals("test", testMethod.getName());
 				return emptySet();
 			}
 		}

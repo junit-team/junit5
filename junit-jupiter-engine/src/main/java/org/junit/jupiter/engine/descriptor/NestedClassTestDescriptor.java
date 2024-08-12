@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 
@@ -20,7 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -93,13 +91,10 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
 		// @formatter:off
-		return Stream.concat(
-				getExclusiveResourcesFromAnnotation(getTestClass()),
-				getExclusiveResourcesFromProvider(
-						getTestClass(),
-						provider -> provider.provideForNestedClass(getTestClass())
-				)
-		).collect(toSet());
+		return getExclusiveResourcesFromAnnotation(
+				getTestClass(),
+				provider -> provider.provideForNestedClass(getTestClass())
+		);
 		// @formatter:on
 	}
 

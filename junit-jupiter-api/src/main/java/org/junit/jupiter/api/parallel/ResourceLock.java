@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.parallel;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.ElementType;
@@ -48,11 +49,16 @@ import org.junit.jupiter.api.BeforeEach;
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
+ * <p>Since JUnit Jupiter 5.12, this annotation supports adding shared resources
+ * in runtime via {@link ResourceLock#providers}.
+ *
+ * <p>Resources declared "statically" using {@code @ResourceLock(value, mode)}
+ * are combined with "dynamic" resources added via {@link ResourceLocksProvider.Lock}.
+ *
  * @see Isolated
  * @see Resources
  * @see ResourceAccessMode
  * @see ResourceLocks
- * @see ResourceLocksFrom
  * @see ResourceLocksProvider
  * @see ResourceLocksProvider.Lock
  * @since 5.3
@@ -67,9 +73,12 @@ public @interface ResourceLock {
 	/**
 	 * The resource key.
 	 *
+	 * <p>Defaults to an empty string.
+	 *
 	 * @see Resources
+	 * @see ResourceLocksProvider.Lock#getKey()
 	 */
-	String value();
+	String value() default "";
 
 	/**
 	 * The resource access mode.
@@ -77,7 +86,19 @@ public @interface ResourceLock {
 	 * <p>Defaults to {@link ResourceAccessMode#READ_WRITE READ_WRITE}.
 	 *
 	 * @see ResourceAccessMode
+	 * @see ResourceLocksProvider.Lock#getAccessMode()
 	 */
 	ResourceAccessMode mode() default ResourceAccessMode.READ_WRITE;
+
+	/**
+	 * An array of one or more classes implementing {@link ResourceLocksProvider}.
+	 *
+	 * <p>Defaults to an empty array.
+	 *
+	 * @see ResourceLocksProvider.Lock
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	Class<? extends ResourceLocksProvider>[] providers() default {};
 
 }

@@ -2897,23 +2897,32 @@ strategy
 
 In addition to controlling the execution mode using the `{Execution}` annotation, JUnit
 Jupiter provides another annotation-based declarative synchronization mechanism. The
-`{ResourceLock}` and `{ResourceLocksFrom}` annotations allows you to declare that
-a test class or method uses a specific shared resource that requires synchronized access
-to ensure reliable test execution. The shared resource is identified by a unique name
-which is a `String`. The name can be user-defined or one of the predefined constants
-in `{Resources}`: `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
+`{ResourceLock}` annotation allows you to declare that a test class or method uses a
+specific shared resource that requires synchronized access to ensure reliable test
+execution. The shared resource is identified by a unique name which is a `String`.
+The name can be user-defined or one of the predefined constants in `{Resources}`:
+`SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
+
+Since Junit Jupiter 5.12 `{ResourceLock}` annotation has 'providers' attribute
+which accepts an array of one or more classes implementing `{ResourceLocksProvider}`
+interface. This interface allows to add shared resources in runtime.
+
+Note that resources declared "statically" with `{ResourceLock}` annotation
+are combined with resources added "dynamically" with `{ResourceLocksProvider}`
+interface.
 
 If the tests in the following examples were run in parallel _without_ the use of
-`{ResourceLock}` or `{ResourceLocksFrom}`, they would be _flaky_. Sometimes they would pass,
-and at other times they would fail due to the inherent race condition of writing
-and then reading the same JVM System Property.
+`{ResourceLock}` or `{ResourceLocksProvider}`, they would be _flaky_.
+Sometimes they would pass, and at other times they would fail due to
+the inherent race condition of writing and then reading the same JVM System Property.
 
-When access to shared resources is declared using the `{ResourceLock}` or `{ResourceLocksFrom}`
-annotation, the JUnit Jupiter engine uses this information to ensure that no conflicting
-tests are run in parallel. This guarantee extends to lifecycle methods of a test class or method.
-For example, if a test method is annotated with a `{ResourceLock}` annotation, the "lock" will
-be acquired before any `@BeforeEach` methods are executed and released after all
-`@AfterEach` methods have been executed.
+When access to shared resources is declared using the `{ResourceLock}` annotation
+or added with `{ResourceLocksProvider}` interface, the JUnit Jupiter engine uses
+this information to ensure that no conflicting tests are run in parallel.
+This guarantee extends to lifecycle methods of a test class or method.
+For example, if a test method is annotated with a `{ResourceLock}` annotation,
+the "lock" will be acquired before any `@BeforeEach` methods are executed
+and released after all `@AfterEach` methods have been executed.
 
 [NOTE]
 .Running tests in isolation
@@ -2930,15 +2939,15 @@ parallel with each other but not while any other test that requires `READ_WRITE`
 to the same shared resource is running.
 
 [source,java]
-.Declaring shared resources with `{ResourceLock}` annotation
+.Declaring shared resources "statically" with `{ResourceLock}` annotation
 ----
-include::{testDir}/example/SharedResourcesWithResourceLockAnnotationDemo.java[tags=user_guide]
+include::{testDir}/example/sharedresources/StaticSharedResourcesDemo.java[tags=user_guide]
 ----
 
 [source,java]
-.Declaring shared resources provider with `{ResourceLocksFrom}` annotation
+.Adding shared resources "dynamically" with `{ResourceLocksProvider}` interface
 ----
-include::{testDir}/example/SharedResourcesWithResourceLocksFromAnnotationDemo.java[tags=user_guide]
+include::{testDir}/example/sharedresources/DynamicSharedResourcesDemo.java[tags=user_guide]
 ----
 
 
