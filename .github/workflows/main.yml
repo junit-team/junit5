@@ -32,6 +32,7 @@ jobs:
       with:
         arguments: |
           -Ptesting.enableJaCoCo \
+          :platform-tooling-support-tests:test \
           build \
           jacocoRootReport
     - name: Upload to Codecov.io
