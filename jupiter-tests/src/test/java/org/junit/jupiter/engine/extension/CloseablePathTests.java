@@ -146,7 +146,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("succeeds if the factory returns a directory on a non-default file system for a Path annotated element")
 		@Test
 		void factoryReturnsDirectoryOnNonDefaultFileSystemWithPath() throws IOException {
-			TempDirFactory factory = spy(new JimfsFactory());
+			TempDirFactory factory = new JimfsFactory();
 
 			closeablePath = TempDirectory.createTempDir(factory, DEFAULT, Path.class, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
