@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,6 +29,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileArgumentsProvider.InputStreamProvider;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -410,7 +410,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void readsLineFromExceedsMaxCharsFileWithCustomConfig(@TempDir Path tempDir) throws java.io.IOException {
+	void readsLineFromExceedsMaxCharsFileWithCustomExplicitConfig(@TempDir Path tempDir) throws Exception {
 		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
@@ -426,24 +426,49 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber(@TempDir Path tempDir) throws java.io.IOException {
+	void readsLineFromExceedsMaxCharsFileWithCustomUnlimitedConfig(@TempDir Path tempDir) throws Exception {
+		var csvFile = tempDir.resolve("test.csv");
+		try (var out = Files.newBufferedWriter(csvFile)) {
+			var chunks = 10;
+			var chunk = "a".repeat(8192);
+			for (long i = 0; i < chunks; i++) {
+				out.write(chunk);
+			}
+		}
+
+		var annotation = csvFileSource()//
+				.encoding("ISO-8859-1")//
+				.maxCharsPerColumn(-1)//
+				.files(csvFile.toAbsolutePath().toString())//
+				.build();
+
+		var arguments = provideArguments(new CsvFileArgumentsProvider(), annotation);
+
+		assertThat(arguments).hasSize(1);
+	}
+
+	@ParameterizedTest
+	@ValueSource(ints = { Integer.MIN_VALUE, -2, 0 })
+	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumberOrMinusOne(int maxCharsPerColumn, @TempDir Path tempDir)
+			throws Exception {
 		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
 				.encoding("ISO-8859-1")//
 				.resources("exceeds-default-max-chars.csv")//
-				.maxCharsPerColumn(-1).files(csvFile.toAbsolutePath().toString())//
+				.maxCharsPerColumn(maxCharsPerColumn)//
+				.files(csvFile.toAbsolutePath().toString())//
 				.build();
 
 		var exception = assertThrows(PreconditionViolationException.class, //
 			() -> provideArguments(new CsvFileArgumentsProvider(), annotation).findAny());
 
 		assertThat(exception)//
-				.hasMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
+				.hasMessageStartingWith("maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
 	}
 
 	@Test
-	void throwsExceptionForExceedsMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws java.io.IOException {
+	void throwsExceptionForExceedsMaxCharsFileWithDefaultConfig(@TempDir Path tempDir) throws Exception {
 		var csvFile = writeClasspathResourceToFile("exceeds-default-max-chars.csv",
 			tempDir.resolve("exceeds-default-max-chars.csv"));
 		var annotation = csvFileSource()//
@@ -461,7 +486,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+	void ignoresLeadingAndTrailingSpaces(@TempDir Path tempDir) throws Exception {
 		var csvFile = writeClasspathResourceToFile("leading-trailing-spaces.csv",
 			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
@@ -477,7 +502,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@Test
-	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws IOException {
+	void trimsLeadingAndTrailingSpaces(@TempDir Path tempDir) throws Exception {
 		var csvFile = writeClasspathResourceToFile("leading-trailing-spaces.csv",
 			tempDir.resolve("leading-trailing-spaces.csv"));
 		var annotation = csvFileSource()//
@@ -527,7 +552,7 @@ class CsvFileArgumentsProviderTests {
 		return elements;
 	}
 
-	private static Path writeClasspathResourceToFile(String name, Path target) throws IOException {
+	private static Path writeClasspathResourceToFile(String name, Path target) throws Exception {
 		try (var in = CsvFileArgumentsProviderTests.class.getResourceAsStream(name)) {
 			Files.copy(in, target);
 		}

@@ -77,8 +77,8 @@ class CsvParserFactory {
 		settings.setAutoConfigurationEnabled(false);
 		settings.setIgnoreLeadingWhitespaces(ignoreLeadingAndTrailingWhitespace);
 		settings.setIgnoreTrailingWhitespaces(ignoreLeadingAndTrailingWhitespace);
-		Preconditions.condition(maxCharsPerColumn > 0,
-			() -> "maxCharsPerColumn must be a positive number: " + maxCharsPerColumn);
+		Preconditions.condition(maxCharsPerColumn > 0 || maxCharsPerColumn == -1,
+			() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
 		settings.setMaxCharsPerColumn(maxCharsPerColumn);
 		// Do not use the built-in support for skipping rows/lines since it will
 		// throw an IllegalArgumentException if the file does not contain at least
