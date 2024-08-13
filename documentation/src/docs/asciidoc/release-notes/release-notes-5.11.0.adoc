@@ -1,7 +1,7 @@
 [[release-notes-5.11.0]]
 == 5.11.0
 
-*Date of Release:* ❓
+*Date of Release:* August 14, 2024
 
 *Scope:*
 
@@ -88,7 +88,7 @@ on GitHub.
   - The Console Launcher supports specifying selectors via their identifiers using the
     `--select` option. For example, `--select class:foo.Bar` will run all tests in the
     `foo.Bar` class.
-  - Similarly, the JUnit Platform Suite engine provides a new `@Select("<identifier>)`
+  - Similarly, the JUnit Platform Suite engine provides a new `@Select("<identifier>")`
     annotation.
 * The Console Launcher now provides a `--version` option.
 * `NamespacedHierarchicalStore` now throws an `IllegalStateException` for any attempt to
@@ -102,7 +102,7 @@ on GitHub.
   exception's _root_ cause matches all supplied conditions, for use with the
   `EngineTestKit`.
 * `ReflectionSupport` now supports scanning for classpath resources.
-* Introduce `@BeforeSuite` and `@AfterSuite` annotations.
+* Introduce `@BeforeSuite` and `@AfterSuite` lifecycle methods for `@Suite` classes.
 
 
 [[release-notes-5.11.0-junit-jupiter]]
@@ -156,9 +156,8 @@ on GitHub.
   close the annotated resource after test execution. See the
   <<../user-guide/index.adoc#writing-tests-built-in-extensions-AutoClose, User Guide>> for
   details.
-* `@TempDir` now suppresses `NoSuchFileException` when attempting to delete files that may
-  have been already deleted by another thread or process.
-* `JAVA_23` has been added to the `JRE` enum for use with JRE-based execution conditions.
+* `JAVA_23` and `JAVA_24` have been added to the `JRE` enum for use with JRE-based
+  execution conditions.
 * New <<../user-guide/index.adoc#writing-tests-exceptions, Exception Handling>>
   documentation in the User Guide.
 * Improved documentation for <<../user-guide/index.adoc#writing-tests-assumptions,
@@ -175,12 +174,13 @@ on GitHub.
   arguments for a `@ParameterizedTest`. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-display-names, User Guide>>
   for details.
-* `JAVA_24` has been added to the `JRE` enum for use with JRE-based execution conditions.
 * New `assertInstanceOf` methods added for Kotlin following up with similar Java
   `assertInstanceOf` methods introduced in `5.8` version.
 * New generators in `DynamicTest` that take a `Stream`/`Iterator` of `Named<Executable>`
   along with a convenient `NamedExecutable` interface that can simplify writing dynamic
   tests, in particular in recent versions of Java that support records.
+* `@TempDir` now suppresses `NoSuchFileException` when attempting to delete files that may
+  have been already deleted by another thread or process.
 * `@TempDir` now fails fast in case `TempDirFactory::createTempDirectory` returns
   `null`, a file, or a symbolic link to a file.
 * `@TempDir` now fails fast in case the annotated target is of type `File` and
