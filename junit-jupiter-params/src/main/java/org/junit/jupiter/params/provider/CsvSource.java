@@ -261,7 +261,7 @@ public @interface CsvSource {
 	/**
 	 * The maximum number of characters allowed per CSV column.
 	 *
-	 * <p>Must be a positive number or -1 to allow an unlimited number of chars.
+	 * <p>Must be a positive number or {@code -1} to allow an unlimited number of chars.
 	 *
 	 * <p>Defaults to {@code 4096}.
 	 *
