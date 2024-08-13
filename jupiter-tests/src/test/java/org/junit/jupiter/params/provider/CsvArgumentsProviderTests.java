@@ -18,6 +18,7 @@ import static org.mockito.Mockito.mock;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -296,20 +297,21 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void providesArgumentsForExceedsSourceWithCustomMaxCharsPerColumnConfig() {
-		var annotation = csvSource().lines("0".repeat(4097)).delimiter(';').maxCharsPerColumn(4097).build();
+		var annotation = csvSource().lines("0".repeat(4097)).maxCharsPerColumn(4097).build();
 
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments.toArray()).hasSize(1);
 	}
 
-	@Test
-	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumber() {
-		var annotation = csvSource().lines("41").delimiter(';').maxCharsPerColumn(-1).build();
+	@ParameterizedTest
+	@ValueSource(ints = { Integer.MIN_VALUE, -2, 0 })
+	void throwsExceptionWhenMaxCharsPerColumnIsNotPositiveNumberOrMinusOne(int maxCharsPerColumn) {
+		var annotation = csvSource().lines("41").maxCharsPerColumn(maxCharsPerColumn).build();
 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
-				.withMessageStartingWith("maxCharsPerColumn must be a positive number: -1");
+				.withMessageStartingWith("maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
 	}
 
 	@Test

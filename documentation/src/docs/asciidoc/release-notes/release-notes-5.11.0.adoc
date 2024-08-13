@@ -186,6 +186,8 @@ on GitHub.
 * `@TempDir` now fails fast in case the annotated target is of type `File` and
   `TempDirFactory::createTempDirectory` returns a `Path` that does not belong to the
   default file system.
+* Allow potentially unlimited characters per column in `@CsvSource` and `@CsvFileSource`
+  by specifying `maxCharsPerColumn = -1`.
 
 
 [[release-notes-5.11.0-junit-vintage]]
