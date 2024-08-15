@@ -33,9 +33,11 @@ import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 
 /**
+ * Integration tests for {@link ResourceLocksProvider}.
+ *
  * @since 5.12
  */
-class ResourceLocksProviderIntegrationTests {
+class ResourceLocksProviderTests {
 
 	@Test
 	void provideForClassAndProvideForMethodCalledWithCorrectArguments() {

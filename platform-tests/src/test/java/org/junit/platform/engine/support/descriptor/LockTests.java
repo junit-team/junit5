@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.AbstractEqualsAndHashCodeTests;
 
 /**
+ * Unit tests for {@link Lock}.
+ *
  * @since 5.12
  */
 class LockTests extends AbstractEqualsAndHashCodeTests {
