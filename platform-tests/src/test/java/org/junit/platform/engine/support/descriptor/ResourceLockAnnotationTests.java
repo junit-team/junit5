@@ -184,7 +184,7 @@ class ResourceLockAnnotationTests {
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
 		try {
 			return new TestMethodTestDescriptor( //
-					uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration //
+				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration //
 			).getExclusiveResources();
 		}
 		catch (NoSuchMethodException e) {
