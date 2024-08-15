@@ -11,7 +11,7 @@
 package org.junit.jupiter.migrationsupport.rules.member;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.makeAccessible;
+import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
 
 import java.lang.reflect.Field;
 
