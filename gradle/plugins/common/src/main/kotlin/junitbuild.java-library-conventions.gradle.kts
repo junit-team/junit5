@@ -10,9 +10,9 @@ plugins {
 	`java-library`
 	eclipse
 	idea
-	checkstyle
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-parameters")
+	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
 }
 
