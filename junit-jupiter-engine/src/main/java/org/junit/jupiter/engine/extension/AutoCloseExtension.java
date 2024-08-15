@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -59,12 +59,12 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 
 	private static void closeFields(Class<?> testClass, Object testInstance, ThrowableCollector throwableCollector) {
 		Predicate<Field> predicate = (testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
-		AnnotationUtils.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
+		AnnotationSupport.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
 			field -> throwableCollector.execute(() -> closeField(field, testInstance)));
 	}
 
 	private static void closeField(Field field, Object testInstance) throws Exception {
-		String methodName = AnnotationUtils.findAnnotation(field, AutoClose.class).get().value();
+		String methodName = AnnotationSupport.findAnnotation(field, AutoClose.class).get().value();
 		Class<?> fieldType = field.getType();
 
 		checkCondition(StringUtils.isNotBlank(methodName), "@AutoClose on field %s must specify a method name.", field);

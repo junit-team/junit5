@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.condition;
 
 import static java.lang.String.format;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;

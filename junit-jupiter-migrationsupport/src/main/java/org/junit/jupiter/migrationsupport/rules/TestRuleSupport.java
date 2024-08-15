@@ -11,8 +11,8 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static java.util.Collections.unmodifiableList;
-import static org.junit.platform.commons.util.AnnotationUtils.findPublicAnnotatedFields;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.findPublicAnnotatedFields;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 
 import java.lang.reflect.Field;

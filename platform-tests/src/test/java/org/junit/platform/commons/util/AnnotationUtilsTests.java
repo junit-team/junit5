@@ -389,8 +389,8 @@ class AnnotationUtilsTests {
 		assertThat(methods.subList(1, 3)).containsOnly(method1, method3);
 	}
 
-	/**
-	 * @see https://github.com/junit-team/junit5/issues/3553
+	/*
+	 * see https://github.com/junit-team/junit5/issues/3553
 	 */
 	@Test
 	void findAnnotatedMethodsDoesNotAllowInstanceMethodToHideStaticMethod() throws Exception {
@@ -523,8 +523,8 @@ class AnnotationUtilsTests {
 		return values.stream().map(String::valueOf).toList();
 	}
 
-	/**
-	 * @see https://github.com/junit-team/junit5/issues/3553
+	/*
+	 * see https://github.com/junit-team/junit5/issues/3553
 	 */
 	@Test
 	void findAnnotatedFieldsDoesNotAllowInstanceFieldToHideStaticField() throws Exception {

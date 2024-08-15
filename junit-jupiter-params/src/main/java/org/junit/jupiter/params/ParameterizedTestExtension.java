@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;

@@ -15,7 +15,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -49,17 +49,17 @@ abstract class AbstractAnnotatedDescriptorWrapper<E extends AnnotatedElement> {
 
 	public final boolean isAnnotated(Class<? extends Annotation> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
-		return AnnotationUtils.isAnnotated(getAnnotatedElement(), annotationType);
+		return AnnotationSupport.isAnnotated(getAnnotatedElement(), annotationType);
 	}
 
 	public final <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
-		return AnnotationUtils.findAnnotation(getAnnotatedElement(), annotationType);
+		return AnnotationSupport.findAnnotation(getAnnotatedElement(), annotationType);
 	}
 
 	public final <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
-		return AnnotationUtils.findRepeatableAnnotations(getAnnotatedElement(), annotationType);
+		return AnnotationSupport.findRepeatableAnnotations(getAnnotatedElement(), annotationType);
 	}
 
 }

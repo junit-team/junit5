@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.support.AnnotationSupport;
 
 /**
  * @since 5.0
@@ -81,7 +81,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	 */
 	@Override
 	public void afterTestExecution(ExtensionContext context) {
-		ParameterizedTest parameterizedTest = AnnotationUtils.findAnnotation(context.getRequiredTestMethod(),
+		ParameterizedTest parameterizedTest = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
 			ParameterizedTest.class).get();
 		if (!parameterizedTest.autoCloseArguments()) {
 			return;

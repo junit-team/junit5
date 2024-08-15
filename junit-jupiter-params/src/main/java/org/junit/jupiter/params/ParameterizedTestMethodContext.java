@@ -12,7 +12,7 @@ package org.junit.jupiter.params;
 
 import static org.junit.jupiter.params.ParameterizedTestMethodContext.ResolverType.AGGREGATOR;
 import static org.junit.jupiter.params.ParameterizedTestMethodContext.ResolverType.CONVERTER;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -30,8 +30,8 @@ import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -179,7 +179,7 @@ class ParameterizedTestMethodContext {
 			@Override
 			Resolver createResolver(ParameterContext parameterContext) {
 				try { // @formatter:off
-					return AnnotationUtils.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
+					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
 							.map(ConvertWith::value)
 							.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
 							.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
@@ -196,7 +196,7 @@ class ParameterizedTestMethodContext {
 			@Override
 			Resolver createResolver(ParameterContext parameterContext) {
 				try { // @formatter:off
-					return AnnotationUtils.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
+					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
 							.map(AggregateWith::value)
 							.map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
 							.map(Aggregator::new)

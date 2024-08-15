@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension.sub;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
