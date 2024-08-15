@@ -23,6 +23,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -236,8 +237,8 @@ public class MethodSelector implements DiscoverySelector {
 		// @formatter:off
 		if (this.javaClass == null) {
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
-				? ReflectionUtils.tryToLoadClass(this.className)
-				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
+				? ReflectionSupport.tryToLoadClass(this.className)
+				: ReflectionSupport.tryToLoadClass(this.className, this.classLoader);
 			this.javaClass = tryToLoadClass.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 		}
@@ -249,14 +250,14 @@ public class MethodSelector implements DiscoverySelector {
 			lazyLoadJavaClass();
 			lazyLoadParameterTypes();
 			if (this.parameterTypes.length > 0) {
-				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
+				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName,
 					this.parameterTypes).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
 							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
 							this.methodName, this.parameterTypeNames, this.javaClass.getName())));
 			}
 			else {
-				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
+				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName).orElseThrow(
 					() -> new PreconditionViolationException(
 						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
 							this.javaClass.getName())));

@@ -1,8 +1,8 @@
 plugins {
-	alias(libs.plugins.nohttp)
 	alias(libs.plugins.nexusPublish)
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-metadata")
+	id("junitbuild.checkstyle-nohttp")
 	id("junitbuild.dependency-update-check")
 	id("junitbuild.jacoco-aggregation-conventions")
 	id("junitbuild.temp-maven-repo")
@@ -52,6 +52,7 @@ dependencies {
 		jacocoAggregation(it)
 	}
 	jacocoAggregation(projects.documentation)
+	jacocoAggregation(projects.jupiterTests)
 	jacocoAggregation(projects.platformTests)
 }
 
@@ -60,12 +61,4 @@ nexusPublishing {
 	repositories {
 		sonatype()
 	}
-}
-
-nohttp {
-	source.exclude("**/.gradle/**", "gradle/plugins/**/build/**", "buildSrc/build/**")
-}
-
-tasks.checkstyleNohttp {
-	notCompatibleWithConfigurationCache("https://github.com/spring-io/nohttp/issues/61")
 }

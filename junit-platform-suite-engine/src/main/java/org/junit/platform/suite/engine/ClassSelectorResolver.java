@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -89,7 +89,7 @@ final class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private static Optional<Class<?>> tryLoadSuiteClass(UniqueId.Segment segment) {
-		return ReflectionUtils.tryToLoadClass(segment.getValue()).toOptional();
+		return ReflectionSupport.tryToLoadClass(segment.getValue()).toOptional();
 	}
 
 	private static Resolution toResolution(Optional<SuiteTestDescriptor> suite) {

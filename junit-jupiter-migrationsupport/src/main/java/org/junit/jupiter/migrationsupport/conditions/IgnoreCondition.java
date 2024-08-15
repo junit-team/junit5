@@ -11,7 +11,7 @@
 package org.junit.jupiter.migrationsupport.conditions;
 
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
 

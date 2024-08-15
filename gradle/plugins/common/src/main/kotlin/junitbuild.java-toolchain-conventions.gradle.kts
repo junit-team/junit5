@@ -9,18 +9,18 @@ project.pluginManager.withPlugin("java") {
 	val javaLanguageVersion = buildParameters.javaToolchain.version.map { JavaLanguageVersion.of(it) }.getOrElse(defaultLanguageVersion)
 	val jvmImplementation = buildParameters.javaToolchain.implementation.map {
 		when(it) {
-            "j9" -> JvmImplementation.J9
-            else -> throw InvalidUserDataException("Unsupported JDK implementation: $it")
-        }
+			"j9" -> JvmImplementation.J9
+			else -> throw InvalidUserDataException("Unsupported JDK implementation: $it")
+		}
 	}.getOrElse(JvmImplementation.VENDOR_SPECIFIC)
 
 	val extension = the<JavaPluginExtension>()
 	val javaToolchainService = the<JavaToolchainService>()
 
 	extension.toolchain {
-        languageVersion = javaLanguageVersion
-        implementation = jvmImplementation
-    }
+		languageVersion = javaLanguageVersion
+		implementation = jvmImplementation
+	}
 
 	pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
 		configure<KotlinJvmProjectExtension> {

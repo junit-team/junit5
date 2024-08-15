@@ -20,7 +20,7 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
@@ -92,8 +92,8 @@ public class ClassSelector implements DiscoverySelector {
 		if (this.javaClass == null) {
 			// @formatter:off
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
-				? ReflectionUtils.tryToLoadClass(this.className)
-				: ReflectionUtils.tryToLoadClass(this.className, this.classLoader);
+				? ReflectionSupport.tryToLoadClass(this.className)
+				: ReflectionSupport.tryToLoadClass(this.className, this.classLoader);
 			this.javaClass = tryToLoadClass.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on

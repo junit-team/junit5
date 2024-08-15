@@ -10,7 +10,7 @@
 
 package org.junit.platform.suite.engine;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
 import java.lang.annotation.Annotation;
@@ -18,8 +18,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
+import org.junit.platform.commons.support.HierarchyTraversalMode;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.suite.api.AfterSuite;
 import org.junit.platform.suite.api.BeforeSuite;
@@ -60,14 +60,14 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ReflectionUtils.isNotStatic(method)) {
+		if (ModifierSupport.isNotStatic(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must be static.", annotationType.getSimpleName(),
 				method.toGenericString()));
 		}
 	}
 
 	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
-		if (ReflectionUtils.isPrivate(method)) {
+		if (ModifierSupport.isPrivate(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not be private.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}

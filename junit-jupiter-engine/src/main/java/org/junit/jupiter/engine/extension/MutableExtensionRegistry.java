@@ -35,9 +35,9 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Default, mutable implementation of {@link ExtensionRegistry}.
@@ -148,7 +148,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	@Override
 	public void registerExtension(Class<? extends Extension> extensionType) {
 		if (!isAlreadyRegistered(extensionType)) {
-			registerLocalExtension(ReflectionUtils.newInstance(extensionType));
+			registerLocalExtension(ReflectionSupport.newInstance(extensionType));
 		}
 	}
 

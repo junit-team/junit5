@@ -2,7 +2,7 @@ import junitbuild.java.ModuleCompileOptions
 
 plugins {
 	id("junitbuild.java-library-conventions")
-	id("io.github.goooler.shadow")
+	id("com.gradleup.shadow")
 }
 
 val shadowed = configurations.dependencyScope("shadowed")
@@ -71,7 +71,7 @@ tasks {
 		classpath -= sourceSets.main.get().output
 		classpath += files(shadowJar.map { it.archiveFile })
 	}
-    named<JavaCompile>("compileModule") {
-        the<ModuleCompileOptions>().modulePath.from(shadowedClasspath.get())
-    }
+	named<JavaCompile>("compileModule") {
+		the<ModuleCompileOptions>().modulePath.from(shadowedClasspath.get())
+	}
 }

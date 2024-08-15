@@ -10,9 +10,9 @@
 
 package org.junit.platform.suite.engine;
 
-import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 
 import java.util.function.Predicate;
 

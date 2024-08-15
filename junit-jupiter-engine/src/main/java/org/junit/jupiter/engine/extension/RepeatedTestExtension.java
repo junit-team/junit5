@@ -10,7 +10,8 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,7 +22,6 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -41,7 +41,7 @@ class RepeatedTestExtension implements TestTemplateInvocationContextProvider {
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		Method testMethod = context.getRequiredTestMethod();
 		String displayName = context.getDisplayName();
-		RepeatedTest repeatedTest = AnnotationUtils.findAnnotation(testMethod, RepeatedTest.class).get();
+		RepeatedTest repeatedTest = findAnnotation(testMethod, RepeatedTest.class).get();
 		int totalRepetitions = totalRepetitions(repeatedTest, testMethod);
 		AtomicInteger failureCount = new AtomicInteger();
 		int failureThreshold = failureThreshold(repeatedTest, testMethod);

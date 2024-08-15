@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
-import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -23,7 +23,9 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePreDestroyCallback;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -58,20 +60,20 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 	}
 
 	private static void closeFields(Class<?> testClass, Object testInstance, ThrowableCollector throwableCollector) {
-		Predicate<Field> predicate = (testInstance == null ? ReflectionUtils::isStatic : ReflectionUtils::isNotStatic);
-		AnnotationUtils.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
+		Predicate<Field> predicate = (testInstance == null ? ModifierSupport::isStatic : ModifierSupport::isNotStatic);
+		AnnotationSupport.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
 			field -> throwableCollector.execute(() -> closeField(field, testInstance)));
 	}
 
 	private static void closeField(Field field, Object testInstance) throws Exception {
-		String methodName = AnnotationUtils.findAnnotation(field, AutoClose.class).get().value();
+		String methodName = AnnotationSupport.findAnnotation(field, AutoClose.class).get().value();
 		Class<?> fieldType = field.getType();
 
 		checkCondition(StringUtils.isNotBlank(methodName), "@AutoClose on field %s must specify a method name.", field);
 		checkCondition(!fieldType.isPrimitive(), "@AutoClose is not supported on primitive field %s.", field);
 		checkCondition(!fieldType.isArray(), "@AutoClose is not supported on array field %s.", field);
 
-		Object fieldValue = ReflectionUtils.tryToReadFieldValue(field, testInstance).get();
+		Object fieldValue = ReflectionSupport.tryToReadFieldValue(field, testInstance).get();
 		if (fieldValue == null) {
 			logger.warn(() -> String.format("Cannot @AutoClose field %s because it is null.", getQualifiedName(field)));
 		}
@@ -88,13 +90,13 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 		}
 
 		Class<?> targetType = target.getClass();
-		Method closeMethod = ReflectionUtils.findMethod(targetType, methodName).orElseThrow(
+		Method closeMethod = ReflectionSupport.findMethod(targetType, methodName).orElseThrow(
 			() -> new ExtensionConfigurationException(
 				String.format("Cannot @AutoClose field %s because %s does not define method %s().",
 					getQualifiedName(field), targetType.getName(), methodName)));
 
 		closeMethod = ReflectionUtils.getInterfaceMethodIfPossible(closeMethod, targetType);
-		ReflectionUtils.invokeMethod(closeMethod, target);
+		ReflectionSupport.invokeMethod(closeMethod, target);
 	}
 
 	private static void checkCondition(boolean condition, String messageFormat, Field field) {

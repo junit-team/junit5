@@ -11,7 +11,7 @@
 package org.junit.platform.commons.support.conversion;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

@@ -10,15 +10,15 @@
 
 package org.junit.platform.suite.engine;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -147,7 +147,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 			return;
 		}
 		for (Method beforeSuiteMethod : beforeSuiteMethods) {
-			throwableCollector.execute(() -> ReflectionUtils.invokeMethod(beforeSuiteMethod, null));
+			throwableCollector.execute(() -> ReflectionSupport.invokeMethod(beforeSuiteMethod, null));
 			if (throwableCollector.isNotEmpty()) {
 				return;
 			}
@@ -170,7 +170,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	private void executeAfterSuiteMethods(List<Method> afterSuiteMethods, ThrowableCollector throwableCollector) {
 		for (Method afterSuiteMethod : afterSuiteMethods) {
-			throwableCollector.execute(() -> ReflectionUtils.invokeMethod(afterSuiteMethod, null));
+			throwableCollector.execute(() -> ReflectionSupport.invokeMethod(afterSuiteMethod, null));
 		}
 	}
 

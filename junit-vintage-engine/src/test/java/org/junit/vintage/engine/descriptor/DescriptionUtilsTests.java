@@ -20,8 +20,7 @@ import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.commons.util.ClassFilter;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.runner.Description;
 import org.junit.vintage.engine.discovery.IsPotentialJUnit4TestClass;
 
@@ -32,8 +31,8 @@ class DescriptionUtilsTests {
 
 	@TestFactory
 	Stream<DynamicNode> computedMethodNameCorrectly() {
-		var classFilter = ClassFilter.of(new IsPotentialJUnit4TestClass());
-		var testClasses = ReflectionUtils.findAllClassesInPackage("org.junit.vintage.engine.samples", classFilter);
+		var testClasses = ReflectionSupport.findAllClassesInPackage("org.junit.vintage.engine.samples",
+			new IsPotentialJUnit4TestClass(), name -> true);
 		return testClasses.stream().flatMap(this::toDynamicTests);
 	}
 

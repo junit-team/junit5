@@ -1,68 +1,19 @@
 [[release-notes-5.11.0]]
 == 5.11.0
 
-*Date of Release:* ❓
+*Date of Release:* August 14, 2024
 
-*Scope:* ❓
+*Scope:*
 
-For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/76?closed=1+[5.11.0] milestone page in the
-JUnit repository on GitHub.
+* `@FieldSource` annotation for use with `@ParameterizedTest` methods
+* Repeatable `@..Source` annotations for parameterized tests
+* Enhancements for authoring dynamic and parameterized tests
+* `@AutoClose` annotation to automatically close field resources in tests
+* `ConversionSupport` utility for converting from a string to a supported target type
+* Extensible syntax for specifying discovery selectors
+* `@BeforeSuite` and `@AfterSuite` annotations
+* Classpath resource scanning support for engines
+* Numerous bug fixes and enhancements regarding field and method search algorithms
 
-
-[[release-notes-5.11.0-junit-platform]]
-=== JUnit Platform
-
-[[release-notes-5.11.0-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.0-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.0-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
-
-[[release-notes-5.11.0-junit-jupiter]]
-=== JUnit Jupiter
-
-[[release-notes-5.11.0-junit-jupiter-bug-fixes]]
-==== Bug Fixes
-
-* The `org.junit.jupiter.api.extension.support` package is now exported from the
-  `org.junit.jupiter.api` module
-
-[[release-notes-5.11.0-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.0-junit-jupiter-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
-
-[[release-notes-5.11.0-junit-vintage]]
-=== JUnit Vintage
-
-[[release-notes-5.11.0-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.0-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.0-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+For complete details consult the
+https://junit.org/junit5/docs/5.11.0/release-notes/index.html[5.11.0 Release Notes] online.

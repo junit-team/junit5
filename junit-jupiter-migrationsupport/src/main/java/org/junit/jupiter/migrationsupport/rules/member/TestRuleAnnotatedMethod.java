@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.lang.reflect.Method;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.rules.TestRule;
 
 /**
@@ -25,7 +25,7 @@ import org.junit.rules.TestRule;
 public final class TestRuleAnnotatedMethod extends AbstractTestRuleAnnotatedMember {
 
 	public TestRuleAnnotatedMethod(Object testInstance, Method method) {
-		super((TestRule) ReflectionUtils.invokeMethod(method, testInstance));
+		super((TestRule) ReflectionSupport.invokeMethod(method, testInstance));
 	}
 
 }

@@ -24,6 +24,8 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -87,7 +89,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 	}
 
 	private static Field validateField(Field field, Object testInstance) {
-		Preconditions.condition(field.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(field),
+		Preconditions.condition(field.getDeclaringClass().isInstance(testInstance) || ModifierSupport.isStatic(field),
 			() -> format("Field '%s' must be static: local @FieldSource fields must be static "
 					+ "unless the PER_CLASS @TestInstance lifecycle mode is used; "
 					+ "external @FieldSource fields must always be static.",
@@ -96,7 +98,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 	}
 
 	private static Object readField(Field field, Object testInstance) {
-		Object value = ReflectionUtils.tryToReadFieldValue(field, testInstance).getOrThrow(
+		Object value = ReflectionSupport.tryToReadFieldValue(field, testInstance).getOrThrow(
 			cause -> new JUnitException(format("Could not read field [%s]", field.getName()), cause));
 
 		String fieldName = field.getName();

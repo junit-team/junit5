@@ -13,10 +13,10 @@ package org.junit.jupiter.params.support;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;

@@ -51,6 +51,7 @@ maven = { module = "org.apache.maven:apache-maven", version = "3.9.8" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.0" }
 mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.12.0" }
+nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
 openTestReporting-tooling = { module = "org.opentest4j.reporting:open-test-reporting-tooling", version.ref = "openTestReporting" }
@@ -86,8 +87,7 @@ foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.8.
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-nohttp = { id = "io.spring.nohttp", version = "0.0.11" }
 plantuml = { id = "io.freefair.plantuml", version = "8.6" }
-shadow = { id = "io.github.goooler.shadow", version = "8.1.8" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.0" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA1" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }

@@ -652,4 +652,21 @@ public final class ReflectionSupport {
 		return ReflectionUtils.streamNestedClasses(clazz, predicate);
 	}
 
+	/**
+	 * Make the supplied field accessible via reflection.
+	 *
+	 * <p>If you're looking for similar functionality for constructors or
+	 * methods, consider using {@link #newInstance(Class, Object...)} or
+	 * {@link #invokeMethod(Method, Object, Object...)}.
+	 *
+	 * @param field the field to make accessible; never {@code null}
+	 * @return the supplied field
+	 * @since 1.11.1
+	 * @see Field#setAccessible(boolean)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11.1")
+	public static Field makeAccessible(Field field) {
+		return ReflectionUtils.makeAccessible(Preconditions.notNull(field, "field must not be null"));
+	}
+
 }
