@@ -23,7 +23,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversal
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
-import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -1944,21 +1943,6 @@ public final class ReflectionUtils {
 
 	private static boolean isGeneric(Type type) {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
-	}
-
-	@SuppressWarnings("unused")
-	@API(status = DEPRECATED, since = "1.11.1")
-	public static <T extends AccessibleObject> T makeAccessible(T object) {
-		logger.warn(() -> "ReflectionUtils.makeAccessible(AccessibleObject) is deprecated and will be removed in a future release. "
-				+ "Please use ReflectionSupport.makeAccessible(Field), ReflectionSupport.invokeMethod(...), or ReflectionSupport.newInstance(...) instead.");
-		if (object instanceof Field) {
-			makeAccessible((Field) object);
-		} else if (object instanceof Executable) {
-			makeAccessible((Executable) object);
-		} else {
-			throw new IllegalArgumentException("Object must be a Field or Executable");
-		}
-		return object;
 	}
 
 	@API(status = INTERNAL, since = "1.11")
