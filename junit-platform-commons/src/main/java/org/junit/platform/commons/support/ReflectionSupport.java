@@ -655,6 +655,10 @@ public final class ReflectionSupport {
 	/**
 	 * Make the supplied field accessible via reflection.
 	 *
+	 * <p>If you're looking for similar functionality for constructors or
+	 * methods, consider using {@link #newInstance(Class, Object...)} or
+	 * {@link #invokeMethod(Method, Object, Object...)}.
+	 *
 	 * @param field the field to make accessible; never {@code null}
 	 * @return the supplied field
 	 * @see Field#setAccessible(boolean)
