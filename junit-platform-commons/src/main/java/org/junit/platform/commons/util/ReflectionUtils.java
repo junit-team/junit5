@@ -23,6 +23,7 @@ import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversal
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
 import java.io.File;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -1943,6 +1944,14 @@ public final class ReflectionUtils {
 
 	private static boolean isGeneric(Type type) {
 		return type instanceof TypeVariable || type instanceof GenericArrayType;
+	}
+
+	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
+	public static <T extends AccessibleObject> T makeAccessible(T object) {
+		if (!object.isAccessible()) {
+			object.setAccessible(true);
+		}
+		return object;
 	}
 
 	@API(status = INTERNAL, since = "1.11")
