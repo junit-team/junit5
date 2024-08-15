@@ -26,7 +26,10 @@ JUnit repository on GitHub.
 [[release-notes-5.11.1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Restore internal `ReflectionUtils.makeAccessible(AccessibleObject)` method to avoid
+  breaking changes for third-party users of the method.
+* Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
+  calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 
 
 [[release-notes-5.11.1-junit-jupiter]]

@@ -652,4 +652,17 @@ public final class ReflectionSupport {
 		return ReflectionUtils.streamNestedClasses(clazz, predicate);
 	}
 
+	/**
+	 * Make the supplied field accessible via reflection.
+	 *
+	 * @param field the field to make accessible; never {@code null}
+	 * @return the supplied field
+	 * @see Field#setAccessible(boolean)
+	 * @since 1.11.1
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11.1")
+	public static Field makeAccessible(Field field) {
+		return ReflectionUtils.makeAccessible(Preconditions.notNull(field, "field must not be null"));
+	}
+
 }
