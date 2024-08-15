@@ -308,11 +308,6 @@ afterEvaluate {
 	}
 }
 
-checkstyle {
-	toolVersion = requiredVersionFromLibs("checkstyle")
-	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
-}
-
 tasks {
 	checkstyleMain {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
