@@ -27,9 +27,9 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -100,7 +100,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	@SuppressWarnings("ConstantConditions")
 	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz) {
 		try {
-			return ReflectionUtils.newInstance(clazz);
+			return ReflectionSupport.newInstance(clazz);
 		}
 		catch (Exception ex) {
 			if (ex instanceof NoSuchMethodException) {

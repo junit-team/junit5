@@ -19,10 +19,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.SearchOption;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DisplayNameGenerator} defines the SPI for generating display names
@@ -379,7 +379,7 @@ public interface DisplayNameGenerator {
 		if (generatorClass == IndicativeSentences.class) {
 			return IndicativeSentences.INSTANCE;
 		}
-		return (DisplayNameGenerator) ReflectionUtils.newInstance(generatorClass);
+		return (DisplayNameGenerator) ReflectionSupport.newInstance(generatorClass);
 	}
 
 }

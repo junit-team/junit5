@@ -32,6 +32,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -68,7 +69,7 @@ class ParameterResolutionUtilsTests {
 		register(new NumberParameterResolver());
 
 		Class<ConstructorInjectionTestCase> outerClass = ConstructorInjectionTestCase.class;
-		ConstructorInjectionTestCase outer = ReflectionUtils.newInstance(outerClass, "str");
+		ConstructorInjectionTestCase outer = ReflectionSupport.newInstance(outerClass, "str");
 
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
 		Object[] arguments = resolveConstructorParameters(innerClass, outer);
@@ -313,7 +314,7 @@ class ParameterResolutionUtilsTests {
 	}
 
 	private void testMethodWith(String methodName, Class<?>... parameterTypes) {
-		this.method = ReflectionUtils.findMethod(this.instance.getClass(), methodName, parameterTypes).get();
+		this.method = ReflectionSupport.findMethod(this.instance.getClass(), methodName, parameterTypes).get();
 	}
 
 	private void register(ParameterResolver... resolvers) {

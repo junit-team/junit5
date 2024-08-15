@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Unit tests for {@link IsTestFactoryMethod}.
@@ -57,7 +57,7 @@ class IsTestFactoryMethodTests {
 	}
 
 	private static Method method(String name) {
-		return ReflectionUtils.findMethod(ClassWithTestFactoryMethods.class, name).get();
+		return ReflectionSupport.findMethod(ClassWithTestFactoryMethods.class, name).get();
 	}
 
 	private static class ClassWithTestFactoryMethods {

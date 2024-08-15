@@ -20,7 +20,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.commons.support.AnnotationSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
@@ -59,7 +59,7 @@ class ClassOrderingVisitor
 		AnnotatedElement annotatedElement = descriptorWrapper.getAnnotatedElement();
 		return AnnotationSupport.findAnnotation(annotatedElement, TestClassOrder.class)//
 				.map(TestClassOrder::value)//
-				.<ClassOrderer> map(ReflectionUtils::newInstance)//
+				.<ClassOrderer> map(ReflectionSupport::newInstance)//
 				.map(this::createDescriptorWrapperOrderer)//
 				.orElse(inheritedDescriptorWrapperOrderer);
 	}

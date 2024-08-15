@@ -30,8 +30,8 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for extension composability in JUnit Jupiter.
@@ -82,7 +82,7 @@ class ExtensionComposabilityTests {
 
 		// @formatter:off
 		List<Method> actualMethods = Arrays.stream(dynamicKitchenSinkExtension.getClass().getDeclaredMethods())
-				.filter(ReflectionUtils::isNotStatic)
+				.filter(ModifierSupport::isNotStatic)
 				.collect(toList());
 
 		List<String> actualMethodSignatures = actualMethods.stream()
@@ -140,7 +140,7 @@ class ExtensionComposabilityTests {
 	}
 
 	private List<Class<?>> findExtensionApis() {
-		return ReflectionUtils.findAllClassesInPackage(Extension.class.getPackage().getName(), this::isExtensionApi,
+		return ReflectionSupport.findAllClassesInPackage(Extension.class.getPackage().getName(), this::isExtensionApi,
 			name -> true);
 	}
 

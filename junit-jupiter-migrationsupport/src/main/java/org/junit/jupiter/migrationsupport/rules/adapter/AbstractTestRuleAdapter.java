@@ -11,8 +11,8 @@
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
-import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
+import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 
 import java.lang.reflect.Method;
 

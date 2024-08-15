@@ -22,7 +22,7 @@ import java.lang.reflect.Parameter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * @since 5.0
@@ -49,7 +49,7 @@ class TestReporterParameterResolverTests {
 	}
 
 	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-		Method method = ReflectionUtils.findMethod(Sample.class, methodName, parameterTypes).get();
+		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).get();
 		return method.getParameters()[0];
 	}
 

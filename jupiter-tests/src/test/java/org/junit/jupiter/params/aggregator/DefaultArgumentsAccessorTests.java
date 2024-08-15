@@ -25,7 +25,7 @@ import java.util.Arrays;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Unit tests for {@link DefaultArgumentsAccessor}.
@@ -173,7 +173,7 @@ class DefaultArgumentsAccessorTests {
 	}
 
 	private static ParameterContext parameterContext() {
-		Method declaringExecutable = ReflectionUtils.findMethod(DefaultArgumentsAccessorTests.class, "foo").get();
+		Method declaringExecutable = ReflectionSupport.findMethod(DefaultArgumentsAccessorTests.class, "foo").get();
 		ParameterContext parameterContext = mock();
 		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
 		return parameterContext;

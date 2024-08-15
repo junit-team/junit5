@@ -17,8 +17,8 @@ import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_
 import java.util.Optional;
 
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassFilter;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
@@ -51,7 +51,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		Segment lastSegment = selector.getUniqueId().getLastSegment();
 		if (SEGMENT_TYPE_RUNNER.equals(lastSegment.getType())) {
 			String testClassName = lastSegment.getValue();
-			Class<?> testClass = ReflectionUtils.tryToLoadClass(testClassName)//
+			Class<?> testClass = ReflectionSupport.tryToLoadClass(testClassName)//
 					.getOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
 			return resolveTestClass(testClass, context);
 		}

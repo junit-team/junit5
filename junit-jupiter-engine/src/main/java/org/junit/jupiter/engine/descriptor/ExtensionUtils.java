@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -89,7 +90,7 @@ final class ExtensionUtils {
 	 * @since 5.11
 	 */
 	static void registerExtensionsFromStaticFields(ExtensionRegistrar registrar, Class<?> clazz) {
-		streamExtensionRegisteringFields(clazz, ReflectionUtils::isStatic) //
+		streamExtensionRegisteringFields(clazz, ModifierSupport::isStatic) //
 				.forEach(field -> {
 					List<Class<? extends Extension>> extensionTypes = streamDeclarativeExtensionTypes(field).collect(
 						toList());

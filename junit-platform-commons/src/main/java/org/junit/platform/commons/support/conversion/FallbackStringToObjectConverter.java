@@ -10,12 +10,12 @@
 
 package org.junit.platform.commons.support.conversion;
 
-import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.ModifierSupport.isNotPrivate;
+import static org.junit.platform.commons.support.ModifierSupport.isNotStatic;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
+import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findConstructors;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
-import static org.junit.platform.commons.util.ReflectionUtils.isNotPrivate;
-import static org.junit.platform.commons.util.ReflectionUtils.isNotStatic;
 import static org.junit.platform.commons.util.ReflectionUtils.newInstance;
 
 import java.lang.reflect.Constructor;

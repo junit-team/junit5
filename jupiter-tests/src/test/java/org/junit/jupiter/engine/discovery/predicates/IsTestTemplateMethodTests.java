@@ -16,7 +16,7 @@ import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Unit tests for {@link IsTestTemplateMethod}.
@@ -38,7 +38,7 @@ class IsTestTemplateMethodTests {
 	}
 
 	private static Method method(String name) {
-		return ReflectionUtils.findMethod(ClassWithTestTemplateMethods.class, name).get();
+		return ReflectionSupport.findMethod(ClassWithTestTemplateMethods.class, name).get();
 	}
 
 	private static class ClassWithTestTemplateMethods {

@@ -72,7 +72,7 @@ import org.junit.jupiter.engine.descriptor.subpackage.Class2WithTestCases;
 import org.junit.jupiter.engine.descriptor.subpackage.ClassWithStaticInnerTestCases;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -457,7 +457,7 @@ class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds)//
 				.describedAs("Failed to pick up DefaultPackageTestCase via classpath scanning")//
-				.contains(uniqueIdForClass(ReflectionUtils.tryToLoadClass("DefaultPackageTestCase").get()));
+				.contains(uniqueIdForClass(ReflectionSupport.tryToLoadClass("DefaultPackageTestCase").get()));
 		assertThat(uniqueIds).contains(uniqueIdForClass(Class1WithTestCases.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()"));
 		assertThat(uniqueIds).contains(uniqueIdForClass(Class2WithTestCases.class));
@@ -481,7 +481,7 @@ class DiscoverySelectorResolverTests {
 		List<UniqueId> uniqueIds = uniqueIds();
 		assertThat(uniqueIds)//
 				.describedAs("Failed to pick up DefaultPackageTestCase via classpath scanning")//
-				.contains(uniqueIdForClass(ReflectionUtils.tryToLoadClass("DefaultPackageTestCase").get()));
+				.contains(uniqueIdForClass(ReflectionSupport.tryToLoadClass("DefaultPackageTestCase").get()));
 		assertThat(uniqueIds).contains(uniqueIdForClass(Class1WithTestCases.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(Class1WithTestCases.class, "test1()"));
 		assertThat(uniqueIds).contains(uniqueIdForClass(Class2WithTestCases.class));

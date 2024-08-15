@@ -13,7 +13,8 @@ package org.junit.jupiter.migrationsupport.rules;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.support.AnnotationSupport.findPublicAnnotatedFields;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -81,7 +82,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		Predicate<Method> isRuleMethod = method -> isAnnotated(method, Rule.class);
 		Predicate<Method> hasCorrectReturnType = method -> TestRule.class.isAssignableFrom(method.getReturnType());
 
-		return findMethods(testInstance.getClass(), isRuleMethod.and(hasCorrectReturnType));
+		return findMethods(testInstance.getClass(), isRuleMethod.and(hasCorrectReturnType), TOP_DOWN);
 	}
 
 	private List<Field> findAnnotatedFields(Object testInstance) {

@@ -18,8 +18,8 @@ import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
 
@@ -175,7 +175,7 @@ public class ClassSource implements TestSource {
 	public final Class<?> getJavaClass() {
 		if (this.javaClass == null) {
 			// @formatter:off
-			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
+			this.javaClass = ReflectionSupport.tryToLoadClass(this.className).getOrThrow(
 				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}

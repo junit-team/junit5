@@ -13,9 +13,10 @@ package org.junit.jupiter.engine.discovery;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 import static org.junit.platform.commons.support.ReflectionSupport.streamNestedClasses;
 import static org.junit.platform.commons.util.FunctionUtils.where;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
@@ -35,7 +36,7 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -93,7 +94,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId.Segment lastSegment = uniqueId.getLastSegment();
 		if (ClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			String className = lastSegment.getValue();
-			return ReflectionUtils.tryToLoadClass(className).toOptional().filter(isTestClassWithTests).map(
+			return ReflectionSupport.tryToLoadClass(className).toOptional().filter(isTestClassWithTests).map(
 				testClass -> toResolution(
 					context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))))).orElse(
 						unresolved());
@@ -103,7 +104,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 				if (parent instanceof ClassBasedTestDescriptor) {
 					Class<?> parentTestClass = ((ClassBasedTestDescriptor) parent).getTestClass();
-					return ReflectionUtils.findNestedClasses(parentTestClass,
+					return ReflectionSupport.findNestedClasses(parentTestClass,
 						isNestedTestClass.and(
 							where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst().flatMap(
 								testClass -> Optional.of(newNestedClassTestDescriptor(parent, testClass)));
@@ -133,7 +134,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			testClasses.add(testClass);
 			// @formatter:off
 			return Resolution.match(Match.exact(it, () -> {
-				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod).stream()
+				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN).stream()
 						.map(method -> selectMethod(testClasses, method));
 				Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass, isNestedTestClass)
 						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));

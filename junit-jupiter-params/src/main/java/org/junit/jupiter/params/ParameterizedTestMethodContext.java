@@ -32,7 +32,6 @@ import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -181,7 +180,7 @@ class ParameterizedTestMethodContext {
 				try { // @formatter:off
 					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
 							.map(ConvertWith::value)
-							.map(clazz -> (ArgumentConverter) ReflectionUtils.newInstance(clazz))
+							.map(clazz -> (ArgumentConverter) ReflectionSupport.newInstance(clazz))
 							.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
 							.map(Converter::new)
 							.orElse(Converter.DEFAULT);

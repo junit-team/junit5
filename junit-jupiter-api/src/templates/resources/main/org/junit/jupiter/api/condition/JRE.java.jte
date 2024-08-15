@@ -15,7 +15,7 @@ import java.util.EnumSet;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -85,9 +85,9 @@ public enum JRE {
 			// that returns an instance of java.lang.Runtime.Version which has the
 			// following method: public int major()
 			Method versionMethod = Runtime.class.getMethod("version");
-			Object version = ReflectionUtils.invokeMethod(versionMethod, null);
+			Object version = ReflectionSupport.invokeMethod(versionMethod, null);
 			Method majorMethod = version.getClass().getMethod("major");
-			int major = (int) ReflectionUtils.invokeMethod(majorMethod, version);
+			int major = (int) ReflectionSupport.invokeMethod(majorMethod, version);
 			switch (major) {<%--
 				--%>@for(var jre : jres)<%--
 					--%>@if(jre.getVersion() != 8)

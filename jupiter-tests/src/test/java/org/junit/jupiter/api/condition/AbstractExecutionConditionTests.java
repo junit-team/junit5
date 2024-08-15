@@ -14,9 +14,10 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.newInstance;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
+import static org.junit.platform.commons.support.ReflectionSupport.newInstance;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -59,10 +60,10 @@ abstract class AbstractExecutionConditionTests {
 	void ensureAllTestMethodsAreCovered() {
 		Predicate<Method> isTestMethod = method -> method.isAnnotationPresent(Test.class);
 
-		List<String> methodsToTest = findMethods(getTestClass(), isTestMethod).stream()//
+		List<String> methodsToTest = findMethods(getTestClass(), isTestMethod, TOP_DOWN).stream()//
 				.map(Method::getName).sorted().collect(toList());
 
-		List<String> localTestMethods = findMethods(getClass(), isTestMethod).stream()//
+		List<String> localTestMethods = findMethods(getClass(), isTestMethod, TOP_DOWN).stream()//
 				.map(Method::getName).sorted().collect(toList());
 
 		assertThat(localTestMethods).isEqualTo(methodsToTest);

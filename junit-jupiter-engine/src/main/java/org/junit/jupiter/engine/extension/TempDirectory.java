@@ -61,9 +61,10 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -126,11 +127,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
-		injectFields(context, null, testClass, ReflectionUtils::isStatic);
+		injectFields(context, null, testClass, ModifierSupport::isStatic);
 	}
 
 	private void injectInstanceFields(ExtensionContext context, Object instance) {
-		injectFields(context, instance, instance.getClass(), ReflectionUtils::isNotStatic);
+		injectFields(context, instance, instance.getClass(), ModifierSupport::isNotStatic);
 	}
 
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
@@ -233,11 +234,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 		return factory == TempDirFactory.class //
 				? this.configuration.getDefaultTempDirFactorySupplier().get()
-				: ReflectionUtils.newInstance(factory);
+				: ReflectionSupport.newInstance(factory);
 	}
 
 	private void assertNonFinalField(Field field) {
-		if (ReflectionUtils.isFinal(field)) {
+		if (ModifierSupport.isFinal(field)) {
 			throw new ExtensionConfigurationException("@TempDir field [" + field + "] must not be declared as final.");
 		}
 	}

@@ -43,8 +43,8 @@ import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.test.TestClassLoader;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -634,10 +634,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			instantiated(getClass(), testClass);
 
 			if (factoryContext.getOuterInstance().isPresent()) {
-				return ReflectionUtils.newInstance(testClass, factoryContext.getOuterInstance().get());
+				return ReflectionSupport.newInstance(testClass, factoryContext.getOuterInstance().get());
 			}
 			// else
-			return ReflectionUtils.newInstance(testClass);
+			return ReflectionSupport.newInstance(testClass);
 		}
 	}
 
@@ -698,7 +698,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			try (var testClassLoader = TestClassLoader.forClasses(testClass)) {
 				// Load test class from different class loader
 				Class<?> clazz = testClassLoader.loadClass(className);
-				return ReflectionUtils.newInstance(clazz);
+				return ReflectionSupport.newInstance(clazz);
 			}
 			catch (Exception ex) {
 				throw new RuntimeException("Failed to load class [" + className + "]", ex);

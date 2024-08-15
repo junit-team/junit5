@@ -13,7 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryWithDefaultExtensions;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -36,8 +36,8 @@ import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.test.TestClassLoader;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link FieldArgumentsProvider}.
@@ -466,7 +466,7 @@ class FieldArgumentsProviderTests {
 
 		// Ensure we have a non-null test method, even if it's not a real test method.
 		// If this throws an exception, make sure that the supplied test class defines a "void test()" method.
-		Method testMethod = ReflectionUtils.findMethod(testClass, "test").get();
+		Method testMethod = ReflectionSupport.findMethod(testClass, "test").get();
 		return provideArguments(testClass, testMethod, allowNonStaticMethod, fieldNames);
 	}
 
@@ -487,7 +487,7 @@ class FieldArgumentsProviderTests {
 		doCallRealMethod().when(extensionContext).getRequiredTestMethod();
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();
 
-		var testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
+		var testInstance = allowNonStaticMethod ? ReflectionSupport.newInstance(testClass) : null;
 		when(extensionContext.getTestInstance()).thenReturn(Optional.ofNullable(testInstance));
 
 		var lifeCycle = allowNonStaticMethod ? Lifecycle.PER_CLASS : Lifecycle.PER_METHOD;

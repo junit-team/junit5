@@ -28,6 +28,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -82,7 +83,8 @@ abstract class AbstractExecutableInvokerTests {
 	}
 
 	private void testMethodWithASingleStringParameter() {
-		this.method = ReflectionUtils.findMethod(this.instance.getClass(), "singleStringParameter", String.class).get();
+		this.method = ReflectionSupport.findMethod(this.instance.getClass(), "singleStringParameter",
+			String.class).get();
 	}
 
 	private void register(ParameterResolver... resolvers) {

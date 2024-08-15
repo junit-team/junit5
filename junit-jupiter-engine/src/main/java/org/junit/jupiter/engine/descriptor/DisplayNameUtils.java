@@ -28,9 +28,9 @@ import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.SearchOption;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -137,7 +137,7 @@ final class DisplayNameUtils {
 					if (displayNameGeneratorClass == IndicativeSentences.class) {
 						return indicativeSentencesGenerator;
 					}
-					return ReflectionUtils.newInstance(displayNameGeneratorClass);
+					return ReflectionSupport.newInstance(displayNameGeneratorClass);
 				});
 	}
 

@@ -43,7 +43,7 @@ import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.Events;
 
@@ -285,7 +285,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void failureThresholdWithConcurrentExecution() {
 			Class<TestCase> testClass = TestCase.class;
 			String methodName = "failureThresholdWithConcurrentExecution";
-			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
+			Method method = ReflectionSupport.findMethod(testClass, methodName).get();
 			LauncherDiscoveryRequest request = request()//
 					.selectors(selectMethod(testClass, method))//
 					.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")//
@@ -313,7 +313,7 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 
 		private Events executeTest(String methodName) {
 			Class<TestCase> testClass = TestCase.class;
-			Method method = ReflectionUtils.findMethod(testClass, methodName).get();
+			Method method = ReflectionSupport.findMethod(testClass, methodName).get();
 			return executeTests(selectMethod(testClass, method)).allEvents();
 		}
 

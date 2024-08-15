@@ -21,8 +21,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.test.TestClassLoader;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Tests for {@link DisabledIfCondition} using custom {@link ClassLoader} arrangements.
@@ -40,7 +40,7 @@ public class DisabledIfConditionClassLoaderTests {
 			assertThat(testClass.getClassLoader()).isSameAs(testClassLoader);
 
 			ExtensionContext context = mock();
-			Method annotatedMethod = ReflectionUtils.findMethod(getClass(), "enabledMethod").get();
+			Method annotatedMethod = ReflectionSupport.findMethod(getClass(), "enabledMethod").get();
 			when(context.getElement()).thenReturn(Optional.of(annotatedMethod));
 			doReturn(testClass).when(context).getRequiredTestClass();
 

@@ -47,7 +47,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * @since 5.0
@@ -357,7 +357,7 @@ class ParameterizedTestNameFormatterTests {
 	private static class ParameterizedTestCases {
 
 		static Method getMethod(String methodName, Class<?>... parameterTypes) {
-			return ReflectionUtils.findMethod(ParameterizedTestCases.class, methodName, parameterTypes).orElseThrow();
+			return ReflectionSupport.findMethod(ParameterizedTestCases.class, methodName, parameterTypes).orElseThrow();
 		}
 
 		@SuppressWarnings("unused")

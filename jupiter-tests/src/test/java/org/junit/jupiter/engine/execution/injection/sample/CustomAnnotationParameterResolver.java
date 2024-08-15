@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.execution.injection.sample;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * @since 5.0
@@ -29,7 +29,7 @@ public class CustomAnnotationParameterResolver implements ParameterResolver {
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return ReflectionUtils.newInstance(parameterContext.getParameter().getType());
+		return ReflectionSupport.newInstance(parameterContext.getParameter().getType());
 	}
 
 }

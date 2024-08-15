@@ -30,7 +30,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Tests for {@link TypedArgumentConverter}.
@@ -98,7 +98,7 @@ class TypedArgumentConverterTests {
 		}
 
 		private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-			Method method = ReflectionUtils.findMethod(getClass(), methodName, parameterTypes).get();
+			Method method = ReflectionSupport.findMethod(getClass(), methodName, parameterTypes).get();
 			return method.getParameters()[0];
 		}
 

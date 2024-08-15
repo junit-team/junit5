@@ -11,9 +11,9 @@
 package org.junit.vintage.engine.discovery;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isPublic;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
-import static org.junit.platform.commons.util.ReflectionUtils.isPublic;
 
 import java.util.function.Predicate;
 

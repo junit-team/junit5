@@ -49,8 +49,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.test.TestClassLoader;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link DefaultArgumentConverter}.
@@ -276,7 +276,7 @@ class DefaultArgumentConverterTests {
 			var customType = testClassLoader.loadClass(customTypeName);
 			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
-			var declaringExecutable = ReflectionUtils.findMethod(customType, "foo").get();
+			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
@@ -373,7 +373,7 @@ class DefaultArgumentConverterTests {
 	}
 
 	private static ParameterContext parameterContext() {
-		Method declaringExecutable = ReflectionUtils.findMethod(DefaultArgumentConverterTests.class, "foo").get();
+		Method declaringExecutable = ReflectionSupport.findMethod(DefaultArgumentConverterTests.class, "foo").get();
 		return parameterContext(declaringExecutable);
 	}
 

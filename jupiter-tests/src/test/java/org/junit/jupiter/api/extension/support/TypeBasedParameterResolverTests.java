@@ -32,7 +32,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * @since 5.6
@@ -98,7 +98,7 @@ class TypeBasedParameterResolverTests {
 	}
 
 	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-		Method method = ReflectionUtils.findMethod(Sample.class, methodName, parameterTypes).get();
+		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).get();
 		return method.getParameters()[0];
 	}
 

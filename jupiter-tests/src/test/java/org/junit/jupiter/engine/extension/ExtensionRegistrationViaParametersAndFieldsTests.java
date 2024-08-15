@@ -74,8 +74,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -914,13 +914,13 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Tes
 
 	@Override
 	public final void beforeAll(ExtensionContext context) {
-		injectFields("beforeAll", context.getRequiredTestClass(), null, ReflectionUtils::isStatic);
+		injectFields("beforeAll", context.getRequiredTestClass(), null, ModifierSupport::isStatic);
 	}
 
 	@Override
 	public final void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 		injectFields("postProcessTestInstance", context.getRequiredTestClass(), testInstance,
-			ReflectionUtils::isNotStatic);
+			ModifierSupport::isNotStatic);
 	}
 
 	private void injectFields(String trigger, Class<?> testClass, Object instance, Predicate<Field> predicate) {

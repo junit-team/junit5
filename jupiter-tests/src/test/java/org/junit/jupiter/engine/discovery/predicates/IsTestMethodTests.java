@@ -18,7 +18,8 @@ import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Unit tests for {@link IsTestMethod}.
@@ -33,7 +34,7 @@ class IsTestMethodTests {
 	void publicTestMethod() {
 		Method method = method("publicTestMethod");
 		// Ensure that somebody doesn't accidentally delete the public modifier again.
-		assertTrue(ReflectionUtils.isPublic(method));
+		assertTrue(ModifierSupport.isPublic(method));
 		assertThat(isTestMethod).accepts(method);
 	}
 
@@ -41,7 +42,7 @@ class IsTestMethodTests {
 	void publicTestMethodWithArgument() {
 		Method method = method("publicTestMethodWithArgument", TestInfo.class);
 		// Ensure that somebody doesn't accidentally delete the public modifier again.
-		assertTrue(ReflectionUtils.isPublic(method));
+		assertTrue(ModifierSupport.isPublic(method));
 		assertThat(isTestMethod).accepts(method);
 	}
 
@@ -86,11 +87,11 @@ class IsTestMethodTests {
 	}
 
 	private static Method method(String name, Class<?>... parameterTypes) {
-		return ReflectionUtils.findMethod(ClassWithTestMethods.class, name, parameterTypes).get();
+		return ReflectionSupport.findMethod(ClassWithTestMethods.class, name, parameterTypes).get();
 	}
 
 	private Method abstractMethod(String name) {
-		return ReflectionUtils.findMethod(AbstractClassWithAbstractTestMethod.class, name).get();
+		return ReflectionSupport.findMethod(AbstractClassWithAbstractTestMethod.class, name).get();
 	}
 
 	private static abstract class AbstractClassWithAbstractTestMethod {
