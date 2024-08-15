@@ -661,8 +661,8 @@ public final class ReflectionSupport {
 	 *
 	 * @param field the field to make accessible; never {@code null}
 	 * @return the supplied field
-	 * @see Field#setAccessible(boolean)
 	 * @since 1.11.1
+	 * @see Field#setAccessible(boolean)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11.1")
 	public static Field makeAccessible(Field field) {
