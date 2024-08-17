@@ -135,6 +135,7 @@ public class ParameterResolutionUtils {
 			ParameterResolver resolver = matchingResolvers.get(0);
 			Object value = resolver.resolveParameter(parameterContext, extensionContext);
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
+			recordResolvedParameter(extensionContext, value);
 
 			logger.trace(() -> String.format(
 				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in %s [%s].",
@@ -184,6 +185,12 @@ public class ParameterResolutionUtils {
 			}
 
 			throw new ParameterResolutionException(message);
+		}
+	}
+
+	private static void recordResolvedParameter(ExtensionContext extensionContext, Object value) {
+		if (extensionContext instanceof ResolvedParametersStore) {
+			((ResolvedParametersStore) extensionContext).recordResolvedParameter(value);
 		}
 	}
 

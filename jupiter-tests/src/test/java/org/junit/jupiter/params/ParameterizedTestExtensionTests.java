@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ResolvedParameters;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
@@ -278,6 +279,11 @@ class ParameterizedTestExtensionTests {
 			@Override
 			public ExecutableInvoker getExecutableInvoker() {
 				return null;
+			}
+
+			@Override
+			public Optional<ResolvedParameters> getResolvedParameters() {
+				return Optional.empty();
 			}
 		};
 	}
