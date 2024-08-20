@@ -646,16 +646,34 @@ include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_arc
 [[writing-tests-conditional-execution-jre]]
 ==== Java Runtime Environment Conditions
 
-A container or test may be enabled or disabled on particular versions of the Java
-Runtime Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations
-or on a particular range of versions of the JRE via the `{EnabledForJreRange}` and
-`{DisabledForJreRange}` annotations. The range defaults to `{JRE}.JAVA_8` as the lower
-border (`min`) and `{JRE}.OTHER` as the higher border (`max`), which allows usage of
-half open ranges.
+A container or test may be enabled or disabled on particular versions of the Java Runtime
+Environment (JRE) via the `{EnabledOnJre}` and `{DisabledOnJre}` annotations or on a
+particular range of versions of the JRE via the `{EnabledForJreRange}` and
+`{DisabledForJreRange}` annotations. The range effectively defaults to `JRE.JAVA_8` as the
+lower bound and `JRE.OTHER` as the upper bound, which allows usage of half open ranges.
+
+The following listing demonstrates the use of these annotations with predefined {JRE} enum
+constants.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_jre]
+----
+
+Since the enum constants defined in {JRE} are static for any given JUnit release, you
+might find that you need to configure a Java version that is not supported by the `JRE`
+enum. For example, as of JUnit Jupiter 5.12 the `JRE` enum defines `JAVA_25` as the
+highest supported Java version. However, you may wish to run your tests against later
+versions of Java. To support such use cases, you can specify arbitrary Java versions via
+the `versions` attributes in `@EnabledOnJre` and `@DisabledOnJre` and via the `minVersion`
+and `maxVersion` attributes in `@EnabledForJreRange` and `@DisabledForJreRange`.
+
+The following listing demonstrates the use of these annotations with arbitrary Java
+versions.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ConditionalTestExecutionDemo.java[tags=user_guide_jre_arbitrary_versions]
 ----
 
 [[writing-tests-conditional-execution-native]]
