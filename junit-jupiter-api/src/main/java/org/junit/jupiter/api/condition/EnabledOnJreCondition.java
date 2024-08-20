@@ -13,7 +13,6 @@ package org.junit.jupiter.api.condition;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.extension.ExecutionCondition;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@link ExecutionCondition} for {@link EnabledOnJre @EnabledOnJre}.
@@ -21,23 +20,19 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.1
  * @see EnabledOnJre
  */
-class EnabledOnJreCondition extends BooleanExecutionCondition<EnabledOnJre> {
-
-	static final String ENABLED_ON_CURRENT_JRE = //
-		"Enabled on JRE version: " + System.getProperty("java.version");
-
-	static final String DISABLED_ON_CURRENT_JRE = //
-		"Disabled on JRE version: " + System.getProperty("java.version");
+class EnabledOnJreCondition extends AbstractJreCondition<EnabledOnJre> {
 
 	EnabledOnJreCondition() {
-		super(EnabledOnJre.class, ENABLED_ON_CURRENT_JRE, DISABLED_ON_CURRENT_JRE, EnabledOnJre::disabledReason);
+		super(EnabledOnJre.class, EnabledOnJre::disabledReason);
 	}
 
 	@Override
 	boolean isEnabled(EnabledOnJre annotation) {
-		JRE[] versions = annotation.value();
-		Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @EnabledOnJre");
-		return Arrays.stream(versions).anyMatch(JRE::isCurrentVersion);
+		JRE[] jres = annotation.value();
+		int[] versions = annotation.versions();
+		validateVersions(jres, versions);
+		return Arrays.stream(jres).anyMatch(JRE::isCurrentVersion)
+				|| Arrays.stream(versions).anyMatch(JRE::isCurrentVersion);
 	}
 
 }
