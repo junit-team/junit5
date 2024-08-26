@@ -68,8 +68,10 @@ class CompositeLock implements ResourceLock {
 
 		@Override
 		public boolean block() throws InterruptedException {
-			acquireAllLocks();
-			acquired = true;
+			if (!acquired) {
+				acquireAllLocks();
+				acquired = true;
+			}
 			return true;
 		}
 
