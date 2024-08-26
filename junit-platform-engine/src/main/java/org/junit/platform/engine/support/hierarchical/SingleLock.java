@@ -46,14 +46,16 @@ class SingleLock implements ResourceLock {
 
 		@Override
 		public boolean block() throws InterruptedException {
-			lock.lockInterruptibly();
-			acquired = true;
+			if (!acquired) {
+				lock.lockInterruptibly();
+				acquired = true;
+			}
 			return true;
 		}
 
 		@Override
 		public boolean isReleasable() {
-			return acquired || lock.tryLock();
+			return acquired || (acquired = lock.tryLock());
 		}
 
 	}

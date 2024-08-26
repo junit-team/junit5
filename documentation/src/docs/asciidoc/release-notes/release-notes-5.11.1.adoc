@@ -16,7 +16,8 @@ JUnit repository on GitHub.
 [[release-notes-5.11.1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Fix potential locking issue with `ExclusiveResource` in the `HierarchicalTestExecutorService`.
+  This could lead to deadlocks in certain scenarios.
 
 [[release-notes-5.11.1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
