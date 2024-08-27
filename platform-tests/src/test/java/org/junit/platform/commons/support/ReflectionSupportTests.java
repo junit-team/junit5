@@ -127,9 +127,9 @@ class ReflectionSupportTests {
 	void tryToGetResourcesPreconditions() {
 		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(null));
 		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(""));
-		assertPreconditionViolationExceptionForString("Class loader",
+		assertPreconditionViolationException("Class loader",
 			() -> ReflectionSupport.tryToGetResources("default-package.resource", null));
-		assertPreconditionViolationExceptionForString("Class loader",
+		assertPreconditionViolationException("Class loader",
 			() -> ReflectionSupport.tryToGetResources("default-package.resource", null));
 	}
 
