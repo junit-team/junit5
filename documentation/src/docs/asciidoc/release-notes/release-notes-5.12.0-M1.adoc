@@ -26,8 +26,9 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
-
+* New `addResourceContainerSelectorResolver()` in `EngineDiscoveryRequestResolver.Builder` to
+support the discovery of class path resource based tests, analogous to the
+`addClassContainerSelectorResolver()`.
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
 === JUnit Jupiter
