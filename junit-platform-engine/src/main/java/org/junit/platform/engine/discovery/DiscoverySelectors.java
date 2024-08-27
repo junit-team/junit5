@@ -313,7 +313,7 @@ public final class DiscoverySelectors {
 	 * {@code null} or blank
 	 * @param position the position inside the classpath resource; may be {@code null}
 	 * @see #selectClasspathResource(String)
-	 * @see #selectClasspathResource(List)
+	 * @see #selectClasspathResource(Set)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)
