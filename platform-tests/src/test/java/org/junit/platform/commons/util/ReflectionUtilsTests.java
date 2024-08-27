@@ -69,6 +69,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtilsTests.NestedClassTests.ClassWithNestedClasses.Nested1;
 import org.junit.platform.commons.util.ReflectionUtilsTests.NestedClassTests.ClassWithNestedClasses.Nested2;
@@ -728,17 +729,20 @@ class ReflectionUtilsTests {
 		void tryToGetResource() {
 			var tryToGetResource = ReflectionUtils.tryToGetResources("org/junit/platform/commons/example.resource");
 			var resource = assertDoesNotThrow(tryToGetResource::get);
-			assertAll(() -> assertThat(resource).hasSize(1),
-				() -> assertThat(resource.get(0).getName()).isEqualTo("org/junit/platform/commons/example.resource"));
-
+			assertAll( //
+				() -> assertThat(resource).hasSize(1), //
+				() -> assertThat(resource).extracting(Resource::getName) //
+						.containsExactly("org/junit/platform/commons/example.resource"));
 		}
 
 		@Test
 		void tryToGetResourceWithPrefixedSlash() {
 			var tryToGetResource = ReflectionUtils.tryToGetResources("/org/junit/platform/commons/example.resource");
 			var resource = assertDoesNotThrow(tryToGetResource::get);
-			assertAll(() -> assertThat(resource).hasSize(1),
-				() -> assertThat(resource.get(0).getName()).isEqualTo("org/junit/platform/commons/example.resource"));
+			assertAll( //
+					() -> assertThat(resource).hasSize(1), //
+					() -> assertThat(resource).extracting(Resource::getName) //
+							.containsExactly("org/junit/platform/commons/example.resource"));
 		}
 
 		@Test

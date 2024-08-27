@@ -294,10 +294,9 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
 			assertViolatesPrecondition(() -> selectClasspathResource("    "));
 			assertViolatesPrecondition(() -> selectClasspathResource("\t"));
-			assertViolatesPrecondition(() -> selectClasspathResource((List<Resource>) null));
-			assertViolatesPrecondition(() -> selectClasspathResource(Collections.emptyList()));
-			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singletonList(null)));
-			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singletonList(null)));
+			assertViolatesPrecondition(() -> selectClasspathResource((Set<Resource>) null));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.emptySet()));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singleton(null)));
 
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");
