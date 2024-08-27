@@ -11,17 +11,18 @@
 package org.junit.jupiter.api;
 
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.support.SearchOption;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code DisplayNameGenerator} defines the SPI for generating display names
@@ -332,7 +333,7 @@ public interface DisplayNameGenerator {
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found
 		 */
 		private static Optional<DisplayNameGeneration> findDisplayNameGeneration(Class<?> testClass) {
-			return findAnnotation(testClass, DisplayNameGeneration.class, true);
+			return findAnnotation(testClass, DisplayNameGeneration.class, SearchOption.INCLUDE_ENCLOSING_CLASSES);
 		}
 
 		/**
@@ -344,7 +345,8 @@ public interface DisplayNameGenerator {
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found
 		 */
 		private static Optional<IndicativeSentencesGeneration> findIndicativeSentencesGeneration(Class<?> testClass) {
-			return findAnnotation(testClass, IndicativeSentencesGeneration.class, true);
+			return findAnnotation(testClass, IndicativeSentencesGeneration.class,
+				SearchOption.INCLUDE_ENCLOSING_CLASSES);
 		}
 
 		private static Predicate<Class<?>> not(Class<?> clazz) {
@@ -377,7 +379,7 @@ public interface DisplayNameGenerator {
 		if (generatorClass == IndicativeSentences.class) {
 			return IndicativeSentences.INSTANCE;
 		}
-		return (DisplayNameGenerator) ReflectionUtils.newInstance(generatorClass);
+		return (DisplayNameGenerator) ReflectionSupport.newInstance(generatorClass);
 	}
 
 }

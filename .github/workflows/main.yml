@@ -15,17 +15,11 @@ env:
 jobs:
   Linux:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write # required for submitting a dependency graph
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
       with:
         fetch-depth: 1
-    - name: Install Graphviz
-      run: |
-        sudo apt-get update
-        sudo apt-get install graphviz
     - name: Install GraalVM
       uses: graalvm/setup-graalvm@v1
       with:
@@ -38,18 +32,13 @@ jobs:
       with:
         arguments: |
           -Ptesting.enableJaCoCo \
+          :platform-tooling-support-tests:test \
           build \
           jacocoRootReport
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-    - name: Run Asciidoctor
-      uses: ./.github/actions/run-gradle
-      with:
-        arguments: |
-          prepareDocsForUploadToGhPages \
-          --no-configuration-cache
 
   Windows:
     runs-on: windows-latest
@@ -95,18 +84,17 @@ jobs:
           prepareGitHubAttestation \
           --no-configuration-cache
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@bdd51370e0416ac948727f861e03c2f05d32d78e # v1.3.2
+      uses: actions/attest-build-provenance@210c1913531870065f03ce1f9440dd87bc0938cd # v1.4.0
       with:
         subject-path: documentation/build/attestation/*.jar
 
-  update_documentation:
-    name: Update Snapshot Documentation
+  documentation:
+    name: Build Documentation
     concurrency:
       group: github-pages
       cancel-in-progress: true
     needs: Linux
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
     steps:
     - name: Check out repository
       uses: actions/checkout@v4
@@ -116,7 +104,15 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install graphviz
+    - name: Build Documentation
+      uses: ./.github/actions/run-gradle
+      with:
+        arguments: |
+          prepareDocsForUploadToGhPages \
+          -Dscan.tag.Documentation \
+          --no-configuration-cache
     - name: Upload Documentation
+      if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
       with:
         arguments: |

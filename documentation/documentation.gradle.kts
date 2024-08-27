@@ -13,6 +13,7 @@ plugins {
 	alias(libs.plugins.gitPublish)
 	alias(libs.plugins.plantuml)
 	id("junitbuild.build-parameters")
+	id("junitbuild.java-multi-release-test-sources")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }
@@ -175,6 +176,10 @@ tasks {
 		}
 	}
 
+	testRelease21 {
+		include("**/*Demo.class")
+	}
+
 	check {
 		dependsOn(consoleLauncherTest)
 	}
@@ -266,11 +271,14 @@ tasks {
 		// Temporary workaround for https://github.com/asciidoctor/asciidoctor-gradle-plugin/issues/599
 		inputs.dir(sourceDir).withPropertyName("sourceDir").withPathSensitivity(RELATIVE)
 
+		val platformVersion: String by project
+		val vintageVersion: String by project
+
 		attributeProviders += AsciidoctorAttributeProvider {
 			mapOf(
 				"jupiter-version" to version,
-				"platform-version" to project.property("platformVersion"),
-				"vintage-version" to project.property("vintageVersion"),
+				"platform-version" to platformVersion,
+				"vintage-version" to vintageVersion,
 				"bom-version" to version,
 				"junit4-version" to libs.versions.junit4.get(),
 				"apiguardian-version" to libs.versions.apiguardian.get(),
@@ -308,6 +316,13 @@ tasks {
 			inputs.dir(resources.srcDirs.first())
 			attributes(mapOf("kotlinTestDir" to kotlin.srcDirs.first()))
 			inputs.dir(kotlin.srcDirs.first())
+		}
+
+		sourceSets["testRelease21"].apply {
+			attributes(mapOf(
+				"testRelease21Dir" to java.srcDirs.first()
+			))
+			inputs.dir(java.srcDirs.first())
 		}
 
 		jvm {

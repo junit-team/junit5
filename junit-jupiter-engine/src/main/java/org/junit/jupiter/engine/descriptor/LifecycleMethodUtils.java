@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotatedMethods;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
 import java.lang.annotation.Annotation;
@@ -22,8 +22,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
+import org.junit.platform.commons.support.HierarchyTraversalMode;
+import org.junit.platform.commons.support.ModifierSupport;
 
 /**
  * Collection of utilities for working with test lifecycle methods.
@@ -81,7 +81,7 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ReflectionUtils.isNotStatic(method)) {
+		if (ModifierSupport.isNotStatic(method)) {
 			throw new JUnitException(String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationType.getSimpleName(), method.toGenericString()));
@@ -89,7 +89,7 @@ final class LifecycleMethodUtils {
 	}
 
 	private static void assertNonStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ReflectionUtils.isStatic(method)) {
+		if (ModifierSupport.isStatic(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not be static.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}

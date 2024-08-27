@@ -13,7 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.lang.String.format;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.reflect.Method;

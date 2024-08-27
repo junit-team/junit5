@@ -10,9 +10,9 @@ plugins {
 	`java-library`
 	eclipse
 	idea
-	checkstyle
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-parameters")
+	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
 }
 
@@ -162,15 +162,15 @@ val allMainClasses by tasks.registering {
 }
 
 val prepareModuleSourceDir by tasks.registering(Sync::class) {
-    from(moduleSourceDir)
-    from(sourceSets.named { it.startsWith("main") }.map { it.allJava })
-    into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+	from(moduleSourceDir)
+	from(sourceSets.named { it.startsWith("main") }.map { it.allJava })
+	into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 val compileModule by tasks.registering(JavaCompile::class) {
 	dependsOn(allMainClasses)
-    enabled = project in modularProjects
+	enabled = project in modularProjects
 	source = fileTree(combinedModuleSourceDir).builtBy(prepareModuleSourceDir)
 	destinationDirectory = moduleOutputDir
 	sourceCompatibility = "9"
@@ -184,22 +184,22 @@ val compileModule by tasks.registering(JavaCompile::class) {
 			"--module-version", "${project.version}",
 	))
 
-    val moduleOptions = objects.newInstance(ModuleCompileOptions::class)
-    extensions.add("moduleOptions", moduleOptions)
-    moduleOptions.modulePath.from(configurations.compileClasspath)
+	val moduleOptions = objects.newInstance(ModuleCompileOptions::class)
+	extensions.add("moduleOptions", moduleOptions)
+	moduleOptions.modulePath.from(configurations.compileClasspath)
 
 	options.compilerArgumentProviders.add(objects.newInstance(ModulePathArgumentProvider::class, project, combinedModuleSourceDir, modularProjects).apply {
-        modulePath.from(moduleOptions.modulePath)
-    })
+		modulePath.from(moduleOptions.modulePath)
+	})
 	options.compilerArgumentProviders.addAll(modularProjects.map { objects.newInstance(PatchModuleArgumentProvider::class, project, it) })
 
 	modularity.inferModulePath = false
 
-    doFirst {
-        options.allCompilerArgs.forEach {
-            logger.info(it)
-        }
-    }
+	doFirst {
+		options.allCompilerArgs.forEach {
+			logger.info(it)
+		}
+	}
 }
 
 tasks.withType<Jar>().configureEach {
@@ -308,23 +308,18 @@ afterEvaluate {
 	}
 }
 
-checkstyle {
-	toolVersion = requiredVersionFromLibs("checkstyle")
-	configDirectory = rootProject.layout.projectDirectory.dir("gradle/config/checkstyle")
-}
-
 tasks {
 	checkstyleMain {
-        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 	}
 	checkstyleTest {
-        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 }
 
 pluginManager.withPlugin("java-test-fixtures") {
 	tasks.named<Checkstyle>("checkstyleTestFixtures") {
-        config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
 		options.release = extension.testJavaVersion.majorVersion.toInt()

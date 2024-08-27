@@ -939,25 +939,32 @@ parameters_ for the following use cases.
 _Configuration Parameters_ are text-based key-value pairs that can be supplied to test
 engines running on the JUnit Platform via one of the following mechanisms.
 
-1. The `configurationParameter()` and `configurationParameters()` methods in the
-  `LauncherDiscoveryRequestBuilder` which is used to build a request supplied to the
-  <<launcher-api, `Launcher` API>>. When running tests via one of the tools provided
-  by the JUnit Platform you can specify configuration parameters as follows:
-  * <<running-tests-console-launcher,Console Launcher>>: use the `--config`
-    command-line option.
-  * <<running-tests-build-gradle-config-params,Gradle>>: use the
-    `systemProperty` or `systemProperties` DSL.
-  * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
-    `configurationParameters` property.
-2. JVM system properties.
-3. The JUnit Platform configuration file: a file named `junit-platform.properties` in the
-  root of the class path that follows the syntax rules for a Java `Properties` file.
+1. The `configurationParameter()` and `configurationParameters()` methods in
+   `LauncherDiscoveryRequestBuilder` which
+   is used to build a request supplied to the <<launcher-api, Launcher API>>.
+    +
+   When running tests via one of the tools provided by the JUnit Platform you can specify
+   configuration parameters as follows:
+   * <<running-tests-console-launcher,Console Launcher>>: use the `--config` command-line
+     option.
+   * <<running-tests-build-gradle-config-params,Gradle>>: use the `systemProperty` or
+     `systemProperties` DSL.
+   * <<running-tests-build-maven-config-params,Maven Surefire provider>>: use the
+     `configurationParameters` property.
+2. The `configurationParametersResources()` method in `LauncherDiscoveryRequestBuilder`.
+    +
+   When running tests via the <<running-tests-console-launcher,Console Launcher>> you can
+   specify custom configuration files using the `--config-resource` command-line option.
+3. JVM system properties.
+4. The JUnit Platform default configuration file: a file named `junit-platform.properties`
+   in the root of the class path that follows the syntax rules for Java `Properties`
+   files.
 
 NOTE: Configuration parameters are looked up in the exact order defined above.
 Consequently, configuration parameters supplied directly to the `Launcher` take
-precedence over those supplied via system properties and the configuration file.
-Similarly, configuration parameters supplied via system properties take precedence over
-those supplied via the configuration file.
+precedence over those supplied via custom configuration files, system properties, and the
+default configuration file. Similarly, configuration parameters supplied via system
+properties take precedence over those supplied via the default configuration file.
 
 [[running-tests-config-params-deactivation-pattern]]
 ==== Pattern Matching Syntax

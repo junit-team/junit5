@@ -136,3 +136,12 @@ $ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
   --config=junit.platform.reporting.open.xml.enabled=true \
   --config=junit.platform.reporting.output.dir=reports
 ----
+
+Configuration parameters can also be set in a custom properties file supplied as a classpath resource
+via the `--config-resource` option:
+
+[source,console,subs=attributes+]
+----
+$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+  --config-resource=configuration.properties
+----

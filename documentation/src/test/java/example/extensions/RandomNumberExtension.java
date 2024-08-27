@@ -18,17 +18,17 @@ import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.platform.commons.support.ModifierSupport;
 
 // end::user_guide[]
 // @formatter:off
 // tag::user_guide[]
 class RandomNumberExtension
-		implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
+		implements BeforeAllCallback, TestInstancePostProcessor, ParameterResolver {
 
 	private final java.util.Random random = new java.util.Random(System.nanoTime());
 
@@ -47,9 +47,8 @@ class RandomNumberExtension
 	 * {@code @Random} and can be assigned an integer value.
 	 */
 	@Override
-	public void beforeEach(ExtensionContext context) {
+	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 		Class<?> testClass = context.getRequiredTestClass();
-		Object testInstance = context.getRequiredTestInstance();
 		injectFields(testClass, testInstance, ModifierSupport::isNotStatic);
 	}
 

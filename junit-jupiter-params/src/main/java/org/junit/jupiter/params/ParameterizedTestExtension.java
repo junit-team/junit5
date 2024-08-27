@@ -10,9 +10,9 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.AnnotationUtils.isAnnotated;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicLong;
@@ -27,9 +27,9 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -100,7 +100,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	@SuppressWarnings("ConstantConditions")
 	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz) {
 		try {
-			return ReflectionUtils.newInstance(clazz);
+			return ReflectionSupport.newInstance(clazz);
 		}
 		catch (Exception ex) {
 			if (ex instanceof NoSuchMethodException) {

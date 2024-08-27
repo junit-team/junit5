@@ -18,8 +18,8 @@ import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestSource;
@@ -195,7 +195,7 @@ public class MethodSource implements TestSource {
 	private void lazyLoadJavaClass() {
 		if (this.javaClass == null) {
 			// @formatter:off
-			this.javaClass = ReflectionUtils.tryToLoadClass(this.className).getOrThrow(
+			this.javaClass = ReflectionSupport.tryToLoadClass(this.className).getOrThrow(
 				cause -> new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}
@@ -206,14 +206,14 @@ public class MethodSource implements TestSource {
 
 		if (this.javaMethod == null) {
 			if (StringUtils.isNotBlank(this.methodParameterTypes)) {
-				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName,
+				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName,
 					this.methodParameterTypes).orElseThrow(
 						() -> new PreconditionViolationException(String.format(
 							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
 							this.methodName, this.methodParameterTypes, this.javaClass.getName())));
 			}
 			else {
-				this.javaMethod = ReflectionUtils.findMethod(this.javaClass, this.methodName).orElseThrow(
+				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName).orElseThrow(
 					() -> new PreconditionViolationException(
 						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
 							this.javaClass.getName())));

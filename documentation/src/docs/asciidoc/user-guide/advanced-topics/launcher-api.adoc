@@ -173,6 +173,16 @@ former, clients can register custom implementations of `{LauncherInterceptor}` v
 `junit.platform.launcher.interceptors.enabled` <<running-tests-config-params,
 configuration parameter>> to `true`.
 
+[NOTE]
+====
+Since interceptors are registered before the test run starts, the
+`junit.platform.launcher.interceptors.enabled` _configuration parameter_ can only be
+supplied as a JVM system property or via the JUnit Platform configuration file (see
+<<running-tests-config-params>> for details). This _configuration parameter_ cannot be
+supplied in the `LauncherDiscoveryRequest` that is passed to the `{Launcher}`.
+====
+
+
 A typical use case is to create a custom interceptor to replace the `ClassLoader` used by
 the JUnit Platform to load test classes and engine implementations.
 

@@ -1,4 +1,4 @@
-import org.gradle.configurationcache.extensions.capitalized
+import junitbuild.extensions.capitalized
 
 plugins {
 	id("junitbuild.java-library-conventions")
@@ -30,7 +30,7 @@ listOf(9, 17).forEach { javaVersion ->
 		}
 
 		named<Checkstyle>("checkstyle${sourceSet.name.capitalized()}").configure {
-            config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
+			config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 		}
 
 		if (project in mavenizedProjects) {

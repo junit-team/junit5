@@ -11,9 +11,9 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isPrivate;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
-import static org.junit.platform.commons.util.ReflectionUtils.isPrivate;
 
 import java.util.function.Predicate;
 

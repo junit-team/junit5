@@ -1,10 +1,5 @@
-import org.gradle.api.tasks.PathSensitivity.RELATIVE
-
 plugins {
 	id("junitbuild.kotlin-library-conventions")
-	id("junitbuild.testing-conventions")
-	id("junitbuild.code-generator")
-	groovy
 	`java-test-fixtures`
 }
 
@@ -17,26 +12,10 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
-	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformSuiteEngine)
-	testImplementation(projects.junitPlatformTestkit)
-	testImplementation(testFixtures(projects.junitPlatformCommons))
-	testImplementation(kotlin("stdlib"))
-	testImplementation(libs.jimfs)
-	testImplementation(libs.junit4)
-	testImplementation(libs.kotlinx.coroutines)
-	testImplementation(libs.groovy4)
-	testImplementation(libs.memoryfilesystem)
-	testImplementation(testFixtures(projects.junitJupiterApi))
-
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
 tasks {
-	test {
-		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
-		systemProperty("developmentVersion", version)
-	}
 	jar {
 		bundle {
 			val platformVersion: String by rootProject.extra

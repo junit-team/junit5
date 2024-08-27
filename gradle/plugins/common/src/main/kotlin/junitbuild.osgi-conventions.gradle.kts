@@ -111,7 +111,6 @@ val verifyOSGi by tasks.registering(Resolve::class) {
 	// end up in the dependencies of those projects.
 	bundles(osgiVerificationClasspath)
 	properties.empty()
-	outputs.doNotCacheIf("https://github.com/bndtools/bnd/issues/5666") { true }
 }
 
 tasks.check {

@@ -22,7 +22,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
@@ -50,7 +50,7 @@ class MethodOrderingVisitor
 	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass) {
 		findAnnotation(testClass, TestMethodOrder.class)//
 				.map(TestMethodOrder::value)//
-				.<MethodOrderer> map(ReflectionUtils::newInstance)//
+				.<MethodOrderer> map(ReflectionSupport::newInstance)//
 				.map(Optional::of)//
 				.orElseGet(configuration::getDefaultTestMethodOrderer)//
 				.ifPresent(methodOrderer -> {

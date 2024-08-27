@@ -92,8 +92,9 @@ public class LauncherConstants {
 	public static final String STDERR_REPORT_ENTRY_KEY = "stderr";
 
 	/**
-	 * Property name used to provide patterns for deactivating listeners registered
-	 * via the {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
+	 * Property name used to provide patterns for deactivating
+	 * {@linkplain TestExecutionListener listeners} registered via the
+	 * {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
 	 *
 	 * <h4>Pattern Matching Syntax</h4>
 	 *
@@ -121,6 +122,17 @@ public class LauncherConstants {
 	 * {@code org.example.TheirListener}.
 	 * </ul>
 	 *
+	 * <p>Only listeners registered via the {@code ServiceLoader} mechanism can
+	 * be deactivated. In other words, any listener registered explicitly via the
+	 * {@link LauncherDiscoveryRequest} cannot be deactivated via this
+	 * configuration parameter.
+	 *
+	 * <p>In addition, since execution listeners are registered before the test
+	 * run starts, this configuration parameter can only be supplied as a JVM
+	 * system property or via the JUnit Platform configuration file but cannot
+	 * be supplied in the {@link LauncherDiscoveryRequest}} that is passed to
+	 * the {@link Launcher}.
+	 *
 	 * @see #DEACTIVATE_ALL_LISTENERS_PATTERN
 	 * @see org.junit.platform.launcher.TestExecutionListener
 	 */
@@ -142,6 +154,11 @@ public class LauncherConstants {
 	 * {@link java.util.ServiceLoader ServiceLoader} mechanism: {@value}
 	 *
 	 * <p>By default, interceptor registration is disabled.
+	 *
+	 * <p>Since interceptors are registered before the test run starts, this
+	 * configuration parameter can only be supplied as a JVM system property or
+	 * via the JUnit Platform configuration file but cannot be supplied in the
+	 * {@link LauncherDiscoveryRequest}} that is passed to the {@link Launcher}.
 	 *
 	 * @see LauncherInterceptor
 	 */

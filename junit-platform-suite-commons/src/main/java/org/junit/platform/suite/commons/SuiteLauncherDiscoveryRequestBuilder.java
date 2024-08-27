@@ -11,8 +11,8 @@
 package org.junit.platform.suite.commons;
 
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectClasspathResource;
 import static org.junit.platform.suite.commons.AdditionalDiscoverySelectors.selectFile;
@@ -46,6 +46,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.suite.api.ConfigurationParameter;
+import org.junit.platform.suite.api.ConfigurationParametersResource;
 import org.junit.platform.suite.api.DisableParentConfigurationParameters;
 import org.junit.platform.suite.api.ExcludeClassNamePatterns;
 import org.junit.platform.suite.api.ExcludeEngines;
@@ -214,6 +215,11 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	public SuiteLauncherDiscoveryRequestBuilder configurationParametersResource(String resourceFile) {
+		this.delegate.configurationParametersResources(resourceFile);
+		return this;
+	}
+
 	/**
 	 * Set the parent configuration parameters to use for the request.
 	 *
@@ -295,6 +301,8 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		// @formatter:off
 		findRepeatableAnnotations(suiteClass, ConfigurationParameter.class)
 				.forEach(configuration -> configurationParameter(configuration.key(), configuration.value()));
+		findRepeatableAnnotations(suiteClass, ConfigurationParametersResource.class)
+				.forEach(configResource -> configurationParametersResource(configResource.value()));
 		findAnnotation(suiteClass, DisableParentConfigurationParameters.class)
 				.ifPresent(__ -> this.enableParentConfigurationParameters = false);
 		// @formatter:on

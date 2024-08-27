@@ -1,7 +1,6 @@
 plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
-	id("junitbuild.testing-conventions")
 	id("junitbuild.jmh-conventions")
 }
 
@@ -15,15 +14,7 @@ dependencies {
 
 	shadowed(libs.univocity.parsers)
 
-	testImplementation(projects.junitPlatformTestkit)
-	testImplementation(projects.junitJupiterEngine)
-	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformSuiteEngine)
-	testImplementation(testFixtures(projects.junitPlatformCommons))
-	testImplementation(testFixtures(projects.junitJupiterEngine))
-
 	compileOnly(kotlin("stdlib"))
-	testImplementation(kotlin("stdlib"))
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)

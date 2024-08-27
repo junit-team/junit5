@@ -1,3 +1,6 @@
+:testDir: ../../../../src/test/java
+:kotlinTestDir: ../../../../src/test/kotlin
+
 [[extensions]]
 == Extension Model
 
@@ -126,20 +129,8 @@ important to note which extension APIs are implemented and for what reasons.
 Specifically, `RandomNumberExtension` implements the following extension APIs:
 
 - `BeforeAllCallback`: to support static field injection
-- `BeforeEachCallback`: to support non-static field injection
+- `TestInstancePostProcessor`: to support non-static field injection
 - `ParameterResolver`: to support constructor and method injection
-
-[NOTE]
-====
-Ideally, the `RandomNumberExtension` would implement `TestInstancePostProcessor` instead
-of `BeforeEachCallback` in order to support non-static field injection immediately after
-the test class has been instantiated.
-
-However, JUnit Jupiter currently does not allow a `TestInstancePostProcessor` to be
-registered via `@ExtendWith` on a non-static field (see
-link:{junit5-repo}/issues/3437[issue 3437]). In light of that, the `RandomNumberExtension`
-implements `BeforeEachCallback` as an alternative approach.
-====
 
 [source,java,indent=0]
 ----
@@ -269,11 +260,8 @@ will be registered after the test class has been instantiated and after each reg
 (potentially injecting the instance of the extension to be used into the annotated
 field). Thus, if such an _instance extension_ implements class-level or instance-level
 extension APIs such as `BeforeAllCallback`, `AfterAllCallback`, or
-`TestInstancePostProcessor`, those APIs will not be honored. By default, an instance
-extension will be registered _after_ extensions that are registered at the method level
-via `@ExtendWith`; however, if the test class is configured with
-`@TestInstance(Lifecycle.PER_CLASS)` semantics, an instance extension will be registered
-_before_ extensions that are registered at the method level via `@ExtendWith`.
+`TestInstancePostProcessor`, those APIs will not be honored. Instance extensions will be
+registered _before_ extensions that are registered at the method level via `@ExtendWith`.
 
 In the following example, the `docs` field in the test class is initialized
 programmatically by invoking a custom `lookUpDocsDir()` method and supplying the result
@@ -484,6 +472,57 @@ constructor invocations, using the `{ExecutableInvoker}` available via the
 `getExecutableInvoker()` method in the `ExtensionContext`.
 ====
 
+[[extensions-parameter-resolution-conflicts]]
+==== Parameter Conflicts
+
+If multiple implementations of `ParameterResolver` that support the same type are
+registered for a test, a `ParameterResolutionException` will be thrown, with a
+message to indicate that competing resolvers have been discovered. See the following
+example:
+
+[source,java,indent=0]
+.Conflicting parameter resolution due to multiple resolvers claiming support for integers
+----
+include::{testDir}/example/extensions/ParameterResolverConflictDemo.java[tags=user_guide]
+----
+
+If the conflicting `ParameterResolver` implementations are applied to different test
+methods as shown in the following example, no conflict occurs.
+
+[source,java,indent=0]
+.Fine-grained registration to avoid conflict
+----
+include::{testDir}/example/extensions/ParameterResolverNoConflictDemo.java[tags=user_guide]
+----
+
+If the conflicting `ParameterResolver` implementations need to be applied to the same test
+method, you can implement a custom type or custom annotation as illustrated by
+`{CustomTypeParameterResolver}` and `{CustomAnnotationParameterResolver}`, respectively.
+
+[source,java,indent=0]
+.Custom type to resolve duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverCustomTypeDemo.java[tags=user_guide]
+----
+
+A custom annotation makes the duplicate type distinguishable from its counterpart:
+
+[source,java,indent=0]
+.Custom annotation to resolve duplicate types
+----
+include::{testDir}/example/extensions/ParameterResolverCustomAnnotationDemo.java[tags=user_guide]
+----
+
+JUnit includes some built-in parameter resolvers that can cause conflicts if a resolver
+attempts to claim their supported types. For example, `{TestInfo}` provides metadata about
+tests. See <<writing-tests-dependency-injection>> for details. Third-party frameworks such
+as Spring may also define parameter resolvers. Apply one of the techniques in this section
+to resolve any conflicts.
+
+Parameterized tests are another potential source of conflict. Ensure that tests annotated
+with `@ParameterizedTest` are not also annotated with `@Test` and see
+<<writing-tests-parameterized-tests-consuming-arguments>> for more details.
+
 [[extensions-test-result-processing]]
 === Test Result Processing
 
@@ -693,7 +732,6 @@ Please refer to the implementations of <<writing-tests-repeated-tests>> or
 <<writing-tests-parameterized-tests>> which use this extension point to provide their
 functionality.
 
-
 [[extensions-keeping-state]]
 === Keeping State in Extensions
 
@@ -713,6 +751,35 @@ NOTE: An extension context store is bound to its extension context lifecycle. Wh
 extension context lifecycle ends it closes its associated store. All stored values
 that are instances of `CloseableResource` are notified by an invocation of their `close()`
 method in the inverse order they were added in.
+
+An example implementation of `CloseableResource` is shown below, using an `HttpServer`
+resource.
+
+[source,java,indent=0]
+.`HttpServer` resource implementing `CloseableResource`
+----
+include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
+----
+
+This resource can then be stored in the desired `ExtensionContext`. It may be stored at
+class or method level, if desired, but this may add unnecessary overhead for this type of
+resource. For this example it might be prudent to store it at root level and instantiate
+it lazily to ensure it's only created once per test run and reused across different test
+classes and methods.
+
+[source,java,indent=0]
+.Lazily storing in root context with `Store.getOrComputeIfAbsent`
+----
+include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
+----
+
+[source,java,indent=0]
+.A test case using the `HttpServerExtension`
+----
+include::{testDir}/example/HttpServerDemo.java[tags=user_guide]
+----
+
+[[extensions-conditional-test-execution]]
 
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions

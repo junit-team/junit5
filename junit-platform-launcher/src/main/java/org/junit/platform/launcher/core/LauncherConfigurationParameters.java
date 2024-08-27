@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.stream.Collectors.joining;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
@@ -25,10 +27,12 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -93,6 +97,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	static final class Builder {
 
 		private final Map<String, String> explicitParameters = new HashMap<>();
+		private final List<String> configResources = new ArrayList<>();
 		private boolean implicitProvidersEnabled = true;
 		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
 		private ConfigurationParameters parentConfigurationParameters;
@@ -103,6 +108,12 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		Builder explicitParameters(Map<String, String> parameters) {
 			Preconditions.notNull(parameters, "configuration parameters must not be null");
 			explicitParameters.putAll(parameters);
+			return this;
+		}
+
+		Builder configurationResources(List<String> configResources) {
+			Preconditions.notNull(configResources, "configResources must not be null");
+			this.configResources.addAll(configResources);
 			return this;
 		}
 
@@ -128,6 +139,9 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			if (!explicitParameters.isEmpty()) {
 				parameterProviders.add(ParameterProvider.explicit(explicitParameters));
 			}
+
+			CollectionUtils.forEachInReverseOrder(configResources,
+				configResource -> parameterProviders.add(ParameterProvider.propertiesFile(configResource)));
 
 			if (parentConfigurationParameters != null) {
 				parameterProviders.add(ParameterProvider.inherited(parentConfigurationParameters));
@@ -261,13 +275,21 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			Set<URL> resources = new LinkedHashSet<>(Collections.list(classLoader.getResources(configFileName)));
 
 			if (!resources.isEmpty()) {
+
+				URL configFileUrl = CollectionUtils.getFirstElement(resources).get();
+
 				if (resources.size() > 1) {
-					logger.warn(() -> String.format(
-						"Discovered %d '%s' configuration files in the classpath; only the first will be used.",
-						resources.size(), configFileName));
+					logger.warn(() -> {
+						String formattedResourceList = Stream.concat( //
+							Stream.of(configFileUrl + " (*)"), //
+							resources.stream().skip(1).map(URL::toString) //
+						).collect(joining("\n- ", "\n- ", ""));
+						return String.format(
+							"Discovered %d '%s' configuration files on the classpath (see below); only the first (*) will be used.%s",
+							resources.size(), configFileName, formattedResourceList);
+					});
 				}
 
-				URL configFileUrl = resources.iterator().next(); // same as List#get(0)
 				logger.config(() -> String.format(
 					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
 				URLConnection urlConnection = configFileUrl.openConnection();

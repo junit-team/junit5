@@ -11,7 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
-import static org.junit.platform.commons.util.AnnotationUtils.findRepeatableAnnotations;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -69,6 +69,7 @@ public class TestDiscoveryOptions {
 	private List<String> includedTagExpressions = emptyList();
 	private List<String> excludedTagExpressions = emptyList();
 
+	private List<String> configurationParametersResources = emptyList();
 	private Map<String, String> configurationParameters = emptyMap();
 
 	public boolean isScanModulepath() {
@@ -274,4 +275,12 @@ public class TestDiscoveryOptions {
 		this.configurationParameters = configurationParameters;
 	}
 
+	public List<String> getConfigurationParametersResources() {
+		return this.configurationParametersResources;
+	}
+
+	public TestDiscoveryOptions setConfigurationParametersResources(List<String> configurationParametersResources) {
+		this.configurationParametersResources = configurationParametersResources;
+		return this;
+	}
 }

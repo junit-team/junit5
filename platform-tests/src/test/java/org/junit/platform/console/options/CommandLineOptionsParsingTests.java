@@ -538,9 +538,27 @@ class CommandLineOptionsParsingTests {
 		// @formatter:on
 	}
 
+	@ParameterizedTest
+	@EnumSource
+	void parseValidConfigurationParametersResource(ArgsType type) {
+		// @formatter:off
+		assertAll(
+				() -> assertThat(type.parseArgLine("--config-resource foo.properties").discovery.getConfigurationParametersResources())
+						.containsOnly("foo.properties"),
+				() -> assertThat(type.parseArgLine("--config-resource foo.properties --config-resource bar.properties").discovery.getConfigurationParametersResources())
+						.containsExactly("foo.properties", "bar.properties")
+		);
+		// @formatter:on
+	}
+
 	@Test
 	void parseInvalidConfigurationParameters() {
 		assertOptionWithMissingRequiredArgumentThrowsException("-config", "--config");
+	}
+
+	@Test
+	void parseInvalidConfigurationParametersResource() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--config-resource");
 	}
 
 	@ParameterizedTest

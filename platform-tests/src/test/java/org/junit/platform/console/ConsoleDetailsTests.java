@@ -17,7 +17,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
+import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.getFullyQualifiedMethodName;
 
 import java.io.File;
@@ -78,7 +79,7 @@ class ConsoleDetailsTests {
 		// String containerName = containerClass.getSimpleName();
 		List<DynamicNode> nodes = new ArrayList<>();
 		Map<Details, List<DynamicTest>> map = new EnumMap<>(Details.class);
-		for (var method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class))) {
+		for (var method : findMethods(containerClass, m -> m.isAnnotationPresent(Test.class), TOP_DOWN)) {
 			var methodName = method.getName();
 			var types = method.getParameterTypes();
 			for (var details : Details.values()) {

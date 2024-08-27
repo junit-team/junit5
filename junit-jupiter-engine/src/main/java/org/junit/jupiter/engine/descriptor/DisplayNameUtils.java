@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static org.junit.platform.commons.util.AnnotationUtils.findAnnotation;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
@@ -28,9 +28,9 @@ import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.support.SearchOption;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -122,7 +122,7 @@ final class DisplayNameUtils {
 	private static Optional<DisplayNameGenerator> findDisplayNameGenerator(Class<?> testClass) {
 		Preconditions.notNull(testClass, "Test class must not be null");
 
-		return AnnotationUtils.findAnnotation(testClass, DisplayNameGeneration.class, true) //
+		return findAnnotation(testClass, DisplayNameGeneration.class, SearchOption.INCLUDE_ENCLOSING_CLASSES) //
 				.map(DisplayNameGeneration::value) //
 				.map(displayNameGeneratorClass -> {
 					if (displayNameGeneratorClass == Standard.class) {
@@ -137,7 +137,7 @@ final class DisplayNameUtils {
 					if (displayNameGeneratorClass == IndicativeSentences.class) {
 						return indicativeSentencesGenerator;
 					}
-					return ReflectionUtils.newInstance(displayNameGeneratorClass);
+					return ReflectionSupport.newInstance(displayNameGeneratorClass);
 				});
 	}
 

@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -51,7 +52,7 @@ public class IsTestClassWithTests implements Predicate<Class<?>> {
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {
-		return !ReflectionUtils.findNestedClasses(candidate, isNestedTestClass).isEmpty();
+		return !ReflectionSupport.findNestedClasses(candidate, isNestedTestClass).isEmpty();
 	}
 
 }

@@ -1,0 +1,12 @@
+comment: false
+
+coverage:
+  status:
+    project:
+      default:
+        threshold: "1"
+        informational: true
+    patch: off
+
+codecov:
+  max_report_age: off

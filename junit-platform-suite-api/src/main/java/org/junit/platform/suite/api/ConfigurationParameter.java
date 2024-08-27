@@ -29,6 +29,7 @@ import org.apiguardian.api.API;
  * a test suite on the JUnit Platform.
  *
  * @since 1.8
+ * @see ConfigurationParametersResource
  * @see DisableParentConfigurationParameters
  * @see Suite
  * @see org.junit.platform.runner.JUnitPlatform

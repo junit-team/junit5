@@ -7,8 +7,8 @@ val license: License by rootProject.extra
 spotless {
 
 	format("misc") {
-		target("*.gradle.kts", "buildSrc/**/*.gradle.kts", "*.gitignore")
-		targetExclude("buildSrc/build/**")
+		target("*.gradle.kts", "gradle/plugins/**/*.gradle.kts", "*.gitignore")
+		targetExclude("gradle/plugins/**/build/**")
 		indentWithTabs()
 		trimTrailingWhitespace()
 		endWithNewline()
@@ -16,15 +16,14 @@ spotless {
 
 	format("documentation") {
 		target("*.adoc", "*.md", "src/**/*.adoc", "src/**/*.md")
-		targetExclude("**/build", "**/target")
 		trimTrailingWhitespace()
 		endWithNewline()
 	}
 
 	pluginManager.withPlugin("java") {
 
-        val configDir = rootProject.layout.projectDirectory.dir("gradle/config/eclipse")
-        val importOrderConfigFile = configDir.file("junit-eclipse.importorder")
+		val configDir = rootProject.layout.projectDirectory.dir("gradle/config/eclipse")
+		val importOrderConfigFile = configDir.file("junit-eclipse.importorder")
 		val javaFormatterConfigFile = configDir.file("junit-eclipse-formatter-settings.xml")
 
 		java {
@@ -46,5 +45,14 @@ spotless {
 			trimTrailingWhitespace()
 			endWithNewline()
 		}
+	}
+}
+
+tasks {
+	named("spotlessDocumentation") {
+		outputs.doNotCacheIf("negative avoidance savings") { true }
+	}
+	named("spotlessMisc") {
+		outputs.doNotCacheIf("negative avoidance savings") { true }
 	}
 }

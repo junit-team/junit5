@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final List<DiscoveryFilter<?>> discoveryFilters = new ArrayList<>();
 	private final List<PostDiscoveryFilter> postDiscoveryFilters = new ArrayList<>();
 	private final Map<String, String> configurationParameters = new HashMap<>();
+	private final List<String> configurationParametersResources = new ArrayList<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
 	private ConfigurationParameters parentConfigurationParameters;
@@ -195,6 +197,18 @@ public final class LauncherDiscoveryRequestBuilder {
 	public LauncherDiscoveryRequestBuilder configurationParameters(Map<String, String> configurationParameters) {
 		Preconditions.notNull(configurationParameters, "configuration parameters map must not be null");
 		configurationParameters.forEach(this::configurationParameter);
+		return this;
+	}
+
+	/**
+	 * Add all of the supplied configuration parameters resource files to the request.
+	 * @param paths the classpath locations of the properties files
+	 * never {@code null}
+	 * @return this builder for method chaining
+	 */
+	public LauncherDiscoveryRequestBuilder configurationParametersResources(String... paths) {
+		Preconditions.notNull(paths, "property file paths must not be null");
+		Collections.addAll(configurationParametersResources, paths);
 		return this;
 	}
 
@@ -300,6 +314,7 @@ public final class LauncherDiscoveryRequestBuilder {
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
 		Builder builder = LauncherConfigurationParameters.builder() //
 				.explicitParameters(this.configurationParameters) //
+				.configurationResources(this.configurationParametersResources) //
 				.enableImplicitProviders(this.implicitConfigurationParametersEnabled);
 
 		if (this.parentConfigurationParameters != null) {

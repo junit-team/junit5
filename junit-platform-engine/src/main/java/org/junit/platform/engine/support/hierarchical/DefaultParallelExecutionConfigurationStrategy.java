@@ -18,8 +18,8 @@ import java.util.Locale;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
@@ -99,13 +99,13 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 		public ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
 			String className = configurationParameters.get(CONFIG_CUSTOM_CLASS_PROPERTY_NAME).orElseThrow(
 				() -> new JUnitException(CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " must be set"));
-			return ReflectionUtils.tryToLoadClass(className) //
+			return ReflectionSupport.tryToLoadClass(className) //
 					.andThenTry(strategyClass -> {
 						Preconditions.condition(
 							ParallelExecutionConfigurationStrategy.class.isAssignableFrom(strategyClass),
 							CONFIG_CUSTOM_CLASS_PROPERTY_NAME + " does not implement "
 									+ ParallelExecutionConfigurationStrategy.class);
-						return (ParallelExecutionConfigurationStrategy) ReflectionUtils.newInstance(strategyClass);
+						return (ParallelExecutionConfigurationStrategy) ReflectionSupport.newInstance(strategyClass);
 					}) //
 					.andThenTry(strategy -> strategy.createConfiguration(configurationParameters)) //
 					.getOrThrow(cause -> new JUnitException(

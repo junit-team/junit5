@@ -1,7 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
-	id("junitbuild.testing-conventions")
 }
 
 description = "JUnit Jupiter Migration Support"
@@ -12,11 +11,6 @@ dependencies {
 	api(projects.junitJupiterApi)
 
 	compileOnlyApi(libs.apiguardian)
-
-	testImplementation(projects.junitJupiterEngine)
-	testImplementation(projects.junitPlatformLauncher)
-	testImplementation(projects.junitPlatformSuiteEngine)
-	testImplementation(projects.junitPlatformTestkit)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)

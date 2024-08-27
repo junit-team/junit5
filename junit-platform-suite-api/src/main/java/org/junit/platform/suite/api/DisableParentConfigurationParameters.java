@@ -24,16 +24,18 @@ import org.apiguardian.api.API;
 /**
  * Disable parent configuration parameters.
  *
- * <p>By default a suite discovers tests using the configuration parameters
+ * <p>By default, a suite discovers tests using the configuration parameters
  * explicitly configured via {@link ConfigurationParameter @ConfigurationParameter}
- * and the configuration parameters from the discovery request that was used to
- * discover the suite.
+ * and {@link ConfigurationParametersResource} as well as the configuration
+ * parameters from the discovery request that was used to discover the suite.
  *
  * <p>Annotating a suite with this annotation disables the latter source so
- * that only explicit configuration parameters are taken into account.
+ * that only explicit configuration parameters and resources are taken into
+ * account.
  *
  * @since 1.8
  * @see ConfigurationParameter
+ * @see ConfigurationParametersResource
  * @see Suite
  */
 @Retention(RetentionPolicy.RUNTIME)

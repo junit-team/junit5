@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.ConfigurationParameters;
 
 /**
@@ -49,9 +49,9 @@ class InstantiatingConfigurationParameterConverter<T> {
 	}
 
 	private Supplier<Optional<T>> newInstanceSupplier(String className, String key) {
-		Try<Class<?>> clazz = ReflectionUtils.tryToLoadClass(className);
+		Try<Class<?>> clazz = ReflectionSupport.tryToLoadClass(className);
 		// @formatter:off
-		return () -> clazz.andThenTry(ReflectionUtils::newInstance)
+		return () -> clazz.andThenTry(ReflectionSupport::newInstance)
 				.andThenTry(this.clazz::cast)
 				.ifSuccess(generator -> logSuccessMessage(className, key))
 				.ifFailure(cause -> logFailureMessage(className, key, cause))
