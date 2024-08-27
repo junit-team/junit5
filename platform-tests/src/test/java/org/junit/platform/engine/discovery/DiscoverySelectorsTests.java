@@ -14,6 +14,7 @@ import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
@@ -303,7 +304,10 @@ class DiscoverySelectorsTests {
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
 
 			selector = selectClasspathResource("org/junit/platform/commons/example.resource");
-			assertEquals("org/junit/platform/commons/example.resource", selector.getClasspathResource().getName());
+			var classpathResources = selector.getClasspathResources();
+			assertAll(() -> assertThat(classpathResources).hasSize(1), () -> assertThat(classpathResources) //
+					.extracting(Resource::getName) //
+					.containsExactly("org/junit/platform/commons/example.resource"));
 		}
 
 		@Test

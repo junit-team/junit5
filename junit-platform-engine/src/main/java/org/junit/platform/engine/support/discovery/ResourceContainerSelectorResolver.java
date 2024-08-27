@@ -14,15 +14,12 @@ import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInClasspathRoot;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInPackage;
 import static org.junit.platform.commons.util.ReflectionUtils.findAllResourcesInModule;
-import static org.junit.platform.commons.util.ResourceUtils.getClassLoaderResource;
-import static org.junit.platform.commons.util.ResourceUtils.packageName;
+import static org.junit.platform.engine.support.discovery.ResourceUtils.packageName;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.selectors;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.support.Resource;
@@ -36,7 +33,6 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.12
  */
 class ResourceContainerSelectorResolver implements SelectorResolver {
-	private final Function<Resource, Optional<Resource>> classLoaderResource = getClassLoaderResource();
 	private final Predicate<Resource> packageFilter;
 	private final Predicate<Resource> resourceFilter;
 
@@ -62,10 +58,6 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 
 	private Resolution resourceSelectors(List<Resource> resources) {
 		Set<ClasspathResourceSelector> classpathResources = resources.stream() //
-				.map(classLoaderResource) //
-				.filter(Optional::isPresent) //
-				.map(Optional::get) //
-				.distinct() // Ensure the resourceFilter only sees unique resources
 				.filter(resourceFilter) //
 				.map(DiscoverySelectors::selectClasspathResource) //
 				.collect(toSet());

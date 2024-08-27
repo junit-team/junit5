@@ -10,10 +10,13 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -21,6 +24,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -53,7 +57,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
 	private final FilePosition position;
-	private Resource classpathResource;
+	private List<Resource> classpathResources;
 
 	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
@@ -61,9 +65,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		this.position = position;
 	}
 
-	ClasspathResourceSelector(Resource classpathResource) {
-		this(classpathResource.getName(), null);
-		this.classpathResource = classpathResource;
+	ClasspathResourceSelector(Resource... classpathResources) {
+		this(getClasspathResourceName(classpathResources), null);
+		this.classpathResources = Arrays.asList(classpathResources);
+	}
+
+	private static String getClasspathResourceName(Resource[] classpathResources) {
+		Preconditions.notEmpty(classpathResources, "classpathResources array must not be null or empty");
+		Preconditions.containsNoNullElements(classpathResources, "individual classpathResources must not be null");
+		List<String> names = Arrays.stream(classpathResources).map(Resource::getName).distinct().collect(toList());
+		Preconditions.condition(names.size() == 1, "all classpathResources must have the same name");
+		return names.get(0);
 	}
 
 	/**
@@ -81,7 +93,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected {@link Resource}.
+	 * Get the selected {@link Resource Resources}.
 	 *
 	 * <p>If the {@link Resource} was not provided, but only the name, this
 	 * method attempts to lazily load the {@link Resource} based on its name and
@@ -91,15 +103,15 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * @since 1.12
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public Resource getClasspathResource() {
-		if (this.classpathResource == null) {
+	public List<Resource> getClasspathResources() {
+		if (this.classpathResources == null) {
 			// @formatter:off
-			Try<Resource> tryToGetResource = ReflectionUtils.tryToGetResource(this.classpathResourceName);
-			this.classpathResource = tryToGetResource.getOrThrow(cause ->
+			Try<List<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
+			this.classpathResources = tryToGetResource.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
 			// @formatter:on
 		}
-		return this.classpathResource;
+		return this.classpathResources;
 	}
 
 	/**
@@ -123,7 +135,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
 		return Objects.equals(this.classpathResourceName, that.classpathResourceName)
-				&& Objects.equals(this.position, that.position);
+				&& Objects.equals(this.position, that.position)
+				&& Objects.equals(this.classpathResources, that.classpathResources);
 	}
 
 	/**
@@ -132,7 +145,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classpathResourceName, this.position);
+		return Objects.hash(this.classpathResourceName, this.position, this.classpathResources);
 	}
 
 	@Override

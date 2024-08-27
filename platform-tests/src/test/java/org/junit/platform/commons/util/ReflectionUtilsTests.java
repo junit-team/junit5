@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -715,31 +716,34 @@ class ReflectionUtilsTests {
 
 		@Test
 		void tryToGetResourcePreconditions() {
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource(""));
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource("   "));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResources(""));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResources("   "));
 
-			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResource(null));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResources(null));
 			assertThrows(PreconditionViolationException.class,
-				() -> ReflectionUtils.tryToGetResource("org/junit/platform/commons/example.resource", null));
+				() -> ReflectionUtils.tryToGetResources("org/junit/platform/commons/example.resource", null));
 		}
 
 		@Test
 		void tryToGetResource() {
-			var tryToGetResource = ReflectionUtils.tryToGetResource("org/junit/platform/commons/example.resource");
+			var tryToGetResource = ReflectionUtils.tryToGetResources("org/junit/platform/commons/example.resource");
 			var resource = assertDoesNotThrow(tryToGetResource::get);
-			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
+			assertAll(() -> assertThat(resource).hasSize(1),
+				() -> assertThat(resource.get(0).getName()).isEqualTo("org/junit/platform/commons/example.resource"));
+
 		}
 
 		@Test
 		void tryToGetResourceWithPrefixedSlash() {
-			var tryToGetResource = ReflectionUtils.tryToGetResource("/org/junit/platform/commons/example.resource");
+			var tryToGetResource = ReflectionUtils.tryToGetResources("/org/junit/platform/commons/example.resource");
 			var resource = assertDoesNotThrow(tryToGetResource::get);
-			assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
+			assertAll(() -> assertThat(resource).hasSize(1),
+				() -> assertThat(resource.get(0).getName()).isEqualTo("org/junit/platform/commons/example.resource"));
 		}
 
 		@Test
 		void tryToGetResourceWhenResourceNotFound() {
-			var tryToGetResource = ReflectionUtils.tryToGetResource("org/junit/platform/commons/no-such.resource");
+			var tryToGetResource = ReflectionUtils.tryToGetResources("org/junit/platform/commons/no-such.resource");
 			assertThrows(NullPointerException.class, tryToGetResource::get);
 		}
 	}

@@ -133,7 +133,7 @@ class ReflectionSupportTests {
 	 */
 	@Test
 	void tryToGetResource() {
-		assertEquals(ReflectionUtils.tryToGetResource("default-package.resource").toOptional(),
+		assertEquals(ReflectionUtils.tryToGetResources("default-package.resource").toOptional(),
 			ReflectionSupport.tryToGetResource("default-package.resource").toOptional());
 	}
 
