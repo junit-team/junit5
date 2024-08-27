@@ -98,9 +98,9 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * Get the selected {@link Resource resources}.
 	 *
 	 * <p>If the {@link Resource resources} were not provided, but only their name,
-	 * this method attempts to lazily load the {@link Resource} based on its name
-	 * and throws a {@link PreconditionViolationException} if the resource cannot
-	 * be loaded.
+	 * this method attempts to lazily load the {@link Resource resources} based on
+	 * their name and throws a {@link PreconditionViolationException} if the
+	 * resource cannot be loaded.
 	 *
 	 * @since 1.12
 	 */
