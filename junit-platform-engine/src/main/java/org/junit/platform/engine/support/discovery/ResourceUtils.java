@@ -33,7 +33,6 @@ class ResourceUtils {
 	 * package name.
 	 */
 	static Predicate<Resource> packageName(Predicate<String> packageFilter) {
-		// TODO: Filter out invalid package names? META-INF and such?
 		return resource -> packageFilter.test(packageName(resource.getName()));
 	}
 
