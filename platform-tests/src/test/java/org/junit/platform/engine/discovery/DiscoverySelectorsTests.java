@@ -39,6 +39,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -293,7 +294,10 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
 			assertViolatesPrecondition(() -> selectClasspathResource("    "));
 			assertViolatesPrecondition(() -> selectClasspathResource("\t"));
-			assertViolatesPrecondition(() -> selectClasspathResource((Resource) null));
+			assertViolatesPrecondition(() -> selectClasspathResource((List<Resource>) null));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.emptyList()));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singletonList(null)));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singletonList(null)));
 
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");

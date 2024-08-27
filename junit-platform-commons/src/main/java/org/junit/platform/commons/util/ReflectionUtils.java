@@ -895,12 +895,12 @@ public final class ReflectionUtils {
 	/**
 	 * Try to get {@linkplain Resource resources} by their name, using the {@link ClassLoaderUtils#getDefaultClassLoader()}.
 	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String)}
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String)}
 	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resources to load; never {@code null} or blank
 	 * @since 1.12
-	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)
 	 */
 	@API(status = INTERNAL, since = "1.12")
 	public static Try<List<Resource>> tryToGetResources(String classpathResourceName) {
@@ -910,7 +910,7 @@ public final class ReflectionUtils {
 	/**
 	 * Try to get {@linkplain Resource resources} by their name, using the supplied {@link ClassLoader}.
 	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)}
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)}
 	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resources to load; never {@code null} or blank

@@ -10,12 +10,13 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Collections.unmodifiableList;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -65,15 +66,21 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		this.position = position;
 	}
 
-	ClasspathResourceSelector(Resource... classpathResources) {
+	ClasspathResourceSelector(List<Resource> classpathResources) {
 		this(getClasspathResourceName(classpathResources), null);
-		this.classpathResources = Arrays.asList(classpathResources);
+		this.classpathResources = unmodifiableList(copyAndSort(classpathResources));
 	}
 
-	private static String getClasspathResourceName(Resource[] classpathResources) {
+	private static List<Resource> copyAndSort(List<Resource> classpathResources) {
+		return classpathResources.stream() //
+				.sorted(comparing(Resource::getUri)) //
+				.collect(toList());
+	}
+
+	private static String getClasspathResourceName(List<Resource> classpathResources) {
 		Preconditions.notEmpty(classpathResources, "classpathResources array must not be null or empty");
 		Preconditions.containsNoNullElements(classpathResources, "individual classpathResources must not be null");
-		List<String> names = Arrays.stream(classpathResources).map(Resource::getName).distinct().collect(toList());
+		List<String> names = classpathResources.stream().map(Resource::getName).distinct().collect(toList());
 		Preconditions.condition(names.size() == 1, "all classpathResources must have the same name");
 		return names.get(0);
 	}
@@ -93,11 +100,11 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	}
 
 	/**
-	 * Get the selected {@link Resource Resources}.
+	 * Get the selected {@link Resource resources}.
 	 *
-	 * <p>If the {@link Resource} was not provided, but only the name, this
-	 * method attempts to lazily load the {@link Resource} based on its name and
-	 * throws a {@link PreconditionViolationException} if the resource cannot
+	 * <p>If the {@link Resource resources} were not provided, but only their name,
+	 * this method attempts to lazily load the {@link Resource} based on its name
+	 * and throws a {@link PreconditionViolationException} if the resource cannot
 	 * be loaded.
 	 *
 	 * @since 1.12
@@ -107,9 +114,10 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		if (this.classpathResources == null) {
 			// @formatter:off
 			Try<List<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
-			this.classpathResources = tryToGetResource.getOrThrow(cause ->
+			List<Resource> classpathResources = tryToGetResource.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
 			// @formatter:on
+			this.classpathResources = unmodifiableList(classpathResources);
 		}
 		return this.classpathResources;
 	}

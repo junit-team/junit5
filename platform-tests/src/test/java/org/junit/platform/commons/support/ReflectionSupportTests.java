@@ -123,18 +123,18 @@ class ReflectionSupportTests {
 	 * @since 1.12
 	 */
 	@Test
-	void tryToGetResourcePreconditions() {
-		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResource(null));
-		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResource(""));
+	void tryToGetResourcesPreconditions() {
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(null));
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(""));
 	}
 
 	/**
 	 * @since 1.12
 	 */
 	@Test
-	void tryToGetResource() {
+	void tryToGetResources() {
 		assertEquals(ReflectionUtils.tryToGetResources("default-package.resource").toOptional(),
-			ReflectionSupport.tryToGetResource("default-package.resource").toOptional());
+			ReflectionSupport.tryToGetResources("default-package.resource").toOptional());
 	}
 
 	@Test

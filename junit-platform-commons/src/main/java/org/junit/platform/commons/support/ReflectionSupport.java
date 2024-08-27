@@ -129,7 +129,7 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResource(String classpathResourceName) {
+	public static Try<List<Resource>> tryToGetResources(String classpathResourceName) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName);
 	}
 
@@ -151,7 +151,7 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResource(String classpathResourceName, ClassLoader classLoader) {
+	public static Try<List<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName, classLoader);
 	}
 

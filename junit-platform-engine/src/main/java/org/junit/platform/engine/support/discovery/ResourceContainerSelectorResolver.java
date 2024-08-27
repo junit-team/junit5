@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.discovery;
 
+import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInClasspathRoot;
 import static org.junit.platform.commons.support.ReflectionSupport.findAllResourcesInPackage;
@@ -57,15 +58,18 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 	}
 
 	private Resolution resourceSelectors(List<Resource> resources) {
-		Set<ClasspathResourceSelector> classpathResources = resources.stream() //
+		Set<ClasspathResourceSelector> selectors = resources.stream() //
 				.filter(resourceFilter) //
+				.collect(groupingBy(Resource::getName)) //
+				.values() //
+				.stream() //
 				.map(DiscoverySelectors::selectClasspathResource) //
 				.collect(toSet());
 
-		if (classpathResources.isEmpty()) {
+		if (selectors.isEmpty()) {
 			return unresolved();
 		}
-		return selectors(classpathResources);
+		return selectors(selectors);
 	}
 
 }

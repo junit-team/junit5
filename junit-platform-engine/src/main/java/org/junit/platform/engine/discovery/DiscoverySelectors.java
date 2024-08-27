@@ -313,7 +313,7 @@ public final class DiscoverySelectors {
 	 * {@code null} or blank
 	 * @param position the position inside the classpath resource; may be {@code null}
 	 * @see #selectClasspathResource(String)
-	 * @see #selectClasspathResource(Resource)
+	 * @see #selectClasspathResource(List)
 	 * @see ClasspathResourceSelector
 	 * @see ClassLoader#getResource(String)
 	 * @see ClassLoader#getResourceAsStream(String)
@@ -327,7 +327,7 @@ public final class DiscoverySelectors {
 
 	/**
 	 * Create a {@code ClasspathResourceSelector} for the supplied classpath
-	 * resource.
+	 * resources.
 	 *
 	 * <p>Since {@linkplain org.junit.platform.engine.TestEngine engines} are not
 	 * expected to modify the classpath, the supplied resource must be on the
@@ -339,17 +339,17 @@ public final class DiscoverySelectors {
 	 * named or unnamed modules. These resources are also considered to be
 	 * classpath resources.
 	 *
-	 * @param classpathResource the classpath resource; never {@code null}
+	 * @param classpathResources the classpath resource; never {@code null}
 	 * @since 1.12
 	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
-	 * @see ReflectionSupport#tryToGetResource(String)
+	 * @see ReflectionSupport#tryToGetResources(String)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {
-		Preconditions.notNull(classpathResource, "classpath resource must not be null or blank");
-		return new ClasspathResourceSelector(classpathResource);
+	public static ClasspathResourceSelector selectClasspathResource(List<Resource> classpathResources) {
+		Preconditions.notNull(classpathResources, "classpath resource must not be null or blank");
+		return new ClasspathResourceSelector(classpathResources);
 	}
 
 	/**
