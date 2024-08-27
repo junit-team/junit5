@@ -740,9 +740,9 @@ class ReflectionUtilsTests {
 			var tryToGetResource = ReflectionUtils.tryToGetResources("/org/junit/platform/commons/example.resource");
 			var resource = assertDoesNotThrow(tryToGetResource::get);
 			assertAll( //
-					() -> assertThat(resource).hasSize(1), //
-					() -> assertThat(resource).extracting(Resource::getName) //
-							.containsExactly("org/junit/platform/commons/example.resource"));
+				() -> assertThat(resource).hasSize(1), //
+				() -> assertThat(resource).extracting(Resource::getName) //
+						.containsExactly("org/junit/platform/commons/example.resource"));
 		}
 
 		@Test
