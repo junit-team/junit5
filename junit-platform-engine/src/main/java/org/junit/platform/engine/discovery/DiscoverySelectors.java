@@ -340,13 +340,13 @@ public final class DiscoverySelectors {
 	 * classpath resources.
 	 *
 	 * @param classpathResource the classpath resource; never {@code null}
-	 * @since 1.11
+	 * @since 1.12
 	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see #selectClasspathResource(String)
 	 * @see ClasspathResourceSelector
 	 * @see ReflectionSupport#tryToGetResource(String)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public static ClasspathResourceSelector selectClasspathResource(Resource classpathResource) {
 		Preconditions.notNull(classpathResource, "classpath resource must not be null or blank");
 		return new ClasspathResourceSelector(classpathResource);

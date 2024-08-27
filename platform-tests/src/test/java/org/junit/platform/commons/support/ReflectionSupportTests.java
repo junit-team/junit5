@@ -120,7 +120,7 @@ class ReflectionSupportTests {
 	}
 
 	/**
-	 * @since 1.11
+	 * @since 1.12
 	 */
 	@Test
 	void tryToGetResourcePreconditions() {
@@ -129,7 +129,7 @@ class ReflectionSupportTests {
 	}
 
 	/**
-	 * @since 1.11
+	 * @since 1.12
 	 */
 	@Test
 	void tryToGetResource() {

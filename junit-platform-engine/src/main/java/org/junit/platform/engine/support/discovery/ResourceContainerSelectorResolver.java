@@ -33,7 +33,7 @@ import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 
 /**
- * @since 1.11
+ * @since 1.12
  */
 class ResourceContainerSelectorResolver implements SelectorResolver {
 	private final Function<Resource, Optional<Resource>> classLoaderResource = getClassLoaderResource();

@@ -88,9 +88,9 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * throws a {@link PreconditionViolationException} if the resource cannot
 	 * be loaded.
 	 *
-	 * @since 1.11
+	 * @since 1.12
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public Resource getClasspathResource() {
 		if (this.classpathResource == null) {
 			// @formatter:off

@@ -898,10 +898,10 @@ public final class ReflectionUtils {
 	 * for details.
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
-	 * @since 1.11
+	 * @since 1.12
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResource(String, ClassLoader)
 	 */
-	@API(status = INTERNAL, since = "1.11")
+	@API(status = INTERNAL, since = "1.12")
 	public static Try<Resource> tryToGetResource(String classpathResourceName) {
 		return tryToGetResource(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
 	}
@@ -914,9 +914,9 @@ public final class ReflectionUtils {
 	 *
 	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @since 1.11
+	 * @since 1.12
 	 */
-	@API(status = INTERNAL, since = "1.11")
+	@API(status = INTERNAL, since = "1.12")
 	public static Try<Resource> tryToGetResource(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");

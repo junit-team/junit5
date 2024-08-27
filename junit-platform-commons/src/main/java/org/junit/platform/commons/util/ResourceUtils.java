@@ -27,9 +27,9 @@ import org.junit.platform.commons.support.Resource;
 /**
  * Resource-related utilities to be used in conjunction with {@link ReflectionSupport}.
  *
- * @since 1.11
+ * @since 1.12
  */
-@API(status = EXPERIMENTAL, since = "1.11")
+@API(status = EXPERIMENTAL, since = "1.12")
 public class ResourceUtils {
 	private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 

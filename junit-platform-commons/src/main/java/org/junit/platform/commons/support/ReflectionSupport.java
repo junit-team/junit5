@@ -130,7 +130,7 @@ public final class ReflectionSupport {
 	 * never {@code null}
 	 * @since 1.11
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Try<Resource> tryToGetResource(String classpathResourceName) {
 		return ReflectionUtils.tryToGetResource(classpathResourceName);
 	}
@@ -152,7 +152,7 @@ public final class ReflectionSupport {
 	 * never {@code null}
 	 * @since 1.11
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11")
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Try<Resource> tryToGetResource(String classpathResourceName, ClassLoader classLoader) {
 		return ReflectionUtils.tryToGetResource(classpathResourceName, classLoader);
 	}
