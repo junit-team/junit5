@@ -922,7 +922,7 @@ public final class ReflectionUtils {
 	@API(status = INTERNAL, since = "1.12")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
-		Preconditions.notNull(classLoader, "ClassLoader must not be null");
+		Preconditions.notNull(classLoader, "Class loader must not be null");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		String canonicalClasspathResourceName = (startsWithSlash ? classpathResourceName.substring(1)
 				: classpathResourceName);
