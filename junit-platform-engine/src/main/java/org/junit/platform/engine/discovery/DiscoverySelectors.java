@@ -347,7 +347,7 @@ public final class DiscoverySelectors {
 	 * @see ReflectionSupport#tryToGetResources(String)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static ClasspathResourceSelector selectClasspathResource(List<Resource> classpathResources) {
+	public static ClasspathResourceSelector selectClasspathResource(Set<Resource> classpathResources) {
 		Preconditions.notNull(classpathResources, "classpath resource must not be null or blank");
 		return new ClasspathResourceSelector(classpathResources);
 	}

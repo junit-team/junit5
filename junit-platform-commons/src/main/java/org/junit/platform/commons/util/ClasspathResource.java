@@ -52,4 +52,12 @@ class ClasspathResource implements Resource {
 	public int hashCode() {
 		return Objects.hash(name, uri);
 	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("name", this.name) //
+				.append("uri", this.uri) //
+				.toString();
+	}
 }

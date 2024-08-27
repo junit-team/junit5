@@ -19,6 +19,7 @@ import static org.junit.platform.engine.support.discovery.ResourceUtils.packageN
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.selectors;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -63,6 +64,7 @@ class ResourceContainerSelectorResolver implements SelectorResolver {
 				.collect(groupingBy(Resource::getName)) //
 				.values() //
 				.stream() //
+				.map(LinkedHashSet::new) //
 				.map(DiscoverySelectors::selectClasspathResource) //
 				.collect(toSet());
 

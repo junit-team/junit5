@@ -10,16 +10,17 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.Collections.unmodifiableList;
-import static java.util.Comparator.comparing;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -58,7 +59,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
 	private final FilePosition position;
-	private List<Resource> classpathResources;
+	private Set<Resource> classpathResources;
 
 	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
@@ -66,18 +67,12 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		this.position = position;
 	}
 
-	ClasspathResourceSelector(List<Resource> classpathResources) {
+	ClasspathResourceSelector(Set<Resource> classpathResources) {
 		this(getClasspathResourceName(classpathResources), null);
-		this.classpathResources = unmodifiableList(copyAndSort(classpathResources));
+		this.classpathResources = unmodifiableSet(new LinkedHashSet<>(classpathResources));
 	}
 
-	private static List<Resource> copyAndSort(List<Resource> classpathResources) {
-		return classpathResources.stream() //
-				.sorted(comparing(Resource::getUri)) //
-				.collect(toList());
-	}
-
-	private static String getClasspathResourceName(List<Resource> classpathResources) {
+	private static String getClasspathResourceName(Set<Resource> classpathResources) {
 		Preconditions.notEmpty(classpathResources, "classpathResources array must not be null or empty");
 		Preconditions.containsNoNullElements(classpathResources, "individual classpathResources must not be null");
 		List<String> names = classpathResources.stream().map(Resource::getName).distinct().collect(toList());
@@ -110,14 +105,14 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 * @since 1.12
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public List<Resource> getClasspathResources() {
+	public Set<Resource> getClasspathResources() {
 		if (this.classpathResources == null) {
 			// @formatter:off
-			Try<List<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
-			List<Resource> classpathResources = tryToGetResource.getOrThrow(cause ->
+			Try<Set<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
+			Set<Resource> classpathResources = tryToGetResource.getOrThrow(cause ->
 				new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
 			// @formatter:on
-			this.classpathResources = unmodifiableList(classpathResources);
+			this.classpathResources = unmodifiableSet(classpathResources);
 		}
 		return this.classpathResources;
 	}

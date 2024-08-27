@@ -893,7 +893,8 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Try to get {@linkplain Resource resources} by their name, using the {@link ClassLoaderUtils#getDefaultClassLoader()}.
+	 * Try to get {@linkplain Resource resources} by their name, using the
+	 * {@link ClassLoaderUtils#getDefaultClassLoader()}.
 	 *
 	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String)}
 	 * for details.
@@ -903,12 +904,13 @@ public final class ReflectionUtils {
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)
 	 */
 	@API(status = INTERNAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResources(String classpathResourceName) {
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
 		return tryToGetResources(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
 	}
 
 	/**
-	 * Try to get {@linkplain Resource resources} by their name, using the supplied {@link ClassLoader}.
+	 * Try to get {@linkplain Resource resources} by their name, using the
+	 * supplied {@link ClassLoader}.
 	 *
 	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)}
 	 * for details.
@@ -918,7 +920,7 @@ public final class ReflectionUtils {
 	 * @since 1.12
 	 */
 	@API(status = INTERNAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
 		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
@@ -937,7 +939,7 @@ public final class ReflectionUtils {
 				catch (URISyntaxException e) {
 					throw ExceptionUtils.throwAsUncheckedException(e);
 				}
-			}).collect(toList());
+			}).collect(toCollection(LinkedHashSet::new));
 		});
 	}
 

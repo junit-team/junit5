@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -114,7 +115,8 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Tries to get the {@linkplain Resource resources} for the supplied classpath resource name.
+	 * Tries to get the {@linkplain Resource resources} for the supplied classpath
+	 * resource name.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
 	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
@@ -129,13 +131,13 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResources(String classpathResourceName) {
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName);
 	}
 
 	/**
-	 * Tries to load the {@linkplain Resource resources} for the supplied classpath resource name,
-	 * using the supplied {@link ClassLoader}.
+	 * Tries to load the {@linkplain Resource resources} for the supplied classpath
+	 * resource name, using the supplied {@link ClassLoader}.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
 	 * for resource paths as defined in {@link ClassLoader#getResource(String)}.
@@ -143,7 +145,7 @@ public final class ReflectionSupport {
 	 * <p>If the supplied classpath resource name is prefixed with a slash
 	 * ({@code /}), the slash will be removed.
 	 *
-	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @param classpathResourceName the name of the resource to load; never {@code null}or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return a successful {@code Try} containing the loaded resources or a failed
 	 * {@code Try} containing the exception if no such resources could be loaded;
@@ -151,7 +153,7 @@ public final class ReflectionSupport {
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static Try<List<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
 		return ReflectionUtils.tryToGetResources(classpathResourceName, classLoader);
 	}
 
@@ -276,8 +278,8 @@ public final class ReflectionSupport {
 	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
-	 * beginning within the supplied base package. The resulting list may include identically
-	 * named resources from different classpath roots.
+	 * beginning within the supplied base package. The resulting list may include
+	 * identically named resources from different classpath roots.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -301,8 +303,8 @@ public final class ReflectionSupport {
 	 * predicates.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
-	 * beginning within the supplied base package. The resulting stream may include
-	 * identically named resources from different classpath roots.
+	 * beginning within the supplied base package. The resulting stream may
+	 * include identically named resources from different classpath roots.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
@@ -327,8 +329,8 @@ public final class ReflectionSupport {
 	 * that match the specified {@code resourceFilter} predicate.
 	 *
 	 * <p>The classpath scanning algorithm searches recursively in subpackages
-	 * beginning within the supplied base package. The resulting stream may include
-	 * identically named resources from different classpath roots.
+	 * beginning within the supplied base package. The resulting stream may
+	 * include identically named resources from different classpath roots.
 	 *
 	 * @param basePackageName the name of the base package in which to start
 	 * scanning; must not be {@code null} and must be valid in terms of Java
