@@ -210,8 +210,6 @@ public class ConsoleTestExecutor {
 
 				}
 			});
-
-			summary.getFailures();
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
