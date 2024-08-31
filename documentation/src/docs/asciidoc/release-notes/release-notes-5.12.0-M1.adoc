@@ -4,6 +4,7 @@
 *Date of Release:* ❓
 
 *Scope:* ❓
+* `ConsoleLauncher` output shows extra diff message for failed assertions on two `CharSequence` objects
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1] milestone page in the

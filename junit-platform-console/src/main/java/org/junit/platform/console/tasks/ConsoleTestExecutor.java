@@ -16,10 +16,14 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+
+import com.github.difflib.text.DiffRow;
+import com.github.difflib.text.DiffRowGenerator;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -36,7 +40,6 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
-//for console output of diff
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.ValueWrapper;
 
@@ -186,15 +189,23 @@ public class ConsoleTestExecutor {
 			//adding diff code here
 			summary.getFailures().forEach(failure -> {
 				//get AssertionFailedError
-				if(failure.getException() instanceof AssertionFailedError){
-					AssertionFailedError assertionFailedError = (AssertionFailedError)failure.getException();
+				if (failure.getException() instanceof AssertionFailedError) {
+					AssertionFailedError assertionFailedError = (AssertionFailedError) failure.getException();
 					ValueWrapper expected = assertionFailedError.getExpected();
 					ValueWrapper actual = assertionFailedError.getActual();
 					//apply diff function
 					if (isCharSequence(expected) && isCharSequence(actual)) {
-						out.printf("Expected %s\n", expected.getStringRepresentation());
-						out.printf("Actual   %s\n", actual.getStringRepresentation());
-						//out.printf("Diff     %s", calculateDiff(expected, actual));
+						DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(
+							true).oldTag(f -> "~").newTag(f -> "**").build();
+						List<DiffRow> rows = generator.generateDiffRows(
+							Arrays.asList(expected.getStringRepresentation()),
+							Arrays.asList(actual.getStringRepresentation()));
+
+						System.out.println(
+							"\nPlease put the diff result below into a onli../ne markdown editor to see markdown effect: ");
+						for (DiffRow row : rows) {
+							System.out.println(" | " + row.getOldLine() + " | " + row.getNewLine() + " | ");
+						}
 					}
 
 				}
@@ -209,7 +220,6 @@ public class ConsoleTestExecutor {
 	private boolean isCharSequence(ValueWrapper value) {
 		return value != null && CharSequence.class.isAssignableFrom(value.getType());
 	}
-
 
 	@FunctionalInterface
 	public interface Factory {
