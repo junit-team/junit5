@@ -36,6 +36,9 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
+//for console output of diff
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.ValueWrapper;
 
 /**
  * @since 1.0
@@ -180,10 +183,33 @@ public class ConsoleTestExecutor {
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
+			//adding diff code here
+			summary.getFailures().forEach(failure -> {
+				//get AssertionFailedError
+				if(failure.getException() instanceof AssertionFailedError){
+					AssertionFailedError assertionFailedError = (AssertionFailedError)failure.getException();
+					ValueWrapper expected = assertionFailedError.getExpected();
+					ValueWrapper actual = assertionFailedError.getActual();
+					//apply diff function
+					if (isCharSequence(expected) && isCharSequence(actual)) {
+						out.printf("Expected %s\n", expected.getStringRepresentation());
+						out.printf("Actual   %s\n", actual.getStringRepresentation());
+						//out.printf("Diff     %s", calculateDiff(expected, actual));
+					}
+
+				}
+			});
+
+			summary.getFailures();
 			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
 	}
+
+	private boolean isCharSequence(ValueWrapper value) {
+		return value != null && CharSequence.class.isAssignableFrom(value.getType());
+	}
+
 
 	@FunctionalInterface
 	public interface Factory {
