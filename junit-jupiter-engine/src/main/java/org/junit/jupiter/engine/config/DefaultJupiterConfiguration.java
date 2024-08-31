@@ -85,6 +85,11 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isThreadPerClassExecutionEnabled() {
+		return configurationParameters.getBoolean(THREAD_PER_CLASS_EXECUTION_ENABLED_PROPERTY_NAME).orElse(false);
+	}
+
+	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return configurationParameters.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(false);
 	}

@@ -2963,6 +2963,29 @@ include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
 ----
 
 
+[[writing-tests-isolated-execution]]
+=== Thread-per-class Isolated Execution
+
+By default, JUnit Jupiter tests are run sequentially from a single thread. The
+thread-per-class isolated execution, set `junit.jupiter.execution.threadperclass.enabled`
+to `true`. Each test class will be executed in its own thread.
+
+The thread-per-class execution model is useful, if test classes need to ensure that
+per-thread resources, for example instances of `ThreadLocal`, do not leak to other test
+classes. This becomes relevant if 3rd party libraries provide no way to clean up the
+`ThreadLocal` instances they created. If such a `ThreadLocal` references a class that has
+been loaded via a different class loader, this can lead to class-leaks and eventually
+out-of-memory errors. Running test classes using the thread-per-class execution model allows
+the JVM to eventually garbage collect those `ThreadLocal` instances and prevent such
+out-of-memory errors.
+
+`junit.jupiter.execution.threadperclass.enabled` is only evaluated, if
+`junit.jupiter.execution.parallel.enabled` is `false`.
+
+Since every test class requires a new thread to be created and requires some synchronization,
+execution with the thread-per-class model has a little overhead.
+
+
 [[writing-tests-built-in-extensions]]
 === Built-in Extensions
 

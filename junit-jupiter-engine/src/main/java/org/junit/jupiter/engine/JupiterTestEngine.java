@@ -30,6 +30,7 @@ import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
+import org.junit.platform.engine.support.hierarchical.ThreadPerClassHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -74,8 +75,14 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 	protected HierarchicalTestExecutorService createExecutorService(ExecutionRequest request) {
 		JupiterConfiguration configuration = getJupiterConfiguration(request);
 		if (configuration.isParallelExecutionEnabled()) {
+			if (configuration.isThreadPerClassExecutionEnabled()) {
+				throw new IllegalArgumentException("Parallel execution and thread-per-class is not supported");
+			}
 			return new ForkJoinPoolHierarchicalTestExecutorService(new PrefixedConfigurationParameters(
 				request.getConfigurationParameters(), Constants.PARALLEL_CONFIG_PREFIX));
+		}
+		if (configuration.isThreadPerClassExecutionEnabled()) {
+			return new ThreadPerClassHierarchicalTestExecutorService(request.getConfigurationParameters());
 		}
 		return super.createExecutorService(request);
 	}

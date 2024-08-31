@@ -69,6 +69,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		this.finalizer = finalizer;
 	}
 
+	TestDescriptor getTestDescriptor() {
+		return testDescriptor;
+	}
+
 	@Override
 	public ResourceLock getResourceLock() {
 		return taskContext.getExecutionAdvisor().getResourceLock(testDescriptor);
