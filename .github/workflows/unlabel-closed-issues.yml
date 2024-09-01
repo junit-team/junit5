@@ -20,7 +20,7 @@ jobs:
             const originalLabels = issue.data.labels.map(l => l.name);
             const newLabels = originalLabels.filter(l => l !== "status: in progress" && l !== "status: new");
             if (newLabels.length !== originalLabels.length) {
-              github.rest.issues.update({
+              await github.rest.issues.update({
                 issue_number: issue.data.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -29,13 +29,13 @@ jobs:
             }
             const statusLabels = newLabels.filter(l => l.startsWith("status: "));
             if (issue.data.state_reason === "not_planned" && statusLabels.length === 0) {
-              github.rest.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: issue.data.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body: "Please assign a status label to this issue.",
               });
-              github.rest.issues.update({
+              await github.rest.issues.update({
                 issue_number: issue.data.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
