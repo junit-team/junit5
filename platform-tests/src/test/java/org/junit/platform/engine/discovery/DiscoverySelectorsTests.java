@@ -375,7 +375,7 @@ class DiscoverySelectorsTests {
 					.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
 		}
 
-		private class StubResource implements Resource {
+		private static class StubResource implements Resource {
 			private final String name;
 
 			private StubResource(String name) {
