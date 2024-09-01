@@ -124,7 +124,8 @@ public final class ReflectionSupport {
 	 * <p>If the supplied classpath resource name is prefixed with a slash
 	 * ({@code /}), the slash will be removed.
 	 *
-	 * @param classpathResourceName the name of the resource to load; never {@code null} or blank
+	 * @param classpathResourceName the name of the resource to load; never
+	 * {@code null} or blank
 	 * @return a successful {@code Try} containing the loaded resources or a failed
 	 * {@code Try} containing the exception if no such resources could be loaded;
 	 * never {@code null}
@@ -145,7 +146,8 @@ public final class ReflectionSupport {
 	 * <p>If the supplied classpath resource name is prefixed with a slash
 	 * ({@code /}), the slash will be removed.
 	 *
-	 * @param classpathResourceName the name of the resource to load; never {@code null}or blank
+	 * @param classpathResourceName the name of the resource to load; never
+	 * {@code null} or blank
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return a successful {@code Try} containing the loaded resources or a failed
 	 * {@code Try} containing the exception if no such resources could be loaded;

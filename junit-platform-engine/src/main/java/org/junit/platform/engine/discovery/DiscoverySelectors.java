@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
@@ -321,7 +322,7 @@ public final class DiscoverySelectors {
 	 */
 	public static ClasspathResourceSelector selectClasspathResource(String classpathResourceName,
 			FilePosition position) {
-		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
+		Preconditions.notBlank(classpathResourceName, "classpath resource name must not be null or blank");
 		return new ClasspathResourceSelector(classpathResourceName, position);
 	}
 
@@ -339,7 +340,9 @@ public final class DiscoverySelectors {
 	 * named or unnamed modules. These resources are also considered to be
 	 * classpath resources.
 	 *
-	 * @param classpathResources the classpath resource; never {@code null}
+	 * @param classpathResources a set of classpath resources; never
+	 * {@code null} or empty. All resources must have the same name, may not
+	 * be {@code null} or blank.
 	 * @since 1.12
 	 * @see #selectClasspathResource(String, FilePosition)
 	 * @see #selectClasspathResource(String)
@@ -348,7 +351,11 @@ public final class DiscoverySelectors {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public static ClasspathResourceSelector selectClasspathResource(Set<Resource> classpathResources) {
-		Preconditions.notNull(classpathResources, "classpath resource must not be null or blank");
+		Preconditions.notEmpty(classpathResources, "classpath resources must not be null or empty");
+		Preconditions.containsNoNullElements(classpathResources, "individual classpath resources must not be null");
+		List<String> resourceNames = classpathResources.stream().map(Resource::getName).distinct().collect(toList());
+		Preconditions.condition(resourceNames.size() == 1, "all classpath resources must have the same name");
+		Preconditions.notBlank(resourceNames.get(0), "classpath resource names must not be null or blank");
 		return new ClasspathResourceSelector(classpathResources);
 	}
 

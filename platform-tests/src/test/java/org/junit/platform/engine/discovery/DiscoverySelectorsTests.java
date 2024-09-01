@@ -297,6 +297,10 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectClasspathResource((Set<Resource>) null));
 			assertViolatesPrecondition(() -> selectClasspathResource(Collections.emptySet()));
 			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singleton(null)));
+			assertViolatesPrecondition(() -> selectClasspathResource(Set.of(new StubResource(null))));
+			assertViolatesPrecondition(() -> selectClasspathResource(Set.of(new StubResource(""))));
+			assertViolatesPrecondition(
+				() -> selectClasspathResource(Set.of(new StubResource("a"), new StubResource("b"))));
 
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");
@@ -371,6 +375,23 @@ class DiscoverySelectorsTests {
 					.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
 		}
 
+		private class StubResource implements Resource {
+			private final String name;
+
+			private StubResource(String name) {
+				this.name = name;
+			}
+
+			@Override
+			public String getName() {
+				return name;
+			}
+
+			@Override
+			public URI getUri() {
+				return null;
+			}
+		}
 	}
 
 	@Nested

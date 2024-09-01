@@ -11,13 +11,11 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.Collections.unmodifiableSet;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -26,7 +24,6 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -68,16 +65,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	}
 
 	ClasspathResourceSelector(Set<Resource> classpathResources) {
-		this(getClasspathResourceName(classpathResources), null);
+		this(classpathResources.iterator().next().getName(), null);
 		this.classpathResources = unmodifiableSet(new LinkedHashSet<>(classpathResources));
-	}
-
-	private static String getClasspathResourceName(Set<Resource> classpathResources) {
-		Preconditions.notEmpty(classpathResources, "classpathResources array must not be null or empty");
-		Preconditions.containsNoNullElements(classpathResources, "individual classpathResources must not be null");
-		List<String> names = classpathResources.stream().map(Resource::getName).distinct().collect(toList());
-		Preconditions.condition(names.size() == 1, "all classpathResources must have the same name");
-		return names.get(0);
 	}
 
 	/**
