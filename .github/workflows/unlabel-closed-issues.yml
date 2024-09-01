@@ -1,4 +1,4 @@
-name: Remove label from closed issues
+name: Check/remove status labels from closed issues
 on:
   issues:
     types:
