@@ -1,0 +1,44 @@
+name: Check/remove status labels from closed issues
+on:
+  issues:
+    types:
+      - closed
+jobs:
+  label_issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const originalLabels = issue.data.labels.map(l => l.name);
+            const newLabels = originalLabels.filter(l => l !== "status: in progress" && l !== "status: new");
+            if (newLabels.length !== originalLabels.length) {
+              await github.rest.issues.update({
+                issue_number: issue.data.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: newLabels,
+              });
+            }
+            const statusLabels = newLabels.filter(l => l.startsWith("status: "));
+            if (issue.data.state_reason === "not_planned" && statusLabels.length === 0) {
+              await github.rest.issues.createComment({
+                issue_number: issue.data.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: "Please assign a status label to this issue.",
+              });
+              await github.rest.issues.update({
+                issue_number: issue.data.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: "open",
+              });
+            }

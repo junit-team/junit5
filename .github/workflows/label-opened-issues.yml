@@ -1,4 +1,4 @@
-name: Label new issues
+name: Add label to opened issues
 on:
   issues:
     types:
