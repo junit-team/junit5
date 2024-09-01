@@ -201,10 +201,10 @@ public class ConsoleTestExecutor {
 							Arrays.asList(expected.getStringRepresentation()),
 							Arrays.asList(actual.getStringRepresentation()));
 
-						System.out.println(
-							"\nPlease put the diff result below into a onli../ne markdown editor to see markdown effect: ");
+						out.printf(
+							"\nPlease put the diff result below into a online markdown editor to see markdown effect: \n");
 						for (DiffRow row : rows) {
-							System.out.println(" | " + row.getOldLine() + " | " + row.getNewLine() + " | ");
+							out.printf(" | %s | %s | \n",row.getOldLine(),row.getNewLine());
 						}
 					}
 
