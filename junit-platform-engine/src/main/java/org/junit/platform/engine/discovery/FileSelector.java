@@ -112,7 +112,7 @@ public class FileSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return Objects.hash(path, position);
+		return Objects.hash(this.path, this.position);
 	}
 
 	@Override
@@ -158,5 +158,7 @@ public class FileSelector implements DiscoverySelector {
 				} //
 			));
 		}
+
 	}
+
 }

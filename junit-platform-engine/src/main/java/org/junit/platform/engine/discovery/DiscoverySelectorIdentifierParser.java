@@ -19,10 +19,9 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
- * Parser for {@link DiscoverySelectorIdentifier DiscoverySelectorIdentifiers}
- * with a specific prefix.
- * <p>
- * Implementations of this interface can be registered using the Java service
+ * Parser for a {@link DiscoverySelectorIdentifier} with a specific prefix.
+ *
+ * <p>Implementations of this interface can be registered using the Java service
  * loader mechanism to extend the set of supported prefixes for
  * {@link DiscoverySelectorIdentifier DiscoverySelectorIdentifiers}.
  *
@@ -33,22 +32,23 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 public interface DiscoverySelectorIdentifierParser {
 
 	/**
-	 * Get the prefix that this parser can handle.
+	 * Get the prefix that this parser supports.
 	 *
-	 * @return the prefix that this parser can handle; never {@code null}
+	 * @return the prefix that this parser supports; never {@code null} or blank
 	 */
 	String getPrefix();
 
 	/**
 	 * Parse the supplied {@link DiscoverySelectorIdentifier}.
-	 * <p>
-	 * The JUnit Platform will only invoke this method if the supplied
+	 *
+	 * <p>The JUnit Platform will only invoke this method if the supplied
 	 * {@link DiscoverySelectorIdentifier} has a prefix that matches the value
 	 * returned by {@link #getPrefix()}.
 	 *
 	 * @param identifier the {@link DiscoverySelectorIdentifier} to parse
 	 * @param context the {@link Context} to use for parsing
-	 * @return an {@link Optional} containing the parsed {@link DiscoverySelector}; never {@code null}
+	 * @return an {@link Optional} containing the parsed {@link DiscoverySelector};
+	 * never {@code null} but potentially empty
 	 */
 	Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier, Context context);
 
@@ -59,8 +59,8 @@ public interface DiscoverySelectorIdentifierParser {
 
 		/**
 		 * Parse the supplied selector.
-		 * <p>
-		 * This method is intended to be used by implementations of
+		 *
+		 * <p>This method is intended to be used by implementations of
 		 * {@link DiscoverySelectorIdentifierParser#parse} for selectors that
 		 * contain other selectors.
 		 */

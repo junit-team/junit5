@@ -930,8 +930,8 @@ public final class DiscoverySelectors {
 	 *
 	 * @param parentSelector the parent selector to select iterations for; never
 	 * {@code null}
-	 * @param iterationIndices the iteration indices to select; never
-	 * {@code null} or empty
+	 * @param iterationIndices the iteration indices to select; never {@code null}
+	 * or empty
 	 * @since 1.9
 	 * @see IterationSelector
 	 */
@@ -943,11 +943,12 @@ public final class DiscoverySelectors {
 	}
 
 	/**
-	 * Parse the supplied string representation of a
-	 * {@link DiscoverySelectorIdentifier}.
+	 * Parse the supplied string representation of a {@link DiscoverySelectorIdentifier}.
 	 *
 	 * @param identifier the string representation of a {@code DiscoverySelectorIdentifier};
 	 * never {@code null} or blank
+	 * @return an {@link Optional} containing the corresponding {@link DiscoverySelector};
+	 * never {@code null} but potentially empty
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
@@ -961,6 +962,8 @@ public final class DiscoverySelectors {
 	 *
 	 * @param identifier the {@code DiscoverySelectorIdentifier} to parse;
 	 * never {@code null}
+	 * @return an {@link Optional} containing the corresponding {@link DiscoverySelector};
+	 * never {@code null} but potentially empty
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
@@ -975,6 +978,8 @@ public final class DiscoverySelectors {
 	 *
 	 * @param identifiers the string representations of
 	 * {@code DiscoverySelectorIdentifiers} to parse; never {@code null}
+	 * @return a stream of the corresponding {@link DiscoverySelector DiscoverySelectors};
+	 * never {@code null} but potentially empty
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
@@ -989,6 +994,8 @@ public final class DiscoverySelectors {
 	 *
 	 * @param identifiers the {@code DiscoverySelectorIdentifiers} to parse;
 	 * never {@code null}
+	 * @return a stream of the corresponding {@link DiscoverySelector DiscoverySelectors};
+	 * never {@code null} but potentially empty
 	 * @since 1.11
 	 * @see DiscoverySelectorIdentifierParser
 	 */
@@ -996,4 +1003,5 @@ public final class DiscoverySelectors {
 	public static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		return DiscoverySelectorIdentifierParsers.parseAll(identifiers);
 	}
+
 }

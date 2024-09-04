@@ -65,14 +65,14 @@ public class IterationSelector implements DiscoverySelector {
 	 * Get the selected parent {@link DiscoverySelector}.
 	 */
 	public DiscoverySelector getParentSelector() {
-		return parentSelector;
+		return this.parentSelector;
 	}
 
 	/**
 	 * Get the selected iteration indices.
 	 */
 	public SortedSet<Integer> getIterationIndices() {
-		return iterationIndices;
+		return this.iterationIndices;
 	}
 
 	@Override
@@ -84,12 +84,12 @@ public class IterationSelector implements DiscoverySelector {
 			return false;
 		}
 		IterationSelector that = (IterationSelector) o;
-		return parentSelector.equals(that.parentSelector) && iterationIndices.equals(that.iterationIndices);
+		return this.parentSelector.equals(that.parentSelector) && this.iterationIndices.equals(that.iterationIndices);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(parentSelector, iterationIndices);
+		return Objects.hash(this.parentSelector, this.iterationIndices);
 	}
 
 	@Override
@@ -104,13 +104,14 @@ public class IterationSelector implements DiscoverySelector {
 
 	@Override
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
-		return parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
+		return this.parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
 			String.format("%s[%s]", parentSelectorString, formatIterationIndicesAsRanges())) //
 		);
 	}
 
 	private String formatIterationIndicesAsRanges() {
+
 		class Range {
 			final int start;
 			int end;
@@ -120,10 +121,11 @@ public class IterationSelector implements DiscoverySelector {
 				this.end = start;
 			}
 		}
+
 		List<Range> ranges = new ArrayList<>();
-		Range current = new Range(iterationIndices.first());
+		Range current = new Range(this.iterationIndices.first());
 		ranges.add(current);
-		for (int n : iterationIndices.tailSet(current.start + 1)) {
+		for (int n : this.iterationIndices.tailSet(current.start + 1)) {
 			if (n == current.end + 1) {
 				current.end = n;
 			}
@@ -133,14 +135,14 @@ public class IterationSelector implements DiscoverySelector {
 			}
 		}
 		return ranges.stream() //
-				.map(r -> {
-					if (r.start == r.end) {
-						return String.valueOf(r.start);
+				.map(range -> {
+					if (range.start == range.end) {
+						return String.valueOf(range.start);
 					}
-					if (r.start == r.end - 1) {
-						return r.start + "," + r.end;
+					if (range.start == range.end - 1) {
+						return range.start + "," + range.end;
 					}
-					return r.start + ".." + r.end;
+					return range.start + ".." + range.end;
 				}) //
 				.collect(joining(","));
 	}
@@ -185,5 +187,7 @@ public class IterationSelector implements DiscoverySelector {
 					Integer.parseInt(lastIndex))//
 			);
 		}
+
 	}
+
 }

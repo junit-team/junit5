@@ -117,5 +117,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 			Path path = Paths.get(URI.create(identifier.getValue()));
 			return getFirstElement(DiscoverySelectors.selectClasspathRoots(singleton(path)));
 		}
+
 	}
+
 }

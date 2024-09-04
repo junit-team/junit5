@@ -933,21 +933,22 @@ public final class ReflectionUtils {
 	 */
 	public static String getFullyQualifiedMethodName(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
 		Preconditions.notNull(clazz, "Class must not be null");
-		Preconditions.notBlank(methodName, "Method name must not be null or blank");
 
 		return getFullyQualifiedMethodName(clazz.getName(), methodName, ClassUtils.nullSafeToString(parameterTypes));
 	}
 
 	/**
 	 * Build the <em>fully qualified method name</em> for the method described by the
-	 * supplied class, method name, and parameter types.
+	 * supplied class name, method name, and parameter types.
 	 *
 	 * <p>Note that the class is not necessarily the class in which the method is
 	 * declared.
 	 *
-	 * @param className the name of the class from which the method should be referenced; never {@code null}
+	 * @param className the name of the class from which the method should be referenced;
+	 * never {@code null}
 	 * @param methodName the name of the method; never {@code null} or blank
-	 * @param parameterTypeNames the parameter type names of the method; may be empty but not {@code null}
+	 * @param parameterTypeNames the parameter type names of the method; may be
+	 * empty but not {@code null}
 	 * @return fully qualified method name; never {@code null}
 	 * @since 1.11
 	 */

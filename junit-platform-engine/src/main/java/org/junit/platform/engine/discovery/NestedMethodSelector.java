@@ -284,5 +284,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 			return Optional.of(DiscoverySelectors.selectNestedMethod(enclosingClassNames, nestedClassName, methodName,
 				parameterTypeNames));
 		}
+
 	}
+
 }

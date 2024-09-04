@@ -33,12 +33,16 @@ public interface DiscoverySelector {
 	/**
 	 * Return the {@linkplain DiscoverySelectorIdentifier identifier} of this
 	 * selector.
-	 * <p>
-	 * The returned identifier has to be parsable by a corresponding
+	 *
+	 * <p>The returned identifier must be parsable by a corresponding
 	 * {@link DiscoverySelectorIdentifierParser}.
 	 *
-	 * @return the identifier of this selector or empty if it is not supported;
-	 * never {@code null}
+	 * <p>The default implementation returns {@link Optional#empty()}. Can be
+	 * overridden by concrete implementations.
+	 *
+	 * @return an {@link Optional} containing the identifier of this selector;
+	 * never {@code null} but potentially empty if the selector does not support
+	 * identifiers
 	 * @since 1.11
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")

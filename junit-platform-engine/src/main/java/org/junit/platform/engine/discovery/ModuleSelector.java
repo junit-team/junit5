@@ -102,5 +102,7 @@ public class ModuleSelector implements DiscoverySelector {
 		public Optional<ModuleSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectModule(identifier.getValue()));
 		}
+
 	}
+
 }

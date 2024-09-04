@@ -162,5 +162,7 @@ public class ClassSelector implements DiscoverySelector {
 		public Optional<ClassSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectClass(identifier.getValue()));
 		}
+
 	}
+
 }
