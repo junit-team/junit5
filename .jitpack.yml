@@ -1,0 +1,11 @@
+jdk:
+  - openjdk21
+before_install:
+  - sdk install java 21.0.2-open
+  - sdk use java 21.0.2-open
+install:
+  - ./gradlew --no-daemon --version
+  - ./gradlew --no-daemon publishToMavenLocal -x test
+  # switch back to a JDK 8 for jitpack.io
+  - sdk install java 8.0.422-tem
+  - sdk use java 8.0.422-tem
