@@ -15,7 +15,8 @@ on GitHub.
 
 ==== Bug Fixes
 
-* ❓
+* Fixed potential locking issue with `ExclusiveResource` in the
+  `HierarchicalTestExecutorService`, which could lead to deadlocks in certain scenarios.
 
 ==== Deprecations and Breaking Changes
 
