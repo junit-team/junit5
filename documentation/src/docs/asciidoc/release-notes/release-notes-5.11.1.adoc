@@ -6,8 +6,8 @@
 *Scope:* minor bug fixes and improvements since 5.11.0
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/79?closed=1+[5.11.1] milestone page in the
-JUnit repository on GitHub.
+link:{junit5-repo}+/milestone/79?closed=1+[5.11.1] milestone page in the JUnit repository
+on GitHub.
 
 
 [[release-notes-5.11.1-junit-platform]]
@@ -22,6 +22,8 @@ JUnit repository on GitHub.
   value, an exception will still be thrown.
 * Fix potential locking issue with `ExclusiveResource` in the `HierarchicalTestExecutorService`.
   This could lead to deadlocks in certain scenarios.
+* Fixed potential locking issue with `ExclusiveResource` in the
+  `HierarchicalTestExecutorService`, which could lead to deadlocks in certain scenarios.
 
 [[release-notes-5.11.1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
