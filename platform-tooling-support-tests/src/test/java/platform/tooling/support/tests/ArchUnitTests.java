@@ -41,10 +41,7 @@ import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.condition.DisabledForJreRange;
-import org.junit.jupiter.api.condition.JRE;
 
-@DisabledForJreRange(min = JRE.JAVA_24)
 @Order(Integer.MAX_VALUE)
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
