@@ -19,6 +19,7 @@ import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import de.sormuras.bartholdy.Result;
 
@@ -80,15 +81,18 @@ class MultiReleaseJarTests {
 	}
 
 	private Result mvn(String variant) {
-		var result = Request.builder() //
+		Map<String, String> environmentVars = MavenEnvVars.FOR_JDK24_AND_LATER;
+
+		var builder = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject("multi-release-jar") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode", "--file", variant,
 					"test") //
-				.setTimeout(TOOL_TIMEOUT) //
-				.build() //
-				.run();
+				.setTimeout(TOOL_TIMEOUT);
+		environmentVars.forEach(builder::putEnvironment);
+
+		var result = builder.build().run();
 
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 
