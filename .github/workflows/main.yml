@@ -34,7 +34,8 @@ jobs:
           -Ptesting.enableJaCoCo \
           :platform-tooling-support-tests:test \
           build \
-          jacocoRootReport
+          jacocoRootReport \
+          --configuration-cache
     - name: Upload to Codecov.io
       uses: codecov/codecov-action@v4
       with:
@@ -81,8 +82,7 @@ jobs:
       with:
         arguments: |
           publish -x check \
-          prepareGitHubAttestation \
-          --no-configuration-cache
+          prepareGitHubAttestation
     - name: Generate build provenance attestations
       uses: actions/attest-build-provenance@210c1913531870065f03ce1f9440dd87bc0938cd # v1.4.0
       with:
@@ -109,15 +109,13 @@ jobs:
       with:
         arguments: |
           prepareDocsForUploadToGhPages \
-          -Dscan.tag.Documentation \
-          --no-configuration-cache
+          -Dscan.tag.Documentation
     - name: Upload Documentation
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
       with:
         arguments: |
           gitPublishPush \
-          -Dscan.tag.Documentation \
-          --no-configuration-cache
+          -Dscan.tag.Documentation
       env:
         GRGIT_USER: ${{ secrets.GH_TOKEN }}
