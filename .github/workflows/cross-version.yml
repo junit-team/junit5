@@ -47,7 +47,8 @@ jobs:
           arguments: |
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
-            build
+            build \
+            --configuration-cache
   openj9:
     strategy:
       fail-fast: false
@@ -81,4 +82,5 @@ jobs:
             -PjavaToolchain.implementation=j9 \
             -Dscan.tag.JDK_${{ matrix.jdk }} \
             -Dscan.tag.OpenJ9 \
-            build
+            build \
+            --configuration-cache

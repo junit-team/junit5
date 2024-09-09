@@ -24,7 +24,8 @@ jobs:
     - name: Restore Gradle cache and display toolchains
       uses: ./.github/actions/run-gradle
       with:
-        arguments: --quiet
+        arguments: --quiet \
+          --configuration-cache
     - name: Build and compare checksums
       shell: bash
       run: |

@@ -4,7 +4,7 @@ inputs:
   arguments:
     required: true
     description: Gradle arguments
-    default: :platform-tooling-support-tests:test build
+    default: :platform-tooling-support-tests:test build --configuration-cache
 runs:
   using: "composite"
   steps:
