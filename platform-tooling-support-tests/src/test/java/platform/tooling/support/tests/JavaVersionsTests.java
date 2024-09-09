@@ -18,6 +18,7 @@ import static platform.tooling.support.Helper.TOOL_TIMEOUT;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 import de.sormuras.bartholdy.tool.Java;
 
@@ -36,28 +37,31 @@ class JavaVersionsTests {
 	void java_8() {
 		var java8Home = Helper.getJavaHome("8");
 		assumeTrue(java8Home.isPresent(), "Java 8 installation directory not found!");
-		var actualLines = execute("8", java8Home.get());
+		var actualLines = execute("8", java8Home.get(), Map.of());
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
 	@Test
 	void java_default() {
-		var actualLines = execute("default", new Java().getHome());
+		var actualLines = execute("default", new Java().getHome(), MavenEnvVars.FOR_JDK24_AND_LATER);
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
-	List<String> execute(String version, Path javaHome) {
-		var result = Request.builder() //
+	List<String> execute(String version, Path javaHome, Map<String, String> environmentVars) {
+		var builder = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.JAVA_VERSIONS) //
 				.setWorkspace("java-versions-" + version) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
-				.setJavaHome(javaHome) //
-				.build().run();
+				.setJavaHome(javaHome);
+		environmentVars.forEach(builder::putEnvironment);
+
+		var result = builder.build().run();
+
 		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
