@@ -34,7 +34,7 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.13.0</version>
                     <configuration>
                         <release>11</release>
                     </configuration>
@@ -45,7 +45,7 @@
             <plugin>
                 <groupId>de.sormuras.junit</groupId>
                 <artifactId>junit-platform-maven-plugin</artifactId>
-                <version>1.1.5</version>
+                <version>1.1.7</version>
                 <extensions>true</extensions>
                 <configuration>
                     <executor>JAVA</executor>
