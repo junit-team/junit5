@@ -11,24 +11,36 @@
       matchManagers: [
         'maven'
       ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ],
     },
     {
       groupName: 'Gradle dependencies',
       matchManagers: [
         'gradle'
       ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+      ]
     },
     {
       groupName: 'GitHub Actions',
       matchManagers: [
         'github-actions'
       ],
-    },
-    {
-      groupName: 'Gradle wrapper',
-      matchManagers: [
-        'gradle-wrapper'
-      ],
+      matchUpdateTypes: [
+        'major',
+        'minor',
+        'patch',
+        'pin',
+        'pinDigest',
+        'digest'
+      ]
     },
     {
       matchCurrentValue: '/^2\\./',
