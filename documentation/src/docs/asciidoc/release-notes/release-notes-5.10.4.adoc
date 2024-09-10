@@ -17,6 +17,8 @@ on GitHub.
 
 * Fixed potential locking issue with `ExclusiveResource` in the
   `HierarchicalTestExecutorService`, which could lead to deadlocks in certain scenarios.
+* Fix support for disabling ANSI colors on the console when the `NO_COLOR` environment
+  variable is available.
 
 ==== Deprecations and Breaking Changes
 
