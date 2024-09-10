@@ -25,5 +25,9 @@
       matchCurrentValue: "/^1\\./",
       allowedVersions: "/^1\\..*-groovy-2\\.*/"
     },
+    {
+      matchPackagePrefixes: ["org.opentest4j.reporting:"],
+      allowedVersions: "!/-SNAPSHOT$/"
+    },
   ]
 }
