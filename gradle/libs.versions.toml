@@ -32,7 +32,7 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.174" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.175" }
 commons-io = { module = "commons-io:commons-io", version = "2.16.1" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.22" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.21" }
