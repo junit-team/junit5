@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:best-practices",
+    "group:all",
+    ":automergeAll",
+    "schedule:weekly",
+  ],
+  packageRules: [
+    // Disable major version upgrades for Groovy versions
+    // as we want to keep one for each major version.
+    // The same applies for Spock as we test the Vintage engine integration
+    {
+      matchPackagePrefixes: ["org.codehaus.groovy:"],
+      matchCurrentValue: "/^2\\./",
+      allowedVersions: "(,3.0)"
+    },
+    {
+      matchPackagePrefixes: ["org.apache.groovy:"],
+      matchCurrentValue: "/^4\\./",
+      allowedVersions: "(,5.0)"
+    },
+    {
+      matchPackagePrefixes: ["org.spockframework:"],
+      matchCurrentValue: "/^1\\./",
+      allowedVersions: "/^1\\..*-groovy-2\\.*/"
+    },
+    {
+      matchPackagePrefixes: ["org.opentest4j.reporting:"],
+      allowedVersions: "!/-SNAPSHOT$/"
+    },
+  ]
+}
