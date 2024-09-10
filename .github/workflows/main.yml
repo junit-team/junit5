@@ -91,8 +91,8 @@ jobs:
   documentation:
     name: Build Documentation
     concurrency:
-      group: github-pages
-      cancel-in-progress: ${{ github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main' }}
+      group: github-pages-${{ github.ref }}
+      cancel-in-progress: true
     needs: Linux
     runs-on: ubuntu-latest
     steps:
