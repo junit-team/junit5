@@ -2,11 +2,34 @@
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
     'config:best-practices',
-    'group:all',
     ':automergeAll',
     'schedule:weekly',
   ],
   packageRules: [
+    {
+      groupName: 'Maven dependencies',
+      matchManagers: [
+        'maven'
+      ],
+    },
+    {
+      groupName: 'Gradle dependencies',
+      matchManagers: [
+        'gradle'
+      ],
+    },
+    {
+      groupName: 'GitHub Actions',
+      matchManagers: [
+        'github-actions'
+      ],
+    },
+    {
+      groupName: 'Gradle wrapper',
+      matchManagers: [
+        'gradle-wrapper'
+      ],
+    },
     {
       matchCurrentValue: '/^2\\./',
       allowedVersions: '(,3.0)',
