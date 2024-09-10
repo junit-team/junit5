@@ -23,7 +23,7 @@
     {
       matchPackagePrefixes: ["org.spockframework:"],
       matchCurrentValue: "/^1\\./",
-      allowedVersions: "(,2.0)"
-    }
+      allowedVersions: "/^1\\..*-groovy-2\\.*/"
+    },
   ]
 }
