@@ -92,7 +92,7 @@ jobs:
     name: Build Documentation
     concurrency:
       group: github-pages
-      cancel-in-progress: true
+      cancel-in-progress: ${{ github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main' }}
     needs: Linux
     runs-on: ubuntu-latest
     steps:
