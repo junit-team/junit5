@@ -34,5 +34,14 @@
         'org.opentest4j.reporting:{/,}**',
       ],
     },
+    {
+      allowedVersions: '!/4\\.33\\.0/',
+      description: [
+        'Due to https://github.com/diffplug/spotless/issues/2255',
+      ],
+      matchPackageNames: [
+        'org.eclipse.platform:{/,}**'
+      ]
+    },
   ],
 }
