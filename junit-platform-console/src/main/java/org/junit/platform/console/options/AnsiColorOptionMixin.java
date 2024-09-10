@@ -23,7 +23,9 @@ class AnsiColorOptionMixin {
 	@Spec(MIXEE)
 	CommandSpec commandSpec;
 
-	private boolean disableAnsiColors;
+	// https://no-color.org
+	// ANSI is disabled when environment variable NO_COLOR is defined (regardless of its value).
+	private boolean disableAnsiColors = System.getenv("NO_COLOR") != null;
 
 	public boolean isDisableAnsiColors() {
 		return disableAnsiColors;
