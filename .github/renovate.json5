@@ -3,7 +3,6 @@
   extends: [
     'config:best-practices',
     ':automergeAll',
-    'schedule:weekly',
   ],
   packageRules: [
     {
