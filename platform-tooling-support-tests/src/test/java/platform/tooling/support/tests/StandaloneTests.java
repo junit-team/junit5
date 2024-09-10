@@ -383,13 +383,13 @@ class StandaloneTests {
 
 	private static Result discover(String... args) {
 		var result = Request.builder() //
+				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
 				.setTool(new Java()) //
 				.setProject(Projects.STANDALONE) //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
 				.addArguments("discover") //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
-				.addArguments("--disable-ansi-colors") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
 				.addArguments((Object[]) args) //
@@ -405,6 +405,7 @@ class StandaloneTests {
 	@Order(3)
 	void execute() throws IOException {
 		var result = Request.builder() //
+				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
 				.setTool(new Java()) //
 				.setProject(Projects.STANDALONE) //
 				.addArguments("--show-version") //
