@@ -27,7 +27,7 @@ class SingleLockTests {
 	void acquire() throws Exception {
 		var lock = new ReentrantLock();
 
-		new SingleLock(lock, true).acquire();
+		new SingleLock(lock).acquire();
 
 		assertTrue(lock.isLocked());
 	}
@@ -37,7 +37,7 @@ class SingleLockTests {
 	void release() throws Exception {
 		var lock = new ReentrantLock();
 
-		new SingleLock(lock, true).acquire().close();
+		new SingleLock(lock).acquire().close();
 
 		assertFalse(lock.isLocked());
 	}

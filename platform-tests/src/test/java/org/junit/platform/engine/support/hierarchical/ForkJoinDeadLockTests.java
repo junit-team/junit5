@@ -10,6 +10,9 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
+import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.util.concurrent.CountDownLatch;
@@ -18,17 +21,37 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.parallel.Isolated;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.Constants;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
+// https://github.com/junit-team/junit5/issues/3945
 public class ForkJoinDeadLockTests {
 
-	// https://github.com/junit-team/junit5/issues/3945
 	@Test
 	@Timeout(10)
 	void forkJoinExecutionDoesNotLeadToDeadLock() {
-		EngineTestKit.engine("junit-jupiter").selectors(selectClass(FirstTestCase.class),
-			selectClass(IsolatedTestCase.class), selectClass(Isolated2TestCase.class)) //
+		run(selectClass(FirstTestCase.class), selectClass(IsolatedTestCase.class),
+				selectClass(Isolated2TestCase.class));
+	}
+
+	@Test
+	@Timeout(10)
+	void nestedResourceLocksShouldStillWork() {
+		ClassSelector classSelector = selectClass(SharedResourceTestCase.class);
+		run(classSelector);
+	}
+
+	@Test
+	@Timeout(10)
+	void multiLevelLocks() {
+		ClassSelector classSelector = selectClass(ClassLevelTestCase.class);
+		run(classSelector);
+	}
+
+	private static void run(ClassSelector... classSelector) {
+		EngineTestKit.engine("junit-jupiter").selectors(classSelector) //
 				.configurationParameter(Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
 				.configurationParameter(Constants.DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent") //
 				.configurationParameter(Constants.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent") //
@@ -79,6 +102,47 @@ public class ForkJoinDeadLockTests {
 		@Test
 		void test1() {
 			// System.out.println("Isolated2 Thread.currentThread() = " + Thread.currentThread());
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	public static class SharedResourceTestCase {
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
+		void customPropertyIsNotSetByDefault() {
+
+		}
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+		void canSetCustomPropertyToApple() {
+		}
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+		void canSetCustomPropertyToBanana() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ResourceLock(value = "foo", mode = READ_WRITE)
+	public static class ClassLevelTestCase {
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
+		void customPropertyIsNotSetByDefault() {
+
+		}
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+		void canSetCustomPropertyToApple() {
+		}
+
+		@Test
+		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
+		void canSetCustomPropertyToBanana() {
 		}
 	}
 }

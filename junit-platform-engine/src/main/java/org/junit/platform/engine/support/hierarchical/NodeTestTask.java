@@ -79,6 +79,11 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		return taskContext.getExecutionAdvisor().getForcedExecutionMode(testDescriptor).orElse(node.getExecutionMode());
 	}
 
+	@Override
+	public String toString() {
+		return testDescriptor.toString();
+	}
+
 	void setParentContext(C parentContext) {
 		this.parentContext = parentContext;
 	}

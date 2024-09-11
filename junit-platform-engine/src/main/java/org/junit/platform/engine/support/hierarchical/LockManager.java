@@ -17,6 +17,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 
 import java.util.Collection;
@@ -56,7 +57,13 @@ class LockManager {
 	}
 
 	ResourceLock getLockForResource(ExclusiveResource resource) {
-		return new SingleLock(toLock(resource), GLOBAL_READ.equals(resource));
+		Lock lock = toLock(resource);
+		if (GLOBAL_READ.equals(resource)) {
+			return new SingleLock.GlobalReadLock(lock);
+		} else if (GLOBAL_READ_WRITE.equals(resource)) {
+			return new SingleLock.GlobalReadWriteLock(lock);
+		}
+		return new SingleLock(lock);
 	}
 
 	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {

@@ -24,16 +24,16 @@ class ResourceLockTests {
 
 	@Test
 	void singleResourceLocksThatBothHaveTheGlobalReadLockFlagAreCompatible() {
-		SingleLock lock1 = new SingleLock(reentrantLock, true);
-		SingleLock lock2 = new SingleLock(reentrantLock, true);
+		SingleLock lock1 = new SingleLock(reentrantLock);
+		SingleLock lock2 = new SingleLock(reentrantLock);
 		assertSymmetry(lock1, lock2);
 	}
 
 	@Test
 	void singleResourceLocksThatNotBothHaveTheGlobalReadLockFlagAreIncompatible() {
-		SingleLock lock1 = new SingleLock(reentrantLock, true);
-		SingleLock lock2 = new SingleLock(reentrantLock, false);
-		SingleLock lock3 = new SingleLock(reentrantLock, false);
+		SingleLock lock1 = new SingleLock(reentrantLock);
+		SingleLock lock2 = new SingleLock(reentrantLock);
+		SingleLock lock3 = new SingleLock(reentrantLock);
 		assertSymmetryNotCompatible(lock1, lock2);
 		assertSymmetryNotCompatible(lock1, lock3);
 		assertSymmetryNotCompatible(lock2, lock3);
@@ -42,8 +42,8 @@ class ResourceLockTests {
 	@Test
 	void nopLocksAreCompatibleWithEverything() {
 		ResourceLock nop = NopLock.INSTANCE;
-		SingleLock singleLockGR = new SingleLock(reentrantLock, true);
-		SingleLock singleLock = new SingleLock(reentrantLock, false);
+		SingleLock singleLockGR = new SingleLock(reentrantLock);
+		SingleLock singleLock = new SingleLock(reentrantLock);
 		CompositeLock compositeLock = new CompositeLock(List.of(reentrantLock));
 		assertSymmetry(nop, singleLockGR);
 		assertSymmetry(nop, singleLock);
@@ -53,8 +53,8 @@ class ResourceLockTests {
 	@Test
 	void compositeLocksAreIncompatibleWithNonNopLocks() {
 		CompositeLock compositeLock = new CompositeLock(List.of(reentrantLock));
-		SingleLock singleLockGR = new SingleLock(reentrantLock, true);
-		SingleLock singleLock = new SingleLock(reentrantLock, false);
+		SingleLock singleLockGR = new SingleLock(reentrantLock);
+		SingleLock singleLock = new SingleLock(reentrantLock);
 		assertSymmetryNotCompatible(compositeLock, singleLockGR);
 		assertSymmetryNotCompatible(compositeLock, singleLock);
 		assertSymmetryNotCompatible(compositeLock, compositeLock);
