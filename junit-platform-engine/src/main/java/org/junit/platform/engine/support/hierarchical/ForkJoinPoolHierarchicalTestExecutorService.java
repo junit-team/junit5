@@ -16,6 +16,8 @@ import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +28,6 @@ import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.Future;
-import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -52,6 +53,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	private final ForkJoinPool forkJoinPool;
 	private final int parallelism;
+	private final ThreadLocal<ThreadLock> threadLocks = new ThreadLocal<>();
 
 	/**
 	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
@@ -132,7 +134,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		if (testTask.getExecutionMode() == CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < parallelism) {
 			return exclusiveTask.fork();
 		}
-		exclusiveTask.compute();
+		exclusiveTask.exec();
 		return completedFuture(null);
 	}
 
@@ -143,7 +145,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	@Override
 	public void invokeAll(List<? extends TestTask> tasks) {
 		if (tasks.size() == 1) {
-			new ExclusiveTask(tasks.get(0)).compute();
+			new ExclusiveTask(tasks.get(0)).exec();
 			return;
 		}
 		Deque<ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
@@ -169,7 +171,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	private void executeNonConcurrentTasks(Deque<ExclusiveTask> nonConcurrentTasks) {
 		for (ExclusiveTask task : nonConcurrentTasks) {
-			task.compute();
+			task.exec();
 		}
 	}
 
@@ -177,6 +179,16 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (ExclusiveTask forkedTask : concurrentTasksInReverseOrder) {
 			forkedTask.join();
+			ThreadLock threadLock = threadLocks.get();
+			if (threadLock != null) {
+				List<ExclusiveTask> deferredTasks = threadLock.deferredTasks;
+				for (ExclusiveTask deferredTask : deferredTasks) {
+					if (!deferredTask.isDone()) {
+						deferredTask.fork();
+					}
+				}
+				deferredTasks.clear();
+			}
 		}
 	}
 
@@ -186,8 +198,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	// this class cannot not be serialized because TestTask is not Serializable
-	@SuppressWarnings("serial")
-	static class ExclusiveTask extends RecursiveAction {
+	@SuppressWarnings({ "serial", "RedundantSuppression" })
+	class ExclusiveTask extends ForkJoinTask<Void> {
 
 		private final TestTask testTask;
 
@@ -195,14 +207,52 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			this.testTask = testTask;
 		}
 
+		/**
+		 * Always returns {@code null}.
+		 *
+		 * @return {@code null} always
+		 */
+		public final Void getRawResult() {
+			return null;
+		}
+
+		/**
+		 * Requires null completion value.
+		 */
+		protected final void setRawResult(Void mustBeNull) {
+		}
+
 		@SuppressWarnings("try")
 		@Override
-		public void compute() {
-			try (ResourceLock lock = testTask.getResourceLock().acquire()) {
+		public boolean exec() {
+			// Check if this task is compatible with the current resource lock, if there is any.
+			// If not, we put this task in the thread local as a deferred task
+			// and let the worker thread fork it once it is done with the current task.
+			ResourceLock resourceLock = testTask.getResourceLock();
+			ThreadLock threadLock = threadLocks.get();
+			if (threadLock != null) {
+				if (!threadLock.isLockCompatible(resourceLock)) {
+					threadLock.addDeferredTask(this);
+					// Return false to indicate that this task is not done yet
+					// this means that .join() will wait.
+					return false;
+				}
+			}
+			try (ResourceLock lock = resourceLock.acquire()) {
+				if (threadLock == null) {
+					threadLocks.set(threadLock = new ThreadLock());
+				}
+				threadLock.incrementNesting(lock);
 				testTask.execute();
+				return true;
 			}
 			catch (InterruptedException e) {
 				throw ExceptionUtils.throwAsUncheckedException(e);
+			}
+			finally {
+				if (threadLock != null && threadLock.decrementNesting()) {
+					threadLocks.remove();
+				}
 			}
 		}
 
@@ -226,6 +276,28 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			setContextClassLoader(contextClassLoader);
 		}
 
+	}
+
+	static class ThreadLock {
+		private final Deque<ResourceLock> locks = new ArrayDeque<>(2);
+		private final List<ExclusiveTask> deferredTasks = new ArrayList<>();
+
+		void addDeferredTask(ExclusiveTask task) {
+			deferredTasks.add(task);
+		}
+
+		void incrementNesting(ResourceLock lock) {
+			locks.push(lock);
+		}
+
+		boolean decrementNesting() {
+			locks.pop();
+			return locks.isEmpty();
+		}
+
+		boolean isLockCompatible(ResourceLock lock) {
+			return locks.stream().allMatch(lock::isCompatible);
+		}
 	}
 
 }

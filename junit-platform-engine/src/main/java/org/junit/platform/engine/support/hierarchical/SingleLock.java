@@ -19,9 +19,11 @@ import java.util.concurrent.locks.Lock;
 class SingleLock implements ResourceLock {
 
 	private final Lock lock;
+	private final boolean isGlobalReadLock;
 
-	SingleLock(Lock lock) {
+	SingleLock(Lock lock, boolean isGlobalReadLock) {
 		this.lock = lock;
+		this.isGlobalReadLock = isGlobalReadLock;
 	}
 
 	// for tests only
@@ -60,4 +62,9 @@ class SingleLock implements ResourceLock {
 
 	}
 
+	@Override
+	public boolean isCompatible(ResourceLock other) {
+		return ResourceLock.super.isCompatible(other)
+				|| (other instanceof SingleLock && ((SingleLock) other).isGlobalReadLock && isGlobalReadLock);
+	}
 }

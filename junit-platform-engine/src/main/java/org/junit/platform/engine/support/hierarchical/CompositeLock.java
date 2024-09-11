@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
+import org.junit.platform.commons.util.Preconditions;
+
 /**
  * @since 1.3
  */
@@ -23,7 +25,7 @@ class CompositeLock implements ResourceLock {
 	private final List<Lock> locks;
 
 	CompositeLock(List<Lock> locks) {
-		this.locks = locks;
+		this.locks = Preconditions.notEmpty(locks, "Locks must not be empty");
 	}
 
 	// for tests only
