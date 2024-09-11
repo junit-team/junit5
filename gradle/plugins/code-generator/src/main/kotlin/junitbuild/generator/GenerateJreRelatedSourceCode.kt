@@ -45,6 +45,7 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
         val codeResolver = DirectoryCodeResolver(templateDir.toPath())
         val templateEngine =
             TemplateEngine.create(codeResolver, temporaryDir.toPath(), ContentType.Plain, javaClass.classLoader)
+        templateEngine.setCompileArgs("-proc:none")
 
         val templates = templateDir.walkTopDown()
             .filter { it.extension == "jte" }
