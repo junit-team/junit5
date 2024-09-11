@@ -34,6 +34,7 @@ spotless {
 			eclipse(majorMinorVersion).configFile(javaFormatterConfigFile)
 			trimTrailingWhitespace()
 			endWithNewline()
+			removeUnusedImports()
 		}
 	}
 
