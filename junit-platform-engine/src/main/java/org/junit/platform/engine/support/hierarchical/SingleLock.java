@@ -64,6 +64,7 @@ class SingleLock implements ResourceLock {
 		GlobalReadLock(Lock lock) {
 			super(lock);
 		}
+
 		@Override
 		public boolean isCompatible(ResourceLock other) {
 			return !(other instanceof GlobalReadWriteLock);

@@ -60,7 +60,8 @@ class LockManager {
 		Lock lock = toLock(resource);
 		if (GLOBAL_READ.equals(resource)) {
 			return new SingleLock.GlobalReadLock(lock);
-		} else if (GLOBAL_READ_WRITE.equals(resource)) {
+		}
+		else if (GLOBAL_READ_WRITE.equals(resource)) {
 			return new SingleLock.GlobalReadWriteLock(lock);
 		}
 		return new SingleLock(lock);

@@ -33,7 +33,7 @@ public class ForkJoinDeadLockTests {
 	@Timeout(10)
 	void forkJoinExecutionDoesNotLeadToDeadLock() {
 		run(selectClass(FirstTestCase.class), selectClass(IsolatedTestCase.class),
-				selectClass(Isolated2TestCase.class));
+			selectClass(Isolated2TestCase.class));
 	}
 
 	@Test

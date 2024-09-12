@@ -183,9 +183,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			if (threadLock != null) {
 				List<ExclusiveTask> deferredTasks = threadLock.deferredTasks;
 				for (ExclusiveTask deferredTask : deferredTasks) {
-//					if (!deferredTask.isDone()) {
-						deferredTask.fork();
-//					}
+					//					if (!deferredTask.isDone()) {
+					deferredTask.fork();
+					//					}
 				}
 				deferredTasks.clear();
 			}
@@ -231,16 +231,19 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			ResourceLock resourceLock = testTask.getResourceLock();
 			ThreadLock threadLock = threadLocks.get();
 			if (threadLock != null) {
-					System.out.println("Checking " + this + " lock compatibility: " + resourceLock + " vs " + threadLock.locks + " " + Thread.currentThread());
+				System.out.println("Checking " + this + " lock compatibility: " + resourceLock + " vs "
+						+ threadLock.locks + " " + Thread.currentThread());
 				if (!threadLock.isLockCompatible(resourceLock)) {
-					System.out.println("Deferring task " + this + " because of lock incompatibility: " + resourceLock + " vs " + threadLock.locks);
+					System.out.println("Deferring task " + this + " because of lock incompatibility: " + resourceLock
+							+ " vs " + threadLock.locks);
 
 					threadLock.addDeferredTask(this);
 					// Return false to indicate that this task is not done yet
 					// this means that .join() will wait.
 					return false;
 				}
-			} else {
+			}
+			else {
 				System.out.println("No existing thread lock for " + this + " " + Thread.currentThread());
 			}
 			try (ResourceLock lock = resourceLock.acquire()) {
@@ -305,7 +308,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		}
 
 		boolean isLockCompatible(ResourceLock lock) {
-			return locks.stream().allMatch( l -> l.isCompatible(lock));
+			return locks.stream().allMatch(l -> l.isCompatible(lock));
 		}
 	}
 
