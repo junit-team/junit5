@@ -85,7 +85,7 @@ asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-pl
 bnd = { id = "biz.aQute.bnd", version.ref = "bnd" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.0.2" }
-develocity = { id = "com.gradle.develocity", version = "3.17.6" }
+develocity = { id = "com.gradle.develocity", version = "3.18.1" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.8.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
