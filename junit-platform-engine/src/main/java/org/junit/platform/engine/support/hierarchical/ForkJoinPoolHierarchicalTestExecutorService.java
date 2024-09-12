@@ -53,7 +53,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	private final ForkJoinPool forkJoinPool;
 	private final int parallelism;
-	private final ThreadLocal<ThreadLock> threadLocks = new ThreadLocal<>();
+	private final ThreadLocal<ThreadLock> threadLocks = ThreadLocal.withInitial(ThreadLock::new);
 
 	/**
 	 * Create a new {@code ForkJoinPoolHierarchicalTestExecutorService} based on
@@ -179,16 +179,20 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (ExclusiveTask forkedTask : concurrentTasksInReverseOrder) {
 			forkedTask.join();
-			ThreadLock threadLock = threadLocks.get();
-			if (threadLock != null) {
-				List<ExclusiveTask> deferredTasks = threadLock.deferredTasks;
-				for (ExclusiveTask deferredTask : deferredTasks) {
-					if (!deferredTask.isDone()) {
-						deferredTask.fork();
-					}
+			resubmitDeferredTasks();
+		}
+	}
+
+	private void resubmitDeferredTasks() {
+		ThreadLock threadLock = threadLocks.get();
+		if (threadLock != null) {
+			List<ExclusiveTask> deferredTasks = threadLock.deferredTasks;
+			for (ExclusiveTask deferredTask : deferredTasks) {
+				if (!deferredTask.isDone()) {
+					deferredTask.fork();
 				}
-				deferredTasks.clear();
 			}
+			deferredTasks.clear();
 		}
 	}
 
@@ -225,7 +229,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		void execSync() {
 			boolean completed = exec();
 			if (!completed) {
-				throw new IllegalStateException("Task was deferred but should have been executed synchronously: " + testTask);
+				throw new IllegalStateException(
+					"Task was deferred but should have been executed synchronously: " + testTask);
 			}
 		}
 
@@ -237,26 +242,21 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			// and let the worker thread fork it once it is done with the current task.
 			ResourceLock resourceLock = testTask.getResourceLock();
 			ThreadLock threadLock = threadLocks.get();
-			if (threadLock != null) {
-				//				System.out.println(
-				//						"Checking " + this + " lock compatibility: " + resourceLock + " vs " + threadLock.locks + " " + Thread.currentThread());
-				if (!threadLock.isLockCompatible(resourceLock)) {
-					//					System.out.println(
-					//							"Deferring task " + this + " because of lock incompatibility: " + resourceLock + " vs " + threadLock.locks);
+			//				System.out.println(
+			//						"Checking " + this + " lock compatibility: " + resourceLock + " vs " + threadLock.locks + " " + Thread.currentThread());
+			if (!threadLock.areAllHeldLocksCompatibleWith(resourceLock)) {
+				//					System.out.println(
+				//							"Deferring task " + this + " because of lock incompatibility: " + resourceLock + " vs " + threadLock.locks);
 
-					threadLock.addDeferredTask(this);
-					// Return false to indicate that this task is not done yet
-					// this means that .join() will wait.
-					return false;
-				}
+				threadLock.addDeferredTask(this);
+				// Return false to indicate that this task is not done yet
+				// this means that .join() will wait.
+				return false;
 			}
 			//			else {
 			//				System.out.println("No existing thread lock for " + this + " " + Thread.currentThread());
 			//			}
 			try (ResourceLock lock = resourceLock.acquire()) {
-				if (threadLock == null) {
-					threadLocks.set(threadLock = new ThreadLock());
-				}
 				threadLock.incrementNesting(lock);
 				testTask.execute();
 				return true;
@@ -265,7 +265,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				throw ExceptionUtils.throwAsUncheckedException(e);
 			}
 			finally {
-				if (threadLock != null && threadLock.decrementNesting()) {
+				if (threadLock.decrementNesting()) {
 					threadLocks.remove();
 				}
 			}
@@ -315,7 +315,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			return locks.isEmpty();
 		}
 
-		boolean isLockCompatible(ResourceLock lock) {
+		boolean areAllHeldLocksCompatibleWith(ResourceLock lock) {
 			return locks.stream().allMatch(l -> l.isCompatible(lock));
 		}
 	}
