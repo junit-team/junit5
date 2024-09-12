@@ -134,7 +134,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		if (testTask.getExecutionMode() == CONCURRENT && ForkJoinTask.getSurplusQueuedTaskCount() < parallelism) {
 			return exclusiveTask.fork();
 		}
-		exclusiveTask.exec();
+		exclusiveTask.execSync();
 		return completedFuture(null);
 	}
 
@@ -145,7 +145,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	@Override
 	public void invokeAll(List<? extends TestTask> tasks) {
 		if (tasks.size() == 1) {
-			new ExclusiveTask(tasks.get(0)).exec();
+			new ExclusiveTask(tasks.get(0)).execSync();
 			return;
 		}
 		Deque<ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
@@ -171,7 +171,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 	private void executeNonConcurrentTasks(Deque<ExclusiveTask> nonConcurrentTasks) {
 		for (ExclusiveTask task : nonConcurrentTasks) {
-			task.exec();
+			task.execSync();
 		}
 	}
 
@@ -220,6 +220,13 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		 * Requires null completion value.
 		 */
 		protected final void setRawResult(Void mustBeNull) {
+		}
+
+		void execSync() {
+			boolean completed = exec();
+			if (!completed) {
+				throw new IllegalStateException("Task was deferred but should have been executed synchronously: " + testTask);
+			}
 		}
 
 		@SuppressWarnings("try")
