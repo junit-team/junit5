@@ -18,55 +18,65 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("resource")
 class ResourceLockTests {
-
-	private final ReentrantLock reentrantLock = new ReentrantLock();
-
-	@Test
-	void singleResourceLocksThatBothHaveTheGlobalReadLockFlagAreCompatible() {
-		SingleLock lock1 = new SingleLock(reentrantLock);
-		SingleLock lock2 = new SingleLock(reentrantLock);
-		assertSymmetry(lock1, lock2);
-	}
-
-	@Test
-	void singleResourceLocksThatNotBothHaveTheGlobalReadLockFlagAreIncompatible() {
-		SingleLock lock1 = new SingleLock(reentrantLock);
-		SingleLock lock2 = new SingleLock(reentrantLock);
-		SingleLock lock3 = new SingleLock(reentrantLock);
-		assertSymmetryNotCompatible(lock1, lock2);
-		assertSymmetryNotCompatible(lock1, lock3);
-		assertSymmetryNotCompatible(lock2, lock3);
-	}
 
 	@Test
 	void nopLocksAreCompatibleWithEverything() {
-		ResourceLock nop = NopLock.INSTANCE;
-		SingleLock singleLockGR = new SingleLock(reentrantLock);
-		SingleLock singleLock = new SingleLock(reentrantLock);
-		CompositeLock compositeLock = new CompositeLock(List.of(reentrantLock));
-		assertSymmetry(nop, singleLockGR);
-		assertSymmetry(nop, singleLock);
-		assertSymmetry(nop, compositeLock);
+		var nopLock = NopLock.INSTANCE;
+
+		assertTrue(nopLock.isCompatible(NopLock.INSTANCE));
+		assertTrue(nopLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertTrue(nopLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertTrue(nopLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertTrue(nopLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+	}
+
+	@Test
+	void singleLocksAreIncompatibleWithNonNopLocks() {
+		var singleLock = new SingleLock(anyReentrantLock());
+
+		assertTrue(singleLock.isCompatible(NopLock.INSTANCE));
+		assertFalse(singleLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+	}
+
+	@Test
+	void globalReadLockIsCompatibleWithEverythingExceptGlobalReadWriteLock() {
+		var globalReadLock = new SingleLock.GlobalReadLock(anyReentrantLock());
+
+		assertTrue(globalReadLock.isCompatible(NopLock.INSTANCE));
+		assertTrue(globalReadLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertTrue(globalReadLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertFalse(globalReadLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertTrue(globalReadLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+	}
+
+	@Test
+	void globalReadWriteLockIsIncompatibleWithWithNonNopLocks() {
+		var globalReadWriteLock = new SingleLock.GlobalReadWriteLock(anyReentrantLock());
+
+		assertTrue(globalReadWriteLock.isCompatible(NopLock.INSTANCE));
+		assertFalse(globalReadWriteLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertFalse(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertFalse(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertFalse(globalReadWriteLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
 	}
 
 	@Test
 	void compositeLocksAreIncompatibleWithNonNopLocks() {
-		CompositeLock compositeLock = new CompositeLock(List.of(reentrantLock));
-		SingleLock singleLockGR = new SingleLock(reentrantLock);
-		SingleLock singleLock = new SingleLock(reentrantLock);
-		assertSymmetryNotCompatible(compositeLock, singleLockGR);
-		assertSymmetryNotCompatible(compositeLock, singleLock);
-		assertSymmetryNotCompatible(compositeLock, compositeLock);
+		CompositeLock compositeLock = new CompositeLock(List.of(anyReentrantLock()));
+
+		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));
+		assertFalse(compositeLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertFalse(compositeLock.isCompatible(compositeLock));
 	}
 
-	void assertSymmetry(ResourceLock a, ResourceLock b) {
-		assertTrue(a.isCompatible(b));
-		assertTrue(b.isCompatible(a));
-	}
-
-	void assertSymmetryNotCompatible(ResourceLock a, ResourceLock b) {
-		assertFalse(a.isCompatible(b));
-		assertFalse(b.isCompatible(a));
+	private static ReentrantLock anyReentrantLock() {
+		return new ReentrantLock();
 	}
 }
