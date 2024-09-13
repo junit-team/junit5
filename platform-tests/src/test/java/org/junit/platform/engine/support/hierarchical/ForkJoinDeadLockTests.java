@@ -147,8 +147,8 @@ public class ForkJoinDeadLockTests {
 		}
 	}
 
-	static class StartFinishLogger implements BeforeTestExecutionCallback, AfterTestExecutionCallback,
-			BeforeAllCallback, AfterAllCallback {
+	static class StartFinishLogger
+			implements BeforeTestExecutionCallback, AfterTestExecutionCallback, BeforeAllCallback, AfterAllCallback {
 
 		@Override
 		public void beforeAll(ExtensionContext context) {
