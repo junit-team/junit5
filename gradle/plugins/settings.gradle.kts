@@ -4,6 +4,9 @@ dependencyResolutionManagement {
 			from(files("../libs.versions.toml"))
 		}
 	}
+	repositories {
+		gradlePluginPortal()
+	}
 }
 
 rootProject.name = "plugins"

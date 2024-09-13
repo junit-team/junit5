@@ -11,32 +11,24 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.commons.JUnitException;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-@ExtendWith(MockitoExtension.class)
 class ForkJoinPoolHierarchicalTestExecutorServiceTests {
-
-	@Mock
-	ParallelExecutionConfiguration configuration;
 
 	@Test
 	void exceptionsFromInvalidConfigurationAreNotSwallowed() {
-		when(configuration.getParallelism()).thenReturn(2);
-		when(configuration.getMaxPoolSize()).thenReturn(1); // invalid, should be > parallelism
-		when(configuration.getCorePoolSize()).thenReturn(1);
-		when(configuration.getMinimumRunnable()).thenReturn(1);
-		when(configuration.getSaturatePredicate()).thenReturn(__ -> true);
-		when(configuration.getKeepAliveSeconds()).thenReturn(0);
+		var configuration = new DefaultParallelExecutionConfiguration(2, 1, 1, 1, 0, __ -> true);
 
-		JUnitException exception = assertThrows(JUnitException.class,
-			() -> new ForkJoinPoolHierarchicalTestExecutorService(configuration));
+		JUnitException exception = assertThrows(JUnitException.class, () -> {
+			try (var pool = new ForkJoinPoolHierarchicalTestExecutorService(configuration)) {
+				assertNotNull(pool, "we won't get here");
+			}
+		});
+
 		assertThat(exception).hasMessage("Failed to create ForkJoinPool");
 		assertThat(exception).rootCause().isInstanceOf(IllegalArgumentException.class);
 	}
