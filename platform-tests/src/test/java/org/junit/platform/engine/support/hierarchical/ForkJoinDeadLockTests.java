@@ -10,16 +10,25 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.Constants;
@@ -33,7 +42,7 @@ public class ForkJoinDeadLockTests {
 
 	@Test
 	void forkJoinExecutionDoesNotLeadToDeadLock() {
-		run(FirstTestCase.class, IsolatedTestCase.class, Isolated2TestCase.class);
+		run(NonIsolatedTestCase.class, IsolatedTestCase.class, Isolated2TestCase.class);
 	}
 
 	@Test
@@ -55,51 +64,48 @@ public class ForkJoinDeadLockTests {
 				.configurationParameter(Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed") //
 				.configurationParameter(Constants.PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME, "3") //
 				.configurationParameter(Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, "3") //
+				.configurationParameter(Constants.PARALLEL_CONFIG_FIXED_SATURATE_PROPERTY_NAME, "false") //
 				.execute();
 	}
 
+	@ExtendWith(StartFinishLogger.class)
+	static class BaseTestCase {
+	}
+
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	public static class FirstTestCase {
-		public static CountDownLatch countDownLatch = new CountDownLatch(2);
+	@Execution(CONCURRENT)
+	public static class NonIsolatedTestCase extends BaseTestCase {
 
-		@BeforeAll
-		static void beforeAll() {
-			// System.out.println("forkJoinWorkerThread = " + Thread.currentThread());
+		public static CountDownLatch otherThreadRunning = new CountDownLatch(1);
+		public static CountDownLatch sameThreadFinishing = new CountDownLatch(1);
+
+		@Test
+		@Execution(CONCURRENT)
+		void otherThread() throws Exception {
+			otherThreadRunning.countDown();
+			sameThreadFinishing.await();
+			Thread.sleep(100);
 		}
 
 		@Test
-		void test1() throws InterruptedException {
-			// System.out.println("FirstTestCase.test1 Thread.currentThread() = " + Thread.currentThread());
-			await();
-		}
-
-		@Test
-		void test2() throws InterruptedException {
-			// System.out.println("FirstTestCase.test2 Thread.currentThread() = " + Thread.currentThread());
-			await();
-		}
-
-		private void await() throws InterruptedException {
-			countDownLatch.countDown();
-			countDownLatch.await();
+		@Execution(SAME_THREAD)
+		void sameThread() throws Exception {
+			otherThreadRunning.await();
+			sameThreadFinishing.countDown();
 		}
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Isolated
-	public static class IsolatedTestCase {
+	public static class IsolatedTestCase extends BaseTestCase {
+
 		@Test
-		void test1() {
-			// System.out.println("Isolated Thread.currentThread() = " + Thread.currentThread());
+		void test() throws Exception {
+			Thread.sleep(100);
 		}
 	}
-	@SuppressWarnings("JUnitMalformedDeclaration")
-	@Isolated
-	public static class Isolated2TestCase {
-		@Test
-		void test1() {
-			// System.out.println("Isolated2 Thread.currentThread() = " + Thread.currentThread());
-		}
+
+	static class Isolated2TestCase extends IsolatedTestCase {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -108,7 +114,6 @@ public class ForkJoinDeadLockTests {
 		@Test
 		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
 		void customPropertyIsNotSetByDefault() {
-
 		}
 
 		@Test
@@ -129,7 +134,6 @@ public class ForkJoinDeadLockTests {
 		@Test
 		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ)
 		void customPropertyIsNotSetByDefault() {
-
 		}
 
 		@Test
@@ -141,5 +145,35 @@ public class ForkJoinDeadLockTests {
 		@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 		void canSetCustomPropertyToBanana() {
 		}
+	}
+
+	static class StartFinishLogger implements BeforeTestExecutionCallback, AfterTestExecutionCallback,
+			BeforeAllCallback, AfterAllCallback {
+
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			log("starting class " + context.getTestClass().orElseThrow().getSimpleName());
+		}
+
+		@Override
+		public void beforeTestExecution(ExtensionContext context) {
+			log("starting method " + context.getTestClass().orElseThrow().getSimpleName() + "."
+					+ context.getTestMethod().orElseThrow().getName());
+		}
+
+		@Override
+		public void afterTestExecution(ExtensionContext context) {
+			log("finishing method " + context.getTestClass().orElseThrow().getSimpleName() + "."
+					+ context.getTestMethod().orElseThrow().getName());
+		}
+
+		@Override
+		public void afterAll(ExtensionContext context) {
+			log("finishing class " + context.getTestClass().orElseThrow().getSimpleName());
+		}
+	}
+
+	private static void log(String message) {
+		System.out.println("[" + LocalTime.now() + "] " + Thread.currentThread().getName() + " - " + message);
 	}
 }
