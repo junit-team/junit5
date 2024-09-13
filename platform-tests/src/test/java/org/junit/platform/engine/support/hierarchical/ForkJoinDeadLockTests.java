@@ -13,8 +13,8 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
+import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -24,34 +24,31 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.Constants;
 import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
 // https://github.com/junit-team/junit5/issues/3945
+@Timeout(10)
 public class ForkJoinDeadLockTests {
 
 	@Test
-	@Timeout(10)
 	void forkJoinExecutionDoesNotLeadToDeadLock() {
-		run(selectClass(FirstTestCase.class), selectClass(IsolatedTestCase.class),
-			selectClass(Isolated2TestCase.class));
+		run(FirstTestCase.class, IsolatedTestCase.class, Isolated2TestCase.class);
 	}
 
 	@Test
-	@Timeout(10)
 	void nestedResourceLocksShouldStillWork() {
-		ClassSelector classSelector = selectClass(SharedResourceTestCase.class);
-		run(classSelector);
+		run(SharedResourceTestCase.class);
 	}
 
 	@Test
-	@Timeout(10)
 	void multiLevelLocks() {
-		ClassSelector classSelector = selectClass(ClassLevelTestCase.class);
-		run(classSelector);
+		run(ClassLevelTestCase.class);
 	}
 
-	private static void run(ClassSelector... classSelector) {
-		EngineTestKit.engine("junit-jupiter").selectors(classSelector) //
+	private static void run(Class<?>... classes) {
+		EngineTestKit.engine("junit-jupiter") //
+				.selectors(Arrays.stream(classes).map(DiscoverySelectors::selectClass).toArray(ClassSelector[]::new)) //
 				.configurationParameter(Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
 				.configurationParameter(Constants.DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent") //
 				.configurationParameter(Constants.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME, "concurrent") //
