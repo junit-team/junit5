@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.groupingBy;
@@ -46,14 +48,7 @@ class LockManager {
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
-		if (resources.isEmpty()) {
-			return NopLock.INSTANCE;
-		}
-		if (resources.size() == 1) {
-			return getLockForResource(getOnlyElement(resources));
-		}
-		List<Lock> locks = getDistinctSortedLocks(resources);
-		return new CompositeLock(locks);
+		return toResourceLock(getDistinctSortedLocks(resources));
 	}
 
 	ResourceLock getLockForResource(ExclusiveResource resource) {
@@ -68,6 +63,12 @@ class LockManager {
 	}
 
 	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {
+		if (resources.isEmpty()) {
+			return emptyList();
+		}
+		if (resources.size() == 1) {
+			return singletonList(toLock(getOnlyElement(resources)));
+		}
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
 				.sorted(COMPARATOR)
@@ -86,4 +87,14 @@ class LockManager {
 		return resource.getLockMode() == READ ? lock.readLock() : lock.writeLock();
 	}
 
+	private ResourceLock toResourceLock(List<Lock> locks) {
+		switch (locks.size()) {
+			case 0:
+				return NopLock.INSTANCE;
+			case 1:
+				return new SingleLock(locks.get(0));
+			default:
+				return new CompositeLock(locks);
+		}
+	}
 }
