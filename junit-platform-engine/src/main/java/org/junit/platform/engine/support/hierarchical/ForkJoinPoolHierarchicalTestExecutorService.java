@@ -52,6 +52,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
 	private final ForkJoinPool forkJoinPool;
+	private final TaskEventListener taskEventListener;
 	private final int parallelism;
 	private final ThreadLocal<ThreadLock> threadLocks = ThreadLocal.withInitial(ThreadLock::new);
 
@@ -73,7 +74,13 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	 */
 	@API(status = STABLE, since = "1.10")
 	public ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration) {
+		this(configuration, TaskEventListener.NOOP);
+	}
+
+	ForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration,
+			TaskEventListener taskEventListener) {
 		forkJoinPool = createForkJoinPool(configuration);
+		this.taskEventListener = taskEventListener;
 		parallelism = forkJoinPool.getParallelism();
 		LoggerFactory.getLogger(getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism);
 	}
@@ -242,20 +249,13 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			// and let the worker thread fork it once it is done with the current task.
 			ResourceLock resourceLock = testTask.getResourceLock();
 			ThreadLock threadLock = threadLocks.get();
-			//				System.out.println(
-			//						"Checking " + this + " lock compatibility: " + resourceLock + " vs " + threadLock.locks + " " + Thread.currentThread());
 			if (!threadLock.areAllHeldLocksCompatibleWith(resourceLock)) {
-				//					System.out.println(
-				//							"Deferring task " + this + " because of lock incompatibility: " + resourceLock + " vs " + threadLock.locks);
-
 				threadLock.addDeferredTask(this);
+				taskEventListener.deferred(testTask);
 				// Return false to indicate that this task is not done yet
 				// this means that .join() will wait.
 				return false;
 			}
-			//			else {
-			//				System.out.println("No existing thread lock for " + this + " " + Thread.currentThread());
-			//			}
 			try (ResourceLock lock = resourceLock.acquire()) {
 				threadLock.incrementNesting(lock);
 				testTask.execute();
@@ -318,6 +318,14 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		boolean areAllHeldLocksCompatibleWith(ResourceLock lock) {
 			return locks.stream().allMatch(l -> l.isCompatible(lock));
 		}
+	}
+
+	interface TaskEventListener {
+
+		TaskEventListener NOOP = __ -> {
+		};
+
+		void deferred(TestTask testTask);
 	}
 
 }
