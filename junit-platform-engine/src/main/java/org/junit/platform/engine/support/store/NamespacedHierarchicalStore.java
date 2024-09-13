@@ -139,7 +139,6 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * closed
 	 */
 	public Object get(N namespace, Object key) {
-		rejectIfClosed();
 		StoredValue storedValue = getStoredValue(new CompositeKey<>(namespace, key));
 		return StoredValue.evaluateIfNotNull(storedValue);
 	}
@@ -156,7 +155,6 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * be cast to the required type, or if this store has already been closed
 	 */
 	public <T> T get(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
-		rejectIfClosed();
 		Object value = get(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
@@ -174,13 +172,15 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * closed
 	 */
 	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator) {
-		rejectIfClosed();
 		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
 		if (storedValue == null) {
 			storedValue = this.storedValues.computeIfAbsent(compositeKey,
-				__ -> storedValue(new MemoizingSupplier(() -> defaultCreator.apply(key))));
+				__ -> storedValue(new MemoizingSupplier(() -> {
+					rejectIfClosed();
+					return defaultCreator.apply(key);
+				})));
 		}
 		return storedValue.evaluate();
 	}
@@ -202,7 +202,6 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, V> defaultCreator, Class<V> requiredType)
 			throws NamespacedHierarchicalStoreException {
 
-		rejectIfClosed();
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
 		return castToRequiredType(key, value, requiredType);
 	}
