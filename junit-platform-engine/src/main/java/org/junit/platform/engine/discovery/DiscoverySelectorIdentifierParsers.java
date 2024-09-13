@@ -75,11 +75,13 @@ class DiscoverySelectorIdentifierParsers {
 			for (DiscoverySelectorIdentifierParser parser : loadedParsers) {
 				DiscoverySelectorIdentifierParser previous = parsersByPrefix.put(parser.getPrefix(), parser);
 				Preconditions.condition(previous == null,
-					() -> String.format("Duplicate parser for prefix: [%s] candidate a: [%s] candidate b: [%s] ",
+					() -> String.format("Duplicate parser for prefix: [%s]; candidate a: [%s]; candidate b: [%s]",
 						parser.getPrefix(), requireNonNull(previous).getClass().getName(),
 						parser.getClass().getName()));
 			}
 			this.parsersByPrefix = unmodifiableMap(parsersByPrefix);
 		}
+
 	}
+
 }

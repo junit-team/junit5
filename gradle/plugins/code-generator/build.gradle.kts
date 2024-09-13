@@ -2,10 +2,6 @@ plugins {
 	`kotlin-dsl`
 }
 
-repositories {
-	gradlePluginPortal()
-}
-
 dependencies {
 	implementation("junitbuild.base:code-generator-model")
 	implementation(projects.common)

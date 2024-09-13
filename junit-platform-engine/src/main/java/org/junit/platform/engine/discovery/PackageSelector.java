@@ -102,5 +102,7 @@ public class PackageSelector implements DiscoverySelector {
 		public Optional<PackageSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectPackage(identifier.getValue()));
 		}
+
 	}
+
 }

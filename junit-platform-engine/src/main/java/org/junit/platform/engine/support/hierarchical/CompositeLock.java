@@ -28,7 +28,7 @@ class CompositeLock implements ResourceLock {
 
 	// for tests only
 	List<Lock> getLocks() {
-		return locks;
+		return this.locks;
 	}
 
 	@Override
@@ -38,9 +38,9 @@ class CompositeLock implements ResourceLock {
 	}
 
 	private void acquireAllLocks() throws InterruptedException {
-		List<Lock> acquiredLocks = new ArrayList<>(locks.size());
+		List<Lock> acquiredLocks = new ArrayList<>(this.locks.size());
 		try {
-			for (Lock lock : locks) {
+			for (Lock lock : this.locks) {
 				lock.lockInterruptibly();
 				acquiredLocks.add(lock);
 			}
@@ -53,7 +53,7 @@ class CompositeLock implements ResourceLock {
 
 	@Override
 	public void release() {
-		release(locks);
+		release(this.locks);
 	}
 
 	private void release(List<Lock> acquiredLocks) {
@@ -64,18 +64,20 @@ class CompositeLock implements ResourceLock {
 
 	private class CompositeLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
 
-		private boolean acquired;
+		private volatile boolean acquired;
 
 		@Override
 		public boolean block() throws InterruptedException {
-			acquireAllLocks();
-			acquired = true;
+			if (!this.acquired) {
+				acquireAllLocks();
+				this.acquired = true;
+			}
 			return true;
 		}
 
 		@Override
 		public boolean isReleasable() {
-			return acquired;
+			return this.acquired;
 		}
 
 	}

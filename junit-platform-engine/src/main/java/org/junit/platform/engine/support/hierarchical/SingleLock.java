@@ -26,7 +26,7 @@ class SingleLock implements ResourceLock {
 
 	// for tests only
 	Lock getLock() {
-		return lock;
+		return this.lock;
 	}
 
 	@Override
@@ -37,23 +37,25 @@ class SingleLock implements ResourceLock {
 
 	@Override
 	public void release() {
-		lock.unlock();
+		this.lock.unlock();
 	}
 
 	private class SingleLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
 
-		private boolean acquired;
+		private volatile boolean acquired;
 
 		@Override
 		public boolean block() throws InterruptedException {
-			lock.lockInterruptibly();
-			acquired = true;
+			if (!this.acquired) {
+				SingleLock.this.lock.lockInterruptibly();
+				this.acquired = true;
+			}
 			return true;
 		}
 
 		@Override
 		public boolean isReleasable() {
-			return acquired || lock.tryLock();
+			return this.acquired || (this.acquired = SingleLock.this.lock.tryLock());
 		}
 
 	}
