@@ -97,4 +97,5 @@ class LockManager {
 				return new CompositeLock(locks);
 		}
 	}
+
 }
