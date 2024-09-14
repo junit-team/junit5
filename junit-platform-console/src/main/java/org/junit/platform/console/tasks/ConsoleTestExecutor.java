@@ -204,7 +204,7 @@ public class ConsoleTestExecutor {
 						out.printf(
 							"\nPlease put the diff result below into a online markdown editor to see markdown effect: \n");
 						for (DiffRow row : rows) {
-							out.printf(" | %s | %s | \n",row.getOldLine(),row.getNewLine());
+							out.printf(" | %s | %s | \n", row.getOldLine(), row.getNewLine());
 						}
 					}
 
