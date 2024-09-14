@@ -25,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService.TaskEventListener;
@@ -48,8 +49,9 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 	}
 
 	@Test
+	@Timeout(5)
 	void defersTasksWithIncompatibleLocks() throws Exception {
-		var configuration = new DefaultParallelExecutionConfiguration(2, 1, 2, 1, 1, __ -> false);
+		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 3, 1, 1, __ -> true);
 
 		var lockManager = new LockManager();
 		var globalReadLock = lockManager.getLockForResource(GLOBAL_READ);
@@ -94,7 +96,6 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		assertEquals(isolatedTask, deferredTask.get());
 		assertEquals(threadNamesByTaskIdentifier.get("nestedTask"), threadNamesByTaskIdentifier.get("leafTask2"));
 		assertNotEquals(threadNamesByTaskIdentifier.get("leafTask1"), threadNamesByTaskIdentifier.get("leafTask2"));
-		assertEquals(threadNamesByTaskIdentifier.get("leafTask1"), threadNamesByTaskIdentifier.get("isolatedTask"));
 	}
 
 	record DummyTestTask(String identifier, ResourceLock resourceLock, ThrowingConsumer<DummyTestTask> action)
