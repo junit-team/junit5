@@ -48,7 +48,7 @@ public interface ResourceLock extends AutoCloseable {
 	 * @param other the other lock to check for compatibility
 	 */
 	default boolean isCompatible(ResourceLock other) {
-		return other instanceof NopLock || this instanceof NopLock;
+		return this instanceof NopLock || other instanceof NopLock;
 	}
 
 }
