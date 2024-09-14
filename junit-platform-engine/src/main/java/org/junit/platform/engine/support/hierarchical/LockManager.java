@@ -32,6 +32,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadLock;
+import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadWriteLock;
+
 /**
  * @since 1.3
  */
@@ -46,23 +49,23 @@ class LockManager {
 	}
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
+	private final GlobalReadLock globalReadLock;
+	private final GlobalReadWriteLock globalReadWriteLock;
+
+	public LockManager() {
+		globalReadLock = new GlobalReadLock(toLock(GLOBAL_READ));
+		globalReadWriteLock = new GlobalReadWriteLock(toLock(GLOBAL_READ_WRITE));
+	}
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
-		return toResourceLock(getDistinctSortedLocks(resources));
+		return toResourceLock(toDistinctSortedLocks(resources));
 	}
 
 	ResourceLock getLockForResource(ExclusiveResource resource) {
-		Lock lock = toLock(resource);
-		if (GLOBAL_READ.equals(resource)) {
-			return new SingleLock.GlobalReadLock(lock);
-		}
-		else if (GLOBAL_READ_WRITE.equals(resource)) {
-			return new SingleLock.GlobalReadWriteLock(lock);
-		}
-		return new SingleLock(lock);
+		return toResourceLock(toLock(resource));
 	}
 
-	private List<Lock> getDistinctSortedLocks(Collection<ExclusiveResource> resources) {
+	private List<Lock> toDistinctSortedLocks(Collection<ExclusiveResource> resources) {
 		if (resources.isEmpty()) {
 			return emptyList();
 		}
@@ -92,10 +95,20 @@ class LockManager {
 			case 0:
 				return NopLock.INSTANCE;
 			case 1:
-				return new SingleLock(locks.get(0));
+				return toResourceLock(locks.get(0));
 			default:
 				return new CompositeLock(locks);
 		}
+	}
+
+	private ResourceLock toResourceLock(Lock lock) {
+		if (lock == toLock(GLOBAL_READ)) {
+			return globalReadLock;
+		}
+		if (lock == toLock(GLOBAL_READ_WRITE)) {
+			return globalReadWriteLock;
+		}
+		return new SingleLock(lock);
 	}
 
 }
