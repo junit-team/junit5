@@ -51,7 +51,7 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 	@Test
 	@Timeout(5)
 	void defersTasksWithIncompatibleLocks() throws Exception {
-		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 3, 1, 1, __ -> true);
+		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 2, 2, 1, __ -> true);
 
 		var lockManager = new LockManager();
 		var globalReadLock = lockManager.getLockForResource(GLOBAL_READ);
@@ -77,10 +77,14 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 				threadNamesByTaskIdentifier.put(t.identifier(), Thread.currentThread().getName());
 				var leafTask1 = new DummyTestTask("leafTask1", nopLock, t1 -> {
 					threadNamesByTaskIdentifier.put(t1.identifier(), Thread.currentThread().getName());
+					pool.new ExclusiveTask(isolatedTask).fork();
 					bothLeafTasksAreRunning.countDown();
 					bothLeafTasksAreRunning.await();
-					pool.new ExclusiveTask(isolatedTask).fork();
-					deferred.await();
+					try {
+						deferred.await();
+					} catch (InterruptedException e) {
+						System.out.println("Interrupted while waiting for task to be deferred");
+					}
 				});
 				var leafTask2 = new DummyTestTask("leafTask2", nopLock, t2 -> {
 					threadNamesByTaskIdentifier.put(t2.identifier(), Thread.currentThread().getName());
