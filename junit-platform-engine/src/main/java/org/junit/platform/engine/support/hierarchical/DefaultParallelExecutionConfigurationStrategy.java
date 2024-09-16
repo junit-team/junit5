@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration.TestExecutor;
 
 import java.math.BigDecimal;
 import java.util.Locale;
@@ -21,6 +22,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.TestDescriptor;
 
 /**
  * Default implementations of configuration strategies for parallel test
@@ -49,8 +51,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			boolean saturate = configurationParameters.get(CONFIG_FIXED_SATURATE_PROPERTY_NAME,
 				Boolean::valueOf).orElse(true);
 
+			TestExecutor testExecutor = configurationParameters.get(CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME,
+				(str) -> TestExecutor.valueOf(str.toUpperCase())).orElse(TestExecutor.FORK_JOIN);
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, maxPoolSize, parallelism,
-				KEEP_ALIVE_SECONDS, __ -> saturate);
+				KEEP_ALIVE_SECONDS, __ -> saturate, testExecutor);
 		}
 	},
 
@@ -84,8 +89,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			boolean saturate = configurationParameters.get(CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME,
 				Boolean::valueOf).orElse(true);
 
+			TestExecutor testExecutor = configurationParameters.get(CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME,
+				(str) -> TestExecutor.valueOf(str.toUpperCase())).orElse(TestExecutor.FORK_JOIN);
+
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, maxPoolSize, parallelism,
-				KEEP_ALIVE_SECONDS, __ -> saturate);
+				KEEP_ALIVE_SECONDS, __ -> saturate, testExecutor);
 		}
 	},
 
@@ -164,6 +172,16 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	public static final String CONFIG_FIXED_SATURATE_PROPERTY_NAME = "fixed.saturate";
 
 	/**
+	 * Property name used to disable saturation of the underlying thread pool
+	 * used to execute {@linkplain TestDescriptor.Type#TEST test tasks}
+	 * for the {@link #FIXED} configuration strategy.
+	 *
+	 * @since 1.11
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static final String CONFIG_FIXED_TEST_EXECUTOR_PROPERTY_NAME = "fixed.test-executor";
+
+	/**
 	 * Property name of the factor used to determine the desired parallelism for the
 	 * {@link #DYNAMIC} configuration strategy.
 	 *
@@ -206,6 +224,16 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String CONFIG_DYNAMIC_SATURATE_PROPERTY_NAME = "dynamic.saturate";
+
+	/**
+	 * Property name used to disable saturation of the underlying thread pool
+	 * used to execute {@linkplain TestDescriptor.Type#TEST test tasks}
+	 * for the {@link #DYNAMIC} configuration strategy.
+	 *
+	 * @since 1.11
+	 */
+	@API(status = EXPERIMENTAL, since = "1.11")
+	public static final String CONFIG_DYNAMIC_TEST_EXECUTOR_PROPERTY_NAME = "dynamic.test-executor";
 
 	/**
 	 * Property name used to specify the fully qualified class name of the
