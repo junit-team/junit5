@@ -29,9 +29,9 @@ class OutputOptionsMixin {
 	@Option(names = "-disable-banner", hidden = true)
 	private boolean disableBanner2;
 
-    // https://no-color.org
-    // ANSI is disabled when environment variable NO_COLOR is defined (regardless of its value).
-    private boolean disableAnsiColors = System.getenv("NO_COLOR") != null;
+	// https://no-color.org
+	// ANSI is disabled when environment variable NO_COLOR is defined (regardless of its value).
+	private boolean disableAnsiColors = System.getenv("NO_COLOR") != null;
 
 	public boolean isDisableBanner() {
 		return disableBanner || disableBanner2;
