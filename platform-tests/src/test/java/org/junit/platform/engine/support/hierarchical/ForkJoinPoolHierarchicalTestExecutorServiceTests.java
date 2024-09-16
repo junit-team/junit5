@@ -82,7 +82,8 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 					bothLeafTasksAreRunning.await();
 					try {
 						deferred.await();
-					} catch (InterruptedException e) {
+					}
+					catch (InterruptedException e) {
 						System.out.println("Interrupted while waiting for task to be deferred");
 					}
 				});
