@@ -81,7 +81,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	@Override
 	public String toString() {
-		return testDescriptor.toString();
+		return "NodeTestTask [" + testDescriptor + "]";
 	}
 
 	void setParentContext(C parentContext) {

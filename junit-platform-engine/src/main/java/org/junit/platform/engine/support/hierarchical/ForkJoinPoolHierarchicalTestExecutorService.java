@@ -273,7 +273,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 		@Override
 		public String toString() {
-			return "ExclusiveTask for " + testTask;
+			return "ExclusiveTask [" + testTask + "]";
 		}
 	}
 
