@@ -35,7 +35,7 @@ jobs:
       - name: Set up Test JDK
         uses: ./.github/actions/setup-test-jdk
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
-        uses: oracle-actions/setup-java@v1.4.0
+        uses: oracle-actions/setup-java@2e744f723b003fdd759727d0ff654c8717024845 # v1.4.0
         with:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
