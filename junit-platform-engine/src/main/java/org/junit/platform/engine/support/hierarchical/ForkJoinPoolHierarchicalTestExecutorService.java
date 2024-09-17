@@ -253,16 +253,16 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				// this means that .join() will wait.
 				return false;
 			}
-			try (ResourceLock lock = resourceLock.acquire()) {
-				threadLock.incrementNesting(lock);
+			try ( //
+					ResourceLock lock = resourceLock.acquire(); //
+					@SuppressWarnings("unused")
+					ThreadLock.NestedResourceLock nested = threadLock.withNesting(lock) //
+			) {
 				testTask.execute();
 				return true;
 			}
 			catch (InterruptedException e) {
 				throw ExceptionUtils.throwAsUncheckedException(e);
-			}
-			finally {
-				threadLock.decrementNesting();
 			}
 		}
 
@@ -300,17 +300,18 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			deferredTasks.add(task);
 		}
 
-		void incrementNesting(ResourceLock lock) {
+		NestedResourceLock withNesting(ResourceLock lock) {
 			locks.push(lock);
-		}
-
-		@SuppressWarnings("resource")
-		void decrementNesting() {
-			locks.pop();
+			return locks::pop;
 		}
 
 		boolean areAllHeldLocksCompatibleWith(ResourceLock lock) {
 			return locks.stream().allMatch(l -> l.isCompatible(lock));
+		}
+
+		interface NestedResourceLock extends AutoCloseable {
+			@Override
+			void close();
 		}
 	}
 
