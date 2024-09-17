@@ -191,16 +191,13 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	private void resubmitDeferredTasks() {
-		ThreadLock threadLock = threadLocks.get();
-		if (threadLock != null) {
-			List<ExclusiveTask> deferredTasks = threadLock.deferredTasks;
-			for (ExclusiveTask deferredTask : deferredTasks) {
-				if (!deferredTask.isDone()) {
-					deferredTask.fork();
-				}
+		List<ExclusiveTask> deferredTasks = threadLocks.get().deferredTasks;
+		for (ExclusiveTask deferredTask : deferredTasks) {
+			if (!deferredTask.isDone()) {
+				deferredTask.fork();
 			}
-			deferredTasks.clear();
 		}
+		deferredTasks.clear();
 	}
 
 	@Override
@@ -265,9 +262,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				throw ExceptionUtils.throwAsUncheckedException(e);
 			}
 			finally {
-				if (threadLock.decrementNesting()) {
-					threadLocks.remove();
-				}
+				threadLock.decrementNesting();
 			}
 		}
 
@@ -310,9 +305,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 		}
 
 		@SuppressWarnings("resource")
-		boolean decrementNesting() {
+		void decrementNesting() {
 			locks.pop();
-			return locks.isEmpty();
 		}
 
 		boolean areAllHeldLocksCompatibleWith(ResourceLock lock) {
