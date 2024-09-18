@@ -20,10 +20,11 @@ import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import static org.junit.jupiter.engine.Constants.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
+import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
@@ -65,8 +66,10 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
@@ -74,6 +77,7 @@ import org.junit.platform.testkit.engine.Event;
 /**
  * @since 1.3
  */
+@SuppressWarnings({ "JUnitMalformedDeclaration", "NewClassNamingConvention" })
 class ParallelExecutionIntegrationTests {
 
 	@Test
@@ -250,6 +254,35 @@ class ParallelExecutionIntegrationTests {
 		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
 	}
 
+	@Test
+	void runsIsolatedTestsLastToMaximizeParallelism() {
+		var configParams = Map.of( //
+			DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent", //
+			PARALLEL_CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME, "3" //
+		);
+		Class<?>[] testClasses = { IsolatedTestCase.class, SuccessfulParallelTestCase.class };
+		var events = executeWithFixedParallelism(3, configParams, testClasses) //
+				.allEvents();
+
+		assertThat(events.stream().filter(event(test(), finishedWithFailure())::matches)).isEmpty();
+
+		List<Event> parallelTestMethodEvents = events.reportingEntryPublished() //
+				.filter(e -> e.getTestDescriptor().getSource() //
+						.filter(it -> //
+						it instanceof MethodSource
+								&& SuccessfulParallelTestCase.class.equals(((MethodSource) it).getJavaClass()) //
+						).isPresent() //
+				) //
+				.toList();
+		assertThat(ThreadReporter.getThreadNames(parallelTestMethodEvents)).hasSize(3);
+
+		var parallelClassFinish = getOnlyElement(getTimestampsFor(events.list(),
+			event(container(SuccessfulParallelTestCase.class), finishedSuccessfully())));
+		var isolatedClassStart = getOnlyElement(
+			getTimestampsFor(events.list(), event(container(IsolatedTestCase.class), started())));
+		assertThat(isolatedClassStart).isAfterOrEqualTo(parallelClassFinish);
+	}
+
 	@Isolated("testing")
 	static class IsolatedTestCase {
 		static AtomicInteger sharedResource;
@@ -384,27 +417,30 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	private List<Event> executeConcurrently(int parallelism, Class<?>... testClasses) {
-		return executeWithFixedParallelism(parallelism, Map.of(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent"),
-			testClasses).allEvents().list();
+		Map<String, String> configParams = Map.of(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
+		return executeWithFixedParallelism(parallelism, configParams, testClasses) //
+				.allEvents() //
+				.list();
 	}
 
 	private EngineExecutionResults executeWithFixedParallelism(int parallelism, Map<String, String> configParams,
 			Class<?>... testClasses) {
-		// @formatter:off
-		var discoveryRequest = request()
-				.selectors(Arrays.stream(testClasses).map(DiscoverySelectors::selectClass).collect(toList()))
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true))
-				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed")
-				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism))
-				.configurationParameters(configParams)
-				.build();
-		// @formatter:on
-		return EngineTestKit.execute("junit-jupiter", discoveryRequest);
+		var classSelectors = Arrays.stream(testClasses) //
+				.map(DiscoverySelectors::selectClass) //
+				.toArray(ClassSelector[]::new);
+		return EngineTestKit.engine("junit-jupiter") //
+				.selectors(classSelectors) //
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, String.valueOf(true)) //
+				.configurationParameter(PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME, "fixed") //
+				.configurationParameter(PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME, String.valueOf(parallelism)) //
+				.configurationParameters(configParams) //
+				.execute();
 	}
 
 	// -------------------------------------------------------------------------
 
 	@ExtendWith(ThreadReporter.class)
+	@Execution(SAME_THREAD)
 	static class SuccessfulParallelTestCase {
 
 		static AtomicInteger sharedResource;
@@ -417,16 +453,19 @@ class ParallelExecutionIntegrationTests {
 		}
 
 		@Test
+		@Execution(CONCURRENT)
 		void firstTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
 
 		@Test
+		@Execution(CONCURRENT)
 		void secondTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
 
 		@Test
+		@Execution(CONCURRENT)
 		void thirdTest() throws Exception {
 			incrementAndBlock(sharedResource, countDownLatch);
 		}
@@ -782,6 +821,7 @@ class ParallelExecutionIntegrationTests {
 		assertEquals(value, sharedResource.get());
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch)
 			throws InterruptedException {
 		var value = sharedResource.incrementAndGet();
@@ -790,6 +830,7 @@ class ParallelExecutionIntegrationTests {
 		return value;
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static void storeAndBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)
 			throws InterruptedException {
 		var value = sharedResource.get();
@@ -798,7 +839,7 @@ class ParallelExecutionIntegrationTests {
 		assertEquals(value, sharedResource.get());
 	}
 
-	/**
+	/*
 	 * To simulate tests running in parallel tests will modify a shared
 	 * resource, simulate work by waiting, then check if the shared resource was
 	 * not modified by any other thread.
@@ -806,10 +847,10 @@ class ParallelExecutionIntegrationTests {
 	 * Depending on system performance the simulation of work needs to be longer
 	 * on slower systems to ensure tests can run in parallel.
 	 *
-	 * Currently CI is known to be slow.
+	 * Currently, CI is known to be slow.
 	 */
 	private static long estimateSimulatedTestDurationInMiliseconds() {
-		var runningInCi = Boolean.valueOf(System.getenv("CI"));
+		var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
 		return runningInCi ? 1000 : 100;
 	}
 
