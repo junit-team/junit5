@@ -22,10 +22,8 @@ jobs:
         jdk:
         - version: 22
           type: ga
-          distribution: temurin
         - version: 23
           type: ga
-          distribution: oracle
         - version: 24
           type: ea
         - version: 24
@@ -51,7 +49,7 @@ jobs:
         if: matrix.jdk.type == 'ga'
         uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
         with:
-          distribution: ${{ matrix.jdk.distribution }}
+          distribution: ${{ matrix.jdk.distribution || 'temurin' }}
           java-version: ${{ matrix.jdk.version }}
           check-latest: true
       - name: 'Prepare JDK${{ matrix.jdk.version }} env var'
