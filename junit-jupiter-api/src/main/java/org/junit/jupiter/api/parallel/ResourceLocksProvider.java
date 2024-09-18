@@ -35,18 +35,10 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * but for some cases may be a more flexible and less verbose alternative
  * since it allows to add resources programmatically.
  *
- * @implNote If both {@code @ResourceLock(value, mode)}
- * and {@code ResourceLocksProvider} are used
- * then shared resources from them are summed up.
- * It means that if resource "A" is declared via {@code @ResourceLock("A")}
- * and resource "B" added via {@code new Lock("B")}
- * then a test class or test method will have both resources: "A" and "B".
- *
  * @since 5.12
- * @see Isolated
+ * @see ResourceLock#providers()
  * @see Resources
  * @see ResourceAccessMode
- * @see ResourceLock
  * @see Lock
  */
 @API(status = EXPERIMENTAL, since = "5.12")
