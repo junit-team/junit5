@@ -74,6 +74,7 @@ import org.junit.platform.testkit.engine.Event;
 /**
  * @since 1.3
  */
+@SuppressWarnings({"JUnitMalformedDeclaration", "NewClassNamingConvention"})
 class ParallelExecutionIntegrationTests {
 
 	@Test
@@ -782,6 +783,7 @@ class ParallelExecutionIntegrationTests {
 		assertEquals(value, sharedResource.get());
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch)
 			throws InterruptedException {
 		var value = sharedResource.incrementAndGet();
@@ -790,6 +792,7 @@ class ParallelExecutionIntegrationTests {
 		return value;
 	}
 
+	@SuppressWarnings("ResultOfMethodCallIgnored")
 	private static void storeAndBlockAndCheck(AtomicInteger sharedResource, CountDownLatch countDownLatch)
 			throws InterruptedException {
 		var value = sharedResource.get();
@@ -798,7 +801,7 @@ class ParallelExecutionIntegrationTests {
 		assertEquals(value, sharedResource.get());
 	}
 
-	/**
+	/*
 	 * To simulate tests running in parallel tests will modify a shared
 	 * resource, simulate work by waiting, then check if the shared resource was
 	 * not modified by any other thread.
@@ -806,10 +809,10 @@ class ParallelExecutionIntegrationTests {
 	 * Depending on system performance the simulation of work needs to be longer
 	 * on slower systems to ensure tests can run in parallel.
 	 *
-	 * Currently CI is known to be slow.
+	 * Currently, CI is known to be slow.
 	 */
 	private static long estimateSimulatedTestDurationInMiliseconds() {
-		var runningInCi = Boolean.valueOf(System.getenv("CI"));
+		var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
 		return runningInCi ? 1000 : 100;
 	}
 
