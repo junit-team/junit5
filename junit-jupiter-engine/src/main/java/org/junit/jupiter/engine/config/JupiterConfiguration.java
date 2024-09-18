@@ -36,6 +36,7 @@ public interface JupiterConfiguration {
 
 	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 	String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
+	String THREAD_PER_CLASS_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.threadperclass.enabled";
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
@@ -49,6 +50,8 @@ public interface JupiterConfiguration {
 	<T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer);
 
 	boolean isParallelExecutionEnabled();
+
+	boolean isThreadPerClassExecutionEnabled();
 
 	boolean isExtensionAutoDetectionEnabled();
 

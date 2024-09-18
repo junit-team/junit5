@@ -62,6 +62,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isThreadPerClassExecutionEnabled() {
+		return (boolean) cache.computeIfAbsent(THREAD_PER_CLASS_EXECUTION_ENABLED_PROPERTY_NAME,
+			key -> delegate.isThreadPerClassExecutionEnabled());
+	}
+
+	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return (boolean) cache.computeIfAbsent(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME,
 			key -> delegate.isExtensionAutoDetectionEnabled());
