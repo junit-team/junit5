@@ -33,7 +33,9 @@ on GitHub.
 [[release-notes-5.11.1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Improve parallelism and reduce number of blocked threads used by
+  `HierarchicalTestEngine` implementations when parallel execution is enabled and the
+  global read-write lock is used.
 
 
 [[release-notes-5.11.1-junit-jupiter]]
@@ -53,7 +55,8 @@ on GitHub.
 [[release-notes-5.11.1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Improve parallelism and reduce number of blocked threads in the presence of `@Isolated`
+  tests when parallel execution is enabled
 
 
 [[release-notes-5.11.1-junit-vintage]]

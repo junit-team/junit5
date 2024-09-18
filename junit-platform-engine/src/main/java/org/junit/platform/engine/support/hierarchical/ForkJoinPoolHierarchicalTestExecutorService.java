@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
+import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.lang.reflect.Constructor;
@@ -38,6 +39,7 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadWriteLock;
 
 /**
  * A {@link ForkJoinPool}-based
@@ -155,29 +157,34 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			new ExclusiveTask(tasks.get(0)).execSync();
 			return;
 		}
-		Deque<ExclusiveTask> nonConcurrentTasks = new LinkedList<>();
+		Deque<ExclusiveTask> isolatedTasks = new LinkedList<>();
+		Deque<ExclusiveTask> sameThreadTasks = new LinkedList<>();
 		Deque<ExclusiveTask> concurrentTasksInReverseOrder = new LinkedList<>();
-		forkConcurrentTasks(tasks, nonConcurrentTasks, concurrentTasksInReverseOrder);
-		executeNonConcurrentTasks(nonConcurrentTasks);
+		forkConcurrentTasks(tasks, isolatedTasks, sameThreadTasks, concurrentTasksInReverseOrder);
+		executeSync(sameThreadTasks);
 		joinConcurrentTasksInReverseOrderToEnableWorkStealing(concurrentTasksInReverseOrder);
+		executeSync(isolatedTasks);
 	}
 
-	private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ExclusiveTask> nonConcurrentTasks,
-			Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
+	private void forkConcurrentTasks(List<? extends TestTask> tasks, Deque<ExclusiveTask> isolatedTasks,
+			Deque<ExclusiveTask> sameThreadTasks, Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (TestTask testTask : tasks) {
 			ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
-			if (testTask.getExecutionMode() == CONCURRENT) {
-				exclusiveTask.fork();
-				concurrentTasksInReverseOrder.addFirst(exclusiveTask);
+			if (testTask.getResourceLock() instanceof GlobalReadWriteLock) {
+				isolatedTasks.add(exclusiveTask);
+			}
+			else if (testTask.getExecutionMode() == SAME_THREAD) {
+				sameThreadTasks.add(exclusiveTask);
 			}
 			else {
-				nonConcurrentTasks.add(exclusiveTask);
+				exclusiveTask.fork();
+				concurrentTasksInReverseOrder.addFirst(exclusiveTask);
 			}
 		}
 	}
 
-	private void executeNonConcurrentTasks(Deque<ExclusiveTask> nonConcurrentTasks) {
-		for (ExclusiveTask task : nonConcurrentTasks) {
+	private void executeSync(Deque<ExclusiveTask> tasks) {
+		for (ExclusiveTask task : tasks) {
 			task.execSync();
 		}
 	}
