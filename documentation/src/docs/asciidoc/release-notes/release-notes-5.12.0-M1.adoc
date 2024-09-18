@@ -27,7 +27,8 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
+  calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
