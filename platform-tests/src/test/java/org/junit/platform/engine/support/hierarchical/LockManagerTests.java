@@ -112,20 +112,20 @@ class LockManagerTests {
 	}
 
 	@Test
-	void usesSpecialClassForGlobalReadLock() {
+	void usesSingleInstanceForGlobalReadLock() {
 		var lock = lockManager.getLockForResources(List.of(ExclusiveResource.GLOBAL_READ));
 
 		assertThat(lock) //
-				.isInstanceOf(SingleLock.GlobalReadLock.class) //
+				.isInstanceOf(SingleLock.class) //
 				.isSameAs(lockManager.getLockForResource(ExclusiveResource.GLOBAL_READ));
 	}
 
 	@Test
-	void usesSpecialClassForGlobalReadWriteLock() {
+	void usesSingleInstanceForGlobalReadWriteLock() {
 		var lock = lockManager.getLockForResources(List.of(ExclusiveResource.GLOBAL_READ_WRITE));
 
 		assertThat(lock) //
-				.isInstanceOf(SingleLock.GlobalReadWriteLock.class) //
+				.isInstanceOf(SingleLock.class) //
 				.isSameAs(lockManager.getLockForResource(ExclusiveResource.GLOBAL_READ_WRITE));
 	}
 

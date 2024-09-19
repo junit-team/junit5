@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 
@@ -39,7 +40,6 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.ConfigurationParameters;
-import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadWriteLock;
 
 /**
  * A {@link ForkJoinPool}-based
@@ -170,7 +170,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 			Deque<ExclusiveTask> sameThreadTasks, Deque<ExclusiveTask> concurrentTasksInReverseOrder) {
 		for (TestTask testTask : tasks) {
 			ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
-			if (testTask.getResourceLock() instanceof GlobalReadWriteLock) {
+			if (requiresGlobalReadWriteLock(testTask)) {
 				isolatedTasks.add(exclusiveTask);
 			}
 			else if (testTask.getExecutionMode() == SAME_THREAD) {
@@ -181,6 +181,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				concurrentTasksInReverseOrder.addFirst(exclusiveTask);
 			}
 		}
+	}
+
+	private static boolean requiresGlobalReadWriteLock(TestTask testTask) {
+		return testTask.getResourceLock().getResources().contains(GLOBAL_READ_WRITE);
 	}
 
 	private void executeSync(Deque<ExclusiveTask> tasks) {

@@ -88,16 +88,4 @@ class SingleLock implements ResourceLock {
 		}
 
 	}
-
-	static class GlobalReadLock extends SingleLock {
-		GlobalReadLock(Lock lock) {
-			super(ExclusiveResource.GLOBAL_READ, lock);
-		}
-	}
-
-	static class GlobalReadWriteLock extends SingleLock {
-		GlobalReadWriteLock(Lock lock) {
-			super(ExclusiveResource.GLOBAL_READ_WRITE, lock);
-		}
-	}
 }

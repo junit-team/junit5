@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
 
 import java.util.List;
@@ -46,38 +48,12 @@ class ResourceLockTests {
 		assertFalse(singleLock.isCompatible(new SingleLock(resource("B", LockMode.READ_WRITE), anyReentrantLock())));
 		assertFalse(singleLock.isCompatible(new SingleLock(resource("A"), anyReentrantLock())));
 		assertTrue(singleLock.isCompatible(new SingleLock(resource("C"), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
 		assertTrue(singleLock.isCompatible(
 			new CompositeLock(allOf(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
 		assertFalse(singleLock.isCompatible(
 			new CompositeLock(allOf(resourceB, resource("A")), List.of(anyReentrantLock(), anyReentrantLock()))));
-	}
-
-	@Test
-	void globalReadLockIsCompatibleWithEverythingExceptGlobalReadWriteLock() {
-		var globalReadLock = new SingleLock.GlobalReadLock(anyReentrantLock());
-
-		assertTrue(globalReadLock.isCompatible(globalReadLock));
-		assertTrue(globalReadLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(globalReadLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertTrue(globalReadLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertFalse(globalReadLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertTrue(
-			globalReadLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
-	}
-
-	@Test
-	void globalReadWriteLockIsIncompatibleOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		var globalReadWriteLock = new SingleLock.GlobalReadWriteLock(anyReentrantLock());
-
-		assertTrue(globalReadWriteLock.isCompatible(globalReadWriteLock));
-		assertTrue(globalReadWriteLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(globalReadWriteLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertTrue(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertTrue(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertTrue(
-			globalReadWriteLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
 	}
 
 	@Test
@@ -87,8 +63,8 @@ class ResourceLockTests {
 		assertTrue(compositeLock.isCompatible(compositeLock));
 		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));
 		assertTrue(compositeLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
+		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
 		assertTrue(compositeLock.isCompatible(compositeLock));
 	}
 

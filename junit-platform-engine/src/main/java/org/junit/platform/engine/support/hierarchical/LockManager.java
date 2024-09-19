@@ -34,21 +34,18 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadLock;
-import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadWriteLock;
-
 /**
  * @since 1.3
  */
 class LockManager {
 
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
-	private final GlobalReadLock globalReadLock;
-	private final GlobalReadWriteLock globalReadWriteLock;
+	private final SingleLock globalReadLock;
+	private final SingleLock globalReadWriteLock;
 
 	public LockManager() {
-		globalReadLock = new GlobalReadLock(toLock(GLOBAL_READ));
-		globalReadWriteLock = new GlobalReadWriteLock(toLock(GLOBAL_READ_WRITE));
+		globalReadLock = new SingleLock(GLOBAL_READ, toLock(GLOBAL_READ));
+		globalReadWriteLock = new SingleLock(GLOBAL_READ_WRITE, toLock(GLOBAL_READ_WRITE));
 	}
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
