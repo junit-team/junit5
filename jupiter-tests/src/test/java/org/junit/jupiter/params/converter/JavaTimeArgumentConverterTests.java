@@ -110,15 +110,21 @@ class JavaTimeArgumentConverterTests {
 		assertThat(exception).hasMessage("Cannot convert to java.lang.Integer: 2017");
 	}
 
+	/**
+	 * @since 5.12
+	 */
 	@Test
 	void throwsExceptionOnNullParameterWithoutNullable() {
 		var exception = assertThrows(ArgumentConversionException.class,
 			() -> convert(null, "dd.MM.yyyy", LocalDate.class));
 
 		assertThat(exception).hasMessage(
-			"Cannot convert null to java.time.LocalDate, consider setting 'nullable = true'");
+			"Cannot convert null to java.time.LocalDate; consider setting 'nullable = true'");
 	}
 
+	/**
+	 * @since 5.12
+	 */
 	@Test
 	void convertsNullableParameter() {
 		assertThat(convert(null, "dd.MM.yyyy", true, LocalDate.class)).isEqualTo(null);

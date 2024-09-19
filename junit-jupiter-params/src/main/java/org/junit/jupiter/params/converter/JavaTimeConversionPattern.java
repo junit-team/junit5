@@ -46,8 +46,14 @@ public @interface JavaTimeConversionPattern {
 	String value();
 
 	/**
-	 * Whether this Java Time parameter may be null or not.
+	 * Whether {@code null} argument values are allowed.
+	 *
+	 * <p>Defaults to {@code false}, in which case a {@code null} value will result in
+	 * an exception.
+	 *
+	 * @since 5.12
 	 */
+	@API(status = STABLE, since = "5.12")
 	boolean nullable() default false;
 
 }
