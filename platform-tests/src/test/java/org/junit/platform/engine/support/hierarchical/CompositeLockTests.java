@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.stream.Collectors.toCollection;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -18,8 +17,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
-import java.util.NavigableSet;
-import java.util.TreeSet;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
 import java.util.stream.IntStream;
@@ -95,10 +92,10 @@ class CompositeLockTests {
 		return lock;
 	}
 
-	private NavigableSet<ExclusiveResource> anyResources(int n) {
+	private List<ExclusiveResource> anyResources(int n) {
 		return IntStream.range(0, n) //
 				.mapToObj(j -> new ExclusiveResource("key" + j, LockMode.READ)) //
-				.collect(toCollection(() -> new TreeSet<>(ExclusiveResource.COMPARATOR)));
+				.toList();
 	}
 
 }

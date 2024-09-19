@@ -10,16 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.unmodifiableNavigableSet;
+import static java.util.Collections.singletonList;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
 
-import java.util.NavigableSet;
-import java.util.SortedSet;
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
 
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -27,21 +24,16 @@ import org.junit.platform.commons.util.ToStringBuilder;
  */
 class SingleLock implements ResourceLock {
 
-	private final SortedSet<ExclusiveResource> resources;
+	private final List<ExclusiveResource> resources;
 	private final Lock lock;
 
-	SingleLock(NavigableSet<ExclusiveResource> resources, Lock lock) {
-		Preconditions.condition(resources.size() == 1, "SingleLock must have exactly one resource");
-		this.resources = unmodifiableNavigableSet(resources);
+	SingleLock(ExclusiveResource resource, Lock lock) {
+		this.resources = singletonList(resource);
 		this.lock = lock;
 	}
 
-	SingleLock(ExclusiveResource resource, Lock lock) {
-		this(singleton(resource), lock);
-	}
-
 	@Override
-	public SortedSet<ExclusiveResource> getResources() {
+	public List<ExclusiveResource> getResources() {
 		return resources;
 	}
 

@@ -10,15 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.unmodifiableNavigableSet;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Comparator;
-import java.util.NavigableSet;
 import java.util.Objects;
-import java.util.TreeSet;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import org.apiguardian.api.API;
@@ -78,12 +75,6 @@ public class ExclusiveResource {
 	public ExclusiveResource(String key, LockMode lockMode) {
 		this.key = Preconditions.notBlank(key, "key must not be blank");
 		this.lockMode = Preconditions.notNull(lockMode, "lockMode must not be null");
-	}
-
-	static NavigableSet<ExclusiveResource> singleton(ExclusiveResource value) {
-		NavigableSet<ExclusiveResource> set = new TreeSet<>(COMPARATOR);
-		set.add(value);
-		return unmodifiableNavigableSet(set);
 	}
 
 	/**

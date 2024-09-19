@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
 
 import java.util.List;
 import java.util.NavigableSet;
@@ -33,7 +32,7 @@ class ResourceLockTests {
 		assertTrue(nopLock.isCompatible(nopLock));
 		assertTrue(nopLock.isCompatible(NopLock.INSTANCE));
 		assertTrue(nopLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertTrue(nopLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
+		assertTrue(nopLock.isCompatible(new CompositeLock(List.of(anyResource()), List.of(anyReentrantLock()))));
 	}
 
 	@Test
@@ -51,14 +50,14 @@ class ResourceLockTests {
 		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
 		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
 		assertTrue(singleLock.isCompatible(
-			new CompositeLock(allOf(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
-		assertFalse(singleLock.isCompatible(new CompositeLock(allOf(resource("A1"), resource("A2"), resourceB),
+			new CompositeLock(List.of(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
+		assertFalse(singleLock.isCompatible(new CompositeLock(List.of(resource("A1"), resource("A2"), resourceB),
 			List.of(anyReentrantLock(), anyReentrantLock(), anyReentrantLock()))));
 	}
 
 	@Test
 	void compositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		CompositeLock compositeLock = new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()));
+		CompositeLock compositeLock = new CompositeLock(List.of(anyResource()), List.of(anyReentrantLock()));
 
 		assertTrue(compositeLock.isCompatible(compositeLock));
 		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));

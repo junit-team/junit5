@@ -12,11 +12,10 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.List;
 import java.util.Optional;
-import java.util.SortedSet;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * A lock for a one or more resources.
@@ -47,7 +46,10 @@ public interface ResourceLock extends AutoCloseable {
 		release();
 	}
 
-	SortedSet<ExclusiveResource> getResources();
+	/**
+	 * {@return the exclusive resources this lock represents}
+	 */
+	List<ExclusiveResource> getResources();
 
 	/**
 	 * {@return whether the given lock is compatible with this lock}
@@ -55,24 +57,18 @@ public interface ResourceLock extends AutoCloseable {
 	 */
 	default boolean isCompatible(ResourceLock other) {
 
-		SortedSet<ExclusiveResource> ownResources = this.getResources();
-		SortedSet<ExclusiveResource> otherResources = other.getResources();
+		List<ExclusiveResource> ownResources = this.getResources();
+		List<ExclusiveResource> otherResources = other.getResources();
 
 		if (ownResources.isEmpty() || otherResources.isEmpty()) {
 			return true;
 		}
 
-		Preconditions.condition(ExclusiveResource.COMPARATOR.equals(ownResources.comparator()),
-			() -> String.format("this.getResources() must be sorted according to %s, but were sorted according to %s",
-				ExclusiveResource.COMPARATOR, ownResources.comparator()));
-		Preconditions.condition(ExclusiveResource.COMPARATOR.equals(otherResources.comparator()),
-			() -> String.format("other.getResources() must be sorted according to %s, but were sorted according to %s",
-				ExclusiveResource.COMPARATOR, otherResources.comparator()));
-
 		Optional<ExclusiveResource> potentiallyDeadlockCausingAdditionalResource = otherResources.stream() //
 				.filter(resource -> !ownResources.contains(resource)) //
 				.findFirst() //
-				.filter(resource -> ExclusiveResource.COMPARATOR.compare(resource, ownResources.last()) < 0);
+				.filter(resource -> ExclusiveResource.COMPARATOR.compare(resource,
+					ownResources.get(ownResources.size() - 1)) < 0);
 
 		return !(potentiallyDeadlockCausingAdditionalResource.isPresent());
 	}

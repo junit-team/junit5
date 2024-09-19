@@ -10,25 +10,20 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.emptyNavigableSet;
-import static java.util.Collections.unmodifiableNavigableSet;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -53,15 +48,15 @@ class LockManager {
 	}
 
 	ResourceLock getLockForResource(ExclusiveResource resource) {
-		return toResourceLock(singleton(resource));
+		return toResourceLock(singletonList(resource));
 	}
 
-	private NavigableSet<ExclusiveResource> toDistinctSortedResources(Collection<ExclusiveResource> resources) {
+	private List<ExclusiveResource> toDistinctSortedResources(Collection<ExclusiveResource> resources) {
 		if (resources.isEmpty()) {
-			return emptyNavigableSet();
+			return emptyList();
 		}
 		if (resources.size() == 1) {
-			return singleton(getOnlyElement(resources));
+			return singletonList(getOnlyElement(resources));
 		}
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
@@ -69,33 +64,34 @@ class LockManager {
 				.distinct()
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
 
-		NavigableSet<ExclusiveResource> result = resourcesByKey.values().stream()
+		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
-				.collect(toCollection(() -> new TreeSet<>(ExclusiveResource.COMPARATOR)));
+				.collect(toUnmodifiableList());
 		// @formatter:on
-
-		return unmodifiableNavigableSet(result);
 	}
 
-	private ResourceLock toResourceLock(NavigableSet<ExclusiveResource> resources) {
+	private ResourceLock toResourceLock(List<ExclusiveResource> resources) {
 		switch (resources.size()) {
 			case 0:
 				return NopLock.INSTANCE;
 			case 1:
-				ExclusiveResource resource = getOnlyElement(resources);
-				if (GLOBAL_READ.equals(resource)) {
-					return globalReadLock;
-				}
-				if (GLOBAL_READ_WRITE.equals(resource)) {
-					return globalReadWriteLock;
-				}
-				return new SingleLock(resources, toLock(resource));
+				return toSingleLock(getOnlyElement(resources));
 			default:
 				return new CompositeLock(resources, toLocks(resources));
 		}
 	}
 
-	private List<Lock> toLocks(Set<ExclusiveResource> resources) {
+	private SingleLock toSingleLock(ExclusiveResource resource) {
+		if (GLOBAL_READ.equals(resource)) {
+			return globalReadLock;
+		}
+		if (GLOBAL_READ_WRITE.equals(resource)) {
+			return globalReadWriteLock;
+		}
+		return new SingleLock(resource, toLock(resource));
+	}
+
+	private List<Lock> toLocks(List<ExclusiveResource> resources) {
 		return resources.stream().map(this::toLock).collect(toUnmodifiableList());
 	}
 
