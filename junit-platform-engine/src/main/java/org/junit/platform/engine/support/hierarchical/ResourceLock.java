@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.SortedSet;
+
 import org.apiguardian.api.API;
 
 /**
@@ -43,12 +45,18 @@ public interface ResourceLock extends AutoCloseable {
 		release();
 	}
 
+	SortedSet<ExclusiveResource> getResources();
+
 	/**
 	 * {@return whether the given lock is compatible with this lock}
 	 * @param other the other lock to check for compatibility
 	 */
 	default boolean isCompatible(ResourceLock other) {
-		return this instanceof NopLock || other instanceof NopLock;
+		if (this.getResources().isEmpty() || other.getResources().isEmpty()) {
+			return true;
+		}
+		return other.getResources().stream() //
+				.allMatch(it -> this.getResources().contains(it)
+						|| ExclusiveResource.COMPARATOR.compare(this.getResources().last(), it) < 0);
 	}
-
 }

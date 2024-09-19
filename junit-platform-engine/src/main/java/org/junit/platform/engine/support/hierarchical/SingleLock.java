@@ -10,18 +10,39 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.unmodifiableNavigableSet;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
+
+import java.util.NavigableSet;
+import java.util.SortedSet;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
+
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * @since 1.3
  */
 class SingleLock implements ResourceLock {
 
+	private final SortedSet<ExclusiveResource> resources;
 	private final Lock lock;
 
-	SingleLock(Lock lock) {
+	SingleLock(NavigableSet<ExclusiveResource> resources, Lock lock) {
+		Preconditions.condition(resources.size() == 1, "SingleLock must have exactly one resource");
+		this.resources = unmodifiableNavigableSet(resources);
 		this.lock = lock;
+	}
+
+	SingleLock(ExclusiveResource resource, Lock lock) {
+		this(singleton(resource), lock);
+	}
+
+	@Override
+	public SortedSet<ExclusiveResource> getResources() {
+		return resources;
 	}
 
 	// for tests only
@@ -38,6 +59,14 @@ class SingleLock implements ResourceLock {
 	@Override
 	public void release() {
 		this.lock.unlock();
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("resource", getOnlyElement(resources)) //
+				.append("lock", lock) //
+				.toString();
 	}
 
 	private class SingleLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
@@ -62,18 +91,13 @@ class SingleLock implements ResourceLock {
 
 	static class GlobalReadLock extends SingleLock {
 		GlobalReadLock(Lock lock) {
-			super(lock);
-		}
-
-		@Override
-		public boolean isCompatible(ResourceLock other) {
-			return !(other instanceof GlobalReadWriteLock);
+			super(ExclusiveResource.GLOBAL_READ, lock);
 		}
 	}
 
 	static class GlobalReadWriteLock extends SingleLock {
 		GlobalReadWriteLock(Lock lock) {
-			super(lock);
+			super(ExclusiveResource.GLOBAL_READ_WRITE, lock);
 		}
 	}
 }

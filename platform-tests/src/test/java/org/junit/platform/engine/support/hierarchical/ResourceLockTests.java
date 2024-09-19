@@ -12,68 +12,102 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.singleton;
 
 import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 
-@SuppressWarnings("resource")
 class ResourceLockTests {
 
 	@Test
 	void nopLocksAreCompatibleWithEverything() {
 		var nopLock = NopLock.INSTANCE;
 
+		assertTrue(nopLock.isCompatible(nopLock));
 		assertTrue(nopLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(nopLock.isCompatible(new SingleLock(anyReentrantLock())));
-		assertTrue(nopLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertTrue(nopLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertTrue(nopLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+		assertTrue(nopLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
+		assertTrue(nopLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
 	}
 
 	@Test
-	void singleLocksAreIncompatibleWithNonNopLocks() {
-		var singleLock = new SingleLock(anyReentrantLock());
+	void singleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+		ExclusiveResource resourceB = resource("B", LockMode.READ);
+		var singleLock = new SingleLock(resourceB, anyReentrantLock());
 
+		assertTrue(singleLock.isCompatible(singleLock));
 		assertTrue(singleLock.isCompatible(NopLock.INSTANCE));
-		assertFalse(singleLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertTrue(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
+		assertTrue(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock(resource("B", LockMode.READ_WRITE), anyReentrantLock())));
+		assertFalse(singleLock.isCompatible(new SingleLock(resource("A"), anyReentrantLock())));
+		assertTrue(singleLock.isCompatible(new SingleLock(resource("C"), anyReentrantLock())));
 		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
 		assertFalse(singleLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+		assertTrue(singleLock.isCompatible(
+			new CompositeLock(allOf(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
+		assertFalse(singleLock.isCompatible(
+			new CompositeLock(allOf(resourceB, resource("A")), List.of(anyReentrantLock(), anyReentrantLock()))));
 	}
 
 	@Test
 	void globalReadLockIsCompatibleWithEverythingExceptGlobalReadWriteLock() {
 		var globalReadLock = new SingleLock.GlobalReadLock(anyReentrantLock());
 
+		assertTrue(globalReadLock.isCompatible(globalReadLock));
 		assertTrue(globalReadLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(globalReadLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertTrue(globalReadLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
 		assertTrue(globalReadLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
 		assertFalse(globalReadLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertTrue(globalReadLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+		assertTrue(
+			globalReadLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
 	}
 
 	@Test
-	void globalReadWriteLockIsIncompatibleWithWithNonNopLocks() {
+	void globalReadWriteLockIsIncompatibleOtherLocksThatCanPotentiallyCauseDeadlocks() {
 		var globalReadWriteLock = new SingleLock.GlobalReadWriteLock(anyReentrantLock());
 
+		assertTrue(globalReadWriteLock.isCompatible(globalReadWriteLock));
 		assertTrue(globalReadWriteLock.isCompatible(NopLock.INSTANCE));
-		assertFalse(globalReadWriteLock.isCompatible(new SingleLock(anyReentrantLock())));
-		assertFalse(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
-		assertFalse(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertFalse(globalReadWriteLock.isCompatible(new CompositeLock(List.of(anyReentrantLock()))));
+		assertTrue(globalReadWriteLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
+		assertTrue(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
+		assertTrue(globalReadWriteLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
+		assertTrue(
+			globalReadWriteLock.isCompatible(new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()))));
 	}
 
 	@Test
-	void compositeLocksAreIncompatibleWithNonNopLocks() {
-		CompositeLock compositeLock = new CompositeLock(List.of(anyReentrantLock()));
+	void compositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+		CompositeLock compositeLock = new CompositeLock(singleton(anyResource()), List.of(anyReentrantLock()));
 
+		assertTrue(compositeLock.isCompatible(compositeLock));
 		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));
-		assertFalse(compositeLock.isCompatible(new SingleLock(anyReentrantLock())));
+		assertTrue(compositeLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
 		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadLock(anyReentrantLock())));
 		assertFalse(compositeLock.isCompatible(new SingleLock.GlobalReadWriteLock(anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(compositeLock));
+		assertTrue(compositeLock.isCompatible(compositeLock));
+	}
+
+	private static ExclusiveResource anyResource() {
+		return resource("key", LockMode.READ);
+	}
+
+	private static ExclusiveResource resource(String key) {
+		return resource(key, LockMode.READ);
+	}
+
+	private static ExclusiveResource resource(String key, LockMode lockMode) {
+		return new ExclusiveResource(key, lockMode);
+	}
+
+	private static NavigableSet<ExclusiveResource> allOf(ExclusiveResource... resources) {
+		var result = new TreeSet<>(ExclusiveResource.COMPARATOR);
+		result.addAll(List.of(resources));
+		return result;
 	}
 
 	private static ReentrantLock anyReentrantLock() {

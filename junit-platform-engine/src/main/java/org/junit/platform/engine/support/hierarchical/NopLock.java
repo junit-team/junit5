@@ -10,6 +10,13 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.unmodifiableNavigableSet;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
+
+import org.junit.platform.commons.util.ToStringBuilder;
+
 /**
  * No-op {@link ResourceLock} implementation.
  *
@@ -18,8 +25,15 @@ package org.junit.platform.engine.support.hierarchical;
 class NopLock implements ResourceLock {
 
 	static final ResourceLock INSTANCE = new NopLock();
+	static final SortedSet<ExclusiveResource> RESOURCES = unmodifiableNavigableSet(
+		new TreeSet<>(ExclusiveResource.COMPARATOR));
 
 	private NopLock() {
+	}
+
+	@Override
+	public SortedSet<ExclusiveResource> getResources() {
+		return RESOURCES;
 	}
 
 	@Override
@@ -32,4 +46,8 @@ class NopLock implements ResourceLock {
 		// nothing to do
 	}
 
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).toString();
+	}
 }

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 
 /**
  * @since 1.3
@@ -27,7 +28,7 @@ class SingleLockTests {
 	void acquire() throws Exception {
 		var lock = new ReentrantLock();
 
-		new SingleLock(lock).acquire();
+		new SingleLock(anyResource(), lock).acquire();
 
 		assertTrue(lock.isLocked());
 	}
@@ -37,9 +38,13 @@ class SingleLockTests {
 	void release() throws Exception {
 		var lock = new ReentrantLock();
 
-		new SingleLock(lock).acquire().close();
+		new SingleLock(anyResource(), lock).acquire().close();
 
 		assertFalse(lock.isLocked());
+	}
+
+	private static ExclusiveResource anyResource() {
+		return new ExclusiveResource("key", LockMode.READ);
 	}
 
 }
