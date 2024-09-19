@@ -72,12 +72,13 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 
 		try (var pool = new ForkJoinPoolHierarchicalTestExecutorService(configuration, taskEventListener)) {
 
+			var extraTask = pool.new ExclusiveTask(isolatedTask);
 			var bothLeafTasksAreRunning = new CountDownLatch(2);
 			var nestedTask = new DummyTestTask("nestedTask", globalReadLock, t -> {
 				threadNamesByTaskIdentifier.put(t.identifier(), Thread.currentThread().getName());
 				var leafTask1 = new DummyTestTask("leafTask1", nopLock, t1 -> {
 					threadNamesByTaskIdentifier.put(t1.identifier(), Thread.currentThread().getName());
-					pool.new ExclusiveTask(isolatedTask).fork();
+					extraTask.fork();
 					bothLeafTasksAreRunning.countDown();
 					bothLeafTasksAreRunning.await();
 					try {
@@ -96,6 +97,7 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 			});
 
 			pool.submit(nestedTask).get();
+			extraTask.join();
 		}
 
 		assertEquals(isolatedTask, deferredTask.get());
