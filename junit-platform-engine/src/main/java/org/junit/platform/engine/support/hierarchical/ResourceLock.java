@@ -52,6 +52,11 @@ public interface ResourceLock extends AutoCloseable {
 	List<ExclusiveResource> getResources();
 
 	/**
+	 * {@return whether this lock requires exclusiveness}
+	 */
+	boolean isExclusive();
+
+	/**
 	 * {@return whether the given lock is compatible with this lock}
 	 * @param other the other lock to check for compatibility
 	 */
@@ -62,6 +67,18 @@ public interface ResourceLock extends AutoCloseable {
 
 		if (ownResources.isEmpty() || otherResources.isEmpty()) {
 			return true;
+		}
+
+		// Whenever there's a READ_WRITE lock, it's incompatible with any other lock
+		// because we guarantee that all children will have exclusive access to the
+		// resource in question. In practice, whenever a READ_WRITE lock is present,
+		// NodeTreeWalker will force all children to run in the same thread so that
+		// it should never attempt to steal work from another thread, and we shouldn't
+		// actually reach this point.
+		boolean isGlobalReadLock = ownResources.size() == 1
+				&& ExclusiveResource.GLOBAL_READ.equals(ownResources.get(0));
+		if ((!isGlobalReadLock && other.isExclusive()) || this.isExclusive()) {
+			return false;
 		}
 
 		Optional<ExclusiveResource> potentiallyDeadlockCausingAdditionalResource = otherResources.stream() //

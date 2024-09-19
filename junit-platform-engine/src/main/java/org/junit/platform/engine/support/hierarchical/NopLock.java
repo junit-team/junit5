@@ -44,6 +44,11 @@ class NopLock implements ResourceLock {
 	}
 
 	@Override
+	public boolean isExclusive() {
+		return false;
+	}
+
+	@Override
 	public String toString() {
 		return new ToStringBuilder(this).toString();
 	}

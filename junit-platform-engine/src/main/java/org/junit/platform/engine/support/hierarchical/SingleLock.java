@@ -54,6 +54,11 @@ class SingleLock implements ResourceLock {
 	}
 
 	@Override
+	public boolean isExclusive() {
+		return resources.get(0).getLockMode() == ExclusiveResource.LockMode.READ_WRITE;
+	}
+
+	@Override
 	public String toString() {
 		return new ToStringBuilder(this) //
 				.append("resource", getOnlyElement(resources)) //

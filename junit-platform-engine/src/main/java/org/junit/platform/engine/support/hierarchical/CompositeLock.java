@@ -27,11 +27,14 @@ class CompositeLock implements ResourceLock {
 
 	private final List<ExclusiveResource> resources;
 	private final List<Lock> locks;
+	private final boolean exclusive;
 
 	CompositeLock(List<ExclusiveResource> resources, List<Lock> locks) {
 		Preconditions.condition(resources.size() == locks.size(), "Resources and locks must have the same size");
 		this.resources = unmodifiableList(resources);
 		this.locks = Preconditions.notEmpty(locks, "Locks must not be empty");
+		this.exclusive = resources.stream().anyMatch(
+			resource -> resource.getLockMode() == ExclusiveResource.LockMode.READ_WRITE);
 	}
 
 	@Override
@@ -73,6 +76,11 @@ class CompositeLock implements ResourceLock {
 		for (int i = acquiredLocks.size() - 1; i >= 0; i--) {
 			acquiredLocks.get(i).unlock();
 		}
+	}
+
+	@Override
+	public boolean isExclusive() {
+		return exclusive;
 	}
 
 	@Override

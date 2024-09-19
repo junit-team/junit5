@@ -69,8 +69,24 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
 			), //
 			arguments(//
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
 				Set.of(new ExclusiveResource("b", LockMode.READ)), //
 				Set.of(new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ_WRITE), //
+				Set.of(GLOBAL_READ) //
 			)//
 		);
 	}
@@ -111,20 +127,20 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 	static List<Arguments> compatibleLockCombinations() {
 		return List.of(//
 			arguments(//
-				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
-				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ)) //
+				Set.of(GLOBAL_READ), //
+				Set.of(new ExclusiveResource("a", LockMode.READ)) //
 			), //
 			arguments(//
-				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
-				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ_WRITE)) //
-			), //
-			arguments(//
-				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(GLOBAL_READ), //
 				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
 			), //
 			arguments(//
-				Set.of(GLOBAL_READ_WRITE), //
-				Set.of(GLOBAL_READ) //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ)) //
 			)//
 		);
 	}
