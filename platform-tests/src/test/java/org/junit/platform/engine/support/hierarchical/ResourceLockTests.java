@@ -52,8 +52,8 @@ class ResourceLockTests {
 		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
 		assertTrue(singleLock.isCompatible(
 			new CompositeLock(allOf(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
-		assertFalse(singleLock.isCompatible(
-			new CompositeLock(allOf(resourceB, resource("A")), List.of(anyReentrantLock(), anyReentrantLock()))));
+		assertFalse(singleLock.isCompatible(new CompositeLock(allOf(resource("A1"), resource("A2"), resourceB),
+			List.of(anyReentrantLock(), anyReentrantLock(), anyReentrantLock()))));
 	}
 
 	@Test

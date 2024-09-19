@@ -12,9 +12,11 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.Optional;
 import java.util.SortedSet;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * A lock for a one or more resources.
@@ -52,11 +54,26 @@ public interface ResourceLock extends AutoCloseable {
 	 * @param other the other lock to check for compatibility
 	 */
 	default boolean isCompatible(ResourceLock other) {
-		if (this.getResources().isEmpty() || other.getResources().isEmpty()) {
+
+		SortedSet<ExclusiveResource> ownResources = this.getResources();
+		SortedSet<ExclusiveResource> otherResources = other.getResources();
+
+		if (ownResources.isEmpty() || otherResources.isEmpty()) {
 			return true;
 		}
-		return other.getResources().stream() //
-				.allMatch(it -> this.getResources().contains(it)
-						|| ExclusiveResource.COMPARATOR.compare(this.getResources().last(), it) < 0);
+
+		Preconditions.condition(ExclusiveResource.COMPARATOR.equals(ownResources.comparator()),
+			() -> String.format("this.getResources() must be sorted according to %s, but were sorted according to %s",
+				ExclusiveResource.COMPARATOR, ownResources.comparator()));
+		Preconditions.condition(ExclusiveResource.COMPARATOR.equals(otherResources.comparator()),
+			() -> String.format("other.getResources() must be sorted according to %s, but were sorted according to %s",
+				ExclusiveResource.COMPARATOR, otherResources.comparator()));
+
+		Optional<ExclusiveResource> potentiallyDeadlockCausingAdditionalResource = otherResources.stream() //
+				.filter(resource -> !ownResources.contains(resource)) //
+				.findFirst() //
+				.filter(resource -> ExclusiveResource.COMPARATOR.compare(resource, ownResources.last()) < 0);
+
+		return !(potentiallyDeadlockCausingAdditionalResource.isPresent());
 	}
 }
