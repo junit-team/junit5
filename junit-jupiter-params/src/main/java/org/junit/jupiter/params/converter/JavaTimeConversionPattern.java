@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -44,5 +45,16 @@ public @interface JavaTimeConversionPattern {
 	 * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
 	 */
 	String value();
+
+	/**
+	 * Whether {@code null} argument values are allowed.
+	 *
+	 * <p>Defaults to {@code false}, in which case a {@code null} value will result in
+	 * an exception.
+	 *
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	boolean nullable() default false;
 
 }
