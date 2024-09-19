@@ -45,4 +45,9 @@ public @interface JavaTimeConversionPattern {
 	 */
 	String value();
 
+	/**
+	 * Whether this Java Time parameter may be null or not.
+	 */
+	boolean nullable() default false;
+
 }

@@ -47,7 +47,7 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Add support for null-values in Java Time parameters using the `nullable`-attribute in `JavaTimeConversionPattern`.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]
