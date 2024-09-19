@@ -24,7 +24,6 @@ import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
@@ -240,22 +239,5 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		public String toString() {
 			return identifier;
 		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (obj == this)
-				return true;
-			if (obj == null || obj.getClass() != this.getClass())
-				return false;
-			var that = (DummyTestTask) obj;
-			return Objects.equals(this.identifier, that.identifier)
-					&& Objects.equals(this.resourceLock, that.resourceLock) && Objects.equals(this.action, that.action);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(identifier, resourceLock, action);
-		}
-
 	}
 }
