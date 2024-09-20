@@ -53,7 +53,9 @@ import org.junit.platform.engine.ConfigurationParameters;
 @API(status = STABLE, since = "1.10")
 public class ForkJoinPoolHierarchicalTestExecutorService implements HierarchicalTestExecutorService {
 
-	private final ForkJoinPool forkJoinPool;
+	// package-private for testing
+	final ForkJoinPool forkJoinPool;
+
 	private final TaskEventListener taskEventListener;
 	private final int parallelism;
 	private final ThreadLocal<ThreadLock> threadLocks = ThreadLocal.withInitial(ThreadLock::new);
