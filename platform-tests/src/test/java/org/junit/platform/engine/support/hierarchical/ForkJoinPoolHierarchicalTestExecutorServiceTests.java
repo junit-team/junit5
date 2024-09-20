@@ -139,6 +139,14 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 			), //
 			arguments(//
 				Set.of(GLOBAL_READ), //
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ), //
 				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
 			), //
 			arguments(//
