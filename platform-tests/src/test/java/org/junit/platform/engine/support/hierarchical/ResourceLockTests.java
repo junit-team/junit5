@@ -26,89 +26,94 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode
 class ResourceLockTests {
 
 	@Test
-	void nopLocksAreCompatibleWithEverything() {
+	void nopLocks() {
 		assertCompatible(nopLock(), nopLock());
 		assertCompatible(nopLock(), singleLock(anyReadOnlyResource()));
 		assertCompatible(nopLock(), compositeLock(anyReadOnlyResource()));
 	}
 
 	@Test
-	void readOnlySingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocksOrViolateResourceIsolationGuarantees() {
+	void readOnlySingleLocks() {
 		ExclusiveResource bR = readOnlyResource("b");
 
 		assertCompatible(singleLock(bR), nopLock());
 		assertCompatible(singleLock(bR), singleLock(bR));
-		assertIncompatible(singleLock(bR), singleLock(readWriteResource("b")));
-		assertIncompatible(singleLock(bR), singleLock(readOnlyResource("a")));
+		assertIncompatible(singleLock(bR), singleLock(readWriteResource("b")), "read-write conflict");
+		assertIncompatible(singleLock(bR), singleLock(readOnlyResource("a")), "lock acquisition order");
 		assertCompatible(singleLock(bR), singleLock(readOnlyResource("c")));
-		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ));
-		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ_WRITE));
+		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ), "lock acquisition order");
+		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ_WRITE), "lock acquisition order");
 		assertCompatible(singleLock(bR), compositeLock(bR, readOnlyResource("c")));
-		assertIncompatible(singleLock(bR), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bR));
+		assertIncompatible(singleLock(bR), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bR),
+			"lock acquisition order");
 	}
 
 	@Test
-	void readWriteSingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+	void readWriteSingleLocks() {
 		ExclusiveResource bRW = readWriteResource("b");
 
 		assertCompatible(singleLock(bRW), nopLock());
-		assertIncompatible(singleLock(bRW), singleLock(bRW));
-		assertIncompatible(singleLock(bRW), compositeLock(bRW));
-		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("a")));
-		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("b")));
-		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("c")));
-		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ));
-		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ_WRITE));
-		assertIncompatible(singleLock(bRW), compositeLock(bRW, readOnlyResource("c")));
-		assertIncompatible(singleLock(bRW), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bRW));
+		assertIncompatible(singleLock(bRW), singleLock(bRW), "isolation guarantees");
+		assertIncompatible(singleLock(bRW), compositeLock(bRW), "isolation guarantees");
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("a")), "lock acquisition order");
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("b")), "isolation guarantees");
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("c")), "isolation guarantees");
+		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ), "lock acquisition order");
+		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ_WRITE), "lock acquisition order");
+		assertIncompatible(singleLock(bRW), compositeLock(bRW, readOnlyResource("c")), "isolation guarantees");
+		assertIncompatible(singleLock(bRW), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bRW),
+			"lock acquisition order");
 	}
 
 	@Test
-	void globalReadLockIsCompatibleWithReadWriteLocksExceptForGlobalReadWriteLock() {
+	void globalReadLock() {
 		assertCompatible(singleLock(GLOBAL_READ), nopLock());
 		assertCompatible(singleLock(GLOBAL_READ), singleLock(GLOBAL_READ));
 		assertCompatible(singleLock(GLOBAL_READ), singleLock(anyReadOnlyResource()));
 		assertCompatible(singleLock(GLOBAL_READ), singleLock(anyReadWriteResource()));
-		assertIncompatible(singleLock(GLOBAL_READ), singleLock(GLOBAL_READ_WRITE));
+		assertIncompatible(singleLock(GLOBAL_READ), singleLock(GLOBAL_READ_WRITE), "read-write conflict");
 	}
 
 	@Test
-	void readOnlyCompositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+	void readOnlyCompositeLocks() {
 		ExclusiveResource bR = readOnlyResource("b");
 
 		assertCompatible(compositeLock(bR), nopLock());
 		assertCompatible(compositeLock(bR), singleLock(bR));
 		assertCompatible(compositeLock(bR), compositeLock(bR));
-		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ));
-		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ_WRITE));
-		assertIncompatible(compositeLock(bR), compositeLock(readOnlyResource("a")));
+		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ), "lock acquisition order");
+		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ_WRITE), "lock acquisition order");
+		assertIncompatible(compositeLock(bR), compositeLock(readOnlyResource("a")), "lock acquisition order");
 		assertCompatible(compositeLock(bR), compositeLock(readOnlyResource("c")));
-		assertIncompatible(compositeLock(bR), compositeLock(readWriteResource("b")));
-		assertIncompatible(compositeLock(bR), compositeLock(bR, readWriteResource("b")));
+		assertIncompatible(compositeLock(bR), compositeLock(readWriteResource("b")), "read-write conflict");
+		assertIncompatible(compositeLock(bR), compositeLock(bR, readWriteResource("b")), "read-write conflict");
 	}
 
 	@Test
-	void readWriteCompositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+	void readWriteCompositeLocks() {
 		ExclusiveResource bRW = readWriteResource("b");
 
 		assertCompatible(compositeLock(bRW), nopLock());
-		assertIncompatible(compositeLock(bRW), singleLock(bRW));
-		assertIncompatible(compositeLock(bRW), compositeLock(bRW));
-		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("a")));
-		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("b")));
-		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("c")));
-		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ));
-		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ_WRITE));
-		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("a")));
-		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("b"), readOnlyResource("c")));
+		assertIncompatible(compositeLock(bRW), singleLock(bRW), "isolation guarantees");
+		assertIncompatible(compositeLock(bRW), compositeLock(bRW), "isolation guarantees");
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("a")), "lock acquisition order");
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("b")), "isolation guarantees");
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("c")), "isolation guarantees");
+		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ), "lock acquisition order");
+		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ_WRITE), "lock acquisition order");
+		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("a")), "lock acquisition order");
+		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("b"), readOnlyResource("c")),
+			"isolation guarantees");
 	}
 
 	private static void assertCompatible(ResourceLock first, ResourceLock second) {
-		assertTrue(first.isCompatible(second));
+		assertTrue(first.isCompatible(second),
+			"Expected locks to be compatible:\n(1) %s\n(2) %s".formatted(first, second));
 	}
 
-	private static void assertIncompatible(ResourceLock first, ResourceLock second) {
-		assertFalse(first.isCompatible(second));
+	private static void assertIncompatible(ResourceLock first, ResourceLock second, String reason) {
+		assertFalse(first.isCompatible(second),
+			"Expected locks to be incompatible due to %s:\n(1) %s\n(2) %s".formatted(reason, first, second));
 	}
 
 	private static ResourceLock nopLock() {
