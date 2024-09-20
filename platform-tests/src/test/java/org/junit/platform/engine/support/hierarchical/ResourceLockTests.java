@@ -33,7 +33,7 @@ class ResourceLockTests {
 	}
 
 	@Test
-	void readOnlySingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
+	void readOnlySingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocksOrViolateResourceIsolationGuarantees() {
 		ExclusiveResource bR = readOnlyResource("b");
 
 		assertCompatible(singleLock(bR), nopLock());
