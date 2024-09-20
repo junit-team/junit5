@@ -107,8 +107,8 @@ class ResourceLockTests {
 		assertTrue(first.isCompatible(second));
 	}
 
-	private static void assertIncompatible(ResourceLock singleLock, ResourceLock a) {
-		assertFalse(singleLock.isCompatible(a));
+	private static void assertIncompatible(ResourceLock first, ResourceLock second) {
+		assertFalse(first.isCompatible(second));
 	}
 
 	private static ResourceLock nopLock() {
