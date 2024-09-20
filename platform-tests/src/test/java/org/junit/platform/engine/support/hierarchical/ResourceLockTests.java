@@ -15,10 +15,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
@@ -120,8 +120,7 @@ class ResourceLockTests {
 	}
 
 	private static CompositeLock compositeLock(ExclusiveResource... resources) {
-		return new CompositeLock(List.of(resources),
-			IntStream.range(0, resources.length).mapToObj(__ -> anyLock()).toList());
+		return new CompositeLock(List.of(resources), Arrays.stream(resources).map(__ -> anyLock()).toList());
 	}
 
 	private static ExclusiveResource anyReadOnlyResource() {
