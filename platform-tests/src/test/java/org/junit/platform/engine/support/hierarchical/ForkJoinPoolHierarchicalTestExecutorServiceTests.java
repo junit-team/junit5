@@ -87,6 +87,13 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 			arguments(//
 				Set.of(GLOBAL_READ_WRITE), //
 				Set.of(GLOBAL_READ) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("b", LockMode.READ), new ExclusiveResource("d", LockMode.READ)),
+				//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("c", LockMode.READ)) //
 			)//
 		);
 	}
@@ -136,11 +143,17 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 			), //
 			arguments(//
 				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
-				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("b", LockMode.READ), new ExclusiveResource("c", LockMode.READ)) //
 			), //
 			arguments(//
 				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
 				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ), new ExclusiveResource("b", LockMode.READ),
+					new ExclusiveResource("c", LockMode.READ)) //
 			)//
 		);
 	}
