@@ -87,7 +87,6 @@ class CompositeLock implements ResourceLock {
 	public String toString() {
 		return new ToStringBuilder(this) //
 				.append("resources", resources) //
-				.append("locks", locks) //
 				.toString();
 	}
 

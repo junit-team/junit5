@@ -62,7 +62,6 @@ class SingleLock implements ResourceLock {
 	public String toString() {
 		return new ToStringBuilder(this) //
 				.append("resource", getOnlyElement(resources)) //
-				.append("lock", lock) //
 				.toString();
 	}
 
