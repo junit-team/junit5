@@ -45,7 +45,7 @@ jobs:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
           version: latest
-      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution }})"
+      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution || 'temurin' }})"
         if: matrix.jdk.type == 'ga'
         uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
         with:
