@@ -30,9 +30,9 @@ jobs:
           - javascript
     steps:
     - name: Check out repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@294a9d92911152fe08befb9ec03e240add280cb3 # v3
       with:
         languages: ${{ matrix.language }}
         tools: latest
@@ -44,4 +44,4 @@ jobs:
           -Dscan.tag.CodeQL \
           allMainClasses
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@294a9d92911152fe08befb9ec03e240add280cb3 # v3

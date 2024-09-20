@@ -1,6 +1,8 @@
 name: Cross-Version
 
 on:
+  schedule:
+    - cron: '0 0 * * 6' # Every Saturday at 00:00 UTC
   push:
     branches:
       - main
@@ -19,25 +21,37 @@ jobs:
       matrix:
         jdk:
         - version: 22
+          type: ga
         - version: 23
+          type: ga
         - version: 24
+          type: ea
         - version: 24
+          type: ea
           release: leyden
-    name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
+    name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }})"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 1
       - name: Set up Test JDK
         uses: ./.github/actions/setup-test-jdk
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
-        uses: oracle-actions/setup-java@v1
+        if: matrix.jdk.type == 'ea'
+        uses: oracle-actions/setup-java@2e744f723b003fdd759727d0ff654c8717024845 # v1.4.0
         with:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
           version: latest
+      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution }})"
+        if: matrix.jdk.type == 'ga'
+        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
+        with:
+          distribution: ${{ matrix.jdk.distribution || 'temurin' }}
+          java-version: ${{ matrix.jdk.version }}
+          check-latest: true
       - name: 'Prepare JDK${{ matrix.jdk.version }} env var'
         shell: bash
         run: echo "JDK${{ matrix.jdk.version }}=$JAVA_HOME" >> $GITHUB_ENV
@@ -47,7 +61,8 @@ jobs:
           arguments: |
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
-            build
+            build \
+            --configuration-cache
   openj9:
     strategy:
       fail-fast: false
@@ -57,7 +72,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
         with:
           fetch-depth: 1
       - name: Set up Test JDK
@@ -65,7 +80,7 @@ jobs:
         with:
           distribution: semeru
       - name: 'Set up JDK ${{ matrix.jdk }}'
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
         with:
           distribution: semeru
           java-version: ${{ matrix.jdk }}
@@ -81,4 +96,5 @@ jobs:
             -PjavaToolchain.implementation=j9 \
             -Dscan.tag.JDK_${{ matrix.jdk }} \
             -Dscan.tag.OpenJ9 \
-            build
+            build \
+            --configuration-cache

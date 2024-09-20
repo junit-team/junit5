@@ -306,9 +306,10 @@ public final class StringUtils {
 	public interface TwoPartSplitResult {
 
 		/**
-		 * Maps the result of splitting a string into two parts or throw an exception.
+		 * Map the result of splitting a string into two parts or throw an exception.
 		 *
-		 * @param onePartExceptionCreator the exception creator to use if the string was split into a single part
+		 * @param onePartExceptionCreator the exception creator to use if the string
+		 * was split into a single part
 		 * @param twoPartsMapper the mapper to use if the string was split into two parts
 		 */
 		default <T> T mapTwo(Supplier<? extends RuntimeException> onePartExceptionCreator,
@@ -320,7 +321,7 @@ public final class StringUtils {
 		}
 
 		/**
-		 * Maps the result of splitting a string into up to two parts.
+		 * Map the result of splitting a string into up to two parts.
 		 *
 		 * @param onePartMapper the mapper to use if the string was split into a single part
 		 * @param twoPartsMapper the mapper to use if the string was split into two parts
@@ -340,7 +341,7 @@ public final class StringUtils {
 		@Override
 		public <T> T map(Function<String, ? extends T> onePartMapper,
 				BiFunction<String, String, ? extends T> twoPartsMapper) {
-			return onePartMapper.apply(value);
+			return onePartMapper.apply(this.value);
 		}
 	}
 
@@ -357,7 +358,7 @@ public final class StringUtils {
 		@Override
 		public <T> T map(Function<String, ? extends T> onePartMapper,
 				BiFunction<String, String, ? extends T> twoPartsMapper) {
-			return twoPartsMapper.apply(first, second);
+			return twoPartsMapper.apply(this.first, this.second);
 		}
 	}
 

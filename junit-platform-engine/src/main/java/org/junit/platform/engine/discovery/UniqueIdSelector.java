@@ -103,5 +103,7 @@ public class UniqueIdSelector implements DiscoverySelector {
 		public Optional<UniqueIdSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectUniqueId(identifier.getValue()));
 		}
+
 	}
+
 }

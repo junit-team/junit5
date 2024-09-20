@@ -20,10 +20,9 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
- * Identifier for {@link DiscoverySelector DiscoverySelectors} with a specific
- * prefix.
- * <p>
- * The {@linkplain #toString() string representation} of an identifier is
+ * Identifier for a {@link DiscoverySelector} with a specific prefix.
+ *
+ * <p>The {@linkplain #toString() string representation} of an identifier is
  * intended to be human-readable and is formatted as {@code prefix:value}.
  *
  * @since 1.11
@@ -37,7 +36,7 @@ public final class DiscoverySelectorIdentifier {
 	private final String value;
 
 	/**
-	 * Create a new {@link DiscoverySelectorIdentifier} with the supplied prefix and
+	 * Create a new {@code DiscoverySelectorIdentifier} with the supplied prefix and
 	 * value.
 	 *
 	 * @param prefix the prefix; never {@code null} or blank
@@ -51,8 +50,8 @@ public final class DiscoverySelectorIdentifier {
 	 * Parse the supplied string representation of a
 	 * {@link DiscoverySelectorIdentifier} in the format {@code prefix:value}.
 	 *
-	 * @param string the string representation of a {@link DiscoverySelectorIdentifier}
-	 * @return the parsed {@link DiscoverySelectorIdentifier}
+	 * @param string the string representation of a {@code DiscoverySelectorIdentifier}
+	 * @return the parsed {@code DiscoverySelectorIdentifier}
 	 * @throws PreconditionViolationException if the supplied string does not
 	 * conform to the expected format
 	 */
@@ -74,7 +73,7 @@ public final class DiscoverySelectorIdentifier {
 	 * @return the prefix; never {@code null} or blank
 	 */
 	public String getPrefix() {
-		return prefix;
+		return this.prefix;
 	}
 
 	/**
@@ -83,7 +82,7 @@ public final class DiscoverySelectorIdentifier {
 	 * @return the value; never {@code null} or blank
 	 */
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	@Override
@@ -95,12 +94,12 @@ public final class DiscoverySelectorIdentifier {
 			return false;
 		}
 		DiscoverySelectorIdentifier that = (DiscoverySelectorIdentifier) o;
-		return Objects.equals(prefix, that.prefix) && Objects.equals(value, that.value);
+		return Objects.equals(this.prefix, that.prefix) && Objects.equals(this.value, that.value);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(prefix, value);
+		return Objects.hash(this.prefix, this.value);
 	}
 
 	/**
@@ -109,6 +108,7 @@ public final class DiscoverySelectorIdentifier {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s:%s", prefix, value);
+		return String.format("%s:%s", this.prefix, this.value);
 	}
+
 }

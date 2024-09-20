@@ -1,0 +1,35 @@
+{
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
+  extends: [
+    'github>junit-team/renovate-config',
+  ],
+  packageRules: [
+    {
+      matchCurrentValue: '/^2\\./',
+      allowedVersions: '(,3.0)',
+      matchPackageNames: [
+        'org.codehaus.groovy:{/,}**',
+      ],
+    },
+    {
+      matchCurrentValue: '/^4\\./',
+      allowedVersions: '(,5.0)',
+      matchPackageNames: [
+        'org.apache.groovy:{/,}**',
+      ],
+    },
+    {
+      matchCurrentValue: '/^1\\./',
+      allowedVersions: '/^1\\..*-groovy-2\\.*/',
+      matchPackageNames: [
+        'org.spockframework:{/,}**',
+      ],
+    },
+    {
+      allowedVersions: '!/-SNAPSHOT$/',
+      matchPackageNames: [
+        'org.opentest4j.reporting:{/,}**',
+      ],
+    },
+  ],
+}

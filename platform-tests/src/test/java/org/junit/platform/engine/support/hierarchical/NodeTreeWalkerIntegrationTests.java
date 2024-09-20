@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.Resources;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -161,12 +162,12 @@ class NodeTreeWalkerIntegrationTests {
 
 		var nestedTestClassDescriptor = getOnlyElement(testClassDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(nestedTestClassDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ)));
+				.isEqualTo(List.of());
 		assertThat(advisor.getForcedExecutionMode(nestedTestClassDescriptor)).contains(SAME_THREAD);
 
 		var testMethodDescriptor = getOnlyElement(nestedTestClassDescriptor.getChildren());
 		assertThat(advisor.getResourceLock(testMethodDescriptor)).extracting(allLocks()) //
-				.isEqualTo(List.of(getLock(GLOBAL_READ_WRITE)));
+				.isEqualTo(List.of());
 		assertThat(advisor.getForcedExecutionMode(testMethodDescriptor)).contains(SAME_THREAD);
 	}
 
@@ -215,6 +216,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@ResourceLock(Resources.SYSTEM_PROPERTIES)
 	static class TestCaseWithGlobalLockRequiringChild {
 		@Nested
 		class NestedTestCaseWithResourceLock {

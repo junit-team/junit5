@@ -136,5 +136,7 @@ public class DirectorySelector implements DiscoverySelector {
 		public Optional<DirectorySelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectDirectory(identifier.getValue()));
 		}
+
 	}
+
 }
