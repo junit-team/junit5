@@ -16,7 +16,9 @@ import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.G
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
@@ -25,110 +27,120 @@ class ResourceLockTests {
 
 	@Test
 	void nopLocksAreCompatibleWithEverything() {
-		var nopLock = NopLock.INSTANCE;
-
-		assertTrue(nopLock.isCompatible(nopLock));
-		assertTrue(nopLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(nopLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertTrue(nopLock.isCompatible(new CompositeLock(List.of(anyResource()), List.of(anyReentrantLock()))));
+		assertCompatible(nopLock(), nopLock());
+		assertCompatible(nopLock(), singleLock(anyReadOnlyResource()));
+		assertCompatible(nopLock(), compositeLock(anyReadOnlyResource()));
 	}
 
 	@Test
 	void readOnlySingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		ExclusiveResource resourceB = resource("B", LockMode.READ);
-		var singleLock = new SingleLock(resourceB, anyReentrantLock());
+		ExclusiveResource bR = readOnlyResource("b");
 
-		assertTrue(singleLock.isCompatible(singleLock));
-		assertTrue(singleLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
-		assertTrue(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resource("B", LockMode.READ_WRITE), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resource("A"), anyReentrantLock())));
-		assertTrue(singleLock.isCompatible(new SingleLock(resource("C"), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
-		assertTrue(singleLock.isCompatible(
-			new CompositeLock(List.of(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
-		assertFalse(singleLock.isCompatible(new CompositeLock(List.of(resource("A1"), resource("A2"), resourceB),
-			List.of(anyReentrantLock(), anyReentrantLock(), anyReentrantLock()))));
+		assertCompatible(singleLock(bR), nopLock());
+		assertCompatible(singleLock(bR), singleLock(bR));
+		assertIncompatible(singleLock(bR), singleLock(readWriteResource("b")));
+		assertIncompatible(singleLock(bR), singleLock(readOnlyResource("a")));
+		assertCompatible(singleLock(bR), singleLock(readOnlyResource("c")));
+		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ));
+		assertIncompatible(singleLock(bR), singleLock(GLOBAL_READ_WRITE));
+		assertCompatible(singleLock(bR), compositeLock(bR, readOnlyResource("c")));
+		assertIncompatible(singleLock(bR), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bR));
 	}
 
 	@Test
 	void readWriteSingleLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		ExclusiveResource resourceB = resource("B", LockMode.READ_WRITE);
-		var singleLock = new SingleLock(resourceB, anyReentrantLock());
+		ExclusiveResource bRW = readWriteResource("b");
 
-		assertFalse(singleLock.isCompatible(singleLock));
-		assertTrue(singleLock.isCompatible(NopLock.INSTANCE));
-		assertFalse(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resourceB, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resource("B", LockMode.READ), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resource("A"), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(resource("C"), anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
-		assertFalse(singleLock.isCompatible(
-			new CompositeLock(List.of(resourceB, resource("C")), List.of(anyReentrantLock(), anyReentrantLock()))));
-		assertFalse(singleLock.isCompatible(new CompositeLock(List.of(resource("A1"), resource("A2"), resourceB),
-			List.of(anyReentrantLock(), anyReentrantLock(), anyReentrantLock()))));
+		assertCompatible(singleLock(bRW), nopLock());
+		assertIncompatible(singleLock(bRW), singleLock(bRW));
+		assertIncompatible(singleLock(bRW), compositeLock(bRW));
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("a")));
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("b")));
+		assertIncompatible(singleLock(bRW), singleLock(readOnlyResource("c")));
+		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ));
+		assertIncompatible(singleLock(bRW), singleLock(GLOBAL_READ_WRITE));
+		assertIncompatible(singleLock(bRW), compositeLock(bRW, readOnlyResource("c")));
+		assertIncompatible(singleLock(bRW), compositeLock(readOnlyResource("a1"), readOnlyResource("a2"), bRW));
 	}
 
 	@Test
 	void globalReadLockIsCompatibleWithReadWriteLocksExceptForGlobalReadWriteLock() {
-		var globalReadLock = new SingleLock(GLOBAL_READ, anyReentrantLock());
-
-		assertTrue(globalReadLock.isCompatible(globalReadLock));
-		assertTrue(globalReadLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(globalReadLock.isCompatible(new SingleLock(anyResource(LockMode.READ), anyReentrantLock())));
-		assertTrue(globalReadLock.isCompatible(new SingleLock(anyResource(LockMode.READ_WRITE), anyReentrantLock())));
-		assertFalse(globalReadLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
+		assertCompatible(singleLock(GLOBAL_READ), nopLock());
+		assertCompatible(singleLock(GLOBAL_READ), singleLock(GLOBAL_READ));
+		assertCompatible(singleLock(GLOBAL_READ), singleLock(anyReadOnlyResource()));
+		assertCompatible(singleLock(GLOBAL_READ), singleLock(anyReadWriteResource()));
+		assertIncompatible(singleLock(GLOBAL_READ), singleLock(GLOBAL_READ_WRITE));
 	}
 
 	@Test
 	void readOnlyCompositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		CompositeLock compositeLock = new CompositeLock(List.of(anyResource(LockMode.READ)),
-			List.of(anyReentrantLock()));
+		ExclusiveResource bR = readOnlyResource("b");
 
-		assertTrue(compositeLock.isCompatible(compositeLock));
-		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));
-		assertTrue(compositeLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(
-			new CompositeLock(List.of(anyResource(LockMode.READ_WRITE)), List.of(anyReentrantLock()))));
+		assertCompatible(compositeLock(bR), nopLock());
+		assertCompatible(compositeLock(bR), singleLock(bR));
+		assertCompatible(compositeLock(bR), compositeLock(bR));
+		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ));
+		assertIncompatible(compositeLock(bR), singleLock(GLOBAL_READ_WRITE));
+		assertIncompatible(compositeLock(bR), compositeLock(readOnlyResource("a")));
+		assertCompatible(compositeLock(bR), compositeLock(readOnlyResource("c")));
+		assertIncompatible(compositeLock(bR), compositeLock(readWriteResource("b")));
+		assertIncompatible(compositeLock(bR), compositeLock(bR, readWriteResource("b")));
 	}
 
 	@Test
 	void readWriteCompositeLocksAreIncompatibleWithOtherLocksThatCanPotentiallyCauseDeadlocks() {
-		CompositeLock compositeLock = new CompositeLock(List.of(anyResource(LockMode.READ_WRITE)),
-			List.of(anyReentrantLock()));
+		ExclusiveResource bRW = readWriteResource("b");
 
-		assertFalse(compositeLock.isCompatible(compositeLock));
-		assertTrue(compositeLock.isCompatible(NopLock.INSTANCE));
-		assertFalse(compositeLock.isCompatible(new SingleLock(anyResource(), anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ, anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(new SingleLock(GLOBAL_READ_WRITE, anyReentrantLock())));
-		assertFalse(compositeLock.isCompatible(
-			new CompositeLock(List.of(anyResource(LockMode.READ)), List.of(anyReentrantLock()))));
+		assertCompatible(compositeLock(bRW), nopLock());
+		assertIncompatible(compositeLock(bRW), singleLock(bRW));
+		assertIncompatible(compositeLock(bRW), compositeLock(bRW));
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("a")));
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("b")));
+		assertIncompatible(compositeLock(bRW), singleLock(readOnlyResource("c")));
+		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ));
+		assertIncompatible(compositeLock(bRW), singleLock(GLOBAL_READ_WRITE));
+		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("a")));
+		assertIncompatible(compositeLock(bRW), compositeLock(readOnlyResource("b"), readOnlyResource("c")));
 	}
 
-	private static ExclusiveResource anyResource() {
-		return anyResource(LockMode.READ);
+	private static void assertCompatible(ResourceLock first, ResourceLock second) {
+		assertTrue(first.isCompatible(second));
 	}
 
-	private static ExclusiveResource anyResource(LockMode lockMode) {
-		return resource("key", lockMode);
+	private static void assertIncompatible(ResourceLock singleLock, ResourceLock a) {
+		assertFalse(singleLock.isCompatible(a));
 	}
 
-	private static ExclusiveResource resource(String key) {
-		return resource(key, LockMode.READ);
+	private static ResourceLock nopLock() {
+		return NopLock.INSTANCE;
 	}
 
-	private static ExclusiveResource resource(String key, LockMode lockMode) {
-		return new ExclusiveResource(key, lockMode);
+	private static SingleLock singleLock(ExclusiveResource resource) {
+		return new SingleLock(resource, anyLock());
 	}
 
-	private static ReentrantLock anyReentrantLock() {
+	private static CompositeLock compositeLock(ExclusiveResource... resources) {
+		return new CompositeLock(List.of(resources),
+			IntStream.range(0, resources.length).mapToObj(__ -> anyLock()).toList());
+	}
+
+	private static ExclusiveResource anyReadOnlyResource() {
+		return readOnlyResource("key");
+	}
+
+	private static ExclusiveResource anyReadWriteResource() {
+		return readWriteResource("key");
+	}
+
+	private static ExclusiveResource readOnlyResource(String key) {
+		return new ExclusiveResource(key, LockMode.READ);
+	}
+
+	private static ExclusiveResource readWriteResource(String key) {
+		return new ExclusiveResource(key, LockMode.READ_WRITE);
+	}
+
+	private static Lock anyLock() {
 		return new ReentrantLock();
 	}
 }
