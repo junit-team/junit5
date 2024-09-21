@@ -10,29 +10,47 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.CONCURRENT;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService.TaskEventListener;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService.TestTask;
 import org.junit.platform.engine.support.hierarchical.Node.ExecutionMode;
 
+@Timeout(5)
 class ForkJoinPoolHierarchicalTestExecutorServiceTests {
+
+	DummyTaskFactory taskFactory = new DummyTaskFactory();
+	LockManager lockManager = new LockManager();
 
 	@Test
 	void exceptionsFromInvalidConfigurationAreNotSwallowed() {
@@ -48,17 +66,53 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		assertThat(exception).rootCause().isInstanceOf(IllegalArgumentException.class);
 	}
 
-	@Test
-	@Timeout(5)
-	void defersTasksWithIncompatibleLocks() throws Exception {
-		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 2, 2, 1, __ -> true);
+	static List<Arguments> incompatibleLockCombinations() {
+		return List.of(//
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(GLOBAL_READ_WRITE) //
+			), //
+			arguments(//
+				Set.of(new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(new ExclusiveResource("b", LockMode.READ)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ_WRITE), //
+				Set.of(GLOBAL_READ) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("b", LockMode.READ), new ExclusiveResource("d", LockMode.READ)),
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("c", LockMode.READ)) //
+			)//
+		);
+	}
 
-		var lockManager = new LockManager();
-		var globalReadLock = lockManager.getLockForResource(GLOBAL_READ);
-		var globalReadWriteLock = lockManager.getLockForResource(GLOBAL_READ_WRITE);
-		var nopLock = NopLock.INSTANCE;
+	@ParameterizedTest
+	@MethodSource("incompatibleLockCombinations")
+	void defersTasksWithIncompatibleLocks(Set<ExclusiveResource> initialResources,
+			Set<ExclusiveResource> incompatibleResources) throws Throwable {
 
-		var threadNamesByTaskIdentifier = new ConcurrentHashMap<String, String>();
+		var initialLock = lockManager.getLockForResources(initialResources);
+		var incompatibleLock = lockManager.getLockForResources(incompatibleResources);
+
 		var deferred = new CountDownLatch(1);
 		var deferredTask = new AtomicReference<TestTask>();
 
@@ -67,44 +121,198 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 			deferred.countDown();
 		};
 
-		var isolatedTask = new DummyTestTask("isolatedTask", globalReadWriteLock,
-			t -> threadNamesByTaskIdentifier.put(t.identifier(), Thread.currentThread().getName()));
+		var incompatibleTask = taskFactory.create("incompatibleTask", incompatibleLock);
 
-		try (var pool = new ForkJoinPoolHierarchicalTestExecutorService(configuration, taskEventListener)) {
+		var tasks = runWithAttemptedWorkStealing(taskEventListener, incompatibleTask, initialLock,
+			() -> await(deferred, "Interrupted while waiting for task to be deferred"));
 
-			var bothLeafTasksAreRunning = new CountDownLatch(2);
-			var nestedTask = new DummyTestTask("nestedTask", globalReadLock, t -> {
-				threadNamesByTaskIdentifier.put(t.identifier(), Thread.currentThread().getName());
-				var leafTask1 = new DummyTestTask("leafTask1", nopLock, t1 -> {
-					threadNamesByTaskIdentifier.put(t1.identifier(), Thread.currentThread().getName());
-					pool.new ExclusiveTask(isolatedTask).fork();
-					bothLeafTasksAreRunning.countDown();
-					bothLeafTasksAreRunning.await();
-					try {
-						deferred.await();
-					}
-					catch (InterruptedException e) {
-						System.out.println("Interrupted while waiting for task to be deferred");
-					}
-				});
-				var leafTask2 = new DummyTestTask("leafTask2", nopLock, t2 -> {
-					threadNamesByTaskIdentifier.put(t2.identifier(), Thread.currentThread().getName());
-					bothLeafTasksAreRunning.countDown();
-					bothLeafTasksAreRunning.await();
-				});
-				pool.invokeAll(List.of(leafTask1, leafTask2));
-			});
-
-			pool.submit(nestedTask).get();
-		}
-
-		assertEquals(isolatedTask, deferredTask.get());
-		assertEquals(threadNamesByTaskIdentifier.get("nestedTask"), threadNamesByTaskIdentifier.get("leafTask2"));
-		assertNotEquals(threadNamesByTaskIdentifier.get("leafTask1"), threadNamesByTaskIdentifier.get("leafTask2"));
+		assertEquals(incompatibleTask, deferredTask.get());
+		assertEquals(tasks.get("nestedTask").threadName, tasks.get("leafTaskB").threadName);
+		assertNotEquals(tasks.get("leafTaskA").threadName, tasks.get("leafTaskB").threadName);
 	}
 
-	record DummyTestTask(String identifier, ResourceLock resourceLock, ThrowingConsumer<DummyTestTask> action)
-			implements TestTask {
+	static List<Arguments> compatibleLockCombinations() {
+		return List.of(//
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ_WRITE)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ),
+					new ExclusiveResource("b", LockMode.READ), new ExclusiveResource("c", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(GLOBAL_READ, new ExclusiveResource("b", LockMode.READ)) //
+			), //
+			arguments(//
+				Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)), //
+				Set.of(new ExclusiveResource("a", LockMode.READ), new ExclusiveResource("b", LockMode.READ),
+					new ExclusiveResource("c", LockMode.READ)) //
+			)//
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("compatibleLockCombinations")
+	void canWorkStealTaskWithCompatibleLocks(Set<ExclusiveResource> initialResources,
+			Set<ExclusiveResource> compatibleResources) throws Throwable {
+
+		var initialLock = lockManager.getLockForResources(initialResources);
+		var compatibleLock = lockManager.getLockForResources(compatibleResources);
+
+		var deferredTask = new AtomicReference<TestTask>();
+
+		var workStolen = new CountDownLatch(1);
+		var compatibleTask = taskFactory.create("compatibleTask", compatibleLock, workStolen::countDown);
+
+		var tasks = runWithAttemptedWorkStealing(deferredTask::set, compatibleTask, initialLock,
+			() -> await(workStolen, "Interrupted while waiting for work to be stolen"));
+
+		assertNull(deferredTask.get());
+		assertEquals(tasks.get("nestedTask").threadName, tasks.get("leafTaskB").threadName);
+		assertNotEquals(tasks.get("leafTaskA").threadName, tasks.get("leafTaskB").threadName);
+	}
+
+	@Test
+	void defersTasksWithIncompatibleLocksOnMultipleLevels() throws Throwable {
+
+		var initialLock = lockManager.getLockForResources(
+			Set.of(GLOBAL_READ, new ExclusiveResource("a", LockMode.READ)));
+		var incompatibleLock1 = lockManager.getLockForResource(new ExclusiveResource("a", LockMode.READ_WRITE));
+		var compatibleLock1 = lockManager.getLockForResource(new ExclusiveResource("b", LockMode.READ));
+		var incompatibleLock2 = lockManager.getLockForResource(new ExclusiveResource("b", LockMode.READ_WRITE));
+
+		var deferred = new ConcurrentHashMap<TestTask, CountDownLatch>();
+		var deferredTasks = new CopyOnWriteArrayList<TestTask>();
+		TaskEventListener taskEventListener = testTask -> {
+			deferredTasks.add(testTask);
+			deferred.get(testTask).countDown();
+		};
+
+		var incompatibleTask1 = taskFactory.create("incompatibleTask1", incompatibleLock1);
+		deferred.put(incompatibleTask1, new CountDownLatch(1));
+
+		var incompatibleTask2 = taskFactory.create("incompatibleTask2", incompatibleLock2);
+		deferred.put(incompatibleTask2, new CountDownLatch(1));
+
+		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 2, 2, 1, __1 -> true);
+
+		withForkJoinPoolHierarchicalTestExecutorService(configuration, taskEventListener, service -> {
+
+			var nestedTask2 = createNestedTaskWithTwoConcurrentLeafTasks(service, "2", compatibleLock1,
+				List.of(incompatibleTask2), //
+				() -> await(deferred.get(incompatibleTask2), incompatibleTask2.identifier + " to be deferred"));
+
+			var nestedTask1 = createNestedTaskWithTwoConcurrentLeafTasks(service, "1", initialLock,
+				List.of(incompatibleTask1, nestedTask2), //
+				() -> {
+					await(deferred.get(incompatibleTask1), incompatibleTask1.identifier + " to be deferred");
+					await(nestedTask2.started, nestedTask2.identifier + " to be started");
+				});
+
+			service.submit(nestedTask1).get();
+		});
+
+		assertThat(deferredTasks) //
+				.containsExactly(incompatibleTask1, incompatibleTask2, incompatibleTask1); // incompatibleTask1 may be deferred multiple times
+		assertThat(taskFactory.tasks) //
+				.hasSize(3 + 3 + 2) //
+				.values().extracting(it -> it.completion.isDone()).containsOnly(true);
+		assertThat(taskFactory.tasks) //
+				.values().extracting(it -> it.completion.isCompletedExceptionally()).containsOnly(false);
+	}
+
+	private Map<String, DummyTestTask> runWithAttemptedWorkStealing(TaskEventListener taskEventListener,
+			DummyTestTask taskToBeStolen, ResourceLock initialLock, Runnable waitAction) throws Throwable {
+
+		var configuration = new DefaultParallelExecutionConfiguration(2, 2, 2, 2, 1, __ -> true);
+
+		withForkJoinPoolHierarchicalTestExecutorService(configuration, taskEventListener, service -> {
+
+			var nestedTask = createNestedTaskWithTwoConcurrentLeafTasks(service, "", initialLock,
+				List.of(taskToBeStolen), waitAction);
+
+			service.submit(nestedTask).get();
+		});
+
+		return taskFactory.tasks;
+	}
+
+	private DummyTestTask createNestedTaskWithTwoConcurrentLeafTasks(
+			ForkJoinPoolHierarchicalTestExecutorService service, String identifierSuffix, ResourceLock parentLock,
+			List<DummyTestTask> tasksToFork, Runnable waitAction) {
+
+		return taskFactory.create("nestedTask" + identifierSuffix, parentLock, () -> {
+
+			var bothLeafTasksAreRunning = new CountDownLatch(2);
+
+			var leafTaskA = taskFactory.create("leafTaskA" + identifierSuffix, NopLock.INSTANCE, () -> {
+				tasksToFork.forEach(task -> service.new ExclusiveTask(task).fork());
+				bothLeafTasksAreRunning.countDown();
+				bothLeafTasksAreRunning.await();
+				waitAction.run();
+			});
+
+			var leafTaskB = taskFactory.create("leafTaskB" + identifierSuffix, NopLock.INSTANCE, () -> {
+				bothLeafTasksAreRunning.countDown();
+				bothLeafTasksAreRunning.await();
+			});
+
+			service.invokeAll(List.of(leafTaskA, leafTaskB));
+		});
+	}
+
+	private static void await(CountDownLatch latch, String message) {
+		try {
+			latch.await();
+		}
+		catch (InterruptedException e) {
+			System.out.println("Interrupted while waiting for " + message);
+		}
+	}
+
+	private void withForkJoinPoolHierarchicalTestExecutorService(ParallelExecutionConfiguration configuration,
+			TaskEventListener taskEventListener, ThrowingConsumer<ForkJoinPoolHierarchicalTestExecutorService> action)
+			throws Throwable {
+		try (var service = new ForkJoinPoolHierarchicalTestExecutorService(configuration, taskEventListener)) {
+
+			action.accept(service);
+
+			service.forkJoinPool.shutdown();
+			assertTrue(service.forkJoinPool.awaitTermination(5, SECONDS), "Pool did not terminate within timeout");
+		}
+	}
+
+	static final class DummyTestTask implements TestTask {
+
+		private final String identifier;
+		private final ResourceLock resourceLock;
+		private final Executable action;
+
+		private volatile String threadName;
+		private final CountDownLatch started = new CountDownLatch(1);
+		private final CompletableFuture<Void> completion = new CompletableFuture<>();
+
+		DummyTestTask(String identifier, ResourceLock resourceLock, Executable action) {
+			this.identifier = identifier;
+			this.resourceLock = resourceLock;
+			this.action = action;
+		}
+
 		@Override
 		public ExecutionMode getExecutionMode() {
 			return CONCURRENT;
@@ -117,10 +325,14 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 
 		@Override
 		public void execute() {
+			threadName = Thread.currentThread().getName();
+			started.countDown();
 			try {
-				action.accept(this);
+				action.execute();
+				completion.complete(null);
 			}
 			catch (Throwable e) {
+				completion.completeExceptionally(e);
 				throw new RuntimeException("Action " + identifier + " failed", e);
 			}
 		}
@@ -128,6 +340,22 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		@Override
 		public String toString() {
 			return identifier;
+		}
+	}
+
+	static final class DummyTaskFactory {
+
+		final Map<String, DummyTestTask> tasks = new HashMap<>();
+
+		DummyTestTask create(String identifier, ResourceLock resourceLock) {
+			return create(identifier, resourceLock, () -> {
+			});
+		}
+
+		DummyTestTask create(String identifier, ResourceLock resourceLock, Executable action) {
+			DummyTestTask task = new DummyTestTask(identifier, resourceLock, action);
+			tasks.put(task.identifier, task);
+			return task;
 		}
 	}
 }

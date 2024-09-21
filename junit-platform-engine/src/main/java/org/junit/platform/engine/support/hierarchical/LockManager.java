@@ -12,18 +12,15 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
-import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_KEY;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.GLOBAL_READ_WRITE;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode.READ;
 
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,83 +29,75 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadLock;
-import org.junit.platform.engine.support.hierarchical.SingleLock.GlobalReadWriteLock;
-
 /**
  * @since 1.3
  */
 class LockManager {
 
-	private static final Comparator<ExclusiveResource> COMPARATOR //
-		= comparing(ExclusiveResource::getKey, globalKeyFirst().thenComparing(naturalOrder())) //
-				.thenComparing(ExclusiveResource::getLockMode);
-
-	private static Comparator<String> globalKeyFirst() {
-		return comparing(key -> !GLOBAL_KEY.equals(key));
-	}
-
 	private final Map<String, ReadWriteLock> locksByKey = new ConcurrentHashMap<>();
-	private final GlobalReadLock globalReadLock;
-	private final GlobalReadWriteLock globalReadWriteLock;
+	private final SingleLock globalReadLock;
+	private final SingleLock globalReadWriteLock;
 
 	public LockManager() {
-		globalReadLock = new GlobalReadLock(toLock(GLOBAL_READ));
-		globalReadWriteLock = new GlobalReadWriteLock(toLock(GLOBAL_READ_WRITE));
+		globalReadLock = new SingleLock(GLOBAL_READ, toLock(GLOBAL_READ));
+		globalReadWriteLock = new SingleLock(GLOBAL_READ_WRITE, toLock(GLOBAL_READ_WRITE));
 	}
 
 	ResourceLock getLockForResources(Collection<ExclusiveResource> resources) {
-		return toResourceLock(toDistinctSortedLocks(resources));
+		return toResourceLock(toDistinctSortedResources(resources));
 	}
 
 	ResourceLock getLockForResource(ExclusiveResource resource) {
-		return toResourceLock(toLock(resource));
+		return toResourceLock(singletonList(resource));
 	}
 
-	private List<Lock> toDistinctSortedLocks(Collection<ExclusiveResource> resources) {
+	private List<ExclusiveResource> toDistinctSortedResources(Collection<ExclusiveResource> resources) {
 		if (resources.isEmpty()) {
 			return emptyList();
 		}
 		if (resources.size() == 1) {
-			return singletonList(toLock(getOnlyElement(resources)));
+			return singletonList(getOnlyElement(resources));
 		}
 		// @formatter:off
 		Map<String, List<ExclusiveResource>> resourcesByKey = resources.stream()
-				.sorted(COMPARATOR)
+				.sorted(ExclusiveResource.COMPARATOR)
 				.distinct()
 				.collect(groupingBy(ExclusiveResource::getKey, LinkedHashMap::new, toList()));
 
 		return resourcesByKey.values().stream()
 				.map(resourcesWithSameKey -> resourcesWithSameKey.get(0))
-				.map(this::toLock)
-				.collect(toList());
+				.collect(toUnmodifiableList());
 		// @formatter:on
+	}
+
+	private ResourceLock toResourceLock(List<ExclusiveResource> resources) {
+		switch (resources.size()) {
+			case 0:
+				return NopLock.INSTANCE;
+			case 1:
+				return toSingleLock(getOnlyElement(resources));
+			default:
+				return new CompositeLock(resources, toLocks(resources));
+		}
+	}
+
+	private SingleLock toSingleLock(ExclusiveResource resource) {
+		if (GLOBAL_READ.equals(resource)) {
+			return globalReadLock;
+		}
+		if (GLOBAL_READ_WRITE.equals(resource)) {
+			return globalReadWriteLock;
+		}
+		return new SingleLock(resource, toLock(resource));
+	}
+
+	private List<Lock> toLocks(List<ExclusiveResource> resources) {
+		return resources.stream().map(this::toLock).collect(toUnmodifiableList());
 	}
 
 	private Lock toLock(ExclusiveResource resource) {
 		ReadWriteLock lock = this.locksByKey.computeIfAbsent(resource.getKey(), key -> new ReentrantReadWriteLock());
 		return resource.getLockMode() == READ ? lock.readLock() : lock.writeLock();
-	}
-
-	private ResourceLock toResourceLock(List<Lock> locks) {
-		switch (locks.size()) {
-			case 0:
-				return NopLock.INSTANCE;
-			case 1:
-				return toResourceLock(locks.get(0));
-			default:
-				return new CompositeLock(locks);
-		}
-	}
-
-	private ResourceLock toResourceLock(Lock lock) {
-		if (lock == toLock(GLOBAL_READ)) {
-			return globalReadLock;
-		}
-		if (lock == toLock(GLOBAL_READ_WRITE)) {
-			return globalReadWriteLock;
-		}
-		return new SingleLock(lock);
 	}
 
 }
