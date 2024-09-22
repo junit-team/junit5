@@ -32,6 +32,17 @@ project.pluginManager.withPlugin("java") {
 
 	tasks.withType<JavaExec>().configureEach {
 		javaLauncher = javaToolchainService.launcherFor(extension.toolchain)
+		if (javaLanguageVersion != defaultLanguageVersion) {
+			// Track exact version of Java to detect changes in behavior between EA builds sooner
+			inputs.property("javaRuntimeVersion", javaLauncher.get().metadata.javaRuntimeVersion)
+		}
+	}
+
+	tasks.withType<Test>().configureEach {
+		if (javaLanguageVersion != defaultLanguageVersion) {
+			// Track exact version of Java to detect changes in behavior between EA builds sooner
+			inputs.property("javaRuntimeVersion", javaLauncher.get().metadata.javaRuntimeVersion)
+		}
 	}
 
 	tasks.withType<JavaCompile>().configureEach {

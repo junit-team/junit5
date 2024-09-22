@@ -93,7 +93,6 @@ class SelectorConverter {
 	}
 
 	static class Iteration implements ITypeConverter<IterationSelector> {
-
 		@Override
 		public IterationSelector convert(String value) {
 			DiscoverySelectorIdentifier identifier = DiscoverySelectorIdentifier.create(
@@ -101,11 +100,9 @@ class SelectorConverter {
 			return (IterationSelector) DiscoverySelectors.parse(identifier) //
 					.orElseThrow(() -> new PreconditionViolationException("Invalid format: Failed to parse selector"));
 		}
-
 	}
 
 	static class Identifier implements ITypeConverter<DiscoverySelectorIdentifier> {
-
 		@Override
 		public DiscoverySelectorIdentifier convert(String value) {
 			return DiscoverySelectorIdentifier.parse(value);

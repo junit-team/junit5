@@ -184,5 +184,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 				} //
 			));
 		}
+
 	}
+
 }

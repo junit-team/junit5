@@ -31,8 +31,9 @@ class VintageMavenIntegrationTests {
 	void unsupportedVersion() {
 		var result = run("4.11");
 
-		assertThat(result.getExitCode()).isEqualTo(0);
+		assertThat(result.getExitCode()).isEqualTo(1);
 		assertThat(result.getOutput("out")) //
+				.contains("TestEngine with ID 'junit-vintage' failed to discover tests") //
 				.contains("Tests run: 0, Failures: 0, Errors: 0, Skipped: 0");
 	}
 

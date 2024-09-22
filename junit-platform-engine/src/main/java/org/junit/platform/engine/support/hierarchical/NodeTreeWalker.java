@@ -52,7 +52,9 @@ class NodeTreeWalker {
 			NodeExecutionAdvisor advisor) {
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
 		if (exclusiveResources.isEmpty()) {
-			advisor.useResourceLock(testDescriptor, globalReadLock);
+			if (globalLockDescriptor.equals(testDescriptor)) {
+				advisor.useResourceLock(globalLockDescriptor, globalReadLock);
+			}
 			testDescriptor.getChildren().forEach(child -> walk(globalLockDescriptor, child, advisor));
 		}
 		else {
@@ -70,14 +72,19 @@ class NodeTreeWalker {
 					advisor.forceDescendantExecutionMode(child, SAME_THREAD);
 				});
 			}
-			if (!globalLockDescriptor.equals(testDescriptor) && allResources.contains(GLOBAL_READ_WRITE)) {
+			if (allResources.contains(GLOBAL_READ_WRITE)) {
 				forceDescendantExecutionModeRecursively(advisor, globalLockDescriptor);
 				advisor.useResourceLock(globalLockDescriptor, globalReadWriteLock);
 			}
-			if (globalLockDescriptor.equals(testDescriptor) && !allResources.contains(GLOBAL_READ_WRITE)) {
-				allResources.add(GLOBAL_READ);
+			else {
+				if (globalLockDescriptor.equals(testDescriptor)) {
+					allResources.add(GLOBAL_READ);
+				}
+				else {
+					allResources.remove(GLOBAL_READ);
+				}
+				advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 			}
-			advisor.useResourceLock(testDescriptor, lockManager.getLockForResources(allResources));
 		}
 	}
 

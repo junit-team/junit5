@@ -10,6 +10,12 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.emptyList;
+
+import java.util.List;
+
+import org.junit.platform.commons.util.ToStringBuilder;
+
 /**
  * No-op {@link ResourceLock} implementation.
  *
@@ -23,6 +29,11 @@ class NopLock implements ResourceLock {
 	}
 
 	@Override
+	public List<ExclusiveResource> getResources() {
+		return emptyList();
+	}
+
+	@Override
 	public ResourceLock acquire() {
 		return this;
 	}
@@ -32,4 +43,13 @@ class NopLock implements ResourceLock {
 		// nothing to do
 	}
 
+	@Override
+	public boolean isExclusive() {
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this).toString();
+	}
 }

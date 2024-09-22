@@ -106,5 +106,7 @@ public class UriSelector implements DiscoverySelector {
 		public Optional<UriSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
 			return Optional.of(DiscoverySelectors.selectUri(identifier.getValue()));
 		}
+
 	}
+
 }

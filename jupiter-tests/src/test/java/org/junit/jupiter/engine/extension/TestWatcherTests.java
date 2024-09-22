@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -41,8 +42,11 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -67,6 +71,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 	@BeforeEach
 	void clearResults() {
 		TrackingTestWatcher.results.clear();
+		DataRetrievingTestWatcher.results.clear();
 	}
 
 	@Test
@@ -165,6 +170,16 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		// We get "testDisabled" events for the @Test method and the @RepeatedTest container.
 		assertThat(TrackingTestWatcher.results.get("testDisabled")).containsExactly("test", "repeatedTest");
+	}
+
+	@Test
+	void testWatcherCanRetrieveDataFromTheExtensionContextStore() {
+		Class<?> testClass = DataRetrievingTestWatcherTestCase.class;
+		EngineExecutionResults results = executeTestsForClass(testClass);
+
+		results.testEvents().assertStatistics(stats -> stats.started(1).succeeded(1).failed(0));
+
+		assertThat(DataRetrievingTestWatcher.results).containsExactly(entry("key", "enigma"));
 	}
 
 	private void assertCommonStatistics(EngineExecutionResults results) {
@@ -412,6 +427,42 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 			throw new JUnitException("Exception in testFailed()");
 		}
 
+	}
+
+	/**
+	 * {@link TestWatcher} that retrieves data from the {@link ExtensionContext.Store}.
+	 * @see <a href="https://github.com/junit-team/junit5/issues/3944">#3944</a>
+	 */
+	static class DataRetrievingTestWatcher implements BeforeTestExecutionCallback, TestWatcher {
+
+		private static final Namespace NAMESPACE = Namespace.create(DataRetrievingTestWatcher.class);
+
+		private static final String KEY = "key";
+
+		private static final Map<String, String> results = new HashMap<>();
+
+		@Override
+		public void beforeTestExecution(ExtensionContext context) throws Exception {
+			getStore(context).put(KEY, "enigma");
+		}
+
+		@Override
+		public void testSuccessful(ExtensionContext context) {
+			results.put(KEY, getStore(context).get(KEY, String.class));
+		}
+
+		private static Store getStore(ExtensionContext context) {
+			return context.getStore(NAMESPACE);
+		}
+	}
+
+	@ExtendWith(DataRetrievingTestWatcher.class)
+	static class DataRetrievingTestWatcherTestCase {
+
+		@Test
+		public void test() {
+			//no-op
+		}
 	}
 
 }
