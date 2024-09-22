@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.converter;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -53,7 +54,7 @@ public @interface JavaTimeConversionPattern {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = STABLE, since = "5.12")
+	@API(status = EXPERIMENTAL, since = "5.12")
 	boolean nullable() default false;
 
 }

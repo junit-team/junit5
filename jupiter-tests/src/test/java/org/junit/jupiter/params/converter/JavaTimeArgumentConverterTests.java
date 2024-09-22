@@ -127,7 +127,7 @@ class JavaTimeArgumentConverterTests {
 	 */
 	@Test
 	void convertsNullableParameter() {
-		assertThat(convert(null, "dd.MM.yyyy", true, LocalDate.class)).isEqualTo(null);
+		assertThat(convert(null, "dd.MM.yyyy", true, LocalDate.class)).isNull();
 	}
 
 	private Object convert(Object input, String pattern, Class<?> targetClass) {
