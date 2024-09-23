@@ -25,9 +25,29 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
 import static org.junit.jupiter.api.condition.JRE.JAVA_22;
+import static org.junit.jupiter.api.condition.JRE.JAVA_23;
+import static org.junit.jupiter.api.condition.JRE.JAVA_24;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava20;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava21;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava24;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -38,8 +58,6 @@ import org.junit.jupiter.api.Test;
  * @since 5.1
  */
 class EnabledOnJreIntegrationTests {
-
-	private static final String JAVA_VERSION = System.getProperty("java.version");
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
@@ -53,8 +71,26 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
-	@EnabledOnJre({ JAVA_8, JAVA_9, JAVA_10, JAVA_11, JAVA_12, JAVA_13, JAVA_14, JAVA_15, JAVA_16, JAVA_17, JAVA_18,
-			JAVA_19, JAVA_20, JAVA_21, JAVA_22, OTHER })
+	@EnabledOnJre({ //
+			JAVA_8, //
+			JAVA_9, //
+			JAVA_10, //
+			JAVA_11, //
+			JAVA_12, //
+			JAVA_13, //
+			JAVA_14, //
+			JAVA_15, //
+			JAVA_16, //
+			JAVA_17, //
+			JAVA_18, //
+			JAVA_19, //
+			JAVA_20, //
+			JAVA_21, //
+			JAVA_22, //
+			JAVA_23, //
+			JAVA_24, //
+			OTHER //
+	})
 	void enabledOnAllJavaVersions() {
 	}
 
@@ -149,71 +185,21 @@ class EnabledOnJreIntegrationTests {
 	}
 
 	@Test
+	@EnabledOnJre(JAVA_23)
+	void java23() {
+		assertTrue(onJava23());
+	}
+
+	@Test
+	@EnabledOnJre(JAVA_24)
+	void java24() {
+		assertTrue(onJava24());
+	}
+
+	@Test
 	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
-		assertFalse(
-			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
-					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22());
-	}
-
-	static boolean onJava8() {
-		return JAVA_VERSION.startsWith("1.8");
-	}
-
-	static boolean onJava9() {
-		return JAVA_VERSION.startsWith("9");
-	}
-
-	static boolean onJava10() {
-		return JAVA_VERSION.startsWith("10");
-	}
-
-	static boolean onJava11() {
-		return JAVA_VERSION.startsWith("11");
-	}
-
-	static boolean onJava12() {
-		return JAVA_VERSION.startsWith("12");
-	}
-
-	static boolean onJava13() {
-		return JAVA_VERSION.startsWith("13");
-	}
-
-	static boolean onJava14() {
-		return JAVA_VERSION.startsWith("14");
-	}
-
-	static boolean onJava15() {
-		return JAVA_VERSION.startsWith("15");
-	}
-
-	static boolean onJava16() {
-		return JAVA_VERSION.startsWith("16");
-	}
-
-	static boolean onJava17() {
-		return JAVA_VERSION.startsWith("17");
-	}
-
-	static boolean onJava18() {
-		return JAVA_VERSION.startsWith("18");
-	}
-
-	static boolean onJava19() {
-		return JAVA_VERSION.startsWith("19");
-	}
-
-	static boolean onJava20() {
-		return JAVA_VERSION.startsWith("20");
-	}
-
-	static boolean onJava21() {
-		return JAVA_VERSION.startsWith("21");
-	}
-
-	static boolean onJava22() {
-		return JAVA_VERSION.startsWith("22");
+		assertFalse(onKnownVersion());
 	}
 
 }

@@ -12,21 +12,24 @@ package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava10;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava11;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava12;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava13;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava14;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava15;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava16;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava17;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava18;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava19;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava20;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava21;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava22;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava8;
-import static org.junit.jupiter.api.condition.EnabledOnJreIntegrationTests.onJava9;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava20;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava21;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava24;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
+import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -217,14 +220,30 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
+	 * @see DisabledOnJreIntegrationTests#java23()
+	 */
+	@Test
+	void java23() {
+		evaluateCondition();
+		assertDisabledOnCurrentJreIf(onJava23());
+	}
+
+	/**
+	 * @see DisabledOnJreIntegrationTests#java24()
+	 */
+	@Test
+	void java24() {
+		evaluateCondition();
+		assertDisabledOnCurrentJreIf(onJava24());
+	}
+
+	/**
 	 * @see DisabledOnJreIntegrationTests#other()
 	 */
 	@Test
 	void other() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(
-			!(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
-					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22()));
+		assertDisabledOnCurrentJreIf(!onKnownVersion());
 	}
 
 	private void assertDisabledOnCurrentJreIf(boolean condition) {

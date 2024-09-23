@@ -45,6 +45,8 @@ import org.junit.platform.commons.util.StringUtils;
  * @see #JAVA_20
  * @see #JAVA_21
  * @see #JAVA_22
+ * @see #JAVA_23
+ * @see #JAVA_24
  * @see #OTHER
  * @see EnabledOnJre
  * @see DisabledOnJre
@@ -163,12 +165,28 @@ public enum JRE {
 	JAVA_22,
 
 	/**
+	 * Java 23.
+	 *
+	 * @since 5.11
+	 */
+	@API(status = STABLE, since = "5.11")
+	JAVA_23,
+
+	/**
+	 * Java 24.
+	 *
+	 * @since 5.11
+	 */
+	@API(status = STABLE, since = "5.11")
+	JAVA_24,
+
+	/**
 	 * A JRE version other than {@link #JAVA_8}, {@link #JAVA_9},
 	 * {@link #JAVA_10}, {@link #JAVA_11}, {@link #JAVA_12},
 	 * {@link #JAVA_13}, {@link #JAVA_14}, {@link #JAVA_15},
 	 * {@link #JAVA_16}, {@link #JAVA_17}, {@link #JAVA_18},
-	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21}, or
-	 * {@link #JAVA_22}.
+	 * {@link #JAVA_19}, {@link #JAVA_20}, {@link #JAVA_21},
+	 * {@link #JAVA_22}, {@link #JAVA_23}, or {@link #JAVA_24}.
 	 */
 	OTHER;
 
@@ -226,6 +244,10 @@ public enum JRE {
 					return JAVA_21;
 				case 22:
 					return JAVA_22;
+				case 23:
+					return JAVA_23;
+				case 24:
+					return JAVA_24;
 				default:
 					return OTHER;
 			}
