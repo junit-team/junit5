@@ -50,7 +50,7 @@ class LockManagerTests {
 		var locks = getLocks(resources, SingleLock.class);
 
 		assertThat(locks).hasSize(1);
-		assertThat(locks.getFirst()).isInstanceOf(ReadLock.class);
+		assertThat(locks.get(0)).isInstanceOf(ReadLock.class);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ class LockManagerTests {
 
 		assertThat(locks1).hasSize(1);
 		assertThat(locks2).hasSize(1);
-		assertThat(locks1.getFirst()).isSameAs(locks2.getFirst());
+		assertThat(locks1.get(0)).isSameAs(locks2.get(0));
 	}
 
 	@Test
@@ -130,7 +130,7 @@ class LockManagerTests {
 	}
 
 	private Lock getSingleLock(String key, LockMode lockMode) {
-		return getLocks(Set.of(new ExclusiveResource(key, lockMode)), SingleLock.class).getFirst();
+		return getLocks(Set.of(new ExclusiveResource(key, lockMode)), SingleLock.class).get(0);
 	}
 
 	private List<Lock> getLocks(Collection<ExclusiveResource> resources, Class<? extends ResourceLock> type) {
