@@ -61,6 +61,6 @@ jobs:
         uses: ./.github/actions/run-gradle
         with:
           arguments: |
-            -PjavaToolchainVersion=${{ matrix.jdk.version }} \
-            -Dscan.tag.JDK_${{ matrix.jdk.version }} \
+            -PjavaToolchainVersion=${{ matrix.jdk.version }}
+            -Dscan.tag.JDK_${{ matrix.jdk.version }}
             build
