@@ -167,17 +167,17 @@ public enum JRE {
 	/**
 	 * Java 23.
 	 *
-	 * @since 5.11
+	 * @since 5.10.4
 	 */
-	@API(status = STABLE, since = "5.11")
+	@API(status = STABLE, since = "5.10.4")
 	JAVA_23,
 
 	/**
 	 * Java 24.
 	 *
-	 * @since 5.11
+	 * @since 5.10.4
 	 */
-	@API(status = STABLE, since = "5.11")
+	@API(status = STABLE, since = "5.10.4")
 	JAVA_24,
 
 	/**
