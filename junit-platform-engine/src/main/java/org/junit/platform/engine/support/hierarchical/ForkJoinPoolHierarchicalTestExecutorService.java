@@ -275,7 +275,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 				return true;
 			}
 			catch (InterruptedException e) {
-				ExceptionUtils.throwAsUncheckedException(e);
+				throw ExceptionUtils.throwAsUncheckedException(e);
 			}
 		}
 
