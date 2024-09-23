@@ -519,28 +519,35 @@ public class NamespacedHierarchicalStoreTests {
 			verifyNoMoreInteractions(closeAction);
 		}
 
+		/**
+		 * @see <a href="https://github.com/junit-team/junit5/issues/3944">#3944</a>
+		 */
+		@Test
+		void acceptsQueryAfterClose() {
+			store.put(namespace, key, value);
+			store.close();
+			assertClosed();
+
+			assertThat(store.get(namespace, key)).isEqualTo(value);
+			assertThat(store.get(namespace, key, String.class)).isEqualTo(value);
+			assertThat(store.getOrComputeIfAbsent(namespace, key, k -> "new")).isEqualTo(value);
+			assertThat(store.getOrComputeIfAbsent(namespace, key, k -> "new", String.class)).isEqualTo(value);
+		}
+
 		@Test
 		void rejectsModificationAfterClose() {
 			store.close();
 			assertClosed();
 
-			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.put(namespace, "key1", "value1"));
-			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.remove(namespace, "key1"));
-			assertThrows(NamespacedHierarchicalStoreException.class,
-				() -> store.remove(namespace, "key1", Number.class));
-		}
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.put(namespace, key, value));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.remove(namespace, key));
+			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.remove(namespace, key, int.class));
 
-		@Test
-		void rejectsQueryAfterClose() {
-			store.close();
-			assertClosed();
-
-			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1"));
-			assertThrows(NamespacedHierarchicalStoreException.class, () -> store.get(namespace, "key1", Integer.class));
+			// Since key does not exist, an invocation of getOrComputeIfAbsent(...) will attempt to compute a new value.
 			assertThrows(NamespacedHierarchicalStoreException.class,
-				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> "value"));
+				() -> store.getOrComputeIfAbsent(namespace, key, k -> "new"));
 			assertThrows(NamespacedHierarchicalStoreException.class,
-				() -> store.getOrComputeIfAbsent(namespace, "key1", k -> 1337, Integer.class));
+				() -> store.getOrComputeIfAbsent(namespace, key, k -> "new", String.class));
 		}
 
 		private void assertNotClosed() {

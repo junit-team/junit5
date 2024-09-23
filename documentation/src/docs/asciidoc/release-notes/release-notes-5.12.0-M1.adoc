@@ -28,7 +28,8 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
+  calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
@@ -47,7 +48,9 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
+  types such as `LocalDate` if the new `nullable` attribute in
+  `@JavaTimeConversionPattern` is set to `true`.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

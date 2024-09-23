@@ -10,20 +10,36 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
+
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * @since 1.3
  */
 class CompositeLock implements ResourceLock {
 
+	private final List<ExclusiveResource> resources;
 	private final List<Lock> locks;
+	private final boolean exclusive;
 
-	CompositeLock(List<Lock> locks) {
-		this.locks = locks;
+	CompositeLock(List<ExclusiveResource> resources, List<Lock> locks) {
+		Preconditions.condition(resources.size() == locks.size(), "Resources and locks must have the same size");
+		this.resources = unmodifiableList(resources);
+		this.locks = Preconditions.notEmpty(locks, "Locks must not be empty");
+		this.exclusive = resources.stream().anyMatch(
+			resource -> resource.getLockMode() == ExclusiveResource.LockMode.READ_WRITE);
+	}
+
+	@Override
+	public List<ExclusiveResource> getResources() {
+		return resources;
 	}
 
 	// for tests only
@@ -60,6 +76,18 @@ class CompositeLock implements ResourceLock {
 		for (int i = acquiredLocks.size() - 1; i >= 0; i--) {
 			acquiredLocks.get(i).unlock();
 		}
+	}
+
+	@Override
+	public boolean isExclusive() {
+		return exclusive;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("resources", resources) //
+				.toString();
 	}
 
 	private class CompositeLockManagedBlocker implements ForkJoinPool.ManagedBlocker {

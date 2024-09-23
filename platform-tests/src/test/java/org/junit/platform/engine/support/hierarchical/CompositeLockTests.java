@@ -19,9 +19,11 @@ import static org.mockito.Mockito.verify;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.locks.Lock;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 
 /**
  * @since 1.3
@@ -34,7 +36,7 @@ class CompositeLockTests {
 		var lock1 = mock(Lock.class);
 		var lock2 = mock(Lock.class);
 
-		new CompositeLock(List.of(lock1, lock2)).acquire();
+		new CompositeLock(anyResources(2), List.of(lock1, lock2)).acquire();
 
 		var inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock1).lockInterruptibly();
@@ -47,7 +49,7 @@ class CompositeLockTests {
 		var lock1 = mock(Lock.class);
 		var lock2 = mock(Lock.class);
 
-		new CompositeLock(List.of(lock1, lock2)).acquire().close();
+		new CompositeLock(anyResources(2), List.of(lock1, lock2)).acquire().close();
 
 		var inOrder = inOrder(lock1, lock2);
 		inOrder.verify(lock2).unlock();
@@ -64,7 +66,7 @@ class CompositeLockTests {
 
 		var thread = new Thread(() -> {
 			try {
-				new CompositeLock(List.of(firstLock, secondLock, unavailableLock)).acquire();
+				new CompositeLock(anyResources(3), List.of(firstLock, secondLock, unavailableLock)).acquire();
 			}
 			catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
@@ -88,6 +90,12 @@ class CompositeLockTests {
 			return null;
 		}).when(lock).lockInterruptibly();
 		return lock;
+	}
+
+	private List<ExclusiveResource> anyResources(int n) {
+		return IntStream.range(0, n) //
+				.mapToObj(j -> new ExclusiveResource("key" + j, LockMode.READ)) //
+				.toList();
 	}
 
 }

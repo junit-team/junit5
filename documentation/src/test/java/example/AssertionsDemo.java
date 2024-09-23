@@ -41,8 +41,9 @@ class AssertionsDemo {
 		assertEquals(2, calculator.add(1, 1));
 		assertEquals(4, calculator.multiply(2, 2),
 				"The optional failure message is now the last parameter");
-		assertTrue('a' < 'b', () -> "Assertion messages can be lazily evaluated -- "
-				+ "to avoid constructing complex messages unnecessarily.");
+
+		// Lazily evaluates generateFailureMessage('a','b').
+		assertTrue('a' < 'b', () -> generateFailureMessage('a','b'));
 	}
 
 	@Test
@@ -160,6 +161,10 @@ class AssertionsDemo {
 		return "Hello, World!";
 	}
 
+	private static String generateFailureMessage(char a, char b) {
+		return "Assertion messages can be lazily evaluated -- "
+				+ "to avoid constructing complex messages unnecessarily." + (a < b);
+	}
 }
 // end::user_guide[]
 // @formatter:on

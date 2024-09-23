@@ -10,18 +10,31 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Collections.singletonList;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+
+import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.locks.Lock;
+
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * @since 1.3
  */
 class SingleLock implements ResourceLock {
 
+	private final List<ExclusiveResource> resources;
 	private final Lock lock;
 
-	SingleLock(Lock lock) {
+	SingleLock(ExclusiveResource resource, Lock lock) {
+		this.resources = singletonList(resource);
 		this.lock = lock;
+	}
+
+	@Override
+	public List<ExclusiveResource> getResources() {
+		return resources;
 	}
 
 	// for tests only
@@ -38,6 +51,18 @@ class SingleLock implements ResourceLock {
 	@Override
 	public void release() {
 		this.lock.unlock();
+	}
+
+	@Override
+	public boolean isExclusive() {
+		return resources.get(0).getLockMode() == ExclusiveResource.LockMode.READ_WRITE;
+	}
+
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this) //
+				.append("resource", getOnlyElement(resources)) //
+				.toString();
 	}
 
 	private class SingleLockManagedBlocker implements ForkJoinPool.ManagedBlocker {
@@ -59,5 +84,4 @@ class SingleLock implements ResourceLock {
 		}
 
 	}
-
 }
