@@ -228,7 +228,9 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		});
 
 		assertThat(deferredTasks) //
-				.containsExactly(incompatibleTask1, incompatibleTask2, incompatibleTask1); // incompatibleTask1 may be deferred multiple times
+				.startsWith(incompatibleTask1, incompatibleTask2) //
+				.containsOnly(incompatibleTask1, incompatibleTask2) // incompatibleTask1 may be deferred multiple times
+				.containsOnlyOnce(incompatibleTask2);
 		assertThat(taskFactory.tasks) //
 				.hasSize(3 + 3 + 2) //
 				.values().extracting(it -> it.completion.isDone()).containsOnly(true);
