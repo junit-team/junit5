@@ -1,0 +1,44 @@
+[[release-notes-5.10.4]]
+== 5.10.4
+
+*Date of Release:* September 24, 2024
+
+*Scope:* Bug fixes and enhancements since 5.10.3
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/79?closed=1+[5.10.4] milestone page in the JUnit repository
+on GitHub.
+
+
+[[release-notes-5.10.4-junit-platform]]
+=== JUnit Platform
+
+==== Bug Fixes
+
+* Fix support for disabling ANSI colors on the console when the `NO_COLOR` environment
+  variable is available.
+* Fixed potential locking issue with `ExclusiveResource` in the
+  `HierarchicalTestExecutorService`, which could lead to deadlocks in certain scenarios.
+
+==== New Features and Improvements
+
+* Improve parallelism and reduce number of blocked threads used by
+  `HierarchicalTestEngine` implementations when parallel execution is enabled and the
+  global read-write lock is used.
+
+
+[[release-notes-5.10.4-junit-jupiter]]
+=== JUnit Jupiter
+
+==== New Features and Improvements
+
+* `JAVA_23` and `JAVA_24` have been added to the `JRE` enum for use with JRE-based
+  execution conditions.
+* Improve parallelism and reduce number of blocked threads in the presence of `@Isolated`
+  tests when parallel execution is enabled
+
+
+[[release-notes-5.10.4-junit-vintage]]
+=== JUnit Vintage
+
+No changes.
