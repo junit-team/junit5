@@ -10,14 +10,10 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.platform.commons.util.CollectionUtils.getFirstElement;
-
 import java.lang.reflect.Constructor;
-import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -28,17 +24,21 @@ class ParameterizedTestSpiInstantiator {
 
 	static <T> T instantiate(Class<T> spiInterface, Class<? extends T> implementationClass,
 			ExtensionContext extensionContext) {
+
 		return extensionContext.getExecutableInvoker() //
 				.invoke(findConstructor(spiInterface, implementationClass));
 	}
 
 	/**
-	 * Find the "best" constructor for the supplied class.
+	 * Find the "best" constructor for the supplied implementation class.
 	 *
-	 * <p>For backward compatibility, it first checks for a default constructor
-	 * which takes precedence over any other constructor. If no default
-	 * constructor is found, it checks for a single constructor and returns it.
+	 * <p>For backward compatibility, it first checks for a single constructor
+	 * and returns that. If there are multiple constructors, it checks for a
+	 * default constructor which takes precedence over any other constructors.
+	 * Otherwise, this method throws an exception stating that it failed to
+	 * find a suitable constructor.
 	 */
+	@SuppressWarnings("unchecked")
 	private static <T, V extends T> Constructor<? extends V> findConstructor(Class<T> spiInterface,
 			Class<V> implementationClass) {
 
@@ -46,28 +46,24 @@ class ParameterizedTestSpiInstantiator {
 			() -> String.format("The %s [%s] must be either a top-level class or a static nested class",
 				spiInterface.getSimpleName(), implementationClass.getName()));
 
-		return findDefaultConstructor(implementationClass) //
-				.orElseGet(() -> findSingleConstructor(spiInterface, implementationClass));
-	}
+		Constructor<?>[] constructors = implementationClass.getDeclaredConstructors();
 
-	@SuppressWarnings("unchecked")
-	private static <T> Optional<Constructor<T>> findDefaultConstructor(Class<T> clazz) {
-		return getFirstElement(ReflectionUtils.findConstructors(clazz, it -> it.getParameterCount() == 0)) //
-				.map(it -> (Constructor<T>) it);
-	}
-
-	private static <T, V extends T> Constructor<V> findSingleConstructor(Class<T> spiInterface,
-			Class<V> implementationClass) {
-
-		try {
-			return ReflectionUtils.getDeclaredConstructor(implementationClass);
+		// Single constructor?
+		if (constructors.length == 1) {
+			return (Constructor<V>) constructors[0];
 		}
-		catch (PreconditionViolationException ex) {
-			String message = String.format(
-				"Failed to find constructor for %s [%s]. "
-						+ "Please ensure that a no-argument or a single constructor exists.",
-				spiInterface.getSimpleName(), implementationClass.getName());
-			throw new JUnitException(message);
+		// Find default constructor.
+		for (Constructor<?> constructor : constructors) {
+			if (constructor.getParameterCount() == 0) {
+				return (Constructor<V>) constructor;
+			}
 		}
+		// Otherwise...
+		String message = String.format(
+			"Failed to find constructor for %s [%s]. "
+					+ "Please ensure that a no-argument or a single constructor exists.",
+			spiInterface.getSimpleName(), implementationClass.getName());
+		throw new JUnitException(message);
 	}
+
 }
