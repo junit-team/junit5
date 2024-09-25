@@ -101,12 +101,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
-		providers.stream()
-				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
-				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
+		for (TestTemplateInvocationContextProvider provider : providers) {
+			provider.provideTestTemplateInvocationContexts(extensionContext)
+				.forEach(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet())
+					.ifPresent(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor)));
+		}
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
