@@ -47,7 +47,8 @@ public class ParameterizedTestNameFormatterBenchmarks {
 		var formatter = new ParameterizedTestNameFormatter(
 			ParameterizedTest.DISPLAY_NAME_PLACEHOLDER + " " + ParameterizedTest.DEFAULT_DISPLAY_NAME + " ({0})",
 			"displayName",
-			new ParameterizedTestMethodContext(TestCase.class.getDeclaredMethod("parameterizedTest", int.class)), 512);
+			new ParameterizedTestMethodContext(TestCase.class.getDeclaredMethod("parameterizedTest", int.class), null),
+			512);
 		for (int i = 0; i < argumentsList.size(); i++) {
 			Arguments arguments = argumentsList.get(i);
 			blackhole.consume(formatter.format(i, arguments, arguments.get()));

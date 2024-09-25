@@ -330,8 +330,8 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, new ParameterizedTestMethodContext(method),
-			512);
+		return new ParameterizedTestNameFormatter(pattern, displayName,
+			new ParameterizedTestMethodContext(method, mock()), 512);
 	}
 
 	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {

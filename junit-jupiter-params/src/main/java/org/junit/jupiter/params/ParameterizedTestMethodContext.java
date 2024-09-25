@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -43,16 +44,18 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestMethodContext {
 
 	private final Parameter[] parameters;
+	private final ExtensionContext extensionContext;
 	private final Resolver[] resolvers;
 	private final List<ResolverType> resolverTypes;
 
-	ParameterizedTestMethodContext(Method testMethod) {
+	ParameterizedTestMethodContext(Method testMethod, ExtensionContext extensionContext) {
 		this.parameters = testMethod.getParameters();
 		this.resolvers = new Resolver[this.parameters.length];
 		this.resolverTypes = new ArrayList<>(this.parameters.length);
 		for (Parameter parameter : this.parameters) {
 			this.resolverTypes.add(isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
+		this.extensionContext = extensionContext;
 	}
 
 	/**
@@ -167,7 +170,7 @@ class ParameterizedTestMethodContext {
 	private Resolver getResolver(ParameterContext parameterContext) {
 		int index = parameterContext.getIndex();
 		if (resolvers[index] == null) {
-			resolvers[index] = resolverTypes.get(index).createResolver(parameterContext);
+			resolvers[index] = resolverTypes.get(index).createResolver(parameterContext, extensionContext);
 		}
 		return resolvers[index];
 	}
@@ -176,11 +179,11 @@ class ParameterizedTestMethodContext {
 
 		CONVERTER {
 			@Override
-			Resolver createResolver(ParameterContext parameterContext) {
+			Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
 				try { // @formatter:off
 					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
 							.map(ConvertWith::value)
-							.map(clazz -> (ArgumentConverter) ReflectionSupport.newInstance(clazz))
+							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
 							.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
 							.map(Converter::new)
 							.orElse(Converter.DEFAULT);
@@ -193,7 +196,7 @@ class ParameterizedTestMethodContext {
 
 		AGGREGATOR {
 			@Override
-			Resolver createResolver(ParameterContext parameterContext) {
+			Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
 				try { // @formatter:off
 					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
 							.map(AggregateWith::value)
@@ -207,7 +210,7 @@ class ParameterizedTestMethodContext {
 			}
 		};
 
-		abstract Resolver createResolver(ParameterContext parameterContext);
+		abstract Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext);
 
 	}
 
