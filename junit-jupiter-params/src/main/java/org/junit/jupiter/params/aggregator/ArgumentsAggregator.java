@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
  * {@code ArgumentsAggregator} is an abstraction for the aggregation of arguments
@@ -33,10 +34,11 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * in a CSV file into a domain object such as a {@code Person}, {@code Address},
  * {@code Order}, etc.
  *
- * <p>Implementations must provide a no-args constructor and should not make any
- * assumptions regarding when they are instantiated or how often they are called.
- * Since instances may potentially be cached and called from different threads,
- * they should be thread-safe and designed to be used as singletons.
+ * <p>Implementations must provide a no-args constructor or a single unambiguous
+ * constructor to use {@linkplain ParameterResolver parameter resolution}. They
+ * should not make any assumptions regarding when they are instantiated or how
+ * often they are called. Since instances may potentially be cached and called
+ * from different threads, they should be thread-safe.
  *
  * @since 5.2
  * @see AggregateWith
