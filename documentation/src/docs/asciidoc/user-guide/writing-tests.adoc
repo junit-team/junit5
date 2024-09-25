@@ -2943,7 +2943,7 @@ execution. The shared resource is identified by a unique name which is a `String
 The name can be user-defined or one of the predefined constants in `{Resources}`:
 `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
-Since Junit Jupiter 5.12 `{ResourceLock}` annotation has 'providers' attribute
+`{ResourceLock}` annotation has 'providers' attribute
 which accepts an array of one or more classes implementing `{ResourceLocksProvider}`
 interface. This interface allows to add shared resources in runtime.
 
