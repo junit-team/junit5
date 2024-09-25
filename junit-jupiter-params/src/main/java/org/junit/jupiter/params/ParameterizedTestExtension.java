@@ -13,8 +13,11 @@ package org.junit.jupiter.params;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.commons.util.CollectionUtils.getFirstElement;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -27,9 +30,11 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -84,7 +89,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
 				.map(ArgumentsSource::value)
-				.map(this::instantiateArgumentsProvider)
+				.map(clazz -> instantiateArgumentsProvider(clazz, extensionContext))
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(arguments -> {
@@ -97,20 +102,32 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		// @formatter:on
 	}
 
-	@SuppressWarnings("ConstantConditions")
-	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz) {
-		try {
-			return ReflectionSupport.newInstance(clazz);
+	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz,
+			ExtensionContext extensionContext) {
+		return extensionContext.getExecutableInvoker().invoke(findConstructor(ArgumentsProvider.class, clazz));
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> Constructor<? extends T> findConstructor(Class<T> spiClass, Class<? extends T> clazz) {
+		Optional<Constructor<?>> defaultConstructor = getFirstElement(
+			ReflectionUtils.findConstructors(clazz, it -> it.getParameterCount() == 0));
+		if (defaultConstructor.isPresent()) {
+			return (Constructor<? extends T>) defaultConstructor.get();
 		}
-		catch (Exception ex) {
-			if (ex instanceof NoSuchMethodException) {
-				String message = String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
-						+ "Please ensure that a no-argument constructor exists and "
-						+ "that the class is either a top-level class or a static nested class",
-					clazz.getName());
-				throw new JUnitException(message, ex);
-			}
-			throw ex;
+		if (ModifierSupport.isNotStatic(clazz)) {
+			String message = String.format("The %s [%s] must be either a top-level class or a static nested class",
+				spiClass.getSimpleName(), clazz.getName());
+			throw new JUnitException(message);
+		}
+		try {
+			return ReflectionUtils.getDeclaredConstructor(clazz);
+		}
+		catch (PreconditionViolationException ex) {
+			String message = String.format(
+				"Failed to find constructor for %s [%s]. "
+						+ "Please ensure that a no-argument or a single constructor exists.",
+				spiClass.getSimpleName(), clazz.getName());
+			throw new JUnitException(message);
 		}
 	}
 
