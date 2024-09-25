@@ -2939,8 +2939,8 @@ In addition to controlling the execution mode using the `{Execution}` annotation
 Jupiter provides another annotation-based declarative synchronization mechanism. The
 `{ResourceLock}` annotation allows you to declare that a test class or method uses a
 specific shared resource that requires synchronized access to ensure reliable test
-execution. The shared resource is identified by a unique name which is a `String`.
-The name can be user-defined or one of the predefined constants in `{Resources}`:
+execution. The shared resource is identified by a unique name which is a `String`. The
+name can be user-defined or one of the predefined constants in `{Resources}`:
 `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
 `{ResourceLock}` annotation has 'providers' attribute
@@ -2956,13 +2956,12 @@ If the tests in the following examples were run in parallel _without_ the use of
 Sometimes they would pass, and at other times they would fail due to
 the inherent race condition of writing and then reading the same JVM System Property.
 
-When access to shared resources is declared using the `{ResourceLock}` annotation
-or added with `{ResourceLocksProvider}` interface, the JUnit Jupiter engine uses
-this information to ensure that no conflicting tests are run in parallel.
-This guarantee extends to lifecycle methods of a test class or method.
-For example, if a test method is annotated with a `{ResourceLock}` annotation,
-the "lock" will be acquired before any `@BeforeEach` methods are executed
-and released after all `@AfterEach` methods have been executed.
+When access to shared resources is declared using the `{ResourceLock}` annotation, the
+JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
+parallel. This guarantee extends to lifecycle methods of a test class or method. For
+example, if a test method is annotated with a `{ResourceLock}` annotation, the "lock" will
+be acquired before any `@BeforeEach` methods are executed and released after all
+`@AfterEach` methods have been executed.
 
 [NOTE]
 .Running tests in isolation
