@@ -35,7 +35,7 @@ jobs:
       uses: github/codeql-action/init@461ef6c76dfe95d5c364de2f431ddbd31a417628 # v3
       with:
         languages: ${{ matrix.language }}
-        tools: latest
+        tools: linked
     - name: Build
       uses: ./.github/actions/run-gradle
       with:
