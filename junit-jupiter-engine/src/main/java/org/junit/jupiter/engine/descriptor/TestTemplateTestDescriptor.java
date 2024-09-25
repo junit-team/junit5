@@ -102,15 +102,19 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		for (TestTemplateInvocationContextProvider provider : providers) {
-			try (Stream<TestTemplateInvocationContext> stream = provider.provideTestTemplateInvocationContexts(
-				extensionContext)) {
-				stream.forEach(invocationContext -> createInvocationTestDescriptor(invocationContext,
-					invocationIndex.incrementAndGet()).ifPresent(
-						invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor)));
+			try (Stream<TestTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
+				stream.forEach(
+					invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
+							.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
 			}
 		}
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
+	}
+
+	private static Stream<TestTemplateInvocationContext> invocationContexts(
+			TestTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+		return provider.provideTestTemplateInvocationContexts(extensionContext);
 	}
 
 	private List<TestTemplateInvocationContextProvider> validateProviders(ExtensionContext extensionContext,
@@ -127,8 +131,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 	}
 
-	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
-			int index) {
+	private Optional<TestDescriptor> toTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 		if (getDynamicDescendantFilter().test(uniqueId, index - 1)) {
 			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),
