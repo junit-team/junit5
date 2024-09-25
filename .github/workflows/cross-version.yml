@@ -45,9 +45,9 @@ jobs:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
           version: latest
-      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution }})"
+      - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution || 'temurin' }})"
         if: matrix.jdk.type == 'ga'
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
+        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
         with:
           distribution: ${{ matrix.jdk.distribution || 'temurin' }}
           java-version: ${{ matrix.jdk.version }}
@@ -80,7 +80,7 @@ jobs:
         with:
           distribution: semeru
       - name: 'Set up JDK ${{ matrix.jdk }}'
-        uses: actions/setup-java@2dfa2011c5b2a0f1489bf9e433881c92c1631f88 # v4
+        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
         with:
           distribution: semeru
           java-version: ${{ matrix.jdk }}

@@ -1984,6 +1984,15 @@ If you wish to implement a custom `ArgumentsProvider` that also consumes an anno
 (like built-in providers such as `{ValueArgumentsProvider}` or `{CsvArgumentsProvider}`),
 you have the possibility to extend the `{AnnotationBasedArgumentsProvider}` class.
 
+Moreover, `ArgumentsProvider` implementations may declare constructor parameters in case
+they need to be resolved by a registered `ParameterResolver` as demonstrated in the
+following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsProviderWithConstructorInjection_example]
+----
+
 [[writing-tests-parameterized-repeatable-sources]]
 ===== Multiple sources using repeatable annotations
 Repeatable annotations provide a convenient way to specify multiple sources from

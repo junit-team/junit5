@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -33,13 +34,13 @@ class ParameterizedTestMethodContextTests {
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
 			"mixedMode" })
 	void validSignatures(String name) {
-		assertTrue(new ParameterizedTestMethodContext(method(name)).hasPotentiallyValidSignature());
+		assertTrue(new ParameterizedTestMethodContext(method(name), mock()).hasPotentiallyValidSignature());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "twoAggregatorsWithPrimitiveInTheMiddle", "twoAggregatorsWithTestInfoInTheMiddle" })
 	void invalidSignatures(String name) {
-		assertFalse(new ParameterizedTestMethodContext(method(name)).hasPotentiallyValidSignature());
+		assertFalse(new ParameterizedTestMethodContext(method(name), mock()).hasPotentiallyValidSignature());
 	}
 
 	private Method method(String name) {

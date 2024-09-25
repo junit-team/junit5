@@ -142,8 +142,9 @@ class ReflectionSupportTests {
 		for (var path : paths) {
 			var root = path.toUri();
 			tests.add(DynamicTest.dynamicTest(createDisplayName(root),
-				() -> assertEquals(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources),
-					ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources))));
+				() -> assertThat(ReflectionUtils.findAllResourcesInClasspathRoot(root, allResources)) //
+						.containsExactlyElementsOf(
+							ReflectionSupport.findAllResourcesInClasspathRoot(root, allResources))));
 		}
 		return tests;
 	}
@@ -172,8 +173,9 @@ class ReflectionSupportTests {
 		for (var path : paths) {
 			var root = path.toUri();
 			tests.add(DynamicTest.dynamicTest(createDisplayName(root),
-				() -> assertEquals(ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources).toList(),
-					ReflectionSupport.streamAllResourcesInClasspathRoot(root, allResources).toList())));
+				() -> assertThat(ReflectionUtils.streamAllResourcesInClasspathRoot(root, allResources)) //
+						.containsExactlyElementsOf(
+							ReflectionSupport.streamAllResourcesInClasspathRoot(root, allResources).toList())));
 		}
 		return tests;
 	}

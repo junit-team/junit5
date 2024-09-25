@@ -348,6 +348,29 @@ class ParameterizedTestDemo {
 	}
 	// end::ArgumentsProvider_example[]
 
+	@ParameterizedTest
+	@ArgumentsSource(MyArgumentsProviderWithConstructorInjection.class)
+	void testWithArgumentsSourceWithConstructorInjection(String argument) {
+		assertNotNull(argument);
+	}
+
+	static
+	// tag::ArgumentsProviderWithConstructorInjection_example[]
+	public class MyArgumentsProviderWithConstructorInjection implements ArgumentsProvider {
+
+		private final TestInfo testInfo;
+
+		public MyArgumentsProviderWithConstructorInjection(TestInfo testInfo) {
+			this.testInfo = testInfo;
+		}
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			return Stream.of(Arguments.of(testInfo.getDisplayName()));
+		}
+	}
+	// end::ArgumentsProviderWithConstructorInjection_example[]
+
 	// tag::ParameterResolver_example[]
 	@BeforeEach
 	void beforeEach(TestInfo testInfo) {

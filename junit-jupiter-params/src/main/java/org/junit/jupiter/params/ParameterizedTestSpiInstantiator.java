@@ -1,0 +1,69 @@
+/*
+ * Copyright 2015-2024 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.params;
+
+import java.lang.reflect.Constructor;
+
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ReflectionUtils;
+
+/**
+ * @since 5.12
+ */
+class ParameterizedTestSpiInstantiator {
+
+	static <T> T instantiate(Class<T> spiInterface, Class<? extends T> implementationClass,
+			ExtensionContext extensionContext) {
+
+		return extensionContext.getExecutableInvoker() //
+				.invoke(findConstructor(spiInterface, implementationClass));
+	}
+
+	/**
+	 * Find the "best" constructor for the supplied implementation class.
+	 *
+	 * <p>For backward compatibility, it first checks for a single constructor
+	 * and returns that. If there are multiple constructors, it checks for a
+	 * default constructor which takes precedence over any other constructors.
+	 * Otherwise, this method throws an exception stating that it failed to
+	 * find a suitable constructor.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T, V extends T> Constructor<? extends V> findConstructor(Class<T> spiInterface,
+			Class<V> implementationClass) {
+
+		Preconditions.condition(!ReflectionUtils.isInnerClass(implementationClass),
+			() -> String.format("The %s [%s] must be either a top-level class or a static nested class",
+				spiInterface.getSimpleName(), implementationClass.getName()));
+
+		Constructor<?>[] constructors = implementationClass.getDeclaredConstructors();
+
+		// Single constructor?
+		if (constructors.length == 1) {
+			return (Constructor<V>) constructors[0];
+		}
+		// Find default constructor.
+		for (Constructor<?> constructor : constructors) {
+			if (constructor.getParameterCount() == 0) {
+				return (Constructor<V>) constructor;
+			}
+		}
+		// Otherwise...
+		String message = String.format(
+			"Failed to find constructor for %s [%s]. "
+					+ "Please ensure that a no-argument or a single constructor exists.",
+			spiInterface.getSimpleName(), implementationClass.getName());
+		throw new JUnitException(message);
+	}
+
+}

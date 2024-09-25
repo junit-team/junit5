@@ -19,6 +19,7 @@ import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Map;
@@ -40,6 +41,7 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
@@ -150,11 +152,14 @@ class ParameterizedTestExtensionTests {
 
 		var exception = assertThrows(JUnitException.class, stream::toArray);
 
-		assertArgumentsProviderInstantiationException(exception, NonStaticArgumentsProvider.class);
+		assertThat(exception) //
+				.hasMessage(String.format(
+					"The ArgumentsProvider [%s] must be either a top-level class or a static nested class",
+					NonStaticArgumentsProvider.class.getName()));
 	}
 
 	@Test
-	void throwsExceptionWhenArgumentsProviderDoesNotContainNoArgumentConstructor() {
+	void throwsExceptionWhenArgumentsProviderDoesNotContainUnambiguousConstructor() {
 		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new MissingNoArgumentsConstructorArgumentsProviderTestCase());
 
@@ -163,15 +168,11 @@ class ParameterizedTestExtensionTests {
 
 		var exception = assertThrows(JUnitException.class, stream::toArray);
 
-		assertArgumentsProviderInstantiationException(exception, MissingNoArgumentsConstructorArgumentsProvider.class);
-	}
-
-	private <T> void assertArgumentsProviderInstantiationException(JUnitException exception, Class<T> clazz) {
-		assertThat(exception).hasMessage(
-			String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
-					+ "Please ensure that a no-argument constructor exists and "
-					+ "that the class is either a top-level class or a static nested class",
-				clazz.getName()));
+		String className = AmbiguousConstructorArgumentsProvider.class.getName();
+		assertThat(exception) //
+				.hasMessage(String.format("Failed to find constructor for ArgumentsProvider [%s]. "
+						+ "Please ensure that a no-argument or a single constructor exists.",
+					className));
 	}
 
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase) {
@@ -277,7 +278,17 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public ExecutableInvoker getExecutableInvoker() {
-				return null;
+				return new ExecutableInvoker() {
+					@Override
+					public Object invoke(Method method, Object target) {
+						return null;
+					}
+
+					@Override
+					public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
+						return ReflectionUtils.newInstance(constructor);
+					}
+				};
 			}
 		};
 	}
@@ -334,7 +345,7 @@ class ParameterizedTestExtensionTests {
 	static class MissingNoArgumentsConstructorArgumentsProviderTestCase {
 
 		@ParameterizedTest
-		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		@ArgumentsSource(AmbiguousConstructorArgumentsProvider.class)
 		void method() {
 		}
 	}
@@ -342,7 +353,7 @@ class ParameterizedTestExtensionTests {
 	static class EmptyDisplayNameProviderTestCase {
 
 		@ParameterizedTest(name = "")
-		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		@ArgumentsSource(AmbiguousConstructorArgumentsProvider.class)
 		void method() {
 		}
 	}
@@ -350,14 +361,17 @@ class ParameterizedTestExtensionTests {
 	static class DefaultDisplayNameProviderTestCase {
 
 		@ParameterizedTest
-		@ArgumentsSource(MissingNoArgumentsConstructorArgumentsProvider.class)
+		@ArgumentsSource(AmbiguousConstructorArgumentsProvider.class)
 		void method() {
 		}
 	}
 
-	static class MissingNoArgumentsConstructorArgumentsProvider implements ArgumentsProvider {
+	static class AmbiguousConstructorArgumentsProvider implements ArgumentsProvider {
 
-		MissingNoArgumentsConstructorArgumentsProvider(String parameter) {
+		AmbiguousConstructorArgumentsProvider(String parameter) {
+		}
+
+		AmbiguousConstructorArgumentsProvider(int parameter) {
 		}
 
 		@Override

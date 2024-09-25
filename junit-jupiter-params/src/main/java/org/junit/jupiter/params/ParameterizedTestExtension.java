@@ -26,8 +26,6 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
-import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -52,7 +50,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 			return false;
 		}
 
-		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(testMethod);
+		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(testMethod, context);
 
 		Preconditions.condition(methodContext.hasPotentiallyValidSignature(),
 			() -> String.format(
@@ -84,7 +82,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
 				.map(ArgumentsSource::value)
-				.map(this::instantiateArgumentsProvider)
+				.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsProvider.class, clazz, extensionContext))
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(arguments -> {
@@ -95,23 +93,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 						Preconditions.condition(invocationCount.get() > 0,
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
-	}
-
-	@SuppressWarnings("ConstantConditions")
-	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz) {
-		try {
-			return ReflectionSupport.newInstance(clazz);
-		}
-		catch (Exception ex) {
-			if (ex instanceof NoSuchMethodException) {
-				String message = String.format("Failed to find a no-argument constructor for ArgumentsProvider [%s]. "
-						+ "Please ensure that a no-argument constructor exists and "
-						+ "that the class is either a top-level class or a static nested class",
-					clazz.getName());
-				throw new JUnitException(message, ex);
-			}
-			throw ex;
-		}
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
