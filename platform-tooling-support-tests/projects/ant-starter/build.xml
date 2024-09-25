@@ -51,6 +51,7 @@
     <!-- https://junit.org/junit5/docs/current/user-guide/#running-tests-console-launcher -->
     <target name="test.console.launcher" depends="compile">
         <java classpathref="test.classpath" classname="org.junit.platform.console.ConsoleLauncher" fork="true">
+            <arg value="execute"/>
             <arg value="--scan-classpath"/>
             <arg value="--include-engine=junit-jupiter"/>
             <arg value="--disable-ansi-colors"/>
