@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
  * {@code ArgumentConverter} is an abstraction that allows an input object to
@@ -24,10 +25,11 @@ import org.junit.jupiter.api.extension.ParameterContext;
  * method with the help of a
  * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith} annotation.
  *
- * <p>Implementations must provide a no-args constructor and should not make any
- * assumptions regarding when they are instantiated or how often they are called.
- * Since instances may potentially be cached and called from different threads,
- * they should be thread-safe and designed to be used as singletons.
+ * <p>Implementations must provide a no-args constructor or a single unambiguous
+ * constructor to use {@linkplain ParameterResolver parameter resolution}. They
+ * should not make any assumptions regarding when they are instantiated or how
+ * often they are called. Since instances may potentially be cached and called
+ * from different threads, they should be thread-safe.
  *
  * <p>Extend {@link SimpleArgumentConverter} if your implementation only needs
  * to know the target type and does not need access to the {@link ParameterContext}

@@ -1218,6 +1218,13 @@ class ParameterizedTestIntegrationTests {
 					.testEvents() //
 					.assertStatistics(it -> it.succeeded(1));
 		}
+
+		@Test
+		void injectsParametersIntoArgumentConverterConstructor() {
+			execute(SpiParameterInjectionTestCase.class, "argumentConverterWithConstructorParameter", String.class) //
+					.testEvents() //
+					.assertStatistics(it -> it.succeeded(1));
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -2162,11 +2169,26 @@ class ParameterizedTestIntegrationTests {
 			assertEquals("resolved value", argument);
 		}
 
+		@ParameterizedTest
+		@ValueSource(strings = "value")
+		void argumentConverterWithConstructorParameter(
+				@ConvertWith(ArgumentConverterWithConstructorParameter.class) String argument) {
+			assertEquals("resolved value", argument);
+		}
+
 		record ArgumentsProviderWithConstructorParameter(String value) implements ArgumentsProvider {
 
 			@Override
 			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
 				return Stream.of(arguments(value));
+			}
+		}
+
+		record ArgumentConverterWithConstructorParameter(String value) implements ArgumentConverter {
+
+			@Override
+			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+				return value;
 			}
 		}
 	}

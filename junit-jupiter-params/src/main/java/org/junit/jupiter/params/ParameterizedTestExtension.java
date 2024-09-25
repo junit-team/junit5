@@ -13,11 +13,8 @@ package org.junit.jupiter.params;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.util.CollectionUtils.getFirstElement;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
@@ -29,12 +26,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
-import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * @since 5.0
@@ -57,7 +50,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 			return false;
 		}
 
-		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(testMethod);
+		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(testMethod, context);
 
 		Preconditions.condition(methodContext.hasPotentiallyValidSignature(),
 			() -> String.format(
@@ -89,7 +82,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		return findRepeatableAnnotations(templateMethod, ArgumentsSource.class)
 				.stream()
 				.map(ArgumentsSource::value)
-				.map(clazz -> instantiateArgumentsProvider(clazz, extensionContext))
+				.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsProvider.class, clazz, extensionContext))
 				.map(provider -> AnnotationConsumerInitializer.initialize(templateMethod, provider))
 				.flatMap(provider -> arguments(provider, extensionContext))
 				.map(arguments -> {
@@ -100,35 +93,6 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 						Preconditions.condition(invocationCount.get() > 0,
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
-	}
-
-	private ArgumentsProvider instantiateArgumentsProvider(Class<? extends ArgumentsProvider> clazz,
-			ExtensionContext extensionContext) {
-		return extensionContext.getExecutableInvoker().invoke(findConstructor(ArgumentsProvider.class, clazz));
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T> Constructor<? extends T> findConstructor(Class<T> spiClass, Class<? extends T> clazz) {
-		Optional<Constructor<?>> defaultConstructor = getFirstElement(
-			ReflectionUtils.findConstructors(clazz, it -> it.getParameterCount() == 0));
-		if (defaultConstructor.isPresent()) {
-			return (Constructor<? extends T>) defaultConstructor.get();
-		}
-		if (ModifierSupport.isNotStatic(clazz)) {
-			String message = String.format("The %s [%s] must be either a top-level class or a static nested class",
-				spiClass.getSimpleName(), clazz.getName());
-			throw new JUnitException(message);
-		}
-		try {
-			return ReflectionUtils.getDeclaredConstructor(clazz);
-		}
-		catch (PreconditionViolationException ex) {
-			String message = String.format(
-				"Failed to find constructor for %s [%s]. "
-						+ "Please ensure that a no-argument or a single constructor exists.",
-				spiClass.getSimpleName(), clazz.getName());
-			throw new JUnitException(message);
-		}
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
