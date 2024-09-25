@@ -32,7 +32,6 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.support.AnnotationSupport;
-import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -200,7 +199,7 @@ class ParameterizedTestMethodContext {
 				try { // @formatter:off
 					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
 							.map(AggregateWith::value)
-							.map(clazz -> (ArgumentsAggregator) ReflectionSupport.newInstance(clazz))
+							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
 							.map(Aggregator::new)
 							.orElse(Aggregator.DEFAULT);
 				} // @formatter:on

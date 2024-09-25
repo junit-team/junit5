@@ -1225,6 +1225,13 @@ class ParameterizedTestIntegrationTests {
 					.testEvents() //
 					.assertStatistics(it -> it.succeeded(1));
 		}
+
+		@Test
+		void injectsParametersIntoArgumentsAggregatorConstructor() {
+			execute(SpiParameterInjectionTestCase.class, "argumentsAggregatorWithConstructorParameter", String.class) //
+					.testEvents() //
+					.assertStatistics(it -> it.succeeded(1));
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -2176,6 +2183,13 @@ class ParameterizedTestIntegrationTests {
 			assertEquals("resolved value", argument);
 		}
 
+		@ParameterizedTest
+		@ValueSource(strings = "value")
+		void argumentsAggregatorWithConstructorParameter(
+				@AggregateWith(ArgumentsAggregatorWithConstructorParameter.class) String argument) {
+			assertEquals("resolved value", argument);
+		}
+
 		record ArgumentsProviderWithConstructorParameter(String value) implements ArgumentsProvider {
 
 			@Override
@@ -2188,6 +2202,15 @@ class ParameterizedTestIntegrationTests {
 
 			@Override
 			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+				return value;
+			}
+		}
+
+		record ArgumentsAggregatorWithConstructorParameter(String value) implements ArgumentsAggregator {
+
+			@Override
+			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+					throws ArgumentsAggregationException {
 				return value;
 			}
 		}
