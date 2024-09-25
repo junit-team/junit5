@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -102,9 +103,12 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		AtomicInteger invocationIndex = new AtomicInteger();
 		// @formatter:off
 		for (TestTemplateInvocationContextProvider provider : providers) {
-			provider.provideTestTemplateInvocationContexts(extensionContext)
-				.forEach(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet())
-					.ifPresent(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor)));
+			try (Stream<TestTemplateInvocationContext> stream = provider.provideTestTemplateInvocationContexts(
+				extensionContext)) {
+				stream.forEach(invocationContext -> createInvocationTestDescriptor(invocationContext,
+					invocationIndex.incrementAndGet()).ifPresent(
+						invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor)));
+			}
 		}
 		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
