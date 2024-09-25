@@ -101,7 +101,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
-		// @formatter:off
 		for (TestTemplateInvocationContextProvider provider : providers) {
 			try (Stream<TestTemplateInvocationContext> stream = provider.provideTestTemplateInvocationContexts(
 				extensionContext)) {
@@ -110,7 +109,6 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 						invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor)));
 			}
 		}
-		// @formatter:on
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
 	}
