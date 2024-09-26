@@ -29,6 +29,13 @@ class ParameterizedTestSpiInstantiator {
 				.invoke(findConstructor(spiInterface, implementationClass));
 	}
 
+	@SuppressWarnings("unchecked")
+	private static <T> Constructor<? extends T> findConstructor(Class<T> spiInterface,
+			Class<? extends T> implementationClass) {
+
+		return (Constructor<? extends T>) findBestConstructor(spiInterface, implementationClass);
+	}
+
 	/**
 	 * Find the "best" constructor for the supplied implementation class.
 	 *
@@ -38,9 +45,8 @@ class ParameterizedTestSpiInstantiator {
 	 * Otherwise, this method throws an exception stating that it failed to
 	 * find a suitable constructor.
 	 */
-	@SuppressWarnings("unchecked")
-	private static <T, V extends T> Constructor<? extends V> findConstructor(Class<T> spiInterface,
-			Class<V> implementationClass) {
+	private static <T> Constructor<?> findBestConstructor(Class<T> spiInterface,
+			Class<? extends T> implementationClass) {
 
 		Preconditions.condition(!ReflectionUtils.isInnerClass(implementationClass),
 			() -> String.format("The %s [%s] must be either a top-level class or a static nested class",
@@ -50,12 +56,12 @@ class ParameterizedTestSpiInstantiator {
 
 		// Single constructor?
 		if (constructors.length == 1) {
-			return (Constructor<V>) constructors[0];
+			return constructors[0];
 		}
 		// Find default constructor.
 		for (Constructor<?> constructor : constructors) {
 			if (constructor.getParameterCount() == 0) {
-				return (Constructor<V>) constructor;
+				return constructor;
 			}
 		}
 		// Otherwise...
