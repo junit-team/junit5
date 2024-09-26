@@ -52,7 +52,7 @@ log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "lo
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.9" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
-memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.0" }
+memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.1" }
 mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.13.0" }
 nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
@@ -61,7 +61,7 @@ openTestReporting-tooling = { module = "org.opentest4j.reporting:open-test-repor
 picocli = { module = "info.picocli:picocli", version = "4.7.6" }
 slf4j-julBinding = { module = "org.slf4j:slf4j-jdk14", version = "2.0.16" }
 spock1 = { module = "org.spockframework:spock-core", version = "1.3-groovy-2.5" }
-univocity-parsers = { module = "com.univocity:univocity-parsers", version = "2.9.1" }
+univocity-parsers = { module = "com.sonofab1rd:univocity-parsers", version = "2.10.1" }
 xmlunit-assertj = { module = "org.xmlunit:xmlunit-assertj3", version.ref = "xmlunit" }
 xmlunit-placeholders = { module = "org.xmlunit:xmlunit-placeholders", version.ref = "xmlunit" }
 testingAnnotations = { module = "com.gradle:develocity-testing-annotations", version = "2.0.1" }

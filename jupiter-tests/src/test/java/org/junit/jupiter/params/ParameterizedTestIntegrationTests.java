@@ -42,6 +42,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -84,6 +85,8 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSourcesTestCase.Action;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -1206,6 +1209,31 @@ class ParameterizedTestIntegrationTests {
 				.haveExactly(1, event(test(), displayName("[3] argument=5"), finishedWithFailure()));
 	}
 
+	@Nested
+	class SpiParameterInjectionIntegrationTests {
+
+		@Test
+		void injectsParametersIntoArgumentsProviderConstructor() {
+			execute(SpiParameterInjectionTestCase.class, "argumentsProviderWithConstructorParameter", String.class) //
+					.testEvents() //
+					.assertStatistics(it -> it.succeeded(1));
+		}
+
+		@Test
+		void injectsParametersIntoArgumentConverterConstructor() {
+			execute(SpiParameterInjectionTestCase.class, "argumentConverterWithConstructorParameter", String.class) //
+					.testEvents() //
+					.assertStatistics(it -> it.succeeded(1));
+		}
+
+		@Test
+		void injectsParametersIntoArgumentsAggregatorConstructor() {
+			execute(SpiParameterInjectionTestCase.class, "argumentsAggregatorWithConstructorParameter", String.class) //
+					.testEvents() //
+					.assertStatistics(it -> it.succeeded(1));
+		}
+	}
+
 	// -------------------------------------------------------------------------
 
 	static class TestCase {
@@ -1307,6 +1335,7 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NullSourceTestCase {
 
 		@ParameterizedTest
@@ -1342,6 +1371,7 @@ class ParameterizedTestIntegrationTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class EmptySourceTestCase {
 
 		@ParameterizedTest
@@ -1497,6 +1527,7 @@ class ParameterizedTestIntegrationTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NullAndEmptySourceTestCase {
 
 		@ParameterizedTest
@@ -1538,6 +1569,7 @@ class ParameterizedTestIntegrationTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(OrderAnnotation.class)
 	static class MethodSourceTestCase {
 
@@ -2116,6 +2148,71 @@ class ParameterizedTestIntegrationTests {
 		@ArgumentsSource(TwoUnusedStringArgumentsProvider.class)
 		void testWithRepeatableArgumentsSource(String argument) {
 			fail(argument);
+		}
+	}
+
+	static class SpiParameterInjectionTestCase {
+
+		@RegisterExtension
+		static final ParameterResolver spiParameterResolver = new ParameterResolver() {
+
+			@Override
+			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return parameterContext.getDeclaringExecutable() instanceof Constructor //
+						&& String.class.equals(parameterContext.getParameter().getType());
+			}
+
+			@Override
+			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return "resolved value";
+			}
+		};
+
+		@ParameterizedTest
+		@ArgumentsSource(ArgumentsProviderWithConstructorParameter.class)
+		void argumentsProviderWithConstructorParameter(String argument) {
+			assertEquals("resolved value", argument);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "value")
+		void argumentConverterWithConstructorParameter(
+				@ConvertWith(ArgumentConverterWithConstructorParameter.class) String argument) {
+			assertEquals("resolved value", argument);
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "value")
+		void argumentsAggregatorWithConstructorParameter(
+				@AggregateWith(ArgumentsAggregatorWithConstructorParameter.class) String argument) {
+			assertEquals("resolved value", argument);
+		}
+
+		record ArgumentsProviderWithConstructorParameter(String value) implements ArgumentsProvider {
+
+			@Override
+			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+				return Stream.of(arguments(value));
+			}
+		}
+
+		record ArgumentConverterWithConstructorParameter(String value) implements ArgumentConverter {
+
+			@Override
+			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+				return value;
+			}
+		}
+
+		record ArgumentsAggregatorWithConstructorParameter(String value) implements ArgumentsAggregator {
+
+			@Override
+			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+					throws ArgumentsAggregationException {
+				return value;
+			}
 		}
 	}
 

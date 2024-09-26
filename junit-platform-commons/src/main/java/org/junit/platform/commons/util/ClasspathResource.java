@@ -56,8 +56,8 @@ class ClasspathResource implements Resource {
 	@Override
 	public String toString() {
 		return new ToStringBuilder(this) //
-				.append("name", this.name) //
-				.append("uri", this.uri) //
+				.append("name", name) //
+				.append("uri", uri) //
 				.toString();
 	}
 }

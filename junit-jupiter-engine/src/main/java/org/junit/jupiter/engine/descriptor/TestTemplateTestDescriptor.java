@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -100,16 +101,20 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		List<TestTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
-		// @formatter:off
-		providers.stream()
-				.flatMap(provider -> provider.provideTestTemplateInvocationContexts(extensionContext))
-				.map(invocationContext -> createInvocationTestDescriptor(invocationContext, invocationIndex.incrementAndGet()))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
-				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
-		// @formatter:on
+		for (TestTemplateInvocationContextProvider provider : providers) {
+			try (Stream<TestTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
+				stream.forEach(
+					invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
+							.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
+			}
+		}
 		validateWasAtLeastInvokedOnce(invocationIndex.get(), providers);
 		return context;
+	}
+
+	private static Stream<TestTemplateInvocationContext> invocationContexts(
+			TestTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+		return provider.provideTestTemplateInvocationContexts(extensionContext);
 	}
 
 	private List<TestTemplateInvocationContextProvider> validateProviders(ExtensionContext extensionContext,
@@ -126,8 +131,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				TestTemplateInvocationContextProvider.class.getSimpleName(), getTestMethod()));
 	}
 
-	private Optional<TestDescriptor> createInvocationTestDescriptor(TestTemplateInvocationContext invocationContext,
-			int index) {
+	private Optional<TestDescriptor> toTestDescriptor(TestTemplateInvocationContext invocationContext, int index) {
 		UniqueId uniqueId = getUniqueId().append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 		if (getDynamicDescendantFilter().test(uniqueId, index - 1)) {
 			return Optional.of(new TestTemplateInvocationTestDescriptor(uniqueId, getTestClass(), getTestMethod(),

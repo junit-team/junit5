@@ -52,7 +52,11 @@ class JavaTimeArgumentConverter extends AnnotationBasedArgumentConverter<JavaTim
 	@Override
 	protected Object convert(Object input, Class<?> targetClass, JavaTimeConversionPattern annotation) {
 		if (input == null) {
-			throw new ArgumentConversionException("Cannot convert null to " + targetClass.getName());
+			if (annotation.nullable()) {
+				return null;
+			}
+			throw new ArgumentConversionException(
+				"Cannot convert null to " + targetClass.getName() + "; consider setting 'nullable = true'");
 		}
 		TemporalQuery<?> temporalQuery = TEMPORAL_QUERIES.get(targetClass);
 		if (temporalQuery == null) {

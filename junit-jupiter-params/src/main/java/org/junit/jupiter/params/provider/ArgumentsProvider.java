@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
  * An {@code ArgumentsProvider} is responsible for {@linkplain #provideArguments
@@ -25,7 +26,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.
  *
- * <p>Implementations must provide a no-args constructor.
+ * <p>Implementations must provide a no-args constructor or a single unambiguous
+ * constructor to use {@linkplain ParameterResolver parameter resolution}.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.ParameterizedTest
