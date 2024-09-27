@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
+import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
@@ -29,6 +30,7 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -91,18 +93,18 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 		Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks =
 				p -> p.provideForMethod(getTestClass(), getTestMethod());
 
-		Set<ExclusiveResource> fromMethodLevelAnnotation = getExclusiveResourcesFromAnnotation(
+		Set<ExclusiveResource> fromMethodAnnotation = getExclusiveResourcesFromAnnotation(
 				getTestMethod(),
 				providerToLocks
 		);
-		Stream<ExclusiveResource> fromProvidersInClassLevelAnnotation = getExclusiveResourcesFromAnnotationProviders(
-				getTestClass(),
+		Stream<ExclusiveResource> fromProvidersInClassAnnotation = getExclusiveResourcesFromProviders(
+				findRepeatableAnnotations(getTestClass(), ResourceLock.class),
 				providerToLocks
 		);
 
 		return Stream.concat(
-				fromMethodLevelAnnotation.stream(),
-				fromProvidersInClassLevelAnnotation
+				fromMethodAnnotation.stream(),
+				fromProvidersInClassAnnotation
 		).collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
 		// @formatter:on
 	}

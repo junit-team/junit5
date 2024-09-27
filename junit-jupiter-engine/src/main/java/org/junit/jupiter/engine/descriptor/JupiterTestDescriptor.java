@@ -188,17 +188,18 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element,
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
+		List<ResourceLock> resourceLocks = findRepeatableAnnotations(element, ResourceLock.class);
 		// @formatter:off
 		return Stream.concat(
-				getExclusiveResourcesFromAnnotationValue(element),
-				getExclusiveResourcesFromAnnotationProviders(element, providerToLocks)
+				getExclusiveResourcesFromValues(resourceLocks),
+				getExclusiveResourcesFromProviders(resourceLocks, providerToLocks)
 		).collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
 		// @formatter:on
 	}
 
-	Stream<ExclusiveResource> getExclusiveResourcesFromAnnotationValue(AnnotatedElement element) {
+	Stream<ExclusiveResource> getExclusiveResourcesFromValues(List<ResourceLock> resourceLocks) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
+		return resourceLocks.stream()
 				.flatMap(resourceLock -> {
 					if (StringUtils.isBlank(resourceLock.value())) {
 						return Stream.empty();
@@ -208,10 +209,10 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
-	Stream<ExclusiveResource> getExclusiveResourcesFromAnnotationProviders(AnnotatedElement element,
+	Stream<ExclusiveResource> getExclusiveResourcesFromProviders(List<ResourceLock> resourceLocks,
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
 		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
+		return resourceLocks.stream()
 				.flatMap(resourceLock -> Stream.of(resourceLock.providers())
 						.map(ReflectionUtils::newInstance)
 						.map(providerToLocks)
