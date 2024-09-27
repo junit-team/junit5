@@ -35,6 +35,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * but for some cases may be a more flexible and less verbose alternative
  * since it allows to add resources programmatically.
  *
+ * <p>Implementations must provide a no-args constructor.
+ *
  * @since 5.12
  * @see ResourceLock#providers()
  * @see Resources
@@ -74,7 +76,7 @@ public interface ResourceLocksProvider {
 	 *
 	 * @param testClass a nested test class to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 * @see	Nested
+	 * @see    Nested
 	 */
 	default Set<Lock> provideForNestedClass(Class<?> testClass) {
 		return emptySet();
