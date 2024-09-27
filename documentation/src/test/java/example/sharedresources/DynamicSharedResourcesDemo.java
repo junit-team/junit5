@@ -65,16 +65,16 @@ class DynamicSharedResourcesDemo {
 		assertEquals("banana", System.getProperty("my.prop"));
 	}
 
-	static final class Provider implements ResourceLocksProvider {
+	static class Provider implements ResourceLocksProvider {
 
 		@Override
 		public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
 			ResourceAccessMode mode;
-			if (testMethod.getName().equals("customPropertyIsNotSetByDefault")) {
-				mode = READ;
+			if (testMethod.getName().startsWith("canSet")) {
+				mode = READ_WRITE;
 			}
 			else {
-				mode = READ_WRITE;
+				mode = READ;
 			}
 			Set<Lock> locks = new HashSet<>();
 			locks.add(new Lock(SYSTEM_PROPERTIES, mode));
