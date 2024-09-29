@@ -201,8 +201,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 			// and store the instance in the ExtensionContext.
 			ClassExtensionContext extensionContext = (ClassExtensionContext) context.getExtensionContext();
 			throwableCollector.execute(() -> {
-				TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(
-					context.getExtensionRegistry(), throwableCollector);
+				TestInstances testInstances = context.getTestInstancesProvider().getTestInstances(context);
 				extensionContext.setTestInstances(testInstances);
 			});
 		}
@@ -273,32 +272,30 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private TestInstancesProvider testInstancesProvider(JupiterEngineExecutionContext parentExecutionContext,
-			ClassExtensionContext extensionContext) {
+			ClassExtensionContext ourExtensionContext) {
 
-		return (registry, registrar, throwableCollector) -> extensionContext.getTestInstances().orElseGet(
-			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, extensionContext, registry, registrar,
-				throwableCollector));
+		// For Lifecycle.PER_CLASS, ourExtensionContext.getTestInstances() is used to store the instance.
+		// Otherwise, extensionContext.getTestInstances() is always empty and we always create a new instance.
+		return (registry, context) -> ourExtensionContext.getTestInstances().orElseGet(
+			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, registry, context));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionContext extensionContext, ExtensionRegistry registry, ExtensionRegistrar registrar,
-			ThrowableCollector throwableCollector) {
+			ExtensionRegistry registry, JupiterEngineExecutionContext context) {
 
-		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, registrar, extensionContext,
-			throwableCollector);
-		throwableCollector.execute(() -> {
-			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
+		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, context);
+		context.getThrowableCollector().execute(() -> {
+			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, context.getExtensionContext());
 			// In addition, we initialize extension registered programmatically from instance fields here
 			// since the best time to do that is immediately following test class instantiation
 			// and post-processing.
-			registrar.initializeExtensions(this.testClass, instances.getInnermostInstance());
+			context.getExtensionRegistry().initializeExtensions(this.testClass, instances.getInnermostInstance());
 		});
 		return instances;
 	}
 
 	protected abstract TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext,
-			ThrowableCollector throwableCollector);
+			ExtensionRegistry registry, JupiterEngineExecutionContext context);
 
 	protected TestInstances instantiateTestClass(Optional<TestInstances> outerInstances, ExtensionRegistry registry,
 			ExtensionContext extensionContext) {

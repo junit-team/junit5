@@ -49,6 +49,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 			"fooPostProcessTestInstance:OuterTestCase",
 				"beforeOuterMethod",
 					"testOuter",
+			"close:OuterTestCase",
 
 			// InnerTestCase
 
@@ -57,7 +58,10 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 				"barPostProcessTestInstance:InnerTestCase",
 					"beforeOuterMethod",
 						"beforeInnerMethod",
-							"testInner"
+							"testInner",
+				"close:InnerTestCase",
+			"close:InnerTestCase",
+			"close:OuterTestCase"
 		);
 		// @formatter:on
 	}
@@ -67,8 +71,14 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		executeTestsForClass(TestCaseWithTestSpecificTestInstancePostProcessor.class).testEvents()//
 				.assertStatistics(stats -> stats.started(1).succeeded(1));
 
+		// @formatter:off
 		assertThat(callSequence).containsExactly(
-			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");
+			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor",
+				"beforeEachMethod",
+					"test",
+			"close:TestCaseWithTestSpecificTestInstancePostProcessor"
+		);
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
@@ -112,7 +122,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void testInner() {
-				assertEquals("foo:" + OuterTestCase.class.getSimpleName(), outerName);
+				assertEquals("foo:" + InnerTestCase.class.getSimpleName(), outerName);
 				assertEquals("bar:" + InnerTestCase.class.getSimpleName(), innerName);
 				callSequence.add("testInner");
 			}
@@ -142,25 +152,34 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	static class FooInstancePostProcessor implements TestInstancePostProcessor {
+	static abstract class AbstractInstancePostProcessor implements TestInstancePostProcessor {
+		private final String name;
+
+		AbstractInstancePostProcessor(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("foo:" + context.getRequiredTestClass().getSimpleName());
+				((Named) testInstance).setName(name + ":" + context.getRequiredTestClass().getSimpleName());
 			}
-			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+			String instanceType = testInstance.getClass().getSimpleName();
+			callSequence.add(name + "PostProcessTestInstance:" + instanceType);
+			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
+				(ExtensionContext.Store.CloseableResource) () -> callSequence.add("close:" + instanceType));
 		}
 	}
 
-	static class BarInstancePostProcessor implements TestInstancePostProcessor {
+	static class FooInstancePostProcessor extends AbstractInstancePostProcessor {
+		FooInstancePostProcessor() {
+			super("foo");
+		}
+	}
 
-		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("bar:" + context.getRequiredTestClass().getSimpleName());
-			}
-			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+	static class BarInstancePostProcessor extends AbstractInstancePostProcessor {
+		BarInstancePostProcessor() {
+			super("bar");
 		}
 	}
 

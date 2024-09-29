@@ -276,7 +276,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 			"FooInstanceFactory instantiated: ParentTestCase",
-				"parentTest"
+				"parentTest",
+			"close ParentTestCase"
 		);
 		// @formatter:on
 	}
@@ -305,8 +306,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		assertThat(callSequence).containsExactly(
 			"FooInstanceFactory instantiated: InheritedFactoryTestCase",
 				"parentTest",
+			"close InheritedFactoryTestCase",
 			"FooInstanceFactory instantiated: InheritedFactoryTestCase",
-				"childTest"
+				"childTest",
+			"close InheritedFactoryTestCase"
 		);
 		// @formatter:on
 	}
@@ -324,17 +327,23 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			// OuterTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
 				"outerTest",
+			"close OuterTestCase",
 
 			// InnerTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
 				"FooInstanceFactory instantiated: InnerTestCase",
 					"innerTest1",
+				"close InnerTestCase",
+			"close OuterTestCase",
 
 			// InnerInnerTestCase
 			"FooInstanceFactory instantiated: OuterTestCase",
 				"FooInstanceFactory instantiated: InnerTestCase",
 					"FooInstanceFactory instantiated: InnerInnerTestCase",
-						"innerTest2"
+						"innerTest2",
+					"close InnerInnerTestCase",
+				"close InnerTestCase",
+			"close OuterTestCase"
 		);
 		// @formatter:on
 	}
@@ -349,7 +358,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:off
 		assertThat(callSequence).containsExactly(
 			"FooInstanceFactory instantiated: FactoryFromInterfaceTestCase",
-				"test"
+				"test",
+			"close FactoryFromInterfaceTestCase"
 		);
 		// @formatter:on
 	}
@@ -386,7 +396,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 						"test1",
 					"@BeforeEach",
 						"test2",
-				"@AfterAll"
+				"@AfterAll",
+			"close PerClassLifecycleTestCase"
 		);
 		// @formatter:on
 	}
@@ -632,6 +643,10 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();
 			instantiated(getClass(), testClass);
+
+			extensionContext.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
+				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
+					"close " + testClass.getSimpleName()));
 
 			if (factoryContext.getOuterInstance().isPresent()) {
 				return ReflectionSupport.newInstance(testClass, factoryContext.getOuterInstance().get());

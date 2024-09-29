@@ -59,12 +59,14 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"test1",
 				"afterEach",
+				"close: name=foo, testClass=InstancePreConstructTestCase",
 
 				"PreConstructCallback: name=foo, testClass=InstancePreConstructTestCase, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"test2",
 				"afterEach",
+				"close: name=foo, testClass=InstancePreConstructTestCase",
 
 				"afterAll"
 		);
@@ -86,6 +88,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"test1",
 				"afterEach",
+				"close: name=foo, testClass=FactoryPreConstructTestCase",
 
 				"PreConstructCallback: name=foo, testClass=FactoryPreConstructTestCase, outerInstance: null",
 				"testInstanceFactory",
@@ -93,6 +96,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"test2",
 				"afterEach",
+				"close: name=foo, testClass=FactoryPreConstructTestCase",
 
 				"afterAll"
 		);
@@ -113,12 +117,14 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"outerTest1",
 				"afterEach",
+				"close: name=foo, testClass=PreConstructInNestedTestCase",
 
 				"PreConstructCallback: name=foo, testClass=PreConstructInNestedTestCase, outerInstance: null",
 				"constructor",
 				"beforeEach",
 				"outerTest2",
 				"afterEach",
+				"close: name=foo, testClass=PreConstructInNestedTestCase",
 
 				"PreConstructCallback: name=foo, testClass=PreConstructInNestedTestCase, outerInstance: null",
 				"constructor",
@@ -132,6 +138,11 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"innerTest1",
 				"afterEachInner",
 				"afterEach",
+
+				"close: name=baz, testClass=InnerTestCase",
+				"close: name=bar, testClass=InnerTestCase",
+				"close: name=foo, testClass=InnerTestCase",
+				"close: name=foo, testClass=PreConstructInNestedTestCase",
 
 				"afterAll"
 		);
@@ -150,6 +161,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"test1",
 				"afterEach",
+				"close: name=foo, testClass=PreConstructOnMethod",
 
 				"constructor",
 				"beforeEach",
@@ -172,7 +184,9 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"beforeEach",
 				"test1",
 				"beforeEach",
-				"test2"
+				"test2",
+				"close: name=bar, testClass=PreConstructWithClassLifecycle",
+				"close: name=foo, testClass=PreConstructWithClassLifecycle"
 		);
 		// @formatter:on
 	}
@@ -404,10 +418,18 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 		public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertThat(context.getTestClass()).isPresent();
-			assertThat(factoryContext.getTestClass()).isSameAs(context.getTestClass().get());
-			callSequence.add(
-				"PreConstructCallback: name=" + name + ", testClass=" + factoryContext.getTestClass().getSimpleName()
-						+ ", outerInstance: " + factoryContext.getOuterInstance().orElse(null));
+			if (context.getTestInstanceLifecycle().orElse(null) != TestInstance.Lifecycle.PER_CLASS) {
+				assertThat(context.getTestMethod()).isPresent();
+			}
+			else {
+				assertThat(context.getTestMethod()).isEmpty();
+			}
+			String testClass = factoryContext.getTestClass().getSimpleName();
+			callSequence.add("PreConstructCallback: name=" + name + ", testClass=" + testClass + ", outerInstance: "
+					+ factoryContext.getOuterInstance().orElse(null));
+			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
+				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
+					"close: name=" + name + ", testClass=" + testClass));
 		}
 	}
 

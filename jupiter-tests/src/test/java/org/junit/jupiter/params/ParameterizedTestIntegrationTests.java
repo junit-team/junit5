@@ -404,20 +404,20 @@ class ParameterizedTestIntegrationTests {
 		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:LifecycleTestCase:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(0) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:LifecycleTestCase:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(0) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:LifecycleTestCase:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(1) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:LifecycleTestCase:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(1) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
@@ -2009,7 +2009,7 @@ class ParameterizedTestIntegrationTests {
 		private static final Set<String> testMethods = new LinkedHashSet<>();
 
 		public LifecycleTestCase(TestInfo testInfo) {
-			lifecycleEvents.add("constructor:" + testInfo.getDisplayName());
+			lifecycleEvents.add("constructor:" + getClass().getSimpleName() + ":" + testInfo.getDisplayName());
 		}
 
 		@BeforeAll
