@@ -282,7 +282,7 @@ class ParallelExecutionIntegrationTests {
 
 	@ParameterizedTest
 	@ValueSource(classes = { IsolatedMethodFirstTestCase.class, IsolatedMethodLastTestCase.class })
-	void canRunTestsIsolatedFromEachOtherWhenDeclaredOnFirstMethod(Class<?> testClass) {
+	void canRunTestsIsolatedFromEachOtherWhenDeclaredOnMethodLevel(Class<?> testClass) {
 		List<Event> events = executeConcurrentlySuccessfully(1, testClass).list();
 
 		assertThat(ThreadReporter.getThreadNames(events)).hasSize(1);
