@@ -33,6 +33,10 @@ class NodeExecutionAdvisor {
 		resourceLocksByTestDescriptor.put(testDescriptor, resourceLock);
 	}
 
+	void removeResourceLock(TestDescriptor testDescriptor) {
+		resourceLocksByTestDescriptor.remove(testDescriptor);
+	}
+
 	Optional<ExecutionMode> getForcedExecutionMode(TestDescriptor testDescriptor) {
 		return testDescriptor.getParent().flatMap(this::lookupExecutionModeForcedByAncestor);
 	}
