@@ -110,7 +110,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 				.forEach(invocationTestDescriptor -> execute(dynamicTestExecutor, invocationTestDescriptor));
 		// @formatter:on
 		boolean allProvidersMayBeEmpty = providers.stream().allMatch(
-			p -> p.mayReturnEmptyInvocationContext(extensionContext));
+			p -> p.mayReturnZeroInvocationContexts(extensionContext));
 		if (!allProvidersMayBeEmpty) {
 			validateWasAtLeastInvokedOnce(invocationIndex.get(), extensionContext, providers);
 		}
@@ -150,11 +150,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			List<TestTemplateInvocationContextProvider> providers) {
 
 		boolean allMayReturnEmptyContext = providers.stream().allMatch(
-			p -> p.mayReturnEmptyInvocationContext(extensionContext));
+			p -> p.mayReturnZeroInvocationContexts(extensionContext));
 
 		Preconditions.condition(invocationIndex > 0 || allMayReturnEmptyContext,
 			() -> "None of the supporting " + TestTemplateInvocationContextProvider.class.getSimpleName() + "s "
-					+ providers.stream().filter(p -> !p.mayReturnEmptyInvocationContext(extensionContext)).map(
+					+ providers.stream().filter(p -> !p.mayReturnZeroInvocationContexts(extensionContext)).map(
 						provider -> provider.getClass().getSimpleName()).collect(joining(", ", "[", "]"))
 					+ " provided a non-empty stream");
 	}

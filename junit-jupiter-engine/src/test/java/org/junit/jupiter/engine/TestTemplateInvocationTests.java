@@ -825,7 +825,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public boolean mayReturnEmptyInvocationContext(ExtensionContext extensionContext) {
+		public boolean mayReturnZeroInvocationContexts(ExtensionContext extensionContext) {
 			return true;
 		}
 	}

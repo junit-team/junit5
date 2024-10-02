@@ -299,9 +299,9 @@ public @interface ParameterizedTest {
 	 * <p>Defaults to {@code true}.
 	 *
 	 * <p></p>
-	 * @since 5.11
+	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = EXPERIMENTAL, since = "5.12")
 	boolean requireArguments() default true;
 
 }

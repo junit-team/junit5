@@ -100,11 +100,11 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	@Override
-	public boolean mayReturnEmptyInvocationContext(ExtensionContext extensionContext) {
+	public boolean mayReturnZeroInvocationContexts(ExtensionContext extensionContext) {
 		Method templateMethod = extensionContext.getRequiredTestMethod();
-		return findAnnotation(templateMethod, ParameterizedTest.class).map(
-			parameterizedTest -> !parameterizedTest.requireArguments()).orElse(
-				TestTemplateInvocationContextProvider.super.mayReturnEmptyInvocationContext(extensionContext));
+		return findAnnotation(templateMethod, ParameterizedTest.class) //
+				.map(parameterizedTest -> !parameterizedTest.requireArguments()) //
+				.orElse(false);
 	}
 
 	@SuppressWarnings("ConstantConditions")
