@@ -16,7 +16,9 @@ on GitHub.
 [[release-notes-5.11.2-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Fix regression in parallel execution that was introduced in 5.10.4/5.11.1 regarding
+  global read-write locks. When such a lock was declared on descendants of top-level nodes
+  in the test tree, such as Cucumber scenarios, test execution failed.
 
 [[release-notes-5.11.2-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
