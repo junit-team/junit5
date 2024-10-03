@@ -281,7 +281,8 @@ class ParallelExecutionIntegrationTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { IsolatedMethodFirstTestCase.class, IsolatedMethodLastTestCase.class })
+	@ValueSource(classes = { IsolatedMethodFirstTestCase.class, IsolatedMethodLastTestCase.class,
+			IsolatedNestedMethodFirstTestCase.class, IsolatedNestedMethodLastTestCase.class })
 	void canRunTestsIsolatedFromEachOtherWhenDeclaredOnMethodLevel(Class<?> testClass) {
 		List<Event> events = executeConcurrentlySuccessfully(1, testClass).list();
 
@@ -407,6 +408,72 @@ class ParallelExecutionIntegrationTests {
 		@ResourceLock(value = GLOBAL_KEY, mode = READ_WRITE) // effectively @Isolated
 		void test2() throws InterruptedException {
 			incrementBlockAndCheck(sharedResource, countDownLatch);
+		}
+	}
+
+	@ExtendWith(ThreadReporter.class)
+	static class IsolatedNestedMethodFirstTestCase {
+
+		static AtomicInteger sharedResource;
+		static CountDownLatch countDownLatch;
+
+		@BeforeAll
+		static void initialize() {
+			sharedResource = new AtomicInteger();
+			countDownLatch = new CountDownLatch(2);
+		}
+
+		@Nested
+		class Test1 {
+
+			@Test
+			@ResourceLock(value = GLOBAL_KEY, mode = READ_WRITE) // effectively @Isolated
+			void test1() throws InterruptedException {
+				incrementBlockAndCheck(sharedResource, countDownLatch);
+			}
+		}
+
+		@Nested
+		class Test2 {
+
+			@Test
+			@ResourceLock(value = "b", mode = READ_WRITE)
+			void test2() throws InterruptedException {
+				incrementBlockAndCheck(sharedResource, countDownLatch);
+			}
+		}
+	}
+
+	@ExtendWith(ThreadReporter.class)
+	static class IsolatedNestedMethodLastTestCase {
+
+		static AtomicInteger sharedResource;
+		static CountDownLatch countDownLatch;
+
+		@BeforeAll
+		static void initialize() {
+			sharedResource = new AtomicInteger();
+			countDownLatch = new CountDownLatch(2);
+		}
+
+		@Nested
+		class Test1 {
+
+			@Test
+			@ResourceLock(value = "b", mode = READ_WRITE)
+			void test1() throws InterruptedException {
+				incrementBlockAndCheck(sharedResource, countDownLatch);
+			}
+		}
+
+		@Nested
+		class Test2 {
+
+			@Test
+			@ResourceLock(value = GLOBAL_KEY, mode = READ_WRITE) // effectively @Isolated
+			void test2() throws InterruptedException {
+				incrementBlockAndCheck(sharedResource, countDownLatch);
+			}
 		}
 	}
 
