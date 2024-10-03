@@ -10,8 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
@@ -19,6 +21,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -106,6 +109,17 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		// @formatter:on
 	}
 
+	public List<Class<?>> getEnclosingTestClasses() {
+		TestDescriptor parent = getParent().orElse(null);
+		if (parent instanceof ClassBasedTestDescriptor) {
+			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
+			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
+			result.add(parentClassDescriptor.getTestClass());
+			return result;
+		}
+		return emptyList();
+	}
+
 	/**
 	 * Invoke exception handlers for the supplied {@code Throwable} one-by-one
 	 * until none are left or the throwable to handle has been swallowed.
@@ -186,34 +200,41 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element,
+	Set<ExclusiveResource> getExclusiveResourcesFromAnnotations(AnnotatedElement element,
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
-		List<ResourceLock> resourceLocks = findRepeatableAnnotations(element, ResourceLock.class);
 		// @formatter:off
-		return Stream.concat(
-				getExclusiveResourcesFromValues(resourceLocks),
-				getExclusiveResourcesFromProviders(resourceLocks, providerToLocks)
-		).collect(collectingAndThen(toSet(), Collections::unmodifiableSet));
+		List<ResourceLock> ownAnnotations = findRepeatableAnnotations(element, ResourceLock.class);
+		List<ResourceLock> enclosingClassesAnnotations = getEnclosingTestClasses().stream()
+				.map(clazz -> findRepeatableAnnotations(clazz, ResourceLock.class))
+				.flatMap(Collection::stream)
+				.collect(toList());
+
+		return Stream.of(
+				getExclusiveResourcesFromValues(ownAnnotations),
+				getExclusiveResourcesFromProviders(ownAnnotations, providerToLocks),
+				getExclusiveResourcesFromProviders(enclosingClassesAnnotations, providerToLocks)
+		).flatMap(s -> s)
+		.collect(toSet());
 		// @formatter:on
 	}
 
-	Stream<ExclusiveResource> getExclusiveResourcesFromValues(List<ResourceLock> resourceLocks) {
+	private Stream<ExclusiveResource> getExclusiveResourcesFromValues(List<ResourceLock> annotations) {
 		// @formatter:off
-		return resourceLocks.stream()
-				.flatMap(resourceLock -> {
-					if (StringUtils.isBlank(resourceLock.value())) {
+		return annotations.stream()
+				.flatMap(annotation -> {
+					if (StringUtils.isBlank(annotation.value())) {
 						return Stream.empty();
 					}
-					return Stream.of(new ExclusiveResource(resourceLock.value(), toLockMode(resourceLock.mode())));
+					return Stream.of(new ExclusiveResource(annotation.value(), toLockMode(annotation.mode())));
 				});
 		// @formatter:on
 	}
 
-	Stream<ExclusiveResource> getExclusiveResourcesFromProviders(List<ResourceLock> resourceLocks,
+	private Stream<ExclusiveResource> getExclusiveResourcesFromProviders(List<ResourceLock> annotations,
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
 		// @formatter:off
-		return resourceLocks.stream()
-				.flatMap(resourceLock -> Stream.of(resourceLock.providers())
+		return annotations.stream()
+				.flatMap(annotation -> Stream.of(annotation.providers())
 						.map(ReflectionUtils::newInstance)
 						.map(providerToLocks)
 						.flatMap(Collection::stream)

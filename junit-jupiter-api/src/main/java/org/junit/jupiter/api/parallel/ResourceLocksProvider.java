@@ -49,8 +49,8 @@ public interface ResourceLocksProvider {
 	/**
 	 * Add shared resources to a test class.
 	 *
-	 * <p>Invoked for a test class annotated with
-	 * {@code @ResourceLock(providers)} and for its child classes.
+	 * <p>Invoked in case a test class or its parent class
+	 * is annotated with {@code @ResourceLock(providers)}.
 	 *
 	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
 	 * has the same semantics as annotating a test class
@@ -66,6 +66,14 @@ public interface ResourceLocksProvider {
 	/**
 	 * Add shared resources to a {@linkplain Nested nested} test class.
 	 *
+	 * <p>Invoked in case:
+	 * <ul>
+	 *     <li>an enclosing test class of any level or its parent class
+	 *     is annotated with {@code @ResourceLock(providers)}.</li>
+	 *     <li>a nested test class or its parent class
+	 * 	   is annotated with {@code @ResourceLock(providers)}.</li>
+	 * </ul>
+	 *
 	 * <p>Invoked for a nested test class
 	 * annotated with {@code @ResourceLock(providers)}
 	 * and for its child classes.
@@ -76,7 +84,7 @@ public interface ResourceLocksProvider {
 	 *
 	 * @param testClass a nested test class to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 * @see    Nested
+	 * @see Nested
 	 */
 	default Set<Lock> provideForNestedClass(Class<?> testClass) {
 		return emptySet();
@@ -87,7 +95,7 @@ public interface ResourceLocksProvider {
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
-	 *     <li>an enclosing test class or its parent class
+	 *     <li>an enclosing test class of any level or its parent class
 	 *     is annotated with {@code @ResourceLock(providers)}.</li>
 	 *     <li>a test method
 	 *     is annotated with {@code @ResourceLock(providers)}.</li>

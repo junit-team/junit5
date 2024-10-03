@@ -10,13 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -62,18 +59,6 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		return allTags;
 	}
 
-	@Override
-	public List<Class<?>> getEnclosingTestClasses() {
-		TestDescriptor parent = getParent().orElse(null);
-		if (parent instanceof ClassBasedTestDescriptor) {
-			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
-			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
-			result.add(parentClassDescriptor.getTestClass());
-			return result;
-		}
-		return emptyList();
-	}
-
 	// --- Node ----------------------------------------------------------------
 
 	@Override
@@ -91,7 +76,7 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
 		// @formatter:off
-		return getExclusiveResourcesFromAnnotation(
+		return getExclusiveResourcesFromAnnotations(
 				getTestClass(),
 				provider -> provider.provideForNestedClass(getTestClass())
 		);
