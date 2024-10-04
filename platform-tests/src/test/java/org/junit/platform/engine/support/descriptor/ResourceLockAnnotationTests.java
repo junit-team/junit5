@@ -184,7 +184,7 @@ class ResourceLockAnnotationTests {
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
 		try {
 			var descriptor = new TestMethodTestDescriptor( //
-					uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration //
+				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration //
 			);
 			descriptor.setParent(new ClassTestDescriptor(uniqueId, testClass, configuration));
 			return descriptor.getExclusiveResources();
@@ -333,6 +333,42 @@ class ResourceLockAnnotationTests {
 		@Nested
 		@ResourceLock
 		class NestedClass {
+		}
+	}
+
+	static class NestedNestedTestCase {
+
+		@Nested
+		@ResourceLock(providers = NestedNestedTestCase.Provider.class)
+		static class NestedClass {
+
+			@Nested
+			class NestedClassTwo {
+
+				@Test
+				void test() {
+				}
+			}
+		}
+
+		static class Provider implements ResourceLocksProvider {
+			@Override
+			public Set<Lock> provideForClass(Class<?> testClass) {
+				System.out.println("provideForClass");
+				return ResourceLocksProvider.super.provideForClass(testClass);
+			}
+
+			@Override
+			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+				System.out.println("provideForNestedClass");
+				return ResourceLocksProvider.super.provideForNestedClass(testClass);
+			}
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				System.out.println("provideForMethod");
+				return ResourceLocksProvider.super.provideForMethod(testClass, testMethod);
+			}
 		}
 	}
 
