@@ -50,6 +50,12 @@ class NodeTreeWalker {
 
 	private void walk(TestDescriptor globalLockDescriptor, TestDescriptor testDescriptor,
 			NodeExecutionAdvisor advisor) {
+
+		if (advisor.getResourceLock(globalLockDescriptor) == globalReadWriteLock) {
+			// Global read-write lock is already being enforced, so no additional locks are needed
+			return;
+		}
+
 		Set<ExclusiveResource> exclusiveResources = getExclusiveResources(testDescriptor);
 		if (exclusiveResources.isEmpty()) {
 			if (globalLockDescriptor.equals(testDescriptor)) {
@@ -73,7 +79,12 @@ class NodeTreeWalker {
 				});
 			}
 			if (allResources.contains(GLOBAL_READ_WRITE)) {
-				forceDescendantExecutionModeRecursively(advisor, globalLockDescriptor);
+				advisor.forceDescendantExecutionMode(globalLockDescriptor, SAME_THREAD);
+				doForChildrenRecursively(globalLockDescriptor, child -> {
+					advisor.forceDescendantExecutionMode(child, SAME_THREAD);
+					// Remove any locks that may have been set for siblings or their descendants
+					advisor.removeResourceLock(child);
+				});
 				advisor.useResourceLock(globalLockDescriptor, globalReadWriteLock);
 			}
 			else {
@@ -94,8 +105,7 @@ class NodeTreeWalker {
 	}
 
 	private boolean isReadOnly(Set<ExclusiveResource> exclusiveResources) {
-		return exclusiveResources.stream().allMatch(
-			exclusiveResource -> exclusiveResource.getLockMode() == ExclusiveResource.LockMode.READ);
+		return exclusiveResources.stream().allMatch(it -> it.getLockMode() == ExclusiveResource.LockMode.READ);
 	}
 
 	private Set<ExclusiveResource> getExclusiveResources(TestDescriptor testDescriptor) {
