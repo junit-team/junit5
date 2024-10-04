@@ -356,19 +356,16 @@ class ResourceLockAnnotationTests {
 		static class Provider implements ResourceLocksProvider {
 			@Override
 			public Set<Lock> provideForClass(Class<?> testClass) {
-				System.out.println("provideForClass");
 				return ResourceLocksProvider.super.provideForClass(testClass);
 			}
 
 			@Override
 			public Set<Lock> provideForNestedClass(Class<?> testClass) {
-				System.out.println("provideForNestedClass");
 				return ResourceLocksProvider.super.provideForNestedClass(testClass);
 			}
 
 			@Override
 			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
-				System.out.println("provideForMethod");
 				return ResourceLocksProvider.super.provideForMethod(testClass, testMethod);
 			}
 		}
