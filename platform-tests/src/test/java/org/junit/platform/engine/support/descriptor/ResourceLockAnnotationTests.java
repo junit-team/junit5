@@ -64,6 +64,7 @@ class ResourceLockAnnotationTests {
 		assertThat(methodResources).isEmpty();
 
 		var nestedClassResources = getNestedClassResources(
+				NoSharedResourcesTestCase.class,
 				NoSharedResourcesTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).isEmpty();
@@ -90,6 +91,7 @@ class ResourceLockAnnotationTests {
 		);
 
 		var nestedClassResources = getNestedClassResources(
+				SharedResourcesViaAnnotationValueTestCase.class,
 				SharedResourcesViaAnnotationValueTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
@@ -119,6 +121,7 @@ class ResourceLockAnnotationTests {
 		);
 
 		var nestedClassResources = getNestedClassResources(
+				SharedResourcesViaAnnotationProvidersTestCase.class,
 				SharedResourcesViaAnnotationProvidersTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
@@ -148,11 +151,13 @@ class ResourceLockAnnotationTests {
 		);
 
 		var nestedClassResources = getNestedClassResources(
+				SharedResourcesViaAnnotationValueAndProvidersTestCase.class,
 				SharedResourcesViaAnnotationValueAndProvidersTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
 				new ExclusiveResource("c1", LockMode.READ_WRITE),
-				new ExclusiveResource("c2", LockMode.READ_WRITE)
+				new ExclusiveResource("c2", LockMode.READ_WRITE),
+				new ExclusiveResource("c3", LockMode.READ_WRITE)
 		);
 		// @formatter:on
 	}
@@ -171,6 +176,7 @@ class ResourceLockAnnotationTests {
 		assertThat(methodResources).isEmpty();
 
 		var nestedClassResources = getNestedClassResources(
+				EmptyAnnotationTestCase.class,
 				EmptyAnnotationTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).isEmpty();
@@ -178,7 +184,11 @@ class ResourceLockAnnotationTests {
 	}
 
 	private Set<ExclusiveResource> getClassResources(Class<?> testClass) {
-		return new ClassTestDescriptor(uniqueId, testClass, configuration).getExclusiveResources();
+		return getClassTestDescriptor(testClass).getExclusiveResources();
+	}
+
+	private ClassTestDescriptor getClassTestDescriptor(Class<?> testClass) {
+		return new ClassTestDescriptor(uniqueId, testClass, configuration);
 	}
 
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
@@ -188,7 +198,7 @@ class ResourceLockAnnotationTests {
 				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration
 			);
 			// @formatter:on
-			descriptor.setParent(new ClassTestDescriptor(uniqueId, testClass, configuration));
+			descriptor.setParent(getClassTestDescriptor(testClass));
 			return descriptor.getExclusiveResources();
 		}
 		catch (NoSuchMethodException e) {
@@ -196,8 +206,10 @@ class ResourceLockAnnotationTests {
 		}
 	}
 
-	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass) {
-		return new NestedClassTestDescriptor(uniqueId, testClass, configuration).getExclusiveResources();
+	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass, Class<?> nestedClass) {
+		var descriptor = new NestedClassTestDescriptor(uniqueId, nestedClass, configuration);
+		descriptor.setParent(getClassTestDescriptor(testClass));
+		return descriptor.getExclusiveResources();
 	}
 
 	// -------------------------------------------------------------------------
@@ -313,13 +325,18 @@ class ResourceLockAnnotationTests {
 			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
 				return Set.of(new Lock("b2", ResourceAccessMode.READ));
 			}
+
+			@Override
+			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+				return Set.of(new Lock("c2"));
+			}
 		}
 
 		static class NestedClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
 			public Set<Lock> provideForNestedClass(Class<?> testClass) {
-				return Set.of(new Lock("c2"));
+				return Set.of(new Lock("c3"));
 			}
 		}
 	}
