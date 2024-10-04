@@ -92,10 +92,12 @@ class ResourceLocksProviderTests {
 			@Test
 			void nestedTest() {
 				assertTrue(Provider.isProvideForNestedClassCalled, "'provideForNestedClass' was not called");
-				assertTrue( //
-						Provider.isProvideForNestedTestMethodCalled, //
-						"'provideForMethod(nestedTest)' was not called" //
+				// @formatter:off
+				assertTrue(
+						Provider.isProvideForNestedTestMethodCalled,
+						"'provideForMethod(nestedTest)' was not called"
 				);
+				// @formatter:on
 			}
 		}
 

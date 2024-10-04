@@ -183,9 +183,11 @@ class ResourceLockAnnotationTests {
 
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
 		try {
-			var descriptor = new TestMethodTestDescriptor( //
-				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration //
+			// @formatter:off
+			var descriptor = new TestMethodTestDescriptor(
+				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration
 			);
+			// @formatter:on
 			descriptor.setParent(new ClassTestDescriptor(uniqueId, testClass, configuration));
 			return descriptor.getExclusiveResources();
 		}
