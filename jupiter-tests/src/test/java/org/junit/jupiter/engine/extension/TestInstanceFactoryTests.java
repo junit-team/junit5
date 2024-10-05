@@ -35,6 +35,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -402,6 +403,32 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
+	@Test
+	void instanceFactoryWithLegacyContext() {
+		EngineExecutionResults executionResults = executeTestsForClass(LegacyContextTestCase.class);
+
+		assertEquals(3, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(3, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"outerTest",
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: InnerTestCase",
+				"innerTest1",
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: InnerTestCase",
+				"innerTest2",
+				"close InnerTestCase",
+				"close InnerTestCase",
+				"close LegacyContextTestCase",
+				"close LegacyContextTestCase",
+				"close LegacyContextTestCase"
+		);
+		// @formatter:on
+	}
+
 	// -------------------------------------------------------------------------
 
 	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
@@ -620,6 +647,29 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@ExtendWith(LegacyInstanceFactory.class)
+	static class LegacyContextTestCase {
+
+		@Test
+		void outerTest() {
+			callSequence.add("outerTest");
+		}
+
+		@Nested
+		class InnerTestCase {
+
+			@Test
+			void innerTest1() {
+				callSequence.add("innerTest1");
+			}
+
+			@Test
+			void innerTest2() {
+				callSequence.add("innerTest2");
+			}
+		}
+	}
+
 	@ExtendWith(ProxyTestInstanceFactory.class)
 	@TestInstance(PER_CLASS)
 	static class ProxiedTestCase {
@@ -656,10 +706,15 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@EnableTestScopedConstructorContext
 	private static class FooInstanceFactory extends AbstractTestInstanceFactory {
 	}
 
+	@EnableTestScopedConstructorContext
 	private static class BarInstanceFactory extends AbstractTestInstanceFactory {
+	}
+
+	private static class LegacyInstanceFactory extends AbstractTestInstanceFactory {
 	}
 
 	/**

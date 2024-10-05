@@ -42,7 +42,10 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `ParameterResolver` extensions receive a different `ExtensionContext` for constructor
+  parameters of the test instance. Since the `ExtensionContext` is now consistent with
+  parameters of test methods, extensions are unlikely to break, but the behavior may
+  change in certain scenarios.
 
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -54,6 +57,12 @@ JUnit repository on GitHub.
   `@ConvertWith`), and `ArgumentsAggregator` (declared via `@AggregateWith`)
   implementations can now use constructor injection from registered `ParameterResolver`
   extensions.
+* Implementations of `ParameterResolver` now receive a test-specific `ExtensionContext`
+  for constructor parameters of the test class.
+* `@EnableTestScopedConstructorContext` has been added to enable the use of a test-scoped
+  `ExtensionContext` in `TestInstancePreConstructCallback`, `TestInstancePostProcessor`
+  and `TestInstanceFactory`. The behavior enabled by the annotation is expected to
+  eventually become the default in future versions of JUnit Jupiter.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

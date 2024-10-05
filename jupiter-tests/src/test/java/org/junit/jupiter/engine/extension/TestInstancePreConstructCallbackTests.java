@@ -23,6 +23,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -187,6 +188,54 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 				"test2",
 				"close: name=bar, testClass=PreConstructWithClassLifecycle",
 				"close: name=foo, testClass=PreConstructWithClassLifecycle"
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void legacyPreConstruct() {
+		executeTestsForClass(LegacyPreConstructTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(3).succeeded(3));
+
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+				"beforeAll",
+
+				"PreConstructCallback: name=foo, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"PreConstructCallback: name=legacy, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"constructor",
+				"beforeEach",
+				"outerTest1",
+				"afterEach",
+				"close: name=foo, testClass=LegacyPreConstructTestCase",
+
+				"PreConstructCallback: name=foo, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"PreConstructCallback: name=legacy, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"constructor",
+				"beforeEach",
+				"outerTest2",
+				"afterEach",
+				"close: name=foo, testClass=LegacyPreConstructTestCase",
+
+				"PreConstructCallback: name=foo, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"PreConstructCallback: name=legacy, testClass=LegacyPreConstructTestCase, outerInstance: null",
+				"constructor",
+				"PreConstructCallback: name=foo, testClass=InnerTestCase, outerInstance: LegacyPreConstructTestCase",
+				"PreConstructCallback: name=legacy, testClass=InnerTestCase, outerInstance: LegacyPreConstructTestCase",
+				"constructorInner",
+				"beforeEach",
+				"beforeEachInner",
+				"innerTest1",
+				"afterEachInner",
+				"afterEach",
+				"close: name=foo, testClass=InnerTestCase",
+				"close: name=foo, testClass=LegacyPreConstructTestCase",
+
+				"close: name=legacy, testClass=InnerTestCase",
+				"afterAll",
+				"close: name=legacy, testClass=LegacyPreConstructTestCase",
+				"close: name=legacy, testClass=LegacyPreConstructTestCase",
+				"close: name=legacy, testClass=LegacyPreConstructTestCase"
 		);
 		// @formatter:on
 	}
@@ -407,6 +456,73 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 		}
 	}
 
+	@ExtendWith(InstancePreConstructCallbackRecordingFoo.class)
+	@ExtendWith(InstancePreConstructCallbackRecordingLegacy.class)
+	static class LegacyPreConstructTestCase extends CallSequenceRecordingTestCase {
+
+		LegacyPreConstructTestCase() {
+			record("constructor");
+		}
+
+		@BeforeAll
+		static void beforeAll() {
+			record("beforeAll");
+		}
+
+		@BeforeEach
+		void beforeEach() {
+			record("beforeEach");
+		}
+
+		@Test
+		void outerTest1() {
+			record("outerTest1");
+		}
+
+		@Test
+		void outerTest2() {
+			record("outerTest2");
+		}
+
+		@AfterEach
+		void afterEach() {
+			record("afterEach");
+		}
+
+		@AfterAll
+		static void afterAll() {
+			record("afterAll");
+		}
+
+		@Override
+		public String toString() {
+			return "LegacyPreConstructTestCase";
+		}
+
+		@Nested
+		class InnerTestCase extends CallSequenceRecordingTestCase {
+
+			InnerTestCase() {
+				record("constructorInner");
+			}
+
+			@BeforeEach
+			void beforeEachInner() {
+				record("beforeEachInner");
+			}
+
+			@Test
+			void innerTest1() {
+				record("innerTest1");
+			}
+
+			@AfterEach
+			void afterEachInner() {
+				record("afterEachInner");
+			}
+		}
+	}
+
 	static abstract class AbstractTestInstancePreConstructCallback implements TestInstancePreConstructCallback {
 		private final String name;
 
@@ -418,7 +534,10 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 		public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertThat(context.getTestClass()).isPresent();
-			if (context.getTestInstanceLifecycle().orElse(null) != TestInstance.Lifecycle.PER_CLASS) {
+			if (name.equals("legacy")) {
+				assertThat(factoryContext.getTestClass()).isSameAs(context.getTestClass().get());
+			}
+			else if (context.getTestInstanceLifecycle().orElse(null) != TestInstance.Lifecycle.PER_CLASS) {
 				assertThat(context.getTestMethod()).isPresent();
 			}
 			else {
@@ -433,21 +552,30 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 		}
 	}
 
+	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingFoo extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingFoo() {
 			super("foo");
 		}
 	}
 
+	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingBar extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingBar() {
 			super("bar");
 		}
 	}
 
+	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingBaz extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingBaz() {
 			super("baz");
+		}
+	}
+
+	static class InstancePreConstructCallbackRecordingLegacy extends AbstractTestInstancePreConstructCallback {
+		InstancePreConstructCallbackRecordingLegacy() {
+			super("legacy");
 		}
 	}
 

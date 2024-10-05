@@ -39,6 +39,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -66,6 +67,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.AnnotationUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -277,15 +279,18 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		// For Lifecycle.PER_CLASS, ourExtensionContext.getTestInstances() is used to store the instance.
 		// Otherwise, extensionContext.getTestInstances() is always empty and we always create a new instance.
 		return (registry, context) -> ourExtensionContext.getTestInstances().orElseGet(
-			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, registry, context));
+			() -> instantiateAndPostProcessTestInstance(parentExecutionContext, ourExtensionContext, registry,
+				context));
 	}
 
 	private TestInstances instantiateAndPostProcessTestInstance(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, JupiterEngineExecutionContext context) {
+			ClassExtensionContext ourExtensionContext, ExtensionRegistry registry,
+			JupiterEngineExecutionContext context) {
 
-		TestInstances instances = instantiateTestClass(parentExecutionContext, registry, context);
+		TestInstances instances = instantiateTestClass(parentExecutionContext, ourExtensionContext, registry, context);
 		context.getThrowableCollector().execute(() -> {
-			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, context.getExtensionContext());
+			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, context.getExtensionContext(),
+				ourExtensionContext);
 			// In addition, we initialize extension registered programmatically from instance fields here
 			// since the best time to do that is immediately following test class instantiation
 			// and post-processing.
@@ -295,27 +300,35 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	protected abstract TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionRegistry registry, JupiterEngineExecutionContext context);
+			ExtensionContext ourExtensionContext, ExtensionRegistry registry, JupiterEngineExecutionContext context);
 
 	protected TestInstances instantiateTestClass(Optional<TestInstances> outerInstances, ExtensionRegistry registry,
-			ExtensionContext extensionContext) {
+			ExtensionContext extensionContext, ExtensionContext ourExtensionContext) {
 
 		Optional<Object> outerInstance = outerInstances.map(TestInstances::getInnermostInstance);
 		invokeTestInstancePreConstructCallbacks(new DefaultTestInstanceFactoryContext(this.testClass, outerInstance),
-			registry, extensionContext);
+			registry, extensionContext, ourExtensionContext);
 		Object instance = this.testInstanceFactory != null //
-				? invokeTestInstanceFactory(outerInstance, extensionContext) //
-				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
+				? invokeTestInstanceFactory(outerInstance, extensionContext, ourExtensionContext) //
+				: invokeTestClassConstructor(outerInstance, registry, extensionContext, ourExtensionContext);
 		return outerInstances.map(instances -> DefaultTestInstances.of(instances, instance)).orElse(
 			DefaultTestInstances.of(instance));
 	}
 
-	private Object invokeTestInstanceFactory(Optional<Object> outerInstance, ExtensionContext extensionContext) {
+	private Object invokeTestInstanceFactory(Optional<Object> outerInstance, ExtensionContext extensionContext,
+			ExtensionContext ourExtensionContext) {
 		Object instance;
 
 		try {
-			instance = this.testInstanceFactory.createTestInstance(
-				new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
+			if (AnnotationUtils.isAnnotated(this.testInstanceFactory.getClass(),
+				EnableTestScopedConstructorContext.class)) {
+				instance = this.testInstanceFactory.createTestInstance(
+					new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), extensionContext);
+			}
+			else {
+				instance = this.testInstanceFactory.createTestInstance(
+					new DefaultTestInstanceFactoryContext(this.testClass, outerInstance), ourExtensionContext);
+			}
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
@@ -355,7 +368,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private Object invokeTestClassConstructor(Optional<Object> outerInstance, ExtensionRegistry registry,
-			ExtensionContext extensionContext) {
+			ExtensionContext extensionContext, ExtensionContext ourExtensionContext) {
 
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(this.testClass);
 		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
@@ -363,16 +376,28 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	private void invokeTestInstancePreConstructCallbacks(TestInstanceFactoryContext factoryContext,
-			ExtensionRegistry registry, ExtensionContext context) {
-		registry.stream(TestInstancePreConstructCallback.class).forEach(
-			extension -> executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, context)));
+			ExtensionRegistry registry, ExtensionContext context, ExtensionContext ourContext) {
+		registry.stream(TestInstancePreConstructCallback.class).forEach(extension -> {
+			if (AnnotationUtils.isAnnotated(extension.getClass(), EnableTestScopedConstructorContext.class)) {
+				executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, context));
+			}
+			else {
+				executeAndMaskThrowable(() -> extension.preConstructTestInstance(factoryContext, ourContext));
+			}
+		});
 	}
 
-	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry,
-			ExtensionContext context) {
+	private void invokeTestInstancePostProcessors(Object instance, ExtensionRegistry registry, ExtensionContext context,
+			ClassExtensionContext ourContext) {
 
-		registry.stream(TestInstancePostProcessor.class).forEach(
-			extension -> executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context)));
+		registry.stream(TestInstancePostProcessor.class).forEach(extension -> {
+			if (AnnotationUtils.isAnnotated(extension.getClass(), EnableTestScopedConstructorContext.class)) {
+				executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, context));
+			}
+			else {
+				executeAndMaskThrowable(() -> extension.postProcessTestInstance(instance, ourContext));
+			}
+		});
 	}
 
 	private void executeAndMaskThrowable(Executable executable) {

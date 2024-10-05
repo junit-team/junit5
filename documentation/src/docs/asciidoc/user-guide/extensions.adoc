@@ -381,6 +381,12 @@ This extension provides a symmetric call to `{TestInstancePreDestroyCallback}` a
 in combination with other extensions to prepare constructor parameters or keeping track of test
 instances and their lifecycle.
 
+[NOTE]
+====
+You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
+handling of `CloseableResource` and to make test-specific data available to your implementation.
+====
+
 [[extensions-test-instance-factories]]
 === Test Instance Factories
 
@@ -407,6 +413,12 @@ the user's responsibility to ensure that only a single `TestInstanceFactory` is
 registered for any specific test class.
 ====
 
+[NOTE]
+====
+You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
+handling of `CloseableResource` and to make test-specific data available to your implementation.
+====
+
 [[extensions-test-instance-post-processing]]
 === Test Instance Post-processing
 
@@ -418,6 +430,12 @@ initialization methods on the test instance, etc.
 
 For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
+
+[NOTE]
+====
+You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
+handling of `CloseableResource` and to make test-specific data available to your implementation.
+====
 
 [[extensions-test-instance-pre-destroy-callback]]
 === Test Instance Pre-destroy Callback
