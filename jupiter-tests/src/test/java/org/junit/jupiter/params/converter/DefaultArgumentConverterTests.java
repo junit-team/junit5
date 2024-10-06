@@ -12,6 +12,7 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -45,6 +46,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -132,7 +134,7 @@ class DefaultArgumentConverterTests {
 
 	@ParameterizedTest(name = "[{index}] {0}")
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
-			double.class })
+			double.class, void.class })
 	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert(null, type)) //
@@ -261,8 +263,10 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringToClass() {
 		assertConverts("java.lang.Integer", Class.class, Integer.class);
+		assertConverts("java.lang.Void", Class.class, Void.class);
 		assertConverts("java.lang.Thread$State", Class.class, State.class);
 		assertConverts("byte", Class.class, byte.class);
+		assertConverts("void", Class.class, void.class);
 		assertConverts("char[]", Class.class, char[].class);
 		assertConverts("java.lang.Long[][]", Class.class, Long[][].class);
 		assertConverts("[[[I", Class.class, int[][][].class);
@@ -352,6 +356,17 @@ class DefaultArgumentConverterTests {
 	void convertsStringToUUID() {
 		var uuid = "d043e930-7b3b-48e3-bdbe-5a3ccfb833db";
 		assertConverts(uuid, UUID.class, UUID.fromString(uuid));
+	}
+
+	@Nested
+	class IntegrationTests {
+
+		@ParameterizedTest
+		@ValueSource(strings = { "boolean", "byte", "char", "short", "int", "long", "float", "double", "void" })
+		void convertsStringToPrimitiveClass(Class<?> clazz) {
+			assertTrue(clazz.isPrimitive());
+		}
+
 	}
 
 	// -------------------------------------------------------------------------

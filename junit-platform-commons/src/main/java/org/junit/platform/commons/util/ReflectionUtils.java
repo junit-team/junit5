@@ -225,7 +225,6 @@ public final class ReflectionUtils {
 			Long[].class,
 			Float[].class,
 			Double[].class,
-			Void[].class,
 			String[].class,
 
 			Boolean[][].class,
@@ -236,7 +235,6 @@ public final class ReflectionUtils {
 			Long[][].class,
 			Float[][].class,
 			Double[][].class,
-			Void[][].class,
 			String[][].class
 		);
 		// @formatter:on
