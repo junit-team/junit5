@@ -186,6 +186,7 @@ public final class ReflectionUtils {
 			long.class,
 			float.class,
 			double.class,
+			void.class,
 
 			boolean[].class,
 			byte[].class,
@@ -213,6 +214,7 @@ public final class ReflectionUtils {
 			Long.class,
 			Float.class,
 			Double.class,
+			Void.class,
 			String.class,
 
 			Boolean[].class,
@@ -223,6 +225,7 @@ public final class ReflectionUtils {
 			Long[].class,
 			Float[].class,
 			Double[].class,
+			Void[].class,
 			String[].class,
 
 			Boolean[][].class,
@@ -233,6 +236,7 @@ public final class ReflectionUtils {
 			Long[][].class,
 			Float[][].class,
 			Double[][].class,
+			Void[][].class,
 			String[][].class
 		);
 		// @formatter:on
@@ -246,7 +250,7 @@ public final class ReflectionUtils {
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
-		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(8);
+		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(9);
 
 		primitivesToWrappers.put(boolean.class, Boolean.class);
 		primitivesToWrappers.put(byte.class, Byte.class);
@@ -256,6 +260,7 @@ public final class ReflectionUtils {
 		primitivesToWrappers.put(long.class, Long.class);
 		primitivesToWrappers.put(float.class, Float.class);
 		primitivesToWrappers.put(double.class, Double.class);
+		primitivesToWrappers.put(void.class, Void.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
