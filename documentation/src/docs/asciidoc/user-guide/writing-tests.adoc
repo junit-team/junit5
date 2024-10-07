@@ -2943,6 +2943,12 @@ execution. The shared resource is identified by a unique name which is a `String
 name can be user-defined or one of the predefined constants in `{Resources}`:
 `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
+In addition to declaring these shared resources statically, the `{ResourceLock}`
+annotation has a `providers` attribute that allows registering implementations of the
+`{ResourceLocksProvider}` interface that can add shared resources dynamically at runtime.
+Note that resources declared statically with `{ResourceLock}` annotation are combined with
+resources added dynamically by `{ResourceLocksProvider}` implementations.
+
 If the tests in the following example were run in parallel _without_ the use of
 {ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
 would fail due to the inherent race condition of writing and then reading the same JVM
@@ -2970,8 +2976,15 @@ parallel with each other but not while any other test that requires `READ_WRITE`
 to the same shared resource is running.
 
 [source,java]
+.Declaring shared resources "statically" with `{ResourceLock}` annotation
 ----
-include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
+include::{testDir}/example/sharedresources/StaticSharedResourcesDemo.java[tags=user_guide]
+----
+
+[source,java]
+.Adding shared resources "dynamically" with `{ResourceLocksProvider}` implementation
+----
+include::{testDir}/example/sharedresources/DynamicSharedResourcesDemo.java[tags=user_guide]
 ----
 
 

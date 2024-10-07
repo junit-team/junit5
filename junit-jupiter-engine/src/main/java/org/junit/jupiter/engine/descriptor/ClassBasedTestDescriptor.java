@@ -112,8 +112,6 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		return this.testClass;
 	}
 
-	public abstract List<Class<?>> getEnclosingTestClasses();
-
 	@Override
 	public Type getType() {
 		return Type.CONTAINER;
@@ -142,7 +140,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestClass());
+		// @formatter:off
+		return getExclusiveResourcesFromAnnotations(
+				getTestClass(),
+				provider -> provider.provideForClass(getTestClass())
+		);
+		// @formatter:on
 	}
 
 	@Override

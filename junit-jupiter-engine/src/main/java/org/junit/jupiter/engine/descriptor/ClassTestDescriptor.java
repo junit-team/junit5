@@ -10,12 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
 
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -57,11 +55,6 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 	public Set<TestTag> getTags() {
 		// return modifiable copy
 		return new LinkedHashSet<>(this.tags);
-	}
-
-	@Override
-	public List<Class<?>> getEnclosingTestClasses() {
-		return emptyList();
 	}
 
 	// --- Node ----------------------------------------------------------------

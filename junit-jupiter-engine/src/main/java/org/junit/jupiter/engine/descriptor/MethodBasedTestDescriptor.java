@@ -81,7 +81,12 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestMethod());
+		// @formatter:off
+		return getExclusiveResourcesFromAnnotations(
+				getTestMethod(),
+				provider -> provider.provideForMethod(getTestClass(), getTestMethod())
+		);
+		// @formatter:on
 	}
 
 	@Override
