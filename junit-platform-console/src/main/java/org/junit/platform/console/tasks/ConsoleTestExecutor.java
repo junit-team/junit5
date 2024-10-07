@@ -16,14 +16,10 @@ import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-
-import com.github.difflib.text.DiffRow;
-import com.github.difflib.text.DiffRowGenerator;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -103,10 +99,8 @@ public class ConsoleTestExecutor {
 	private TestExecutionSummary executeTests(PrintWriter out, Optional<Path> reportsDir) {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
-
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		launcher.execute(discoveryRequest);
-
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
 			printSummary(summary, out);
@@ -195,17 +189,8 @@ public class ConsoleTestExecutor {
 					ValueWrapper actual = assertionFailedError.getActual();
 					//apply diff function
 					if (isCharSequence(expected) && isCharSequence(actual)) {
-						DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(
-							true).oldTag(f -> "~").newTag(f -> "**").build();
-						List<DiffRow> rows = generator.generateDiffRows(
-							Arrays.asList(expected.getStringRepresentation()),
-							Arrays.asList(actual.getStringRepresentation()));
-
-						out.printf(
-							"\nPlease put the diff result below into a online markdown editor to see markdown effect: \n");
-						for (DiffRow row : rows) {
-							out.printf(" | %s | %s | \n", row.getOldLine(), row.getNewLine());
-						}
+						DiffPrinter.printDiff(out, expected.getStringRepresentation(),
+							actual.getStringRepresentation());
 					}
 
 				}

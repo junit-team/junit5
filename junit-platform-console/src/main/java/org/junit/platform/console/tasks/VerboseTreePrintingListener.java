@@ -97,6 +97,7 @@ class VerboseTreePrintingListener implements DetailsPrintingListener {
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 		testExecutionResult.getThrowable().ifPresent(t -> printDetail(Style.FAILED, "caught", readStackTrace(t)));
+		//add diff here
 		if (testIdentifier.isContainer()) {
 			Long creationMillis = frames.pop();
 			printVerticals(theme.end());
