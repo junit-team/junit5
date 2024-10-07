@@ -50,7 +50,7 @@ import org.junit.jupiter.api.BeforeEach;
  * within class hierarchies.
  *
  * <p>Since JUnit Jupiter 5.12, this annotation supports adding shared resources
- * in runtime via {@link ResourceLock#providers}.
+ * dynamically at runtime via {@link ResourceLock#providers}.
  *
  * <p>Resources declared "statically" using {@link #value()} and {@link #mode()}
  * are combined with "dynamic" resources added via {@link #providers()}.
