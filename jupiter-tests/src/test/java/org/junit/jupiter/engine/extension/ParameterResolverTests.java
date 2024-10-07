@@ -258,8 +258,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void test() {
 			assertNotNull(this.outerTestInfo);
 			assertNotNull(this.outerCustomType);
-			assertEquals("test()", outerTestInfo.getDisplayName());
-			assertEquals(ConstructorInjectionTestCase.class, outerTestInfo.getTestClass().orElse(null));
 		}
 
 		@Nested
@@ -277,13 +275,8 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			void test() {
 				assertNotNull(outerTestInfo);
 				assertNotNull(outerCustomType);
-				assertEquals("test()", outerTestInfo.getDisplayName());
-				assertEquals(NestedTestCase.class, outerTestInfo.getTestClass().orElse(null));
-
 				assertNotNull(this.innerTestInfo);
 				assertNotNull(this.innerCustomType);
-				assertEquals("test()", innerTestInfo.getDisplayName());
-				assertEquals(NestedTestCase.class, innerTestInfo.getTestClass().orElse(null));
 			}
 		}
 	}
@@ -303,9 +296,6 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		void test() {
 			assertNotNull(this.outerTestInfo);
 			assertNotNull(this.outerCustomType);
-			assertEquals("test()", outerTestInfo.getDisplayName());
-			assertEquals(AnnotatedParameterConstructorInjectionTestCase.class,
-				outerTestInfo.getTestClass().orElse(null));
 		}
 
 		@Nested
@@ -324,15 +314,8 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 			void test() {
 				assertNotNull(outerTestInfo);
 				assertNotNull(outerCustomType);
-				assertEquals("test()", outerTestInfo.getDisplayName());
-				assertEquals(AnnotatedConstructorParameterNestedTestCase.class,
-					outerTestInfo.getTestClass().orElse(null));
-
 				assertNotNull(this.innerTestInfo);
 				assertNotNull(this.innerCustomType);
-				assertEquals("test()", innerTestInfo.getDisplayName());
-				assertEquals(AnnotatedConstructorParameterNestedTestCase.class,
-					innerTestInfo.getTestClass().orElse(null));
 			}
 		}
 	}

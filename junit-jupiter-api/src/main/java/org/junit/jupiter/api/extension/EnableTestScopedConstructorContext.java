@@ -34,6 +34,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
  * annotated with {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
  *
  * <ul>
+ * <li>{@link InvocationInterceptor#interceptTestClassConstructor(InvocationInterceptor.Invocation, ReflectiveInvocationContext, ExtensionContext) InvocationInterceptor.interceptTestClassConstructor(...)}</li>
+ * <li>{@link ParameterResolver} when resolving constructor parameters</li>
  * <li>{@link TestInstancePreConstructCallback}</li>
  * <li>{@link TestInstancePostProcessor}</li>
  * <li>{@link TestInstanceFactory}</li>
@@ -64,6 +66,8 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
  * their extensions, even if they don't need the new functionality.
  *
  * @since 5.12
+ * @see InvocationInterceptor
+ * @see ParameterResolver
  * @see TestInstancePreConstructCallback
  * @see TestInstancePostProcessor
  * @see TestInstanceFactory

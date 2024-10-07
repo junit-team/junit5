@@ -20,9 +20,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
@@ -72,8 +72,9 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionContext ourExtensionContext, ExtensionRegistry registry, JupiterEngineExecutionContext context) {
-		return instantiateTestClass(Optional.empty(), registry, context.getExtensionContext(), ourExtensionContext);
+			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
+			JupiterEngineExecutionContext context) {
+		return instantiateTestClass(Optional.empty(), registry, extensionContext);
 	}
 
 }

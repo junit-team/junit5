@@ -485,6 +485,14 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 
 [NOTE]
 ====
+You may annotate your extension with `{EnableTestScopedConstructorContext}` to support
+injecting test specific data into constructor parameters of the test instance.
+The annotation makes JUnit use a test-specific `ExtensionContext` while resolving
+constructor parameters, unless the lifecycle is set to `TestInstance.Lifecycle.PER_CLASS`.
+====
+
+[NOTE]
+====
 Other extensions can also leverage registered `ParameterResolvers` for method and
 constructor invocations, using the `{ExecutableInvoker}` available via the
 `getExecutableInvoker()` method in the `ExtensionContext`.
@@ -712,6 +720,13 @@ Dispatch Thread.
 ----
 include::{testDir}/example/interceptor/SwingEdtInterceptor.java[tags=user_guide]
 ----
+
+[NOTE]
+====
+You may annotate your extension with `{EnableTestScopedConstructorContext}` to make
+test-specific data available to your implementation of `interceptTestClassConstructor` and
+for a revised scope of the provided `Store` instance.
+====
 
 [[extensions-test-templates]]
 === Providing Invocation Contexts for Test Templates

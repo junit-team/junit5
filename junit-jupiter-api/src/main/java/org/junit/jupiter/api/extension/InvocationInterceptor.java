@@ -58,6 +58,10 @@ public interface InvocationInterceptor extends Extension {
 	 * <p>Note that the test class may <em>not</em> have been initialized
 	 * (static initialization) when this method is invoked.
 	 *
+	 * <p>You may annotate your extension with {@link EnableTestScopedConstructorContext}
+	 * to make test-specific data available to your implementation of this method and
+	 * for a revised scope of the provided `Store` instance.
+	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}
 	 * @param invocationContext the context of the invocation that is being

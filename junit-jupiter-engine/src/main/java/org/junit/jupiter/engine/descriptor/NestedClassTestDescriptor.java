@@ -21,9 +21,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
@@ -75,14 +75,14 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
-			ExtensionContext ourExtensionContext, ExtensionRegistry registry, JupiterEngineExecutionContext context) {
+			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
+			JupiterEngineExecutionContext context) {
 
 		// Extensions registered for nested classes and below are not to be used for instantiating and initializing outer classes
 		ExtensionRegistry extensionRegistryForOuterInstanceCreation = parentExecutionContext.getExtensionRegistry();
 		TestInstances outerInstances = parentExecutionContext.getTestInstancesProvider().getTestInstances(
 			extensionRegistryForOuterInstanceCreation, context);
-		return instantiateTestClass(Optional.of(outerInstances), registry, context.getExtensionContext(),
-			ourExtensionContext);
+		return instantiateTestClass(Optional.of(outerInstances), registry, extensionContext);
 	}
 
 }
