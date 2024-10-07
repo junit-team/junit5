@@ -54,8 +54,8 @@ JUnit repository on GitHub.
   `@ConvertWith`), and `ArgumentsAggregator` (declared via `@AggregateWith`)
   implementations can now use constructor injection from registered `ParameterResolver`
   extensions.
-* Introduce adding `shared resources` in runtime via new `@ResourceLocks#provider` attribute
-  which accepts implementations of `ResourceLocksProvider`.
+* Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
+  attribute that accepts implementations of `ResourceLocksProvider`.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * {@code @ResourceLocksProvider} is used to add shared resources
- * to a test class and / or its test methods in runtime.
+ * to a test class and / or its test methods dynamically at runtime.
  *
  * <p>Each shared resource is represented by an instance of {@link Lock}.
  *
@@ -118,23 +118,11 @@ public interface ResourceLocksProvider {
 	 *
 	 * <p>{@link Lock} represents a shared resource.
 	 *
-	 * <p>Each resource is identified by {@link #key}.
-	 * In addition,{@link #accessMode} allows you to specify
+	 * <p>Each resource is identified by a {@link #key}.
+	 * In addition, the {@link #accessMode} allows to specify
 	 * whether a test class or test
 	 * method requires {@link ResourceAccessMode#READ_WRITE READ_WRITE}
 	 * or only {@link ResourceAccessMode#READ READ} access to the resource.
-	 * In the former case, execution of the test will occur while no other test
-	 * that uses the shared resource is being executed.
-	 * In the latter case, the test class or test method
-	 * may be executed concurrently with other tests
-	 * that also require {@code READ} access but not at the same time
-	 * as any other test that requires {@code READ_WRITE} access.
-	 *
-	 * <p>This guarantee extends to lifecycle methods of a test class or method.
-	 * For example, if a {@code Lock} is added to a test method
-	 * then the "lock" will be acquired before any
-	 * {@link BeforeEach @BeforeEach} methods are executed and released after all
-	 * {@link AfterEach @AfterEach} methods have been executed.
 	 *
 	 * @apiNote {@link Lock#key} and {@link Lock#accessMode} have the same
 	 * semantics as {@link ResourceLock#value()} and {@link ResourceLock#mode()}

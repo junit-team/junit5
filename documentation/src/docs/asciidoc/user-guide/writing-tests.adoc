@@ -2943,18 +2943,16 @@ execution. The shared resource is identified by a unique name which is a `String
 name can be user-defined or one of the predefined constants in `{Resources}`:
 `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
-`{ResourceLock}` annotation has 'providers' attribute
-which accepts an array of one or more classes implementing `{ResourceLocksProvider}`
-interface. This interface allows to add shared resources in runtime.
+In addition to declaring these shared resources statically, the `{ResourceLock}`
+annotation has a `providers` attribute that allows registering implementations of the
+`{ResourceLocksProvider}` interface that can add shared resources dynamically at runtime.
+Note that resources declared statically with `{ResourceLock}` annotation are combined with
+resources added dynamically by `{ResourceLocksProvider}` implementations.
 
-Note that resources declared "statically" with `{ResourceLock}` annotation
-are combined with resources added "dynamically" with `{ResourceLocksProvider}`
-interface.
-
-If the tests in the following examples were run in parallel _without_ the use of
-`{ResourceLock}` or `{ResourceLocksProvider}`, they would be _flaky_.
-Sometimes they would pass, and at other times they would fail due to
-the inherent race condition of writing and then reading the same JVM System Property.
+If the tests in the following example were run in parallel _without_ the use of
+{ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
+would fail due to the inherent race condition of writing and then reading the same JVM
+System Property.
 
 When access to shared resources is declared using the `{ResourceLock}` annotation, the
 JUnit Jupiter engine uses this information to ensure that no conflicting tests are run in
@@ -2984,7 +2982,7 @@ include::{testDir}/example/sharedresources/StaticSharedResourcesDemo.java[tags=u
 ----
 
 [source,java]
-.Adding shared resources "dynamically" with `{ResourceLocksProvider}` interface
+.Adding shared resources "dynamically" with `{ResourceLocksProvider}` implementation
 ----
 include::{testDir}/example/sharedresources/DynamicSharedResourcesDemo.java[tags=user_guide]
 ----
