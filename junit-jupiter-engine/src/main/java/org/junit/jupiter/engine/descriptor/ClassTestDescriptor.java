@@ -10,16 +10,19 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
 
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
@@ -57,6 +60,11 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 		return new LinkedHashSet<>(this.tags);
 	}
 
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return emptyList();
+	}
+
 	// --- Node ----------------------------------------------------------------
 
 	@Override
@@ -70,6 +78,11 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 			ExtensionRegistry registry, ExtensionRegistrar registrar, ExtensionContext extensionContext,
 			ThrowableCollector throwableCollector) {
 		return instantiateTestClass(Optional.empty(), registry, extensionContext);
+	}
+
+	@Override
+	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
+		return provider.provideForClass(getTestClass());
 	}
 
 }
