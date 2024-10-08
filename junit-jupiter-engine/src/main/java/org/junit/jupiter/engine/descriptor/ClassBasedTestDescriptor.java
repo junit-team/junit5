@@ -75,7 +75,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -84,13 +83,14 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.5
  */
 @API(status = INTERNAL, since = "5.5")
-public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
+public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor implements ResourceLockAware {
 
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
 	private final Class<?> testClass;
 	protected final Set<TestTag> tags;
 	protected final Lifecycle lifecycle;
+	private final ExclusiveResourceCollector exclusiveResourceCollector;
 
 	private ExecutionMode defaultChildExecutionMode;
 	private TestInstanceFactory testInstanceFactory;
@@ -105,6 +105,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 		this.tags = getTags(testClass);
 		this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
+		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -142,8 +143,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestClass());
+	public final ExclusiveResourceCollector getExclusiveResourceCollector() {
+		return exclusiveResourceCollector;
 	}
 
 	@Override

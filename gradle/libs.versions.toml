@@ -5,18 +5,18 @@ asciidoctorj-pdf = "2.3.18"
 asciidoctor-plugins = "4.0.3" # Check if workaround in documentation.gradle.kts can be removed when upgrading
 assertj = "3.26.3"
 bnd = "7.0.0"
-checkstyle = "10.18.1"
+checkstyle = "10.18.2"
 eclipse = "4.32.0"
-jackson = "2.17.2"
+jackson = "2.18.0"
 jacoco = "0.8.12"
 jmh = "1.37"
 junit4 = "4.13.2"
 junit4Min = "4.12"
 ktlint = "1.3.1"
-log4j = "2.24.0"
+log4j = "2.24.1"
 opentest4j = "1.3.0"
 openTestReporting = "0.1.0-M2"
-surefire = "3.5.0"
+surefire = "3.5.1"
 xmlunit = "2.10.0"
 
 [libraries]
@@ -32,7 +32,7 @@ assertj = { module = "org.assertj:assertj-core", version.ref = "assertj" }
 bartholdy = { module = "de.sormuras:bartholdy", version = "0.2.3" }
 bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
-classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.176" }
+classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.177" }
 commons-io = { module = "commons-io:commons-io", version = "2.17.0" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.23" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.23" }
@@ -53,7 +53,7 @@ log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.9" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.1" }
-mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.13.0" }
+mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.14.1" }
 nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
@@ -90,7 +90,7 @@ foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.8.
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-plantuml = { id = "io.freefair.plantuml", version = "8.10" }
-shadow = { id = "com.gradleup.shadow", version = "8.3.2" }
+plantuml = { id = "io.freefair.plantuml", version = "8.10.2" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.3" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA2" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }

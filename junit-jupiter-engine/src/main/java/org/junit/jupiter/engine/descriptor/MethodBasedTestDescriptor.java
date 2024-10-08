@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestWatcher;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.logging.Logger;
@@ -36,7 +37,6 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 
 /**
  * Base class for {@link TestDescriptor TestDescriptors} based on Java methods.
@@ -44,7 +44,7 @@ import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
+public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor implements ResourceLockAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodBasedTestDescriptor.class);
 
@@ -80,8 +80,14 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor {
 	}
 
 	@Override
-	public Set<ExclusiveResource> getExclusiveResources() {
-		return getExclusiveResourcesFromAnnotation(getTestMethod());
+	public ExclusiveResourceCollector getExclusiveResourceCollector() {
+		// There's no need to cache this as this method should only be called once
+		return ExclusiveResourceCollector.from(getTestMethod());
+	}
+
+	@Override
+	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
+		return provider.provideForMethod(getTestClass(), getTestMethod());
 	}
 
 	@Override

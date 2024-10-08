@@ -22,6 +22,7 @@ import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -83,6 +84,11 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		TestInstances outerInstances = parentExecutionContext.getTestInstancesProvider().getTestInstances(
 			extensionRegistryForOuterInstanceCreation, context);
 		return instantiateTestClass(Optional.of(outerInstances), registry, extensionContext);
+	}
+
+	@Override
+	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
+		return provider.provideForNestedClass(getTestClass());
 	}
 
 }
