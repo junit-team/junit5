@@ -35,9 +35,8 @@ on GitHub.
 [[release-notes-5.11.3-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* Extensions can once again be registered via multiple `@ExtendWith`
-  meta-annotations on the same composed annotation on a field within a
-  test class.
+* Extensions can once again be registered via multiple `@ExtendWith` meta-annotations on
+  the same composed annotation on a field within a test class.
 
 
 [[release-notes-5.11.3-junit-jupiter-deprecations-and-breaking-changes]]
