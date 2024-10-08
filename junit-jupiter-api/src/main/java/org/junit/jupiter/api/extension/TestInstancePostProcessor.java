@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 
 /**
  * {@code TestInstancePostProcessor} defines the API for {@link Extension
@@ -44,6 +45,11 @@ public interface TestInstancePostProcessor extends Extension {
 
 	/**
 	 * Callback for post-processing the supplied test instance.
+	 *
+	 * <p>You may annotate your extension with
+	 * {@link EnableTestScopedConstructorContext @EnableTestScopedConstructorContext}
+	 * for revised handling of {@link CloseableResource CloseableResource} and
+	 * to make test-specific data available to your implementation.
 	 *
 	 * <p><strong>Note</strong>: the {@code ExtensionContext} supplied to a
 	 * {@code TestInstancePostProcessor} will always return an empty

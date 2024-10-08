@@ -83,6 +83,13 @@ public class ParameterResolutionUtils {
 	 */
 	public static Object[] resolveParameters(Executable executable, Optional<Object> target,
 			Optional<Object> outerInstance, ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+		ExtensionContextSupplier context = new ExtensionContextSupplier(extensionContext, extensionContext);
+		return resolveParameters(executable, target, outerInstance, context, extensionRegistry);
+	}
+
+	public static Object[] resolveParameters(Executable executable, Optional<Object> target,
+			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
+			ExtensionRegistry extensionRegistry) {
 
 		Preconditions.notNull(target, "target must not be null");
 
@@ -106,12 +113,12 @@ public class ParameterResolutionUtils {
 	}
 
 	private static Object resolveParameter(ParameterContext parameterContext, Executable executable,
-			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+			ExtensionContextSupplier extensionContext, ExtensionRegistry extensionRegistry) {
 
 		try {
 			// @formatter:off
 			List<ParameterResolver> matchingResolvers = extensionRegistry.stream(ParameterResolver.class)
-					.filter(resolver -> resolver.supportsParameter(parameterContext, extensionContext))
+					.filter(resolver -> resolver.supportsParameter(parameterContext, extensionContext.get(resolver)))
 					.collect(toList());
 			// @formatter:on
 
@@ -133,7 +140,7 @@ public class ParameterResolutionUtils {
 			}
 
 			ParameterResolver resolver = matchingResolvers.get(0);
-			Object value = resolver.resolveParameter(parameterContext, extensionContext);
+			Object value = resolver.resolveParameter(parameterContext, extensionContext.get(resolver));
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
 			logger.trace(() -> String.format(

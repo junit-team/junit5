@@ -53,8 +53,9 @@ public class InterceptingExecutableInvoker {
 	 * invocation via all registered {@linkplain InvocationInterceptor
 	 * interceptors}
 	 */
-	public <T> T invoke(Constructor<T> constructor, Optional<Object> outerInstance, ExtensionContext extensionContext,
-			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<Constructor<T>, T> interceptorCall) {
+	public <T> T invoke(Constructor<T> constructor, Optional<Object> outerInstance,
+			ExtensionContextSupplier extensionContext, ExtensionRegistry extensionRegistry,
+			ReflectiveInterceptorCall<Constructor<T>, T> interceptorCall) {
 
 		Object[] arguments = resolveParameters(constructor, Optional.empty(), outerInstance, extensionContext,
 			extensionRegistry);
@@ -91,6 +92,14 @@ public class InterceptingExecutableInvoker {
 			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<E, T> call) {
 		return interceptorChain.invoke(originalInvocation, extensionRegistry, (interceptor,
 				wrappedInvocation) -> call.apply(interceptor, wrappedInvocation, invocationContext, extensionContext));
+	}
+
+	private <E extends Executable, T> T invoke(Invocation<T> originalInvocation,
+			ReflectiveInvocationContext<E> invocationContext, ExtensionContextSupplier extensionContext,
+			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<E, T> call) {
+		return interceptorChain.invoke(originalInvocation, extensionRegistry,
+			(interceptor, wrappedInvocation) -> call.apply(interceptor, wrappedInvocation, invocationContext,
+				extensionContext.get(interceptor)));
 	}
 
 	public interface ReflectiveInterceptorCall<E extends Executable, T> {

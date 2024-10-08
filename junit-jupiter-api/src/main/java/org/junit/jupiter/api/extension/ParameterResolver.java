@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * {@code ParameterResolver} defines the API for {@link Extension Extensions}
@@ -29,6 +30,12 @@ import org.apiguardian.api.API;
  * {@link org.junit.jupiter.api.AfterAll @AfterAll} method declares a parameter,
  * an argument for the parameter must be resolved at runtime by a
  * {@code ParameterResolver}.
+ *
+ * <p>You may annotate your extension with {@link EnableTestScopedConstructorContext}
+ * to support injecting test specific data into constructor parameters of the test instance.
+ * The annotation makes JUnit use a test-specific `ExtensionContext` while resolving
+ * constructor parameters, unless the test class is annotated with
+ * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
  *
  * <h2>Constructor Requirements</h2>
  *

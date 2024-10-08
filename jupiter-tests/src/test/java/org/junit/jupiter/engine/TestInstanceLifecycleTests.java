@@ -992,8 +992,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			trackLifecycle(context);
 			assertThat(context.getTestInstance()).isNotPresent();
 			assertNotNull(testInstance);
-			instanceMap.put(postProcessTestInstanceKey(context.getRequiredTestClass()),
-				DefaultTestInstances.of(testInstance));
+			instanceMap.put(postProcessTestInstanceKey(testInstance.getClass()), DefaultTestInstances.of(testInstance));
 		}
 
 		@Override
