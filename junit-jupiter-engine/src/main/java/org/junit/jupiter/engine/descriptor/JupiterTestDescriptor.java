@@ -10,10 +10,9 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayName;
@@ -21,25 +20,18 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -48,8 +40,6 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -57,7 +47,6 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -107,17 +96,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				.map(TestTag::create)
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
-	}
-
-	public List<Class<?>> getEnclosingTestClasses() {
-		TestDescriptor parent = getParent().orElse(null);
-		if (parent instanceof ClassBasedTestDescriptor) {
-			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
-			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
-			result.add(parentClassDescriptor.getTestClass());
-			return result;
-		}
-		return emptyList();
 	}
 
 	/**
@@ -200,57 +178,12 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotations(AnnotatedElement element,
-			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
-		// @formatter:off
-		List<ResourceLock> ownAnnotations = findRepeatableAnnotations(element, ResourceLock.class);
-		List<ResourceLock> enclosingClassesAnnotations = getEnclosingTestClasses().stream()
-				.map(clazz -> findRepeatableAnnotations(clazz, ResourceLock.class))
-				.flatMap(Collection::stream)
-				.collect(toList());
-
-		return Stream.of(
-				getExclusiveResourcesFromValues(ownAnnotations),
-				getExclusiveResourcesFromProviders(ownAnnotations, providerToLocks),
-				getExclusiveResourcesFromProviders(enclosingClassesAnnotations, providerToLocks)
-		).flatMap(s -> s)
-		.collect(toSet());
-		// @formatter:on
-	}
-
-	private Stream<ExclusiveResource> getExclusiveResourcesFromValues(List<ResourceLock> annotations) {
-		// @formatter:off
-		return annotations.stream()
-				.flatMap(annotation -> {
-					if (StringUtils.isBlank(annotation.value())) {
-						return Stream.empty();
-					}
-					return Stream.of(new ExclusiveResource(annotation.value(), toLockMode(annotation.mode())));
-				});
-		// @formatter:on
-	}
-
-	private Stream<ExclusiveResource> getExclusiveResourcesFromProviders(List<ResourceLock> annotations,
-			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
-		// @formatter:off
-		return annotations.stream()
-				.flatMap(annotation -> Stream.of(annotation.providers())
-						.map(ReflectionUtils::newInstance)
-						.map(providerToLocks)
-						.flatMap(Collection::stream)
-						.map(lock -> new ExclusiveResource(lock.getKey(), toLockMode(lock.getAccessMode())))
-				);
-		// @formatter:on
-	}
-
-	private static LockMode toLockMode(ResourceAccessMode mode) {
-		switch (mode) {
-			case READ:
-				return LockMode.READ;
-			case READ_WRITE:
-				return LockMode.READ_WRITE;
+	@Override
+	public Set<ExclusiveResource> getExclusiveResources() {
+		if (this instanceof ResourceLockAware) {
+			return ((ResourceLockAware) this).determineExclusiveResources().collect(toSet());
 		}
-		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+		return emptySet();
 	}
 
 	@Override

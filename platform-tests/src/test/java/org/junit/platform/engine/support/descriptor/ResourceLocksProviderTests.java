@@ -77,6 +77,7 @@ class ResourceLocksProviderTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock(providers = ClassLevelProviderTestCase.Provider.class)
 	static class ClassLevelProviderTestCase {
 
@@ -150,6 +151,7 @@ class ResourceLocksProviderTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NestedClassLevelProviderTestCase {
 
 		@Test
@@ -202,6 +204,7 @@ class ResourceLocksProviderTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MethodLevelProviderTestCase {
 
 		@Test
@@ -249,6 +252,7 @@ class ResourceLocksProviderTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MethodLevelProviderInNestedClassTestCase {
 
 		@Test

@@ -10,16 +10,20 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistrar;
@@ -27,7 +31,6 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -59,6 +62,18 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		return allTags;
 	}
 
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		TestDescriptor parent = getParent().orElse(null);
+		if (parent instanceof ClassBasedTestDescriptor) {
+			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
+			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
+			result.add(parentClassDescriptor.getTestClass());
+			return result;
+		}
+		return emptyList();
+	}
+
 	// --- Node ----------------------------------------------------------------
 
 	@Override
@@ -74,13 +89,8 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	}
 
 	@Override
-	public Set<ExclusiveResource> getExclusiveResources() {
-		// @formatter:off
-		return getExclusiveResourcesFromAnnotations(
-				getTestClass(),
-				provider -> provider.provideForNestedClass(getTestClass())
-		);
-		// @formatter:on
+	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
+		return provider.provideForNestedClass(getTestClass());
 	}
 
 }
