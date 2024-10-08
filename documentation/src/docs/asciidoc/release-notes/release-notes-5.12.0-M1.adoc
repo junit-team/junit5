@@ -30,7 +30,7 @@ JUnit repository on GitHub.
 * Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
-  `ReflectionUtils` to support `String` to `Class` conversion in parameterized tests.
+  `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
