@@ -3003,7 +3003,8 @@ The built-in `{TempDirectory}` extension is used to create and clean up a tempor
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a non-final, unassigned field of type `java.nio.file.Path` or
 `java.io.File` with `{TempDir}` or add a parameter of type `java.nio.file.Path` or
-`java.io.File` annotated with `@TempDir` to a lifecycle method or test method.
+`java.io.File` annotated with `@TempDir` to a test class constructor, lifecycle method, or
+test method.
 
 For example, the following test declares a parameter annotated with `@TempDir` for a
 single test method, creates and writes to a file in the temporary directory, and checks
@@ -3028,14 +3029,10 @@ entire test class or method (depending on which level the annotation is used), y
 the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
 please note that this option is deprecated and will be removed in a future release.
 
-`@TempDir` is not supported on constructor parameters. If you wish to retain a single
-reference to a temp directory across lifecycle methods and the current test method, please
-use field injection by annotating an instance field with `@TempDir`.
-
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of
-the test class. For better isolation, you should use an instance field so that each test
-method uses a separate directory.
+the test class. For better isolation, you should use an instance field or constructor
+injection so that each test method uses a separate directory.
 
 [source,java,indent=0]
 .A test class that shares a temporary directory across test methods

@@ -22,7 +22,6 @@ import static org.junit.platform.commons.support.ReflectionSupport.makeAccessibl
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
@@ -45,12 +44,12 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -78,6 +77,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see TempDir
  * @see Files#createTempDirectory
  */
+@EnableTestScopedConstructorContext
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
@@ -161,12 +161,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		boolean annotated = parameterContext.isAnnotated(TempDir.class);
-		if (annotated && parameterContext.getDeclaringExecutable() instanceof Constructor) {
-			throw new ParameterResolutionException(
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
-		}
-		return annotated;
+		return parameterContext.isAnnotated(TempDir.class);
 	}
 
 	/**

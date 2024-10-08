@@ -62,6 +62,7 @@ JUnit repository on GitHub.
   `ExtensionContext` while instantiating the test instance.
   The behavior enabled by the annotation is expected to eventually become the default in
   future versions of JUnit Jupiter.
+* `@TempDir` is now supported on test class constructors.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

@@ -96,6 +96,7 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 		BaseSharedTempDirParameterInjectionTestCase.tempDir = null;
 		BaseSeparateTempDirsFieldInjectionTestCase.tempDirs.clear();
 		BaseSeparateTempDirsParameterInjectionTestCase.tempDirs.clear();
+		BaseConstructorInjectionTestCase.tempDirs.clear();
 	}
 
 	@Test
@@ -217,6 +218,17 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 				AnnotationOnBeforeAllMethodParameterWithTestInstancePerClassTestCase.class);
 		}
 
+		@Test
+		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
+		@Order(25)
+		void resolvesSharedTempDirWhenAnnotationIsUsedOnConstructorWithTestInstancePerClass() {
+			var results = executeTestsForClass(SharedTempDirsConstructorInjectionPerClassTestCase.class);
+
+			results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+			assertThat(BaseConstructorInjectionTestCase.tempDirs.getFirst()).doesNotExist();
+			assertThat(BaseConstructorInjectionTestCase.tempDirs.getLast()).doesNotExist();
+		}
+
 		private void assertSharedTempDirForFieldInjection(
 				Class<? extends BaseSharedTempDirFieldInjectionTestCase> testClass) {
 
@@ -296,6 +308,17 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 			assertThat(AnnotationOnAfterAllMethodParameterTestCase.secondTempDir).isNotNull().doesNotExist();
 		}
 
+		@Test
+		@DisplayName("when @TempDir is used on constructor parameter")
+		@Order(32)
+		void resolvesSeparateTempDirsWhenAnnotationIsUsedOnConstructorWithTestInstancePerMethod() {
+			var results = executeTestsForClass(SeparateTempDirsConstructorInjectionPerMethodTestCase.class);
+
+			results.testEvents().assertStatistics(stats -> stats.started(2).failed(0).succeeded(2));
+			assertThat(BaseConstructorInjectionTestCase.tempDirs.getFirst()).doesNotExist();
+			assertThat(BaseConstructorInjectionTestCase.tempDirs.getLast()).doesNotExist();
+		}
+
 	}
 
 	@Nested
@@ -368,26 +391,6 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 					instanceOf(ExtensionConfigurationException.class),
 					message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
 			// @formatter:on
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter")
-		@Order(30)
-		void doesNotSupportTempDirAnnotationOnConstructorParameter() {
-			var results = executeTestsForClass(AnnotationOnConstructorParameterTestCase.class);
-
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
-		@Order(31)
-		void doesNotSupportTempDirAnnotationOnConstructorParameterWithTestInstancePerClass() {
-			var results = executeTestsForClass(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
-
-			assertSingleFailedContainer(results, ParameterResolutionException.class,
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
 		}
 
 		@Test
@@ -693,25 +696,74 @@ class TempDirectoryPerContextTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class AnnotationOnConstructorParameterTestCase {
+	static class BaseConstructorInjectionTestCase {
 
-		AnnotationOnConstructorParameterTestCase(@SuppressWarnings("unused") @TempDir Path tempDir) {
-			// never called
+		static final Deque<Path> tempDirs = new LinkedList<>();
+
+		private final Path tempDir;
+
+		BaseConstructorInjectionTestCase(Path tempDir) {
+			this.tempDir = tempDir;
 		}
 
 		@Test
-		void test() {
-			// never called
+		void test1(@TempDir Path tempDir, TestInfo testInfo) throws Exception {
+			check(tempDir);
+			writeFile(tempDir, testInfo);
+		}
+
+		@Test
+		void test2(TestInfo testInfo, @TempDir Path tempDir) throws Exception {
+			check(tempDir);
+			writeFile(tempDir, testInfo);
+		}
+
+		@AfterEach
+		void afterEach(@TempDir Path tempDir) {
+			check(tempDir);
+		}
+
+		void check(Path tempDir) {
+			assertThat(tempDirs.getLast())//
+					.isNotNull()//
+					.isSameAs(tempDir)//
+					.isSameAs(this.tempDir);
+			assertTrue(Files.exists(tempDir));
 		}
 
 	}
 
-	@TestInstance(PER_CLASS)
-	static class AnnotationOnConstructorParameterWithTestInstancePerClassTestCase
-			extends AnnotationOnConstructorParameterTestCase {
+	static class SeparateTempDirsConstructorInjectionPerMethodTestCase extends BaseConstructorInjectionTestCase {
 
-		AnnotationOnConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
+		SeparateTempDirsConstructorInjectionPerMethodTestCase(@TempDir Path tempDir) {
 			super(tempDir);
+		}
+
+		@BeforeEach
+		void beforeEach(@TempDir Path tempDir) {
+			for (Path dir : tempDirs) {
+				assertThat(dir).doesNotExist();
+			}
+			assertThat(tempDirs).doesNotContain(tempDir);
+			tempDirs.add(tempDir);
+			check(tempDir);
+		}
+	}
+
+	@TestInstance(PER_CLASS)
+	static class SharedTempDirsConstructorInjectionPerClassTestCase extends BaseConstructorInjectionTestCase {
+
+		SharedTempDirsConstructorInjectionPerClassTestCase(@TempDir Path tempDir) {
+			super(tempDir);
+		}
+
+		@BeforeEach
+		void beforeEach(@TempDir Path tempDir) {
+			for (Path dir : tempDirs) {
+				assertThat(dir).isSameAs(tempDir).exists();
+			}
+			tempDirs.add(tempDir);
+			check(tempDir);
 		}
 	}
 
