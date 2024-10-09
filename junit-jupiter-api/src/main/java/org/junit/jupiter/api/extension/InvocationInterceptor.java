@@ -51,7 +51,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store;
  * @see ExtensionContext
  */
 @API(status = STABLE, since = "5.10")
-public interface InvocationInterceptor extends Extension {
+public interface InvocationInterceptor extends TestClassInstanceConstructionParticipatingExtension {
 
 	/**
 	 * Intercept the invocation of a test class constructor.
@@ -60,9 +60,9 @@ public interface InvocationInterceptor extends Extension {
 	 * (static initialization) when this method is invoked.
 	 *
 	 * <p>Extensions may override
-	 * {@link #getExtensionContextScopeDuringTestInstanceConstruction} to make
-	 * test-specific data available to the implementation of this method and for
-	 * a revised scope of the provided {@link Store} instance.
+	 * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} to
+	 * make test-specific data available to the implementation of this method
+	 * and for a revised scope of the provided {@link Store Store} instance.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}

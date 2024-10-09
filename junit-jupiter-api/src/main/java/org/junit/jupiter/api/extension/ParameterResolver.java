@@ -32,11 +32,12 @@ import org.junit.jupiter.api.TestInstance;
  * {@code ParameterResolver}.
  *
  * <p>Extensions may override
- * {@link #getExtensionContextScopeDuringTestInstanceConstruction} to support
- * injecting test specific data into constructor parameters of the test
- * instance. Returning {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED}
- * from this method, causes a test-specific {@link ExtensionContext} to be used
- * while resolving constructor parameters, unless the lifecycle is set to
+ * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} to
+ * support injecting test specific data into constructor parameters of the test
+ * class instance. Returning
+ * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method,
+ * causes a test-specific {@link ExtensionContext} to be used while resolving
+ * constructor parameters, unless the lifecycle is set to
  * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}.
  *
  * <h2>Constructor Requirements</h2>
@@ -53,7 +54,7 @@ import org.junit.jupiter.api.TestInstance;
  * @see TestInstancePreDestroyCallback
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterResolver extends Extension {
+public interface ParameterResolver extends TestClassInstanceConstructionParticipatingExtension {
 
 	/**
 	 * Determine if this resolver supports resolution of an argument for the

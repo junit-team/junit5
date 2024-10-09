@@ -65,8 +65,11 @@ public class KitchenSinkExtension implements
 // @formatter:on
 {
 
+	// --- Test Class Instance Construction ------------------------------------
+
 	@Override
-	public ExtensionContextScope getExtensionContextScopeDuringTestInstanceConstruction(ExtensionContext rootContext) {
+	public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
+			ExtensionContext rootContext) {
 		return ExtensionContextScope.TEST_SCOPED;
 	}
 

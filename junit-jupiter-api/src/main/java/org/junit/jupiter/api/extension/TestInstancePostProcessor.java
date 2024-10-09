@@ -41,13 +41,13 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
-public interface TestInstancePostProcessor extends Extension {
+public interface TestInstancePostProcessor extends TestClassInstanceConstructionParticipatingExtension {
 
 	/**
 	 * Callback for post-processing the supplied test instance.
 	 *
 	 * <p>Extensions may override
-	 * {@link #getExtensionContextScopeDuringTestInstanceConstruction} for
+	 * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} for
 	 * revised handling of {@link CloseableResource CloseableResource} and to
 	 * make test-specific data available to your implementation.
 	 *
