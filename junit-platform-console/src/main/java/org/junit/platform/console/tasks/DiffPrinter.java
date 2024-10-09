@@ -31,7 +31,8 @@ class DiffPrinter {
 		out.println("| expected | actual |");
 		out.println("| -------- | ------ |");
 		for (DiffRow row : rows) {
-			out.printf(" | %s | %s | \n", row.getOldLine(), row.getNewLine());
+			out.printf("| %s | %s |", row.getOldLine(), row.getNewLine());
+			out.println();
 		}
 	}
 }
