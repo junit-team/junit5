@@ -24,7 +24,7 @@ class DiffPrinter {
 	//print the difference of two print to out
 	static void printDiff(PrintWriter out, String expected, String actual) {
 		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(true).oldTag(
-			f -> "~").newTag(f -> "**").build();
+			f -> "~~").newTag(f -> "**").build();
 		List<DiffRow> rows = generator.generateDiffRows(Arrays.asList(expected), Arrays.asList(actual));
 		out.println();
 		out.println("Please put the diff result below into a online markdown editor to see markdown effect:");
