@@ -383,8 +383,9 @@ instances and their lifecycle.
 
 [NOTE]
 ====
-You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
-handling of `CloseableResource` and to make test-specific data available to your implementation.
+You may override the `{Extension}.isTestScopedConstructorContextEnabled(...)` method to
+return `true` for revised handling of `CloseableResource` and to make test-specific data
+available to your implementation.
 ====
 
 [[extensions-test-instance-factories]]
@@ -415,8 +416,9 @@ registered for any specific test class.
 
 [NOTE]
 ====
-You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
-handling of `CloseableResource` and to make test-specific data available to your implementation.
+You may override the `{Extension}.isTestScopedConstructorContextEnabled(...)` method to
+return `true` for revised handling of `CloseableResource` and to make test-specific data
+available to your implementation.
 ====
 
 [[extensions-test-instance-post-processing]]
@@ -433,8 +435,9 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 
 [NOTE]
 ====
-You may annotate your extension with `{EnableTestScopedConstructorContext}` for revised
-handling of `CloseableResource` and to make test-specific data available to your implementation.
+You may override the `{Extension}.isTestScopedConstructorContextEnabled(...)` method to
+return `true` for revised handling of `CloseableResource` and to make test-specific data
+available to your implementation.
 ====
 
 [[extensions-test-instance-pre-destroy-callback]]
@@ -485,10 +488,11 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 
 [NOTE]
 ====
-You may annotate your extension with `{EnableTestScopedConstructorContext}` to support
-injecting test specific data into constructor parameters of the test instance.
-The annotation makes JUnit use a test-specific `ExtensionContext` while resolving
-constructor parameters, unless the lifecycle is set to `TestInstance.Lifecycle.PER_CLASS`.
+You may override the `{Extension}.isTestScopedConstructorContextEnabled(...)` method to
+return `true` to support injecting test specific data into constructor parameters of the
+test instance. Doing so causes a test-specific `{ExtensionContext}` to be used while
+resolving constructor parameters, unless the
+<<writing-tests-test-instance-lifecycle, test instance lifecycle>> is set to `PER_CLASS`.
 ====
 
 [NOTE]
@@ -723,9 +727,9 @@ include::{testDir}/example/interceptor/SwingEdtInterceptor.java[tags=user_guide]
 
 [NOTE]
 ====
-You may annotate your extension with `{EnableTestScopedConstructorContext}` to make
-test-specific data available to your implementation of `interceptTestClassConstructor` and
-for a revised scope of the provided `Store` instance.
+You may override the `{Extension}.isTestScopedConstructorContextEnabled(...)` method to
+return `true` to make test-specific data available to your implementation of
+`interceptTestClassConstructor` and for a revised scope of the provided `Store` instance.
 ====
 
 [[extensions-test-templates]]

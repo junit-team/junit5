@@ -44,7 +44,6 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -77,7 +76,6 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see TempDir
  * @see Files#createTempDirectory
  */
-@EnableTestScopedConstructorContext
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
@@ -92,6 +90,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	public TempDirectory(JupiterConfiguration configuration) {
 		this.configuration = configuration;
+	}
+
+	@Override
+	public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+		return true;
 	}
 
 	/**

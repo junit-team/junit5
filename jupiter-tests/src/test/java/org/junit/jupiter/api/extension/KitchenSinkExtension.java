@@ -65,6 +65,11 @@ public class KitchenSinkExtension implements
 // @formatter:on
 {
 
+	@Override
+	public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+		return true;
+	}
+
 	// --- Lifecycle Callbacks -------------------------------------------------
 
 	@Override

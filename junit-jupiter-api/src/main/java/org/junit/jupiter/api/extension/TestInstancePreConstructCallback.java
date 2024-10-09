@@ -14,7 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 
 /**
  * {@code TestInstancePreConstructCallback} defines the API for {@link Extension
@@ -50,10 +49,9 @@ public interface TestInstancePreConstructCallback extends Extension {
 	/**
 	 * Callback invoked prior to test instances being constructed.
 	 *
-	 * <p>You may annotate your extension with
-	 * {@link EnableTestScopedConstructorContext @EnableTestScopedConstructorContext}
-	 * for revised handling of {@link CloseableResource CloseableResource} and
-	 * to make test-specific data available to your implementation.
+	 * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
+	 * to make test-specific data available to the implementation of this method
+	 * and for a revised scope of the provided {@link ExtensionContext.Store} instance.
 	 *
 	 * @param factoryContext the context for the test instance about to be instantiated;
 	 * never {@code null}

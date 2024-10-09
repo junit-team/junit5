@@ -58,10 +58,10 @@ JUnit repository on GitHub.
   extensions.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
-* `@EnableTestScopedConstructorContext` has been added to enable the use of a test-scoped
-  `ExtensionContext` while instantiating the test instance.
-  The behavior enabled by the annotation is expected to eventually become the default in
-  future versions of JUnit Jupiter.
+* Overriding `Extension.isTestScopedConstructorContextEnabled()` enables using a
+  test-scoped `ExtensionContext` in `Extension` methods called during test class
+  instantiation.
+  This behavior will become the default in future versions of JUnit Jupiter.
 * `@TempDir` is now supported on test class constructors.
 
 
