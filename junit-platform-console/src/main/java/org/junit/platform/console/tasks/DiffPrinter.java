@@ -26,7 +26,8 @@ class DiffPrinter {
 		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(true).oldTag(
 			f -> "~").newTag(f -> "**").build();
 		List<DiffRow> rows = generator.generateDiffRows(Arrays.asList(expected), Arrays.asList(actual));
-		out.printf("\nPlease put the diff result below into a online markdown editor to see markdown effect: \n");
+		out.println();
+		out.println("Please put the diff result below into a online markdown editor to see markdown effect:");
 		for (DiffRow row : rows) {
 			out.printf(" | %s | %s | \n", row.getOldLine(), row.getNewLine());
 		}
