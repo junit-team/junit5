@@ -358,8 +358,8 @@ public @interface Timeout {
 	ThreadMode threadMode() default ThreadMode.INFERRED;
 
 	/**
-	 * {@code ThreadMode} is use to define whether the test code should be executed in the thread
-	 * of the calling code or in a separated thread.
+	 * {@code ThreadMode} is used to define whether test code should be executed
+	 * in the thread of the calling code or in a separate thread.
 	 *
 	 * @since 5.9
 	 */
