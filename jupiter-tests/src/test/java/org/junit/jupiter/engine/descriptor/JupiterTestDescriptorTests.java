@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -135,7 +134,7 @@ class JupiterTestDescriptorTests {
 		assertEquals("custom test name", methodDescriptor.getDisplayName(), "display name:");
 		assertEquals("foo()", methodDescriptor.getLegacyReportingName(), "legacy name:");
 
-		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).collect(toList());
+		List<String> tags = methodDescriptor.getTags().stream().map(TestTag::getName).toList();
 		assertThat(tags).containsExactlyInAnyOrder("inherited-class-level-tag", "classTag1", "classTag2", "methodTag1",
 			"methodTag2");
 	}

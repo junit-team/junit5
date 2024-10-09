@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.time.Duration.ofMillis;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -1645,7 +1644,7 @@ class ReflectionUtilsTests {
 			// @formatter:off
 			return methods.stream()
 					.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
-					.collect(toList());
+					.toList();
 			// @formatter:on
 		}
 

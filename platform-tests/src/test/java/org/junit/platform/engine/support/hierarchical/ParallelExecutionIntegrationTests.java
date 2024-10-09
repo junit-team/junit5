@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.hierarchical;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -522,7 +521,7 @@ class ParallelExecutionIntegrationTests {
 
 	private List<Event> getEventsOfChildren(EngineExecutionResults results, TestDescriptor container) {
 		return results.testEvents().filter(
-			event -> event.getTestDescriptor().getParent().orElseThrow().equals(container)).collect(toList());
+			event -> event.getTestDescriptor().getParent().orElseThrow().equals(container)).toList();
 	}
 
 	private TestDescriptor findFirstTestDescriptor(EngineExecutionResults results, Condition<Event> condition) {
@@ -534,7 +533,7 @@ class ParallelExecutionIntegrationTests {
 		return events.stream()
 				.filter(condition::matches)
 				.map(Event::getTimestamp)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 	}
 
