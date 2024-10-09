@@ -23,7 +23,11 @@ import com.github.difflib.text.DiffRowGenerator;
 class DiffPrinter {
 	//print the difference of two print to out
 	static void printDiff(PrintWriter out, String expected, String actual) {
-		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(true).oldTag(
+		boolean inlineDiffByWordFlag = false;
+		if(expected.contains(" ") || actual.contains(" ")){
+			inlineDiffByWordFlag = true;
+		}
+		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(inlineDiffByWordFlag).oldTag(
 			f -> "~~").newTag(f -> "**").build();
 		List<DiffRow> rows = generator.generateDiffRows(Arrays.asList(expected), Arrays.asList(actual));
 		out.println();
