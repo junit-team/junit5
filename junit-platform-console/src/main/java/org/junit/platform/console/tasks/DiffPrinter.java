@@ -28,6 +28,8 @@ class DiffPrinter {
 		List<DiffRow> rows = generator.generateDiffRows(Arrays.asList(expected), Arrays.asList(actual));
 		out.println();
 		out.println("Please put the diff result below into a online markdown editor to see markdown effect:");
+		out.println("| expected | actual |");
+		out.println("| -------- | ------ |");
 		for (DiffRow row : rows) {
 			out.printf(" | %s | %s | \n", row.getOldLine(), row.getNewLine());
 		}
