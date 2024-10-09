@@ -57,9 +57,10 @@ public interface TestInstanceFactory extends Extension {
 	/**
 	 * Callback for creating a test instance for the supplied context.
 	 *
-	 * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
-	 * for revised handling of {@link CloseableResource CloseableResource} and
-	 * to make test-specific data available to your implementation.
+	 * <p>Extensions may override
+	 * {@link #getExtensionContextScopeDuringTestInstanceConstruction} for
+	 * revised handling of {@link CloseableResource CloseableResource} and to
+	 * make test-specific data available to your implementation.
 	 *
 	 * <p><strong>Note</strong>: the {@code ExtensionContext} supplied to a
 	 * {@code TestInstanceFactory} will always return an empty

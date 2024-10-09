@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.extension.Extension.ExtensionContextScope.TEST_SCOPED;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.Extension;
@@ -34,12 +35,16 @@ public final class ExtensionContextSupplier {
 	}
 
 	public ExtensionContext get(Extension extension) {
-		if (currentExtensionContext == legacyExtensionContext
-				|| extension.isTestScopedConstructorContextEnabled(currentExtensionContext.getRoot())) {
+		if (currentExtensionContext == legacyExtensionContext || isTestScoped(extension)) {
 			return currentExtensionContext;
 		}
 		else {
 			return legacyExtensionContext;
 		}
+	}
+
+	private boolean isTestScoped(Extension extension) {
+		ExtensionContext rootContext = currentExtensionContext.getRoot();
+		return extension.getExtensionContextScopeDuringTestInstanceConstruction(rootContext) == TEST_SCOPED;
 	}
 }

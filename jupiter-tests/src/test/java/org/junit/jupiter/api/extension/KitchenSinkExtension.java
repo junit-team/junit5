@@ -66,8 +66,8 @@ public class KitchenSinkExtension implements
 {
 
 	@Override
-	public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
-		return true;
+	public ExtensionContextScope getExtensionContextScopeDuringTestInstanceConstruction(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_SCOPED;
 	}
 
 	// --- Lifecycle Callbacks -------------------------------------------------

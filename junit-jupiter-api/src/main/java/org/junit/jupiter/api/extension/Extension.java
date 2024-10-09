@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -47,10 +48,11 @@ public interface Extension {
 	 * Whether this extension should receive a test-scoped
 	 * {@link ExtensionContext} during the creation of test instances.
 	 *
-	 * <p>If an extension returns {@code true} from this method, the following\
-	 * extension methods will be called with a test-scoped
-	 * {@link ExtensionContext}, unless the test class is annotated with
-	 * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}:
+	 * <p>If an extension returns
+	 * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method,
+	 * the following extension methods will be called with a test-scoped
+	 * {@link ExtensionContext} instead of a class-scoped one, unless the
+	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used:
 	 *
 	 * <ul>
 	 * <li>{@link InvocationInterceptor#interceptTestClassConstructor}</li>
@@ -60,8 +62,8 @@ public interface Extension {
 	 * <li>{@link TestInstanceFactory}</li>
 	 * </ul>
 	 *
-	 * <p>Implementations of these extension callbacks can observe the following
-	 * differences if they are returning {@code true} from this method:
+	 * <p>In such cases, implementations of these extension callbacks can
+	 * observe the following differences:
 	 *
 	 * <ul>
 	 * <li>{@link ExtensionContext#getElement() getElement()} may refer to the
@@ -81,16 +83,16 @@ public interface Extension {
 	 * </ul>
 	 *
 	 * <p><strong>Note</strong>: The behavior which is enabled by returning
-	 * {@code true} from this method will become the default in future versions
-	 * of JUnit Jupiter. To ensure future compatibility, extension implementors
-	 * are therefore advised to opt in, even if they don't require the new
-	 * functionality.
+	 * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method
+	 * will become the default in future versions of JUnit. To ensure future
+	 * compatibility, extension implementors are therefore advised to opt in,
+	 * even if they don't require the new functionality.
 	 *
 	 * @implNote There are no guarantees about how often this method is called.
 	 *           Therefore, implementations should be idempotent and avoid side
 	 *           effects. They may, however, cache the result for performance in
 	 *           the {@link Store Store} of the supplied
-	 *           {@link ExtensionContext}.
+	 *           {@link ExtensionContext}, if necessary.
 	 * @param rootContext the root extension context to allow inspection of
 	 *                    configuration parameters; never {@code null}
 	 * @since 5.12
@@ -101,8 +103,37 @@ public interface Extension {
 	 * @see TestInstanceFactory
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
-	default boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
-		return false;
+	default ExtensionContextScope getExtensionContextScopeDuringTestInstanceConstruction(ExtensionContext rootContext) {
+		return ExtensionContextScope.DEFAULT;
+	}
+
+	/**
+	 * {@code ExtensionContextScope} is used to define the scope of the
+	 * {@link ExtensionContext} passed to an extension during the creation of
+	 * test instances.
+	 *
+	 * @since 5.12
+	 * @see org.junit.jupiter.api.extension.Extension#getExtensionContextScopeDuringTestInstanceConstruction
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	enum ExtensionContextScope {
+
+		/**
+		 * The extension should receive an {@link ExtensionContext} scoped to
+		 * the test class.
+		 *
+		 * @deprecated This behavior will be removed from future versions of
+		 * JUnit and {@link #TEST_SCOPED} will become the default.
+		 */
+		@API(status = DEPRECATED, since = "5.12") //
+		@Deprecated
+		DEFAULT,
+
+		/**
+		 * The extension should receive an {@link ExtensionContext} scoped to
+		 * the test instance.
+		 */
+		TEST_SCOPED
 	}
 
 }

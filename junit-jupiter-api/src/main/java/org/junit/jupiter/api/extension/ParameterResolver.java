@@ -31,11 +31,13 @@ import org.junit.jupiter.api.TestInstance;
  * an argument for the parameter must be resolved at runtime by a
  * {@code ParameterResolver}.
  *
- * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
- * to support injecting test specific data into constructor parameters of the
- * test instance. Returning {@code true} from this method, causes a
- * test-specific {@link ExtensionContext} to be used while resolving constructor
- * parameters, unless the lifecycle is set to {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}.
+ * <p>Extensions may override
+ * {@link #getExtensionContextScopeDuringTestInstanceConstruction} to support
+ * injecting test specific data into constructor parameters of the test
+ * instance. Returning {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED}
+ * from this method, causes a test-specific {@link ExtensionContext} to be used
+ * while resolving constructor parameters, unless the lifecycle is set to
+ * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}.
  *
  * <h2>Constructor Requirements</h2>
  *
