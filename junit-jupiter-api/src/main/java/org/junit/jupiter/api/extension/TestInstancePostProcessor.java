@@ -46,8 +46,7 @@ public interface TestInstancePostProcessor extends Extension {
 	/**
 	 * Callback for post-processing the supplied test instance.
 	 *
-	 * <p>You may annotate your extension with
-	 * {@link EnableTestScopedConstructorContext @EnableTestScopedConstructorContext}
+	 * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
 	 * for revised handling of {@link CloseableResource CloseableResource} and
 	 * to make test-specific data available to your implementation.
 	 *

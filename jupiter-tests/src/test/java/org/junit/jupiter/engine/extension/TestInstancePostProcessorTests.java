@@ -21,7 +21,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -198,17 +197,25 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class FooInstancePostProcessor extends AbstractInstancePostProcessor {
 		FooInstancePostProcessor() {
 			super("foo");
 		}
+
+		@Override
+		public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+			return true;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class BarInstancePostProcessor extends AbstractInstancePostProcessor {
 		BarInstancePostProcessor() {
 			super("bar");
+		}
+
+		@Override
+		public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+			return true;
 		}
 	}
 

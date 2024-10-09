@@ -145,7 +145,7 @@ class ExtensionComposabilityTests {
 	}
 
 	private boolean isExtensionApi(Class<?> candidate) {
-		return candidate.isInterface() && (candidate != Extension.class) && Extension.class.isAssignableFrom(candidate);
+		return candidate.isInterface() && Extension.class.isAssignableFrom(candidate);
 	}
 
 	private String methodSignature(Method method) {

@@ -25,6 +25,7 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 
 /**
  * {@code InvocationInterceptor} defines the API for {@link Extension
@@ -58,9 +59,9 @@ public interface InvocationInterceptor extends Extension {
 	 * <p>Note that the test class may <em>not</em> have been initialized
 	 * (static initialization) when this method is invoked.
 	 *
-	 * <p>You may annotate your extension with {@link EnableTestScopedConstructorContext}
-	 * to make test-specific data available to your implementation of this method and
-	 * for a revised scope of the provided `Store` instance.
+	 * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
+	 * to make test-specific data available to the implementation of this method
+	 * and for a revised scope of the provided {@link Store} instance.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}

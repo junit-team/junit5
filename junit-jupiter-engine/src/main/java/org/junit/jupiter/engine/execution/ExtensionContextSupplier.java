@@ -13,10 +13,8 @@ package org.junit.jupiter.engine.execution;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.util.AnnotationUtils;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
@@ -37,7 +35,7 @@ public final class ExtensionContextSupplier {
 
 	public ExtensionContext get(Extension extension) {
 		if (currentExtensionContext == legacyExtensionContext
-				|| AnnotationUtils.isAnnotated(extension.getClass(), EnableTestScopedConstructorContext.class)) {
+				|| extension.isTestScopedConstructorContextEnabled(currentExtensionContext.getRoot())) {
 			return currentExtensionContext;
 		}
 		else {

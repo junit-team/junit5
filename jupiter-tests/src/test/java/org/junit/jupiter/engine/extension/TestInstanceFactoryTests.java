@@ -35,7 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -706,12 +705,18 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@EnableTestScopedConstructorContext
 	private static class FooInstanceFactory extends AbstractTestInstanceFactory {
+		@Override
+		public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+			return true;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	private static class BarInstanceFactory extends AbstractTestInstanceFactory {
+		@Override
+		public boolean isTestScopedConstructorContextEnabled(ExtensionContext rootContext) {
+			return true;
+		}
 	}
 
 	private static class LegacyInstanceFactory extends AbstractTestInstanceFactory {
