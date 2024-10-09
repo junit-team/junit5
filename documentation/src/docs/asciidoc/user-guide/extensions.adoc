@@ -384,7 +384,7 @@ instances and their lifecycle.
 [NOTE]
 ====
 You may override the
-`{Extension}.getExtensionContextScopeDuringTestInstanceConstruction(...)` method to return
+`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -418,7 +418,7 @@ registered for any specific test class.
 [NOTE]
 ====
 You may override the
-`{Extension}.getExtensionContextScopeDuringTestInstanceConstruction(...)` method to return
+`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -438,7 +438,7 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 [NOTE]
 ====
 You may override the
-`{Extension}.getExtensionContextScopeDuringTestInstanceConstruction(...)` method to return
+`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -492,9 +492,9 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 [NOTE]
 ====
 You may override the
-`{Extension}.getExtensionContextScopeDuringTestInstanceConstruction(...)` method to return
+`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
 `TEST_SCOPED` to support injecting test specific data into constructor parameters of the
-test instance. Doing so causes a test-specific `{ExtensionContext}` to be used while
+test class instance. Doing so causes a test-specific `{ExtensionContext}` to be used while
 resolving constructor parameters, unless the
 <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is set to `PER_CLASS`.
 ====
@@ -732,7 +732,7 @@ include::{testDir}/example/interceptor/SwingEdtInterceptor.java[tags=user_guide]
 [NOTE]
 ====
 You may override the
-`{Extension}.getExtensionContextScopeDuringTestInstanceConstruction(...)` method to return
+`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
 `TEST_SCOPED` to make test-specific data available to your implementation of
 `interceptTestClassConstructor` and for a revised scope of the provided `Store` instance.
 ====

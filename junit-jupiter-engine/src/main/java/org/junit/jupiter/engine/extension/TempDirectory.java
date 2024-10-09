@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.api.extension.Extension.ExtensionContextScope.TEST_SCOPED;
+import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_SCOPED;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -94,7 +94,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	@Override
-	public ExtensionContextScope getExtensionContextScopeDuringTestInstanceConstruction(ExtensionContext rootContext) {
+	public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
+			ExtensionContext rootContext) {
 		return TEST_SCOPED;
 	}
 
