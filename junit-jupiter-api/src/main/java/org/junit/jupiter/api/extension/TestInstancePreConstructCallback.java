@@ -49,9 +49,11 @@ public interface TestInstancePreConstructCallback extends Extension {
 	/**
 	 * Callback invoked prior to test instances being constructed.
 	 *
-	 * <p>Extensions may override {@link #isTestScopedConstructorContextEnabled}
-	 * to make test-specific data available to the implementation of this method
-	 * and for a revised scope of the provided {@link ExtensionContext.Store} instance.
+	 * <p>Extensions may override
+	 * {@link #getExtensionContextScopeDuringTestInstanceConstruction} to make
+	 * test-specific data available to the implementation of this method and for
+	 * a revised scope of the provided {@link ExtensionContext.Store Store}
+	 * instance.
 	 *
 	 * @param factoryContext the context for the test instance about to be instantiated;
 	 * never {@code null}
