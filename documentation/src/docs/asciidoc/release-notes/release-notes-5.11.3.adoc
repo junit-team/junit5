@@ -37,6 +37,8 @@ on GitHub.
 
 * Extensions can once again be registered via multiple `@ExtendWith` meta-annotations on
   the same composed annotation on a field within a test class.
+* All `@...Source` annotations of parameterized tests can now also be repeated when used
+  as meta annotations.
 
 
 [[release-notes-5.11.3-junit-jupiter-deprecations-and-breaking-changes]]

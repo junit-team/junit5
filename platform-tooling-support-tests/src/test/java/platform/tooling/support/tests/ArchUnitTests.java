@@ -19,7 +19,6 @@ import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyP
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.type;
 import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
-import static com.tngtech.archunit.core.domain.properties.CanBeAnnotated.Predicates.annotatedWith;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameContaining;
@@ -54,7 +53,6 @@ import com.tngtech.archunit.library.GeneralCodingRules;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.provider.ArgumentsSource;
 
 @Order(Integer.MAX_VALUE)
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
@@ -77,7 +75,6 @@ class ArchUnitTests {
 			.and().areAnnotations() //
 			.and().areAnnotatedWith(Repeatable.class) //
 			.and(are(not(type(ExtendWith.class)))) // to be resolved in https://github.com/junit-team/junit5/issues/4059
-			.and(are(not(type(ArgumentsSource.class).or(annotatedWith(ArgumentsSource.class))))) // to be resolved in https://github.com/junit-team/junit5/issues/4063
 			.should(haveContainerAnnotationWithSameRetentionPolicy()) //
 			.andShould(haveContainerAnnotationWithSameTargetTypes());
 

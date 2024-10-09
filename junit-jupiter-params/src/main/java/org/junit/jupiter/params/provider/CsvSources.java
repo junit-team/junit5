@@ -32,7 +32,7 @@ import org.apiguardian.api.API;
  * @see CsvSource
  * @see java.lang.annotation.Repeatable
  */
-@Target(ElementType.METHOD)
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.11")
