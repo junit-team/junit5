@@ -44,6 +44,11 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
+* When injecting `TestInfo` into test class constructors it now contains data of the test
+  method the test class instance is being created for unless the test instance lifecycle
+  is set to `PER_CLASS` (in which case it continues to contain the data of the test
+  class). If you require the `TestInfo` of the test class, you can implement a class-level
+  lifecycle method (e.g., `@BeforeAll`) and inject `TestInfo` into that method.
 * When injecting `TestReporter` into test class constructors the published report entries
   are now associated with the test method rather than the test class unless the test
   instance lifecycle is set to `PER_CLASS` (in which case they will continue to be
