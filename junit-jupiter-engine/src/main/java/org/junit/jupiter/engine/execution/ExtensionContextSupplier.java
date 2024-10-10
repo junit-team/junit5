@@ -24,28 +24,38 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension;
  * @since 5.12
  * @see TestInstantiationAwareExtension
  */
+@FunctionalInterface
 @API(status = INTERNAL, since = "5.12")
-public final class ExtensionContextSupplier {
+public interface ExtensionContextSupplier {
 
-	private final ExtensionContext currentExtensionContext;
-	private final ExtensionContext legacyExtensionContext;
-
-	public ExtensionContextSupplier(ExtensionContext currentExtensionContext, ExtensionContext legacyExtensionContext) {
-		this.currentExtensionContext = currentExtensionContext;
-		this.legacyExtensionContext = legacyExtensionContext;
+	static ExtensionContextSupplier create(ExtensionContext currentExtensionContext,
+			ExtensionContext legacyExtensionContext) {
+		if (currentExtensionContext == legacyExtensionContext) {
+			return __ -> currentExtensionContext;
+		}
+		return new ScopeBasedExtensionContextSupplier(currentExtensionContext, legacyExtensionContext);
 	}
 
-	public ExtensionContext get(TestInstantiationAwareExtension extension) {
-		if (currentExtensionContext == legacyExtensionContext || isTestScoped(extension)) {
-			return currentExtensionContext;
-		}
-		else {
-			return legacyExtensionContext;
-		}
-	}
+	ExtensionContext get(TestInstantiationAwareExtension extension);
 
-	private boolean isTestScoped(TestInstantiationAwareExtension extension) {
-		ExtensionContext rootContext = currentExtensionContext.getRoot();
-		return extension.getTestInstantiationExtensionContextScope(rootContext) == TEST_METHOD;
+	class ScopeBasedExtensionContextSupplier implements ExtensionContextSupplier {
+
+		private final ExtensionContext currentExtensionContext;
+		private final ExtensionContext legacyExtensionContext;
+
+		private ScopeBasedExtensionContextSupplier(ExtensionContext currentExtensionContext,
+				ExtensionContext legacyExtensionContext) {
+			this.currentExtensionContext = currentExtensionContext;
+			this.legacyExtensionContext = legacyExtensionContext;
+		}
+
+		public ExtensionContext get(TestInstantiationAwareExtension extension) {
+			return isTestScoped(extension) ? currentExtensionContext : legacyExtensionContext;
+		}
+
+		private boolean isTestScoped(TestInstantiationAwareExtension extension) {
+			ExtensionContext rootContext = legacyExtensionContext.getRoot();
+			return extension.getTestInstantiationExtensionContextScope(rootContext) == TEST_METHOD;
+		}
 	}
 }
