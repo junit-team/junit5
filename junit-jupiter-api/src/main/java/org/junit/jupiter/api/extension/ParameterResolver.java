@@ -35,7 +35,7 @@ import org.junit.jupiter.api.TestInstance;
  * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} to
  * support injecting test specific data into constructor parameters of the test
  * class instance. Returning
- * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method,
+ * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method,
  * causes a test-specific {@link ExtensionContext} to be used while resolving
  * constructor parameters, unless the lifecycle is set to
  * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}.
