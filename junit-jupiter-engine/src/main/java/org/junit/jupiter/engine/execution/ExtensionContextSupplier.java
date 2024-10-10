@@ -24,28 +24,38 @@ import org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatin
  * @since 5.12
  * @see TestClassInstanceConstructionParticipatingExtension
  */
+@FunctionalInterface
 @API(status = INTERNAL, since = "5.12")
-public final class ExtensionContextSupplier {
+public interface ExtensionContextSupplier {
 
-	private final ExtensionContext currentExtensionContext;
-	private final ExtensionContext legacyExtensionContext;
-
-	public ExtensionContextSupplier(ExtensionContext currentExtensionContext, ExtensionContext legacyExtensionContext) {
-		this.currentExtensionContext = currentExtensionContext;
-		this.legacyExtensionContext = legacyExtensionContext;
+	static ExtensionContextSupplier create(ExtensionContext currentExtensionContext,
+			ExtensionContext legacyExtensionContext) {
+		if (currentExtensionContext == legacyExtensionContext) {
+			return __ -> currentExtensionContext;
+		}
+		return new ScopeBasedExtensionContextSupplier(currentExtensionContext, legacyExtensionContext);
 	}
 
-	public ExtensionContext get(TestClassInstanceConstructionParticipatingExtension extension) {
-		if (currentExtensionContext == legacyExtensionContext || isTestScoped(extension)) {
-			return currentExtensionContext;
-		}
-		else {
-			return legacyExtensionContext;
-		}
-	}
+	ExtensionContext get(TestClassInstanceConstructionParticipatingExtension extension);
 
-	private boolean isTestScoped(TestClassInstanceConstructionParticipatingExtension extension) {
-		ExtensionContext rootContext = currentExtensionContext.getRoot();
-		return extension.getExtensionContextScopeDuringTestClassInstanceConstruction(rootContext) == TEST_METHOD;
+	class ScopeBasedExtensionContextSupplier implements ExtensionContextSupplier {
+
+		private final ExtensionContext currentExtensionContext;
+		private final ExtensionContext legacyExtensionContext;
+
+		private ScopeBasedExtensionContextSupplier(ExtensionContext currentExtensionContext,
+				ExtensionContext legacyExtensionContext) {
+			this.currentExtensionContext = currentExtensionContext;
+			this.legacyExtensionContext = legacyExtensionContext;
+		}
+
+		public ExtensionContext get(TestClassInstanceConstructionParticipatingExtension extension) {
+			return isTestScoped(extension) ? currentExtensionContext : legacyExtensionContext;
+		}
+
+		private boolean isTestScoped(TestClassInstanceConstructionParticipatingExtension extension) {
+			ExtensionContext rootContext = legacyExtensionContext.getRoot();
+			return extension.getExtensionContextScopeDuringTestClassInstanceConstruction(rootContext) == TEST_METHOD;
+		}
 	}
 }
