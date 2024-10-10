@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
@@ -118,6 +119,11 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		@AfterAll
 		static void afterAll() {
 			assertEquals(42, fortyTwo);
+		}
+
+		// Can be injected into test class constructors if the test class only has @RepeatedTest methods
+		public LifecycleMethodTests(RepetitionInfo repetitionInfo) {
+			assertNotNull(repetitionInfo);
 		}
 
 		@BeforeEach
