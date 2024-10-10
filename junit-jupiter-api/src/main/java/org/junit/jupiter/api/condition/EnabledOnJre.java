@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -86,8 +87,19 @@ public @interface EnabledOnJre {
 	 * method should be enabled.
 	 *
 	 * @see JRE
+	 * @see #featureVersions()
 	 */
-	JRE[] value();
+	JRE[] value() default {};
+
+	/**
+	 * Java Runtime Environment feature versions on which the annotated class or
+	 * method should be enabled.
+	 *
+	 * @since 5.12
+	 * @see #value()
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	int[] featureVersions() default {};
 
 	/**
 	 * Custom reason to provide if the test or container is disabled.

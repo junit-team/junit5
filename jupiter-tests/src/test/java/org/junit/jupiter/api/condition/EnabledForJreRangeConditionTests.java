@@ -66,7 +66,8 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	void defaultValues() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessageContaining("You must declare a non-default value for min or max in @EnabledForJreRange");
+				.withMessageContaining(
+					"You must declare a non-default value for the minimum or maximum value in @EnabledForJreRange");
 	}
 
 	/**
