@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_SCOPED;
+import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
@@ -725,7 +725,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
 				ExtensionContext rootContext) {
-			return TEST_SCOPED;
+			return TEST_METHOD;
 		}
 	}
 
@@ -733,7 +733,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		@Override
 		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
 				ExtensionContext rootContext) {
-			return TEST_SCOPED;
+			return TEST_METHOD;
 		}
 	}
 

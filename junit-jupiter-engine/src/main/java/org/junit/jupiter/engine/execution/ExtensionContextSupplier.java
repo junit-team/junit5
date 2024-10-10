@@ -11,7 +11,7 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_SCOPED;
+import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_METHOD;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -46,6 +46,6 @@ public final class ExtensionContextSupplier {
 
 	private boolean isTestScoped(TestClassInstanceConstructionParticipatingExtension extension) {
 		ExtensionContext rootContext = currentExtensionContext.getRoot();
-		return extension.getExtensionContextScopeDuringTestClassInstanceConstruction(rootContext) == TEST_SCOPED;
+		return extension.getExtensionContextScopeDuringTestClassInstanceConstruction(rootContext) == TEST_METHOD;
 	}
 }

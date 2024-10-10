@@ -35,7 +35,7 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 	 * {@link ExtensionContext} during the creation of test instances.
 	 *
 	 * <p>If an extension returns
-	 * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method,
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method,
 	 * the following extension methods will be called with a test-scoped
 	 * {@link ExtensionContext} instead of a class-scoped one, unless the
 	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used:
@@ -69,7 +69,7 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 	 * </ul>
 	 *
 	 * <p><strong>Note</strong>: The behavior which is enabled by returning
-	 * {@link ExtensionContextScope#TEST_SCOPED TEST_SCOPED} from this method
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method
 	 * will become the default in future versions of JUnit. To ensure future
 	 * compatibility, extension implementors are therefore advised to opt in,
 	 * even if they don't require the new functionality.
@@ -91,8 +91,8 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 
 	/**
 	 * {@code ExtensionContextScope} is used to define the scope of the
-	 * {@link ExtensionContext} passed to an extension during the creation of
-	 * test instances.
+	 * {@link ExtensionContext} passed to an extension during the construction
+	 * of test class instances.
 	 *
 	 * @since 5.12
 	 * @see TestClassInstanceConstructionParticipatingExtension#getExtensionContextScopeDuringTestClassInstanceConstruction
@@ -105,7 +105,7 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 		 * the test class.
 		 *
 		 * @deprecated This behavior will be removed from future versions of
-		 * JUnit and {@link #TEST_SCOPED} will become the default.
+		 * JUnit and {@link #TEST_METHOD} will become the default.
 		 */
 		@API(status = DEPRECATED, since = "5.12") //
 		@Deprecated
@@ -113,9 +113,10 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 
 		/**
 		 * The extension should receive an {@link ExtensionContext} scoped to
-		 * the test instance.
+		 * the test method, unless the
+		 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
 		 */
-		TEST_SCOPED
+		TEST_METHOD
 	}
 
 }

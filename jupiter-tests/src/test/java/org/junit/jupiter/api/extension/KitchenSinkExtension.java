@@ -70,7 +70,7 @@ public class KitchenSinkExtension implements
 	@Override
 	public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
 			ExtensionContext rootContext) {
-		return ExtensionContextScope.TEST_SCOPED;
+		return ExtensionContextScope.TEST_METHOD;
 	}
 
 	// --- Lifecycle Callbacks -------------------------------------------------
