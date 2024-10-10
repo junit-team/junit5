@@ -115,6 +115,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
+import org.junit.platform.testkit.engine.EventConditions;
 import org.opentest4j.TestAbortedException;
 
 /**
@@ -1091,6 +1092,42 @@ class ParameterizedTestIntegrationTests {
 				methodParameterTypes);
 		}
 
+	}
+
+	@Nested
+	class UnusedArgumentsWithStrictArgumentsCountIntegrationTests {
+		@Test
+		void failsWithArgumentsSourceProvidingUnusedArguments() {
+			var results = execute(UnusedArgumentsTestCase.class, "testWithTwoUnusedStringArgumentsProvider",
+				String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided./nNote: the provided arguments are [foo, unused1]"))));
+		}
+
+		@Test
+		void failsWithMethodSourceProvidingUnusedArguments() {
+			var results = execute(UnusedArgumentsTestCase.class, "testWithMethodSourceProvidingUnusedArguments",
+				String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided./nNote: the provided arguments are [foo, unused1]"))));
+		}
+
+		@Test
+		void executesWithMethodSourceProvidingUnusedArguments() {
+			var results = execute(RepeatableSourcesTestCase.class, "testWithRepeatableCsvSource", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
+					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+		}
+
+		private EngineExecutionResults execute(Class<?> javaClass, String methodName,
+				Class<?>... methodParameterTypes) {
+			return EngineTestKit.engine(new JupiterTestEngine()).selectors(
+				selectMethod(javaClass, methodName, methodParameterTypes)).configurationParameter(
+					ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY, "strict").execute();
+		}
 	}
 
 	@Nested
