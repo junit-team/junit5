@@ -45,6 +45,12 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	}
 
 	@Override
+	public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
+			ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
