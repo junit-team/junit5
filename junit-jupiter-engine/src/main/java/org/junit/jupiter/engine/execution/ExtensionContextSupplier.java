@@ -11,18 +11,18 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_METHOD;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
- * <a href="https://github.com/junit-team/junit5/issues/3445">#3445 (Introduction of Test-scoped ExtensionContext)</a>.
+ * <a href="https://github.com/junit-team/junit5/issues/3445">#3445</a>.
  *
  * @since 5.12
+ * @see TestClassInstanceConstructionParticipatingExtension
  */
 @API(status = INTERNAL, since = "5.12")
 public final class ExtensionContextSupplier {
@@ -35,13 +35,17 @@ public final class ExtensionContextSupplier {
 		this.legacyExtensionContext = legacyExtensionContext;
 	}
 
-	public ExtensionContext get(Extension extension) {
-		if (currentExtensionContext == legacyExtensionContext
-				|| AnnotationUtils.isAnnotated(extension.getClass(), EnableTestScopedConstructorContext.class)) {
+	public ExtensionContext get(TestClassInstanceConstructionParticipatingExtension extension) {
+		if (currentExtensionContext == legacyExtensionContext || isTestScoped(extension)) {
 			return currentExtensionContext;
 		}
 		else {
 			return legacyExtensionContext;
 		}
+	}
+
+	private boolean isTestScoped(TestClassInstanceConstructionParticipatingExtension extension) {
+		ExtensionContext rootContext = currentExtensionContext.getRoot();
+		return extension.getExtensionContextScopeDuringTestClassInstanceConstruction(rootContext) == TEST_METHOD;
 	}
 }

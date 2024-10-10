@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
@@ -35,7 +36,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -721,12 +721,20 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@EnableTestScopedConstructorContext
 	private static class FooInstanceFactory extends AbstractTestInstanceFactory {
+		@Override
+		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
+				ExtensionContext rootContext) {
+			return TEST_METHOD;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	private static class BarInstanceFactory extends AbstractTestInstanceFactory {
+		@Override
+		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
+				ExtensionContext rootContext) {
+			return TEST_METHOD;
+		}
 	}
 
 	private static class LegacyInstanceFactory extends AbstractTestInstanceFactory {
