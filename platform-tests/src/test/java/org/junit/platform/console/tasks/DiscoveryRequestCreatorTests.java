@@ -179,6 +179,18 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	@Test
+	void convertsMethodNamePatternOptions() {
+		options.setScanClasspath(true);
+		options.setIncludedMethodNamePatterns(List.of(".+#foo.*Bar", ".+#toString", ".+#method.*"));
+		options.setExcludedMethodNamePatterns(List.of(".+#bar.*Foo"));
+		var request = convert();
+		var methodNameFilters = request.getPostDiscoveryFilters();
+		assertThat(methodNameFilters).hasSize(2);
+		assertThat(methodNameFilters.get(0).toString()).contains(".+#foo.*Bar", ".+#toString", ".+#method.*");
+		assertThat(methodNameFilters.get(1).toString()).contains(".+#bar.*Foo");
+	}
+
+	@Test
 	void convertsTagOptions() {
 		options.setScanClasspath(true);
 		options.setIncludedTagExpressions(List.of("fast", "medium", "slow"));

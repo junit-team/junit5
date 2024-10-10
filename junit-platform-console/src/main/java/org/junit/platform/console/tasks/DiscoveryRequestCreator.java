@@ -18,6 +18,8 @@ import static org.junit.platform.engine.discovery.PackageNameFilter.excludePacka
 import static org.junit.platform.engine.discovery.PackageNameFilter.includePackageNames;
 import static org.junit.platform.launcher.EngineFilter.excludeEngines;
 import static org.junit.platform.launcher.EngineFilter.includeEngines;
+import static org.junit.platform.launcher.MethodFilter.excludeMethodNamePatterns;
+import static org.junit.platform.launcher.MethodFilter.includeMethodNamePatterns;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -104,6 +106,14 @@ class DiscoveryRequestCreator {
 
 		if (!options.getExcludedPackages().isEmpty()) {
 			requestBuilder.filters(excludePackageNames(options.getExcludedPackages()));
+		}
+
+		if (!options.getIncludedMethodNamePatterns().isEmpty()) {
+			requestBuilder.filters(includeMethodNamePatterns(options.getIncludedMethodNamePatterns()));
+		}
+
+		if (!options.getExcludedMethodNamePatterns().isEmpty()) {
+			requestBuilder.filters(excludeMethodNamePatterns(options.getExcludedMethodNamePatterns()));
 		}
 
 		if (!options.getIncludedTagExpressions().isEmpty()) {

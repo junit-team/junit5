@@ -64,6 +64,8 @@ public class TestDiscoveryOptions {
 	private List<String> excludedClassNamePatterns = emptyList();
 	private List<String> includedPackages = emptyList();
 	private List<String> excludedPackages = emptyList();
+	private List<String> includedMethodNamePatterns = emptyList();
+	private List<String> excludedMethodNamePatterns = emptyList();
 	private List<String> includedEngines = emptyList();
 	private List<String> excludedEngines = emptyList();
 	private List<String> includedTagExpressions = emptyList();
@@ -233,6 +235,22 @@ public class TestDiscoveryOptions {
 
 	public void setExcludedPackages(List<String> excludedPackages) {
 		this.excludedPackages = excludedPackages;
+	}
+
+	public List<String> getIncludedMethodNamePatterns() {
+		return includedMethodNamePatterns;
+	}
+
+	public void setIncludedMethodNamePatterns(List<String> includedMethodNamePatterns) {
+		this.includedMethodNamePatterns = includedMethodNamePatterns;
+	}
+
+	public List<String> getExcludedMethodNamePatterns() {
+		return excludedMethodNamePatterns;
+	}
+
+	public void setExcludedMethodNamePatterns(List<String> excludedMethodNamePatterns) {
+		this.excludedMethodNamePatterns = excludedMethodNamePatterns;
 	}
 
 	public List<String> getIncludedEngines() {
