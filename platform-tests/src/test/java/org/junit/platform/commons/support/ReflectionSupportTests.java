@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationException;
 import static org.junit.platform.commons.support.PreconditionAssertions.assertPreconditionViolationExceptionForString;
+import static org.junit.platform.commons.util.ClassLoaderUtils.getDefaultClassLoader;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -117,6 +118,31 @@ class ReflectionSupportTests {
 					ReflectionSupport.findAllClassesInClasspathRoot(root, allTypes, allNames))));
 		}
 		return tests;
+	}
+
+	/**
+	 * @since 1.12
+	 */
+	@Test
+	void tryToGetResourcesPreconditions() {
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(null));
+		assertPreconditionViolationExceptionForString("Resource name", () -> ReflectionSupport.tryToGetResources(""));
+		assertPreconditionViolationException("Class loader",
+			() -> ReflectionSupport.tryToGetResources("default-package.resource", null));
+		assertPreconditionViolationException("Class loader",
+			() -> ReflectionSupport.tryToGetResources("default-package.resource", null));
+	}
+
+	/**
+	 * @since 1.12
+	 */
+	@Test
+	void tryToGetResources() {
+		assertEquals(ReflectionUtils.tryToGetResources("default-package.resource").toOptional(),
+			ReflectionSupport.tryToGetResources("default-package.resource").toOptional());
+		assertEquals(
+			ReflectionUtils.tryToGetResources("default-package.resource", getDefaultClassLoader()).toOptional(), //
+			ReflectionSupport.tryToGetResources("default-package.resource", getDefaultClassLoader()).toOptional());
 	}
 
 	@Test

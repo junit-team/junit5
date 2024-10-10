@@ -10,13 +10,21 @@
 
 package org.junit.platform.engine.discovery;
 
+import static java.util.Collections.unmodifiableSet;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -34,6 +42,10 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
  * {@linkplain Thread#getContextClassLoader() context class loader} of the
  * {@linkplain Thread thread} that uses it.
  *
+ * <p>Note: Since Java 9, all resources are on the module path. Either in
+ * named or unnamed modules. These resources are also considered to be
+ * classpath resources.
+ *
  * @since 1.0
  * @see DiscoverySelectors#selectClasspathResource(String)
  * @see ClasspathRootSelector
@@ -44,11 +56,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 
 	private final String classpathResourceName;
 	private final FilePosition position;
+	private Set<Resource> classpathResources;
 
 	ClasspathResourceSelector(String classpathResourceName, FilePosition position) {
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);
 		this.position = position;
+	}
+
+	ClasspathResourceSelector(Set<Resource> classpathResources) {
+		this(classpathResources.iterator().next().getName(), null);
+		this.classpathResources = unmodifiableSet(new LinkedHashSet<>(classpathResources));
 	}
 
 	/**
@@ -63,6 +81,29 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	 */
 	public String getClasspathResourceName() {
 		return this.classpathResourceName;
+	}
+
+	/**
+	 * Get the selected {@link Resource resources}.
+	 *
+	 * <p>If the {@link Resource resources} were not provided, but only their name,
+	 * this method attempts to lazily load the {@link Resource resources} based on
+	 * their name and throws a {@link PreconditionViolationException} if the
+	 * resource cannot be loaded.
+	 *
+	 * @since 1.12
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	public Set<Resource> getClasspathResources() {
+		if (this.classpathResources == null) {
+			// @formatter:off
+			Try<Set<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
+			Set<Resource> classpathResources = tryToGetResource.getOrThrow(cause ->
+				new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
+			// @formatter:on
+			this.classpathResources = unmodifiableSet(classpathResources);
+		}
+		return this.classpathResources;
 	}
 
 	/**
@@ -86,7 +127,8 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
 		return Objects.equals(this.classpathResourceName, that.classpathResourceName)
-				&& Objects.equals(this.position, that.position);
+				&& Objects.equals(this.position, that.position)
+				&& Objects.equals(this.classpathResources, that.classpathResources);
 	}
 
 	/**
@@ -95,7 +137,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classpathResourceName, this.position);
+		return Objects.hash(this.classpathResourceName, this.position, this.classpathResources);
 	}
 
 	@Override
