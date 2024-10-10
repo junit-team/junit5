@@ -46,6 +46,11 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	private static final String DISABLED_ON_DEBUG_MODE_VALUE = "disabled_on_debug";
 
 	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
 	public void beforeAll(ExtensionContext context) {
 		readAndStoreTimeoutSoChildrenInheritIt(context);
 	}
