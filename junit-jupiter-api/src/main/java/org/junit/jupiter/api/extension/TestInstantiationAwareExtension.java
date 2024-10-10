@@ -106,10 +106,16 @@ public interface TestInstantiationAwareExtension extends Extension {
 
 		/**
 		 * The extension should receive an {@link ExtensionContext} scoped to
-		 * the test class.
+		 * in the <em>default</em> scope.
+		 *
+		 * <p>The default scope is determined by the configuration parameter
+		 * {@link #DEFAULT_SCOPE_PROPERTY_NAME}. If not specified, extensions
+		 * will receive an {@link ExtensionContext} scoped to the test class.
 		 *
 		 * @deprecated This behavior will be removed from future versions of
 		 * JUnit and {@link #TEST_METHOD} will become the default.
+		 *
+		 * @see #DEFAULT_SCOPE_PROPERTY_NAME
 		 */
 		@API(status = DEPRECATED, since = "5.12") //
 		@Deprecated
@@ -120,7 +126,19 @@ public interface TestInstantiationAwareExtension extends Extension {
 		 * the test method, unless the
 		 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
 		 */
-		TEST_METHOD
+		TEST_METHOD;
+
+		/**
+		 * Property name used to set the default extension context scope: {@value}
+		 *
+		 * <h4>Supported Values</h4>
+		 *
+		 * <p>Supported values include names of enum constants defined in this
+		 * class, ignoring case.
+		 *
+		 * @see #DEFAULT
+		 */
+		public static final String DEFAULT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testInstantiation.extensionContextScope.default";
 	}
 
 }

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -61,6 +62,9 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	private static final InstantiatingConfigurationParameterConverter<TempDirFactory> tempDirFactoryConverter = //
 		new InstantiatingConfigurationParameterConverter<>(TempDirFactory.class, "temp dir factory");
+
+	private static final EnumConfigurationParameterConverter<ExtensionContextScope> extensionContextScopeConverter = //
+		new EnumConfigurationParameterConverter<>(ExtensionContextScope.class, "extension context scope");
 
 	private final ConfigurationParameters configurationParameters;
 
@@ -141,4 +145,10 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		return () -> supplier.get().orElse(TempDirFactory.Standard.INSTANCE);
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public ExtensionContextScope getDefaultTestInstantiationExtensionContextScope() {
+		return extensionContextScopeConverter.get(configurationParameters,
+			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME, ExtensionContextScope.DEFAULT);
+	}
 }
