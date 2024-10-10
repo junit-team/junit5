@@ -1058,8 +1058,8 @@ There are currently three built-in resolvers that are registered automatically.
   method, or a custom name configured via `@DisplayName`.
 +
 `{TestInfo}` acts as a drop-in replacement for the `TestName` rule from JUnit 4. The
-following demonstrates how to have `TestInfo` injected into a test constructor,
-`@BeforeEach` method, and `@Test` method.
+following demonstrates how to have `TestInfo` injected into a `@BeforeAll` method, test
+class constructor, `@BeforeEach` method, and `@Test` method.
 
 [source,java,indent=0]
 ----

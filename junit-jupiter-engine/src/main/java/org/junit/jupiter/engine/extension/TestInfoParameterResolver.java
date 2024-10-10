@@ -29,6 +29,11 @@ import org.junit.platform.commons.util.ToStringBuilder;
 class TestInfoParameterResolver implements ParameterResolver {
 
 	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return (parameterContext.getParameter().getType() == TestInfo.class);
 	}
