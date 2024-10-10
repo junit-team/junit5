@@ -120,6 +120,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	// -------------------------------------------------------------------------
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooTestInstanceCallbacks.class, BarTestInstanceCallbacks.class })
 	static class TopLevelTestCase {
 
@@ -130,6 +131,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 	}
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BazTestInstanceCallbacks.class)
 	static class SecondLevelTestCase extends TopLevelTestCase {
 
@@ -140,6 +142,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(QuuxTestInstanceCallbacks.class)
 	static class ThirdLevelTestCase extends SecondLevelTestCase {
 
@@ -150,6 +153,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExceptionThrowingTestInstancePreDestroyCallback.class)
 	static class ExceptionInTestInstancePreDestroyCallbackTestCase {
 
@@ -159,6 +163,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExceptionThrowingTestInstancePostProcessor.class)
 	static class ExceptionInTestInstancePostProcessorTestCase {
 
@@ -168,6 +173,7 @@ class TestInstancePostProcessorAndPreDestroyCallbackTests extends AbstractJupite
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooTestInstanceCallbacks.class)
 	static class ExceptionInTestClassConstructorTestCase {
 

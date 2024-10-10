@@ -214,6 +214,7 @@ class ResourceLockAnnotationTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NoSharedResourcesTestCase {
 
 		@Test
@@ -225,6 +226,7 @@ class ResourceLockAnnotationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock("a1")
 	@ResourceLock(value = "a2", mode = ResourceAccessMode.READ_WRITE)
 	static class SharedResourcesViaAnnotationValueTestCase {
@@ -242,6 +244,7 @@ class ResourceLockAnnotationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock(providers = { //
 			SharedResourcesViaAnnotationProvidersTestCase.FirstClassLevelProvider.class, //
 			SharedResourcesViaAnnotationProvidersTestCase.SecondClassLevelProvider.class //
@@ -296,6 +299,7 @@ class ResourceLockAnnotationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock( //
 			value = "a1", //
 			mode = ResourceAccessMode.READ_WRITE, //
@@ -341,6 +345,7 @@ class ResourceLockAnnotationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock
 	static class EmptyAnnotationTestCase {
 
@@ -357,6 +362,7 @@ class ResourceLockAnnotationTests {
 
 	static class NestedNestedTestCase {
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Nested
 		@ResourceLock(providers = NestedNestedTestCase.Provider.class)
 		static class NestedClass {

@@ -294,6 +294,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase1 {
 
 		@Test
@@ -321,6 +322,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase2 {
 
 		@Test
@@ -332,6 +334,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase3 {
 
 		@Test
@@ -343,6 +346,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase4 {
 
 		@Test

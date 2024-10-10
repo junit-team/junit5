@@ -431,6 +431,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooInstanceFactory.class, BarInstanceFactory.class })
 	static class MultipleFactoriesRegisteredOnSingleTestCase {
 
@@ -440,6 +441,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(NullTestInstanceFactory.class)
 	static class NullTestInstanceFactoryTestCase {
 
@@ -453,6 +455,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	static class PerClassLifecycleNullTestInstanceFactoryTestCase extends NullTestInstanceFactoryTestCase {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BogusTestInstanceFactory.class)
 	static class BogusTestInstanceFactoryTestCase {
 
@@ -466,6 +469,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	static class PerClassLifecycleBogusTestInstanceFactoryTestCase extends BogusTestInstanceFactoryTestCase {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExplosiveTestInstanceFactory.class)
 	static class ExplosiveTestInstanceFactoryTestCase {
 
@@ -488,6 +492,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(MultipleConstructorsTestInstanceFactory.class)
 	static class MultipleConstructorsTestCase {
 
@@ -507,6 +512,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstanceFactory.class)
 	static class ParentTestCase {
 
@@ -516,6 +522,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InheritedFactoryTestCase extends ParentTestCase {
 
 		@Test
@@ -524,6 +531,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BarInstanceFactory.class)
 	static class MultipleFactoriesRegisteredWithinClassHierarchyTestCase extends ParentTestCase {
 
@@ -533,6 +541,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstanceFactory.class)
 	static class OuterTestCase {
 
@@ -560,6 +569,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstanceFactory.class)
 	static class MultipleFactoriesRegisteredWithinNestedClassStructureTestCase {
 
@@ -581,6 +591,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 	interface TestInterface {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryFromInterfaceTestCase implements TestInterface {
 
 		@Test
@@ -589,6 +600,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class LambdaFactoryTestCase {
 
 		private final String text;
@@ -611,6 +623,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstanceFactory.class)
 	@TestInstance(PER_CLASS)
 	static class PerClassLifecycleTestCase {
@@ -647,6 +660,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(LegacyInstanceFactory.class)
 	static class LegacyContextTestCase {
 
@@ -670,6 +684,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ProxyTestInstanceFactory.class)
 	@TestInstance(PER_CLASS)
 	static class ProxiedTestCase {

@@ -195,6 +195,7 @@ class StackTracePruningTests {
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FailingTestTestCase {
 
 		@Test
@@ -216,6 +217,7 @@ class StackTracePruningTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FailingBeforeEachTestCase {
 
 		@BeforeEach

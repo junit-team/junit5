@@ -101,26 +101,32 @@ class IsTestMethodTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class ClassWithTestMethods {
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		static void bogusStaticTestMethod() {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		private void bogusPrivateTestMethod() {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		String bogusTestMethodReturningObject() {
 			return "";
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		Void bogusTestMethodReturningVoidReference() {
 			return null;
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		int bogusTestMethodReturningPrimitive() {
 			return 0;

@@ -137,6 +137,7 @@ class LifecycleMethodUtilsTests {
 
 class TestCaseWithStandardLifecycle {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@BeforeAll
 	void one() {
 	}
@@ -157,10 +158,12 @@ class TestCaseWithStandardLifecycle {
 	void twelve() {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterAll
 	void five() {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterAll
 	void six() {
 	}
@@ -190,21 +193,25 @@ class TestCaseWithLifecyclePerClass {
 
 class TestCaseWithNonVoidLifecyleMethods {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@BeforeEach
 	String aa() {
 		return null;
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterEach
 	int bb() {
 		return 1;
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@BeforeAll
 	Double cc() {
 		return null;
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterAll
 	String dd() {
 		return "";

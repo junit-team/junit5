@@ -2149,6 +2149,7 @@ class ParameterizedTestIntegrationTests {
 		@interface TwoMethodSources {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@ParameterizedTest
 		@TwoMethodSources
 		void testWithRepeatableMethodSourceAsMetaAnnotation(String argument) {

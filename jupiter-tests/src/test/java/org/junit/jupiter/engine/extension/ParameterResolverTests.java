@@ -243,6 +243,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(CustomTypeParameterResolver.class)
 	static class ConstructorInjectionTestCase {
 
@@ -281,6 +282,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(CustomAnnotationParameterResolver.class)
 	static class AnnotatedParameterConstructorInjectionTestCase {
 
@@ -320,6 +322,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ CustomTypeParameterResolver.class, CustomAnnotationParameterResolver.class })
 	static class MethodInjectionTestCase {
 
@@ -362,6 +365,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(NullIntegerParameterResolver.class)
 	static class NullMethodInjectionTestCase {
 
@@ -376,6 +380,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(PrimitiveIntegerParameterResolver.class)
 	static class PrimitiveIntegerMethodInjectionTestCase {
 
@@ -385,6 +390,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
 	static class PrimitiveArrayMethodInjectionTestCase {
 
@@ -394,6 +400,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(NumberParameterResolver.class)
 	static class PotentiallyIncompatibleTypeMethodInjectionTestCase {
 
@@ -417,6 +424,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class BeforeAndAfterMethodInjectionTestCase {
 
 		@BeforeEach
@@ -435,6 +443,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("custom class name")
 	static class BeforeAndAfterAllMethodInjectionTestCase {
 
@@ -453,6 +462,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ExtendWithOnMethodTestCase {
 
 		/**
@@ -463,6 +473,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		 *
 		 * @see <a href="https://github.com/junit-team/junit5/issues/523">#523</a>
 		 */
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeEach
 		@AfterEach
 		void setUpAndTearDown(CustomType customType, @CustomAnnotation String value) {
@@ -479,6 +490,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ParameterizedTypeTestCase {
 
 		@Test
@@ -489,6 +501,7 @@ class ParameterResolverTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TypeBasedParameterResolverTestCase {
 		@Test
 		@ExtendWith(MapOfListsTypeBasedParameterResolver.class)

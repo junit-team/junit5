@@ -118,6 +118,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 		assertTrue(TestCaseWithFailingAfter.testExecuted, "test executed?");
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MyStandardTestCase {
 
 		static int countBefore1 = 0;
@@ -175,6 +176,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FirstOfTwoTestCases {
 
 		@Test
@@ -194,6 +196,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class SecondOfTwoTestCases {
 
 		@Test
@@ -213,6 +216,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithFailingBefore {
 
 		static int countBefore = 0;
@@ -233,6 +237,7 @@ class StandardTestClassTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithFailingAfter {
 
 		static boolean testExecuted = false;

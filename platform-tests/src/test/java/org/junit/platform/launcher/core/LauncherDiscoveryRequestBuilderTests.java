@@ -397,6 +397,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class SampleTestClass {
 
 		@Test

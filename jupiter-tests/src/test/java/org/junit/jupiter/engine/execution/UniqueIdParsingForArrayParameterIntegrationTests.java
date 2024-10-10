@@ -55,6 +55,7 @@ class UniqueIdParsingForArrayParameterIntegrationTests extends AbstractJupiterTe
 		assertThat(UniqueId.parse(uniqueId.toString())).isEqualTo(uniqueId);
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(PrimitiveArrayParameterResolver.class)
 	static class PrimitiveArrayMethodInjectionTestCase {
 

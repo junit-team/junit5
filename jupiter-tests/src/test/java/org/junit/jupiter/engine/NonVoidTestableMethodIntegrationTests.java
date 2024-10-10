@@ -21,12 +21,14 @@ class NonVoidTestableMethodIntegrationTests {
 	void valid() {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Test
 	int invalidMethodReturningPrimitive() {
 		fail("This method should never have been called.");
 		return 1;
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Test
 	String invalidMethodReturningObject() {
 		fail("This method should never have been called.");

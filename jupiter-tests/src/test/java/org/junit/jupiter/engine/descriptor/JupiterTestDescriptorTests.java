@@ -295,7 +295,7 @@ class JupiterTestDescriptorTests {
 	@Tag("classTag1")
 	@Tag("classTag2")
 	@DisplayName("custom class name")
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "JUnitMalformedDeclaration" })
 	private static class TestCase extends AbstractTestCase {
 
 		void test() {
@@ -330,9 +330,11 @@ class JupiterTestDescriptorTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class TestCaseWithInvalidBeforeAllMethod {
 
 		// must be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeAll
 		void beforeAll() {
 		}
@@ -343,9 +345,11 @@ class JupiterTestDescriptorTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class TestCaseWithInvalidAfterAllMethod {
 
 		// must be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@AfterAll
 		void afterAll() {
 		}
@@ -356,9 +360,11 @@ class JupiterTestDescriptorTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class TestCaseWithInvalidBeforeEachMethod {
 
 		// must NOT be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeEach
 		static void beforeEach() {
 		}
@@ -369,9 +375,11 @@ class JupiterTestDescriptorTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class TestCaseWithInvalidAfterEachMethod {
 
 		// must NOT be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@AfterEach
 		static void afterEach() {
 		}

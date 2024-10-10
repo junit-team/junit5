@@ -331,10 +331,12 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		void testWithBlankPattern() {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@RepeatedTest(-99)
 		void negativeRepeatCount() {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@RepeatedTest(0)
 		void zeroRepeatCount() {
 		}

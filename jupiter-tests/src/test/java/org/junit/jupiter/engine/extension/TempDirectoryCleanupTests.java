@@ -192,6 +192,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 		// -------------------------------------------------------------------
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class DefaultFieldCase {
 
 			@TempDir
@@ -203,6 +204,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class NeverFieldCase {
 
 			@TempDir(cleanup = NEVER)
@@ -214,6 +216,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class AlwaysFieldCase {
 
 			@TempDir(cleanup = ALWAYS)
@@ -225,6 +228,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class OnSuccessPassingFieldCase {
 
 			@TempDir(cleanup = ON_SUCCESS)
@@ -236,6 +240,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class OnSuccessFailingFieldCase {
 
 			@TempDir(cleanup = ON_SUCCESS)
@@ -248,6 +253,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 		static class OnSuccessFailingStaticFieldCase {
 
@@ -398,6 +404,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 		// -------------------------------------------------------------------
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class DefaultParameterCase {
 
 			@Test
@@ -406,6 +413,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class NeverParameterCase {
 
 			@Test
@@ -414,6 +422,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class AlwaysParameterCase {
 
 			@Test
@@ -422,6 +431,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class OnSuccessPassingParameterCase {
 
 			@Test
@@ -430,6 +440,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		static class OnSuccessFailingParameterCase {
 
 			@Test

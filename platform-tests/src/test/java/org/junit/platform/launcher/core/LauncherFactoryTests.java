@@ -360,7 +360,7 @@ class LauncherFactoryTests {
 		// @formatter:on
 	}
 
-	@SuppressWarnings("NewClassNamingConvention")
+	@SuppressWarnings({ "NewClassNamingConvention", "JUnitMalformedDeclaration" })
 	public static class JUnit4Example {
 
 		@org.junit.Test
@@ -369,7 +369,7 @@ class LauncherFactoryTests {
 
 	}
 
-	@SuppressWarnings("NewClassNamingConvention")
+	@SuppressWarnings({ "NewClassNamingConvention", "JUnitMalformedDeclaration" })
 	static class JUnit5Example {
 
 		@Tag("test-post-discovery")

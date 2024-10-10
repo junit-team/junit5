@@ -104,6 +104,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	static class OuterTestCase extends Destroyable {
 
@@ -136,6 +137,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithTestSpecificTestInstancePreDestroyCallback extends Destroyable {
 
 		@BeforeEach
@@ -151,6 +153,7 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestInstance(PER_CLASS)
 	@ExtendWith(FooInstancePreDestroyCallback.class)
 	@ExtendWith(BarInstancePreDestroyCallback.class)

@@ -355,6 +355,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		TestWatcher watcher = new TrackingTestWatcher();
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MethodLevelTestWatcherTestCase extends AbstractDisabledMethodsTestCase {
 
 		@Override
@@ -456,6 +457,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(DataRetrievingTestWatcher.class)
 	static class DataRetrievingTestWatcherTestCase {
 

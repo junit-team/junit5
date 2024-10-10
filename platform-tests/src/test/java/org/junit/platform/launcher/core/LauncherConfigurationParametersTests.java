@@ -266,6 +266,7 @@ class LauncherConfigurationParametersTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(Mutator.class)
 	static class Something {
 

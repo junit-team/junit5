@@ -834,6 +834,7 @@ class YourTestClass {
 
 class HerTestClass extends MyTestClass {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Test
 	void test7(String param) {
 	}
@@ -841,6 +842,7 @@ class HerTestClass extends MyTestClass {
 
 class OtherTestClass {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NestedTestClass {
 
 		@Test

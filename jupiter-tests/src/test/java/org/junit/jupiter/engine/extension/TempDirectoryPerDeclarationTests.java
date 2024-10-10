@@ -516,6 +516,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnPrivateInstanceFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -529,6 +530,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnPrivateStaticFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -542,6 +544,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
 
 		@SuppressWarnings("unused")
@@ -554,6 +557,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnInstanceFieldWithUnsupportedTypeTestCase {
 
 		@SuppressWarnings("unused")
@@ -566,6 +570,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InvalidTestCase {
 
 		@Test
@@ -600,6 +605,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/1748
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
 
 		@TempDir
@@ -617,6 +623,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/1801
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UserTempDirectoryDeletionDoesNotCauseFailureTestCase {
 
 		@Test
@@ -628,6 +635,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2046
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NonWritableFileDoesNotCauseFailureTestCase {
 
 		@Test
@@ -642,6 +650,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2171
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase {
 
 		@Test
@@ -655,6 +664,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2171
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase {
 
 		@Test
@@ -670,7 +680,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
-	@SuppressWarnings("ResultOfMethodCallIgnored")
+	@SuppressWarnings({ "ResultOfMethodCallIgnored", "JUnitMalformedDeclaration" })
 	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
 
 		@Test
@@ -1049,6 +1059,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2079
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirUsageInsideNestedClassesTestCase {
 
 		@TempDir
@@ -1081,6 +1092,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class StaticTempDirUsageInsideNestedClassTestCase {
 
 		@TempDir
@@ -1107,6 +1119,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("class")
 	static class AllPossibleDeclarationLocationsTestCase {
 
@@ -1228,6 +1241,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UndeletableDirectoryTestCase extends UndeletableTestCase {
 		@Test
 		void test() throws Exception {
@@ -1235,6 +1249,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UndeletableFileTestCase extends UndeletableTestCase {
 		@Test
 		void test() throws Exception {
@@ -1242,6 +1257,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithTestMethodNameAsPrefixTestCase {
 
 		@Test
@@ -1262,6 +1278,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2088
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithCustomParentDirectoryTestCase {
 
 		@Test
@@ -1287,6 +1304,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithMemoryFileSystemTestCase {
 
 		@Test
@@ -1315,6 +1333,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithJimfsTestCase {
 
 		@Test
@@ -1343,6 +1362,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithAnnotatedElementNameAsPrefixTestCase {
 
 		@TempDir(factory = Factory.class)
@@ -1370,6 +1390,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithCustomMetaAnnotationTestCase {
 
 		@TempDirForField
@@ -1416,6 +1437,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryNotReturningDirectoryTestCase {
 
 		@Test
@@ -1433,6 +1455,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryReturningNonDefaultFileSystemPathForFileAnnotatedElementTestCase {
 
 		@Test
@@ -1458,6 +1481,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class StandardDefaultFactoryTestCase {
 
 		@Test
@@ -1469,6 +1493,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryTestCase {
 
 		@Test
@@ -1480,6 +1505,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryWithStandardDeclarationTestCase {
 
 		@Test
@@ -1491,6 +1517,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryNotReturningDirectoryTestCase {
 
 		@Test

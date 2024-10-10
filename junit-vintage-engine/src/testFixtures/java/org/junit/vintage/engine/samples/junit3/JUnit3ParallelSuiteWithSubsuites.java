@@ -14,6 +14,7 @@ import junit.extensions.ActiveTestSuite;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+@SuppressWarnings("JUnitMalformedDeclaration")
 public class JUnit3ParallelSuiteWithSubsuites extends TestCase {
 	private final String arg;
 

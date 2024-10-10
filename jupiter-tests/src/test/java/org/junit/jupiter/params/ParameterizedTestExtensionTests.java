@@ -304,6 +304,7 @@ class ParameterizedTestExtensionTests {
 
 	static class TestCaseWithAnnotatedMethod {
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@ParameterizedTest
 		void method() {
 		}
