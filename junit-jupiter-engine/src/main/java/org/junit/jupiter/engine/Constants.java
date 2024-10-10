@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
@@ -368,6 +369,16 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	public static final String DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME = TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default extension context scope for
+	 * extensions that participate in test class instance construction: {@value}
+	 *
+	 * @since 5.12
+	 * @see org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	public static final String DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextSupplier.DEFAULT_SCOPE_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

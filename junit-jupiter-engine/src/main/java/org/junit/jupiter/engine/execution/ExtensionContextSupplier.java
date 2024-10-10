@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParti
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
@@ -28,9 +29,12 @@ import org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatin
 @API(status = INTERNAL, since = "5.12")
 public interface ExtensionContextSupplier {
 
+	String DEFAULT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testClassInstanceConstruction.extensionContextScope.default";
+
 	static ExtensionContextSupplier create(ExtensionContext currentExtensionContext,
-			ExtensionContext legacyExtensionContext) {
-		if (currentExtensionContext == legacyExtensionContext) {
+			ExtensionContext legacyExtensionContext, JupiterConfiguration configuration) {
+		if (currentExtensionContext == legacyExtensionContext
+				|| configuration.getDefaultTestClassInstanceConstructionExtensionContextScope() == TEST_METHOD) {
 			return __ -> currentExtensionContext;
 		}
 		return new ScopeBasedExtensionContextSupplier(currentExtensionContext, legacyExtensionContext);

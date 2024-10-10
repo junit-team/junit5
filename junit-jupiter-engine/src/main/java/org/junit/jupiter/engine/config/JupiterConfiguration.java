@@ -23,10 +23,12 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 
 /**
  * @since 5.4
@@ -42,7 +44,8 @@ public interface JupiterConfiguration {
 	String DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME = TestInstance.Lifecycle.DEFAULT_LIFECYCLE_PROPERTY_NAME;
 	String DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME = DisplayNameGenerator.DEFAULT_GENERATOR_PROPERTY_NAME;
 	String DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME = MethodOrderer.DEFAULT_ORDER_PROPERTY_NAME;
-	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;
+	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;;
+	String DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextSupplier.DEFAULT_SCOPE_PROPERTY_NAME;
 
 	Optional<String> getRawConfigurationParameter(String key);
 
@@ -69,5 +72,7 @@ public interface JupiterConfiguration {
 	CleanupMode getDefaultTempDirCleanupMode();
 
 	Supplier<TempDirFactory> getDefaultTempDirFactorySupplier();
+
+	ExtensionContextScope getDefaultTestClassInstanceConstructionExtensionContextScope();
 
 }
