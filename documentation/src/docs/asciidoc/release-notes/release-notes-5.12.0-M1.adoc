@@ -44,7 +44,12 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* When injecting `TestReporter` into test class constructors the published report entries
+  are now associated with the test method rather than the test class unless the test
+  instance lifecycle is set to `PER_CLASS` (in which case they will continue to be
+  associated with the test class). If you want to publish report entries for the test
+  class, you can implement a class-level lifecycle method (e.g., `@BeforeAll`) and inject
+  `TestReporter` into that method.
 
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
