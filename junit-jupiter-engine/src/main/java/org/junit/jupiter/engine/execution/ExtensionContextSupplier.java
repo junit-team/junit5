@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Ex
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstantiationAwareExtension;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
@@ -29,8 +30,9 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension;
 public interface ExtensionContextSupplier {
 
 	static ExtensionContextSupplier create(ExtensionContext currentExtensionContext,
-			ExtensionContext legacyExtensionContext) {
-		if (currentExtensionContext == legacyExtensionContext) {
+			ExtensionContext legacyExtensionContext, JupiterConfiguration configuration) {
+		if (currentExtensionContext == legacyExtensionContext
+				|| configuration.getDefaultTestInstantiationExtensionContextScope() == TEST_METHOD) {
 			return __ -> currentExtensionContext;
 		}
 		return new ScopeBasedExtensionContextSupplier(currentExtensionContext, legacyExtensionContext);

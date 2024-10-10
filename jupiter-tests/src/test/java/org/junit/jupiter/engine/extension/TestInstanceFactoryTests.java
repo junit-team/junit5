@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
@@ -44,6 +46,7 @@ import org.junit.jupiter.api.extension.TestInstanceFactory;
 import org.junit.jupiter.api.extension.TestInstanceFactoryContext;
 import org.junit.jupiter.api.extension.TestInstantiationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.Constants;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -429,6 +432,36 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
+	@Test
+	void instanceFactoryWithLegacyContextAndChangedDefaultScope() {
+		var executionResults = executeTests(request() //
+				.selectors(selectClass(LegacyContextTestCase.class)) //
+				.configurationParameter(
+					Constants.DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME,
+					TEST_METHOD.name()));
+
+		assertEquals(3, executionResults.testEvents().started().count(), "# tests started");
+		assertEquals(3, executionResults.testEvents().succeeded().count(), "# tests succeeded");
+
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"outerTest",
+				"close LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: InnerTestCase",
+				"innerTest1",
+				"close InnerTestCase",
+				"close LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: LegacyContextTestCase",
+				"LegacyInstanceFactory instantiated: InnerTestCase",
+				"innerTest2",
+				"close InnerTestCase",
+				"close LegacyContextTestCase"
+		);
+		// @formatter:on
+	}
+
 	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -797,8 +830,8 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static boolean instantiated(Class<? extends TestInstanceFactory> factoryClass, Class<?> testClass) {
-		return callSequence.add(factoryClass.getSimpleName() + " instantiated: " + testClass.getSimpleName());
+	private static void instantiated(Class<? extends TestInstanceFactory> factoryClass, Class<?> testClass) {
+		callSequence.add(factoryClass.getSimpleName() + " instantiated: " + testClass.getSimpleName());
 	}
 
 }

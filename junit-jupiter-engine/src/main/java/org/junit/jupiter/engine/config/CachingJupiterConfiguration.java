@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -58,71 +59,77 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public boolean isParallelExecutionEnabled() {
 		return (boolean) cache.computeIfAbsent(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME,
-			key -> delegate.isParallelExecutionEnabled());
+			__ -> delegate.isParallelExecutionEnabled());
 	}
 
 	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return (boolean) cache.computeIfAbsent(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME,
-			key -> delegate.isExtensionAutoDetectionEnabled());
+			__ -> delegate.isExtensionAutoDetectionEnabled());
 	}
 
 	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
-			key -> delegate.getDefaultExecutionMode());
+			__ -> delegate.getDefaultExecutionMode());
 	}
 
 	@Override
 	public ExecutionMode getDefaultClassesExecutionMode() {
 		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME,
-			key -> delegate.getDefaultClassesExecutionMode());
+			__ -> delegate.getDefaultClassesExecutionMode());
 	}
 
 	@Override
 	public TestInstance.Lifecycle getDefaultTestInstanceLifecycle() {
 		return (TestInstance.Lifecycle) cache.computeIfAbsent(DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME,
-			key -> delegate.getDefaultTestInstanceLifecycle());
+			__ -> delegate.getDefaultTestInstanceLifecycle());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Predicate<ExecutionCondition> getExecutionConditionFilter() {
 		return (Predicate<ExecutionCondition>) cache.computeIfAbsent(DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME,
-			key -> delegate.getExecutionConditionFilter());
+			__ -> delegate.getExecutionConditionFilter());
 	}
 
 	@Override
 	public DisplayNameGenerator getDefaultDisplayNameGenerator() {
 		return (DisplayNameGenerator) cache.computeIfAbsent(DEFAULT_DISPLAY_NAME_GENERATOR_PROPERTY_NAME,
-			key -> delegate.getDefaultDisplayNameGenerator());
+			__ -> delegate.getDefaultDisplayNameGenerator());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<MethodOrderer> getDefaultTestMethodOrderer() {
 		return (Optional<MethodOrderer>) cache.computeIfAbsent(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME,
-			key -> delegate.getDefaultTestMethodOrderer());
+			__ -> delegate.getDefaultTestMethodOrderer());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Optional<ClassOrderer> getDefaultTestClassOrderer() {
 		return (Optional<ClassOrderer>) cache.computeIfAbsent(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME,
-			key -> delegate.getDefaultTestClassOrderer());
+			__ -> delegate.getDefaultTestClassOrderer());
 	}
 
 	@Override
 	public CleanupMode getDefaultTempDirCleanupMode() {
 		return (CleanupMode) cache.computeIfAbsent(DEFAULT_CLEANUP_MODE_PROPERTY_NAME,
-			key -> delegate.getDefaultTempDirCleanupMode());
+			__ -> delegate.getDefaultTempDirCleanupMode());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Supplier<TempDirFactory> getDefaultTempDirFactorySupplier() {
 		return (Supplier<TempDirFactory>) cache.computeIfAbsent(DEFAULT_FACTORY_PROPERTY_NAME,
-			key -> delegate.getDefaultTempDirFactorySupplier());
+			__ -> delegate.getDefaultTempDirFactorySupplier());
 	}
 
+	@Override
+	public ExtensionContextScope getDefaultTestInstantiationExtensionContextScope() {
+		return (ExtensionContextScope) cache.computeIfAbsent(
+			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME,
+			__ -> delegate.getDefaultTestInstantiationExtensionContextScope());
+	}
 }
