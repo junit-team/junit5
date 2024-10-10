@@ -287,8 +287,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor imp
 			ClassExtensionContext ourExtensionContext, ExtensionRegistry registry,
 			JupiterEngineExecutionContext context) {
 
-		ExtensionContextSupplier extensionContext = new ExtensionContextSupplier(context.getExtensionContext(),
-			ourExtensionContext);
+		ExtensionContextSupplier extensionContext = ExtensionContextSupplier.create(context.getExtensionContext(),
+			ourExtensionContext, configuration);
 		TestInstances instances = instantiateTestClass(parentExecutionContext, extensionContext, registry, context);
 		context.getThrowableCollector().execute(() -> {
 			invokeTestInstancePostProcessors(instances.getInnermostInstance(), registry, extensionContext);
