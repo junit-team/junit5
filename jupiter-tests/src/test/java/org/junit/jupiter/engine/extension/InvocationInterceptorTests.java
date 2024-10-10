@@ -60,6 +60,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 				message(it -> it.startsWith("Chain of InvocationInterceptors never called invocation")))));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InvocationIgnoringInterceptorTestCase {
 		@RegisterExtension
 		Extension interceptor = new InvocationInterceptor() {
@@ -83,6 +84,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 		results.testEvents().assertStatistics(stats -> stats.failed(0).succeeded(1));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InvocationSkippedTestCase {
 		@RegisterExtension
 		Extension interceptor = new InvocationInterceptor() {
@@ -109,6 +111,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 				"Chain of InvocationInterceptors called invocation multiple times instead of just once")))));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class DoubleInvocationInterceptorTestCase {
 		@RegisterExtension
 		Extension interceptor = new InvocationInterceptor() {
@@ -147,6 +150,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 				.flatMap(map -> map.values().stream());
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooInvocationInterceptor.class, BarInvocationInterceptor.class, BazInvocationInterceptor.class })
 	static class TestCaseWithThreeInterceptors {
 
@@ -154,6 +158,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			publish(reporter, InvocationType.CONSTRUCTOR);
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeAll
 		static void beforeAll(TestReporter reporter) {
 			publish(reporter, InvocationType.BEFORE_ALL);
@@ -187,6 +192,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			publish(reporter, InvocationType.AFTER_EACH);
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@AfterAll
 		static void afterAll(TestReporter reporter) {
 			publish(reporter, InvocationType.AFTER_ALL);

@@ -187,6 +187,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------------
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooClassLevelCallbacks.class, BarClassLevelCallbacks.class })
 	static class TopLevelTestCase {
 
@@ -207,6 +208,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// Must NOT be private; otherwise, the @Test method gets discovered but never executed.
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BazClassLevelCallbacks.class)
 	static class SecondLevelTestCase extends TopLevelTestCase {
 
@@ -227,6 +229,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(QuuxClassLevelCallbacks.class)
 	static class ThirdLevelTestCase extends SecondLevelTestCase {
 
@@ -247,6 +250,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(QuuxClassLevelCallbacks.class)
 	static class ThirdLevelStaticHidingTestCase extends SecondLevelTestCase {
 
@@ -287,6 +291,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooClassLevelCallbacks.class)
 	static class ExceptionInBeforeAllMethodTestCase {
 
@@ -307,6 +312,7 @@ class BeforeAndAfterAllTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooClassLevelCallbacks.class, ExceptionThrowingBeforeAllCallback.class })
 	static class ExceptionInBeforeAllCallbackTestCase {
 

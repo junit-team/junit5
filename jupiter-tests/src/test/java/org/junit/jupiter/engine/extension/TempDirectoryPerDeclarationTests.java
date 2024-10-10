@@ -15,6 +15,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
@@ -22,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -123,25 +123,37 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		assertThat(AllPossibleDeclarationLocationsTestCase.tempDirs).hasSize(3);
 
 		var classTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("class");
-		assertThat(classTempDirs).containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2",
-			"afterAll1", "afterAll2");
-		assertThat(classTempDirs.values()).hasSize(6).doesNotHaveDuplicates();
+		assertThat(classTempDirs) //
+				.containsOnlyKeys("staticField1", "staticField2", "beforeAll1", "beforeAll2", "afterAll1", "afterAll2") //
+				.values().hasSize(6).doesNotHaveDuplicates().allMatch(Files::notExists);
 
 		var testATempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testA");
-		assertThat(testATempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1", "instanceField2",
-			"beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
-		assertThat(testATempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+		assertThat(testATempDirs) //
+				.containsOnlyKeys("staticField1", "staticField2", "instanceFieldSetViaConstructorInjection",
+					"instanceField1", "instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1",
+					"afterEach2") //
+				.values().hasSize(11).doesNotHaveDuplicates().allMatch(Files::notExists);
 
 		var testBTempDirs = AllPossibleDeclarationLocationsTestCase.tempDirs.get("testB");
-		assertThat(testBTempDirs).containsOnlyKeys("staticField1", "staticField2", "instanceField1", "instanceField2",
-			"beforeEach1", "beforeEach2", "test1", "test2", "afterEach1", "afterEach2");
-		assertThat(testBTempDirs.values()).hasSize(10).doesNotHaveDuplicates();
+		assertThat(testBTempDirs) //
+				.containsOnlyKeys("staticField1", "staticField2", "instanceFieldSetViaConstructorInjection",
+					"instanceField1", "instanceField2", "beforeEach1", "beforeEach2", "test1", "test2", "afterEach1",
+					"afterEach2") //
+				.values().hasSize(11).doesNotHaveDuplicates().allMatch(Files::notExists);
 
 		assertThat(testATempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
 		assertThat(testBTempDirs).containsEntry("staticField1", classTempDirs.get("staticField1"));
 		assertThat(testATempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
 		assertThat(testBTempDirs).containsEntry("staticField2", classTempDirs.get("staticField2"));
 
+		switch (lifecycle) {
+			case PER_CLASS -> assertThat(testATempDirs) //
+					.containsEntry("instanceFieldSetViaConstructorInjection",
+						testBTempDirs.get("instanceFieldSetViaConstructorInjection"));
+			case PER_METHOD -> assertThat(testATempDirs) //
+					.doesNotContainEntry("instanceFieldSetViaConstructorInjection",
+						testBTempDirs.get("instanceFieldSetViaConstructorInjection"));
+		}
 		assertThat(testATempDirs).doesNotContainEntry("instanceField1", testBTempDirs.get("instanceField1"));
 		assertThat(testATempDirs).doesNotContainEntry("instanceField2", testBTempDirs.get("instanceField2"));
 		assertThat(testATempDirs).doesNotContainEntry("beforeEach1", testBTempDirs.get("beforeEach1"));
@@ -276,26 +288,6 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 					instanceOf(ExtensionConfigurationException.class),
 					message("Can only resolve @TempDir parameter of type java.nio.file.Path or java.io.File but was: java.lang.String")));
 			// @formatter:on
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter")
-		@Order(30)
-		void doesNotSupportTempDirAnnotationOnConstructorParameter() {
-			var results = executeTestsForClass(AnnotationOnConstructorParameterTestCase.class);
-
-			assertSingleFailedTest(results, ParameterResolutionException.class,
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
-		}
-
-		@Test
-		@DisplayName("when @TempDir is used on constructor parameter with @TestInstance(PER_CLASS)")
-		@Order(31)
-		void doesNotSupportTempDirAnnotationOnConstructorParameterWithTestInstancePerClass() {
-			var results = executeTestsForClass(AnnotationOnConstructorParameterWithTestInstancePerClassTestCase.class);
-
-			assertSingleFailedContainer(results, ParameterResolutionException.class,
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
 		}
 
 		@Test
@@ -524,6 +516,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnPrivateInstanceFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -537,6 +530,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnPrivateStaticFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -550,6 +544,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnStaticFieldWithUnsupportedTypeTestCase {
 
 		@SuppressWarnings("unused")
@@ -562,6 +557,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class AnnotationOnInstanceFieldWithUnsupportedTypeTestCase {
 
 		@SuppressWarnings("unused")
@@ -574,28 +570,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	static class AnnotationOnConstructorParameterTestCase {
-
-		AnnotationOnConstructorParameterTestCase(@SuppressWarnings("unused") @TempDir Path tempDir) {
-			// never called
-		}
-
-		@Test
-		void test() {
-			// never called
-		}
-
-	}
-
-	@TestInstance(PER_CLASS)
-	static class AnnotationOnConstructorParameterWithTestInstancePerClassTestCase
-			extends AnnotationOnConstructorParameterTestCase {
-
-		AnnotationOnConstructorParameterWithTestInstancePerClassTestCase(@TempDir Path tempDir) {
-			super(tempDir);
-		}
-	}
-
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InvalidTestCase {
 
 		@Test
@@ -630,6 +605,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/1748
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase {
 
 		@TempDir
@@ -647,6 +623,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/1801
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UserTempDirectoryDeletionDoesNotCauseFailureTestCase {
 
 		@Test
@@ -658,6 +635,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2046
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NonWritableFileDoesNotCauseFailureTestCase {
 
 		@Test
@@ -672,6 +650,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2171
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInReadOnlyDirDoesNotCauseFailureTestCase {
 
 		@Test
@@ -685,6 +664,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2171
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ReadOnlyFileInDirInReadOnlyDirDoesNotCauseFailureTestCase {
 
 		@Test
@@ -700,7 +680,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2609
-	@SuppressWarnings("ResultOfMethodCallIgnored")
+	@SuppressWarnings({ "ResultOfMethodCallIgnored", "JUnitMalformedDeclaration" })
 	static class NonMintPermissionContentInTempDirectoryDoesNotCauseFailureTestCase {
 
 		@Test
@@ -1079,6 +1059,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2079
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TempDirUsageInsideNestedClassesTestCase {
 
 		@TempDir
@@ -1111,6 +1092,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class StaticTempDirUsageInsideNestedClassTestCase {
 
 		@TempDir
@@ -1137,6 +1119,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("class")
 	static class AllPossibleDeclarationLocationsTestCase {
 
@@ -1147,6 +1130,8 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 		@TempDir
 		static Path staticField2;
+
+		final Path instanceFieldSetViaConstructorInjection;
 
 		@TempDir
 		Path instanceField1;
@@ -1162,6 +1147,11 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				"beforeAll1", param1, //
 				"beforeAll2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
+		}
+
+		AllPossibleDeclarationLocationsTestCase(@TempDir Path tempDir) {
+			this.instanceFieldSetViaConstructorInjection = tempDir;
 		}
 
 		@BeforeEach
@@ -1169,11 +1159,13 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			getTempDirs(testInfo).putAll(Map.of( //
 				"staticField1", staticField1, //
 				"staticField2", staticField2, //
+				"instanceFieldSetViaConstructorInjection", instanceFieldSetViaConstructorInjection, //
 				"instanceField1", instanceField1, //
 				"instanceField2", instanceField2, //
 				"beforeEach1", param1, //
 				"beforeEach2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
 		}
 
 		@Test
@@ -1183,6 +1175,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				"test1", param1, //
 				"test2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
 		}
 
 		@Test
@@ -1192,6 +1185,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				"test1", param1, //
 				"test2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
 		}
 
 		@AfterEach
@@ -1200,6 +1194,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				"afterEach1", param1, //
 				"afterEach2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
 		}
 
 		@AfterAll
@@ -1208,10 +1203,15 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				"afterAll1", param1, //
 				"afterAll2", param2 //
 			));
+			assertAllTempDirsExist(testInfo);
 		}
 
 		private static Map<String, Path> getTempDirs(TestInfo testInfo) {
 			return tempDirs.computeIfAbsent(testInfo.getDisplayName(), __ -> new LinkedHashMap<>());
+		}
+
+		private static void assertAllTempDirsExist(TestInfo testInfo) {
+			assertAll(getTempDirs(testInfo).values().stream().map(tempDir -> () -> assertTrue(Files.exists(tempDir))));
 		}
 	}
 
@@ -1241,6 +1241,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UndeletableDirectoryTestCase extends UndeletableTestCase {
 		@Test
 		void test() throws Exception {
@@ -1248,6 +1249,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class UndeletableFileTestCase extends UndeletableTestCase {
 		@Test
 		void test() throws Exception {
@@ -1255,6 +1257,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithTestMethodNameAsPrefixTestCase {
 
 		@Test
@@ -1275,6 +1278,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	// https://github.com/junit-team/junit5/issues/2088
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithCustomParentDirectoryTestCase {
 
 		@Test
@@ -1300,6 +1304,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithMemoryFileSystemTestCase {
 
 		@Test
@@ -1328,6 +1333,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithJimfsTestCase {
 
 		@Test
@@ -1356,6 +1362,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithAnnotatedElementNameAsPrefixTestCase {
 
 		@TempDir(factory = Factory.class)
@@ -1383,6 +1390,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryWithCustomMetaAnnotationTestCase {
 
 		@TempDirForField
@@ -1429,6 +1437,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryNotReturningDirectoryTestCase {
 
 		@Test
@@ -1446,6 +1455,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FactoryReturningNonDefaultFileSystemPathForFileAnnotatedElementTestCase {
 
 		@Test
@@ -1471,6 +1481,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class StandardDefaultFactoryTestCase {
 
 		@Test
@@ -1482,6 +1493,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryTestCase {
 
 		@Test
@@ -1493,6 +1505,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryWithStandardDeclarationTestCase {
 
 		@Test
@@ -1504,6 +1517,7 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class CustomDefaultFactoryNotReturningDirectoryTestCase {
 
 		@Test

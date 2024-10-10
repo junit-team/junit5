@@ -132,7 +132,7 @@ class DefaultArgumentConverterTests {
 
 	@ParameterizedTest(name = "[{index}] {0}")
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
-			double.class })
+			double.class, void.class })
 	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert(null, type)) //
@@ -261,8 +261,10 @@ class DefaultArgumentConverterTests {
 	@Test
 	void convertsStringToClass() {
 		assertConverts("java.lang.Integer", Class.class, Integer.class);
+		assertConverts("java.lang.Void", Class.class, Void.class);
 		assertConverts("java.lang.Thread$State", Class.class, State.class);
 		assertConverts("byte", Class.class, byte.class);
+		assertConverts("void", Class.class, void.class);
 		assertConverts("char[]", Class.class, char[].class);
 		assertConverts("java.lang.Long[][]", Class.class, Long[][].class);
 		assertConverts("[[[I", Class.class, int[][][].class);

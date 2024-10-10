@@ -287,6 +287,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
 	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	static class StackTestCase {
@@ -353,6 +354,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
 	@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorTestCase {
@@ -397,6 +399,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
 	@IndicativeSentencesGeneration(separator = " >> ", generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorWithCustomSeparatorTestCase {

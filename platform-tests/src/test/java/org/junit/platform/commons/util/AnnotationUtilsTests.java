@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -273,8 +272,7 @@ class AnnotationUtilsTests {
 	}
 
 	private void assertTagsFound(Class<?> clazz, String... tags) {
-		assertEquals(List.of(tags),
-			findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).collect(toList()),
+		assertEquals(List.of(tags), findRepeatableAnnotations(clazz, Tag.class).stream().map(Tag::value).toList(),
 			() -> "Tags found for class " + clazz.getName());
 	}
 
@@ -332,7 +330,7 @@ class AnnotationUtilsTests {
 
 	private void assertExtensionsFound(Class<?> clazz, String... tags) {
 		assertEquals(List.of(tags),
-			findRepeatableAnnotations(clazz, ExtendWith.class).stream().map(ExtendWith::value).collect(toList()),
+			findRepeatableAnnotations(clazz, ExtendWith.class).stream().map(ExtendWith::value).toList(),
 			() -> "Extensions found for class " + clazz.getName());
 	}
 
@@ -610,7 +608,7 @@ class AnnotationUtilsTests {
 	}
 
 	private List<String> asNames(List<Field> fields) {
-		return fields.stream().map(Field::getName).collect(toList());
+		return fields.stream().map(Field::getName).toList();
 	}
 
 	// -------------------------------------------------------------------------

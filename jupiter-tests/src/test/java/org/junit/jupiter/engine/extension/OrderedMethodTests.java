@@ -337,6 +337,7 @@ class OrderedMethodTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class BaseTestCase {
 
 		@Test
@@ -349,7 +350,7 @@ class OrderedMethodTests {
 
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "JUnitMalformedDeclaration" })
 	@TestMethodOrder(MethodName.class)
 	static class MethodNameTestCase extends BaseTestCase {
 
@@ -402,7 +403,7 @@ class OrderedMethodTests {
 		}
 	}
 
-	@SuppressWarnings({ "deprecation", "unused" })
+	@SuppressWarnings({ "deprecation", "unused", "JUnitMalformedDeclaration" })
 	@TestMethodOrder(org.junit.jupiter.api.MethodOrderer.Alphanumeric.class)
 	static class AlphanumericTestCase extends BaseTestCase {
 
@@ -455,6 +456,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(MethodOrderer.DisplayName.class)
 	static class DisplayNameTestCase {
 
@@ -527,6 +529,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(OrderAnnotation.class)
 	static class OrderAnnotationTestCase {
 
@@ -594,6 +597,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(Random.class)
 	static class RandomTestCase {
 
@@ -626,6 +630,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(MisbehavingByAdding.class)
 	static class MisbehavingByAddingTestCase {
 
@@ -643,6 +648,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(MisbehavingByRemoving.class)
 	static class MisbehavingByRemovingTestCase {
 
@@ -712,6 +718,7 @@ class OrderedMethodTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class WithoutTestMethodOrderTestCase {
 
 		@BeforeEach

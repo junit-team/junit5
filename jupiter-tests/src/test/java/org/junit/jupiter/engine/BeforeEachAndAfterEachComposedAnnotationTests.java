@@ -39,6 +39,7 @@ class BeforeEachAndAfterEachComposedAnnotationTests extends AbstractJupiterTestE
 		assertThat(methodsInvoked).containsExactly("beforeEach", "test", "afterEach");
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase {
 
 		@CustomBeforeEach

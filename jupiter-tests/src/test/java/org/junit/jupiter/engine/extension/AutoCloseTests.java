@@ -457,6 +457,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@TestInstance(PER_METHOD)
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InstancePerMethodTestCase {
 
 		@AutoClose
@@ -489,6 +490,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@TestInstance(PER_CLASS)
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class InstancePerClassTestCase {
 
 		static boolean closed = false;
@@ -569,6 +571,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class SuperTestCase {
 
 		@AutoClose
@@ -589,6 +592,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class SubTestCase extends SuperTestCase {
 
 		@AutoClose
@@ -607,6 +611,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FailingFieldsTestCase {
 
 		@AutoClose
@@ -639,6 +644,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FailingFieldsEnclosingTestCase {
 
 		@AutoClose

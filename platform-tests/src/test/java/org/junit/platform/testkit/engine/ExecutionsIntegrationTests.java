@@ -94,6 +94,7 @@ class ExecutionsIntegrationTests {
 				.assertStatistics(stats -> stats.skipped(1).started(3).succeeded(1).aborted(1).failed(1));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ExampleTestCase {
 
 		@Test

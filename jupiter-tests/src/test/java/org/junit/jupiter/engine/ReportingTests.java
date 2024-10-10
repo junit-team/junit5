@@ -36,6 +36,7 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 				.reportingEntryPublished(7));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MyReportingTestCase {
 
 		@BeforeEach

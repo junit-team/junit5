@@ -248,6 +248,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FailureTestCase {
 
 		static Optional<Throwable> exceptionToThrowInBeforeAll = Optional.empty();
@@ -309,6 +310,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestInstance(PER_METHOD)
 	@ExtendWith(ThrowingAfterAllCallback.class)
 	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerMethodLifecycle {
@@ -322,6 +324,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestInstance(PER_CLASS)
 	@ExtendWith(ThrowingAfterAllCallback.class)
 	static class TestCaseWithInvalidConstructorAndThrowingAfterAllCallbackAndPerClassLifecycle {
@@ -334,6 +337,7 @@ class ExceptionHandlingTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ThrowingBeforeAllCallback.class)
 	@ExtendWith(ThrowingAfterAllCallback.class)
 	static class TestCaseWithThrowingBeforeAllAndAfterAllCallbacks {

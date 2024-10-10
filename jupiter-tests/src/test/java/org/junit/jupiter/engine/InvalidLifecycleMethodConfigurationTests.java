@@ -73,6 +73,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase {
 
 		@Test
@@ -80,9 +81,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithInvalidNonStaticBeforeAllMethod {
 
 		// must be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeAll
 		void beforeAll() {
 		}
@@ -92,9 +95,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithInvalidNonStaticAfterAllMethod {
 
 		// must be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@AfterAll
 		void afterAll() {
 		}
@@ -104,9 +109,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithInvalidStaticBeforeEachMethod {
 
 		// must NOT be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@BeforeEach
 		static void beforeEach() {
 		}
@@ -116,9 +123,11 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@AfterEach
 		static void afterEach() {
 		}

@@ -256,6 +256,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 	static class ParentTestCase {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BarTestExecutionCallbacks.class)
 	static class ChildTestCase extends ParentTestCase {
 
@@ -274,6 +275,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(BarTestExecutionCallbacks.class)
 	static class TestInterfaceTestCase implements TestInterface {
 
@@ -283,6 +285,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooTestExecutionCallbacks.class, BarTestExecutionCallbacks.class })
 	static class OuterTestCase {
 
@@ -322,6 +325,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingBeforeTestExecutionCallback.class,
 			BarTestExecutionCallbacks.class })
 	static class ExceptionInBeforeTestExecutionCallbackTestCase {
@@ -342,6 +346,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith({ FooTestExecutionCallbacks.class, ExceptionThrowingAfterTestExecutionCallback.class,
 			BarTestExecutionCallbacks.class })
 	static class ExceptionInAfterTestExecutionCallbackTestCase {
@@ -362,6 +367,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooTestExecutionCallbacks.class)
 	static class ExceptionInBeforeEachMethodTestCase {
 
@@ -382,6 +388,7 @@ class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngine
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooTestExecutionCallbacks.class)
 	static class ExceptionInTestMethodTestCase {
 

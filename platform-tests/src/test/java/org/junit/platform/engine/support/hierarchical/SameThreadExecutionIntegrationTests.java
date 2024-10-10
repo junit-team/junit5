@@ -53,6 +53,7 @@ class SameThreadExecutionIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(MethodName.class)
 	static class InterruptedThreadTestCase {
 

@@ -192,6 +192,7 @@ class NodeTreeWalkerIntegrationTests {
 		return new JupiterTestEngine().discover(discoveryRequest, UniqueId.forEngine("junit-jupiter"));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock("a")
 	static class TestCaseWithResourceLock {
 		@Test
@@ -200,6 +201,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithoutResourceLock {
 		@Test
 		@ResourceLock("a")
@@ -227,6 +229,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock("a")
 	static class TestCaseWithResourceWriteLockOnClass {
 		@Test
@@ -234,6 +237,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
 	static class TestCaseWithResourceReadLockOnClass {
 		@Test
@@ -241,6 +245,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
 	static class TestCaseWithResourceReadLockOnClassAndWriteClockOnTestCase {
 		@Test
@@ -249,6 +254,7 @@ class NodeTreeWalkerIntegrationTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock(value = "a", mode = ResourceAccessMode.READ)
 	static class TestCaseWithResourceReadLockOnClassAndReadClockOnTestCase {
 		@Test

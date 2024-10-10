@@ -53,6 +53,7 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 		assertThat(Parent.counter).hasValue(1);
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(OnlyIncrementCounterOnce.class)
 	static class Parent {
 		static final AtomicInteger counter = new AtomicInteger(0);

@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,10 +60,10 @@ abstract class AbstractExecutionConditionTests {
 		Predicate<Method> isTestMethod = method -> method.isAnnotationPresent(Test.class);
 
 		List<String> methodsToTest = findMethods(getTestClass(), isTestMethod, TOP_DOWN).stream()//
-				.map(Method::getName).sorted().collect(toList());
+				.map(Method::getName).sorted().toList();
 
 		List<String> localTestMethods = findMethods(getClass(), isTestMethod, TOP_DOWN).stream()//
-				.map(Method::getName).sorted().collect(toList());
+				.map(Method::getName).sorted().toList();
 
 		assertThat(localTestMethods).isEqualTo(methodsToTest);
 	}

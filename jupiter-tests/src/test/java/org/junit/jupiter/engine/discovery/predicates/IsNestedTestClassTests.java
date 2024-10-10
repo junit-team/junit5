@@ -45,10 +45,12 @@ class IsNestedTestClassTests {
 		class InnerClass {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Nested
 		static class StaticNestedClass {
 		}
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Nested
 		private class PrivateInnerClass {
 		}

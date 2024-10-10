@@ -216,6 +216,7 @@ class DisplayNameUtilsTests {
 	class NestedTestCase {
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayNameGeneration(value = NullDisplayNameGenerator.class)
 	static class NullDisplayNameTestCase {
 

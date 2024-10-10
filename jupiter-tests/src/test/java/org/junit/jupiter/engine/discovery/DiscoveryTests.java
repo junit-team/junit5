@@ -170,6 +170,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class LocalTestCase {
 
 		@Test

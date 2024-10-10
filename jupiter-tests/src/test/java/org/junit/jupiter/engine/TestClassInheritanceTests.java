@@ -157,6 +157,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class LocalTestCase extends AbstractTestCase {
 
 		boolean throwExceptionInAfterMethod = false;
@@ -252,6 +253,7 @@ class TestClassInheritanceTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase3 extends TestCase2 {
 
 		@BeforeAll

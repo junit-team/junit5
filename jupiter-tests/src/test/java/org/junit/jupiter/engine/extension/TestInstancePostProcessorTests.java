@@ -14,11 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -46,18 +49,28 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		assertThat(callSequence).containsExactly(
 
 			// OuterTestCase
-			"fooPostProcessTestInstance:OuterTestCase",
+			"foo:OuterTestCase",
+			"legacy:OuterTestCase",
 				"beforeOuterMethod",
 					"testOuter",
+			"close:foo:OuterTestCase",
 
 			// InnerTestCase
 
-			"fooPostProcessTestInstance:OuterTestCase",
-			"fooPostProcessTestInstance:InnerTestCase",
-				"barPostProcessTestInstance:InnerTestCase",
+			"foo:OuterTestCase",
+			"legacy:OuterTestCase",
+			"foo:InnerTestCase",
+			"legacy:InnerTestCase",
+				"bar:InnerTestCase",
 					"beforeOuterMethod",
 						"beforeInnerMethod",
-							"testInner"
+							"testInner",
+				"close:bar:InnerTestCase",
+			"close:foo:InnerTestCase",
+			"close:foo:OuterTestCase",
+			"close:legacy:InnerTestCase",
+			"close:legacy:OuterTestCase",
+			"close:legacy:OuterTestCase"
 		);
 		// @formatter:on
 	}
@@ -65,22 +78,34 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testSpecificTestInstancePostProcessorIsCalled() {
 		executeTestsForClass(TestCaseWithTestSpecificTestInstancePostProcessor.class).testEvents()//
-				.assertStatistics(stats -> stats.started(1).succeeded(1));
+				.assertStatistics(stats -> stats.started(2).succeeded(2));
 
+		// @formatter:off
 		assertThat(callSequence).containsExactly(
-			"fooPostProcessTestInstance:TestCaseWithTestSpecificTestInstancePostProcessor", "beforeEachMethod", "test");
+			"foo:TestCaseWithTestSpecificTestInstancePostProcessor",
+			"legacy:TestCaseWithTestSpecificTestInstancePostProcessor",
+				"beforeEachMethod",
+					"test1",
+			"close:foo:TestCaseWithTestSpecificTestInstancePostProcessor",
+				"beforeEachMethod",
+					"test2",
+			"close:legacy:TestCaseWithTestSpecificTestInstancePostProcessor"
+		);
+		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(FooInstancePostProcessor.class)
+	@ExtendWith(LegacyInstancePostProcessor.class)
 	static class OuterTestCase implements Named {
 
-		private String outerName;
+		private final Map<String, String> outerNames = new HashMap<>();
 
 		@Override
-		public void setName(String name) {
-			this.outerName = name;
+		public void setName(String source, String name) {
+			outerNames.put(source, name);
 		}
 
 		@BeforeEach
@@ -90,7 +115,9 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		@Test
 		void testOuter() {
-			assertEquals("foo:" + OuterTestCase.class.getSimpleName(), outerName);
+			assertEquals(
+				Map.of("foo", OuterTestCase.class.getSimpleName(), "legacy", OuterTestCase.class.getSimpleName()),
+				outerNames);
 			callSequence.add("testOuter");
 		}
 
@@ -98,11 +125,11 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		@ExtendWith(BarInstancePostProcessor.class)
 		class InnerTestCase implements Named {
 
-			private String innerName;
+			private final Map<String, String> innerNames = new HashMap<>();
 
 			@Override
-			public void setName(String name) {
-				this.innerName = name;
+			public void setName(String source, String name) {
+				innerNames.put(source, name);
 			}
 
 			@BeforeEach
@@ -112,21 +139,25 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 			@Test
 			void testInner() {
-				assertEquals("foo:" + OuterTestCase.class.getSimpleName(), outerName);
-				assertEquals("bar:" + InnerTestCase.class.getSimpleName(), innerName);
+				assertEquals(
+					Map.of("foo", InnerTestCase.class.getSimpleName(), "legacy", OuterTestCase.class.getSimpleName()),
+					outerNames);
+				assertEquals(Map.of("foo", InnerTestCase.class.getSimpleName(), "bar",
+					InnerTestCase.class.getSimpleName(), "legacy", InnerTestCase.class.getSimpleName()), innerNames);
 				callSequence.add("testInner");
 			}
 		}
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithTestSpecificTestInstancePostProcessor implements Named {
 
-		private String name;
+		private final Map<String, String> names = new HashMap<>();
 
 		@Override
-		public void setName(String name) {
-			this.name = name;
+		public void setName(String source, String name) {
+			names.put(source, name);
 		}
 
 		@BeforeEach
@@ -135,38 +166,63 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@ExtendWith(FooInstancePostProcessor.class)
+		@ExtendWith(LegacyInstancePostProcessor.class)
 		@Test
-		void test() {
-			callSequence.add("test");
-			assertEquals("foo:" + getClass().getSimpleName(), name);
+		void test1() {
+			callSequence.add("test1");
+			assertEquals(Map.of("foo", getClass().getSimpleName(), "legacy", getClass().getSimpleName()), names);
+		}
+
+		@Test
+		void test2() {
+			callSequence.add("test2");
+			assertEquals(Map.of(), names);
 		}
 	}
 
-	static class FooInstancePostProcessor implements TestInstancePostProcessor {
+	static abstract class AbstractInstancePostProcessor implements TestInstancePostProcessor {
+		private final String name;
+
+		AbstractInstancePostProcessor(String name) {
+			this.name = name;
+		}
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("foo:" + context.getRequiredTestClass().getSimpleName());
+				((Named) testInstance).setName(name, context.getRequiredTestClass().getSimpleName());
 			}
-			callSequence.add("fooPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+			String instanceType = testInstance.getClass().getSimpleName();
+			callSequence.add(name + ":" + instanceType);
+			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
+				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
+					"close:" + name + ":" + instanceType));
 		}
 	}
 
-	static class BarInstancePostProcessor implements TestInstancePostProcessor {
+	@EnableTestScopedConstructorContext
+	static class FooInstancePostProcessor extends AbstractInstancePostProcessor {
+		FooInstancePostProcessor() {
+			super("foo");
+		}
+	}
 
-		@Override
-		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setName("bar:" + context.getRequiredTestClass().getSimpleName());
-			}
-			callSequence.add("barPostProcessTestInstance:" + testInstance.getClass().getSimpleName());
+	@EnableTestScopedConstructorContext
+	static class BarInstancePostProcessor extends AbstractInstancePostProcessor {
+		BarInstancePostProcessor() {
+			super("bar");
+		}
+	}
+
+	static class LegacyInstancePostProcessor extends AbstractInstancePostProcessor {
+		LegacyInstancePostProcessor() {
+			super("legacy");
 		}
 	}
 
 	private interface Named {
 
-		void setName(String name);
+		void setName(String source, String name);
 	}
 
 }

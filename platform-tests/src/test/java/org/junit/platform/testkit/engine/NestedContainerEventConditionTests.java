@@ -123,6 +123,7 @@ class NestedContainerEventConditionTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class ATestCase {
 
 		@Test

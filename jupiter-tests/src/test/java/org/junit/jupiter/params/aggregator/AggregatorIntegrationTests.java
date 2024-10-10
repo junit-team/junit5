@@ -410,6 +410,7 @@ public class AggregatorIntegrationTests {
 
 		static final List<String> output = new ArrayList<>();
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@ParameterizedTest
 		@ValueSource(ints = { 1, 2, 3 })
 		void testWithCountingConverterAggregator(@ConvertWith(InstanceCountingConverter.class) int i,
