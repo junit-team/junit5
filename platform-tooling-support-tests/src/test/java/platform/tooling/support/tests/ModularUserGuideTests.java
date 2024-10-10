@@ -145,6 +145,7 @@ class ModularUserGuideTests {
 		command.add("--module");
 		command.add("org.junit.platform.console");
 
+		command.add("execute");
 		command.add("--scan-modules");
 
 		command.add("--config");
