@@ -26,6 +26,7 @@ import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.reportEntry;
 import static org.junit.platform.testkit.engine.EventConditions.skippedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
@@ -36,6 +37,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -60,6 +62,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.ResolvedParameters;
 import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -268,6 +271,27 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void templateWithDynamicParameterResolverAndExtensionReadingResolvedParameterIsInvoked() {
+		LauncherDiscoveryRequest request = request().selectors(selectMethod(MyTestTemplateTestCase.class,
+			"templateWithDynamicParameterResolverAndExtensionReadingResolvedParameter", "java.lang.String")).build();
+
+		EngineExecutionResults executionResults = executeTests(request);
+
+		executionResults.allEvents().assertEventsMatchExactly( //
+			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
+				event(container("templateWithDynamicParameterResolverAndExtensionReadingResolvedParameter"), started()), //
+				event(dynamicTestRegistered("test-template-invocation:#1"), displayName("[1] foo")), //
+				event(test("test-template-invocation:#1"), started()), //
+				event(test("test-template-invocation:#1"), reportEntry(Map.of("found resolved parameters", "none"))), //
+				event(test("test-template-invocation:#1"), finishedWithFailure(message("foo"))), //
+				event(dynamicTestRegistered("test-template-invocation:#2"), displayName("[2] bar")), //
+				event(test("test-template-invocation:#2"), started()), //
+				event(test("test-template-invocation:#2"), reportEntry(Map.of("found resolved parameters", "none"))), //
+				event(test("test-template-invocation:#2"), finishedWithFailure(message("bar"))), //
+				event(container("templateWithDynamicParameterResolverAndExtensionReadingResolvedParameter"), finishedSuccessfully())));
+	}
+
+	@Test
 	void contextParameterResolverCanResolveConstructorArguments() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyTestTemplateTestCaseWithConstructor.class, "template", "java.lang.String")).build();
@@ -447,6 +471,13 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		@ExtendWith(StringParameterResolvingInvocationContextProvider.class)
 		@TestTemplate
 		void templateWithDynamicParameterResolver(String parameter) {
+			fail(parameter);
+		}
+
+		@ExtendWith(StringParameterResolvingInvocationContextProvider.class)
+		@ExtendWith(ExtensionReadingResolvedParameter.class)
+		@TestTemplate
+		void templateWithDynamicParameterResolverAndExtensionReadingResolvedParameter(String parameter) {
 			fail(parameter);
 		}
 
@@ -660,6 +691,17 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 					});
 				}
 			};
+		}
+	}
+
+	private static class ExtensionReadingResolvedParameter implements Extension, BeforeEachCallback {
+
+		@Override
+		public void beforeEach(ExtensionContext context) {
+			context.publishReportEntry("found resolved parameters", context.getResolvedParameters()
+					.map(ResolvedParameters::getAllParameters)
+					.map(List::toString)
+					.orElse("none"));
 		}
 	}
 
