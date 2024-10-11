@@ -22,7 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 import java.net.URI;
 
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.commons.util.ResourceUtils;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -58,7 +58,7 @@ class SelectorConverter {
 		@Override
 		public FileSelector convert(String value) {
 			URI uri = URI.create(value);
-			String path = stripQueryComponent(uri).getPath();
+			String path = ResourceUtils.stripQueryComponent(uri).getPath();
 			FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
 			return selectFile(path, filePosition);
 		}
@@ -97,7 +97,7 @@ class SelectorConverter {
 		@Override
 		public ClasspathResourceSelector convert(String value) {
 			URI uri = URI.create(value);
-			String path = stripQueryComponent(uri).getPath();
+			String path = ResourceUtils.stripQueryComponent(uri).getPath();
 			FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
 			return selectClasspathResource(path, filePosition);
 		}
@@ -120,12 +120,4 @@ class SelectorConverter {
 		}
 	}
 
-	private static URI stripQueryComponent(URI uri) {
-		if (StringUtils.isBlank(uri.getQuery())) {
-			return uri;
-		}
-
-		String uriAsString = uri.toString();
-		return URI.create(uriAsString.substring(0, uriAsString.indexOf('?')));
-	}
 }
