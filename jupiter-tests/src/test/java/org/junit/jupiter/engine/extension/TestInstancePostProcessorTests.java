@@ -12,7 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.extension.TestClassInstanceConstructionParticipatingExtension.ExtensionContextScope.TEST_METHOD;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -206,8 +206,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
-				ExtensionContext rootContext) {
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
 			return TEST_METHOD;
 		}
 	}
@@ -218,8 +217,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
-				ExtensionContext rootContext) {
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
 			return TEST_METHOD;
 		}
 	}

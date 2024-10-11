@@ -44,13 +44,13 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.11")
-public interface TestInstancePreConstructCallback extends TestClassInstanceConstructionParticipatingExtension {
+public interface TestInstancePreConstructCallback extends TestInstantiationAwareExtension {
 
 	/**
 	 * Callback invoked prior to test instances being constructed.
 	 *
 	 * <p>Extensions may override
-	 * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} to
+	 * {@link #getTestInstantiationExtensionContextScope} to
 	 * make test-specific data available to the implementation of this method
 	 * and for a revised scope of the provided
 	 * {@link ExtensionContext.Store Store} instance.

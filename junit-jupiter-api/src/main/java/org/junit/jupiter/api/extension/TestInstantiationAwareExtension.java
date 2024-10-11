@@ -15,10 +15,15 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 
 /**
- * Interface for {@link Extension Extensions} that participate in the
- * construction of test class instances.
+ * Interface for {@link Extension Extensions} that are aware and can influence
+ * the instantiation of test instances.
+ *
+ * <p>This interface is not indented to be implemented directly. Instead, extend
+ * one of its sub-interfaces.
  *
  * @since 5.12
  * @see InvocationInterceptor#interceptTestClassConstructor
@@ -28,14 +33,14 @@ import org.junit.jupiter.api.TestInstance;
  * @see TestInstanceFactory
  */
 @API(status = EXPERIMENTAL, since = "5.12")
-public interface TestClassInstanceConstructionParticipatingExtension extends Extension {
+public interface TestInstantiationAwareExtension extends Extension {
 
 	/**
 	 * Whether this extension should receive a test-scoped
-	 * {@link ExtensionContext} during the creation of test instances.
+	 * {@link ExtensionContext} during the instantiation of test instances.
 	 *
 	 * <p>If an extension returns
-	 * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method,
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} from this method,
 	 * the following extension methods will be called with a test-scoped
 	 * {@link ExtensionContext} instead of a class-scoped one, unless the
 	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used:
@@ -57,45 +62,44 @@ public interface TestClassInstanceConstructionParticipatingExtension extends Ext
 	 * may refer to a nested test class.
 	 * Use {@link TestInstanceFactoryContext#getTestClass()} to get the class
 	 * under construction.</li>
-	 * <li>{@link ExtensionContext#getTestMethod() getTestMethod()} is no-longer
-	 * empty, unless the test class is annotated with
-	 * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.</li>
-	 * <li>If the callback adds a new {@link ExtensionContext.Store.CloseableResource} to the
-	 * {@link ExtensionContext.Store}, the resource is closed just after the instance is
+	 * <li>{@link ExtensionContext#getTestMethod() getTestMethod()} is no longer
+	 * empty, unless the {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}
+	 * lifecycle is used.</li>
+	 * <li>If the callback adds a new {@link CloseableResource} to the
+	 * {@link Store Store}, the resource is closed just after the instance is
 	 * destroyed.</li>
 	 * <li>The callbacks can now access data previously stored by
-	 * {@link TestTemplateInvocationContext}, unless the test class is annotated
-	 * with {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.</li>
+	 * {@link TestTemplateInvocationContext}, unless the
+	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.</li>
 	 * </ul>
 	 *
 	 * <p><strong>Note</strong>: The behavior which is enabled by returning
-	 * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method
-	 * will become the default in future versions of JUnit. To ensure future
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} from this method
+	 * will become the default in future versions of JUnit. To ensure forward
 	 * compatibility, extension implementors are therefore advised to opt in,
 	 * even if they don't require the new functionality.
 	 *
 	 * @implNote There are no guarantees about how often this method is called.
 	 *           Therefore, implementations should be idempotent and avoid side
 	 *           effects. They may, however, cache the result for performance in
-	 *           the {@link ExtensionContext.Store Store} of the supplied
+	 *           the {@link Store Store} of the supplied
 	 *           {@link ExtensionContext}, if necessary.
 	 * @param rootContext the root extension context to allow inspection of
 	 *                    configuration parameters; never {@code null}
 	 * @since 5.12
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
-	default ExtensionContextScope getExtensionContextScopeDuringTestClassInstanceConstruction(
-			ExtensionContext rootContext) {
+	default ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
 		return ExtensionContextScope.DEFAULT;
 	}
 
 	/**
 	 * {@code ExtensionContextScope} is used to define the scope of the
-	 * {@link ExtensionContext} passed to an extension during the construction
-	 * of test class instances.
+	 * {@link ExtensionContext} passed to an extension during the instantiation
+	 * of test instances.
 	 *
 	 * @since 5.12
-	 * @see TestClassInstanceConstructionParticipatingExtension#getExtensionContextScopeDuringTestClassInstanceConstruction
+	 * @see TestInstantiationAwareExtension#getTestInstantiationExtensionContextScope
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
 	enum ExtensionContextScope {
