@@ -383,8 +383,7 @@ instances and their lifecycle.
 
 [NOTE]
 ====
-You may override the
-`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -417,8 +416,7 @@ registered for any specific test class.
 
 [NOTE]
 ====
-You may override the
-`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -437,8 +435,7 @@ For a concrete example, consult the source code for the `{MockitoExtension}` and
 
 [NOTE]
 ====
-You may override the
-`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
 `TEST_SCOPED` for revised handling of `CloseableResource` and to make test-specific data
 available to your implementation.
 ====
@@ -491,8 +488,7 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 
 [NOTE]
 ====
-You may override the
-`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
 `TEST_SCOPED` to support injecting test specific data into constructor parameters of the
 test class instance. Doing so causes a test-specific `{ExtensionContext}` to be used while
 resolving constructor parameters, unless the
@@ -731,8 +727,7 @@ include::{testDir}/example/interceptor/SwingEdtInterceptor.java[tags=user_guide]
 
 [NOTE]
 ====
-You may override the
-`getExtensionContextScopeDuringTestClassInstanceConstruction(...)` method to return
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
 `TEST_SCOPED` to make test-specific data available to your implementation of
 `interceptTestClassConstructor` and for a revised scope of the provided `Store` instance.
 ====

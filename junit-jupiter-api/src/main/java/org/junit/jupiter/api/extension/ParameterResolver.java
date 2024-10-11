@@ -32,7 +32,7 @@ import org.junit.jupiter.api.TestInstance;
  * {@code ParameterResolver}.
  *
  * <p>Extensions may override
- * {@link #getExtensionContextScopeDuringTestClassInstanceConstruction} to
+ * {@link #getTestInstantiationExtensionContextScope} to
  * support injecting test specific data into constructor parameters of the test
  * class instance. Returning
  * {@link ExtensionContextScope#TEST_METHOD TEST_SCOPED} from this method,
@@ -54,7 +54,7 @@ import org.junit.jupiter.api.TestInstance;
  * @see TestInstancePreDestroyCallback
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterResolver extends TestClassInstanceConstructionParticipatingExtension {
+public interface ParameterResolver extends TestInstantiationAwareExtension {
 
 	/**
 	 * Determine if this resolver supports resolution of an argument for the
