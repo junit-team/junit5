@@ -24,18 +24,17 @@ class DiffPrinter {
 	//print the difference of two print to out
 	static void printDiff(PrintWriter out, String expected, String actual) {
 		boolean inlineDiffByWordFlag = false;
-		if(expected.contains(" ") || actual.contains(" ")){
+		if (expected.contains(" ") || actual.contains(" ")) {
 			inlineDiffByWordFlag = true;
 		}
-		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(inlineDiffByWordFlag).oldTag(
-			f -> "~~").newTag(f -> "**").build();
+		DiffRowGenerator generator = DiffRowGenerator.create().showInlineDiffs(true).inlineDiffByWord(
+			inlineDiffByWordFlag).oldTag(f -> "~~").newTag(f -> "**").build();
 		List<DiffRow> rows = generator.generateDiffRows(Arrays.asList(expected), Arrays.asList(actual));
 		out.println();
-		out.println("Please put the diff result below into a online markdown editor to see markdown effect:");
-		out.println("| expected | actual |");
-		out.println("| -------- | ------ |");
+		out.println("    | expected | actual |");
+		out.println("    | -------- | ------ |");
 		for (DiffRow row : rows) {
-			out.printf("| %s | %s |", row.getOldLine(), row.getNewLine());
+			out.printf("    | %s | %s |", row.getOldLine(), row.getNewLine());
 			out.println();
 		}
 	}

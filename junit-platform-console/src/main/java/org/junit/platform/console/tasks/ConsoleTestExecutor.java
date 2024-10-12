@@ -180,6 +180,7 @@ public class ConsoleTestExecutor {
 	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
+			summary.printFailuresTo(out);
 			//adding diff code here
 			summary.getFailures().forEach(failure -> {
 				//get AssertionFailedError
@@ -189,13 +190,14 @@ public class ConsoleTestExecutor {
 					ValueWrapper actual = assertionFailedError.getActual();
 					//apply diff function
 					if (isCharSequence(expected) && isCharSequence(actual)) {
+						out.printf("%nDiffs (Markdown):%n");
+						out.printf("  %s:", failure.getTestIdentifier().getDisplayName());
 						DiffPrinter.printDiff(out, expected.getStringRepresentation(),
 							actual.getStringRepresentation());
 					}
 
 				}
 			});
-			summary.printFailuresTo(out);
 		}
 		summary.printTo(out);
 	}
