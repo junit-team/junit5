@@ -13,6 +13,7 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 
 /**
@@ -49,11 +50,15 @@ public interface TestInstancePreConstructCallback extends TestInstantiationAware
 	/**
 	 * Callback invoked prior to test instances being constructed.
 	 *
-	 * <p>Extensions may override
-	 * {@link #getTestInstantiationExtensionContextScope} to
-	 * make test-specific data available to the implementation of this method
-	 * and for a revised scope of the provided
-	 * {@link ExtensionContext.Store Store} instance.
+	 * <p>By default, the supplied {@link ExtensionContext} represents the test
+	 * class that's about to be constructed. Extensions may override
+	 * {@link #getTestInstantiationExtensionContextScope} to return
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} in order to change
+	 * the scope of the {@code ExtensionContext} to the test method, unless the
+	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
+	 * Changing the scope makes test-specific data available to the
+	 * implementation of this method and allows keeping state on the test level
+	 * by using the provided {@link ExtensionContext.Store Store} instance.
 	 *
 	 * @param factoryContext the context for the test instance about to be instantiated;
 	 * never {@code null}
