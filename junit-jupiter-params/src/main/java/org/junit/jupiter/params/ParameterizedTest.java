@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
  * {@code @ParameterizedTest} is used to signal that the annotated method is a
@@ -291,4 +292,21 @@ public @interface ParameterizedTest {
 	@API(status = STABLE, since = "5.10")
 	boolean autoCloseArguments() default true;
 
+	/**
+	 * Configure how the number of arguments provided by an {@link ArgumentsSource} are validated.
+	 *
+	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.
+	 *
+	 * <p>When an {@link ArgumentsSource} provides more arguments than declared by the test method,
+	 * there might be a bug in the test method or the {@link ArgumentsSource}.
+	 * By default, the additional arguments are ignored.
+	 * {@code argumentCountValidation} allows you to control how additional arguments are handled.
+	 * This can also be controlled via the {@value ParameterizedTestExtension#ARGUMENT_COUNT_VALIDATION_KEY}
+	 * configuration parameter (see the User Guide for details on configuration parameters).
+	 *
+	 * @since 5.12
+	 * @see ArgumentCountValidationMode
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	ArgumentCountValidationMode argumentCountValidation() default ArgumentCountValidationMode.DEFAULT;
 }
