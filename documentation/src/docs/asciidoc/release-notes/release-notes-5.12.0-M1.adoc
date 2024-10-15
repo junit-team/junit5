@@ -48,9 +48,9 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `--exclude-methodname` and `--include-methodname` options added to the
-`ConsoleLauncher` to include or exclude methods based on fully qualified method names
-without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
-will exclude all methods called `methodName` under package `org.example`.
+  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
+  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
+  will exclude all methods called `methodName` under package `org.example`.
 * In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
   types such as `LocalDate` if the new `nullable` attribute in
   `@JavaTimeConversionPattern` is set to `true`.
