@@ -105,7 +105,7 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * @since 5.12
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
-	default boolean mayReturnZeroInvocationContexts(ExtensionContext context) {
+	default boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext context) {
 		return false;
 	}
 

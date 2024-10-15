@@ -101,18 +101,28 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 			context.getExtensionRegistry());
 		AtomicInteger invocationIndex = new AtomicInteger();
 		for (TestTemplateInvocationContextProvider provider : providers) {
-			int initialValue = invocationIndex.get();
-			try (Stream<TestTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
-				stream.forEach(
-					invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
-							.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
-			}
-			Preconditions.condition(
-					invocationIndex.get() != initialValue || provider.mayReturnZeroInvocationContexts(extensionContext),
-					"Provider [" + provider.getClass().getSimpleName() //
-							+ "] did not provide invocation contexts, but is expected to do so");
+			executeForProvider(provider, invocationIndex, dynamicTestExecutor, extensionContext);
 		}
 		return context;
+	}
+
+	private void executeForProvider(TestTemplateInvocationContextProvider provider, AtomicInteger invocationIndex,
+			DynamicTestExecutor dynamicTestExecutor, ExtensionContext extensionContext) {
+
+		int initialValue = invocationIndex.get();
+
+		try (Stream<TestTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
+			stream.forEach(invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
+					.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
+		}
+
+		Preconditions.condition(
+			invocationIndex.get() != initialValue
+					|| provider.mayReturnZeroTestTemplateInvocationContexts(extensionContext),
+			String.format(
+				"Provider [%s] did not provide any invocation contexts, but was expected to do so. "
+						+ "You may override mayReturnZeroTestTemplateInvocationContexts() to allow this.",
+				provider.getClass().getSimpleName()));
 	}
 
 	private static Stream<TestTemplateInvocationContext> invocationContexts(

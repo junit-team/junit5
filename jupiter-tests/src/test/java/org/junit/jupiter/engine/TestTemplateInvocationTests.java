@@ -353,9 +353,10 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithSupportingProviderButNoInvocations"), started()), //
 				event(container("templateWithSupportingProviderButNoInvocations"),
-					finishedWithFailure(message("Provider ["
-							+ InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName()
-							+ "] did not provide invocation contexts, but is expected to do so")))));
+					finishedWithFailure(message(
+						"Provider [%s] did not provide any invocation contexts, but was expected to do so. ".formatted(
+							InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName())
+								+ "You may override mayReturnZeroTestTemplateInvocationContexts() to allow this.")))));
 	}
 
 	@Test
@@ -382,9 +383,10 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			wrappedInContainerEvents(MyTestTemplateTestCase.class, //
 				event(container("templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing"), started()), //
 				event(container("templateWithMultipleProvidersAllowingAndRestrictingToProvideNothing"),
-					finishedWithFailure(message("Provider ["
-							+ InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName()
-							+ "] did not provide invocation contexts, but is expected to do so")))));
+					finishedWithFailure(message(
+						"Provider [%s] did not provide any invocation contexts, but was expected to do so. ".formatted(
+							InvocationContextProviderThatSupportsEverythingButProvidesNothing.class.getSimpleName())
+								+ "You may override mayReturnZeroTestTemplateInvocationContexts() to allow this.")))));
 	}
 
 	@Test
@@ -825,7 +827,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public boolean mayReturnZeroInvocationContexts(ExtensionContext extensionContext) {
+		public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext extensionContext) {
 			return true;
 		}
 	}
