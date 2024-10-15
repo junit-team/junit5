@@ -83,6 +83,7 @@ JUnit repository on GitHub.
   a test-scoped `ExtensionContext` in `Extension` methods called during test class
   instantiation. This behavior will become the default in future versions of JUnit.
 * `@TempDir` is now supported on test class constructors.
+* Added `PreInterruptCallback`
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

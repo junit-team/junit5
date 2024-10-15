@@ -60,7 +60,8 @@ public class KitchenSinkExtension implements
 
 	// Miscellaneous
 	TestWatcher,
-	InvocationInterceptor
+	InvocationInterceptor,
+	PreInterruptCallback
 
 // @formatter:on
 {
@@ -253,5 +254,12 @@ public class KitchenSinkExtension implements
 	public void interceptAfterAllMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		InvocationInterceptor.super.interceptAfterAllMethod(invocation, invocationContext, extensionContext);
+	}
+
+	// --- PreInterruptCallback ------------------------------------------------
+
+	@Override
+	public void beforeThreadInterrupt(PreInterruptContext preInterruptContext) throws Exception {
+
 	}
 }
