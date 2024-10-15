@@ -168,6 +168,11 @@ public class KitchenSinkExtension implements
 		return null;
 	}
 
+	@Override
+	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext context) {
+		return false;
+	}
+
 	// --- TestWatcher ---------------------------------------------------------
 
 	@Override
