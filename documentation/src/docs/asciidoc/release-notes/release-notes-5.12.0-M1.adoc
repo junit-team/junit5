@@ -66,6 +66,11 @@ JUnit repository on GitHub.
   `@ConvertWith`), and `ArgumentsAggregator` (declared via `@AggregateWith`)
   implementations can now use constructor injection from registered `ParameterResolver`
   extensions.
+* Extensions based on `TestTemplateInvocationContextProvider` can now allow returning zero
+  invocation contexts by overriding the new `mayReturnZeroTestTemplateInvocationContexts`
+  method.
+* The new `@ParameterizedTest(requireArguments = false)` attribute allows to specify that
+  the absence of arguments is expected in some cases and should not cause a test failure.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
 * Extensions that implement `TestInstancePreConstructCallback`, `TestInstanceFactory`,
