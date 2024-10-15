@@ -28,7 +28,7 @@ import org.apiguardian.api.API;
  * preparing the test class instance differently, or multiple times without
  * modifying the context.
  *
- * <p>This interface defines two methods: {@link #supportsTestTemplate} and
+ * <p>This interface defines two main methods: {@link #supportsTestTemplate} and
  * {@link #provideTestTemplateInvocationContexts}. The former is called by the
  * framework to determine whether this extension wants to act on a test template
  * that is about to be executed. If so, the latter is called and must return a
@@ -41,6 +41,10 @@ import org.apiguardian.api.API;
  * {@link #provideTestTemplateInvocationContexts} methods will be chained, and
  * the test template method will be invoked using the contexts of all active
  * providers.
+ *
+ * <p>An active provider may return zero invocation contexts from its
+ * {@link #provideTestTemplateInvocationContexts} method if it overrides
+ * {@link #mayReturnZeroTestTemplateInvocationContexts} to return {@code true}.
  *
  * <h2>Constructor Requirements</h2>
  *
@@ -88,19 +92,20 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context);
 
 	/**
-	 * Signal that in the supplied {@linkplain ExtensionContext context} the
-	 * provider may return zero
-	 * {@linkplain TestTemplateInvocationContext invocation contexts}.
+	 * Signal that this provider may provide zero
+	 * {@linkplain TestTemplateInvocationContext invocation contexts} in the
+	 * supplied {@code context}.
 	 *
-	 * <p>If this method returns {@code false} and the provider returns an empty
-	 * stream from {@link #provideTestTemplateInvocationContexts}, this will be
-	 * considered an execution error. Override this method to ignore the absence
-	 * of invocation contexts for this provider.
+	 * <p>If this method returns {@code false} (which is the default) and the
+	 * provider returns an empty stream from
+	 * {@link #provideTestTemplateInvocationContexts}, this will be considered
+	 * an execution error. Override this method to ignore the absence of
+	 * invocation contexts for this provider.
 	 *
 	 * @param context the extension context for the test template method about
 	 * to be invoked; never {@code null}
-	 * @return {@code true} to allow zero contexts, {@code false} (default) to
-	 * fail execution in case of zero contexts.
+	 * @return {@code true} to allow zero contexts, {@code false} to fail
+	 * execution in case of zero contexts.
 	 *
 	 * @since 5.12
 	 */
