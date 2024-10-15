@@ -20,6 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 /**
  * {@code @TestInstance} is a type-level annotation that is used to configure
@@ -81,10 +83,11 @@ public @interface TestInstance {
 		 * When using this mode, a new test instance will be created once per
 		 * test class.
 		 *
-		 * <p>Note: Test methods in classes using this mode are executed in
-		 * the same thread by default. To enable concurrent execution,
-		 * annotate the test class or methods with
-		 * {@code @Execution(CONCURRENT)}.
+		 * <p>Note: To avoid concurrency issues, class-level lifecycle methods
+		 * and tests in classes using this mode are executed in the
+		 * {@linkplain ExecutionMode#SAME_THREAD same thread} by default. You
+		 * can enable concurrent execution, by explicitly annotating the test
+		 * class or methods with {@link Execution @Execution(CONCURRENT)}.
 		 *
 		 * @see #PER_METHOD
 		 */
