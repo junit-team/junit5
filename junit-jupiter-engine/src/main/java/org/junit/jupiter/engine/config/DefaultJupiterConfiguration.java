@@ -94,6 +94,11 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isThreadDumpOnTimeoutEnabled() {
+		return configurationParameters.getBoolean(EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME).orElse(false);
+	}
+
+	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return executionModeConverter.get(configurationParameters, DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			ExecutionMode.SAME_THREAD);

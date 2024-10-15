@@ -73,7 +73,8 @@ class SeparateThreadTimeoutInvocationTests {
 		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTests.class);
 		var store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null), namespace);
 		var parameters = new TimeoutInvocationParameters<>(invocation,
-			new TimeoutDuration(PREEMPTIVE_TIMEOUT_MILLIS, MILLISECONDS), () -> "method()");
+			new TimeoutDuration(PREEMPTIVE_TIMEOUT_MILLIS, MILLISECONDS), () -> "method()",
+			PreInterruptCallbackInvocation.NOOP);
 		return (SeparateThreadTimeoutInvocation<T>) new TimeoutInvocationFactory(store) //
 				.create(ThreadMode.SEPARATE_THREAD, parameters);
 	}
