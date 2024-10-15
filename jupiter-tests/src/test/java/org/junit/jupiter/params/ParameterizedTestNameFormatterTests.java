@@ -52,6 +52,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
 /**
  * @since 5.0
  */
+@SuppressWarnings("ALL")
 class ParameterizedTestNameFormatterTests {
 
 	private final Locale originalLocale = Locale.getDefault();
@@ -330,8 +331,8 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		return new ParameterizedTestNameFormatter(pattern, displayName,
-			new ParameterizedTestMethodContext(method, mock()), 512);
+		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
 	}
 
 	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {
@@ -361,15 +362,18 @@ class ParameterizedTestNameFormatterTests {
 		}
 
 		@SuppressWarnings("unused")
+		@ParameterizedTest
 		void parameterizedTest(int someNumber, String someString, Object[] someArray) {
 		}
 
 		@SuppressWarnings("unused")
+		@ParameterizedTest
 		void parameterizedTestWithAggregator(int someNumber,
 				@AggregateWith(CustomAggregator.class) String someAggregatedString) {
 		}
 
 		@SuppressWarnings("unused")
+		@ParameterizedTest
 		void processFruits(String fruit1, String fruit2) {
 		}
 

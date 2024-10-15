@@ -78,7 +78,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments), this.invocationIndex);
+		return this.methodContext.resolve(parameterContext, extensionContext, extractPayloads(this.arguments),
+			this.invocationIndex);
 	}
 
 	/**
