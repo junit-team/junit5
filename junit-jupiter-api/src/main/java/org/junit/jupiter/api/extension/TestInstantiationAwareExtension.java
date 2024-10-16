@@ -138,7 +138,7 @@ public interface TestInstantiationAwareExtension extends Extension {
 		 *
 		 * @see #DEFAULT
 		 */
-		public static final String DEFAULT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testInstantiation.extensionContextScope.default";
+		public static final String DEFAULT_SCOPE_PROPERTY_NAME = "junit.jupiter.extensions.testinstantiation.extensioncontextscope.default";
 	}
 
 }
