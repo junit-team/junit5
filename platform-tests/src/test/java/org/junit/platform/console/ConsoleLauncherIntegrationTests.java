@@ -62,6 +62,19 @@ class ConsoleLauncherIntegrationTests {
 		);
 	}
 
+	@Test
+	void executeWithExcludeMethodNameOptionExcludesMethods() {
+		var line = "execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-methodname"
+				+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..+#test";
+		var args = line.split(" ");
+		var result = new ConsoleLauncherWrapper().execute(args);
+		assertAll("all subpackage test methods are excluded by the method name filter", //
+			() -> assertArrayEquals(args, result.args), //
+			() -> assertEquals(0, result.code), //
+			() -> assertEquals(0, result.getTestsFoundCount()) //
+		);
+	}
+
 	@ParameterizedTest
 	@ValueSource(strings = { //
 			"-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base", //
