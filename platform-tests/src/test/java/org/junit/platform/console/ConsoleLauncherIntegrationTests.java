@@ -62,13 +62,11 @@ class ConsoleLauncherIntegrationTests {
 		);
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = { //
-			"-e junit-jupiter -p org.junit.platform.console.subpackage --exclude-methodname"
-					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..+#test" //
-	})
-	void executeWithExcludeMethodNameOptionExcludesMethods(final String line) {
-		String[] args = line.split(" ");
+	@Test
+	void executeWithExcludeMethodNameOptionExcludesMethods() {
+		var line = "execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-methodname"
+				+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..+#test";
+		var args = line.split(" ");
 		var result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test methods are excluded by the method name filter", //
 			() -> assertArrayEquals(args, result.args), //
