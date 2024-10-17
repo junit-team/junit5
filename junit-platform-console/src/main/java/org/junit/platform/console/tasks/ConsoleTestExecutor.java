@@ -36,6 +36,8 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.ValueWrapper;
 
 /**
  * @since 1.0
@@ -97,10 +99,8 @@ public class ConsoleTestExecutor {
 	private TestExecutionSummary executeTests(PrintWriter out, Optional<Path> reportsDir) {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
-
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		launcher.execute(discoveryRequest);
-
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
 			printSummary(summary, out);
@@ -181,8 +181,29 @@ public class ConsoleTestExecutor {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
+			//adding diff code here
+			summary.getFailures().forEach(failure -> {
+				//get AssertionFailedError
+				if (failure.getException() instanceof AssertionFailedError) {
+					AssertionFailedError assertionFailedError = (AssertionFailedError) failure.getException();
+					ValueWrapper expected = assertionFailedError.getExpected();
+					ValueWrapper actual = assertionFailedError.getActual();
+					//apply diff function
+					if (isCharSequence(expected) && isCharSequence(actual)) {
+						out.printf("%nDiffs (Markdown):%n");
+						out.printf("  %s:", failure.getTestIdentifier().getDisplayName());
+						DiffPrinter.printDiff(out, expected.getStringRepresentation(),
+							actual.getStringRepresentation());
+					}
+
+				}
+			});
 		}
 		summary.printTo(out);
+	}
+
+	private boolean isCharSequence(ValueWrapper value) {
+		return value != null && CharSequence.class.isAssignableFrom(value.getType());
 	}
 
 	@FunctionalInterface
