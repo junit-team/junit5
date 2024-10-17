@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GitHub Discussions
+    url: https://github.com/junit-team/junit5/discussions
+    about: Please ask and answer questions here.
+  - name: Stack Overflow ("junit5" tag)
+    url: https://stackoverflow.com/questions/tagged/junit5
+    about: Alternatively, ask questions here.
