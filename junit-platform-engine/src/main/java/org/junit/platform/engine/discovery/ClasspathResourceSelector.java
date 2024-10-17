@@ -130,8 +130,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 		ClasspathResourceSelector that = (ClasspathResourceSelector) o;
 		return Objects.equals(this.classpathResourceName, that.classpathResourceName)
-				&& Objects.equals(this.position, that.position)
-				&& Objects.equals(this.classpathResources, that.classpathResources);
+				&& Objects.equals(this.position, that.position);
 	}
 
 	/**
@@ -140,13 +139,17 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = STABLE, since = "1.3")
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.classpathResourceName, this.position, this.classpathResources);
+		return Objects.hash(this.classpathResourceName, this.position);
 	}
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this).append("classpathResourceName", this.classpathResourceName).append("position",
-			this.position).toString();
+		// @formatter:off
+		return new ToStringBuilder(this)
+				.append("classpathResourceName", this.classpathResourceName)
+				.append("position", this.position)
+				.toString();
+		// @formatter:on
 	}
 
 	@Override
