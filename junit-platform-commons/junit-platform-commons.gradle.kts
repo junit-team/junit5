@@ -29,6 +29,7 @@ tasks.jar {
 
 tasks.codeCoverageClassesJar {
 	exclude("org/junit/platform/commons/util/ModuleUtils.class")
+	exclude("org/junit/platform/commons/util/PackageNameUtils.class")
 }
 
 eclipse {

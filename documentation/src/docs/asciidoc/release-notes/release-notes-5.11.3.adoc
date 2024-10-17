@@ -16,7 +16,8 @@ on GitHub.
 [[release-notes-5.11.3-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Fixed a regression in method search algorithms introduced in 5.11.0 when classes reside
+  in the default package and using a Java 8 runtime.
 
 [[release-notes-5.11.3-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
