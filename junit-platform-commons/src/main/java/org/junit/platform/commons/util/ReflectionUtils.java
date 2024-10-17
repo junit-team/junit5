@@ -1903,7 +1903,8 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean declaredInSamePackage(Method m1, Method m2) {
-		return m1.getDeclaringClass().getPackage().getName().equals(m2.getDeclaringClass().getPackage().getName());
+		return PackageNameUtils.getPackageName(m1.getDeclaringClass()).equals(
+			PackageNameUtils.getPackageName(m2.getDeclaringClass()));
 	}
 
 	/**
