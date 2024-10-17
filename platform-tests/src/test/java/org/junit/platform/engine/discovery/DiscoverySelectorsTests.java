@@ -289,7 +289,7 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
-		void selectClasspathResources() {
+		void selectClasspathResourcesPreconditions() {
 			assertViolatesPrecondition(() -> selectClasspathResource((String) null));
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
 			assertViolatesPrecondition(() -> selectClasspathResource("    "));
@@ -301,7 +301,10 @@ class DiscoverySelectorsTests {
 			assertViolatesPrecondition(() -> selectClasspathResource(Set.of(new StubResource(""))));
 			assertViolatesPrecondition(
 				() -> selectClasspathResource(Set.of(new StubResource("a"), new StubResource("b"))));
+		}
 
+		@Test
+		void selectClasspathResources() {
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");
 			assertEquals("foo/bar/spec.xml", selector.getClasspathResourceName());
@@ -309,12 +312,23 @@ class DiscoverySelectorsTests {
 			// standard use case
 			selector = selectClasspathResource("A/B/C/spec.json");
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+		}
 
-			selector = selectClasspathResource("org/junit/platform/commons/example.resource");
+		@Test
+		void getSelectedClasspathResources() {
+			var selector = selectClasspathResource("org/junit/platform/commons/example.resource");
 			var classpathResources = selector.getClasspathResources();
-			assertAll(() -> assertThat(classpathResources).hasSize(1), () -> assertThat(classpathResources) //
-					.extracting(Resource::getName) //
-					.containsExactly("org/junit/platform/commons/example.resource"));
+			assertAll(() -> assertThat(classpathResources).hasSize(1), //
+				() -> assertThat(classpathResources) //
+						.extracting(Resource::getName) //
+						.containsExactly("org/junit/platform/commons/example.resource") //
+			);
+		}
+
+		@Test
+		void getMissingClasspathResources() {
+			var selector = selectClasspathResource("org/junit/platform/commons/no-such-example.resource");
+			assertViolatesPrecondition(selector::getClasspathResources);
 		}
 
 		@Test

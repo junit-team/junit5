@@ -748,7 +748,8 @@ class ReflectionUtilsTests {
 		@Test
 		void tryToGetResourceWhenResourceNotFound() {
 			var tryToGetResource = ReflectionUtils.tryToGetResources("org/junit/platform/commons/no-such.resource");
-			assertThrows(NullPointerException.class, tryToGetResource::get);
+			var resource = assertDoesNotThrow(tryToGetResource::get);
+			assertThat(resource).isEmpty();
 		}
 	}
 

@@ -933,9 +933,6 @@ public final class ReflectionUtils {
 
 		return Try.call(() -> {
 			List<URL> resources = Collections.list(classLoader.getResources(canonicalClasspathResourceName));
-			if (resources.isEmpty()) {
-				throw new NullPointerException("classLoader.getResource returned no resources");
-			}
 			return resources.stream().map(url -> {
 				try {
 					return new ClasspathResource(canonicalClasspathResourceName, url.toURI());

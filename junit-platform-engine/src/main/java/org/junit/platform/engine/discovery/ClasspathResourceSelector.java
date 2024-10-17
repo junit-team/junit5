@@ -96,11 +96,14 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public Set<Resource> getClasspathResources() {
 		if (this.classpathResources == null) {
-			// @formatter:off
 			Try<Set<Resource>> tryToGetResource = ReflectionUtils.tryToGetResources(this.classpathResourceName);
-			Set<Resource> classpathResources = tryToGetResource.getOrThrow(cause ->
-				new PreconditionViolationException("Could not load resource with name: " + this.classpathResourceName, cause));
-			// @formatter:on
+			Set<Resource> classpathResources = tryToGetResource.getOrThrow( //
+				cause -> new PreconditionViolationException( //
+					"Could not load resource(s) with name: " + this.classpathResourceName, cause));
+			if (classpathResources.isEmpty()) {
+				throw new PreconditionViolationException(
+					"Could not load resource(s) with name: " + this.classpathResourceName);
+			}
 			this.classpathResources = unmodifiableSet(classpathResources);
 		}
 		return this.classpathResources;
