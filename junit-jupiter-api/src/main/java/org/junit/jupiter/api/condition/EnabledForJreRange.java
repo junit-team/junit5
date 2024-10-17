@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.condition;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
@@ -90,6 +91,7 @@ public @interface EnabledForJreRange {
 	 * supported JRE version.
 	 *
 	 * @see JRE
+	 * @see #minFeatureVersion()
 	 */
 	JRE min() default JRE.JAVA_8;
 
@@ -102,8 +104,35 @@ public @interface EnabledForJreRange {
 	 * possible version.
 	 *
 	 * @see JRE
+	 * @see #maxFeatureVersion()
 	 */
 	JRE max() default JRE.OTHER;
+
+	/**
+	 * Java Runtime Environment feature version which should be used as the lower
+	 * boundary for the version range that determines if the annotated class or
+	 * method should be enabled.
+	 *
+	 * <p>Defaults to {@code -1} to signal that {@link #min()} should be used instead.
+	 *
+	 * @since 5.12
+	 * @see #min()
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	int minFeatureVersion() default -1;
+
+	/**
+	 * Java Runtime Environment feature version which should be used as the upper
+	 * boundary for the version range that determines if the annotated class or
+	 * method should be enabled.
+	 *
+	 * <p>Defaults to {@code -1} to signal that {@link #max()} should be used instead.
+	 *
+	 * @since 5.12
+	 * @see #max()
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	int maxFeatureVersion() default -1;
 
 	/**
 	 * Custom reason to provide if the test or container is disabled.
