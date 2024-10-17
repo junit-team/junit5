@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2015-2024 the original author or authors.
  *
@@ -7,24 +8,15 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+import com.example.vintage.VintageTest;
 
-package com.example.vintage;
+import org.junit.Ignore;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-public class VintageTest {
+/**
+ * Reproducer for https://github.com/junit-team/junit5/issues/4076
+ */
+@Ignore
+public class DefaultPackageTest extends VintageTest {
 	void packagePrivateMethod() {
-	}
-
-	@Test
-	public void success() {
-		// pass
-	}
-
-	@Test
-	public void failure() {
-		fail("expected to fail");
 	}
 }
