@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestTemplate;
 
 /**
@@ -50,7 +51,7 @@ import org.junit.jupiter.api.TestTemplate;
  * @see ExtensionContext
  */
 @API(status = STABLE, since = "5.10")
-public interface InvocationInterceptor extends Extension {
+public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 
 	/**
 	 * Intercept the invocation of a test class constructor.
@@ -58,9 +59,15 @@ public interface InvocationInterceptor extends Extension {
 	 * <p>Note that the test class may <em>not</em> have been initialized
 	 * (static initialization) when this method is invoked.
 	 *
-	 * <p>You may annotate your extension with {@link EnableTestScopedConstructorContext}
-	 * to make test-specific data available to your implementation of this method and
-	 * for a revised scope of the provided `Store` instance.
+	 * <p>By default, the supplied {@link ExtensionContext} represents the test
+	 * class that's about to be constructed. Extensions may override
+	 * {@link #getTestInstantiationExtensionContextScope} to return
+	 * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} in order to change
+	 * the scope of the {@code ExtensionContext} to the test method, unless the
+	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
+	 * Changing the scope makes test-specific data available to the
+	 * implementation of this method and allows keeping state on the test level
+	 * by using the provided {@link ExtensionContext.Store Store} instance.
 	 *
 	 * @param invocation the invocation that is being intercepted; never
 	 * {@code null}

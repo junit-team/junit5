@@ -64,6 +64,8 @@ class CommandLineOptionsParsingTests {
 			() -> assertEquals(List.of(), options.discovery.getExcludedClassNamePatterns()),
 			() -> assertEquals(List.of(), options.discovery.getIncludedPackages()),
 			() -> assertEquals(List.of(), options.discovery.getExcludedPackages()),
+			() -> assertEquals(List.of(), options.discovery.getIncludedMethodNamePatterns()),
+			() -> assertEquals(List.of(), options.discovery.getExcludedMethodNamePatterns()),
 			() -> assertEquals(List.of(), options.discovery.getIncludedTagExpressions()),
 			() -> assertEquals(List.of(), options.discovery.getExcludedTagExpressions()),
 			() -> assertEquals(List.of(), options.discovery.getAdditionalClasspathEntries()),
@@ -196,6 +198,46 @@ class CommandLineOptionsParsingTests {
 						type.parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").discovery.getExcludedPackages())
 		);
 		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@EnumSource
+	void parseValidIncludeMethodNamePatterns(ArgsType type) {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(List.of(".+#method.*"),
+						type.parseArgLine("--include-methodname .+#method.*").discovery.getIncludedMethodNamePatterns()),
+				() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
+						type.parseArgLine("--include-methodname .+#methodA.* --include-methodname .+#methodB.*").discovery.getIncludedMethodNamePatterns()),
+				() -> assertEquals(List.of(".+#method.*"),
+						type.parseArgLine("--include-methodname=.+#method.*").discovery.getIncludedMethodNamePatterns())
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@EnumSource
+	void parseValidExcludeMethodNamePatterns(ArgsType type) {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(List.of(".+#method.*"),
+						type.parseArgLine("--exclude-methodname .+#method.*").discovery.getExcludedMethodNamePatterns()),
+				() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
+						type.parseArgLine("--exclude-methodname .+#methodA.* --exclude-methodname .+#methodB.*").discovery.getExcludedMethodNamePatterns()),
+				() -> assertEquals(List.of(".+#method.*"),
+						type.parseArgLine("--exclude-methodname=.+#method.*").discovery.getExcludedMethodNamePatterns())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidIncludeMethodNamePatterns() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--include-methodname");
+	}
+
+	@Test
+	void parseInvalidExcludeMethodNamePatterns() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--exclude-methodname");
 	}
 
 	@ParameterizedTest

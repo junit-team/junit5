@@ -83,8 +83,7 @@ public class ParameterResolutionUtils {
 	 */
 	public static Object[] resolveParameters(Executable executable, Optional<Object> target,
 			Optional<Object> outerInstance, ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
-		ExtensionContextSupplier context = new ExtensionContextSupplier(extensionContext, extensionContext);
-		return resolveParameters(executable, target, outerInstance, context, extensionRegistry);
+		return resolveParameters(executable, target, outerInstance, __ -> extensionContext, extensionRegistry);
 	}
 
 	public static Object[] resolveParameters(Executable executable, Optional<Object> target,

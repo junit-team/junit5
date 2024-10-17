@@ -31,6 +31,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -404,20 +405,20 @@ class ParameterizedTestIntegrationTests {
 		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+				"constructor:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(0) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(0) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(1) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(1) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
@@ -445,6 +446,24 @@ class ParameterizedTestIntegrationTests {
 		results.testEvents().assertThatEvents() //
 				.haveExactly(1, event(displayName("1"), started())) //
 				.haveExactly(1, event(displayName("2"), started()));
+	}
+
+	@Test
+	void failsWhenArgumentsRequiredButNoneProvided() {
+		var result = execute(ZeroArgumentsTestCase.class, "testThatRequiresArguments", String.class);
+		result.containerEvents().assertThatEvents().haveExactly(1, event(finishedWithFailure(message(
+			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+	}
+
+	@Test
+	void failsWhenArgumentsAreNotRequiredAndNoneProvided() {
+		var result = execute(ZeroArgumentsTestCase.class, "testThatDoesNotRequireArguments", String.class);
+		result.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), event(container(ZeroArgumentsTestCase.class), started()),
+			event(container("testThatDoesNotRequireArguments"), started()),
+			event(container("testThatDoesNotRequireArguments"), finishedSuccessfully()),
+			event(container(ZeroArgumentsTestCase.class), finishedSuccessfully()),
+			event(engine(), finishedSuccessfully()));
 	}
 
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
@@ -2306,6 +2325,25 @@ class ParameterizedTestIntegrationTests {
 					throws ArgumentsAggregationException {
 				return value;
 			}
+		}
+	}
+
+	static class ZeroArgumentsTestCase {
+
+		@ParameterizedTest
+		@MethodSource("zeroArgumentsProvider")
+		void testThatRequiresArguments(String argument) {
+			fail("This test should not be executed, because no arguments are provided.");
+		}
+
+		@ParameterizedTest(requireArguments = false)
+		@MethodSource("zeroArgumentsProvider")
+		void testThatDoesNotRequireArguments(String argument) {
+			fail("This test should not be executed, because no arguments are provided.");
+		}
+
+		public static Stream<Arguments> zeroArgumentsProvider() {
+			return Stream.empty();
 		}
 	}
 

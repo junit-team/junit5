@@ -45,6 +45,11 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	}
 
 	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
 		Method testMethod = extensionContext.getTestMethod().orElse(null);
@@ -73,7 +78,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.resolve(parameterContext, extractPayloads(this.arguments), this.invocationIndex);
+		return this.methodContext.resolve(parameterContext, extensionContext, extractPayloads(this.arguments),
+			this.invocationIndex);
 	}
 
 	/**

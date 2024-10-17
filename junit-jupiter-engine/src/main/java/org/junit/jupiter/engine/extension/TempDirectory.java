@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -44,7 +45,6 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
@@ -77,7 +77,6 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @see TempDir
  * @see Files#createTempDirectory
  */
-@EnableTestScopedConstructorContext
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
@@ -92,6 +91,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	public TempDirectory(JupiterConfiguration configuration) {
 		this.configuration = configuration;
+	}
+
+	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return TEST_METHOD;
 	}
 
 	/**

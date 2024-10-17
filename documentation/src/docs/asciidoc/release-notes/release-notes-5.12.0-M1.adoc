@@ -47,11 +47,25 @@ support the discovery of class path resource based tests, analogous to the
 [[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* When injecting `TestInfo` into test class constructors it now contains data of the test
+  method the test class instance is being created for unless the test instance lifecycle
+  is set to `PER_CLASS` (in which case it continues to contain the data of the test
+  class). If you require the `TestInfo` of the test class, you can implement a class-level
+  lifecycle method (e.g., `@BeforeAll`) and inject `TestInfo` into that method.
+* When injecting `TestReporter` into test class constructors the published report entries
+  are now associated with the test method rather than the test class unless the test
+  instance lifecycle is set to `PER_CLASS` (in which case they will continue to be
+  associated with the test class). If you want to publish report entries for the test
+  class, you can implement a class-level lifecycle method (e.g., `@BeforeAll`) and inject
+  `TestReporter` into that method.
 
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* New `--exclude-methodname` and `--include-methodname` options added to the
+  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
+  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
+  will exclude all methods called `methodName` under package `org.example`.
 * In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
   types such as `LocalDate` if the new `nullable` attribute in
   `@JavaTimeConversionPattern` is set to `true`.
@@ -59,12 +73,18 @@ support the discovery of class path resource based tests, analogous to the
   `@ConvertWith`), and `ArgumentsAggregator` (declared via `@AggregateWith`)
   implementations can now use constructor injection from registered `ParameterResolver`
   extensions.
+* Extensions based on `TestTemplateInvocationContextProvider` can now allow returning zero
+  invocation contexts by overriding the new `mayReturnZeroTestTemplateInvocationContexts`
+  method.
+* The new `@ParameterizedTest(requireArguments = false)` attribute allows to specify that
+  the absence of arguments is expected in some cases and should not cause a test failure.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
-* `@EnableTestScopedConstructorContext` has been added to enable the use of a test-scoped
-  `ExtensionContext` while instantiating the test instance.
-  The behavior enabled by the annotation is expected to eventually become the default in
-  future versions of JUnit Jupiter.
+* Extensions that implement `TestInstancePreConstructCallback`, `TestInstanceFactory`,
+  `TestInstancePostProcessor`, `ParameterResolver`, or `InvocationInterceptor` may
+  override the `getTestInstantiationExtensionContextScope()` method to enable receiving
+  a test-scoped `ExtensionContext` in `Extension` methods called during test class
+  instantiation. This behavior will become the default in future versions of JUnit.
 * `@TempDir` is now supported on test class constructors.
 
 

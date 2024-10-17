@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -558,24 +558,36 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingFoo extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingFoo() {
 			super("foo");
 		}
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return TEST_METHOD;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingBar extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingBar() {
 			super("bar");
 		}
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return TEST_METHOD;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class InstancePreConstructCallbackRecordingBaz extends AbstractTestInstancePreConstructCallback {
 		InstancePreConstructCallbackRecordingBaz() {
 			super("baz");
+		}
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return TEST_METHOD;
 		}
 	}
 

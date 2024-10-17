@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
@@ -200,17 +200,25 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class FooInstancePostProcessor extends AbstractInstancePostProcessor {
 		FooInstancePostProcessor() {
 			super("foo");
 		}
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return TEST_METHOD;
+		}
 	}
 
-	@EnableTestScopedConstructorContext
 	static class BarInstancePostProcessor extends AbstractInstancePostProcessor {
 		BarInstancePostProcessor() {
 			super("bar");
+		}
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return TEST_METHOD;
 		}
 	}
 

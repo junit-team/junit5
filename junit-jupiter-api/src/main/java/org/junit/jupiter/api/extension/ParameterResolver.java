@@ -31,11 +31,16 @@ import org.junit.jupiter.api.TestInstance;
  * an argument for the parameter must be resolved at runtime by a
  * {@code ParameterResolver}.
  *
- * <p>You may annotate your extension with {@link EnableTestScopedConstructorContext}
- * to support injecting test specific data into constructor parameters of the test instance.
- * The annotation makes JUnit use a test-specific `ExtensionContext` while resolving
- * constructor parameters, unless the test class is annotated with
- * {@link TestInstance @TestInstance(Lifecycle.PER_CLASS)}.
+ * <p>By default, when the methods in this interface are called for a test class
+ * constructor, the supplied {@link ExtensionContext} represents the test
+ * class that's about to be instantiated. Extensions may override
+ * {@link #getTestInstantiationExtensionContextScope} to return
+ * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} in order to change
+ * the scope of the {@code ExtensionContext} to the test method, unless the
+ * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
+ * Changing the scope makes test-specific data available to the
+ * implementation of this method and allows keeping state on the test level
+ * by using the provided {@link ExtensionContext.Store Store} instance.
  *
  * <h2>Constructor Requirements</h2>
  *
@@ -51,7 +56,7 @@ import org.junit.jupiter.api.TestInstance;
  * @see TestInstancePreDestroyCallback
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterResolver extends Extension {
+public interface ParameterResolver extends TestInstantiationAwareExtension {
 
 	/**
 	 * Determine if this resolver supports resolution of an argument for the

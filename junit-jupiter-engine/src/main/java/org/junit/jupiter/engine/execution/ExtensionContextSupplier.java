@@ -11,37 +11,53 @@
 package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.EnableTestScopedConstructorContext;
-import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.platform.commons.util.AnnotationUtils;
+import org.junit.jupiter.api.extension.TestInstantiationAwareExtension;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 
 /**
  * Container of two instances of {@link ExtensionContext} to simplify the legacy for
- * <a href="https://github.com/junit-team/junit5/issues/3445">#3445 (Introduction of Test-scoped ExtensionContext)</a>.
+ * <a href="https://github.com/junit-team/junit5/issues/3445">#3445</a>.
  *
  * @since 5.12
+ * @see TestInstantiationAwareExtension
  */
+@FunctionalInterface
 @API(status = INTERNAL, since = "5.12")
-public final class ExtensionContextSupplier {
+public interface ExtensionContextSupplier {
 
-	private final ExtensionContext currentExtensionContext;
-	private final ExtensionContext legacyExtensionContext;
-
-	public ExtensionContextSupplier(ExtensionContext currentExtensionContext, ExtensionContext legacyExtensionContext) {
-		this.currentExtensionContext = currentExtensionContext;
-		this.legacyExtensionContext = legacyExtensionContext;
+	static ExtensionContextSupplier create(ExtensionContext currentExtensionContext,
+			ExtensionContext legacyExtensionContext, JupiterConfiguration configuration) {
+		if (currentExtensionContext == legacyExtensionContext
+				|| configuration.getDefaultTestInstantiationExtensionContextScope() == TEST_METHOD) {
+			return __ -> currentExtensionContext;
+		}
+		return new ScopeBasedExtensionContextSupplier(currentExtensionContext, legacyExtensionContext);
 	}
 
-	public ExtensionContext get(Extension extension) {
-		if (currentExtensionContext == legacyExtensionContext
-				|| AnnotationUtils.isAnnotated(extension.getClass(), EnableTestScopedConstructorContext.class)) {
-			return currentExtensionContext;
+	ExtensionContext get(TestInstantiationAwareExtension extension);
+
+	class ScopeBasedExtensionContextSupplier implements ExtensionContextSupplier {
+
+		private final ExtensionContext currentExtensionContext;
+		private final ExtensionContext legacyExtensionContext;
+
+		private ScopeBasedExtensionContextSupplier(ExtensionContext currentExtensionContext,
+				ExtensionContext legacyExtensionContext) {
+			this.currentExtensionContext = currentExtensionContext;
+			this.legacyExtensionContext = legacyExtensionContext;
 		}
-		else {
-			return legacyExtensionContext;
+
+		public ExtensionContext get(TestInstantiationAwareExtension extension) {
+			return isTestScoped(extension) ? currentExtensionContext : legacyExtensionContext;
+		}
+
+		private boolean isTestScoped(TestInstantiationAwareExtension extension) {
+			ExtensionContext rootContext = legacyExtensionContext.getRoot();
+			return extension.getTestInstantiationExtensionContextScope(rootContext) == TEST_METHOD;
 		}
 	}
 }

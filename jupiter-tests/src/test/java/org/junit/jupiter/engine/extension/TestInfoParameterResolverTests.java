@@ -35,8 +35,13 @@ import org.junit.jupiter.api.TestInfo;
 @Tag("class-tag")
 class TestInfoParameterResolverTests {
 
-	private static List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)", "custom display name",
-		"getTags(TestInfo)", "customDisplayNameThatIsEmpty(TestInfo)");
+	private static final List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)",
+		"custom display name", "getTags(TestInfo)", "customDisplayNameThatIsEmpty(TestInfo)");
+
+	public TestInfoParameterResolverTests(TestInfo testInfo) {
+		assertThat(testInfo.getTestClass()).contains(TestInfoParameterResolverTests.class);
+		assertThat(testInfo.getTestMethod()).isPresent();
+	}
 
 	@Test
 	void defaultDisplayName(TestInfo testInfo) {

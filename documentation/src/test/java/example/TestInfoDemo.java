@@ -14,6 +14,7 @@ package example;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,8 +24,14 @@ import org.junit.jupiter.api.TestInfo;
 @DisplayName("TestInfo Demo")
 class TestInfoDemo {
 
-	TestInfoDemo(TestInfo testInfo) {
+	@BeforeAll
+	static void beforeAll(TestInfo testInfo) {
 		assertEquals("TestInfo Demo", testInfo.getDisplayName());
+	}
+
+	TestInfoDemo(TestInfo testInfo) {
+		String displayName = testInfo.getDisplayName();
+		assertTrue(displayName.equals("TEST 1") || displayName.equals("test2()"));
 	}
 
 	@BeforeEach

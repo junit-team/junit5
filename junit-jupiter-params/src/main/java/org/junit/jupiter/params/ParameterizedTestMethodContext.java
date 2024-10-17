@@ -32,6 +32,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
@@ -42,19 +43,22 @@ import org.junit.platform.commons.util.StringUtils;
  */
 class ParameterizedTestMethodContext {
 
+	final Method method;
+	final ParameterizedTest annotation;
+
 	private final Parameter[] parameters;
-	private final ExtensionContext extensionContext;
 	private final Resolver[] resolvers;
 	private final List<ResolverType> resolverTypes;
 
-	ParameterizedTestMethodContext(Method testMethod, ExtensionContext extensionContext) {
-		this.parameters = testMethod.getParameters();
+	ParameterizedTestMethodContext(Method method, ParameterizedTest annotation) {
+		this.method = Preconditions.notNull(method, "method must not be null");
+		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
+		this.parameters = method.getParameters();
 		this.resolvers = new Resolver[this.parameters.length];
 		this.resolverTypes = new ArrayList<>(this.parameters.length);
 		for (Parameter parameter : this.parameters) {
 			this.resolverTypes.add(isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
-		this.extensionContext = extensionContext;
 	}
 
 	/**
@@ -162,11 +166,12 @@ class ParameterizedTestMethodContext {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
-	Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
-		return getResolver(parameterContext).resolve(parameterContext, arguments, invocationIndex);
+	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, Object[] arguments,
+			int invocationIndex) {
+		return getResolver(parameterContext, extensionContext).resolve(parameterContext, arguments, invocationIndex);
 	}
 
-	private Resolver getResolver(ParameterContext parameterContext) {
+	private Resolver getResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		int index = parameterContext.getIndex();
 		if (resolvers[index] == null) {
 			resolvers[index] = resolverTypes.get(index).createResolver(parameterContext, extensionContext);
