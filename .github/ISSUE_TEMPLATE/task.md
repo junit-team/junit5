@@ -1,5 +1,5 @@
 ---
-name: Task
+name: Create a task
 about: Create a task for a specific piece of work
 type: Task
 labels: ["type: task"]
