@@ -13,8 +13,10 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -23,9 +25,11 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.extension.ResolvedParameters;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.jupiter.engine.execution.ResolvedParametersStore;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -38,8 +42,7 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 /**
  * @since 5.0
  */
-abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
-
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, ResolvedParametersStore, AutoCloseable {
 	private static final NamespacedHierarchicalStore.CloseAction<Namespace> CLOSE_RESOURCES = (__, ___, value) -> {
 		if (value instanceof CloseableResource) {
 			((CloseableResource) value).close();
@@ -53,6 +56,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final JupiterConfiguration configuration;
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
+	private ResolvedParametersList resolvedParameters;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			JupiterConfiguration configuration,
@@ -152,6 +156,19 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return executableInvoker;
 	}
 
+	@Override
+	public Optional<ResolvedParameters> getResolvedParameters() {
+		return Optional.ofNullable(resolvedParameters);
+	}
+
+	@Override
+	public void recordResolvedParameter(Object value) {
+		if (this.resolvedParameters == null) {
+			this.resolvedParameters = new ResolvedParametersList();
+		}
+		this.resolvedParameters.add(value);
+	}
+
 	protected abstract Node.ExecutionMode getPlatformExecutionMode();
 
 	private ExecutionMode toJupiterExecutionMode(Node.ExecutionMode mode) {
@@ -162,5 +179,18 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 				return ExecutionMode.SAME_THREAD;
 		}
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
+	}
+
+	private static class ResolvedParametersList implements ResolvedParameters {
+		private final List<Object> resolvedParameters = new ArrayList<>();
+
+		@Override
+		public List<?> getAllParameters() {
+			return resolvedParameters;
+		}
+
+		public void add(Object value) {
+			resolvedParameters.add(value);
+		}
 	}
 }
