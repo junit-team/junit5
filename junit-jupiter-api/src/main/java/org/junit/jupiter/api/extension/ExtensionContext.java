@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -400,6 +401,17 @@ public interface ExtensionContext {
 	 */
 	@API(status = STABLE, since = "5.11")
 	ExecutableInvoker getExecutableInvoker();
+
+	/**
+	 * Returns a list of registered extension at this context of the passed {@code extensionType}.
+	 *
+	 * @param <E> the extension type
+	 * @param extensionType the extension type
+	 * @return the list of extensions
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	<E extends Extension> List<E> getExtensions(Class<E> extensionType);
 
 	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
