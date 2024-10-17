@@ -19,12 +19,16 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModul
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
+import java.net.URI;
+
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.util.ResourceUtils;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
 import org.junit.platform.engine.discovery.DirectorySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.FilePosition;
 import org.junit.platform.engine.discovery.FileSelector;
 import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
@@ -53,8 +57,12 @@ class SelectorConverter {
 	static class File implements ITypeConverter<FileSelector> {
 		@Override
 		public FileSelector convert(String value) {
-			return selectFile(value);
+			URI uri = URI.create(value);
+			String path = ResourceUtils.stripQueryComponent(uri).getPath();
+			FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
+			return selectFile(path, filePosition);
 		}
+
 	}
 
 	static class Directory implements ITypeConverter<DirectorySelector> {
@@ -88,7 +96,10 @@ class SelectorConverter {
 	static class ClasspathResource implements ITypeConverter<ClasspathResourceSelector> {
 		@Override
 		public ClasspathResourceSelector convert(String value) {
-			return selectClasspathResource(value);
+			URI uri = URI.create(value);
+			String path = ResourceUtils.stripQueryComponent(uri).getPath();
+			FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
+			return selectClasspathResource(path, filePosition);
 		}
 	}
 
