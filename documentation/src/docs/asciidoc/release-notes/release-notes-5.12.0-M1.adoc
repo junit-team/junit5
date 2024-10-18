@@ -18,8 +18,6 @@ JUnit repository on GitHub.
 
 * Fix support for disabling ANSI colors on the console when the `NO_COLOR` environment
   variable is available.
-* Add support for passing line and column number to ConsoleLauncher via `--select-file`
-  and `--select-resource`.
 
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -33,6 +31,8 @@ JUnit repository on GitHub.
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
   `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
+* Add support for passing line and column number to `ConsoleLauncher` via
+  `--select-file` and `--select-resource`.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
