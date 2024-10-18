@@ -17,6 +17,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.net.URI;
@@ -34,6 +35,7 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 
 import picocli.CommandLine.ITypeConverter;
@@ -110,6 +112,13 @@ class SelectorConverter {
 				IterationSelector.IdentifierParser.PREFIX, value);
 			return (IterationSelector) DiscoverySelectors.parse(identifier) //
 					.orElseThrow(() -> new PreconditionViolationException("Invalid format: Failed to parse selector"));
+		}
+	}
+
+	static class UniqueId implements ITypeConverter<UniqueIdSelector> {
+		@Override
+		public UniqueIdSelector convert(String value) {
+			return selectUniqueId(value);
 		}
 	}
 

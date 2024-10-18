@@ -26,6 +26,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectItera
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModule;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
@@ -557,6 +558,24 @@ class CommandLineOptionsParsingTests {
 
 	@ParameterizedTest
 	@EnumSource
+	void parseValidUniqueIdSelectors(ArgsType type) {
+		// @formatter:off
+		assertAll(
+				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
+				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--select-unique-id [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
+				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] --uid [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds()),
+				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds())
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidUniqueIdSelectors() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--uid", "--select-unique-id");
+	}
+
+	@ParameterizedTest
+	@EnumSource
 	void parseClasspathScanningEntries(ArgsType type) {
 		var dir = Paths.get(".");
 		// @formatter:off
@@ -637,7 +656,8 @@ class CommandLineOptionsParsingTests {
 				() -> assertEquals(List.of(selectPackage("com.acme.foo")), parseIdentifiers(type,"--select package:com.acme.foo")),
 				() -> assertEquals(List.of(selectModule("com.acme.foo")), parseIdentifiers(type,"--select module:com.acme.foo")),
 				() -> assertEquals(List.of(selectDirectory("foo/bar")), parseIdentifiers(type,"--select directory:foo/bar")),
-				() -> assertEquals(List.of(selectFile("foo.txt"), selectUri("file:///foo.txt")), parseIdentifiers(type,"--select file:foo.txt --select uri:file:///foo.txt"))
+				() -> assertEquals(List.of(selectFile("foo.txt"), selectUri("file:///foo.txt")), parseIdentifiers(type,"--select file:foo.txt --select uri:file:///foo.txt")),
+				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), parseIdentifiers(type,"--select uid:[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]"))
 		);
 		// @formatter:on
 	}
