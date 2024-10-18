@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ResourceUtils;
 import org.junit.platform.engine.TestSource;
 
 /**
