@@ -49,6 +49,8 @@ public class ConsoleTestExecutor {
 	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
 
+	private TestPlan testPlanListeners;
+
 	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
 		this(discoveryOptions, outputOptions, LauncherFactory::create);
 	}
@@ -79,7 +81,6 @@ public class ConsoleTestExecutor {
 
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		TestPlan testPlan = launcher.discover(discoveryRequest);
-
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
 		if (outputOptions.getDetails() != Details.NONE) {
 			printFoundTestsSummary(out, testPlan);
@@ -103,6 +104,8 @@ public class ConsoleTestExecutor {
 		launcher.execute(discoveryRequest);
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
+			//get testPlan from summaryListener
+			testPlanListeners = summaryListener.getTestPlan();
 			printSummary(summary, out);
 		}
 
@@ -182,6 +185,7 @@ public class ConsoleTestExecutor {
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
 			//adding diff code here
+			out.printf("%nDiffs (Markdown):%n");
 			summary.getFailures().forEach(failure -> {
 				//get AssertionFailedError
 				if (failure.getException() instanceof AssertionFailedError) {
@@ -190,10 +194,8 @@ public class ConsoleTestExecutor {
 					ValueWrapper actual = assertionFailedError.getActual();
 					//apply diff function
 					if (isCharSequence(expected) && isCharSequence(actual)) {
-						out.printf("%nDiffs (Markdown):%n");
-						out.printf("  %s:", failure.getTestIdentifier().getDisplayName());
-						DiffPrinter.printDiff(out, expected.getStringRepresentation(),
-							actual.getStringRepresentation());
+						new DiffPrinter(testPlanListeners).printDiff(out, expected.getStringRepresentation(),
+							actual.getStringRepresentation(), failure.getTestIdentifier());
 					}
 
 				}
