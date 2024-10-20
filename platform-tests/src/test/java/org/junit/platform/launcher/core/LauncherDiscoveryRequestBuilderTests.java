@@ -92,8 +92,9 @@ class LauncherDiscoveryRequestBuilderTests {
 				.build();
 			// @formatter:on
 
-			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
-				ClassSelector::getJavaClass).toList();
+			@SuppressWarnings("rawtypes")
+			List<Class> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream()//
+					.map(ClassSelector::getJavaClass).map(Class.class::cast).toList();
 			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
