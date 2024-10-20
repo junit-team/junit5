@@ -96,6 +96,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromClassTestDescriptor() {
 		NestedClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -124,6 +125,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void tagsCanBeRetrievedInExtensionContext() {
 		NestedClassTestDescriptor nestedClassDescriptor = nestedClassDescriptor();
 		ClassTestDescriptor outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -149,6 +151,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromMethodTestDescriptor() {
 		TestMethodTestDescriptor methodTestDescriptor = methodDescriptor();
 		ClassTestDescriptor classTestDescriptor = outerClassDescriptor(methodTestDescriptor);

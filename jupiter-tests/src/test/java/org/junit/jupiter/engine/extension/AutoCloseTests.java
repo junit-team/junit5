@@ -109,6 +109,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 	 */
 	@Test
 	void spyPermitsOnlyASingleAction() {
+		@SuppressWarnings("resource")
 		AutoCloseSpy spy = new AutoCloseSpy("preconditions");
 
 		spy.close();
