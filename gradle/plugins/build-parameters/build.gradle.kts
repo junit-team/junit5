@@ -41,6 +41,11 @@ buildParameters {
 					description = "Whether or not to use Predictive Test Selection for selecting tests to execute"
 					defaultValue = true
 				}
+				bool("selectRemainingTests") {
+					// see https://docs.gradle.com/develocity/predictive-test-selection/#gradle-selection-mode
+					description = "Whether or not to use PTS' 'remaining tests' selection mode"
+					defaultValue = false
+				}
 			}
 			group("testDistribution") {
 				bool("enabled") {
