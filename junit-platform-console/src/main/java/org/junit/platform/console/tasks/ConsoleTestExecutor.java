@@ -184,10 +184,10 @@ public class ConsoleTestExecutor {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
-			boolean[] diffFlag = {true};
+			boolean[] diffFlag = { true };
 			//adding diff code here
 			summary.getFailures().forEach(failure -> {
-				if(diffFlag[0]){
+				if (diffFlag[0]) {
 					out.printf("%nDiffs (Markdown):%n");
 					diffFlag[0] = false;
 				}
