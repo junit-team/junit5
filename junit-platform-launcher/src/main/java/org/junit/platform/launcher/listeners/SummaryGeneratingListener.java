@@ -46,6 +46,13 @@ public class SummaryGeneratingListener implements TestExecutionListener {
 		return this.summary;
 	}
 
+	/**
+	 * Get the testPlan of this listener.
+	 */
+	public TestPlan getTestPlan() {
+		return testPlan;
+	}
+
 	@Override
 	public void testPlanExecutionStarted(TestPlan testPlan) {
 		this.testPlan = testPlan;
