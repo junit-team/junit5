@@ -182,8 +182,8 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 
 		ThreadMode threadMode = resolveTimeoutThreadMode(extensionContext);
 		return new TimeoutInvocationFactory(extensionContext.getRoot().getStore(NAMESPACE)).create(threadMode,
-			new TimeoutInvocationParameters<>(invocation, timeout,
-				() -> describe(invocationContext, extensionContext)));
+			new TimeoutInvocationParameters<>(invocation, timeout, () -> describe(invocationContext, extensionContext),
+				PreInterruptCallbackInvocationFactory.create(extensionContext)));
 	}
 
 	private ThreadMode resolveTimeoutThreadMode(ExtensionContext extensionContext) {

@@ -108,6 +108,8 @@ class ArchUnitTests {
 				.that(are(not(name("org.junit.platform.runner.JUnitPlatformRunnerListener")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Events")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Executions")))) //
+				//The PreInterruptThreadDumpPrinter writes to StdOut by contract to dump threads
+				.that(are(not(name("org.junit.jupiter.engine.extension.PreInterruptThreadDumpPrinter")))) //
 				.that(are(not(resideInAPackage("org.junit.platform.console.shadow.picocli"))));
 		GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(subset);
 	}

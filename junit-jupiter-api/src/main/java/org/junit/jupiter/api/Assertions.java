@@ -3662,6 +3662,6 @@ public class Assertions {
 		 *
 		 * @return timeout failure; never {@code null}
 		 */
-		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause);
+		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause, Thread testThread);
 	}
 }

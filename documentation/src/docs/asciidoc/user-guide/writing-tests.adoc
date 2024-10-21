@@ -2659,6 +2659,22 @@ asynchronous tests, consider using a dedicated library such as
 link:https://github.com/awaitility/awaitility[Awaitility].
 
 
+[[writing-tests-declarative-timeouts-debugging]]
+===  Debugging Timeouts
+
+Registered <<extensions-preinterrupt-callback>> extensions are called prior to invoking
+`Thread.interrupt()` on the thread that is executing the timed out method. This allows to
+inspect the application state and output additional information that might be helpful for
+diagnosing the cause of a timeout.
+
+
+[[writing-tests-declarative-timeouts-debugging-thread-dump]]
+==== Thread Dump on Timeout
+JUnit registers a default implementation of the <<extensions-preinterrupt-callback>> extension point that
+dumps the stacks of all threads to `System.out` if enabled by setting the
+`junit.jupiter.execution.timeout.threaddump.enabled` configuration parameter to `true`.
+
+
 [[writing-tests-declarative-timeouts-mode]]
 ==== Disable @Timeout Globally
 When stepping through your code in a debug session, a fixed timeout limit may influence

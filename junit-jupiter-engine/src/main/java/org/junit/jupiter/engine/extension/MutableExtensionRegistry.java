@@ -66,6 +66,11 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	 * auto-detected using Java's {@link ServiceLoader} mechanism and automatically
 	 * registered after the default extensions.
 	 *
+	 * <p>If the
+	 * {@value org.junit.jupiter.engine.Constants#EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME}
+	 * configuration parameter has been set to {@code true}, the
+	 * {@link PreInterruptThreadDumpPrinter} will be registered.
+	 *
 	 * @param configuration configuration parameters used to retrieve the extension
 	 * auto-detection flag; never {@code null}
 	 * @return a new {@code ExtensionRegistry}; never {@code null}
@@ -79,6 +84,10 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
 			registerAutoDetectedExtensions(extensionRegistry);
+		}
+
+		if (configuration.isThreadDumpOnTimeoutEnabled()) {
+			extensionRegistry.registerDefaultExtension(new PreInterruptThreadDumpPrinter());
 		}
 
 		return extensionRegistry;
