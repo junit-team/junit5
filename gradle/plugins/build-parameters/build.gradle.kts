@@ -67,7 +67,7 @@ buildParameters {
 		description = "Testing related parameters"
 		bool("enableJaCoCo") {
 			description = "Enables JaCoCo test coverage reporting"
-			defaultValue = false
+			defaultValue = true
 		}
 		bool("enableJFR") {
 			description = "Enables Java Flight Recorder functionality"
