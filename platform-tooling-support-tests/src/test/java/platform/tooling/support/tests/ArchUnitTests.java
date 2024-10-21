@@ -17,7 +17,6 @@ import static com.tngtech.archunit.core.domain.JavaClass.Predicates.TOP_LEVEL_CL
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
-import static com.tngtech.archunit.core.domain.JavaClass.Predicates.type;
 import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
@@ -51,7 +50,6 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
@@ -72,7 +70,6 @@ class ArchUnitTests {
 			.that(nameStartingWith("org.junit.")) //
 			.and().areAnnotations() //
 			.and().areAnnotatedWith(Repeatable.class) //
-			.and(are(not(type(ExtendWith.class)))) // to be resolved in https://github.com/junit-team/junit5/issues/4059
 			.should(haveContainerAnnotationWithSameRetentionPolicy()) //
 			.andShould(haveContainerAnnotationWithSameTargetTypes());
 
