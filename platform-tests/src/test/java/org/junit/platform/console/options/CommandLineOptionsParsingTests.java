@@ -44,6 +44,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.FilePosition;
 
 /**
  * @since 1.10
@@ -382,7 +383,9 @@ class CommandLineOptionsParsingTests {
 				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-select-file=foo.txt").discovery.getSelectedFiles()),
 				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file foo.txt").discovery.getSelectedFiles()),
 				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file=foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt -f bar.csv").discovery.getSelectedFiles())
+				() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt -f bar.csv").discovery.getSelectedFiles()),
+				() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(5))), type.parseArgLine("-f foo.txt?line=5").discovery.getSelectedFiles()),
+				() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(12, 34))), type.parseArgLine("-f foo.txt?line=12&column=34").discovery.getSelectedFiles())
 		);
 		// @formatter:on
 	}
@@ -509,7 +512,9 @@ class CommandLineOptionsParsingTests {
 				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
 				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource /foo.csv").discovery.getSelectedClasspathResources()),
 				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv -r bar.json").discovery.getSelectedClasspathResources())
+				() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv -r bar.json").discovery.getSelectedClasspathResources()),
+				() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(5))), type.parseArgLine("-r /foo.csv?line=5").discovery.getSelectedClasspathResources()),
+				() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(12, 34))), type.parseArgLine("-r /foo.csv?line=12&column=34").discovery.getSelectedClasspathResources())
 		);
 		// @formatter:on
 	}
