@@ -133,6 +133,12 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	}
 
 	@Test
+	void multipleRegistrationsViaParameter(@TrackLogRecords LogRecordListener listener) {
+		assertOneTestSucceeded(MultipleRegistrationsViaParameterTestCase.class);
+		assertThat(getRegisteredLocalExtensions(listener)).containsExactly("LongParameterResolver", "DummyExtension");
+	}
+
+	@Test
 	void staticField() {
 		assertOneTestSucceeded(StaticFieldTestCase.class);
 	}
@@ -147,9 +153,11 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		assertOneTestSucceeded(TestInstancePerClassFieldTestCase.class);
 	}
 
-	@Test
-	void multipleRegistrationsViaField(@TrackLogRecords LogRecordListener listener) {
-		assertOneTestSucceeded(MultipleRegistrationsViaFieldTestCase.class);
+	@ParameterizedTest
+	@ValueSource(classes = { MultipleMixedRegistrationsViaFieldTestCase.class,
+			MultipleExtendWithRegistrationsViaFieldTestCase.class })
+	void multipleRegistrationsViaField(Class<?> testClass, @TrackLogRecords LogRecordListener listener) {
+		assertOneTestSucceeded(testClass);
 		assertThat(getRegisteredLocalExtensions(listener)).containsExactly("LongParameterResolver", "DummyExtension");
 	}
 
@@ -567,14 +575,37 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
-	static class MultipleRegistrationsViaFieldTestCase {
+	@ExtendWith(LongParameterResolver.class)
+	static class MultipleRegistrationsViaParameterTestCase {
+
+		@Test
+		void test(@ExtendWith(DummyExtension.class) @ExtendWith(LongParameterResolver.class) Long number) {
+			assertThat(number).isEqualTo(42L);
+		}
+	}
+
+	static class MultipleMixedRegistrationsViaFieldTestCase {
 
 		@ExtendWith(LongParameterResolver.class)
 		@RegisterExtension
 		DummyExtension dummy = new DummyExtension();
 
 		@Test
-		void test() {
+		void test(Long number) {
+			assertThat(number).isEqualTo(42L);
+		}
+	}
+
+	static class MultipleExtendWithRegistrationsViaFieldTestCase {
+
+		@SuppressWarnings("unused")
+		@ExtendWith(LongParameterResolver.class)
+		@ExtendWith(DummyExtension.class)
+		Object field;
+
+		@Test
+		void test(Long number) {
+			assertThat(number).isEqualTo(42L);
 		}
 	}
 
