@@ -34,7 +34,6 @@ jobs:
       with:
         encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
-          -Ptesting.enableJaCoCo \
           :platform-tooling-support-tests:test \
           build \
           jacocoRootReport \

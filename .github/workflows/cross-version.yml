@@ -62,6 +62,7 @@ jobs:
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
+            -Ptesting.enableJaCoCo=false \
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
             build \
@@ -101,6 +102,7 @@ jobs:
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
+            -Ptesting.enableJaCoCo=false \
             -PjavaToolchain.version=${{ matrix.jdk }} \
             -PjavaToolchain.implementation=j9 \
             -Dscan.tag.JDK_${{ matrix.jdk }} \
