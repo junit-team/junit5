@@ -49,7 +49,7 @@ builds of the next OpenJDK.
 Code coverage using [JaCoCo] for the latest build is available on [Codecov].
 
 A code coverage report can also be generated locally via the [Gradle Wrapper] by
-executing `./gradlew -Ptesting.enableJaCoCo clean jacocoRootReport`. The results will be available
+executing `./gradlew clean jacocoRootReport`. The results will be available
 in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 ## Develocity
