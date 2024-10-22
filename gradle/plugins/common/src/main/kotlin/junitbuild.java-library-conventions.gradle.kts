@@ -211,7 +211,10 @@ tasks.withType<Jar>().configureEach {
 		into("META-INF")
 	}
 	from(rootDir) {
-		include("LICENSE-notice.md")
+		include("NOTICE.md")
+		rename {
+			"LICENSE-notice.md"
+		}
 		into("META-INF")
 	}
 	val suffix = archiveClassifier.getOrElse("")
