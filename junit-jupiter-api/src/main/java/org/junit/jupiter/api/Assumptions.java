@@ -27,7 +27,12 @@ import org.opentest4j.TestAbortedException;
  *
  * <p>In direct contrast to failed {@linkplain Assertions assertions},
  * failed assumptions do not result in a test <em>failure</em>; rather,
- * a failed assumption results in a test being <em>aborted</em>.
+ * a failed assumption results in a test being <em>aborted</em>. However,
+ * failed assertions and other exceptions thrown by tests take precedence over
+ * failed assumptions when both are thrown during the execution of a test
+ * (for example, by different lifecycle methods), regardless of the order they
+ * are thrown in. In such cases, the test will be reported as <em>failed</em>
+ * rather than <em>aborted</em>.
  *
  * <p>Assumptions are typically used whenever it does not make sense to
  * continue execution of a given test method &mdash; for example, if the
