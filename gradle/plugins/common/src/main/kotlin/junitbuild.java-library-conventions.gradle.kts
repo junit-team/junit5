@@ -203,17 +203,17 @@ val compileModule by tasks.registering(JavaCompile::class) {
 }
 
 tasks.withType<Jar>().configureEach {
-    from(rootDir) {
-        include("LICENSE.md")
-        into("META-INF")
-    }
-    from(rootDir) {
-        include("NOTICE.md")
-        rename {
-            "LICENSE-notice.md"
-        }
-        into("META-INF")
-    }
+	from(rootDir) {
+		include("LICENSE.md")
+		into("META-INF")
+	}
+	from(rootDir) {
+		include("NOTICE.md")
+		rename {
+			"LICENSE-notice.md"
+		}
+		into("META-INF")
+	}
 	val suffix = archiveClassifier.getOrElse("")
 	if (suffix.isBlank() || this is ShadowJar) {
 		dependsOn(allMainClasses, compileModule)
