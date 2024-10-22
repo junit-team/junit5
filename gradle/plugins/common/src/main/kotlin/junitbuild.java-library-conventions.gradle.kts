@@ -204,7 +204,14 @@ val compileModule by tasks.registering(JavaCompile::class) {
 
 tasks.withType<Jar>().configureEach {
 	from(rootDir) {
-		include("LICENSE.md", "LICENSE-notice.md")
+		include("LICENSE-EPL-2.0.md")
+		rename {
+			"LICENSE.md"
+		}
+		into("META-INF")
+	}
+	from(rootDir) {
+		include("LICENSE-notice.md")
 		into("META-INF")
 	}
 	val suffix = archiveClassifier.getOrElse("")
