@@ -13,6 +13,8 @@ on:
   schedule:
     - cron: '0 19 * * 3'
 
+permissions: read-all
+
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
