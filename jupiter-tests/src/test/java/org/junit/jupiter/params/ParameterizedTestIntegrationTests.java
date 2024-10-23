@@ -1117,35 +1117,52 @@ class ParameterizedTestIntegrationTests {
 	class UnusedArgumentsWithStrictArgumentsCountIntegrationTests {
 		@Test
 		void failsWithArgumentsSourceProvidingUnusedArguments() {
-			var results = execute(UnusedArgumentsTestCase.class, "testWithTwoUnusedStringArgumentsProvider",
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class, "testWithTwoUnusedStringArgumentsProvider",
 				String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided./nNote: the provided arguments are [foo, unused1]"))));
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
 		}
 
 		@Test
 		void failsWithMethodSourceProvidingUnusedArguments() {
-			var results = execute(UnusedArgumentsTestCase.class, "testWithMethodSourceProvidingUnusedArguments",
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class, "testWithMethodSourceProvidingUnusedArguments",
 				String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided./nNote: the provided arguments are [foo, unused1]"))));
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+		}
+
+		@Test
+		void failsWithCsvSourceUnusedArgumentsAndStrictArgumentCountValidationAnnotationAttribute() {
+			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class, "testWithStrictArgumentCountValidation",
+					String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
+							"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+		}
+
+		@Test
+		void executesWithCsvSourceUnusedArgumentsAndArgumentCountValidationAnnotationAttribute() {
+			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class, "testWithNoneArgumentCountValidation", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo"))));
 		}
 
 		@Test
 		void executesWithMethodSourceProvidingUnusedArguments() {
-			var results = execute(RepeatableSourcesTestCase.class, "testWithRepeatableCsvSource", String.class);
+			var results = execute(ArgumentCountValidationMode.STRICT, RepeatableSourcesTestCase.class, "testWithRepeatableCsvSource", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
 		}
 
-		private EngineExecutionResults execute(Class<?> javaClass, String methodName,
+		private EngineExecutionResults execute(ArgumentCountValidationMode configurationValue, Class<?> javaClass, String methodName,
 				Class<?>... methodParameterTypes) {
-			return EngineTestKit.engine(new JupiterTestEngine()).selectors(
-				selectMethod(javaClass, methodName, methodParameterTypes)).configurationParameter(
-					ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY, "strict").execute();
+			return EngineTestKit.engine(new JupiterTestEngine()) //
+					.selectors(selectMethod(javaClass, methodName, methodParameterTypes)) //
+					.configurationParameter(ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY, configurationValue.name().toLowerCase()) //
+					.execute();
 		}
 	}
 
@@ -2065,6 +2082,17 @@ class ParameterizedTestIntegrationTests {
 		static Supplier<Stream<Arguments>> unusedArgumentsProviderField = //
 			() -> Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 
+		@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
+		@CsvSource({ "foo, unused1" })
+		void testWithStrictArgumentCountValidation(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.NONE)
+		@CsvSource({ "foo, unused1" })
+		void testWithNoneArgumentCountValidation(String argument) {
+			fail(argument);
+		}
 	}
 
 	static class LifecycleTestCase {

@@ -14,7 +14,6 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.reflect.Method;
-import java.util.Optional;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -70,7 +69,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 						+ "and before any arguments resolved by another ParameterResolver.",
 				templateMethod.toGenericString()));
 
-		getStore(context).put(METHOD_CONTEXT_KEY, methodContext);
+		getStoreInMethodNamespace(context).put(METHOD_CONTEXT_KEY, methodContext);
 
 		return true;
 	}
@@ -108,12 +107,16 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private ParameterizedTestMethodContext getMethodContext(ExtensionContext extensionContext) {
-		return getStore(extensionContext)//
+		return getStoreInMethodNamespace(extensionContext)//
 				.get(METHOD_CONTEXT_KEY, ParameterizedTestMethodContext.class);
 	}
 
-	private ExtensionContext.Store getStore(ExtensionContext context) {
+	private ExtensionContext.Store getStoreInMethodNamespace(ExtensionContext context) {
 		return context.getStore(Namespace.create(ParameterizedTestExtension.class, context.getRequiredTestMethod()));
+	}
+
+	private ExtensionContext.Store getStoreInExtensionNamespace(ExtensionContext context) {
+		return context.getStore(Namespace.create(ParameterizedTestExtension.class));
 	}
 
 	private void validateArgumentCount(ExtensionContext extensionContext, Arguments arguments) {
@@ -126,7 +129,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 				int testParamCount = extensionContext.getRequiredTestMethod().getParameterCount();
 				int argumentsCount = arguments.get().length;
 				Preconditions.condition(testParamCount == argumentsCount, () -> String.format(
-					"Configuration error: the @ParameterizedTest has %s argument(s) but there were %s argument(s) provided./nNote: the provided arguments are %s",
+					"Configuration error: the @ParameterizedTest has %s argument(s) but there were %s argument(s) provided.%nNote: the provided arguments are %s",
 					testParamCount, argumentsCount, Arrays.toString(arguments.get())));
 				break;
 			default:
@@ -149,20 +152,33 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 
 	private ArgumentCountValidationMode getArgumentCountValidationModeConfiguration(ExtensionContext extensionContext) {
 		String key = ARGUMENT_COUNT_VALIDATION_KEY;
-		ArgumentCountValidationMode fallback = ArgumentCountValidationMode.DEFAULT;
-		Optional<String> optionalValue = extensionContext.getConfigurationParameter(key);
-		if (optionalValue.isPresent()) {
-			String value = optionalValue.get();
-			return Arrays.stream(ArgumentCountValidationMode.values()).filter(
-				mode -> mode.name().equalsIgnoreCase(value)).findFirst().orElseGet(() -> {
+		ArgumentCountValidationMode fallback = ArgumentCountValidationMode.NONE;
+		ExtensionContext.Store store = getStoreInExtensionNamespace(extensionContext);
+		return store.getOrComputeIfAbsent(key, k -> {
+			Optional<String> optionalConfigValue = extensionContext.getConfigurationParameter(key);
+			if (optionalConfigValue.isPresent()) {
+				String configValue = optionalConfigValue.get();
+				Optional<ArgumentCountValidationMode> enumValue = Arrays.stream(
+					ArgumentCountValidationMode.values()).filter(
+						mode -> mode.name().equalsIgnoreCase(configValue)).findFirst();
+				if (enumValue.isPresent()) {
+					logger.config(() -> String.format(
+						"Using ArgumentCountValidationMode '%s' set via the '%s' configuration parameter.",
+						enumValue.get().name(), key));
+					return enumValue.get();
+				}
+				else {
 					logger.warn(() -> String.format(
-						"Ignored invalid configuration '%s' set via the '%s' configuration parameter.", value, key));
+						"Invalid ArgumentCountValidationMode '%s' set via the '%s' configuration parameter. "
+								+ "Falling back to the %s default value.",
+						configValue, key, fallback.name()));
 					return fallback;
-				});
-		}
-		else {
-			return fallback;
-		}
+				}
+			}
+			else {
+				return fallback;
+			}
+		}, ArgumentCountValidationMode.class);
 	}
 
 	private TestTemplateInvocationContext createInvocationContext(ParameterizedTestNameFormatter formatter,

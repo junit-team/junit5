@@ -51,6 +51,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.params.ArgumentCountValidationMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -607,4 +608,12 @@ class ParameterizedTestDemo {
 		return Stream.of("bar");
 	}
 	// end::repeatable_annotations[]
+
+	// tag::argument_count_validation[]
+	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
+	@CsvSource({ "42, -666" })
+	void testWithArgumentCountValidation(int number) {
+		assertTrue(number > 0);
+	}
+	// end::argument_count_validation[]
 }
