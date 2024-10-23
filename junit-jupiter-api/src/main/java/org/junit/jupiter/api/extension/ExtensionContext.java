@@ -402,6 +402,30 @@ public interface ExtensionContext {
 	ExecutableInvoker getExecutableInvoker();
 
 	/**
+	 * Get the {@link ResolvedParameters} implementation to find the parameters that have been resolved
+	 * by some {@link ParameterResolver} for the current test.
+	 */
+	Optional<ResolvedParameters> getResolvedParameters();
+
+	/**
+	 * Get the <em>required</em> {@link ResolvedParameters} implementation to find the parameters
+	 * that have been resolved by some {@link ParameterResolver} for the current test.
+	 *
+	 * <p>Use this method as an alternative to {@link #getResolvedParameters()} for use
+	 * cases in which the resolved parameters is required to be present.
+	 *
+	 * @return the resolved parameters; never {@code null}
+	 * @throws PreconditionViolationException if the resolved parameters is not present
+	 * in this {@code ExtensionContext}
+	 *
+	 * @see #getRequiredResolvedParameters()
+	 */
+	default ResolvedParameters getRequiredResolvedParameters() {
+		return Preconditions.notNull(getResolvedParameters().orElse(null),
+				"Illegal state: required resolved parameters is not present in the current ExtensionContext");
+	}
+
+	/**
 	 * {@code Store} provides methods for extensions to save and retrieve data.
 	 */
 	interface Store {
