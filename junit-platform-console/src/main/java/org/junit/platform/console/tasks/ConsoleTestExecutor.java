@@ -36,6 +36,8 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener;
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.ValueWrapper;
 
 /**
  * @since 1.0
@@ -46,6 +48,8 @@ public class ConsoleTestExecutor {
 	private final TestDiscoveryOptions discoveryOptions;
 	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
+
+	private TestPlan testPlanListeners;
 
 	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
 		this(discoveryOptions, outputOptions, LauncherFactory::create);
@@ -77,7 +81,6 @@ public class ConsoleTestExecutor {
 
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		TestPlan testPlan = launcher.discover(discoveryRequest);
-
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
 		if (outputOptions.getDetails() != Details.NONE) {
 			printFoundTestsSummary(out, testPlan);
@@ -97,12 +100,12 @@ public class ConsoleTestExecutor {
 	private TestExecutionSummary executeTests(PrintWriter out, Optional<Path> reportsDir) {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
-
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
 		launcher.execute(discoveryRequest);
-
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
+			//get testPlan from summaryListener
+			testPlanListeners = summaryListener.getTestPlan();
 			printSummary(summary, out);
 		}
 
@@ -181,8 +184,31 @@ public class ConsoleTestExecutor {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
+			boolean[] diffFlag = { true };
+			//adding diff code here
+			summary.getFailures().forEach(failure -> {
+				if (diffFlag[0]) {
+					out.printf("%nDiffs (Markdown):%n");
+					diffFlag[0] = false;
+				}
+				//get AssertionFailedError
+				if (failure.getException() instanceof AssertionFailedError) {
+					AssertionFailedError assertionFailedError = (AssertionFailedError) failure.getException();
+					ValueWrapper expected = assertionFailedError.getExpected();
+					ValueWrapper actual = assertionFailedError.getActual();
+					//apply diff function
+					if (isCharSequence(expected) && isCharSequence(actual)) {
+						new DiffPrinter(testPlanListeners).printDiff(out, expected.getStringRepresentation(),
+							actual.getStringRepresentation(), failure.getTestIdentifier());
+					}
+				}
+			});
 		}
 		summary.printTo(out);
+	}
+
+	private boolean isCharSequence(ValueWrapper value) {
+		return value != null && CharSequence.class.isAssignableFrom(value.getType());
 	}
 
 	@FunctionalInterface

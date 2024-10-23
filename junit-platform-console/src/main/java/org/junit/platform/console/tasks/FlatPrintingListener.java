@@ -79,6 +79,7 @@ class FlatPrintingListener implements DetailsPrintingListener {
 
 	private void printlnException(Style style, Throwable throwable) {
 		printlnMessage(style, "Exception", ExceptionUtils.readStackTrace(throwable));
+		//add diff here
 	}
 
 	private void printlnMessage(Style style, String message, String detail) {
