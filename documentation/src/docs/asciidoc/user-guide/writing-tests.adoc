@@ -2041,7 +2041,11 @@ use the `argumentCountValidation` attribute of the `@ParameterizedTest` annotati
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedTestDemo.java[tags=argument_count_validation]
+	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
+	@CsvSource({ "42, -666" })
+	void testWithArgumentCountValidation(int number) {
+		assertTrue(number > 0);
+	}
 ----
 
 [[writing-tests-parameterized-tests-argument-conversion]]
