@@ -31,13 +31,25 @@ class EnabledForJreRangeCondition extends BooleanExecutionCondition<EnabledForJr
 
 	@Override
 	boolean isEnabled(EnabledForJreRange annotation) {
-		JRE min = annotation.min();
-		JRE max = annotation.max();
+		JRE minJre = annotation.min();
+		JRE maxJre = annotation.max();
+		int minFeatureVersion = annotation.minFeatureVersion();
+		int maxFeatureVersion = annotation.maxFeatureVersion();
 
-		Preconditions.condition((min != JRE.JAVA_8 || max != JRE.OTHER),
-			"You must declare a non-default value for min or max in @EnabledForJreRange");
-		Preconditions.condition(max.compareTo(min) >= 0,
-			"@EnabledForJreRange.min must be less than or equal to @EnabledForJreRange.max");
+		Preconditions.condition(!(minJre != JRE.JAVA_8 && minFeatureVersion != -1),
+			"@EnabledForJreRange's minimum value must be configured with either a JRE or feature version, but not both");
+		Preconditions.condition(!(maxJre != JRE.OTHER && maxFeatureVersion != -1),
+			"@EnabledForJreRange's maximum value must be configured with either a JRE or feature version, but not both");
+
+		boolean minValueConfigured = minJre != JRE.JAVA_8 || minFeatureVersion != -1;
+		boolean maxValueConfigured = maxJre != JRE.OTHER || maxFeatureVersion != -1;
+		Preconditions.condition(minValueConfigured || maxValueConfigured,
+			"You must declare a non-default value for the minimum or maximum value in @EnabledForJreRange");
+
+		int min = (minFeatureVersion != -1 ? minFeatureVersion : minJre.featureVersion());
+		int max = (maxFeatureVersion != -1 ? maxFeatureVersion : maxJre.featureVersion());
+		Preconditions.condition(min <= max,
+			"@EnabledForJreRange's minimum value must be less than or equal to its maximum value");
 
 		return JRE.isCurrentVersionWithinRange(min, max);
 	}
