@@ -76,7 +76,10 @@ class TestDiscoveryOptionsMixin {
 		private final List<UriSelector> selectedUris2 = new ArrayList<>();
 
 		@Option(names = { "-f",
-				"--select-file" }, paramLabel = "FILE", arity = "1", converter = SelectorConverter.File.class, description = "Select a file for test discovery. This option can be repeated.")
+				"--select-file" }, paramLabel = "FILE", arity = "1", converter = SelectorConverter.File.class, //
+				description = "Select a file for test discovery. "
+						+ "The line and column numbers can be provided as URI query parameters (e.g. foo.txt?line=12&column=34). "
+						+ "This option can be repeated.")
 		private final List<FileSelector> selectedFiles = new ArrayList<>();
 
 		@Option(names = { "--f", "-select-file" }, arity = "1", hidden = true, converter = SelectorConverter.File.class)
@@ -123,7 +126,10 @@ class TestDiscoveryOptionsMixin {
 		private final List<MethodSelector> selectedMethods2 = new ArrayList<>();
 
 		@Option(names = { "-r",
-				"--select-resource" }, paramLabel = "RESOURCE", arity = "1", converter = SelectorConverter.ClasspathResource.class, description = "Select a classpath resource for test discovery. This option can be repeated.")
+				"--select-resource" }, paramLabel = "RESOURCE", arity = "1", converter = SelectorConverter.ClasspathResource.class, //
+				description = "Select a classpath resource for test discovery. "
+						+ "The line and column numbers can be provided as URI query parameters (e.g. foo.csv?line=12&column=34). "
+						+ "This option can be repeated.")
 		private final List<ClasspathResourceSelector> selectedClasspathResources = new ArrayList<>();
 
 		@Option(names = { "--r",

@@ -8,19 +8,21 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.platform.commons.util;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.net.URI;
 
-import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
+import org.apiguardian.api.API;
 
 /**
  * Collection of static utility methods for working with resources.
  *
- * @since 1.3
+ * @since 1.3 (originally in org.junit.platform.engine.support.descriptor)
  */
-final class ResourceUtils {
+@API(status = INTERNAL, since = "1.12")
+public final class ResourceUtils {
 
 	private ResourceUtils() {
 		/* no-op */
@@ -33,8 +35,10 @@ final class ResourceUtils {
 	 * @param uri the {@code URI} from which to strip the query component
 	 * @return a new {@code URI} with the query component removed, or the
 	 * original {@code URI} unmodified if it does not have a query component
+	 *
+	 * @since 1.3
 	 */
-	static URI stripQueryComponent(URI uri) {
+	public static URI stripQueryComponent(URI uri) {
 		Preconditions.notNull(uri, "URI must not be null");
 
 		if (StringUtils.isBlank(uri.getQuery())) {
