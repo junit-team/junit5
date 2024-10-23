@@ -1,6 +1,6 @@
 # Security Policy
 
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9607/badge)](https://www.bestpractices.dev/projects/9607) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/junit-team/junit5/badge)](https://scorecard.dev/viewer/?uri=github.com/{owner}/{repo})
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9607/badge)](https://www.bestpractices.dev/projects/9607) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/junit-team/junit5/badge)](https://scorecard.dev/viewer/?uri=github.com/junit-team/junit5)
 
 ## Supported Versions
 
