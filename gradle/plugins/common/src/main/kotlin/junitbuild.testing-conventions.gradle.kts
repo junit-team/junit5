@@ -1,4 +1,5 @@
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
+import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
@@ -36,9 +37,15 @@ tasks.withType<Test>().configureEach {
 		predictiveTestSelection {
 			enabled = buildParameters.junit.develocity.predictiveTestSelection.enabled
 
+			if (buildParameters.junit.develocity.predictiveTestSelection.selectRemainingTests) {
+				mode = PredictiveTestSelectionMode.REMAINING_TESTS
+			}
+
 			// Ensure PTS works when publishing Build Scans to scans.gradle.com
 			this as PredictiveTestSelectionConfigurationInternal
 			server = uri("https://ge.junit.org")
+
+			mergeCodeCoverage = true
 		}
 	}
 	systemProperty("java.util.logging.manager", "org.apache.logging.log4j.jul.LogManager")

@@ -15,13 +15,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.ParameterizedTestExtension.METHOD_CONTEXT_KEY;
 import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -143,6 +143,18 @@ class ParameterizedTestExtensionTests {
 	}
 
 	@Test
+	void doesNotThrowExceptionWhenParametrizedTestDoesNotRequireArguments() {
+		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
+			new TestCaseAllowNoArgumentsMethod());
+
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
+			extensionContextWithAnnotatedTestMethod);
+		// cause the stream to be evaluated
+		stream.toArray();
+		stream.close();
+	}
+
+	@Test
 	void throwsExceptionWhenArgumentsProviderIsNotStatic() {
 		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
 			new NonStaticArgumentsProviderTestCase());
@@ -182,11 +194,8 @@ class ParameterizedTestExtensionTests {
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase,
 			Function<String, Optional<String>> configurationSupplier) {
 
-		// @formatter:off
-		var optional = Arrays.stream(testCase.getClass().getDeclaredMethods())
-				.filter(method -> method.getName().equals("method"))
-				.findFirst();
-		// @formatter:on
+		var method = ReflectionUtils.findMethods(testCase.getClass(),
+			it -> "method".equals(it.getName())).stream().findFirst();
 
 		return new ExtensionContext() {
 
@@ -194,7 +203,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<Method> getTestMethod() {
-				return optional;
+				return method;
 			}
 
 			@Override
@@ -268,7 +277,11 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				return new NamespaceAwareStore(store, namespace);
+				var store = new NamespaceAwareStore(this.store, namespace);
+				method //
+						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class))) //
+						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
+				return store;
 			}
 
 			@Override
@@ -304,7 +317,15 @@ class ParameterizedTestExtensionTests {
 
 	static class TestCaseWithAnnotatedMethod {
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@ParameterizedTest
+		void method() {
+		}
+	}
+
+	static class TestCaseAllowNoArgumentsMethod {
+
+		@ParameterizedTest(requireArguments = false)
 		void method() {
 		}
 	}

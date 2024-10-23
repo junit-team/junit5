@@ -15,6 +15,9 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class VintageTest {
+	void packagePrivateMethod() {
+	}
+
 	@Test
 	public void success() {
 		// pass

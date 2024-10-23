@@ -39,11 +39,13 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 		assertEquals(2, ExecuteTestsTwiceTestCase.testInvocations);
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExecuteTestsTwiceExtension.class)
 	static class ExecuteTestsTwiceTestCase {
 
 		static int testInvocations = 0;
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		void testWithResolvedParameter(TestInfo testInfo,
 				@ExtendWith(ExtensionContextParameterResolver.class) ExtensionContext extensionContext) {
@@ -54,6 +56,7 @@ public class ExecutableInvokerIntegrationTests extends AbstractJupiterTestEngine
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExecuteConstructorTwiceExtension.class)
 	static class ExecuteConstructorTwiceTestCase {
 

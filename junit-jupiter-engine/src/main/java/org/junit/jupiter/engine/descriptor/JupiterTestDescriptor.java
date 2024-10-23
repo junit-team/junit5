@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptySet;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
@@ -31,8 +32,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -48,7 +47,6 @@ import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
-import org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -180,22 +178,12 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		throw new JUnitException("Unknown ExecutionMode: " + mode);
 	}
 
-	Set<ExclusiveResource> getExclusiveResourcesFromAnnotation(AnnotatedElement element) {
-		// @formatter:off
-		return findRepeatableAnnotations(element, ResourceLock.class).stream()
-				.map(resource -> new ExclusiveResource(resource.value(), toLockMode(resource.mode())))
-				.collect(toSet());
-		// @formatter:on
-	}
-
-	private static LockMode toLockMode(ResourceAccessMode mode) {
-		switch (mode) {
-			case READ:
-				return LockMode.READ;
-			case READ_WRITE:
-				return LockMode.READ_WRITE;
+	@Override
+	public Set<ExclusiveResource> getExclusiveResources() {
+		if (this instanceof ResourceLockAware) {
+			return ((ResourceLockAware) this).determineExclusiveResources().collect(toSet());
 		}
-		throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+		return emptySet();
 	}
 
 	@Override

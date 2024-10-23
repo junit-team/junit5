@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -64,7 +63,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:on
 
 			var packageSelectors = discoveryRequest.getSelectorsByType(ModuleSelector.class).stream().map(
-				ModuleSelector::getModuleName).collect(toList());
+				ModuleSelector::getModuleName).toList();
 			assertThat(packageSelectors).contains("java.base");
 		}
 
@@ -78,7 +77,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:on
 
 			var packageSelectors = discoveryRequest.getSelectorsByType(PackageSelector.class).stream().map(
-				PackageSelector::getPackageName).collect(toList());
+				PackageSelector::getPackageName).toList();
 			assertThat(packageSelectors).contains("org.junit.platform.engine");
 		}
 
@@ -93,8 +92,9 @@ class LauncherDiscoveryRequestBuilderTests {
 				.build();
 			// @formatter:on
 
-			List<Class<?>> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream().map(
-				ClassSelector::getJavaClass).collect(toList());
+			@SuppressWarnings("rawtypes")
+			List<Class> classes = discoveryRequest.getSelectorsByType(ClassSelector.class).stream()//
+					.map(ClassSelector::getJavaClass).map(Class.class::cast).toList();
 			assertThat(classes).contains(SampleTestClass.class, LauncherDiscoveryRequestBuilderTests.class);
 		}
 
@@ -167,7 +167,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			// @formatter:on
 
 			var uniqueIds = discoveryRequest.getSelectorsByType(UniqueIdSelector.class).stream().map(
-				UniqueIdSelector::getUniqueId).map(Object::toString).collect(toList());
+				UniqueIdSelector::getUniqueId).map(Object::toString).toList();
 
 			assertThat(uniqueIds).contains(id1.toString(), id2.toString());
 		}
@@ -398,6 +398,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class SampleTestClass {
 
 		@Test

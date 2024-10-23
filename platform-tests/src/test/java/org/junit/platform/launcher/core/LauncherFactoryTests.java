@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -112,7 +111,7 @@ class LauncherFactoryTests {
 		// @formatter:off
 		var ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 
 		assertThat(ids).containsOnly("[engine:junit-vintage]", "[engine:junit-jupiter]",
@@ -135,7 +134,7 @@ class LauncherFactoryTests {
 		// @formatter:off
 		var ids = roots.stream()
 				.map(TestIdentifier::getUniqueId)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 
 		assertThat(ids).containsOnly("[engine:junit-jupiter]");
@@ -361,7 +360,7 @@ class LauncherFactoryTests {
 		// @formatter:on
 	}
 
-	@SuppressWarnings("NewClassNamingConvention")
+	@SuppressWarnings({ "NewClassNamingConvention", "JUnitMalformedDeclaration" })
 	public static class JUnit4Example {
 
 		@org.junit.Test
@@ -370,7 +369,7 @@ class LauncherFactoryTests {
 
 	}
 
-	@SuppressWarnings("NewClassNamingConvention")
+	@SuppressWarnings({ "NewClassNamingConvention", "JUnitMalformedDeclaration" })
 	static class JUnit5Example {
 
 		@Tag("test-post-discovery")

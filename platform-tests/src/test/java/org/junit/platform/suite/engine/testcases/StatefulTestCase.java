@@ -24,6 +24,7 @@ public class StatefulTestCase {
 
 	public static List<String> callSequence = new ArrayList<>();
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	public static class Test1 {
 
 		@Test
@@ -33,6 +34,7 @@ public class StatefulTestCase {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	public static class Test2 {
 
 		@Test

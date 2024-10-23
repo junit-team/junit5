@@ -31,8 +31,8 @@ class InterceptingExecutableInvokerTests extends AbstractExecutableInvokerTests 
 
 	@Override
 	<T> T invokeConstructor(Constructor<T> constructor, Object outerInstance) {
-		return newInvoker().invoke(constructor, Optional.ofNullable(outerInstance), extensionContext, extensionRegistry,
-			passthroughInterceptor());
+		return newInvoker().invoke(constructor, Optional.ofNullable(outerInstance), __ -> extensionContext,
+			extensionRegistry, passthroughInterceptor());
 	}
 
 	private InterceptingExecutableInvoker newInvoker() {

@@ -33,6 +33,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -368,6 +369,16 @@ public final class Constants {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	public static final String DEFAULT_TEMP_DIR_FACTORY_PROPERTY_NAME = TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
+
+	/**
+	 * Property name used to set the default extension context scope for
+	 * extensions that participate in test instantiation: {@value}
+	 *
+	 * @since 5.12
+	 * @see org.junit.jupiter.api.extension.TestInstantiationAwareExtension
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	public static final String DEFAULT_TEST_CLASS_INSTANCE_CONSTRUCTION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextScope.DEFAULT_SCOPE_PROPERTY_NAME;
 
 	private Constants() {
 		/* no-op */

@@ -21,6 +21,7 @@ import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameContaining;
+import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.nameStartingWith;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
@@ -28,24 +29,32 @@ import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.sli
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static platform.tooling.support.Helper.loadJarFiles;
 
+import java.lang.annotation.Annotation;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import java.util.Arrays;
 import java.util.Set;
+import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
 
+import com.tngtech.archunit.base.DescribedPredicate;
+import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.Location;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.junit.LocationProvider;
+import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.Order;
 
-@Order(Integer.MAX_VALUE)
 @AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
 class ArchUnitTests {
 
+	@SuppressWarnings("unused")
 	@ArchTest
 	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
 			.that(have(modifier(PUBLIC))) //
@@ -54,6 +63,15 @@ class ArchUnitTests {
 			.and(not(describe("are Kotlin SAM type implementations", simpleName("")))) //
 			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
+
+	@SuppressWarnings("unused")
+	@ArchTest // Consistency of @Documented and @Inherited is checked by the compiler but not for @Retention and @Target
+	private final ArchRule repeatableAnnotationsShouldHaveMatchingContainerAnnotations = classes() //
+			.that(nameStartingWith("org.junit.")) //
+			.and().areAnnotations() //
+			.and().areAnnotatedWith(Repeatable.class) //
+			.should(haveContainerAnnotationWithSameRetentionPolicy()) //
+			.andShould(haveContainerAnnotationWithSameTargetTypes());
 
 	@ArchTest
 	void allAreIn(JavaClasses classes) {
@@ -94,6 +112,16 @@ class ArchUnitTests {
 		GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS.check(subset);
 	}
 
+	private static ArchCondition<? super JavaClass> haveContainerAnnotationWithSameRetentionPolicy() {
+		return ArchCondition.from(new RepeatableAnnotationPredicate<>(Retention.class,
+			(expectedTarget, actualTarget) -> expectedTarget.value() == actualTarget.value()));
+	}
+
+	private static ArchCondition<? super JavaClass> haveContainerAnnotationWithSameTargetTypes() {
+		return ArchCondition.from(new RepeatableAnnotationPredicate<>(Target.class,
+			(expectedTarget, actualTarget) -> Arrays.equals(expectedTarget.value(), actualTarget.value())));
+	}
+
 	static class AllJars implements LocationProvider {
 
 		@Override
@@ -103,4 +131,27 @@ class ArchUnitTests {
 
 	}
 
+	private static class RepeatableAnnotationPredicate<T extends Annotation> extends DescribedPredicate<JavaClass> {
+
+		private final Class<T> annotationType;
+		private final BiPredicate<T, T> predicate;
+
+		public RepeatableAnnotationPredicate(Class<T> annotationType, BiPredicate<T, T> predicate) {
+			super("have identical @%s annotation as container annotation", annotationType.getSimpleName());
+			this.annotationType = annotationType;
+			this.predicate = predicate;
+		}
+
+		@Override
+		public boolean test(JavaClass annotationClass) {
+			var containerAnnotationClass = (JavaClass) annotationClass.getAnnotationOfType(
+				Repeatable.class.getName()).get("value").orElseThrow();
+			var expectedAnnotation = annotationClass.tryGetAnnotationOfType(annotationType);
+			var actualAnnotation = containerAnnotationClass.tryGetAnnotationOfType(annotationType);
+			return expectedAnnotation.map(expectedTarget -> actualAnnotation //
+					.map(actualTarget -> predicate.test(expectedTarget, actualTarget)) //
+					.orElse(false)) //
+					.orElse(actualAnnotation.isEmpty());
+		}
+	}
 }

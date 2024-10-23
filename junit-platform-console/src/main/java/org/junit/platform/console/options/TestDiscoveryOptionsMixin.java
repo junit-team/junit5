@@ -202,6 +202,16 @@ class TestDiscoveryOptionsMixin {
 		@Option(names = { "-exclude-package" }, arity = "1", hidden = true)
 		private final List<String> excludePackages2 = new ArrayList<>();
 
+		@Option(names = {
+				"--include-methodname" }, paramLabel = "PATTERN", arity = "1", description = "Provide a regular expression to include only methods whose fully qualified names without parameters match. " //
+						+ "When this option is repeated, all patterns will be combined using OR semantics.")
+		private List<String> includeMethodNamePatterns = new ArrayList<>();
+
+		@Option(names = {
+				"--exclude-methodname" }, paramLabel = "PATTERN", arity = "1", description = "Provide a regular expression to exclude those methods whose fully qualified names without parameters match. " //
+						+ "When this option is repeated, all patterns will be combined using OR semantics.")
+		private List<String> excludeMethodNamePatterns = new ArrayList<>();
+
 		@Option(names = { "-t",
 				"--include-tag" }, paramLabel = "TAG", arity = "1", description = "Provide a tag or tag expression to include only tests whose tags match. "
 						+ //
@@ -239,6 +249,8 @@ class TestDiscoveryOptionsMixin {
 			result.setExcludedClassNamePatterns(merge(this.excludeClassNamePatterns, this.excludeClassNamePatterns2));
 			result.setIncludedPackages(merge(this.includePackages, this.includePackages2));
 			result.setExcludedPackages(merge(this.excludePackages, this.excludePackages2));
+			result.setIncludedMethodNamePatterns(new ArrayList<>(this.includeMethodNamePatterns));
+			result.setExcludedMethodNamePatterns(new ArrayList<>(this.excludeMethodNamePatterns));
 			result.setIncludedTagExpressions(merge(this.includedTags, this.includedTags2));
 			result.setExcludedTagExpressions(merge(this.excludedTags, this.excludedTags2));
 			result.setIncludedEngines(merge(this.includedEngines, this.includedEngines2));

@@ -200,6 +200,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class GenericTestCaseWithDefaultMethod implements GenericTestInterface<Long> {
 
 		@Test
@@ -210,6 +211,7 @@ class DefaultMethodTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class GenericTestCaseWithOverriddenDefaultMethod implements GenericTestInterface<Long> {
 
 		@Test

@@ -1058,8 +1058,8 @@ There are currently three built-in resolvers that are registered automatically.
   method, or a custom name configured via `@DisplayName`.
 +
 `{TestInfo}` acts as a drop-in replacement for the `TestName` rule from JUnit 4. The
-following demonstrates how to have `TestInfo` injected into a test constructor,
-`@BeforeEach` method, and `@Test` method.
+following demonstrates how to have `TestInfo` injected into a `@BeforeAll` method, test
+class constructor, `@BeforeEach` method, and `@Test` method.
 
 [source,java,indent=0]
 ----
@@ -2943,6 +2943,12 @@ execution. The shared resource is identified by a unique name which is a `String
 name can be user-defined or one of the predefined constants in `{Resources}`:
 `SYSTEM_PROPERTIES`, `SYSTEM_OUT`, `SYSTEM_ERR`, `LOCALE`, or `TIME_ZONE`.
 
+In addition to declaring these shared resources statically, the `{ResourceLock}`
+annotation has a `providers` attribute that allows registering implementations of the
+`{ResourceLocksProvider}` interface that can add shared resources dynamically at runtime.
+Note that resources declared statically with `{ResourceLock}` annotation are combined with
+resources added dynamically by `{ResourceLocksProvider}` implementations.
+
 If the tests in the following example were run in parallel _without_ the use of
 {ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
 would fail due to the inherent race condition of writing and then reading the same JVM
@@ -2970,8 +2976,15 @@ parallel with each other but not while any other test that requires `READ_WRITE`
 to the same shared resource is running.
 
 [source,java]
+.Declaring shared resources "statically" with `{ResourceLock}` annotation
 ----
-include::{testDir}/example/SharedResourcesDemo.java[tags=user_guide]
+include::{testDir}/example/sharedresources/StaticSharedResourcesDemo.java[tags=user_guide]
+----
+
+[source,java]
+.Adding shared resources "dynamically" with `{ResourceLocksProvider}` implementation
+----
+include::{testDir}/example/sharedresources/DynamicSharedResourcesDemo.java[tags=user_guide]
 ----
 
 
@@ -2990,7 +3003,8 @@ The built-in `{TempDirectory}` extension is used to create and clean up a tempor
 directory for an individual test or all tests in a test class. It is registered by
 default. To use it, annotate a non-final, unassigned field of type `java.nio.file.Path` or
 `java.io.File` with `{TempDir}` or add a parameter of type `java.nio.file.Path` or
-`java.io.File` annotated with `@TempDir` to a lifecycle method or test method.
+`java.io.File` annotated with `@TempDir` to a test class constructor, lifecycle method, or
+test method.
 
 For example, the following test declares a parameter annotated with `@TempDir` for a
 single test method, creates and writes to a file in the temporary directory, and checks
@@ -3015,14 +3029,10 @@ entire test class or method (depending on which level the annotation is used), y
 the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
 please note that this option is deprecated and will be removed in a future release.
 
-`@TempDir` is not supported on constructor parameters. If you wish to retain a single
-reference to a temp directory across lifecycle methods and the current test method, please
-use field injection by annotating an instance field with `@TempDir`.
-
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of
-the test class. For better isolation, you should use an instance field so that each test
-method uses a separate directory.
+the test class. For better isolation, you should use an instance field or constructor
+injection so that each test method uses a separate directory.
 
 [source,java,indent=0]
 .A test class that shares a temporary directory across test methods

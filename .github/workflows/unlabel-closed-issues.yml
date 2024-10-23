@@ -3,6 +3,7 @@ on:
   issues:
     types:
       - closed
+permissions: read-all
 jobs:
   label_issues:
     runs-on: ubuntu-latest

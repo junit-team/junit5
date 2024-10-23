@@ -1,10 +1,11 @@
 ---
-name: Bug report
+name: Report a bug or regression
 about: Create a report to help us improve
-
+type: Bug
+labels: ["type: bug"]
 ---
 
-<!-- Please provide us the version of JUnit 5 you are using and, if possible, a failing unit test with your bug report. Don't forget to describe the rationale for this issue (e.g. expected vs. actual behavior). -->
+<!-- Please provide us the version of JUnit 5 you are using and, if possible, a failing unit test with your bug report. Don't forget to describe the rationale for this issue (e.g. expected vs. actual behavior). Please also mention where it's a regression compared to a previous version. -->
 
 ## Steps to reproduce
 

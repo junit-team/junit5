@@ -35,6 +35,7 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 					reportEntry(Map.of("1", "closed")));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExtensionContextParameterResolver.class)
 	static class TestCase {
 		@Test
@@ -64,6 +65,7 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 						))));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ThrowingOnCloseExtension.class)
 	static class ExceptionInCloseableResourceTestCase {
 

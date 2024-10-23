@@ -65,6 +65,7 @@ public class FlightRecordingExecutionListenerIntegrationTests {
 						.with("reason", "for demonstration purposes"));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase {
 		@Test
 		void test(TestReporter reporter) {

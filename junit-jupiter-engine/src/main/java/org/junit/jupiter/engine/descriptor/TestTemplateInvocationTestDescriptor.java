@@ -53,7 +53,7 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		// @ResourceLock annotations are already collected and returned by the enclosing container
+		// Resources are already collected and returned by the enclosing container
 		return emptySet();
 	}
 

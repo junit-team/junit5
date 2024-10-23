@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 // problem since the test method here can never fail.
 class ContainerForStaticNestedTest {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NestedTest {
 
 		@Test

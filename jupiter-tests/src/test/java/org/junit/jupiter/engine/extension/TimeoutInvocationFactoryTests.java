@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout.ThreadMode;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
@@ -30,6 +31,11 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+// org.mockito.exceptions.base.MockitoException: Unable to initialize @Spy annotated field 'store'.
+// Mockito cannot mock this class: class org.junit.jupiter.engine.execution.NamespaceAwareStore.
+// You are seeing this disclaimer because Mockito is configured to create inlined mocks.
+// Byte Buddy could not instrument all classes within the mock's type hierarchy.
+@DisabledIf(value = "runningInEclipse", disabledReason = "Mockito cannot create a spy for NamespaceAwareStore using the inline MockMaker in Eclipse IDE")
 @DisplayName("TimeoutInvocationFactory")
 @ExtendWith(MockitoExtension.class)
 class TimeoutInvocationFactoryTests {
@@ -37,11 +43,15 @@ class TimeoutInvocationFactoryTests {
 	@Spy
 	private final Store store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null),
 		ExtensionContext.Namespace.create(TimeoutInvocationFactoryTests.class));
+
 	@Mock
 	private Invocation<String> invocation;
+
 	@Mock
 	private TimeoutDuration timeoutDuration;
+
 	private TimeoutInvocationFactory timeoutInvocationFactory;
+
 	private TimeoutInvocationParameters<String> parameters;
 
 	@BeforeEach
@@ -84,6 +94,15 @@ class TimeoutInvocationFactoryTests {
 	void shouldCreateTimeoutInvocationForSeparateThreadTimeoutThreadMode() {
 		var invocation = timeoutInvocationFactory.create(ThreadMode.SEPARATE_THREAD, parameters);
 		assertThat(invocation).isInstanceOf(SeparateThreadTimeoutInvocation.class);
+	}
+
+	/**
+	 * Determine if the current code is running in the Eclipse IDE.
+	 * <p>Copied from {@code org.springframework.core.testfixture.ide.IdeUtils}.
+	 */
+	static boolean runningInEclipse() {
+		return StackWalker.getInstance().walk(
+			stream -> stream.anyMatch(stackFrame -> stackFrame.getClassName().startsWith("org.eclipse.jdt")));
 	}
 
 }

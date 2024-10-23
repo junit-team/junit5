@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.time.Duration.ofMillis;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -559,6 +558,7 @@ class ReflectionUtilsTests {
 			// Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, int.class));
 			assertTrue(ReflectionUtils.isAssignableTo(Boolean.class, boolean.class));
+			assertTrue(ReflectionUtils.isAssignableTo(Void.class, void.class));
 
 			// Widening Conversions from Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, long.class));
@@ -759,6 +759,7 @@ class ReflectionUtilsTests {
 		@Test
 		void tryToLoadClass() {
 			assertThat(ReflectionUtils.tryToLoadClass(Integer.class.getName())).isEqualTo(success(Integer.class));
+			assertThat(ReflectionUtils.tryToLoadClass(Void.class.getName())).isEqualTo(success(Void.class));
 		}
 
 		@Test
@@ -770,6 +771,7 @@ class ReflectionUtilsTests {
 		@Test
 		void tryToLoadClassForPrimitive() {
 			assertThat(ReflectionUtils.tryToLoadClass(int.class.getName())).isEqualTo(success(int.class));
+			assertThat(ReflectionUtils.tryToLoadClass(void.class.getName())).isEqualTo(success(void.class));
 		}
 
 		@Test
@@ -1642,7 +1644,7 @@ class ReflectionUtilsTests {
 			// @formatter:off
 			return methods.stream()
 					.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
-					.collect(toList());
+					.toList();
 			// @formatter:on
 		}
 

@@ -13,6 +13,7 @@ package org.junit.vintage.engine.samples.junit3;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+@SuppressWarnings("JUnitMalformedDeclaration")
 public class JUnit3SuiteWithSubsuites extends TestCase {
 	private final String arg;
 

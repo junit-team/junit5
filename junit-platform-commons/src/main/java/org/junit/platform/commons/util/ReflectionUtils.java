@@ -19,6 +19,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.commons.util.PackageNameUtils.getPackageName;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
@@ -186,6 +187,7 @@ public final class ReflectionUtils {
 			long.class,
 			float.class,
 			double.class,
+			void.class,
 
 			boolean[].class,
 			byte[].class,
@@ -213,6 +215,7 @@ public final class ReflectionUtils {
 			Long.class,
 			Float.class,
 			Double.class,
+			Void.class,
 			String.class,
 
 			Boolean[].class,
@@ -246,7 +249,7 @@ public final class ReflectionUtils {
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
-		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(8);
+		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(9);
 
 		primitivesToWrappers.put(boolean.class, Boolean.class);
 		primitivesToWrappers.put(byte.class, Byte.class);
@@ -256,6 +259,7 @@ public final class ReflectionUtils {
 		primitivesToWrappers.put(long.class, Long.class);
 		primitivesToWrappers.put(float.class, Float.class);
 		primitivesToWrappers.put(double.class, Double.class);
+		primitivesToWrappers.put(void.class, Void.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
@@ -1900,7 +1904,7 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean declaredInSamePackage(Method m1, Method m2) {
-		return m1.getDeclaringClass().getPackage().getName().equals(m2.getDeclaringClass().getPackage().getName());
+		return getPackageName(m1.getDeclaringClass()).equals(getPackageName(m2.getDeclaringClass()));
 	}
 
 	/**

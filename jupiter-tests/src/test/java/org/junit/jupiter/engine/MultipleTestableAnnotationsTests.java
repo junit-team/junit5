@@ -42,8 +42,10 @@ class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase {
 
+		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		@RepeatedTest(1)
 		void testAndRepeatedTest(RepetitionInfo repetitionInfo) {

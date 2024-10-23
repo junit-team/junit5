@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.TestInstance;
 
 /**
  * {@code ParameterResolver} defines the API for {@link Extension Extensions}
@@ -30,6 +31,17 @@ import org.apiguardian.api.API;
  * an argument for the parameter must be resolved at runtime by a
  * {@code ParameterResolver}.
  *
+ * <p>By default, when the methods in this interface are called for a test class
+ * constructor, the supplied {@link ExtensionContext} represents the test
+ * class that's about to be instantiated. Extensions may override
+ * {@link #getTestInstantiationExtensionContextScope} to return
+ * {@link ExtensionContextScope#TEST_METHOD TEST_METHOD} in order to change
+ * the scope of the {@code ExtensionContext} to the test method, unless the
+ * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.
+ * Changing the scope makes test-specific data available to the
+ * implementation of this method and allows keeping state on the test level
+ * by using the provided {@link ExtensionContext.Store Store} instance.
+ *
  * <h2>Constructor Requirements</h2>
  *
  * <p>Consult the documentation in {@link Extension} for details on
@@ -44,7 +56,7 @@ import org.apiguardian.api.API;
  * @see TestInstancePreDestroyCallback
  */
 @API(status = STABLE, since = "5.0")
-public interface ParameterResolver extends Extension {
+public interface ParameterResolver extends TestInstantiationAwareExtension {
 
 	/**
 	 * Determine if this resolver supports resolution of an argument for the

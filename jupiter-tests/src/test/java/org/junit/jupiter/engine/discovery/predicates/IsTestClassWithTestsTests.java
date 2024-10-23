@@ -95,6 +95,7 @@ class IsTestClassWithTestsTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private class PrivateClassWithTestMethod {
 
 		@Test
@@ -138,6 +139,7 @@ class IsTestClassWithTestsTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class StaticTestCase {
 
 		@Test
@@ -145,6 +147,7 @@ class IsTestClassWithTestsTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class PrivateStaticTestCase {
 
 		@Test

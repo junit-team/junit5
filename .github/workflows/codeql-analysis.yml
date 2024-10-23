@@ -13,6 +13,8 @@ on:
   schedule:
     - cron: '0 19 * * 3'
 
+permissions: read-all
+
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
@@ -30,9 +32,9 @@ jobs:
           - javascript
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@6db8d6351fd0be61f9ed8ebd12ccd35dcec51fea # v3
+      uses: github/codeql-action/init@662472033e021d55d94146f66f6058822b0b39fd # v3
       with:
         languages: ${{ matrix.language }}
         tools: linked
@@ -44,4 +46,4 @@ jobs:
           -Dscan.tag.CodeQL \
           allMainClasses
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@6db8d6351fd0be61f9ed8ebd12ccd35dcec51fea # v3
+      uses: github/codeql-action/analyze@662472033e021d55d94146f66f6058822b0b39fd # v3

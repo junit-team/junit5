@@ -160,6 +160,7 @@ public class JUnitPlatform extends Runner implements Filterable {
 		return new JUnitPlatformTestTree(testPlan, this.testClass);
 	}
 
+	@SuppressWarnings("deprecation")
 	private LauncherDiscoveryRequest createDiscoveryRequest() {
 		SuiteLauncherDiscoveryRequestBuilder requestBuilder = request();
 		// Allows @RunWith(JUnitPlatform.class) to be added to any test case

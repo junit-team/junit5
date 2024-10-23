@@ -202,9 +202,7 @@ final class ExtensionUtils {
 	 * @since 5.11
 	 */
 	private static Stream<Field> streamExtensionRegisteringFields(Class<?> clazz, Predicate<Field> predicate) {
-		Predicate<Field> composedPredicate = predicate.and(
-			field -> isAnnotated(field, ExtendWith.class) || isAnnotated(field, RegisterExtension.class));
-		return streamFields(clazz, composedPredicate, TOP_DOWN)//
+		return streamFields(clazz, predicate.and(registersExtension), TOP_DOWN)//
 				.sorted(orderComparator);
 	}
 
@@ -236,5 +234,15 @@ final class ExtensionUtils {
 	private static int getOrder(Field field) {
 		return findAnnotation(field, Order.class).map(Order::value).orElse(Order.DEFAULT);
 	}
+
+	/**
+	 * {@link Predicate} which determines if a {@link Field} registers an extension via
+	 * {@link RegisterExtension @RegisterExtension} or {@link ExtendWith @ExtendWith}.
+	 *
+	 * @since 5.11.3
+	 */
+	private static final Predicate<Field> registersExtension = //
+		field -> isAnnotated(field, RegisterExtension.class)
+				|| !findRepeatableAnnotations(field, ExtendWith.class).isEmpty();
 
 }

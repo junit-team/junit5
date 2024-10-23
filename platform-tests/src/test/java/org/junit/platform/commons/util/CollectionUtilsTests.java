@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -260,7 +259,7 @@ class CollectionUtilsTests {
 			};
 
 			try (var stream = (Stream<String>) CollectionUtils.toStream(input)) {
-				var result = stream.collect(toList());
+				var result = stream.toList();
 				assertThat(result).containsExactly("foo", "bar");
 			}
 

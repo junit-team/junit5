@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
+import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -22,7 +23,6 @@ import static org.junit.platform.commons.support.ReflectionSupport.makeAccessibl
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
@@ -50,7 +50,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
@@ -92,6 +91,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	public TempDirectory(JupiterConfiguration configuration) {
 		this.configuration = configuration;
+	}
+
+	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return TEST_METHOD;
 	}
 
 	/**
@@ -161,12 +165,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	 */
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		boolean annotated = parameterContext.isAnnotated(TempDir.class);
-		if (annotated && parameterContext.getDeclaringExecutable() instanceof Constructor) {
-			throw new ParameterResolutionException(
-				"@TempDir is not supported on constructor parameters. Please use field injection instead.");
-		}
-		return annotated;
+		return parameterContext.isAnnotated(TempDir.class);
 	}
 
 	/**

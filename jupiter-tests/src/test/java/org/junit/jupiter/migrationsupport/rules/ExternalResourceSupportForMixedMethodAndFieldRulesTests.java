@@ -45,11 +45,13 @@ public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 	@Rule
 	public ExternalResource fieldRule2 = new MyExternalResource("fieldRule2");
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Rule
 	ExternalResource methodRule1() {
 		return new MyExternalResource("methodRule1");
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Rule
 	ExternalResource methodRule2() {
 		return new MyExternalResource("methodRule2");

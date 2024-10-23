@@ -9,6 +9,8 @@ on:
     branches:
       - '*'
 
+permissions: read-all
+
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
 
@@ -17,11 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       with:
         fetch-depth: 1
     - name: Install GraalVM
-      uses: graalvm/setup-graalvm@22cc13fe88ef133134b3798e128fb208df55e1f5 # v1
+      uses: graalvm/setup-graalvm@6f327093bb6a42fe5eac053d21b168c46aa46f22 # v1
       with:
         distribution: graalvm-community
         version: 'latest'
@@ -45,7 +47,7 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       with:
         fetch-depth: 1
     - name: Build
@@ -55,7 +57,7 @@ jobs:
     runs-on: macos-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       with:
         fetch-depth: 1
     - name: Build
@@ -71,7 +73,7 @@ jobs:
     if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && (startsWith(github.ref, 'refs/heads/releases/') || github.ref == 'refs/heads/main')
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       with:
         fetch-depth: 1
     - name: Publish
@@ -97,7 +99,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
-      uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4
       with:
         fetch-depth: 1
     - name: Install Graphviz

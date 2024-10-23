@@ -11,7 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toCollection;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,6 +22,7 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -60,18 +61,18 @@ class ExtensionComposabilityTests {
 				.flatMap(Arrays::stream)
 				.filter(not(Method::isSynthetic))
 				.filter(not(where(Method::getModifiers, Modifier::isStatic)))
-				.collect(toList());
+				.toList();
 
 		List<String> expectedMethodSignatures = expectedMethods.stream()
 				.map(this::methodSignature)
 				.sorted()
-				.collect(toList());
+				.toList();
 
 		List<String> expectedMethodNames = expectedMethods.stream()
 				.map(Method::getName)
 				.distinct()
 				.sorted()
-				.collect(toList());
+				.toList();
 		// @formatter:on
 
 		// 3) Dynamically implement all Extension APIs
@@ -83,19 +84,19 @@ class ExtensionComposabilityTests {
 		// @formatter:off
 		List<Method> actualMethods = Arrays.stream(dynamicKitchenSinkExtension.getClass().getDeclaredMethods())
 				.filter(ModifierSupport::isNotStatic)
-				.collect(toList());
+				.toList();
 
 		List<String> actualMethodSignatures = actualMethods.stream()
 				.map(this::methodSignature)
 				.distinct()
 				.sorted()
-				.collect(toList());
+				.collect(toCollection(ArrayList::new));
 
 		List<String> actualMethodNames = actualMethods.stream()
 				.map(Method::getName)
 				.distinct()
 				.sorted()
-				.collect(toList());
+				.collect(toCollection(ArrayList::new));
 		// @formatter:on
 
 		// 5) Remove methods from java.lang.Object

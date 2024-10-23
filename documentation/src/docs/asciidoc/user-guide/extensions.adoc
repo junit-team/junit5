@@ -381,6 +381,14 @@ This extension provides a symmetric call to `{TestInstancePreDestroyCallback}` a
 in combination with other extensions to prepare constructor parameters or keeping track of test
 instances and their lifecycle.
 
+[NOTE]
+.Accessing the test-scoped `ExtensionContext`
+====
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
+`TEST_METHOD` to make test-specific data available to your extension implementation or if
+you want to <<extensions-keeping-state, keep state>> on the test method level.
+====
+
 [[extensions-test-instance-factories]]
 === Test Instance Factories
 
@@ -407,6 +415,14 @@ the user's responsibility to ensure that only a single `TestInstanceFactory` is
 registered for any specific test class.
 ====
 
+[NOTE]
+.Accessing the test-scoped `ExtensionContext`
+====
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
+`TEST_METHOD` to make test-specific data available to your extension implementation or if
+you want to <<extensions-keeping-state, keep state>> on the test method level.
+====
+
 [[extensions-test-instance-post-processing]]
 === Test Instance Post-processing
 
@@ -418,6 +434,14 @@ initialization methods on the test instance, etc.
 
 For a concrete example, consult the source code for the `{MockitoExtension}` and the
 `{SpringExtension}`.
+
+[NOTE]
+.Accessing the test-scoped `ExtensionContext`
+====
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
+`TEST_METHOD` to make test-specific data available to your extension implementation or if
+you want to <<extensions-keeping-state, keep state>> on the test method level.
+====
 
 [[extensions-test-instance-pre-destroy-callback]]
 === Test Instance Pre-destroy Callback
@@ -466,6 +490,17 @@ those provided in `java.lang.reflect.Parameter` in order to avoid this bug in th
 ====
 
 [NOTE]
+.Accessing the test-scoped `ExtensionContext`
+====
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
+`TEST_METHOD` to support injecting test specific data into constructor parameters of the
+test class instance. Doing so causes a test-specific `{ExtensionContext}` to be used while
+resolving constructor parameters, unless the
+<<writing-tests-test-instance-lifecycle, test instance lifecycle>> is set to `PER_CLASS`.
+====
+
+[TIP]
+.Parameter resolution for methods called from extensions
 ====
 Other extensions can also leverage registered `ParameterResolvers` for method and
 constructor invocations, using the `{ExecutableInvoker}` available via the
@@ -694,6 +729,15 @@ Dispatch Thread.
 ----
 include::{testDir}/example/interceptor/SwingEdtInterceptor.java[tags=user_guide]
 ----
+
+[NOTE]
+.Accessing the test-scoped `ExtensionContext`
+====
+You may override the `getTestInstantiationExtensionContextScope(...)` method to return
+`TEST_METHOD` to make test-specific data available to your extension implementation of
+`interceptTestClassConstructor` or if you want to <<extensions-keeping-state, keep state>>
+on the test method level.
+====
 
 [[extensions-test-templates]]
 === Providing Invocation Contexts for Test Templates

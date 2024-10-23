@@ -12,6 +12,9 @@ package org.junit.jupiter.engine;
 
 import static java.util.Collections.emptyMap;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +22,10 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -27,16 +33,31 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class ReportingTests extends AbstractJupiterTestEngineTests {
 
-	@Test
-	void reportEntriesArePublished() {
-		executeTestsForClass(MyReportingTestCase.class).testEvents().assertStatistics(stats -> stats //
-				.started(2) //
-				.succeeded(2) //
-				.failed(0) //
-				.reportingEntryPublished(7));
+	@ParameterizedTest
+	@CsvSource(textBlock = """
+			PER_CLASS,  7
+			PER_METHOD, 9
+			""")
+	void reportEntriesArePublished(Lifecycle lifecycle, int expectedReportEntryCount) {
+		var request = request() //
+				.selectors(selectClass(MyReportingTestCase.class)) //
+				.configurationParameter(DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, lifecycle.name());
+		executeTests(request) //
+				.testEvents() //
+				.assertStatistics(stats -> stats //
+						.started(2) //
+						.succeeded(2) //
+						.failed(0) //
+						.reportingEntryPublished(expectedReportEntryCount));
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class MyReportingTestCase {
+
+		public MyReportingTestCase(TestReporter reporter) {
+			// Reported on class-level for PER_CLASS lifecycle and on method-level for PER_METHOD lifecycle
+			reporter.publishEntry("Constructor");
+		}
 
 		@BeforeEach
 		void beforeEach(TestReporter reporter) {

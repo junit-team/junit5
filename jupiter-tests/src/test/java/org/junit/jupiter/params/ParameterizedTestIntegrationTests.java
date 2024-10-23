@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +31,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -40,7 +42,6 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
@@ -405,20 +406,20 @@ class ParameterizedTestIntegrationTests {
 		assertThat(LifecycleTestCase.lifecycleEvents).containsExactly(
 			"beforeAll:ParameterizedTestIntegrationTests$LifecycleTestCase",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+				"constructor:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(0) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(0) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
 				"providerMethod",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[1] argument=foo",
 					"beforeEach:[1] argument=foo",
 						testMethods.get(1) + ":[1] argument=foo",
 					"afterEach:[1] argument=foo",
-					"constructor:ParameterizedTestIntegrationTests$LifecycleTestCase",
+					"constructor:[2] argument=bar",
 					"beforeEach:[2] argument=bar",
 						testMethods.get(1) + ":[2] argument=bar",
 					"afterEach:[2] argument=bar",
@@ -446,6 +447,24 @@ class ParameterizedTestIntegrationTests {
 		results.testEvents().assertThatEvents() //
 				.haveExactly(1, event(displayName("1"), started())) //
 				.haveExactly(1, event(displayName("2"), started()));
+	}
+
+	@Test
+	void failsWhenArgumentsRequiredButNoneProvided() {
+		var result = execute(ZeroArgumentsTestCase.class, "testThatRequiresArguments", String.class);
+		result.containerEvents().assertThatEvents().haveExactly(1, event(finishedWithFailure(message(
+			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+	}
+
+	@Test
+	void failsWhenArgumentsAreNotRequiredAndNoneProvided() {
+		var result = execute(ZeroArgumentsTestCase.class, "testThatDoesNotRequireArguments", String.class);
+		result.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), event(container(ZeroArgumentsTestCase.class), started()),
+			event(container("testThatDoesNotRequireArguments"), started()),
+			event(container("testThatDoesNotRequireArguments"), finishedSuccessfully()),
+			event(container(ZeroArgumentsTestCase.class), finishedSuccessfully()),
+			event(engine(), finishedSuccessfully()));
 	}
 
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
@@ -1133,9 +1152,10 @@ class ParameterizedTestIntegrationTests {
 	@Nested
 	class RepeatableSourcesIntegrationTests {
 
-		@Test
-		void executesWithRepeatableCsvFileSource() {
-			var results = execute("testWithRepeatableCsvFileSource", String.class, String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableCsvFileSource", "testWithRepeatableCsvFileSourceAsMetaAnnotation" })
+		void executesWithRepeatableCsvFileSource(String methodName) {
+			var results = execute(methodName, String.class, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
 						event(test(), displayName("[1] column1=foo, column2=1"), finishedWithFailure(message("foo 1")))) //
@@ -1143,17 +1163,19 @@ class ParameterizedTestIntegrationTests {
 						finishedWithFailure(message("apple 1"))));
 		}
 
-		@Test
-		void executesWithRepeatableCsvSource() {
-			var results = execute("testWithRepeatableCsvSource", String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableCsvSource", "testWithRepeatableCsvSourceAsMetaAnnotation" })
+		void executesWithRepeatableCsvSource(String methodName) {
+			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
 		}
 
-		@Test
-		void executesWithRepeatableMethodSource() {
-			var results = execute("testWithRepeatableMethodSource", String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableMethodSource", "testWithRepeatableMethodSourceAsMetaAnnotation" })
+		void executesWithRepeatableMethodSource(String methodName) {
+			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
 						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
@@ -1161,27 +1183,30 @@ class ParameterizedTestIntegrationTests {
 						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
-		@Test
-		void executesWithRepeatableEnumSource() {
-			var results = execute("testWithRepeatableEnumSource", Action.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableEnumSource", "testWithRepeatableEnumSourceAsMetaAnnotation" })
+		void executesWithRepeatableEnumSource(String methodName) {
+			var results = execute(methodName, Action.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=FOO"), finishedWithFailure(message("FOO")))) //
 					.haveExactly(1,
 						event(test(), displayName("[2] argument=BAR"), finishedWithFailure(message("BAR"))));
 		}
 
-		@Test
-		void executesWithRepeatableValueSource() {
-			var results = execute("testWithRepeatableValueSource", String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableValueSource", "testWithRepeatableValueSourceAsMetaAnnotation" })
+		void executesWithRepeatableValueSource(String methodName) {
+			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1,
 						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
 
-		@Test
-		void executesWithRepeatableFieldSource() {
-			var results = execute("testWithRepeatableFieldSource", String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableFieldSource", "testWithRepeatableFieldSourceAsMetaAnnotation" })
+		void executesWithRepeatableFieldSource(String methodName) {
+			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1,
 						event(test(), displayName("[1] argument=some"), finishedWithFailure(message("some")))) //
@@ -1189,9 +1214,11 @@ class ParameterizedTestIntegrationTests {
 						event(test(), displayName("[2] argument=other"), finishedWithFailure(message("other"))));
 		}
 
-		@Test
-		void executesWithRepeatableArgumentsSource() {
-			var results = execute("testWithRepeatableArgumentsSource", String.class);
+		@ParameterizedTest
+		@ValueSource(strings = { "testWithRepeatableArgumentsSource",
+				"testWithRepeatableArgumentsSourceAsMetaAnnotation" })
+		void executesWithRepeatableArgumentsSource(String methodName) {
+			var results = execute(methodName, String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar")))) //
@@ -1611,7 +1638,7 @@ class ParameterizedTestIntegrationTests {
 	static class MethodSourceTestCase {
 
 		@Target(ElementType.METHOD)
-		@Retention(RetentionPolicy.RUNTIME)
+		@Retention(RUNTIME)
 		@ParameterizedTest(name = "{arguments}")
 		@MethodSource
 		@interface MethodSourceTest {
@@ -1836,7 +1863,7 @@ class ParameterizedTestIntegrationTests {
 	static class FieldSourceTestCase {
 
 		@Target(ElementType.METHOD)
-		@Retention(RetentionPolicy.RUNTIME)
+		@Retention(RUNTIME)
 		@ParameterizedTest(name = "{arguments}")
 		@FieldSource
 		@interface FieldSourceTest {
@@ -2104,6 +2131,18 @@ class ParameterizedTestIntegrationTests {
 			fail("%s %s".formatted(column1, column2));
 		}
 
+		@CsvFileSource(resources = "two-column.csv")
+		@CsvFileSource(resources = "two-column-with-headers.csv", delimiter = '|', useHeadersInDisplayName = true, nullValues = "NIL")
+		@Retention(RUNTIME)
+		@interface TwoCsvFileSources {
+		}
+
+		@ParameterizedTest
+		@TwoCsvFileSources
+		void testWithRepeatableCsvFileSourceAsMetaAnnotation(String column1, String column2) {
+			fail("%s %s".formatted(column1, column2));
+		}
+
 		@ParameterizedTest
 		@CsvSource({ "a" })
 		@CsvSource({ "b" })
@@ -2111,10 +2150,34 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		@CsvSource({ "a" })
+		@CsvSource({ "b" })
+		@Retention(RUNTIME)
+		@interface TwoCsvSources {
+		}
+
+		@ParameterizedTest
+		@TwoCsvSources
+		void testWithRepeatableCsvSourceAsMetaAnnotation(String argument) {
+			fail(argument);
+		}
+
 		@ParameterizedTest
 		@EnumSource(SmartAction.class)
 		@EnumSource(QuickAction.class)
 		void testWithRepeatableEnumSource(Action argument) {
+			fail(argument.toString());
+		}
+
+		@EnumSource(SmartAction.class)
+		@EnumSource(QuickAction.class)
+		@Retention(RUNTIME)
+		@interface TwoEnumSources {
+		}
+
+		@ParameterizedTest
+		@TwoEnumSources
+		void testWithRepeatableEnumSourceAsMetaAnnotation(Action argument) {
 			fail(argument.toString());
 		}
 
@@ -2136,6 +2199,19 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		@MethodSource("someArgumentsMethodSource")
+		@MethodSource("otherArgumentsMethodSource")
+		@Retention(RUNTIME)
+		@interface TwoMethodSources {
+		}
+
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		@ParameterizedTest
+		@TwoMethodSources
+		void testWithRepeatableMethodSourceAsMetaAnnotation(String argument) {
+			fail(argument);
+		}
+
 		public static Stream<Arguments> someArgumentsMethodSource() {
 			return Stream.of(Arguments.of("some"));
 		}
@@ -2151,6 +2227,18 @@ class ParameterizedTestIntegrationTests {
 			fail(argument);
 		}
 
+		@FieldSource("someArgumentsContainer")
+		@FieldSource("otherArgumentsContainer")
+		@Retention(RUNTIME)
+		@interface TwoFieldSources {
+		}
+
+		@ParameterizedTest
+		@TwoFieldSources
+		void testWithRepeatableFieldSourceAsMetaAnnotation(String argument) {
+			fail(argument);
+		}
+
 		static List<String> someArgumentsContainer = List.of("some");
 		static List<String> otherArgumentsContainer = List.of("other");
 
@@ -2158,6 +2246,18 @@ class ParameterizedTestIntegrationTests {
 		@ValueSource(strings = "foo")
 		@ValueSource(strings = "bar")
 		void testWithRepeatableValueSource(String argument) {
+			fail(argument);
+		}
+
+		@ValueSource(strings = "foo")
+		@ValueSource(strings = "bar")
+		@Retention(RUNTIME)
+		@interface TwoValueSources {
+		}
+
+		@ParameterizedTest
+		@TwoValueSources
+		void testWithRepeatableValueSourceAsMetaAnnotation(String argument) {
 			fail(argument);
 		}
 
@@ -2184,6 +2284,18 @@ class ParameterizedTestIntegrationTests {
 		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
 		@ArgumentsSource(TwoUnusedStringArgumentsProvider.class)
 		void testWithRepeatableArgumentsSource(String argument) {
+			fail(argument);
+		}
+
+		@ArgumentsSource(TwoSingleStringArgumentsProvider.class)
+		@ArgumentsSource(TwoUnusedStringArgumentsProvider.class)
+		@Retention(RUNTIME)
+		@interface TwoArgumentsSources {
+		}
+
+		@ParameterizedTest
+		@TwoArgumentsSources
+		void testWithRepeatableArgumentsSourceAsMetaAnnotation(String argument) {
 			fail(argument);
 		}
 	}
@@ -2250,6 +2362,25 @@ class ParameterizedTestIntegrationTests {
 					throws ArgumentsAggregationException {
 				return value;
 			}
+		}
+	}
+
+	static class ZeroArgumentsTestCase {
+
+		@ParameterizedTest
+		@MethodSource("zeroArgumentsProvider")
+		void testThatRequiresArguments(String argument) {
+			fail("This test should not be executed, because no arguments are provided.");
+		}
+
+		@ParameterizedTest(requireArguments = false)
+		@MethodSource("zeroArgumentsProvider")
+		void testThatDoesNotRequireArguments(String argument) {
+			fail("This test should not be executed, because no arguments are provided.");
+		}
+
+		public static Stream<Arguments> zeroArgumentsProvider() {
+			return Stream.empty();
 		}
 	}
 

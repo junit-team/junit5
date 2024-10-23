@@ -125,6 +125,7 @@ class VintageDiscovererTests {
 		return new VintageDiscoverer().discover(request, engineId());
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	public static class Foo {
 
 		@org.junit.Test
@@ -133,6 +134,7 @@ class VintageDiscovererTests {
 
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	public static class Bar {
 
 		@org.junit.Test

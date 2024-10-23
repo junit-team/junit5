@@ -293,6 +293,20 @@ public @interface ParameterizedTest {
 	boolean autoCloseArguments() default true;
 
 	/**
+	 * Configure whether at least one set of arguments is required for this
+	 * parameterized test.
+	 *
+	 * <p>Set this attribute to {@code false} if the absence of arguments is
+	 * expected in some cases and should not cause a test failure.
+	 *
+	 * <p>Defaults to {@code true}.
+	 *
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	boolean requireArguments() default true;
+
+	/**
 	 * Configure how the number of arguments provided by an {@link ArgumentsSource} are validated.
 	 *
 	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.

@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
-import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -759,7 +758,7 @@ class DiscoverySelectorResolverTests {
 	}
 
 	private List<UniqueId> uniqueIds() {
-		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).collect(toList());
+		return engineDescriptor.getDescendants().stream().map(TestDescriptor::getUniqueId).toList();
 	}
 
 	private LauncherDiscoveryRequestBuilder request() {
@@ -835,6 +834,7 @@ class YourTestClass {
 
 class HerTestClass extends MyTestClass {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Test
 	void test7(String param) {
 	}
@@ -842,6 +842,7 @@ class HerTestClass extends MyTestClass {
 
 class OtherTestClass {
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class NestedTestClass {
 
 		@Test

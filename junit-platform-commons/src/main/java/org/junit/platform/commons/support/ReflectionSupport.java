@@ -67,6 +67,7 @@ public final class ReflectionSupport {
 	 */
 	@API(status = DEPRECATED, since = "1.4")
 	@Deprecated
+	@SuppressWarnings("deprecation")
 	public static Optional<Class<?>> loadClass(String name) {
 		return ReflectionUtils.loadClass(name);
 	}

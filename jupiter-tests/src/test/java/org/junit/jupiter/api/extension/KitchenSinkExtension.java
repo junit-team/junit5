@@ -65,6 +65,13 @@ public class KitchenSinkExtension implements
 // @formatter:on
 {
 
+	// --- Test Class Instantiation --------------------------------------------
+
+	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
 	// --- Lifecycle Callbacks -------------------------------------------------
 
 	@Override
@@ -159,6 +166,11 @@ public class KitchenSinkExtension implements
 	@Override
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
 		return null;
+	}
+
+	@Override
+	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext context) {
+		return false;
 	}
 
 	// --- TestWatcher ---------------------------------------------------------

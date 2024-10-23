@@ -12,16 +12,13 @@ package org.junit.jupiter.params;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-
-import java.lang.reflect.Method;
-import java.util.Arrays;
 
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.CsvToPerson;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.Person;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * Unit tests for {@link ParameterizedTestMethodContext}.
@@ -33,49 +30,58 @@ class ParameterizedTestMethodContextTests {
 	@ParameterizedTest
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
 			"mixedMode" })
-	void validSignatures(String name) {
-		assertTrue(new ParameterizedTestMethodContext(method(name), mock()).hasPotentiallyValidSignature());
+	void validSignatures(String methodName) {
+		assertTrue(createMethodContext(ValidTestCase.class, methodName).hasPotentiallyValidSignature());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "twoAggregatorsWithPrimitiveInTheMiddle", "twoAggregatorsWithTestInfoInTheMiddle" })
-	void invalidSignatures(String name) {
-		assertFalse(new ParameterizedTestMethodContext(method(name), mock()).hasPotentiallyValidSignature());
+	void invalidSignatures(String methodName) {
+		assertFalse(createMethodContext(InvalidTestCase.class, methodName).hasPotentiallyValidSignature());
 	}
 
-	private Method method(String name) {
-		return Arrays.stream(getClass().getDeclaredMethods()) //
-				.filter(m -> m.getName().equals(name)) //
-				.findFirst() //
-				.orElseThrow();
+	private ParameterizedTestMethodContext createMethodContext(Class<?> testClass, String methodName) {
+		var method = ReflectionUtils.findMethods(testClass, m -> m.getName().equals(methodName)).getFirst();
+		return new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
 	}
 
-	// --- VALID ---------------------------------------------------------------
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class ValidTestCase {
 
-	void onePrimitive(int num) {
+		@ParameterizedTest
+		void onePrimitive(int num) {
+		}
+
+		@ParameterizedTest
+		void twoPrimitives(int num1, int num2) {
+		}
+
+		@ParameterizedTest
+		void twoAggregators(@CsvToPerson Person person, ArgumentsAccessor arguments) {
+		}
+
+		@ParameterizedTest
+		void twoAggregatorsWithTestInfoAtTheEnd(@CsvToPerson Person person1, @CsvToPerson Person person2,
+				TestInfo testInfo) {
+		}
+
+		@ParameterizedTest
+		void mixedMode(int num1, int num2, ArgumentsAccessor arguments1, ArgumentsAccessor arguments2,
+				@CsvToPerson Person person1, @CsvToPerson Person person2, TestInfo testInfo1, TestInfo testInfo2) {
+		}
 	}
 
-	void twoPrimitives(int num1, int num2) {
-	}
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class InvalidTestCase {
 
-	void twoAggregators(@CsvToPerson Person person, ArgumentsAccessor arguments) {
-	}
+		@ParameterizedTest
+		void twoAggregatorsWithPrimitiveInTheMiddle(@CsvToPerson Person person1, int num, @CsvToPerson Person person2) {
+		}
 
-	void twoAggregatorsWithTestInfoAtTheEnd(@CsvToPerson Person person1, @CsvToPerson Person person2,
-			TestInfo testInfo) {
-	}
-
-	void mixedMode(int num1, int num2, ArgumentsAccessor arguments1, ArgumentsAccessor arguments2,
-			@CsvToPerson Person person1, @CsvToPerson Person person2, TestInfo testInfo1, TestInfo testInfo2) {
-	}
-
-	// --- INVALID -------------------------------------------------------------
-
-	void twoAggregatorsWithPrimitiveInTheMiddle(@CsvToPerson Person person1, int num, @CsvToPerson Person person2) {
-	}
-
-	void twoAggregatorsWithTestInfoInTheMiddle(@CsvToPerson Person person1, TestInfo testInfo,
-			@CsvToPerson Person person2) {
+		@ParameterizedTest
+		void twoAggregatorsWithTestInfoInTheMiddle(@CsvToPerson Person person1, TestInfo testInfo,
+				@CsvToPerson Person person2) {
+		}
 	}
 
 }
