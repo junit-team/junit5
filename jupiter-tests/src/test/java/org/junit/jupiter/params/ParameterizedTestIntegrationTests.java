@@ -1121,7 +1121,7 @@ class ParameterizedTestIntegrationTests {
 				"testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+						String.format("Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
 		@Test
@@ -1130,7 +1130,7 @@ class ParameterizedTestIntegrationTests {
 				"testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+							String.format("Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
 		@Test
@@ -1139,7 +1139,7 @@ class ParameterizedTestIntegrationTests {
 				"testWithStrictArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+							String.format("Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
 		@Test
