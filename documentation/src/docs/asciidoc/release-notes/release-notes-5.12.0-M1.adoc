@@ -33,6 +33,7 @@ JUnit repository on GitHub.
   `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
 * Add support for passing line and column number to `ConsoleLauncher` via
   `--select-file` and `--select-resource`.
+* `ConsoleLauncher` now accepts multiple values for all `--select` options.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]

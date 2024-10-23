@@ -69,85 +69,84 @@ class TestDiscoveryOptionsMixin {
 		private boolean scanModulepath2;
 
 		@Option(names = { "-u",
-				"--select-uri" }, paramLabel = "URI", arity = "1", converter = SelectorConverter.Uri.class, description = "Select a URI for test discovery. This option can be repeated.")
+				"--select-uri" }, paramLabel = "URI", arity = "1..*", converter = SelectorConverter.Uri.class, description = "Select a URI for test discovery. This option can be repeated.")
 		private final List<UriSelector> selectedUris = new ArrayList<>();
 
-		@Option(names = { "--u", "-select-uri" }, arity = "1", hidden = true, converter = SelectorConverter.Uri.class)
+		@Option(names = { "--u",
+				"-select-uri" }, arity = "1..*", hidden = true, converter = SelectorConverter.Uri.class)
 		private final List<UriSelector> selectedUris2 = new ArrayList<>();
 
 		@Option(names = { "-f",
-				"--select-file" }, paramLabel = "FILE", arity = "1", converter = SelectorConverter.File.class, //
+				"--select-file" }, paramLabel = "FILE", arity = "1..*", converter = SelectorConverter.File.class, //
 				description = "Select a file for test discovery. "
 						+ "The line and column numbers can be provided as URI query parameters (e.g. foo.txt?line=12&column=34). "
 						+ "This option can be repeated.")
 		private final List<FileSelector> selectedFiles = new ArrayList<>();
 
-		@Option(names = { "--f", "-select-file" }, arity = "1", hidden = true, converter = SelectorConverter.File.class)
+		@Option(names = { "--f",
+				"-select-file" }, arity = "1..*", hidden = true, converter = SelectorConverter.File.class)
 		private final List<FileSelector> selectedFiles2 = new ArrayList<>();
 
 		@Option(names = { "-d",
-				"--select-directory" }, paramLabel = "DIR", arity = "1", converter = SelectorConverter.Directory.class, description = "Select a directory for test discovery. This option can be repeated.")
+				"--select-directory" }, paramLabel = "DIR", arity = "1..*", converter = SelectorConverter.Directory.class, description = "Select a directory for test discovery. This option can be repeated.")
 		private final List<DirectorySelector> selectedDirectories = new ArrayList<>();
 
 		@Option(names = { "--d",
-				"-select-directory" }, arity = "1", hidden = true, converter = SelectorConverter.Directory.class)
+				"-select-directory" }, arity = "1..*", hidden = true, converter = SelectorConverter.Directory.class)
 		private final List<DirectorySelector> selectedDirectories2 = new ArrayList<>();
 
 		@Option(names = { "-o",
-				"--select-module" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Module.class, description = "Select single module for test discovery. This option can be repeated.")
+				"--select-module" }, paramLabel = "NAME", arity = "1..*", converter = SelectorConverter.Module.class, description = "Select single module for test discovery. This option can be repeated.")
 		private final List<ModuleSelector> selectedModules = new ArrayList<>();
 
 		@Option(names = { "--o",
-				"-select-module" }, arity = "1", converter = SelectorConverter.Module.class, hidden = true)
+				"-select-module" }, arity = "1..*", converter = SelectorConverter.Module.class, hidden = true)
 		private final List<ModuleSelector> selectedModules2 = new ArrayList<>();
 
 		@Option(names = { "-p",
-				"--select-package" }, paramLabel = "PKG", arity = "1", converter = SelectorConverter.Package.class, description = "Select a package for test discovery. This option can be repeated.")
+				"--select-package" }, paramLabel = "PKG", arity = "1..*", converter = SelectorConverter.Package.class, description = "Select a package for test discovery. This option can be repeated.")
 		private final List<PackageSelector> selectedPackages = new ArrayList<>();
 
 		@Option(names = { "--p",
-				"-select-package" }, arity = "1", hidden = true, converter = SelectorConverter.Package.class)
+				"-select-package" }, arity = "1..*", hidden = true, converter = SelectorConverter.Package.class)
 		private final List<PackageSelector> selectedPackages2 = new ArrayList<>();
 
 		@Option(names = { "-c",
-				"--select-class" }, paramLabel = "CLASS", arity = "1", converter = SelectorConverter.Class.class, description = "Select a class for test discovery. This option can be repeated.")
+				"--select-class" }, paramLabel = "CLASS", arity = "1..*", converter = SelectorConverter.Class.class, description = "Select a class for test discovery. This option can be repeated.")
 		private final List<ClassSelector> selectedClasses = new ArrayList<>();
 
 		@Option(names = { "--c",
-				"-select-class" }, arity = "1", hidden = true, converter = SelectorConverter.Class.class)
+				"-select-class" }, arity = "1..*", hidden = true, converter = SelectorConverter.Class.class)
 		private final List<ClassSelector> selectedClasses2 = new ArrayList<>();
 
 		@Option(names = { "-m",
-				"--select-method" }, paramLabel = "NAME", arity = "1", converter = SelectorConverter.Method.class, description = "Select a method for test discovery. This option can be repeated.")
+				"--select-method" }, paramLabel = "NAME", arity = "1..*", converter = SelectorConverter.Method.class, description = "Select a method for test discovery. This option can be repeated.")
 		private final List<MethodSelector> selectedMethods = new ArrayList<>();
 
 		@Option(names = { "--m",
-				"-select-method" }, arity = "1", hidden = true, converter = SelectorConverter.Method.class)
+				"-select-method" }, arity = "1..*", hidden = true, converter = SelectorConverter.Method.class)
 		private final List<MethodSelector> selectedMethods2 = new ArrayList<>();
 
 		@Option(names = { "-r",
-				"--select-resource" }, paramLabel = "RESOURCE", arity = "1", converter = SelectorConverter.ClasspathResource.class, //
-				description = "Select a classpath resource for test discovery. "
-						+ "The line and column numbers can be provided as URI query parameters (e.g. foo.csv?line=12&column=34). "
-						+ "This option can be repeated.")
+				"--select-resource" }, paramLabel = "RESOURCE", arity = "1..*", converter = SelectorConverter.ClasspathResource.class, description = "Select a classpath resource for test discovery. This option can be repeated.")
 		private final List<ClasspathResourceSelector> selectedClasspathResources = new ArrayList<>();
 
 		@Option(names = { "--r",
-				"-select-resource" }, arity = "1", hidden = true, converter = SelectorConverter.ClasspathResource.class)
+				"-select-resource" }, arity = "1..*", hidden = true, converter = SelectorConverter.ClasspathResource.class)
 		private final List<ClasspathResourceSelector> selectedClasspathResources2 = new ArrayList<>();
 
 		@Option(names = { "-i",
-				"--select-iteration" }, paramLabel = "PREFIX:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]", arity = "1", converter = SelectorConverter.Iteration.class, //
+				"--select-iteration" }, paramLabel = "PREFIX:VALUE[INDEX(..INDEX)?(,INDEX(..INDEX)?)*]", arity = "1..*", converter = SelectorConverter.Iteration.class, //
 				description = "Select iterations for test discovery via a prefixed identifier and a list of indexes or index ranges "
 						+ "(e.g. method:com.acme.Foo#m()[1..2] selects the first and second iteration of the m() method in the com.acme.Foo class). "
 						+ "This option can be repeated.")
 		private final List<IterationSelector> selectedIterations = new ArrayList<>();
 
 		@Option(names = { "--i",
-				"-select-iteration" }, arity = "1", hidden = true, converter = SelectorConverter.Iteration.class)
+				"-select-iteration" }, arity = "1..*", hidden = true, converter = SelectorConverter.Iteration.class)
 		private final List<IterationSelector> selectedIterations2 = new ArrayList<>();
 
-		@Option(names = "--select", paramLabel = "PREFIX:VALUE", arity = "1", converter = SelectorConverter.Identifier.class, //
+		@Option(names = "--select", paramLabel = "PREFIX:VALUE", arity = "1..*", converter = SelectorConverter.Identifier.class, //
 				description = "Select via a prefixed identifier (e.g. method:com.acme.Foo#m selects the m() method in the com.acme.Foo class). "
 						+ "This option can be repeated.")
 		private final List<DiscoverySelectorIdentifier> selectorIdentifiers = new ArrayList<>();
