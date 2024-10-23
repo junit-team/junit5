@@ -1117,8 +1117,8 @@ class ParameterizedTestIntegrationTests {
 	class UnusedArgumentsWithStrictArgumentsCountIntegrationTests {
 		@Test
 		void failsWithArgumentsSourceProvidingUnusedArguments() {
-			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class, "testWithTwoUnusedStringArgumentsProvider",
-				String.class);
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
+				"testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
@@ -1126,8 +1126,8 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithMethodSourceProvidingUnusedArguments() {
-			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class, "testWithMethodSourceProvidingUnusedArguments",
-				String.class);
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
+				"testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
@@ -1135,33 +1135,37 @@ class ParameterizedTestIntegrationTests {
 
 		@Test
 		void failsWithCsvSourceUnusedArgumentsAndStrictArgumentCountValidationAnnotationAttribute() {
-			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class, "testWithStrictArgumentCountValidation",
-					String.class);
+			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
+				"testWithStrictArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.finishedWithFailure(message(
-							"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.\nNote: the provided arguments are [foo, unused1]"))));
 		}
 
 		@Test
 		void executesWithCsvSourceUnusedArgumentsAndArgumentCountValidationAnnotationAttribute() {
-			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class, "testWithNoneArgumentCountValidation", String.class);
+			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
+				"testWithNoneArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo"))));
+					.haveExactly(1,
+						event(test(), displayName("[1] argument=foo"), finishedWithFailure(message("foo"))));
 		}
 
 		@Test
 		void executesWithMethodSourceProvidingUnusedArguments() {
-			var results = execute(ArgumentCountValidationMode.STRICT, RepeatableSourcesTestCase.class, "testWithRepeatableCsvSource", String.class);
+			var results = execute(ArgumentCountValidationMode.STRICT, RepeatableSourcesTestCase.class,
+				"testWithRepeatableCsvSource", String.class);
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
 		}
 
-		private EngineExecutionResults execute(ArgumentCountValidationMode configurationValue, Class<?> javaClass, String methodName,
-				Class<?>... methodParameterTypes) {
+		private EngineExecutionResults execute(ArgumentCountValidationMode configurationValue, Class<?> javaClass,
+				String methodName, Class<?>... methodParameterTypes) {
 			return EngineTestKit.engine(new JupiterTestEngine()) //
 					.selectors(selectMethod(javaClass, methodName, methodParameterTypes)) //
-					.configurationParameter(ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY, configurationValue.name().toLowerCase()) //
+					.configurationParameter(ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY,
+						configurationValue.name().toLowerCase()) //
 					.execute();
 		}
 	}
