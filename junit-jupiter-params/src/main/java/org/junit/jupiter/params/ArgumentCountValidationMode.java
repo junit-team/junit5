@@ -27,9 +27,9 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @API(status = API.Status.EXPERIMENTAL, since = "5.12")
 public enum ArgumentCountValidationMode {
 	/**
-	 * Use the default cleanup mode.
+	 * Use the default validation mode.
 	 *
-	 * <p>The default cleanup mode may be changed via the
+	 * <p>The default validation mode may be changed via the
 	 * {@value ParameterizedTestExtension#ARGUMENT_COUNT_VALIDATION_KEY} configuration parameter
 	 * (see the User Guide for details on configuration parameters).
 	 */
