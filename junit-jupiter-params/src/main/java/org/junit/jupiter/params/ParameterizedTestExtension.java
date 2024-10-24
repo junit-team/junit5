@@ -154,7 +154,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		String key = ARGUMENT_COUNT_VALIDATION_KEY;
 		ArgumentCountValidationMode fallback = ArgumentCountValidationMode.NONE;
 		ExtensionContext.Store store = getStoreInExtensionNamespace(extensionContext);
-		return store.getOrComputeIfAbsent(key, k -> {
+		return store.getOrComputeIfAbsent(key, __ -> {
 			Optional<String> optionalConfigValue = extensionContext.getConfigurationParameter(key);
 			if (optionalConfigValue.isPresent()) {
 				String configValue = optionalConfigValue.get();
