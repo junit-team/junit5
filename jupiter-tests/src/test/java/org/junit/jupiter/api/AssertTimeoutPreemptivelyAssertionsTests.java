@@ -40,8 +40,8 @@ import org.opentest4j.AssertionFailedError;
 class AssertTimeoutPreemptivelyAssertionsTests {
 
 	private static final Duration PREEMPTIVE_TIMEOUT = ofMillis(WINDOWS.isCurrentOs() ? 1000 : 100);
-	private static final Assertions.TimeoutFailureFactory<TimeoutException> TIMEOUT_EXCEPTION_FACTORY = (__, ___,
-			____) -> new TimeoutException();
+	private static final Assertions.TimeoutFailureFactory<TimeoutException> TIMEOUT_EXCEPTION_FACTORY = (__, ___, ____,
+			_____) -> new TimeoutException();
 
 	private static final ThreadLocal<AtomicBoolean> changed = ThreadLocal.withInitial(() -> new AtomicBoolean(false));
 

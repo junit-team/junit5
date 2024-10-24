@@ -25,19 +25,22 @@ class SeparateThreadTimeoutInvocation<T> implements Invocation<T> {
 	private final Invocation<T> delegate;
 	private final TimeoutDuration timeout;
 	private final Supplier<String> descriptionSupplier;
+	private final PreInterruptCallbackInvocation preInterruptCallback;
 
 	SeparateThreadTimeoutInvocation(Invocation<T> delegate, TimeoutDuration timeout,
-			Supplier<String> descriptionSupplier) {
+			Supplier<String> descriptionSupplier, PreInterruptCallbackInvocation preInterruptCallback) {
 		this.delegate = delegate;
 		this.timeout = timeout;
 		this.descriptionSupplier = descriptionSupplier;
+		this.preInterruptCallback = preInterruptCallback;
 	}
 
 	@Override
 	public T proceed() throws Throwable {
 		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
-			(__, messageSupplier, cause) -> {
+			(__, messageSupplier, cause, testThread) -> {
 				TimeoutException exception = TimeoutExceptionFactory.create(messageSupplier.get(), timeout, null);
+				preInterruptCallback.executePreInterruptCallback(testThread, exception::addSuppressed);
 				exception.initCause(cause);
 				return exception;
 			});

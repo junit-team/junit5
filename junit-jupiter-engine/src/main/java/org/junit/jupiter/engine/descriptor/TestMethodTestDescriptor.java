@@ -35,7 +35,6 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.AfterEachMethodAdapter;
 import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
-import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
@@ -99,8 +98,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		MutableExtensionRegistry registry = populateNewExtensionRegistry(context);
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), throwableCollector,
-			it -> new DefaultExecutableInvoker(it, registry));
+			context.getExecutionListener(), this, context.getConfiguration(), registry, throwableCollector);
 		// @formatter:off
 		JupiterEngineExecutionContext newContext = context.extend()
 				.withExtensionRegistry(registry)

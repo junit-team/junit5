@@ -69,6 +69,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isThreadDumpOnTimeoutEnabled() {
+		return (boolean) cache.computeIfAbsent(EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME,
+			__ -> delegate.isThreadDumpOnTimeoutEnabled());
+	}
+
+	@Override
 	public ExecutionMode getDefaultExecutionMode() {
 		return (ExecutionMode) cache.computeIfAbsent(DEFAULT_EXECUTION_MODE_PROPERTY_NAME,
 			__ -> delegate.getDefaultExecutionMode());
