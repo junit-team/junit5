@@ -116,7 +116,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	}
 
 	private ExtensionContext.Store getStoreInExtensionNamespace(ExtensionContext context) {
-		return context.getStore(Namespace.create(ParameterizedTestExtension.class));
+		return context.getRoot().getStore(Namespace.create(ParameterizedTestExtension.class));
 	}
 
 	private void validateArgumentCount(ExtensionContext extensionContext, Arguments arguments) {
