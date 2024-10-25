@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
 
 /**
  * {@code PreInterruptContext} encapsulates the <em>context</em> in which an
- * {@link PreInterruptCallback#beforeThreadInterrupt(PreInterruptContext) beforeThreadInterrupt} method is called.
+ * {@link PreInterruptCallback#beforeThreadInterrupt(PreInterruptContext, ExtensionContext) beforeThreadInterrupt} method is called.
  *
  * @since 5.12
  * @see PreInterruptCallback
