@@ -27,6 +27,7 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 
 import picocli.CommandLine;
@@ -146,6 +147,11 @@ class TestDiscoveryOptionsMixin {
 				"-select-iteration" }, arity = "1..*", hidden = true, converter = SelectorConverter.Iteration.class)
 		private final List<IterationSelector> selectedIterations2 = new ArrayList<>();
 
+		@Option(names = { "--select-unique-id",
+				"--uid" }, paramLabel = "UNIQUE-ID", arity = "1..*", converter = SelectorConverter.UniqueId.class, //
+				description = "Select a unique id for test discovery. This option can be repeated.")
+		private final List<UniqueIdSelector> selectedUniqueIds = new ArrayList<>();
+
 		@Option(names = "--select", paramLabel = "PREFIX:VALUE", arity = "1..*", converter = SelectorConverter.Identifier.class, //
 				description = "Select via a prefixed identifier (e.g. method:com.acme.Foo#m selects the m() method in the com.acme.Foo class). "
 						+ "This option can be repeated.")
@@ -168,6 +174,7 @@ class TestDiscoveryOptionsMixin {
 			result.setSelectedClasspathResources(
 				merge(this.selectedClasspathResources, this.selectedClasspathResources2));
 			result.setSelectedIterations(merge(this.selectedIterations, this.selectedIterations2));
+			result.setSelectedUniqueId(this.selectedUniqueIds);
 			result.setSelectorIdentifiers(this.selectorIdentifiers);
 		}
 	}
@@ -210,12 +217,12 @@ class TestDiscoveryOptionsMixin {
 		@Option(names = {
 				"--include-methodname" }, paramLabel = "PATTERN", arity = "1", description = "Provide a regular expression to include only methods whose fully qualified names without parameters match. " //
 						+ "When this option is repeated, all patterns will be combined using OR semantics.")
-		private List<String> includeMethodNamePatterns = new ArrayList<>();
+		private final List<String> includeMethodNamePatterns = new ArrayList<>();
 
 		@Option(names = {
 				"--exclude-methodname" }, paramLabel = "PATTERN", arity = "1", description = "Provide a regular expression to exclude those methods whose fully qualified names without parameters match. " //
 						+ "When this option is repeated, all patterns will be combined using OR semantics.")
-		private List<String> excludeMethodNamePatterns = new ArrayList<>();
+		private final List<String> excludeMethodNamePatterns = new ArrayList<>();
 
 		@Option(names = { "-t",
 				"--include-tag" }, paramLabel = "TAG", arity = "1", description = "Provide a tag or tag expression to include only tests whose tags match. "

@@ -35,6 +35,7 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.ModuleSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 
 /**
@@ -58,6 +59,7 @@ public class TestDiscoveryOptions {
 	private List<MethodSelector> selectedMethods = emptyList();
 	private List<ClasspathResourceSelector> selectedClasspathResources = emptyList();
 	private List<IterationSelector> selectedIterations = emptyList();
+	private List<UniqueIdSelector> selectedUniqueIds = emptyList();
 	private List<DiscoverySelectorIdentifier> selectorIdentifiers = emptyList();
 
 	private List<String> includedClassNamePatterns = singletonList(STANDARD_INCLUDE_PATTERN);
@@ -180,6 +182,14 @@ public class TestDiscoveryOptions {
 
 	public void setSelectedIterations(List<IterationSelector> selectedIterations) {
 		this.selectedIterations = selectedIterations;
+	}
+
+	public List<UniqueIdSelector> getSelectedUniqueIds() {
+		return selectedUniqueIds;
+	}
+
+	public void setSelectedUniqueId(List<UniqueIdSelector> selectedUniqueIds) {
+		this.selectedUniqueIds = selectedUniqueIds;
 	}
 
 	public List<DiscoverySelectorIdentifier> getSelectorIdentifiers() {
