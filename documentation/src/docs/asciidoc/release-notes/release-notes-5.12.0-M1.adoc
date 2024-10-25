@@ -87,7 +87,7 @@ JUnit repository on GitHub.
   a test-scoped `ExtensionContext` in `Extension` methods called during test class
   instantiation. This behavior will become the default in future versions of JUnit.
 * `@TempDir` is now supported on test class constructors.
-* `@ParameterizedTest`s now support argument count validation.
+* Parameterized tests now support argument count validation.
   With the `junit.jupiter.params.argumentCountValidation=strict` configuration
   or the `@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)` attribute,
   any mismatch between the declared number of arguments and the number of arguments provided by the arguments source
