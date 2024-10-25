@@ -203,7 +203,8 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		if (getTotalFailureCount() > 0) {
 			writer.printf("%nFailures (%d):%n", getTotalFailureCount());
 			this.failures.forEach(failure -> {
-				writer.printf("%s%s%n", TAB, describeTest(failure.getTestIdentifier()));
+				writer.printf("%s(%c) %s%n", TAB, getTestId(failure.getTestIdentifier()),
+					describeTest(failure.getTestIdentifier()));
 				printSource(writer, failure.getTestIdentifier());
 				writer.printf("%s=> %s%n", DOUBLE_TAB, failure.getException());
 				printStackTrace(writer, failure.getException(), maxStackTraceLines);
@@ -221,6 +222,12 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		List<String> descriptionParts = new ArrayList<>();
 		collectTestDescription(testIdentifier, descriptionParts);
 		return join(":", descriptionParts);
+	}
+
+	//return the unique id of the test
+	private char getTestId(TestIdentifier testIdentifier) {
+		char id = testIdentifier.getUniqueId().charAt(testIdentifier.getUniqueId().length() - 4);
+		return id == 's' ? '1' : id;
 	}
 
 	private void collectTestDescription(TestIdentifier identifier, List<String> descriptionParts) {

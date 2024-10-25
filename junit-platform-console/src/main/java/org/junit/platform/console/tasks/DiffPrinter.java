@@ -35,7 +35,8 @@ class DiffPrinter {
 
 	//print the difference of two print to out
 	void printDiff(PrintWriter out, String expected, String actual, TestIdentifier testIdentifier) {
-		out.printf("  %s:", describeTest(testIdentifier));
+		char id = testIdentifier.getUniqueId().charAt(testIdentifier.getUniqueId().length() - 4);
+		out.printf(" (%c) %s:", id == 's' ? '1' : id, describeTest(testIdentifier));
 		boolean inlineDiffByWordFlag = false;
 		if (expected.contains(" ") || actual.contains(" ")) {
 			inlineDiffByWordFlag = true;
