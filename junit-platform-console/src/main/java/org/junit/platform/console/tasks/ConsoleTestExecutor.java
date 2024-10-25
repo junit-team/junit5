@@ -49,8 +49,6 @@ public class ConsoleTestExecutor {
 	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
 
-	private TestPlan testPlanListeners;
-
 	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
 		this(discoveryOptions, outputOptions, LauncherFactory::create);
 	}
@@ -101,12 +99,11 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
 		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
+		TestPlanCapturer testPlanCapturer = new TestPlanCapturer();
 		launcher.execute(discoveryRequest);
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
-			//get testPlan from summaryListener
-			testPlanListeners = summaryListener.getTestPlan();
-			printSummary(summary, out);
+			printSummary(summary, testPlanCapturer.testPlan, out);
 		}
 
 		return summary;
@@ -180,7 +177,7 @@ public class ConsoleTestExecutor {
 		return reportsDir.map(it -> new LegacyXmlReportGeneratingListener(it, out));
 	}
 
-	private void printSummary(TestExecutionSummary summary, PrintWriter out) {
+	private void printSummary(TestExecutionSummary summary, TestPlan testPlan, PrintWriter out) {
 		// Otherwise the failures have already been printed in detail
 		if (EnumSet.of(Details.NONE, Details.SUMMARY, Details.TREE).contains(outputOptions.getDetails())) {
 			summary.printFailuresTo(out);
@@ -198,7 +195,7 @@ public class ConsoleTestExecutor {
 					ValueWrapper actual = assertionFailedError.getActual();
 					//apply diff function
 					if (isCharSequence(expected) && isCharSequence(actual)) {
-						new DiffPrinter(testPlanListeners).printDiff(out, expected.getStringRepresentation(),
+						new DiffPrinter(testPlan).printDiff(out, expected.getStringRepresentation(),
 							actual.getStringRepresentation(), failure.getTestIdentifier());
 					}
 				}
@@ -214,5 +211,15 @@ public class ConsoleTestExecutor {
 	@FunctionalInterface
 	public interface Factory {
 		ConsoleTestExecutor create(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions);
+	}
+
+	private static class TestPlanCapturer implements TestExecutionListener {
+
+		private TestPlan testPlan;
+
+		@Override
+		public void testPlanExecutionStarted(TestPlan testPlan) {
+			this.testPlan = testPlan;
+		}
 	}
 }
