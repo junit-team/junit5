@@ -102,7 +102,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 					"Could not load resource(s) with name: " + this.classpathResourceName, cause));
 			if (classpathResources.isEmpty()) {
 				throw new PreconditionViolationException(
-					"Could not load resource(s) with name: " + this.classpathResourceName);
+					"Could not find any resource(s) with name: " + this.classpathResourceName);
 			}
 			this.classpathResources = unmodifiableSet(classpathResources);
 		}
