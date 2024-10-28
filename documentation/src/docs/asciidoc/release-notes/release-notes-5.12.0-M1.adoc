@@ -28,8 +28,8 @@ JUnit repository on GitHub.
 ==== New Features and Improvements
 
 * New `addResourceContainerSelectorResolver()` in `EngineDiscoveryRequestResolver.Builder` to
-support the discovery of class path resource based tests, analogous to the
-`addClassContainerSelectorResolver()`.
+  support the discovery of class path resource based tests, analogous to the
+  `addClassContainerSelectorResolver()`.
 * Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
