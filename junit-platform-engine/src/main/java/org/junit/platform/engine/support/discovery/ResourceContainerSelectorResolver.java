@@ -35,32 +35,29 @@ import org.junit.platform.engine.discovery.PackageSelector;
  * @since 1.12
  */
 class ResourceContainerSelectorResolver implements SelectorResolver {
-	private final Predicate<Resource> packageFilter;
 	private final Predicate<Resource> resourceFilter;
 
-	ResourceContainerSelectorResolver(Predicate<Resource> resourceFilter, Predicate<String> resourcePackageFilter) {
-		this.packageFilter = packageName(resourcePackageFilter);
-		this.resourceFilter = resourceFilter;
+	ResourceContainerSelectorResolver(Predicate<Resource> resourceFilter, Predicate<String> packageFilter) {
+		this.resourceFilter = packageName(packageFilter).and(resourceFilter);
 	}
 
 	@Override
 	public Resolution resolve(ClasspathRootSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInClasspathRoot(selector.getClasspathRoot(), packageFilter));
+		return resourceSelectors(findAllResourcesInClasspathRoot(selector.getClasspathRoot(), resourceFilter));
 	}
 
 	@Override
 	public Resolution resolve(ModuleSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInModule(selector.getModuleName(), packageFilter));
+		return resourceSelectors(findAllResourcesInModule(selector.getModuleName(), resourceFilter));
 	}
 
 	@Override
 	public Resolution resolve(PackageSelector selector, Context context) {
-		return resourceSelectors(findAllResourcesInPackage(selector.getPackageName(), packageFilter));
+		return resourceSelectors(findAllResourcesInPackage(selector.getPackageName(), resourceFilter));
 	}
 
 	private Resolution resourceSelectors(List<Resource> resources) {
 		Set<ClasspathResourceSelector> selectors = resources.stream() //
-				.filter(resourceFilter) //
 				.collect(groupingBy(Resource::getName)) //
 				.values() //
 				.stream() //
