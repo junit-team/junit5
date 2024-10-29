@@ -2660,7 +2660,7 @@ link:https://github.com/awaitility/awaitility[Awaitility].
 
 
 [[writing-tests-declarative-timeouts-debugging]]
-===  Debugging Timeouts
+==== Debugging Timeouts
 
 Registered <<extensions-preinterrupt-callback>> extensions are called prior to invoking
 `Thread.interrupt()` on the thread that is executing the timed out method. This allows to
@@ -2669,7 +2669,7 @@ diagnosing the cause of a timeout.
 
 
 [[writing-tests-declarative-timeouts-debugging-thread-dump]]
-==== Thread Dump on Timeout
+===== Thread Dump on Timeout
 JUnit registers a default implementation of the <<extensions-preinterrupt-callback>> extension point that
 dumps the stacks of all threads to `System.out` if enabled by setting the
 `junit.jupiter.execution.timeout.threaddump.enabled` configuration parameter to `true`.
