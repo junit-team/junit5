@@ -90,7 +90,12 @@ JUnit repository on GitHub.
   a test-scoped `ExtensionContext` in `Extension` methods called during test class
   instantiation. This behavior will become the default in future versions of JUnit.
 * `@TempDir` is now supported on test class constructors.
-* Added `PreInterruptCallback`
+* The new `PreInterruptCallback` extension point defines the API for `Extensions` that
+  wish to be called prior to invocations of `Thread#interrupt()` by the `@Timeout`
+  extension.
+* When enabled via the `junit.jupiter.execution.timeout.threaddump.enabled` configuration
+  parameter, an implementation of `PreInterruptCallback` is registered that writes a
+  thread dump to `System.out` prior to interrupting a test thread due to a timeout.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]
