@@ -15,17 +15,22 @@ import static java.util.stream.Collectors.toCollection;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 
 import org.junit.jupiter.api.extension.ExecutableInvoker;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.jupiter.engine.extension.ExtensionContextInternal;
+import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -38,7 +43,7 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 /**
  * @since 5.0
  */
-abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContext, AutoCloseable {
+abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
 
 	private static final NamespacedHierarchicalStore.CloseAction<Namespace> CLOSE_RESOURCES = (__, ___, value) -> {
 		if (value instanceof CloseableResource) {
@@ -53,20 +58,21 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final JupiterConfiguration configuration;
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
+	private final ExtensionRegistry extensionRegistry;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
-			JupiterConfiguration configuration,
-			Function<ExtensionContext, ExecutableInvoker> executableInvokerFactory) {
-		this.executableInvoker = executableInvokerFactory.apply(this);
+			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		Preconditions.notNull(configuration, "JupiterConfiguration must not be null");
-
+		Preconditions.notNull(extensionRegistry, "ExtensionRegistry must not be null");
+		this.executableInvoker = new DefaultExecutableInvoker(this, extensionRegistry);
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
 		this.configuration = configuration;
 		this.valuesStore = createStore(parent);
+		this.extensionRegistry = extensionRegistry;
 
 		// @formatter:off
 		this.tags = testDescriptor.getTags().stream()
@@ -150,6 +156,11 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public ExecutableInvoker getExecutableInvoker() {
 		return executableInvoker;
+	}
+
+	@Override
+	public <E extends Extension> List<E> getExtensions(Class<E> extensionType) {
+		return extensionRegistry.getExtensions(extensionType);
 	}
 
 	protected abstract Node.ExecutionMode getPlatformExecutionMode();

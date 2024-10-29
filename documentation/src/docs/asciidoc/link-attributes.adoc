@@ -156,6 +156,7 @@ endif::[]
 :TestTemplateInvocationContext:              {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContext.html[TestTemplateInvocationContext]
 :TestTemplateInvocationContextProvider:      {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestTemplateInvocationContextProvider.html[TestTemplateInvocationContextProvider]
 :TestWatcher:                                {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/extension/TestWatcher.html[TestWatcher]
+:PreInterruptCallback:                       {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/extension/PreInterruptCallback.html[PreInterruptCallback]
 // Jupiter Conditions
 :DisabledForJreRange:                        {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledForJreRange.html[@DisabledForJreRange]
 :DisabledIf:                                 {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/condition/DisabledIf.html[@DisabledIf]
