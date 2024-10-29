@@ -33,8 +33,6 @@ public interface ExtensionContextInternal extends ExtensionContext {
 	 * @param <E> the extension type
 	 * @param extensionType the extension type
 	 * @return the list of extensions
-	 * @since 5.12
 	 */
-	@API(status = INTERNAL, since = "5.12")
 	<E extends Extension> List<E> getExtensions(Class<E> extensionType);
 }
