@@ -389,16 +389,11 @@ class DiscoverySelectorsTests {
 					.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
 		}
 
-		private static class StubResource implements Resource {
-			private final String name;
-
-			private StubResource(String name) {
-				this.name = name;
-			}
+		private record StubResource(String name) implements Resource {
 
 			@Override
 			public String getName() {
-				return name;
+				return name();
 			}
 
 			@Override

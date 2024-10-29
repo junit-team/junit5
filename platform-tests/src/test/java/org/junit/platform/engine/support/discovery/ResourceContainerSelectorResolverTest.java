@@ -59,7 +59,6 @@ class ResourceContainerSelectorResolverTest {
 						"org/junit/platform/commons/example.resource",
 						"org/junit/platform/commons/other-example.resource");
 		// @formatter:on
-
 	}
 
 	@Test
@@ -78,7 +77,6 @@ class ResourceContainerSelectorResolverTest {
 						"org/junit/platform/commons/example.resource",
 						"org/junit/platform/commons/other-example.resource");
 		// @formatter:on
-
 	}
 
 	@Test
@@ -97,7 +95,6 @@ class ResourceContainerSelectorResolverTest {
 						"org/junit/platform/commons/example.resource",
 						"org/junit/platform/commons/other-example.resource");
 		// @formatter:on
-
 	}
 
 	@Test
