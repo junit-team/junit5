@@ -36,6 +36,8 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -891,6 +893,54 @@ public final class ReflectionUtils {
 
 			// Fallback to standard VM class loading
 			return Class.forName(trimmedName, false, classLoader);
+		});
+	}
+
+	/**
+	 * Try to get {@linkplain Resource resources} by their name, using the
+	 * {@link ClassLoaderUtils#getDefaultClassLoader()}.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String)}
+	 * for details.
+	 *
+	 * @param classpathResourceName the name of the resources to load; never {@code null} or blank
+	 * @since 1.12
+	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
+		return tryToGetResources(classpathResourceName, ClassLoaderUtils.getDefaultClassLoader());
+	}
+
+	/**
+	 * Try to get {@linkplain Resource resources} by their name, using the
+	 * supplied {@link ClassLoader}.
+	 *
+	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#tryToGetResources(String, ClassLoader)}
+	 * for details.
+	 *
+	 * @param classpathResourceName the name of the resources to load; never {@code null} or blank
+	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
+		Preconditions.notBlank(classpathResourceName, "Resource name must not be null or blank");
+		Preconditions.notNull(classLoader, "Class loader must not be null");
+		boolean startsWithSlash = classpathResourceName.startsWith("/");
+		String canonicalClasspathResourceName = (startsWithSlash ? classpathResourceName.substring(1)
+				: classpathResourceName);
+
+		return Try.call(() -> {
+			List<URL> resources = Collections.list(classLoader.getResources(canonicalClasspathResourceName));
+			return resources.stream().map(url -> {
+				try {
+					return new ClasspathResource(canonicalClasspathResourceName, url.toURI());
+				}
+				catch (URISyntaxException e) {
+					throw ExceptionUtils.throwAsUncheckedException(e);
+				}
+			}).collect(toCollection(LinkedHashSet::new));
 		});
 	}
 
