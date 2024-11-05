@@ -31,12 +31,15 @@ final class PreInterruptThreadDumpPrinter implements PreInterruptCallback {
 
 	@Override
 	public void beforeThreadInterrupt(PreInterruptContext preInterruptContext, ExtensionContext extensionContext) {
+
 		Map<Thread, StackTraceElement[]> stackTraces = Thread.getAllStackTraces();
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("Thread ");
 		appendThreadName(sb, preInterruptContext.getThreadToInterrupt());
 		sb.append(" will be interrupted.");
 		sb.append(NL);
+
 		for (Map.Entry<Thread, StackTraceElement[]> entry : stackTraces.entrySet()) {
 			Thread thread = entry.getKey();
 			StackTraceElement[] stack = entry.getValue();
@@ -53,6 +56,7 @@ final class PreInterruptThreadDumpPrinter implements PreInterruptCallback {
 				sb.append(NL);
 			}
 		}
+
 		System.out.println(sb);
 	}
 
@@ -62,13 +66,18 @@ final class PreInterruptThreadDumpPrinter implements PreInterruptCallback {
 	 * @param th the thread to append
 	 */
 	private void appendThreadName(StringBuilder sb, Thread th) {
+		// Use same format as java.lang.management.ThreadInfo.toString
 		sb.append("\"");
 		sb.append(th.getName());
 		sb.append("\"");
-		sb.append(" #");
-		sb.append(th.getId());
 		if (th.isDaemon()) {
 			sb.append(" daemon");
 		}
+		sb.append(" prio=");
+		sb.append(th.getPriority());
+		sb.append(" Id=");
+		sb.append(th.getId());
+		sb.append(" ");
+		sb.append(th.getState());
 	}
 }

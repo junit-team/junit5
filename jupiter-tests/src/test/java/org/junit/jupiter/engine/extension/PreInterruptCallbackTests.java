@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -102,18 +103,18 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 		assertTestHasTimedOut(tests);
 		assertTrue(interruptedTest.get());
 		Thread thread = Thread.currentThread();
-		assertTrue(
-			output.contains("Thread \"" + thread.getName() + "\" #" + thread.threadId() + " will be interrupted."),
-			output);
-		assertTrue(output.contains("java.lang.Thread.sleep"), output);
-		assertTrue(output.contains(
-			"org.junit.jupiter.engine.extension.PreInterruptCallbackTests$DefaultPreInterruptCallbackTimeoutOnMethodTestCase.test(PreInterruptCallbackTests.java"),
-			output);
 
-		assertTrue(output.contains("junit-jupiter-timeout-watcher"), output);
-		assertTrue(
-			output.contains("org.junit.jupiter.engine.extension.PreInterruptThreadDumpPrinter.beforeThreadInterrupt"),
-			output);
+		assertThat(output) //
+				.containsSubsequence(
+					"Thread \"%s\" prio=%d Id=%d %s will be interrupted.".formatted(thread.getName(),
+						thread.getPriority(), thread.threadId(), Thread.State.TIMED_WAITING), //
+					"java.lang.Thread.sleep", //
+					"org.junit.jupiter.engine.extension.PreInterruptCallbackTests$DefaultPreInterruptCallbackTimeoutOnMethodTestCase.test(PreInterruptCallbackTests.java");
+
+		assertThat(output) //
+				.containsSubsequence( //
+					"junit-jupiter-timeout-watcher", //
+					"org.junit.jupiter.engine.extension.PreInterruptThreadDumpPrinter.beforeThreadInterrupt");
 	}
 
 	@Test
