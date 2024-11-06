@@ -2674,7 +2674,7 @@ diagnosing the cause of a timeout.
 JUnit registers a default implementation of the <<extensions-preinterrupt-callback>>
 extension point that dumps the stacks of all threads to `System.out` if enabled by setting
 the `junit.jupiter.execution.timeout.threaddump.enabled`
-<<running-tests-build-gradle-config-params, configuration parameter>> to `true`.
+<<running-tests-config-params, configuration parameter>> to `true`.
 
 
 [[writing-tests-declarative-timeouts-mode]]
