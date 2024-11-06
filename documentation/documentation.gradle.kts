@@ -481,9 +481,6 @@ tasks {
 		dependsOn(fixJavadoc, asciidoctor, asciidoctorPdf)
 		outputs.dir(docsDir)
 
-		from(layout.buildDirectory.dir("checksum")) {
-			include("published-checksum.txt")
-		}
 		from(asciidoctor.map { it.outputDir }) {
 			include("user-guide/**")
 			include("release-notes/**")
