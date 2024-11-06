@@ -101,8 +101,6 @@ jobs:
     concurrency:
       group: github-pages-${{ github.ref }}
       cancel-in-progress: true
-    permissions:
-      contents: write
     needs: Linux
     runs-on: ubuntu-latest
     steps:
@@ -124,6 +122,8 @@ jobs:
     - name: Upload Documentation
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
+      permissions:
+        contents: write
       with:
         encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
