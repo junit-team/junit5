@@ -2670,13 +2670,16 @@ diagnosing the cause of a timeout.
 
 [[writing-tests-declarative-timeouts-debugging-thread-dump]]
 ===== Thread Dump on Timeout
-JUnit registers a default implementation of the <<extensions-preinterrupt-callback>> extension point that
-dumps the stacks of all threads to `System.out` if enabled by setting the
-`junit.jupiter.execution.timeout.threaddump.enabled` configuration parameter to `true`.
+
+JUnit registers a default implementation of the <<extensions-preinterrupt-callback>>
+extension point that dumps the stacks of all threads to `System.out` if enabled by setting
+the `junit.jupiter.execution.timeout.threaddump.enabled`
+<<running-tests-build-gradle-config-params, configuration parameter>> to `true`.
 
 
 [[writing-tests-declarative-timeouts-mode]]
 ==== Disable @Timeout Globally
+
 When stepping through your code in a debug session, a fixed timeout limit may influence
 the result of the test, e.g. mark the test as failed although all assertions were met.
 
