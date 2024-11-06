@@ -122,12 +122,10 @@ jobs:
     - name: Upload Documentation
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
-      permissions:
-        contents: write
       with:
         encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           gitPublishPush \
           -Dscan.tag.Documentation
       env:
-        GRGIT_USER: ${{ secrets.GITHUB_TOKEN }}
+        GRGIT_USER: ${{ secrets.GH_TOKEN }}
