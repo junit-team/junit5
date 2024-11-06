@@ -30,6 +30,7 @@ jobs:
     - name: Build
       uses: ./.github/actions/main-build
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           -Ptesting.enableJaCoCo \
           :platform-tooling-support-tests:test \
@@ -50,6 +51,8 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+      with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   macOS:
     runs-on: macos-latest
@@ -60,10 +63,12 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+      with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
-    needs: linux
+    needs: Linux
     runs-on: ubuntu-latest
     permissions:
       attestations: write # required for build provenance attestation
@@ -80,6 +85,7 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           publish -x check \
           prepareGitHubAttestation
@@ -107,6 +113,7 @@ jobs:
     - name: Build Documentation
       uses: ./.github/actions/run-gradle
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           prepareDocsForUploadToGhPages \
           -Dscan.tag.Documentation
@@ -114,6 +121,7 @@ jobs:
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           gitPublishPush \
           -Dscan.tag.Documentation

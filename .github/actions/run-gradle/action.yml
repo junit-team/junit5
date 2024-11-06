@@ -5,6 +5,9 @@ inputs:
     required: true
     description: Gradle arguments
     default: build
+  encryptionKey:
+    required: true
+    description: Gradle cache encryption key
 runs:
   using: "composite"
   steps:
@@ -16,7 +19,7 @@ runs:
         check-latest: true
     - uses: gradle/actions/setup-gradle@d156388eb19639ec20ade50009f3d199ce1e2808 # v4
       with:
-        cache-encryption-key: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+        cache-encryption-key: ${{ inputs.encryptionKey }}
     - shell: bash
       env:
         JAVA_HOME: ${{ steps.setup-gradle-jdk.outputs.path }}
