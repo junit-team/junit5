@@ -1,12 +1,38 @@
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
+import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
+import java.nio.file.Files
 
 plugins {
 	`java-library`
 	id("junitbuild.build-parameters")
+}
+
+var openTestReportingCli = configurations.dependencyScope("openTestReportingCli")
+var openTestReportingCliClasspath = configurations.resolvable("openTestReportingCliClasspath") {
+	extendsFrom(openTestReportingCli.get())
+}
+
+val htmlReportFile = layout.buildDirectory.file("reports/open-test-report.html")
+val eventXmlFiles =
+	files(tasks.withType<Test>().map { it.reports.junitXml.outputLocation.get().asFileTree.matching { include("junit-platform-events-*.xml") } })
+
+val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
+	mustRunAfter(tasks.withType<Test>())
+	mainClass.set("org.opentest4j.reporting.cli.ReportingCli")
+	args("html-report")
+	classpath(openTestReportingCliClasspath)
+	outputs.file(htmlReportFile)
+	inputs.files(eventXmlFiles).withPathSensitivity(NONE).skipWhenEmpty()
+	argumentProviders += CommandLineArgumentProvider {
+		listOf(
+			"--output",
+			htmlReportFile.get().asFile.absolutePath
+		) + eventXmlFiles.files.map { it.absolutePath }.toList()
+	}
 }
 
 tasks.withType<Test>().configureEach {
@@ -79,6 +105,16 @@ tasks.withType<Test>().configureEach {
 			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}"
 		)
 	}
+
+	doFirst {
+		files(reports.junitXml.outputLocation.get().asFileTree.matching {
+			include("junit-platform-events-*.xml")
+		}).files.forEach {
+			Files.delete(it.toPath())
+		}
+	}
+
+	finalizedBy(generateOpenTestHtmlReport)
 }
 
 dependencies {
@@ -98,4 +134,7 @@ dependencies {
 	testRuntimeOnly(dependencyFromLibs("openTestReporting-events")) {
 		because("it's required to run tests via IntelliJ which does not consumed the shadowed jar of junit-platform-reporting")
 	}
+
+	openTestReportingCli(dependencyFromLibs("openTestReporting-cli"))
+	openTestReportingCli(project(":junit-platform-reporting"))
 }

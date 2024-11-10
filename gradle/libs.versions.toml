@@ -56,6 +56,7 @@ memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version =
 mockito = { module = "org.mockito:mockito-junit-jupiter", version = "5.14.2" }
 nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
+openTestReporting-cli = { module = "org.opentest4j.reporting:open-test-reporting-cli", version.ref = "openTestReporting" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
 openTestReporting-tooling-core = { module = "org.opentest4j.reporting:open-test-reporting-tooling-core", version.ref = "openTestReporting" }
 openTestReporting-tooling-spi = { module = "org.opentest4j.reporting:open-test-reporting-tooling-spi", version.ref = "openTestReporting" }

@@ -11,6 +11,7 @@ dependencies {
 	api(projects.junitPlatformLauncher)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnlyApi(libs.openTestReporting.tooling.spi)
 
 	shadowed(libs.openTestReporting.events)
 
@@ -22,7 +23,7 @@ dependencies {
 
 tasks {
 	shadowJar {
-		relocate("org.opentest4j.reporting", "org.junit.platform.reporting.shadow.org.opentest4j.reporting")
+		relocate("org.opentest4j.reporting.events", "org.junit.platform.reporting.shadow.org.opentest4j.reporting.events")
 		from(projectDir) {
 			include("LICENSE-open-test-reporting.md")
 			into("META-INF")
