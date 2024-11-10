@@ -169,4 +169,155 @@ class ClassNamePatternFilterUtilsTests {
 				.isEmpty();
 	}
 
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.jupiter.*",
+			"org.junit.platform.*.NonExistentClass",
+			"*.NonExistentClass*",
+			"*NonExistentClass*",
+			"AExecutionConditionClass, BExecutionConditionClass"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void neverIncludedConditions(String pattern) {
+		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
+			new BExecutionConditionClass());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.isEmpty();
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*AExecutionConditionClass, *BExecutionConditionClass",
+			"*ExecutionConditionClass"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void alwaysIncludedConditions(String pattern) {
+		List<? extends ExecutionCondition> executionConditions = List.of(new AExecutionConditionClass(),
+			new BExecutionConditionClass());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.hasSize(2);
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.jupiter.*",
+			"org.junit.platform.*.NonExistentClass",
+			"*.NonExistentClass*",
+			"*NonExistentClass*",
+			"ATestExecutionListenerClass, BTestExecutionListenerClass"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void neverIncludedListeners(String pattern) {
+		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
+			new BTestExecutionListenerClass());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.isEmpty();
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*ATestExecutionListenerClass, *BTestExecutionListenerClass",
+			"*TestExecutionListenerClass"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void alwaysIncludedListeners(String pattern) {
+		List<? extends TestExecutionListener> executionConditions = List.of(new ATestExecutionListenerClass(),
+			new BTestExecutionListenerClass());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.hasSize(2);
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.jupiter.*",
+			"org.junit.platform.*.NonExistentClass",
+			"*.NonExistentClass*",
+			"*NonExistentClass*",
+			"AVanillaEmpty, BVanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void neverIncludedClass(String pattern) {
+		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.isEmpty();
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*AVanillaEmpty, *BVanillaEmpty",
+			"*VanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void alwaysIncludedClass(String pattern) {
+		var executionConditions = List.of(new AVanillaEmpty(), new BVanillaEmpty());
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClasses(pattern)) //
+				.hasSize(2);
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.jupiter.*",
+			"org.junit.platform.*.NonExistentClass",
+			"*.NonExistentClass*",
+			"*NonExistentClass*",
+			"AVanillaEmpty, BVanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void neverIncludedClassName(String pattern) {
+		var executionConditions = List.of("org.junit.platform.commons.util.classes.AVanillaEmpty",
+			"org.junit.platform.commons.util.classes.BVanillaEmpty");
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClassNames(pattern)) //
+				.isEmpty();
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*AVanillaEmpty, *BVanillaEmpty",
+			"*VanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void alwaysIncludedClassName(String pattern) {
+		var executionConditions = List.of("org.junit.platform.commons.util.classes.AVanillaEmpty",
+			"org.junit.platform.commons.util.classes.BVanillaEmpty");
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClassNames(pattern)) //
+				.hasSize(2);
+	}
+
+	//@formatter:off
+	@ValueSource(strings = {
+			"org.junit.platform.*",
+			"*.platform.*",
+			"*",
+			"*AVanillaEmpty, *BVanillaEmpty",
+			"*VanillaEmpty"
+	})
+	//@formatter:on
+	@ParameterizedTest
+	void includeAndExcludeSame(String pattern) {
+		var executionConditions = List.of("org.junit.platform.commons.util.classes.AVanillaEmpty",
+			"org.junit.platform.commons.util.classes.BVanillaEmpty");
+		assertThat(executionConditions).filteredOn(ClassNamePatternFilterUtils.includeMatchingClassNames(pattern)) //
+				.hasSize(2);
+	}
+
 }
