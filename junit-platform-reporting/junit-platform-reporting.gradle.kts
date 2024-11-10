@@ -1,6 +1,7 @@
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.shadow-conventions")
+	`java-test-fixtures`
 }
 
 description = "JUnit Platform Reporting"
@@ -15,6 +16,8 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+
+	testFixturesApi(projects.junitJupiterApi)
 }
 
 tasks {
