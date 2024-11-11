@@ -14,12 +14,12 @@
  * @since 1.4
  */
 module org.junit.platform.reporting {
-	requires transitive java.xml;
+	requires java.xml;
 	requires static transitive org.apiguardian.api;
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;
-	requires static transitive org.opentest4j.reporting.tooling.spi;
+	requires org.opentest4j.reporting.tooling.spi;
 
 	// exports org.junit.platform.reporting; empty package
 	exports org.junit.platform.reporting.legacy;

@@ -69,6 +69,7 @@ class ToolProviderTests {
 			}
 			ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 			ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
+			ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		}
 		catch (Exception e) {
 			throw new AssertionError("Preparing local library folder failed", e);
