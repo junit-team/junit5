@@ -118,7 +118,10 @@ class StandaloneTests {
 		var junitJars = Stream.of("junit-platform-console", "junit-platform-reporting", "junit-platform-engine",
 			"junit-platform-launcher", "junit-platform-commons") //
 				.map(MavenRepo::jar);
-		var thirdPartyJars = Stream.of(ThirdPartyJars.find("org.opentest4j", "opentest4j"));
+		var thirdPartyJars = Stream.of( //
+			ThirdPartyJars.find("org.opentest4j", "opentest4j"), //
+			ThirdPartyJars.find("org.opentest4j.reporting", "open-test-reporting-tooling-spi") //
+		);
 		var modulePath = Stream.concat(junitJars, thirdPartyJars) //
 				.map(String::valueOf) //
 				.collect(joining(File.pathSeparator));

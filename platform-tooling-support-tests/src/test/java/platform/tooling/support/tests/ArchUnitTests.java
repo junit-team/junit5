@@ -56,6 +56,11 @@ class ArchUnitTests {
 
 	@SuppressWarnings("unused")
 	@ArchTest
+	private final ArchRule allClassesAreInJUnitPackage = classes() //
+			.should().haveNameMatching("org\\.junit\\..+");
+
+	@SuppressWarnings("unused")
+	@ArchTest
 	private final ArchRule allPublicTopLevelTypesHaveApiAnnotations = classes() //
 			.that(have(modifier(PUBLIC))) //
 			.and(TOP_LEVEL_CLASSES) //

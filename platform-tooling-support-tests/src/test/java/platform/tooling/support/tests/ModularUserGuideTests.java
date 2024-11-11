@@ -86,6 +86,7 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 		ThirdPartyJars.copy(lib, "org.hamcrest", "hamcrest");
 		ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
+		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
 		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
 		Helper.loadAllJUnitModules(lib);

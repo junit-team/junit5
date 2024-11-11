@@ -248,7 +248,7 @@ class XmlReportWriterTests {
 		writeXmlReport(testPlan, reportData, assertingWriter);
 	}
 
-	@ParameterizedTest
+	@ParameterizedTest(name = "{index}")
 	@MethodSource("stringPairs")
 	void escapesIllegalChars(String input, String output) {
 		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));

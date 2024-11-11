@@ -32,10 +32,11 @@ dependencies {
 		exclude(group = "org.junit.vintage")
 	}
 	testImplementation(libs.joox)
-	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.openTestReporting.tooling.core)
 	testImplementation(libs.picocli)
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
