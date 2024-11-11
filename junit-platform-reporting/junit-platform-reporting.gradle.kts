@@ -17,6 +17,7 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+	osgiVerification(libs.openTestReporting.tooling.spi)
 
 	testFixturesApi(projects.junitJupiterApi)
 }

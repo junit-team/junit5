@@ -17,6 +17,8 @@ dependencies {
 	shadowed(libs.apiguardian) {
 		because("downstream projects need it to avoid compiler warnings")
 	}
+
+	osgiVerification(libs.openTestReporting.tooling.spi)
 }
 
 val jupiterVersion = rootProject.version
