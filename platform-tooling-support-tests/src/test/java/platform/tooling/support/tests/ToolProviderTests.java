@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.spi.ToolProvider;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -98,7 +97,7 @@ class ToolProviderTests {
 				.map(ModuleReference::descriptor) //
 				.map(ModuleDescriptor::toNameAndVersion) //
 				.sorted() //
-				.collect(Collectors.toList());
+				.toList();
 		// modules.forEach(System.out::println);
 
 		var bootLayer = ModuleLayer.boot();
@@ -140,7 +139,7 @@ class ToolProviderTests {
 			">> USAGE >>", //
 			"Launches the JUnit Platform for test discovery and execution.", //
 			">> OPTIONS >>"), //
-			out.toString().lines().collect(Collectors.toList())), //
+			out.toString().lines().toList()), //
 			() -> assertEquals("", err.toString()), //
 			() -> assertEquals(0, code, "Expected exit of 0, but got: " + code) //
 		);

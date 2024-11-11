@@ -20,7 +20,6 @@ import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.stream.Collectors;
 
 import de.sormuras.bartholdy.jdk.Jar;
 
@@ -62,7 +61,7 @@ class JarDescribeModuleTests {
 			result.getOutputLines("out").forEach(System.err::println);
 			fail("No such file: " + expected);
 		}
-		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
+		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).toList();
 		var origin = Path.of("projects", "jar-describe-module", module + ".expected.txt").toUri();
 		assertLinesMatch(expectedLines, result.getOutputLines("out"), () -> String.format("%s\nError", origin));
 	}
