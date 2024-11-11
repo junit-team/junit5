@@ -1,3 +1,4 @@
+
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
 import org.gradle.api.tasks.PathSensitivity.NONE
@@ -16,23 +17,32 @@ var openTestReportingCliClasspath = configurations.resolvable("openTestReporting
 	extendsFrom(openTestReportingCli.get())
 }
 
-val htmlReportFile = layout.buildDirectory.file("reports/open-test-report.html")
-val eventXmlFiles =
-	files(tasks.withType<Test>().map { it.reports.junitXml.outputLocation.get().asFileTree.matching { include("junit-platform-events-*.xml") } })
-
 val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 	mustRunAfter(tasks.withType<Test>())
 	mainClass.set("org.opentest4j.reporting.cli.ReportingCli")
 	args("html-report")
 	classpath(openTestReportingCliClasspath)
-	outputs.file(htmlReportFile)
-	inputs.files(eventXmlFiles).withPathSensitivity(NONE).skipWhenEmpty()
-	argumentProviders += CommandLineArgumentProvider {
-		listOf(
-			"--output",
-			htmlReportFile.get().asFile.absolutePath
-		) + eventXmlFiles.files.map { it.absolutePath }.toList()
+	argumentProviders += objects.newInstance(HtmlReportParameters::class).apply {
+		eventXmlFiles.from(tasks.withType<Test>().map {
+			objects.fileTree()
+				.from(it.reports.junitXml.outputLocation)
+				.include("junit-platform-events-*.xml")
+		})
+		outputLocation = layout.buildDirectory.file("reports/open-test-report.html")
 	}
+}
+
+abstract class HtmlReportParameters : CommandLineArgumentProvider {
+
+	@get:InputFiles
+	@get:PathSensitive(NONE)
+	abstract val eventXmlFiles: ConfigurableFileCollection
+
+	@get:OutputFile
+	abstract val outputLocation: RegularFileProperty
+
+	override fun asArguments() = listOf("--output", outputLocation.get().asFile.absolutePath) +
+			eventXmlFiles.map { it.absolutePath }.toList()
 }
 
 tasks.withType<Test>().configureEach {
@@ -106,10 +116,9 @@ tasks.withType<Test>().configureEach {
 		)
 	}
 
+	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-platform-events-*.xml") }
 	doFirst {
-		files(reports.junitXml.outputLocation.get().asFileTree.matching {
-			include("junit-platform-events-*.xml")
-		}).files.forEach {
+		reportFiles.files.forEach {
 			Files.delete(it.toPath())
 		}
 	}
