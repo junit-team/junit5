@@ -24,7 +24,10 @@ dependencies {
 
 tasks {
 	shadowJar {
-		relocate("org.opentest4j.reporting.events", "org.junit.platform.reporting.shadow.org.opentest4j.reporting.events")
+		listOf("events", "schema").forEach { name ->
+			val packageName = "org.opentest4j.reporting.${name}"
+			relocate(packageName, "org.junit.platform.reporting.shadow.${packageName}")
+		}
 		from(projectDir) {
 			include("LICENSE-open-test-reporting.md")
 			into("META-INF")
