@@ -102,3 +102,8 @@ jobs:
             -Dscan.tag.OpenJ9 \
             build \
             --configuration-cache
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        if: ${{ always() }}
+        with:
+          name: Open Test Reports (${{ github.job }})
+          path: '**/build/reports/open-test-report.html'
