@@ -38,6 +38,9 @@ JUnit repository on GitHub.
   `--select-file` and `--select-resource`.
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
 * Add `--select-unique-id` support to ConsoleLauncher.
+* The `junit-platform-reporting` module now contributes a section containing
+  JUnit-specific metadata about each test/container to the HTML report written by
+  open-test-reporting when added to the classpath/module path.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
