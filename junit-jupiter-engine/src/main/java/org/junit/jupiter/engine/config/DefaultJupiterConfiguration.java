@@ -74,6 +74,16 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public Optional<String> getExtensionAutodetectionIncludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME);
+	}
+
+	@Override
+	public Optional<String> getExtensionAutodetectionExcludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME);
+	}
+
+	@Override
 	public Optional<String> getRawConfigurationParameter(String key) {
 		return configurationParameters.get(key);
 	}

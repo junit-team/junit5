@@ -47,6 +47,16 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public Optional<String> getExtensionAutodetectionIncludePattern() {
+		return delegate.getExtensionAutodetectionIncludePattern();
+	}
+
+	@Override
+	public Optional<String> getExtensionAutodetectionExcludePattern() {
+		return delegate.getExtensionAutodetectionExcludePattern();
+	}
+
+	@Override
 	public Optional<String> getRawConfigurationParameter(String key) {
 		return delegate.getRawConfigurationParameter(key);
 	}
