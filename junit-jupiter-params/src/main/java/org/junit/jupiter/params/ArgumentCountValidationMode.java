@@ -30,7 +30,7 @@ public enum ArgumentCountValidationMode {
 	 * Use the default validation mode.
 	 *
 	 * <p>The default validation mode may be changed via the
-	 * {@value ParameterizedTestExtension#ARGUMENT_COUNT_VALIDATION_KEY} configuration parameter
+	 * {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY} configuration parameter
 	 * (see the User Guide for details on configuration parameters).
 	 */
 	DEFAULT,

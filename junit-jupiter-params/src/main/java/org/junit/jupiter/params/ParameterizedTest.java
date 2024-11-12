@@ -315,7 +315,7 @@ public @interface ParameterizedTest {
 	 * there might be a bug in the test method or the {@link ArgumentsSource}.
 	 * By default, the additional arguments are ignored.
 	 * {@code argumentCountValidation} allows you to control how additional arguments are handled.
-	 * The default can be configured via the {@value ParameterizedTestExtension#ARGUMENT_COUNT_VALIDATION_KEY}
+	 * The default can be configured via the {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
 	 * configuration parameter (see the User Guide for details on configuration parameters).
 	 *
 	 * @since 5.12
