@@ -84,12 +84,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.actualProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.actualProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }
