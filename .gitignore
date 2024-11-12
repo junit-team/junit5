@@ -1,5 +1,6 @@
 # Gradle
 .gradle
+.kotlin
 build
 
 # Ignore Gradle GUI config
