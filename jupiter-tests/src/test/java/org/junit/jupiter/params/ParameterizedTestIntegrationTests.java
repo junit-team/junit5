@@ -1143,6 +1143,17 @@ class ParameterizedTestIntegrationTests {
 		}
 
 		@Test
+		void failsWithCsvSourceUnusedArgumentsButExecutesRemainingArgumentsWhereThereIsNoUnusedArgument() {
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
+				"testWithCsvSourceContainingDifferentNumbersOfArguments", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]"))))) //
+					.haveExactly(1,
+						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
+		}
+
+		@Test
 		void executesWithCsvSourceUnusedArgumentsAndArgumentCountValidationAnnotationAttribute() {
 			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
 				"testWithNoneArgumentCountValidation", String.class);
@@ -1164,7 +1175,7 @@ class ParameterizedTestIntegrationTests {
 				String methodName, Class<?>... methodParameterTypes) {
 			return EngineTestKit.engine(new JupiterTestEngine()) //
 					.selectors(selectMethod(javaClass, methodName, methodParameterTypes)) //
-					.configurationParameter(ParameterizedTestExtension.ARGUMENT_COUNT_VALIDATION_KEY,
+					.configurationParameter(ArgumentCountValidator.ARGUMENT_COUNT_VALIDATION_KEY,
 						configurationValue.name().toLowerCase()) //
 					.execute();
 		}
@@ -2095,6 +2106,12 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.NONE)
 		@CsvSource({ "foo, unused1" })
 		void testWithNoneArgumentCountValidation(String argument) {
+			fail(argument);
+		}
+
+		@ParameterizedTest
+		@CsvSource({ "foo, unused1", "bar" })
+		void testWithCsvSourceContainingDifferentNumbersOfArguments(String argument) {
 			fail(argument);
 		}
 	}
