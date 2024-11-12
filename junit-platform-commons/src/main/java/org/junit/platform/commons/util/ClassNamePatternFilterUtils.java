@@ -96,7 +96,7 @@ public class ClassNamePatternFilterUtils {
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
 				.map(trimmedPatterns -> createPredicateFromPatterns(trimmedPatterns, classNameProvider, type))
-				.orElse(type == FilterType.EXCLUDE ? object -> true : object -> false);
+				.orElse(type == FilterType.EXCLUDE ? __ -> true : __ -> false);
 		// @formatter:on
 	}
 
