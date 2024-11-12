@@ -30,6 +30,7 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 		})
 		outputLocation = layout.buildDirectory.file("reports/open-test-report.html")
 	}
+	outputs.cacheIf { true }
 }
 
 abstract class HtmlReportParameters : CommandLineArgumentProvider {
