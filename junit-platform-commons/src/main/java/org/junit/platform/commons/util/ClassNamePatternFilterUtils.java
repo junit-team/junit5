@@ -103,7 +103,7 @@ public class ClassNamePatternFilterUtils {
 	private static <T> Predicate<T> createPredicateFromPatterns(String patterns, Function<T, String> classNameProvider,
 			FilterType mode) {
 		if (ALL_PATTERN.equals(patterns)) {
-			return object -> mode == FilterType.INCLUDE;
+			return __ -> mode == FilterType.INCLUDE;
 		}
 
 		List<Pattern> patternList = convertToRegularExpressions(patterns);
