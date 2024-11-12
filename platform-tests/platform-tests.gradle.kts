@@ -32,10 +32,11 @@ dependencies {
 		exclude(group = "org.junit.vintage")
 	}
 	testImplementation(libs.joox)
-	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.openTestReporting.tooling.core)
 	testImplementation(libs.picocli)
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
@@ -83,12 +84,12 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }

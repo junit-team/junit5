@@ -20,5 +20,6 @@ tasks.register<Checkstyle>("checkstyleNohttp") {
 		exclude("**/*.jpg", "**/*.png")
 		exclude("**/*.jks")
 		exclude("**/build/**")
+		exclude("**/.kotlin")
 	}
 }

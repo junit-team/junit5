@@ -91,7 +91,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.ALL_PATTERN;
 
 	/**
 	 * Property name used to set the default display name generator class name: {@value}
@@ -107,6 +107,17 @@ public final class Constants {
 	 * <p>The default behavior is not to perform auto-detection.
 	 */
 	public static final String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME;
+
+	/**
+	 * Property name used to enable dumping the stack of all
+	 * {@linkplain Thread threads} to {@code System.out} when a timeout has occurred.
+	 *
+	 * <p>This behavior is disabled by default.
+	 *
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	public static final String EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default test instance lifecycle mode: {@value}
@@ -192,7 +203,7 @@ public final class Constants {
 	 * <p>When set to {@code false} the underlying fork-join pool will reject
 	 * additional tasks if all available workers are busy and the maximum
 	 * pool-size would be exceeded.
-
+	 *
 	 * <p>Value must either {@code true} or {@code false}; defaults to {@code true}.
 	 *
 	 * <p>Note: This property only takes affect on Java 9+.

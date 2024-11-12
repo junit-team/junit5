@@ -26,7 +26,6 @@ import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -81,8 +80,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		TestInstances testInstances = context.getExtensionContext().getTestInstances().orElse(null);
 
 		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), testInstances,
-			it -> new DefaultExecutableInvoker(it, registry));
+			context.getExecutionListener(), this, context.getConfiguration(), registry, testInstances);
 
 		// @formatter:off
 		return context.extend()

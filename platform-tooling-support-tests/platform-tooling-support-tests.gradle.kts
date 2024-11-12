@@ -77,6 +77,7 @@ dependencies {
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
 	thirdPartyJars(libs.opentest4j)
+	thirdPartyJars(libs.openTestReporting.tooling.spi)
 	thirdPartyJars(libs.jimfs)
 
 	antJars(platform(projects.junitBom))
@@ -108,7 +109,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 	val tempRepoName: String by rootProject
 
 	// All maven-aware projects must be published to the local temp repository
-	(mavenizedProjects + projects.junitBom.dependencyProject)
+	(mavenizedProjects + dependencyProject(projects.junitBom))
 		.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
 		.forEach { dependsOn(it) }
 

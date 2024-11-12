@@ -23,7 +23,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install GraalVM
-      uses: graalvm/setup-graalvm@6f327093bb6a42fe5eac053d21b168c46aa46f22 # v1
+      uses: graalvm/setup-graalvm@3aaf71e276c9159bbdfbcdab8abc50c95f41a2c8 # v1
       with:
         distribution: graalvm-community
         version: 'latest'
@@ -32,6 +32,7 @@ jobs:
     - name: Build
       uses: ./.github/actions/main-build
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           -Ptesting.enableJaCoCo \
           :platform-tooling-support-tests:test \
@@ -52,6 +53,8 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+      with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   macOS:
     runs-on: macos-latest
@@ -62,10 +65,12 @@ jobs:
         fetch-depth: 1
     - name: Build
       uses: ./.github/actions/main-build
+      with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
-    needs: linux
+    needs: Linux
     runs-on: ubuntu-latest
     permissions:
       attestations: write # required for build provenance attestation
@@ -82,11 +87,12 @@ jobs:
         ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
         ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           publish -x check \
           prepareGitHubAttestation
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c # v1.4.3
+      uses: actions/attest-build-provenance@ef244123eb79f2f7a7e75d99086184180e6d0018 # v1.4.4
       with:
         subject-path: documentation/build/attestation/*.jar
 
@@ -109,6 +115,7 @@ jobs:
     - name: Build Documentation
       uses: ./.github/actions/run-gradle
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           prepareDocsForUploadToGhPages \
           -Dscan.tag.Documentation
@@ -116,6 +123,7 @@ jobs:
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
       with:
+        encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
           gitPublishPush \
           -Dscan.tag.Documentation

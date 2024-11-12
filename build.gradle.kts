@@ -30,7 +30,7 @@ val platformProjects by extra(listOf(
 		projects.junitPlatformSuiteCommons,
 		projects.junitPlatformSuiteEngine,
 		projects.junitPlatformTestkit
-).map { it.dependencyProject })
+).map { dependencyProject(it) })
 
 val jupiterProjects by extra(listOf(
 		projects.junitJupiter,
@@ -38,14 +38,14 @@ val jupiterProjects by extra(listOf(
 		projects.junitJupiterEngine,
 		projects.junitJupiterMigrationsupport,
 		projects.junitJupiterParams
-).map { it.dependencyProject })
+).map { dependencyProject(it) })
 
 val vintageProjects by extra(listOf(
-		projects.junitVintageEngine.dependencyProject
+	dependencyProject(projects.junitVintageEngine)
 ))
 
 val mavenizedProjects by extra(platformProjects + jupiterProjects + vintageProjects)
-val modularProjects by extra(mavenizedProjects - listOf(projects.junitPlatformConsoleStandalone.dependencyProject))
+val modularProjects by extra(mavenizedProjects - setOf(dependencyProject(projects.junitPlatformConsoleStandalone)))
 
 dependencies {
 	modularProjects.forEach {

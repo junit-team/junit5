@@ -27,6 +27,9 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* New `addResourceContainerSelectorResolver()` in `EngineDiscoveryRequestResolver.Builder` to
+  support the discovery of class path resource based tests, analogous to the
+  `addClassContainerSelectorResolver()`.
 * Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
@@ -35,6 +38,9 @@ JUnit repository on GitHub.
   `--select-file` and `--select-resource`.
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
 * Add `--select-unique-id` support to ConsoleLauncher.
+* The `junit-platform-reporting` module now contributes a section containing
+  JUnit-specific metadata about each test/container to the HTML report written by
+  open-test-reporting when added to the classpath/module path.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
@@ -93,6 +99,12 @@ JUnit repository on GitHub.
   mismatch between the declared number of arguments and the number of arguments provided
   by the arguments source will result in an error. By default, it's still only an error if
   there are fewer arguments provided than declared.
+* The new `PreInterruptCallback` extension point defines the API for `Extensions` that
+  wish to be called prior to invocations of `Thread#interrupt()` by the `@Timeout`
+  extension.
+* When enabled via the `junit.jupiter.execution.timeout.threaddump.enabled` configuration
+  parameter, an implementation of `PreInterruptCallback` is registered that writes a
+  thread dump to `System.out` prior to interrupting a test thread due to a timeout.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

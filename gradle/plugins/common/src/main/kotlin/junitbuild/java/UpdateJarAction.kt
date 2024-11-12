@@ -2,7 +2,7 @@ package junitbuild.java
 
 import org.gradle.api.Action
 import org.gradle.api.Task
-import org.gradle.api.internal.file.archive.ZipCopyAction
+import org.gradle.api.internal.file.archive.ZipEntryConstants
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
 import org.gradle.jvm.toolchain.JavaLauncher
@@ -19,7 +19,7 @@ abstract class UpdateJarAction @Inject constructor(private val operations: ExecO
         // Since ZipCopyAction.CONSTANT_TIME_FOR_ZIP_ENTRIES is in the default time zone (see its Javadoc),
         // we're converting it to the same time in UTC here to make the jar reproducible regardless of the
         // build's time zone.
-        private val CONSTANT_TIME_FOR_ZIP_ENTRIES = LocalDateTime.ofInstant(Instant.ofEpochMilli(ZipCopyAction.CONSTANT_TIME_FOR_ZIP_ENTRIES), ZoneId.systemDefault())
+        private val CONSTANT_TIME_FOR_ZIP_ENTRIES = LocalDateTime.ofInstant(Instant.ofEpochMilli(ZipEntryConstants.CONSTANT_TIME_FOR_ZIP_ENTRIES), ZoneId.systemDefault())
             .toInstant(ZoneOffset.UTC)
             .toString()
     }

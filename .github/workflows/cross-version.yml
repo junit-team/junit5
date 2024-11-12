@@ -49,7 +49,7 @@ jobs:
           version: latest
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution || 'temurin' }})"
         if: matrix.jdk.type == 'ga'
-        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
+        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
         with:
           distribution: ${{ matrix.jdk.distribution || 'temurin' }}
           java-version: ${{ matrix.jdk.version }}
@@ -60,11 +60,17 @@ jobs:
       - name: Build
         uses: ./.github/actions/run-gradle
         with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
             build \
             --configuration-cache
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        if: ${{ always() }}
+        with:
+          name: Open Test Reports (${{ github.job }} ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }}))
+          path: '**/build/reports/open-test-report.html'
   openj9:
     strategy:
       fail-fast: false
@@ -82,7 +88,7 @@ jobs:
         with:
           distribution: semeru
       - name: 'Set up JDK ${{ matrix.jdk }}'
-        uses: actions/setup-java@b36c23c0d998641eff861008f374ee103c25ac73 # v4
+        uses: actions/setup-java@8df1039502a15bceb9433410b1a100fbe190c53b # v4
         with:
           distribution: semeru
           java-version: ${{ matrix.jdk }}
@@ -93,6 +99,7 @@ jobs:
       - name: Build
         uses: ./.github/actions/run-gradle
         with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
             -PjavaToolchain.version=${{ matrix.jdk }} \
             -PjavaToolchain.implementation=j9 \
@@ -100,3 +107,8 @@ jobs:
             -Dscan.tag.OpenJ9 \
             build \
             --configuration-cache
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        if: ${{ always() }}
+        with:
+          name: Open Test Reports (${{ github.job }})
+          path: '**/build/reports/open-test-report.html'

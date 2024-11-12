@@ -14,6 +14,7 @@ import static java.lang.String.join;
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.InstanceOfAssertFactories.type;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
@@ -38,6 +39,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -53,6 +55,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoverySelector;
@@ -286,12 +289,22 @@ class DiscoverySelectorsTests {
 		}
 
 		@Test
-		void selectClasspathResources() {
-			assertViolatesPrecondition(() -> selectClasspathResource(null));
+		void selectClasspathResourcesPreconditions() {
+			assertViolatesPrecondition(() -> selectClasspathResource((String) null));
 			assertViolatesPrecondition(() -> selectClasspathResource(""));
 			assertViolatesPrecondition(() -> selectClasspathResource("    "));
 			assertViolatesPrecondition(() -> selectClasspathResource("\t"));
+			assertViolatesPrecondition(() -> selectClasspathResource((Set<Resource>) null));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.emptySet()));
+			assertViolatesPrecondition(() -> selectClasspathResource(Collections.singleton(null)));
+			assertViolatesPrecondition(() -> selectClasspathResource(Set.of(new StubResource(null))));
+			assertViolatesPrecondition(() -> selectClasspathResource(Set.of(new StubResource(""))));
+			assertViolatesPrecondition(
+				() -> selectClasspathResource(Set.of(new StubResource("a"), new StubResource("b"))));
+		}
 
+		@Test
+		void selectClasspathResources() {
 			// with unnecessary "/" prefix
 			var selector = selectClasspathResource("/foo/bar/spec.xml");
 			assertEquals("foo/bar/spec.xml", selector.getClasspathResourceName());
@@ -299,6 +312,23 @@ class DiscoverySelectorsTests {
 			// standard use case
 			selector = selectClasspathResource("A/B/C/spec.json");
 			assertEquals("A/B/C/spec.json", selector.getClasspathResourceName());
+		}
+
+		@Test
+		void getSelectedClasspathResources() {
+			var selector = selectClasspathResource("org/junit/platform/commons/example.resource");
+			var classpathResources = selector.getClasspathResources();
+			assertAll(() -> assertThat(classpathResources).hasSize(1), //
+				() -> assertThat(classpathResources) //
+						.extracting(Resource::getName) //
+						.containsExactly("org/junit/platform/commons/example.resource") //
+			);
+		}
+
+		@Test
+		void getMissingClasspathResources() {
+			var selector = selectClasspathResource("org/junit/platform/commons/no-such-example.resource");
+			assertViolatesPrecondition(selector::getClasspathResources);
 		}
 
 		@Test
@@ -359,6 +389,18 @@ class DiscoverySelectorsTests {
 					.containsExactly("A/B/C/spec.json", Optional.of(filePosition));
 		}
 
+		private record StubResource(String name) implements Resource {
+
+			@Override
+			public String getName() {
+				return name();
+			}
+
+			@Override
+			public URI getUri() {
+				return null;
+			}
+		}
 	}
 
 	@Nested

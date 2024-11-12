@@ -146,7 +146,7 @@ public class LauncherConstants {
 	 * @see #DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.platform.launcher.TestExecutionListener
 	 */
-	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
+	public static final String DEACTIVATE_ALL_LISTENERS_PATTERN = ClassNamePatternFilterUtils.ALL_PATTERN;
 
 	/**
 	 * Property name used to enable support for
