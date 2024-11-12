@@ -109,7 +109,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 	val tempRepoName: String by rootProject
 
 	// All maven-aware projects must be published to the local temp repository
-	(mavenizedProjects + projects.junitBom.dependencyProject)
+	(mavenizedProjects + projects.junitBom.actualProject)
 		.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
 		.forEach { dependsOn(it) }
 

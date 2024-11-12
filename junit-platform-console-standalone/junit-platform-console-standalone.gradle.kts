@@ -41,11 +41,11 @@ tasks {
 		// https://github.com/junit-team/junit5/issues/761
 		// prevent duplicates, add 3rd-party licenses explicitly
 		exclude("META-INF/LICENSE*.md")
-		from(project.projects.junitPlatformConsole.dependencyProject.projectDir) {
+		from(project.projects.junitPlatformConsole.actualProject.projectDir) {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
-		from(project.projects.junitJupiterParams.dependencyProject.projectDir) {
+		from(project.projects.junitJupiterParams.actualProject.projectDir) {
 			include("LICENSE-univocity-parsers.md")
 			into("META-INF")
 		}

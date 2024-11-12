@@ -1,10 +1,20 @@
 import org.gradle.api.Project
+import org.gradle.api.artifacts.ProjectDependency
 import org.gradle.api.artifacts.VersionCatalog
 import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.the
 
 val Project.javaModuleName: String
-    get() = "org." + this.name.replace('-', '.')
+    get() = toModuleName(name)
+
+val ProjectDependency.javaModuleName: String
+    get() = toModuleName(name)
+
+private fun toModuleName(name: String) = "org.${name.replace('-', '.')}"
+
+val ProjectDependency.actualProject: Project
+    @Suppress("DEPRECATION")
+    get() = this.dependencyProject
 
 fun Project.requiredVersionFromLibs(name: String) =
     libsVersionCatalog.findVersion(name).get().requiredVersion
