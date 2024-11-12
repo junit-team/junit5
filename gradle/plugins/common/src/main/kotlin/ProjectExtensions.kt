@@ -12,9 +12,8 @@ val ProjectDependency.javaModuleName: String
 
 private fun toModuleName(name: String) = "org.${name.replace('-', '.')}"
 
-val ProjectDependency.actualProject: Project
-    @Suppress("DEPRECATION")
-    get() = this.dependencyProject
+fun Project.dependencyProject(dependency: ProjectDependency) =
+    project(dependency.path)
 
 fun Project.requiredVersionFromLibs(name: String) =
     libsVersionCatalog.findVersion(name).get().requiredVersion

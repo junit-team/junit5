@@ -553,14 +553,14 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.actualProject.configurations["shadowedClasspath"])
-		plusConfigurations.add(projects.junitJupiterParams.actualProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.actualProject.configurations["shadowedClasspath"])
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.actualProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }
