@@ -23,7 +23,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install GraalVM
-      uses: graalvm/setup-graalvm@3aaf71e276c9159bbdfbcdab8abc50c95f41a2c8 # v1
+      uses: graalvm/setup-graalvm@4a200f28cd70d1940b5e33bd00830b7dc71a7e2b # v1
       with:
         distribution: graalvm-community
         version: 'latest'
