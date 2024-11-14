@@ -10,11 +10,8 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
-
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -30,10 +27,14 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	private static final Logger logger = LoggerFactory.getLogger(ArgumentCountValidator.class);
 
 	static final String ARGUMENT_COUNT_VALIDATION_KEY = "junit.jupiter.params.argumentCountValidation";
+	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
+		ArgumentCountValidator.class);
 
+	private final ParameterizedTestMethodContext methodContext;
 	private final Arguments arguments;
 
-	ArgumentCountValidator(Arguments arguments) {
+	ArgumentCountValidator(ParameterizedTestMethodContext methodContext, Arguments arguments) {
+		this.methodContext = methodContext;
 		this.arguments = arguments;
 	}
 
@@ -45,7 +46,7 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
-		return context.getRoot().getStore(ExtensionContext.Namespace.create(getClass()));
+		return context.getRoot().getStore(NAMESPACE);
 	}
 
 	private void validateArgumentCount(ExtensionContext extensionContext, Arguments arguments) {
@@ -68,9 +69,7 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	}
 
 	private ArgumentCountValidationMode getArgumentCountValidationMode(ExtensionContext extensionContext) {
-		ParameterizedTest parameterizedTest = findAnnotation(//
-			extensionContext.getRequiredTestMethod(), ParameterizedTest.class//
-		).orElseThrow(NoSuchElementException::new);
+		ParameterizedTest parameterizedTest = methodContext.annotation;
 		if (parameterizedTest.argumentCountValidation() != ArgumentCountValidationMode.DEFAULT) {
 			return parameterizedTest.argumentCountValidation();
 		}

@@ -47,7 +47,7 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 	public List<Extension> getAdditionalExtensions() {
 		return Arrays.asList(
 			new ParameterizedTestParameterResolver(this.methodContext, this.consumedArguments, this.invocationIndex),
-			new ArgumentCountValidator(this.arguments));
+			new ArgumentCountValidator(this.methodContext, this.arguments));
 	}
 
 	private static Object[] consumedArguments(ParameterizedTestMethodContext methodContext, Object[] arguments) {
