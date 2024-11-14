@@ -110,8 +110,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 	}
 
 	private static Predicate<String> createExtensionFilterByPatterns(String include, String exclude) {
-		return ClassNamePatternFilterUtils.includeMatchingClassNames(include).and(
-			ClassNamePatternFilterUtils.excludeMatchingClassNames(exclude));
+		return ClassNamePatternFilterUtils.includeMatchingClassNames(include) //
+			.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(exclude));
 	}
 
 	/**
