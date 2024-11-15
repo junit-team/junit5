@@ -84,9 +84,11 @@
             <url>file://${maven.repo}</url>
             <snapshots>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
             <releases>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
         <repository>
