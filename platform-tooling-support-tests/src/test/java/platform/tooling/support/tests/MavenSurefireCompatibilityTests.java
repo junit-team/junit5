@@ -27,15 +27,14 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
-import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.9.2
  */
 class MavenSurefireCompatibilityTests {
 
-	@LocalMavenRepo
-	Directory localMavenRepo;
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
 
 	@ResourceLock(Projects.MAVEN_SUREFIRE_COMPATIBILITY)
 	@ParameterizedTest

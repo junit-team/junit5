@@ -24,12 +24,11 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
-import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 class VintageMavenIntegrationTests {
 
-	@LocalMavenRepo
-	Directory localMavenRepo;
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
 
 	@Test
 	void unsupportedVersion() {
