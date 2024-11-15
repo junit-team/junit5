@@ -65,7 +65,7 @@ jobs:
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
             build \
-            --configuration-cache
+            --no-configuration-cache #Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         if: ${{ always() }}
         with:
@@ -106,7 +106,7 @@ jobs:
             -Dscan.tag.JDK_${{ matrix.jdk }} \
             -Dscan.tag.OpenJ9 \
             build \
-            --configuration-cache
+            --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
       - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
         if: ${{ always() }}
         with:
