@@ -24,6 +24,7 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.3
@@ -32,11 +33,11 @@ class MavenStarterTests {
 
 	@ResourceLock(Projects.MAVEN_STARTER)
 	@Test
-	void verifyMavenStarterProject() {
+	void verifyMavenStarterProject(@LocalMavenRepo Directory localMavenRepo) {
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MAVEN_STARTER) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //

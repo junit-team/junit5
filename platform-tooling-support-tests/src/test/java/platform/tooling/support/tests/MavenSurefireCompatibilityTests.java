@@ -27,11 +27,15 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.9.2
  */
 class MavenSurefireCompatibilityTests {
+
+	@LocalMavenRepo
+	Directory localMavenRepo;
 
 	@ResourceLock(Projects.MAVEN_SUREFIRE_COMPATIBILITY)
 	@ParameterizedTest
@@ -44,7 +48,7 @@ class MavenSurefireCompatibilityTests {
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MAVEN_SUREFIRE_COMPATIBILITY) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
 				.addArguments(extraArgs) //

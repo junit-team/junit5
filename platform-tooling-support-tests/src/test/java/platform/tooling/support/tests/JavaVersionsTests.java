@@ -27,11 +27,15 @@ import org.junit.jupiter.api.Test;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.4
  */
 class JavaVersionsTests {
+
+	@LocalMavenRepo
+	Directory localMavenRepo;
 
 	@Test
 	void java_8() {
@@ -54,7 +58,7 @@ class JavaVersionsTests {
 				.setTool(Request.maven()) //
 				.setProject(Projects.JAVA_VERSIONS) //
 				.setWorkspace("java-versions-" + version) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(javaHome);
