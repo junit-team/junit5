@@ -24,8 +24,12 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 class VintageMavenIntegrationTests {
+
+	@LocalMavenRepo
+	Directory localMavenRepo;
 
 	@Test
 	void unsupportedVersion() {
@@ -61,7 +65,7 @@ class VintageMavenIntegrationTests {
 				.setProject(Projects.VINTAGE) //
 				.setWorkspace("vintage-maven-" + version) //
 				.addArguments("clean", "test", "--update-snapshots", "--batch-mode") //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(TOOL_TIMEOUT) //
 				.build() //

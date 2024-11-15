@@ -28,11 +28,15 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.4
  */
 class MultiReleaseJarTests {
+
+	@LocalMavenRepo
+	Directory localMavenRepo;
 
 	@ResourceLock(Projects.MULTI_RELEASE_JAR)
 	@Test
@@ -88,7 +92,7 @@ class MultiReleaseJarTests {
 		var builder = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MULTI_RELEASE_JAR) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode", "--file", variant,
 					"test") //
 				.setTimeout(TOOL_TIMEOUT);
