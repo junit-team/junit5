@@ -10,21 +10,12 @@
 
 package platform.tooling.support.tests;
 
-import static java.net.http.HttpRequest.BodyPublishers.noBody;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 
-import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
 public class MavenRepoProxy implements AutoCloseable {
@@ -32,10 +23,7 @@ public class MavenRepoProxy implements AutoCloseable {
 	// Forbid downloading JUnit artifacts since we want to use the local ones
 	private static final List<String> FORBIDDEN_PATHS = List.of("/org/junit");
 
-	private static final List<String> RESTRICTED_HEADER_NAMES = List.of("Connection", "Host");
-
 	private final HttpServer httpServer;
-	private final HttpClient httpClient;
 
 	@SuppressWarnings("unused")
 	public MavenRepoProxy() throws IOException {
@@ -48,7 +36,6 @@ public class MavenRepoProxy implements AutoCloseable {
 	}
 
 	private MavenRepoProxy(String proxiedUrl, int port) throws IOException {
-		httpClient = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 		httpServer = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), port), 0);
 		httpServer.createContext("/", exchange -> {
 			try (exchange) {
@@ -57,17 +44,12 @@ public class MavenRepoProxy implements AutoCloseable {
 					case "GET":
 						if (FORBIDDEN_PATHS.stream().anyMatch(
 							it -> exchange.getRequestURI().getPath().startsWith(it))) {
-							exchange.sendResponseHeaders(404, 0);
+							exchange.sendResponseHeaders(404, -1);
 							break;
 						}
-						var request = mapRequest(proxiedUrl, exchange);
-						try {
-							var response = httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
-							mapResponse(response, exchange);
-						}
-						catch (InterruptedException e) {
-							Thread.currentThread().interrupt();
-						}
+						var redirectUrl = proxiedUrl + exchange.getRequestURI().getPath();
+						exchange.getResponseHeaders().add("Location", redirectUrl);
+						exchange.sendResponseHeaders(302, -1);
 						break;
 					default:
 						exchange.sendResponseHeaders(405, -1);
@@ -85,40 +67,9 @@ public class MavenRepoProxy implements AutoCloseable {
 		return URI.create("http://" + address.getAddress().getHostName() + ":" + address.getPort());
 	}
 
-	private static void mapResponse(HttpResponse<InputStream> response, HttpExchange exchange) throws IOException {
-		exchange.sendResponseHeaders(response.statusCode(),
-			response.headers().firstValueAsLong("Content-Length").orElse(0));
-		response.headers().map().forEach((key, values) -> exchange.getResponseHeaders().put(key, values));
-		try (InputStream body = response.body()) {
-			body.transferTo(exchange.getResponseBody());
-		}
-	}
-
-	private static HttpRequest mapRequest(String proxiedUrl, HttpExchange exchange) {
-		var request = HttpRequest.newBuilder().method(exchange.getRequestMethod(), noBody()) //
-				.uri(URI.create(proxiedUrl + exchange.getRequestURI().getPath()));
-		exchange.getRequestHeaders().entrySet().stream() //
-				.filter(entry -> RESTRICTED_HEADER_NAMES.stream().noneMatch(it -> it.equalsIgnoreCase(entry.getKey()))) //
-				.forEach(entry -> entry.getValue() //
-						.forEach(value -> request.header(entry.getKey(), value)));
-		return request.build();
-	}
-
 	@Override
 	public void close() {
-		assertAll( //
-			() -> assertDoesNotThrow(() -> httpServer.stop(0)), //
-			() -> assertDoesNotThrow(httpClient::close) //
-		);
+		httpServer.stop(0);
 	}
 
-	@SuppressWarnings("unused")
-	public static void main(String[] args) throws Exception {
-		try (var proxy = new MavenRepoProxy(12345)) {
-			System.out.println("Started proxy: " + proxy.getBaseUri());
-			while (!Thread.interrupted()) {
-				Thread.onSpinWait();
-			}
-		}
-	}
 }
