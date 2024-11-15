@@ -33,6 +33,9 @@ class MavenStarterTests {
 	@GlobalResource
 	LocalMavenRepo localMavenRepo;
 
+	@GlobalResource
+	MavenRepoProxy mavenRepoProxy;
+
 	@ResourceLock(Projects.MAVEN_STARTER)
 	@Test
 	void verifyMavenStarterProject() {
@@ -40,6 +43,7 @@ class MavenStarterTests {
 				.setTool(Request.maven()) //
 				.setProject(Projects.MAVEN_STARTER) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
