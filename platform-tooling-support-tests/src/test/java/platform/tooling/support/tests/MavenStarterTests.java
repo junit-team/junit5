@@ -24,16 +24,18 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
-import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.3
  */
 class MavenStarterTests {
 
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
+
 	@ResourceLock(Projects.MAVEN_STARTER)
 	@Test
-	void verifyMavenStarterProject(@LocalMavenRepo Directory localMavenRepo) {
+	void verifyMavenStarterProject() {
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MAVEN_STARTER) //

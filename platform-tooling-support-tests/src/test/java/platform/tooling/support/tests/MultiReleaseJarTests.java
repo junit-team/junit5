@@ -28,15 +28,14 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
-import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.4
  */
 class MultiReleaseJarTests {
 
-	@LocalMavenRepo
-	Directory localMavenRepo;
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
 
 	@ResourceLock(Projects.MULTI_RELEASE_JAR)
 	@Test

@@ -27,15 +27,14 @@ import org.junit.jupiter.api.Test;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
-import platform.tooling.support.tests.LocalMavenRepo.Directory;
 
 /**
  * @since 1.4
  */
 class JavaVersionsTests {
 
-	@LocalMavenRepo
-	Directory localMavenRepo;
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
 
 	@Test
 	void java_8() {
