@@ -33,6 +33,9 @@ import platform.tooling.support.Request;
  */
 class MavenSurefireCompatibilityTests {
 
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
+
 	@ResourceLock(Projects.MAVEN_SUREFIRE_COMPATIBILITY)
 	@ParameterizedTest
 	@CsvSource(delimiter = '|', nullValues = "<none>", textBlock = """
@@ -44,7 +47,7 @@ class MavenSurefireCompatibilityTests {
 		var request = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MAVEN_SUREFIRE_COMPATIBILITY) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
 				.addArguments(extraArgs) //

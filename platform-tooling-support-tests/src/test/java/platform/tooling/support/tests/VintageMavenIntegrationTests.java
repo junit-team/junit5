@@ -27,6 +27,9 @@ import platform.tooling.support.Request;
 
 class VintageMavenIntegrationTests {
 
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
+
 	@Test
 	void unsupportedVersion() {
 		var result = run("4.11");
@@ -61,7 +64,7 @@ class VintageMavenIntegrationTests {
 				.setProject(Projects.VINTAGE) //
 				.setWorkspace("vintage-maven-" + version) //
 				.addArguments("clean", "test", "--update-snapshots", "--batch-mode") //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
 				.setTimeout(TOOL_TIMEOUT) //
 				.build() //

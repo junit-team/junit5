@@ -23,6 +23,7 @@ dependencies {
 	testImplementation(libs.memoryfilesystem)
 	testImplementation(testFixtures(projects.junitJupiterApi))
 	testImplementation(testFixtures(projects.junitJupiterEngine))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 }
 
 tasks {

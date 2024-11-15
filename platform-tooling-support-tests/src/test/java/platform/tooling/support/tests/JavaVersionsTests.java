@@ -33,6 +33,9 @@ import platform.tooling.support.Request;
  */
 class JavaVersionsTests {
 
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
+
 	@Test
 	void java_8() {
 		var java8Home = Helper.getJavaHome("8");
@@ -54,7 +57,7 @@ class JavaVersionsTests {
 				.setTool(Request.maven()) //
 				.setProject(Projects.JAVA_VERSIONS) //
 				.setWorkspace("java-versions-" + version) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.setJavaHome(javaHome);

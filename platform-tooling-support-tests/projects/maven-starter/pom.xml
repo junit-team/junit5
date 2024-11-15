@@ -84,14 +84,16 @@
             <url>file://${maven.repo}</url>
             <snapshots>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
             <releases>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
         <repository>
-            <id>sonatype-oss-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>snapshots-repo</id>
+            <url>${snapshot.repo.url}</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
