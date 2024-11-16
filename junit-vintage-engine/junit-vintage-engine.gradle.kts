@@ -23,6 +23,7 @@ dependencies {
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 
 	osgiVerification(projects.junitPlatformLauncher)
 }

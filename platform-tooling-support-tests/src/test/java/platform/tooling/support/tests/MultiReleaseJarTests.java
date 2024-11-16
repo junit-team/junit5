@@ -34,6 +34,12 @@ import platform.tooling.support.Request;
  */
 class MultiReleaseJarTests {
 
+	@GlobalResource
+	LocalMavenRepo localMavenRepo;
+
+	@GlobalResource
+	MavenRepoProxy mavenRepoProxy;
+
 	@ResourceLock(Projects.MULTI_RELEASE_JAR)
 	@Test
 	void checkDefault() throws Exception {
@@ -88,7 +94,8 @@ class MultiReleaseJarTests {
 		var builder = Request.builder() //
 				.setTool(Request.maven()) //
 				.setProject(Projects.MULTI_RELEASE_JAR) //
-				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode", "--file", variant,
 					"test") //
 				.setTimeout(TOOL_TIMEOUT);
