@@ -14,10 +14,20 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
@@ -36,6 +46,11 @@ import org.junit.vintage.engine.execution.RunnerExecutor;
  */
 @API(status = INTERNAL, since = "4.12")
 public final class VintageTestEngine implements TestEngine {
+
+	private static final Logger logger = LoggerFactory.getLogger(VintageTestEngine.class);
+
+	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
+	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
 
 	@Override
 	public String getId() {
@@ -75,11 +90,81 @@ public final class VintageTestEngine implements TestEngine {
 
 	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener) {
+		boolean parallelExecutionEnabled = getParallelExecutionEnabled();
+
+		if (parallelExecutionEnabled) {
+			executeInParallel(engineDescriptor, engineExecutionListener);
+		}
+		else {
+			executeSequentially(engineDescriptor, engineExecutionListener);
+		}
+	}
+
+	private void executeInParallel(VintageEngineDescriptor engineDescriptor,
+			EngineExecutionListener engineExecutionListener) {
+		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize());
+		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
+
+		List<CompletableFuture<Void>> futures = new ArrayList<>();
+		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
+			TestDescriptor descriptor = iterator.next();
+			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+				RunnerTestDescriptor testDescriptor = (RunnerTestDescriptor) descriptor;
+				try {
+					runnerExecutor.execute(testDescriptor);
+				}
+				catch (Exception e) {
+					engineExecutionListener.executionSkipped(testDescriptor, e.getMessage());
+				}
+			}, executorService);
+
+			futures.add(future);
+			iterator.remove();
+		}
+
+		CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0]));
+		try {
+			allOf.get();
+		}
+		catch (InterruptedException e) {
+			logger.warn(e, () -> "Interruption while waiting for parallel test execution to finish");
+			Thread.currentThread().interrupt();
+		}
+		catch (ExecutionException e) {
+			throw ExceptionUtils.throwAsUncheckedException(e.getCause());
+		}
+		finally {
+			try {
+				executorService.shutdown();
+				if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+					logger.warn(() -> "Executor service did not terminate within the specified timeout");
+					executorService.shutdownNow();
+				}
+			}
+			catch (InterruptedException e) {
+				logger.warn(e, () -> "Interruption while waiting for executor service to shut down");
+				Thread.currentThread().interrupt();
+			}
+		}
+	}
+
+	private void executeSequentially(VintageEngineDescriptor engineDescriptor,
+			EngineExecutionListener engineExecutionListener) {
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
 			iterator.remove();
 		}
+	}
+
+	private boolean getParallelExecutionEnabled() {
+		// get parallel execution enabled from configuration
+		return true;
+	}
+
+	private int getThreadPoolSize() {
+		// get thread pool size from configuration
+		return DEFAULT_THREAD_POOL_SIZE;
 	}
 
 }
