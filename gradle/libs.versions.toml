@@ -92,7 +92,7 @@ foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.8.
 gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-plantuml = { id = "io.freefair.plantuml", version = "8.10.2" }
+plantuml = { id = "io.freefair.plantuml", version = "8.11" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.5" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA4" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }
