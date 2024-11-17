@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.Collections.singletonList;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,8 +45,9 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return singletonList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.consumedArguments, this.invocationIndex));
+		return Arrays.asList(
+			new ParameterizedTestParameterResolver(this.methodContext, this.consumedArguments, this.invocationIndex),
+			new ArgumentCountValidator(this.methodContext, this.arguments));
 	}
 
 	private static Object[] consumedArguments(ParameterizedTestMethodContext methodContext, Object[] arguments) {
