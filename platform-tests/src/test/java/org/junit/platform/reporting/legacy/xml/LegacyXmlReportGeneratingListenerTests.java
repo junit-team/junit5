@@ -19,6 +19,7 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
 import static org.mockito.Mockito.mock;
 
@@ -370,7 +371,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(reportsDir, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of(), mock()));
+		listener.testPlanExecutionStarted(TestPlan.from(Set.of(), mock(), dummyOutputDirectoryProvider()));
 
 		assertThat(out.toString()).containsSubsequence("Could not create reports directory",
 			"FileAlreadyExistsException", "at ");
@@ -386,7 +387,8 @@ class LegacyXmlReportGeneratingListenerTests {
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));
 
-		listener.testPlanExecutionStarted(TestPlan.from(Set.of(engineDescriptor), mock()));
+		listener.testPlanExecutionStarted(
+			TestPlan.from(Set.of(engineDescriptor), mock(), dummyOutputDirectoryProvider()));
 		listener.executionFinished(TestIdentifier.from(engineDescriptor), successful());
 
 		assertThat(out.toString()).containsSubsequence("Could not write XML report", "Exception", "at ");
@@ -397,7 +399,7 @@ class LegacyXmlReportGeneratingListenerTests {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		var childUniqueId = UniqueId.root("child", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock());
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), mock(), dummyOutputDirectoryProvider());
 
 		var out = new StringWriter();
 		var listener = new LegacyXmlReportGeneratingListener(tempDirectory, new PrintWriter(out));

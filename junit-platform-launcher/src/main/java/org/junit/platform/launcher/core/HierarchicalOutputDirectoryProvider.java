@@ -33,7 +33,7 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 	private static final char REPLACEMENT = '_';
 
 	private final Supplier<Path> rootDirSupplier;
-	private Path rootDir;
+	private volatile Path rootDir;
 
 	HierarchicalOutputDirectoryProvider(Supplier<Path> rootDirSupplier) {
 		this.rootDirSupplier = rootDirSupplier;
@@ -48,10 +48,11 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 				.map(Segment::getValue) //
 				.map(HierarchicalOutputDirectoryProvider::sanitizeName).map(Paths::get) //
 				.reduce(Paths.get(firstSegment.getValue()), Path::resolve);
-		return Files.createDirectories(resolveRootDir().resolve(relativePath));
+		return Files.createDirectories(getRootDirectory().resolve(relativePath));
 	}
 
-	private synchronized Path resolveRootDir() {
+	@Override
+	public synchronized Path getRootDirectory() {
 		if (rootDir == null) {
 			rootDir = rootDirSupplier.get();
 		}

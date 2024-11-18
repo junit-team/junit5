@@ -11,6 +11,7 @@
 package org.junit.platform.launcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
@@ -40,7 +41,7 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
 	}
@@ -55,7 +56,7 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -75,7 +76,7 @@ class TestPlanTests {
 				}
 			});
 
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
 	}
@@ -93,7 +94,8 @@ class TestPlanTests {
 		engineDescriptor2.addChild(test2);
 		engineDescriptor2.addChild(test3);
 
-		var testPlan = TestPlan.from(List.of(engineDescriptor, engineDescriptor2), configParams);
+		var testPlan = TestPlan.from(List.of(engineDescriptor, engineDescriptor2), configParams,
+			dummyOutputDirectoryProvider());
 		var visitor = mock(TestPlan.Visitor.class);
 
 		testPlan.accept(visitor);

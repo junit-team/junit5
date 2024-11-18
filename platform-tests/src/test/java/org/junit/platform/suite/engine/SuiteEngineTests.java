@@ -10,9 +10,12 @@
 
 package org.junit.platform.suite.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.hierarchicalOutputDirectoryProvider;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -24,7 +27,10 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -435,6 +441,25 @@ class SuiteEngineTests {
 				.haveExactly(1, event(test(SelectByIdentifierSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
+	}
+
+	@Test
+	void passesOutputDirectoryProviderToEnginesInSuite(@TempDir Path rootDir) {
+		// @formatter:off
+		var request = request()
+				.selectors(selectClass(SelectClassesSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(rootDir))
+				.build();
+		// @formatter:on
+
+		// @formatter:off
+		EngineTestKit.execute(ENGINE_ID, request)
+				.testEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+
+		assertThat(rootDir).isDirectoryRecursivelyContaining("glob:**/test.txt");
 	}
 
 	@Suite

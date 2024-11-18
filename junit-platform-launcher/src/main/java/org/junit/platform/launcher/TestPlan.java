@@ -34,6 +34,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
 /**
  * {@code TestPlan} describes the tree of tests and containers as discovered
@@ -70,6 +71,7 @@ public class TestPlan {
 	private final boolean containsTests;
 
 	private final ConfigurationParameters configurationParameters;
+	private final OutputDirectoryProvider outputDirectoryProvider;
 
 	/**
 	 * Construct a new {@code TestPlan} from the supplied collection of
@@ -82,24 +84,28 @@ public class TestPlan {
 	 * plan should be created; never {@code null}
 	 * @param configurationParameters the {@code ConfigurationParameters} for
 	 * this test plan; never {@code null}
+	 * @param outputDirectoryProvider the {@code OutputDirectoryProvider} for
+	 * this test plan; never {@code null}
 	 * @return a new test plan
 	 */
 	@API(status = INTERNAL, since = "1.0")
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors,
-			ConfigurationParameters configurationParameters) {
+			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
 		Preconditions.notNull(configurationParameters, "Cannot create TestPlan from null ConfigurationParameters");
 		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests),
-			configurationParameters);
+			configurationParameters, outputDirectoryProvider);
 		TestDescriptor.Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;
 	}
 
 	@API(status = INTERNAL, since = "1.4")
-	protected TestPlan(boolean containsTests, ConfigurationParameters configurationParameters) {
+	protected TestPlan(boolean containsTests, ConfigurationParameters configurationParameters,
+			OutputDirectoryProvider outputDirectoryProvider) {
 		this.containsTests = containsTests;
 		this.configurationParameters = configurationParameters;
+		this.outputDirectoryProvider = outputDirectoryProvider;
 	}
 
 	/**
@@ -289,6 +295,10 @@ public class TestPlan {
 	@API(status = MAINTAINED, since = "1.8")
 	public ConfigurationParameters getConfigurationParameters() {
 		return this.configurationParameters;
+	}
+
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return this.outputDirectoryProvider;
 	}
 
 	/**

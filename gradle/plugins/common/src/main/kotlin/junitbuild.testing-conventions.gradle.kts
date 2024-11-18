@@ -31,7 +31,7 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 		eventXmlFiles.from(tasks.withType<Test>().map {
 			objects.fileTree()
 				.from(it.reports.junitXml.outputLocation)
-				.include("junit-platform-events-*.xml")
+				.include("junit-*/open-test-report.xml")
 		})
 		outputLocation = layout.buildDirectory.file("reports/open-test-report.html")
 	}
@@ -127,7 +127,7 @@ tasks.withType<Test>().configureEach {
 		classpath.from(javaAgentClasspath)
 	}
 
-	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-platform-events-*.xml") }
+	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-*/open-test-report.xml") }
 	doFirst {
 		reportFiles.files.forEach {
 			Files.delete(it.toPath())

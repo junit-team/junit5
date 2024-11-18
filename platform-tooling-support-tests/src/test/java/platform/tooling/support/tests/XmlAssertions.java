@@ -10,6 +10,8 @@
 
 package platform.tooling.support.tests;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -22,11 +24,19 @@ import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 class XmlAssertions {
 
 	static void verifyContainsExpectedStartedOpenTestReport(Path testResultsDir) {
+		var xmlFile = findOpenTestReport(testResultsDir);
+		verifyContent(xmlFile);
+	}
+
+	private static Path findOpenTestReport(Path testResultsDir) {
 		try (var files = Files.list(testResultsDir)) {
-			Path xmlFile = files.filter(it -> it.getFileName().toString().startsWith("junit-platform-events-")) //
+			var outputDir = files.filter(
+				it -> Files.isDirectory(it) && it.getFileName().toString().startsWith("junit-")) //
 					.findAny() //
-					.orElseThrow(() -> new AssertionError("Missing open-test-reporting XML file in " + testResultsDir));
-			verifyContent(xmlFile);
+					.orElseThrow(() -> new AssertionError("Missing JUnit output dir in " + testResultsDir));
+			var xmlFile = outputDir.resolve("open-test-report.xml");
+			assertThat(xmlFile).exists();
+			return xmlFile;
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException(e);
@@ -35,9 +45,12 @@ class XmlAssertions {
 
 	private static void verifyContent(Path xmlFile) {
 		var expected = """
-				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
+				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0"
+				                  xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0"
+				                  xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
 				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0"
-				                  xmlns:junit="https://schemas.junit.org/open-test-reporting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				                  xmlns:junit="https://schemas.junit.org/open-test-reporting"
+				                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				                  xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
 				          <infrastructure>
 				            <hostName>${xmlunit.ignore}</hostName>

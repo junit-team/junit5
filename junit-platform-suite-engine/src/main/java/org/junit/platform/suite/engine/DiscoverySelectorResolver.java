@@ -25,7 +25,8 @@ final class DiscoverySelectorResolver {
 			.addSelectorResolver(context -> new ClassSelectorResolver(
 					context.getClassNameFilter(),
 					context.getEngineDescriptor(),
-					context.getDiscoveryRequest().getConfigurationParameters()))
+					context.getDiscoveryRequest().getConfigurationParameters(),
+					context.getDiscoveryRequest().getOutputDirectoryProvider()))
 			.build();
 	// @formatter:on
 

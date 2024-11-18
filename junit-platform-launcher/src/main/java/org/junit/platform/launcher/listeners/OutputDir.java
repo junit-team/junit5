@@ -33,6 +33,10 @@ public class OutputDir {
 	private final SecureRandom random = new SecureRandom();
 
 	public static OutputDir create(Optional<String> customDir) {
+		return createWithPath(customDir.filter(StringUtils::isNotBlank).map(Paths::get));
+	}
+
+	public static OutputDir createWithPath(Optional<Path> customDir) {
 		try {
 			return createSafely(customDir, () -> Paths.get(".").toAbsolutePath());
 		}
@@ -44,11 +48,11 @@ public class OutputDir {
 	/**
 	 * Package private for testing purposes.
 	 */
-	static OutputDir createSafely(Optional<String> customDir, Supplier<Path> currentWorkingDir) throws IOException {
+	static OutputDir createSafely(Optional<Path> customDir, Supplier<Path> currentWorkingDir) throws IOException {
 		Path cwd = currentWorkingDir.get();
 		Path outputDir;
 
-		if (customDir.isPresent() && StringUtils.isNotBlank(customDir.get())) {
+		if (customDir.isPresent()) {
 			outputDir = cwd.resolve(customDir.get());
 		}
 		else if (Files.exists(cwd.resolve("pom.xml"))) {

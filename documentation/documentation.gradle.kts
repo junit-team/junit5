@@ -147,7 +147,7 @@ tasks {
 
 	val consoleLauncherTestReportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
 	val consoleLauncherTestEventXmlFiles =
-		files(consoleLauncherTestReportsDir.map { it.asFileTree.matching { include("junit-platform-events-*.xml") } })
+		files(consoleLauncherTestReportsDir.map { it.asFileTree.matching { include("junit-*/open-test-report.xml") } })
 
 	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
 		args.addAll("execute")

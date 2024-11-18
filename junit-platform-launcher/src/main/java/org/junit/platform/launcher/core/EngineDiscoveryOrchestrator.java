@@ -76,7 +76,8 @@ public class EngineDiscoveryOrchestrator {
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase) {
 		Map<TestEngine, TestDescriptor> result = discover(request, phase, UniqueId::forEngine);
-		return new LauncherDiscoveryResult(result, request.getConfigurationParameters());
+		return new LauncherDiscoveryResult(result, request.getConfigurationParameters(),
+			request.getOutputDirectoryProvider());
 	}
 
 	/**
@@ -95,7 +96,8 @@ public class EngineDiscoveryOrchestrator {
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
 		Map<TestEngine, TestDescriptor> testEngines = discover(request, phase, parentId::appendEngine);
-		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters());
+		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
+			request.getOutputDirectoryProvider());
 		return result.withRetainedEngines(TestDescriptor::containsTests);
 	}
 
