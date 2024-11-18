@@ -191,6 +191,8 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME = "junit.platform.stacktrace.pruning.enabled";
 
+	public static final String OUTPUT_DIR_PROPERTY_NAME = "junit.platform.reporting.output.dir";
+
 	private LauncherConstants() {
 		/* no-op */
 	}

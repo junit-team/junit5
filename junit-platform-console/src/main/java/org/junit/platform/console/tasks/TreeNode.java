@@ -16,6 +16,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
 
@@ -31,6 +32,7 @@ class TreeNode {
 	private TestIdentifier identifier;
 	private TestExecutionResult result;
 	final Queue<ReportEntry> reports = new ConcurrentLinkedQueue<>();
+	final Queue<FileEntry> files = new ConcurrentLinkedQueue<>();
 	final Queue<TreeNode> children = new ConcurrentLinkedQueue<>();
 	boolean visible;
 
@@ -58,6 +60,11 @@ class TreeNode {
 
 	TreeNode addReportEntry(ReportEntry reportEntry) {
 		reports.add(reportEntry);
+		return this;
+	}
+
+	TreeNode addFileEntry(FileEntry file) {
+		files.add(file);
 		return this;
 	}
 

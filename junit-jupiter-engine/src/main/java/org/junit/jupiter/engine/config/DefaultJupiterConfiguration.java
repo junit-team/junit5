@@ -33,6 +33,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 
 /**
  * Default implementation of the {@link JupiterConfiguration} API.
@@ -67,10 +68,13 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		new EnumConfigurationParameterConverter<>(ExtensionContextScope.class, "extension context scope");
 
 	private final ConfigurationParameters configurationParameters;
+	private final OutputDirProvider outputDirProvider;
 
-	public DefaultJupiterConfiguration(ConfigurationParameters configurationParameters) {
+	public DefaultJupiterConfiguration(ConfigurationParameters configurationParameters,
+			OutputDirProvider outputDirProvider) {
 		this.configurationParameters = Preconditions.notNull(configurationParameters,
 			"ConfigurationParameters must not be null");
+		this.outputDirProvider = outputDirProvider;
 	}
 
 	@Override
@@ -155,5 +159,10 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	public ExtensionContextScope getDefaultTestInstantiationExtensionContextScope() {
 		return extensionContextScopeConverter.get(configurationParameters,
 			DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME, ExtensionContextScope.DEFAULT);
+	}
+
+	@Override
+	public OutputDirProvider getOutputDirProvider() {
+		return outputDirProvider;
 	}
 }

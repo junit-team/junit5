@@ -10,10 +10,12 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -137,4 +139,7 @@ public interface EngineExecutionListener {
 	default void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 	}
 
+	@API(status = EXPERIMENTAL, since = "1.12")
+	default void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+	}
 }

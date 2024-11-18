@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -59,6 +60,11 @@ class ExecutionListenerAdapter implements EngineExecutionListener {
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		this.testExecutionListener.reportingEntryPublished(getTestIdentifier(testDescriptor), entry);
+	}
+
+	@Override
+	public void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+		this.testExecutionListener.fileEntryPublished(getTestIdentifier(testDescriptor), file);
 	}
 
 	private TestIdentifier getTestIdentifier(TestDescriptor testDescriptor) {

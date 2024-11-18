@@ -49,6 +49,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
@@ -280,7 +281,7 @@ public class ExtensionContextTests {
 	@ParameterizedTest
 	@MethodSource("extensionContextFactories")
 	void configurationParameter(Function<JupiterConfiguration, ? extends ExtensionContext> extensionContextFactory) {
-		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters());
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(), OutputDirProvider.NOOP);
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 
