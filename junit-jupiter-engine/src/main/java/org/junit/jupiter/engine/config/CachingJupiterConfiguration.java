@@ -30,7 +30,7 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Extension
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.platform.engine.reporting.OutputDirProvider;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
 /**
  * Caching implementation of the {@link JupiterConfiguration} API.
@@ -141,7 +141,7 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public OutputDirProvider getOutputDirProvider() {
-		return delegate.getOutputDirProvider();
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return delegate.getOutputDirectoryProvider();
 	}
 }

@@ -21,7 +21,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.reporting.OutputDirProvider;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -98,10 +98,8 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	}
 
 	@Override
-	public OutputDirProvider getOutputDirProvider() {
-		// TODO Provider another configuration parameter to disable writing outputs?
-		// TODO OutputDirProvider could be made configurable via another configuration parameter
-		return new HierarchicalOutputDirProvider(() -> {
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return new HierarchicalOutputDirectoryProvider(() -> {
 			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
 			return outputDir.createDir("junit");
 		});

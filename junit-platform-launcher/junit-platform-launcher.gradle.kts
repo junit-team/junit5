@@ -11,6 +11,8 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
+	testFixturesImplementation(libs.jimfs)
+
 	osgiVerification(projects.junitJupiterEngine)
 }
 

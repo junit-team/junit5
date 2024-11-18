@@ -117,17 +117,16 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public void publishFile(String fileName, ThrowingConsumer<Path> action) {
 		try {
-			configuration.getOutputDirProvider().createOutputDirectory(this.testDescriptor).ifPresent(dir -> {
-				try {
-					Path file = dir.resolve(fileName);
-					action.accept(file);
-					this.engineExecutionListener.fileEntryPublished(this.testDescriptor, FileEntry.from(file));
-				}
-				catch (Throwable t) {
-					UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-					throw new JUnitException("Failed to publish file", t);
-				}
-			});
+			Path dir = configuration.getOutputDirectoryProvider().createOutputDirectory(this.testDescriptor);
+			try {
+				Path file = dir.resolve(fileName);
+				action.accept(file);
+				this.engineExecutionListener.fileEntryPublished(this.testDescriptor, FileEntry.from(file));
+			}
+			catch (Throwable t) {
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
+				throw new JUnitException("Failed to publish file", t);
+			}
 		}
 		catch (IOException e) {
 			throw new JUnitException("Failed to create output directory", e);

@@ -12,18 +12,20 @@ package org.junit.platform.engine.reporting;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestDescriptor;
 
 @API(status = EXPERIMENTAL, since = "1.12")
-public interface OutputDirProvider {
+public interface OutputDirectoryProvider extends Closeable {
 
-	OutputDirProvider NOOP = __ -> Optional.empty();
+	Path createOutputDirectory(TestDescriptor testDescriptor) throws IOException;
 
-	Optional<Path> createOutputDirectory(TestDescriptor testDescriptor) throws IOException;
-
+	@Override
+	default void close() throws IOException {
+		// do nothing
+	}
 }

@@ -19,15 +19,14 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId.Segment;
-import org.junit.platform.engine.reporting.OutputDirProvider;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
-class HierarchicalOutputDirProvider implements OutputDirProvider {
+class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 
 	private static final Set<Character> FORBIDDEN_CHARS = unmodifiableSet(
 		new HashSet<>(Arrays.asList('\0', '/', '\\', ':', '*', '?', '"', '<', '>', '|')));
@@ -36,23 +35,20 @@ class HierarchicalOutputDirProvider implements OutputDirProvider {
 	private final Supplier<Path> rootDirSupplier;
 	private Path rootDir;
 
-	HierarchicalOutputDirProvider(Supplier<Path> rootDirSupplier) {
+	HierarchicalOutputDirectoryProvider(Supplier<Path> rootDirSupplier) {
 		this.rootDirSupplier = rootDirSupplier;
 	}
 
 	@Override
-	public Optional<Path> createOutputDirectory(TestDescriptor testDescriptor) throws IOException {
+	public Path createOutputDirectory(TestDescriptor testDescriptor) throws IOException {
 		List<Segment> segments = testDescriptor.getUniqueId().getSegments();
-		if (segments.isEmpty()) {
-			return Optional.empty();
-		}
 		Segment firstSegment = segments.get(0);
 		Path relativePath = segments.stream() //
 				.skip(1) //
 				.map(Segment::getValue) //
-				.map(HierarchicalOutputDirProvider::sanitizeName).map(Paths::get) //
+				.map(HierarchicalOutputDirectoryProvider::sanitizeName).map(Paths::get) //
 				.reduce(Paths.get(firstSegment.getValue()), Path::resolve);
-		return Optional.of(Files.createDirectories(resolveRootDir().resolve(relativePath)));
+		return Files.createDirectories(resolveRootDir().resolve(relativePath));
 	}
 
 	private synchronized Path resolveRootDir() {

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Named.named;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.inMemoryOutputDirectoryProvider;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,7 +50,6 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.reporting.OutputDirProvider;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.mockito.ArgumentCaptor;
@@ -281,7 +281,7 @@ public class ExtensionContextTests {
 	@ParameterizedTest
 	@MethodSource("extensionContextFactories")
 	void configurationParameter(Function<JupiterConfiguration, ? extends ExtensionContext> extensionContextFactory) {
-		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(), OutputDirProvider.NOOP);
+		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(), inMemoryOutputDirectoryProvider());
 		String key = "123";
 		Optional<String> expected = Optional.of(key);
 
