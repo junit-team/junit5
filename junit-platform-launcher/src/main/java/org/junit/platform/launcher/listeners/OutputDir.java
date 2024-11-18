@@ -17,9 +17,12 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SecureRandom;
 import java.util.Optional;
+import java.util.function.BiPredicate;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.StringUtils;
@@ -27,7 +30,7 @@ import org.junit.platform.commons.util.StringUtils;
 @API(status = INTERNAL, since = "1.9")
 public class OutputDir {
 
-	private SecureRandom random = new SecureRandom();
+	private final SecureRandom random = new SecureRandom();
 
 	public static OutputDir create(Optional<String> customDir) {
 		try {
@@ -107,18 +110,18 @@ public class OutputDir {
 	 * supplied extensions.
 	 */
 	private static boolean containsFilesWithExtensions(Path dir, String... extensions) throws IOException {
-		return Files.find(dir, 1, //
-			(path, basicFileAttributes) -> {
-				if (basicFileAttributes.isRegularFile()) {
-					for (String extension : extensions) {
-						if (path.getFileName().toString().endsWith(extension)) {
-							return true;
-						}
+		BiPredicate<Path, BasicFileAttributes> matcher = (path, basicFileAttributes) -> {
+			if (basicFileAttributes.isRegularFile()) {
+				for (String extension : extensions) {
+					if (path.getFileName().toString().endsWith(extension)) {
+						return true;
 					}
 				}
-				return false;
-			}) //
-				.findFirst() //
-				.isPresent();
+			}
+			return false;
+		};
+		try (Stream<Path> pathStream = Files.find(dir, 1, matcher)) {
+			return pathStream.findFirst().isPresent();
+		}
 	}
 }
