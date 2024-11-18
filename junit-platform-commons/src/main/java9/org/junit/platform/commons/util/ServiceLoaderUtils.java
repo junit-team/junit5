@@ -31,6 +31,10 @@ import org.apiguardian.api.API.Status;
 @API(status = Status.INTERNAL, since = "5.11")
 public class ServiceLoaderUtils {
 
+	private ServiceLoaderUtils() {
+		/* no-op */
+	}
+
 	/**
 	 * Loads services of the given type using the specified class loader and filters them using the provided predicate.
 	 *

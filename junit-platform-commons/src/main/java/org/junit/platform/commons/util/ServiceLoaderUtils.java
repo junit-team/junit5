@@ -29,7 +29,7 @@ import org.apiguardian.api.API;
  * @since 5.11
  */
 @API(status = API.Status.INTERNAL, since = "5.11")
-public final class ServiceLoaderUtils {
+public class ServiceLoaderUtils {
 
 	private ServiceLoaderUtils() {
 		/* no-op */
