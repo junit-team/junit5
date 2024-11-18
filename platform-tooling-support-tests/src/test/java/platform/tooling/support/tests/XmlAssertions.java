@@ -34,8 +34,8 @@ class XmlAssertions {
 
 	private static void verifyContent(Path xmlFile) {
 		var expected = """
-				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.1.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.1.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.1.0"
-				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.1.0"
+				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
+				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0"
 				                  xmlns:junit="https://schemas.junit.org/open-test-reporting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				                  xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
 				          <infrastructure>

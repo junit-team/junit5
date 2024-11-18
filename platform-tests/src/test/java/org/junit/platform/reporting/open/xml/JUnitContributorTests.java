@@ -26,7 +26,7 @@ public class JUnitContributorTests {
 	void contributesJUnitSpecificMetadata(@TempDir Path tempDir) throws Exception {
 		var xmlFile = Files.writeString(tempDir.resolve("report.xml"),
 			"""
-					<e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.1.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.1.0" xmlns:java="https://schemas.opentest4j.org/reporting/java/0.1.0"
+					<e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0"
 					          xmlns:junit="https://schemas.junit.org/open-test-reporting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 					          xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
 					    <e:started id="1" name="dummy" time="2024-11-10T16:31:35.000Z">
