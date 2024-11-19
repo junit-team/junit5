@@ -23,6 +23,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.PreInterruptCallback;
 import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -50,9 +51,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;;
 	String DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextScope.DEFAULT_SCOPE_PROPERTY_NAME;
 
-	Optional<String> getExtensionAutodetectionIncludePattern();
-
-	Optional<String> getExtensionAutodetectionExcludePattern();
+	Predicate<Class<? extends Extension>> createExtensionFilterByPatterns();
 
 	Optional<String> getRawConfigurationParameter(String key);
 

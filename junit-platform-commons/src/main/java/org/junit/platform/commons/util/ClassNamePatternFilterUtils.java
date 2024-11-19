@@ -43,6 +43,8 @@ public class ClassNamePatternFilterUtils {
 
 	public static final String ALL_PATTERN = "*";
 
+	public static final String BLANK = "";
+
 	/**
 	 * Create a {@link Predicate} that can be used to exclude (i.e., filter out)
 	 * objects of type {@code T} whose fully qualified class names match any of

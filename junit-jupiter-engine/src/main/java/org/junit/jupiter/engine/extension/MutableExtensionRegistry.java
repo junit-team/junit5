@@ -38,7 +38,6 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
-import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ServiceLoaderUtils;
 
@@ -98,21 +97,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry,
 			JupiterConfiguration configuration) {
-		Predicate<Class<? extends Extension>> filter = createExtensionFilterByPatterns(
-			configuration.getExtensionAutodetectionIncludePattern().orElse(ClassNamePatternFilterUtils.ALL_PATTERN),
-			configuration.getExtensionAutodetectionExcludePattern().orElse(""));
+		Predicate<Class<? extends Extension>> filter = configuration.createExtensionFilterByPatterns();
 
 		ServiceLoader<Extension> serviceLoader = ServiceLoader.load(Extension.class,
 			ClassLoaderUtils.getDefaultClassLoader());
 		ServiceLoaderUtils.filter(serviceLoader, filter) //
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
-	}
-
-	private static Predicate<Class<? extends Extension>> createExtensionFilterByPatterns(String include,
-			String exclude) {
-		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(include) //
-				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(exclude));
-		return clazz -> predicate.test(clazz.getName());
 	}
 
 	/**

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
@@ -47,13 +48,8 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Optional<String> getExtensionAutodetectionIncludePattern() {
-		return delegate.getExtensionAutodetectionIncludePattern();
-	}
-
-	@Override
-	public Optional<String> getExtensionAutodetectionExcludePattern() {
-		return delegate.getExtensionAutodetectionExcludePattern();
+	public Predicate<Class<? extends Extension>> createExtensionFilterByPatterns() {
+		return delegate.createExtensionFilterByPatterns();
 	}
 
 	@Override
