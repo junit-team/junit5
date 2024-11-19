@@ -75,9 +75,7 @@ public class EngineDiscoveryOrchestrator {
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase) {
-		Map<TestEngine, TestDescriptor> result = discover(request, phase, UniqueId::forEngine);
-		return new LauncherDiscoveryResult(result, request.getConfigurationParameters(),
-			request.getOutputDirectoryProvider());
+		return discover(request, phase, UniqueId::forEngine);
 	}
 
 	/**
@@ -95,18 +93,18 @@ public class EngineDiscoveryOrchestrator {
 	 * will not emit start or emit events for engines without tests.
 	 */
 	public LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase, UniqueId parentId) {
-		Map<TestEngine, TestDescriptor> testEngines = discover(request, phase, parentId::appendEngine);
-		LauncherDiscoveryResult result = new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
-			request.getOutputDirectoryProvider());
+		LauncherDiscoveryResult result = discover(request, phase, parentId::appendEngine);
 		return result.withRetainedEngines(TestDescriptor::containsTests);
 	}
 
-	private Map<TestEngine, TestDescriptor> discover(LauncherDiscoveryRequest request, Phase phase,
+	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase,
 			Function<String, UniqueId> uniqueIdCreator) {
 		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request);
 		listener.launcherDiscoveryStarted(request);
 		try {
-			return discoverSafely(request, phase, listener, uniqueIdCreator);
+			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(request, phase, listener, uniqueIdCreator);
+			return new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
+				request.getOutputDirectoryProvider());
 		}
 		finally {
 			listener.launcherDiscoveryFinished(request);
