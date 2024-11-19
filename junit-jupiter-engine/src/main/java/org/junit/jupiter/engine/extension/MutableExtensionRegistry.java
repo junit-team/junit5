@@ -110,11 +110,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static Predicate<Class<? extends Extension>> createExtensionFilterByPatterns(String include,
 			String exclude) {
-		return clazz -> {
-			String className = clazz.getName();
-			return ClassNamePatternFilterUtils.includeMatchingClassNames(include).test(className) //
-					&& ClassNamePatternFilterUtils.excludeMatchingClassNames(exclude).test(className);
-		};
+		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(include) //
+				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(exclude));
+		return clazz -> predicate.test(clazz.getName());
 	}
 
 	/**
