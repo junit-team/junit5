@@ -60,6 +60,7 @@ public final class FileEntry {
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
+		builder.append("timestamp", this.timestamp);
 		builder.append("file", this.file);
 		return builder.toString();
 	}
