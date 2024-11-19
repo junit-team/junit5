@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ServiceLoader;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -54,9 +55,9 @@ class ServiceLoaderRegistry {
 
 	private static <T> List<T> load(Class<T> type, Predicate<String> classNameFilter,
 			Function<List<T>, String> logMessageSupplier) {
+		ServiceLoader<T> serviceLoader = ServiceLoader.load(type, ClassLoaderUtils.getDefaultClassLoader());
 		Predicate<Class<? extends T>> providerPredicate = clazz -> classNameFilter.test(clazz.getName());
-		List<T> instances = ServiceLoaderUtils.load(type, providerPredicate, ClassLoaderUtils.getDefaultClassLoader()) //
-				.collect(toList());
+		List<T> instances = ServiceLoaderUtils.filter(serviceLoader, providerPredicate).collect(toList());
 		getLogger().config(() -> logMessageSupplier.apply(instances));
 		return instances;
 	}
