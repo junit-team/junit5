@@ -24,11 +24,14 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -79,7 +82,8 @@ class LauncherFactoryTests {
 	}
 
 	@Test
-	void testExecutionListenersExcludedViaConfigParametersIsNotLoadedViaServiceApi() {
+	void testExecutionListenersExcludedViaConfigParametersIsNotLoadedViaServiceApi(
+			@TrackLogRecords LogRecordListener listener) {
 		withTestServices(() -> {
 			var value = "org.junit.*.launcher.listeners.Unused*,org.junit.*.launcher.listeners.AnotherUnused*";
 			withSystemProperty(DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME, value, () -> {
@@ -93,6 +97,16 @@ class LauncherFactoryTests {
 				AnotherUnusedTestExecutionListener.called = false;
 
 				launcher.execute(request().build());
+
+				var logMessage = listener.stream(ServiceLoaderRegistry.class) //
+						.map(LogRecord::getMessage) //
+						.filter(it -> it.startsWith("Loaded TestExecutionListener instances")) //
+						.findAny();
+				assertThat(logMessage).isPresent();
+				assertThat(logMessage.get()) //
+						.contains("NoopTestExecutionListener@") //
+						.endsWith(" (excluded classes: [" + UnusedTestExecutionListener.class.getName() + ", "
+								+ AnotherUnusedTestExecutionListener.class.getName() + "])");
 
 				assertFalse(UnusedTestExecutionListener.called);
 				assertFalse(AnotherUnusedTestExecutionListener.called);

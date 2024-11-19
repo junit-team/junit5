@@ -11,24 +11,54 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.StreamSupport.stream;
 
-import java.util.ServiceLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.function.Predicate;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
+import org.junit.platform.commons.util.ServiceLoaderUtils;
 
 /**
  * @since 1.8
  */
 class ServiceLoaderRegistry {
 
-	static <T> Iterable<T> load(Class<T> serviceProviderClass) {
-		Iterable<T> listeners = ServiceLoader.load(serviceProviderClass, ClassLoaderUtils.getDefaultClassLoader());
-		getLogger().config(() -> "Loaded " + serviceProviderClass.getSimpleName() + " instances: "
-				+ stream(listeners.spliterator(), false).map(Object::toString).collect(toList()));
-		return listeners;
+	static <T> Iterable<T> load(Class<T> type) {
+		return load(type, __ -> true, instances -> logLoadedInstances(type, instances, null));
+	}
+
+	static <T> Iterable<T> load(@SuppressWarnings("SameParameterValue") Class<T> type,
+			Predicate<String> classNameFilter) {
+		List<String> exclusions = new ArrayList<>();
+		Predicate<String> collectingClassNameFilter = className -> {
+			boolean included = classNameFilter.test(className);
+			if (!included) {
+				exclusions.add(className);
+			}
+			return included;
+		};
+		return load(type, collectingClassNameFilter, instances -> logLoadedInstances(type, instances, exclusions));
+	}
+
+	private static <T> String logLoadedInstances(Class<T> type, List<T> instances, List<String> exclusions) {
+		String typeName = type.getSimpleName();
+		if (exclusions == null) {
+			return String.format("Loaded %s instances: %s", typeName, instances);
+		}
+		return String.format("Loaded %s instances: %s (excluded classes: %s)", typeName, instances, exclusions);
+	}
+
+	private static <T> List<T> load(Class<T> type, Predicate<String> classNameFilter,
+			Function<List<T>, String> logMessageSupplier) {
+		Predicate<Class<? extends T>> providerPredicate = clazz -> classNameFilter.test(clazz.getName());
+		List<T> instances = ServiceLoaderUtils.load(type, providerPredicate, ClassLoaderUtils.getDefaultClassLoader()) //
+				.collect(toList());
+		getLogger().config(() -> logMessageSupplier.apply(instances));
+		return instances;
 	}
 
 	private static Logger getLogger() {
