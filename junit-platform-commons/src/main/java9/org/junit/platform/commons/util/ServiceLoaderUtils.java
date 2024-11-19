@@ -36,18 +36,17 @@ public class ServiceLoaderUtils {
 	}
 
 	/**
-	 * Loads services of the given type using the specified class loader and filters them using the provided predicate.
+	 * Filters the supplied service loader using the supplied predicate.
 	 *
 	 * @param <T> the type of the service
-	 * @param service the class of the service to be loaded
+	 * @param serviceLoader the service loader to be filtered
 	 * @param providerPredicate the predicate to filter the loaded services
-	 * @param loader the class loader to be used to load the services
 	 * @return a stream of loaded services that match the predicate
 	 */
-	public static <T> Stream<T> load(Class<T> service, Predicate<? super Class<? extends T>> providerPredicate,
-			ClassLoader loader) {
+	public static <T> Stream<T> filter(ServiceLoader<T> serviceLoader,
+			Predicate<? super Class<? extends T>> providerPredicate) {
 		// @formatter:off
-		return ServiceLoader.load(service, loader)
+		return serviceLoader
 				.stream()
 				.filter(provider -> providerPredicate.test(provider.type()))
 				.map(ServiceLoader.Provider::get);

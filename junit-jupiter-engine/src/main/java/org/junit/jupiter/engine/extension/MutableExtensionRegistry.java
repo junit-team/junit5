@@ -102,7 +102,9 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			configuration.getExtensionAutodetectionIncludePattern().orElse("*"),
 			configuration.getExtensionAutodetectionExcludePattern().orElse(""));
 
-		ServiceLoaderUtils.load(Extension.class, filter, ClassLoaderUtils.getDefaultClassLoader()) //
+		ServiceLoader<Extension> serviceLoader = ServiceLoader.load(Extension.class,
+			ClassLoaderUtils.getDefaultClassLoader());
+		ServiceLoaderUtils.filter(serviceLoader, filter) //
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
 	}
 
