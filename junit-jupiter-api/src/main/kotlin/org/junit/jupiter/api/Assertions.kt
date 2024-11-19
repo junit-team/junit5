@@ -20,6 +20,8 @@ import java.time.Duration
 import java.util.function.Supplier
 import java.util.stream.Stream
 import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.InvocationKind.AT_MOST_ONCE
+import kotlin.contracts.InvocationKind.EXACTLY_ONCE
 import kotlin.contracts.contract
 
 /**
@@ -29,6 +31,20 @@ fun fail(
     message: String?,
     throwable: Throwable? = null
 ): Nothing = Assertions.fail<Nothing>(message, throwable)
+
+/**
+ * @see Assertions.fail
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+@JvmName("fail_nonNullableLambda")
+fun fail(message: () -> String): Nothing {
+    contract {
+        callsInPlace(message, EXACTLY_ONCE)
+    }
+
+    return Assertions.fail(message)
+}
 
 /**
  * @see Assertions.fail
@@ -96,6 +112,154 @@ fun assertAll(
 /**
  * Example usage:
  * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNull(nullableString)
+ *
+ * // The compiler won't allow even safe calls, since nullableString is always null.
+ * // nullableString?.isNotEmpty()
+ * ```
+ * @see Assertions.assertNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNull(actual: Any?) {
+    contract {
+        returns() implies (actual == null)
+    }
+
+    Assertions.assertNull(actual)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNull(nullableString, "Should be nullable")
+ *
+ * // The compiler won't allow even safe calls, since nullableString is always null.
+ * // nullableString?.isNotEmpty()
+ * ```
+ * @see Assertions.assertNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNull(
+    actual: Any?,
+    message: String
+) {
+    contract {
+        returns() implies (actual == null)
+    }
+
+    Assertions.assertNull(actual, message)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNull(nullableString) { "Should be nullable" }
+ *
+ * // The compiler won't allow even safe calls, since nullableString is always null.
+ * // nullableString?.isNotEmpty()
+ * ```
+ * @see Assertions.assertNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNull(
+    actual: Any?,
+    messageSupplier: () -> String
+) {
+    contract {
+        returns() implies (actual == null)
+
+        callsInPlace(messageSupplier, AT_MOST_ONCE)
+    }
+
+    Assertions.assertNull(actual, messageSupplier)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNotNull(nullableString)
+ *
+ * // The compiler smart casts nullableString to a non-nullable object.
+ * assertTrue(nullableString.isNotEmpty())
+ * ```
+ * @see Assertions.assertNotNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNotNull(actual: Any?) {
+    contract {
+        returns() implies (actual != null)
+    }
+
+    Assertions.assertNotNull(actual)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNotNull(nullableString, "Should be non-nullable")
+ *
+ * // The compiler smart casts nullableString to a non-nullable object.
+ * assertTrue(nullableString.isNotEmpty())
+ * ```
+ * @see Assertions.assertNotNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNotNull(
+    actual: Any?,
+    message: String
+) {
+    contract {
+        returns() implies (actual != null)
+    }
+
+    Assertions.assertNotNull(actual, message)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
+ * val nullableString: String? = ...
+ *
+ * assertNotNull(nullableString) { "Should be non-nullable" }
+ *
+ * // The compiler smart casts nullableString to a non-nullable object.
+ * assertTrue(nullableString.isNotEmpty())
+ * ```
+ * @see Assertions.assertNotNull
+ */
+@OptIn(ExperimentalContracts::class)
+@API(since = "5.12", status = EXPERIMENTAL)
+fun assertNotNull(
+    actual: Any?,
+    messageSupplier: () -> String
+) {
+    contract {
+        returns() implies (actual != null)
+
+        callsInPlace(messageSupplier, AT_MOST_ONCE)
+    }
+
+    Assertions.assertNotNull(actual, messageSupplier)
+}
+
+/**
+ * Example usage:
+ * ```kotlin
  * val exception = assertThrows<IllegalArgumentException> {
  *     throw IllegalArgumentException("Talk to a duck")
  * }
@@ -143,10 +307,15 @@ inline fun <reified T : Throwable> assertThrows(
  * ```
  * @see Assertions.assertThrows
  */
+@OptIn(ExperimentalContracts::class)
 inline fun <reified T : Throwable> assertThrows(
     noinline message: () -> String,
     executable: () -> Unit
 ): T {
+    contract {
+        callsInPlace(message, AT_MOST_ONCE)
+    }
+
     val throwable: Throwable? =
         try {
             executable()
@@ -175,8 +344,15 @@ inline fun <reified T : Throwable> assertThrows(
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
-inline fun <R> assertDoesNotThrow(executable: () -> R): R = Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
+inline fun <R> assertDoesNotThrow(executable: () -> R): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+
+    return Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
+}
 
 /**
  * Example usage:
@@ -188,11 +364,18 @@ inline fun <R> assertDoesNotThrow(executable: () -> R): R = Assertions.assertDoe
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(
     message: String,
     executable: () -> R
-): R = assertDoesNotThrow({ message }, executable)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+
+    return assertDoesNotThrow({ message }, executable)
+}
 
 /**
  * Example usage:
@@ -204,15 +387,22 @@ inline fun <R> assertDoesNotThrow(
  * @see Assertions.assertDoesNotThrow
  * @param R the result type of the [executable]
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(
     noinline message: () -> String,
     executable: () -> R
-): R =
-    Assertions.assertDoesNotThrow(
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(message, AT_MOST_ONCE)
+    }
+
+    return Assertions.assertDoesNotThrow(
         evaluateAndWrap(executable),
         Supplier(message)
     )
+}
 
 @PublishedApi
 internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> =
@@ -231,13 +421,20 @@ internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R
  * }
  * ```
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     executable: () -> R
-): R = Assertions.assertTimeout(timeout, executable)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+
+    return Assertions.assertTimeout(timeout, executable)
+}
 
 /**
  * Example usage:
@@ -247,14 +444,21 @@ fun <R> assertTimeout(
  * }
  * ```
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     message: String,
     executable: () -> R
-): R = Assertions.assertTimeout(timeout, executable, message)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+
+    return Assertions.assertTimeout(timeout, executable, message)
+}
 
 /**
  * Example usage:
@@ -264,14 +468,22 @@ fun <R> assertTimeout(
  * }
  * ```
  * @see Assertions.assertTimeout
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeout(
     timeout: Duration,
     message: () -> String,
     executable: () -> R
-): R = Assertions.assertTimeout(timeout, executable, message)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(message, AT_MOST_ONCE)
+    }
+
+    return Assertions.assertTimeout(timeout, executable, message)
+}
 
 /**
  * Example usage:
@@ -281,7 +493,7 @@ fun <R> assertTimeout(
  * }
  * ```
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
@@ -297,7 +509,7 @@ fun <R> assertTimeoutPreemptively(
  * }
  * ```
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
@@ -314,19 +526,31 @@ fun <R> assertTimeoutPreemptively(
  * }
  * ```
  * @see Assertions.assertTimeoutPreemptively
- * @paramR the result of the [executable].
+ * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     message: () -> String,
     executable: () -> R
-): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)
+): R {
+    contract {
+        callsInPlace(message, AT_MOST_ONCE)
+    }
+
+    return Assertions.assertTimeoutPreemptively(timeout, executable, message)
+}
 
 /**
  * Example usage:
  * ```kotlin
- * assertInstanceOf<RandomAccess>(list, "List should support fast random access")
+ * val maybeString: Any = ...
+ *
+ * assertInstanceOf<String>(maybeString)
+ *
+ * // The compiler smart casts maybeString to a String object.
+ * assertTrue(maybeString.isNotEmpty())
  * ```
  * @see Assertions.assertInstanceOf
  * @since 5.11
@@ -343,7 +567,16 @@ inline fun <reified T : Any> assertInstanceOf(
     return Assertions.assertInstanceOf(T::class.java, actualValue, message)
 }
 
-/*
+/**
+ * Example usage:
+ * ```kotlin
+ * val maybeString: Any = ...
+ *
+ * assertInstanceOf<String>(maybeString) { "Should be a string" }
+ *
+ * // The compiler smart casts maybeString to a String object.
+ * assertTrue(maybeString.isNotEmpty())
+ * ```
  * @see Assertions.assertInstanceOf
  * @since 5.11
  */
@@ -355,6 +588,8 @@ inline fun <reified T : Any> assertInstanceOf(
 ): T {
     contract {
         returns() implies (actualValue is T)
+
+        callsInPlace(message, AT_MOST_ONCE)
     }
     return Assertions.assertInstanceOf(T::class.java, actualValue, message)
 }
