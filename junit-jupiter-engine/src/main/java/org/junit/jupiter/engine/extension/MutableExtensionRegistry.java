@@ -108,7 +108,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
 	}
 
-	private static Predicate<? super Class<? extends Extension>> createExtensionFilterByPatterns(String include,
+	private static Predicate<Class<? extends Extension>> createExtensionFilterByPatterns(String include,
 			String exclude) {
 		return clazz -> {
 			String className = clazz.getName();
