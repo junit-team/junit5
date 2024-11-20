@@ -71,6 +71,7 @@ dependencies {
 	}
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
