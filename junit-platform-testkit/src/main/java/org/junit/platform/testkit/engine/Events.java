@@ -208,6 +208,16 @@ public final class Events {
 	}
 
 	/**
+	 * Get the file entry publication {@link Events} contained in this
+	 * {@code Events} object.
+	 *
+	 * @return the filtered {@code Events}; never {@code null}
+	 */
+	public Events fileEntryPublished() {
+		return new Events(eventsByType(EventType.FILE_ENTRY_PUBLISHED), this.category + " File Entry Published");
+	}
+
+	/**
 	 * Get the dynamic registration {@link Events} contained in this
 	 * {@code Events} object.
 	 *

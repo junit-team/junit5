@@ -128,6 +128,18 @@ public class EventStatistics {
 	}
 
 	/**
+	 * Specify the number of expected <em>file entry publication</em> events.
+	 *
+	 * @param expected the expected number of events
+	 * @return this {@code EventStatistics} for method chaining
+	 */
+	public EventStatistics fileEntryPublished(long expected) {
+		this.executables.add(
+			() -> assertEquals(expected, this.events.fileEntryPublished().count(), "file entry published"));
+		return this;
+	}
+
+	/**
 	 * Specify the number of expected <em>dynamic registration</em> events.
 	 *
 	 * @param expected the expected number of events
