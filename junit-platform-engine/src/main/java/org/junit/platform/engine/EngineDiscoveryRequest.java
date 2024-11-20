@@ -87,6 +87,7 @@ public interface EngineDiscoveryRequest {
 	}
 
 	default OutputDirectoryProvider getOutputDirectoryProvider() {
-		throw new JUnitException("OutputDirectoryProvider not available");
+		throw new JUnitException(
+			"OutputDirectoryProvider not available; probably due to unaligned versions of the junit-platform-engine and junit-platform-launcher jars on the classpath/module path.");
 	}
 }
