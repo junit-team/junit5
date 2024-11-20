@@ -45,8 +45,8 @@ class GradleMissingEngineTests {
 				.setProject(Projects.GRADLE_MISSING_ENGINE) //
 				.setTool(gradle) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--debug", "--stacktrace", "--no-build-cache") //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
+				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
 				.setTimeout(TOOL_TIMEOUT).build() //
 				.run();
 

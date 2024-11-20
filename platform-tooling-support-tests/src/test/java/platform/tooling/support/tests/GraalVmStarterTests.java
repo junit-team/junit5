@@ -43,7 +43,8 @@ class GraalVmStarterTests {
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setProject(Projects.GRAALVM_STARTER) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache") //
+				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
+					"--warning-mode=fail") //
 				.setTimeout(Duration.ofMinutes(10)) //
 				.build();
 

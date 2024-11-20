@@ -18,6 +18,15 @@ dependencies {
 		exclude(group = "junit")
 		because("we want to override it to test against different versions")
 	}
+
+	val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
 }
 
 tasks.test {

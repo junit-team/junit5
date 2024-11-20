@@ -18,11 +18,17 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-reporting:$platformVersion")
 }
 
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
 tasks.test {
 	useJUnitPlatform()
 
 	testLogging {
-		events("failed")
+		events("failed", "standardOut")
 	}
 
 	reports {
@@ -35,9 +41,5 @@ tasks.test {
 			"-Djunit.platform.reporting.open.xml.enabled=true",
 			"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"
 		)
-	}
-
-	doFirst {
-		println("Using Java version: ${JavaVersion.current()}")
 	}
 }

@@ -41,9 +41,9 @@ class GradleStarterTests {
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setProject(Projects.GRADLE_STARTER) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache") //
+				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.setTimeout(TOOL_TIMEOUT) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
 				.build();
 
 		var result = request.run();

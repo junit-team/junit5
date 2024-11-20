@@ -11,10 +11,18 @@ repositories {
 
 // grab jupiter version from system environment
 val jupiterVersion = System.getenv("JUNIT_JUPITER_VERSION")
+val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
 
 dependencies {
 	testImplementation(kotlin("stdlib-jdk8"))
 	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
 }
 
 tasks.withType<KotlinCompile>().configureEach {

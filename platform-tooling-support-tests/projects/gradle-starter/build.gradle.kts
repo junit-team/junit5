@@ -4,7 +4,6 @@ plugins {
 
 // grab jupiter version from system environment
 val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
-val vintageVersion: String = System.getenv("JUNIT_VINTAGE_VERSION")
 val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
 
 repositories {
@@ -17,11 +16,17 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-reporting:$platformVersion")
 }
 
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
+}
+
 tasks.test {
 	useJUnitPlatform()
 
 	testLogging {
-		events("passed", "skipped", "failed")
+		events("passed", "skipped", "failed", "standardOut")
 	}
 
 	reports {
@@ -34,9 +39,5 @@ tasks.test {
 			"-Djunit.platform.reporting.open.xml.enabled=true",
 			"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"
 		)
-	}
-
-	doFirst {
-		println("Using Java version: ${JavaVersion.current()}")
 	}
 }
