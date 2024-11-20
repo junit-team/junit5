@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
 import java.util.Set;
 
@@ -39,7 +40,7 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
-		return executeTests(request().selectors(selectors));
+		return executeTests(request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()));
 	}
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequestBuilder builder) {
@@ -51,7 +52,8 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(request().selectors(selectors).build());
+		return discoverTests(
+			request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()).build());
 	}
 
 	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
