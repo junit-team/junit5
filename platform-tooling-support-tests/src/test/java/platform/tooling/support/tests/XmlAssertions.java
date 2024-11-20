@@ -10,11 +10,8 @@
 
 package platform.tooling.support.tests;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.reporting.testutil.FileUtils.findPath;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.regex.Pattern;
 
@@ -24,23 +21,8 @@ import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 class XmlAssertions {
 
 	static void verifyContainsExpectedStartedOpenTestReport(Path testResultsDir) {
-		var xmlFile = findOpenTestReport(testResultsDir);
+		var xmlFile = findPath(testResultsDir, "glob:**/open-test-report.xml");
 		verifyContent(xmlFile);
-	}
-
-	private static Path findOpenTestReport(Path testResultsDir) {
-		try (var files = Files.list(testResultsDir)) {
-			var outputDir = files.filter(
-				it -> Files.isDirectory(it) && it.getFileName().toString().startsWith("junit-")) //
-					.findAny() //
-					.orElseThrow(() -> new AssertionError("Missing JUnit output dir in " + testResultsDir));
-			var xmlFile = outputDir.resolve("open-test-report.xml");
-			assertThat(xmlFile).exists();
-			return xmlFile;
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
 	}
 
 	private static void verifyContent(Path xmlFile) {

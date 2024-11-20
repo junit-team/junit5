@@ -13,11 +13,10 @@ package org.junit.platform.jfr;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.hierarchicalOutputDirectoryProvider;
+import static org.junit.platform.reporting.testutil.FileUtils.findPath;
 import static org.moditect.jfrunit.ExpectedEvent.event;
 import static org.moditect.jfrunit.JfrEventsAssert.assertThat;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -75,16 +74,6 @@ public class FlightRecordingExecutionListenerIntegrationTests {
 						.with("displayName", "skipped()") //
 						.with("type", "TEST") //
 						.with("reason", "for demonstration purposes"));
-	}
-
-	private static Path findPath(Path rootDir, @SuppressWarnings("SameParameterValue") String syntaxAndPattern) {
-		var matcher = rootDir.getFileSystem().getPathMatcher(syntaxAndPattern);
-		try (var files = Files.walk(rootDir)) {
-			return files.filter(matcher::matches).findFirst().orElseThrow();
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
