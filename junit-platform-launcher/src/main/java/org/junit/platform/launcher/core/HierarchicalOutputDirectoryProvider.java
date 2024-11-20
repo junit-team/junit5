@@ -47,7 +47,7 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 				.skip(1) //
 				.map(Segment::getValue) //
 				.map(HierarchicalOutputDirectoryProvider::sanitizeName).map(Paths::get) //
-				.reduce(Paths.get(firstSegment.getValue()), Path::resolve);
+				.reduce(Paths.get(sanitizeName(firstSegment.getValue())), Path::resolve);
 		return Files.createDirectories(getRootDirectory().resolve(relativePath));
 	}
 
