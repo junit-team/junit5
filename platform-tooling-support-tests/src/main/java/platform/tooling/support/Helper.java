@@ -114,6 +114,10 @@ public class Helper {
 		return loadModuleDirectoryNames().stream().map(Helper::createJarFile).collect(Collectors.toList());
 	}
 
+	public static Optional<Path> getGradleJavaHome() {
+		return getJavaHome(System.getProperty("gradle.java.version"));
+	}
+
 	public static Optional<Path> getJavaHome(String version) {
 		// First, try various system sources...
 		var sources = Stream.of( //

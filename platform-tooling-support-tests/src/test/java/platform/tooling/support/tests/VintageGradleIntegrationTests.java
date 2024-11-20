@@ -58,6 +58,7 @@ class VintageGradleIntegrationTests {
 		var result = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.setProject(Projects.VINTAGE) //
 				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //

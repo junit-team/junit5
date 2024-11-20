@@ -170,6 +170,10 @@ tasks.test {
 		}
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
+
+	val gradleJavaVersion = JavaVersion.current().majorVersion.toInt()
+	jvmArgumentProviders += JavaHomeDir(project, gradleJavaVersion, develocity.testDistribution.enabled)
+	systemProperty("gradle.java.version", gradleJavaVersion)
 }
 
 class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : CommandLineArgumentProvider {

@@ -24,7 +24,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.opentest4j.TestAbortedException;
 
+import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 
@@ -42,6 +44,7 @@ class GraalVmStarterTests {
 		var request = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.setProject(Projects.GRAALVM_STARTER) //
+				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
 					"--warning-mode=fail") //

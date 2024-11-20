@@ -43,6 +43,7 @@ class ReflectionCompatibilityTests {
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.setTimeout(TOOL_TIMEOUT) //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.build();
 
 		var result = request.run();
