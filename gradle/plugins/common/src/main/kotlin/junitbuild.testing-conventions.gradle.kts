@@ -5,7 +5,6 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
-import java.nio.file.Files
 
 plugins {
 	`java-library`
@@ -119,7 +118,7 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
-			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}"
+			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}/junit-{uniqueNumber}",
 		)
 	}
 
@@ -127,10 +126,12 @@ tasks.withType<Test>().configureEach {
 		classpath.from(javaAgentClasspath)
 	}
 
-	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-*/open-test-report.xml") }
+	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
-		reportFiles.files.forEach {
-			Files.delete(it.toPath())
+		reportDirTree.visit {
+			if (name.startsWith("junit-")) {
+				file.deleteRecursively()
+			}
 		}
 	}
 

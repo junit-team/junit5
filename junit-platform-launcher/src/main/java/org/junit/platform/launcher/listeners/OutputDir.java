@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.listeners;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -22,6 +23,7 @@ import java.security.SecureRandom;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -30,13 +32,10 @@ import org.junit.platform.commons.util.StringUtils;
 @API(status = INTERNAL, since = "1.9")
 public class OutputDir {
 
-	private final SecureRandom random = new SecureRandom();
+	private static final Pattern OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER_PATTERN = Pattern.compile(
+		Pattern.quote(OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER));
 
 	public static OutputDir create(Optional<String> customDir) {
-		return createWithPath(customDir.filter(StringUtils::isNotBlank).map(Paths::get));
-	}
-
-	public static OutputDir createWithPath(Optional<Path> customDir) {
 		try {
 			return createSafely(customDir, () -> Paths.get(".").toAbsolutePath());
 		}
@@ -48,12 +47,22 @@ public class OutputDir {
 	/**
 	 * Package private for testing purposes.
 	 */
-	static OutputDir createSafely(Optional<Path> customDir, Supplier<Path> currentWorkingDir) throws IOException {
+	static OutputDir createSafely(Optional<String> customDir, Supplier<Path> currentWorkingDir) throws IOException {
+		return createSafely(customDir, currentWorkingDir, new SecureRandom());
+	}
+
+	private static OutputDir createSafely(Optional<String> customDir, Supplier<Path> currentWorkingDir,
+			SecureRandom random) throws IOException {
 		Path cwd = currentWorkingDir.get();
 		Path outputDir;
 
-		if (customDir.isPresent()) {
-			outputDir = cwd.resolve(customDir.get());
+		if (customDir.isPresent() && StringUtils.isNotBlank(customDir.get())) {
+			String customPath = customDir.get();
+			while (customPath.contains(OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER)) {
+				customPath = OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER_PATTERN.matcher(customPath) //
+						.replaceFirst(String.valueOf(Math.abs(random.nextLong())));
+			}
+			outputDir = cwd.resolve(customPath);
 		}
 		else if (Files.exists(cwd.resolve("pom.xml"))) {
 			outputDir = cwd.resolve("target");
@@ -69,29 +78,19 @@ public class OutputDir {
 			Files.createDirectories(outputDir);
 		}
 
-		return new OutputDir(outputDir.normalize());
+		return new OutputDir(outputDir.normalize(), random);
 	}
 
 	private final Path path;
+	private final SecureRandom random;
 
-	private OutputDir(Path path) {
+	private OutputDir(Path path, SecureRandom random) {
 		this.path = path;
+		this.random = random;
 	}
 
 	public Path toPath() {
 		return path;
-	}
-
-	public Path createDir(String prefix) throws UncheckedIOException {
-		String filename = String.format("%s-%d", prefix, Math.abs(random.nextLong()));
-		Path outputFile = path.resolve(filename);
-
-		try {
-			return Files.createDirectory(outputFile);
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException("Failed to create output directory: " + outputFile, e);
-		}
 	}
 
 	public Path createFile(String prefix, String extension) throws UncheckedIOException {

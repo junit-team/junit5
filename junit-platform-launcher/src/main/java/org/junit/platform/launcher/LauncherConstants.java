@@ -193,6 +193,8 @@ public class LauncherConstants {
 
 	public static final String OUTPUT_DIR_PROPERTY_NAME = "junit.platform.reporting.output.dir";
 
+	public static final String OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER = "{uniqueNumber}";
+
 	private LauncherConstants() {
 		/* no-op */
 	}

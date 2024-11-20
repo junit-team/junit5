@@ -327,10 +327,8 @@ public final class LauncherDiscoveryRequestBuilder {
 		if (this.outputDirectoryProvider != null) {
 			return this.outputDirectoryProvider;
 		}
-		return new HierarchicalOutputDirectoryProvider(() -> {
-			OutputDir outputDir = OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME));
-			return outputDir.createDir("junit");
-		});
+		return new HierarchicalOutputDirectoryProvider(
+			() -> OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME)).toPath());
 	}
 
 	private LauncherConfigurationParameters buildLauncherConfigurationParameters() {
