@@ -12,6 +12,11 @@ plugins {
 	id("junitbuild.build-parameters")
 }
 
+var javaAgent = configurations.dependencyScope("javaAgent")
+var javaAgentClasspath = configurations.resolvable("javaAgentClasspath") {
+	extendsFrom(javaAgent.get())
+}
+
 var openTestReportingCli = configurations.dependencyScope("openTestReportingCli")
 var openTestReportingCliClasspath = configurations.resolvable("openTestReportingCliClasspath") {
 	extendsFrom(openTestReportingCli.get())
@@ -117,6 +122,10 @@ tasks.withType<Test>().configureEach {
 		)
 	}
 
+	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
+		classpath.from(javaAgentClasspath)
+	}
+
 	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-platform-events-*.xml") }
 	doFirst {
 		reportFiles.files.forEach {
@@ -129,7 +138,7 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
 	testImplementation(dependencyFromLibs("assertj"))
-	testImplementation(dependencyFromLibs("mockito"))
+	testImplementation(dependencyFromLibs("mockito-junit-jupiter"))
 	testImplementation(dependencyFromLibs("testingAnnotations"))
 	testImplementation(project(":junit-jupiter"))
 
@@ -147,4 +156,17 @@ dependencies {
 
 	openTestReportingCli(dependencyFromLibs("openTestReporting-cli"))
 	openTestReportingCli(project(":junit-platform-reporting"))
+
+	javaAgent(dependencyFromLibs("mockito-core")) {
+		isTransitive = false
+	}
+}
+
+abstract class JavaAgentArgumentProvider : CommandLineArgumentProvider {
+
+	@get:Classpath
+	abstract val classpath: ConfigurableFileCollection
+
+	override fun asArguments() = listOf("-javaagent:${classpath.singleFile.absolutePath}")
+
 }
