@@ -10,14 +10,10 @@
 
 package org.junit.jupiter.engine.extension;
 
-import java.nio.file.Path;
-import java.util.Map;
-
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.jupiter.api.function.ThrowingConsumer;
 
 /**
  * {@link ParameterResolver} that injects a {@link TestReporter}.
@@ -38,17 +34,7 @@ class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
 	public TestReporter resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return new TestReporter() {
-			@Override
-			public void publishEntry(Map<String, String> map) {
-				extensionContext.publishReportEntry(map);
-			}
-
-			@Override
-			public void publishFile(String fileName, ThrowingConsumer<Path> action) {
-				extensionContext.publishFile(fileName, action);
-			}
-		};
+		return new DefaultTestReporter(extensionContext);
 	}
 
 }
