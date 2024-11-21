@@ -42,12 +42,10 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 	@Override
 	public Path createOutputDirectory(TestDescriptor testDescriptor) throws IOException {
 		List<Segment> segments = testDescriptor.getUniqueId().getSegments();
-		Segment firstSegment = segments.get(0);
 		Path relativePath = segments.stream() //
 				.skip(1) //
-				.map(Segment::getValue) //
-				.map(HierarchicalOutputDirectoryProvider::sanitizeName).map(Paths::get) //
-				.reduce(Paths.get(sanitizeName(firstSegment.getValue())), Path::resolve);
+				.map(HierarchicalOutputDirectoryProvider::toSanitizedPath) //
+				.reduce(toSanitizedPath(segments.get(0)), Path::resolve);
 		return Files.createDirectories(getRootDirectory().resolve(relativePath));
 	}
 
@@ -57,6 +55,10 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 			rootDir = rootDirSupplier.get();
 		}
 		return rootDir;
+	}
+
+	private static Path toSanitizedPath(Segment segment) {
+		return Paths.get(sanitizeName(segment.getValue()));
 	}
 
 	private static String sanitizeName(String value) {
