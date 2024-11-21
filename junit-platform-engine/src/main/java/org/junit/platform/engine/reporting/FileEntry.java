@@ -20,12 +20,13 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * {@code FileEntry} encapsulates a file to be published to the reporting infrastructure.
+ * {@code FileEntry} encapsulates a file to be published to the reporting
+ * infrastructure.
  *
- * @since 1.11
+ * @since 1.12
  * @see #from(Path)
  */
-@API(status = EXPERIMENTAL, since = "1.11")
+@API(status = EXPERIMENTAL, since = "1.12")
 public final class FileEntry {
 
 	/**
@@ -53,6 +54,11 @@ public final class FileEntry {
 		return this.timestamp;
 	}
 
+	/**
+	 * Get the file to be published.
+	 *
+	 * @return the file to publish; never {@code null}
+	 */
 	public Path getFile() {
 		return file;
 	}

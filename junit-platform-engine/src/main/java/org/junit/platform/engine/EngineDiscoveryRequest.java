@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -74,10 +75,6 @@ public interface EngineDiscoveryRequest {
 	/**
 	 * Get the {@link EngineDiscoveryListener} for this request.
 	 *
-	 * <p>The default implementation returns a no-op listener that ignores all
-	 * calls so that engines that call this methods can be used with an earlier
-	 * version of the JUnit Platform that did not yet include this API.
-	 *
 	 * @return the discovery listener; never {@code null}
 	 * @since 1.6
 	 */
@@ -86,6 +83,13 @@ public interface EngineDiscoveryRequest {
 		return EngineDiscoveryListener.NOOP;
 	}
 
+	/**
+	 * Get the {@link OutputDirectoryProvider} for this request.
+	 *
+	 * @return the output directory provider; never {@code null}
+	 * @since 1.12
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
 	default OutputDirectoryProvider getOutputDirectoryProvider() {
 		throw new JUnitException(
 			"OutputDirectoryProvider not available; probably due to unaligned versions of the junit-platform-engine and junit-platform-launcher jars on the classpath/module path.");

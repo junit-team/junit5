@@ -139,6 +139,23 @@ public interface EngineExecutionListener {
 	default void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 	}
 
+	/**
+	 * Can be called for any {@link TestDescriptor} in order to attach a file to
+	 * a test or container &mdash; for example:
+	 *
+	 * <ul>
+	 *     <li>Screenshots</li>
+	 *     <li>Logs</li>
+	 *     <li>Output files written by the code under test</li>
+	 * </ul>
+	 *
+	 * <p>The current lifecycle state of the supplied {@code TestDescriptor} is
+	 * not relevant: file events can occur at any time.
+	 *
+	 * @param testDescriptor the descriptor of the test or container to which
+	* the file entry belongs
+	 * @param file a {@code FileEntry} instance to be attached
+	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
 	default void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
 	}

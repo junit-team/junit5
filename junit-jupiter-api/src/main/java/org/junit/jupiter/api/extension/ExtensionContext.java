@@ -371,8 +371,8 @@ public interface ExtensionContext {
 	 * Publish a file with the supplied name written by the supplied action and
 	 * attach it to the current test or container.
 	 * <p>
-	 * The file will be located in the report output directory prior to invoking
-	 * the supplied action.
+	 * The file will be resolved in the report output directory prior to
+	 * invoking the supplied action.
 	 *
 	 * @param fileName the name of the file to be attached; never {@code null} or blank
 	 *                 and must not contain any path separators
