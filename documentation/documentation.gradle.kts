@@ -176,6 +176,7 @@ tasks {
 
 	generateOpenTestHtmlReport {
 		mustRunAfter(consoleLauncherTest)
+		inputs.files(consoleLauncherTestEventXmlFiles).withPathSensitivity(RELATIVE).skipWhenEmpty()
 		argumentProviders += CommandLineArgumentProvider {
 			consoleLauncherTestEventXmlFiles.files.map { it.absolutePath }.toList()
 		}
