@@ -296,7 +296,7 @@ public @interface ParameterizedTest {
 	 * Configure whether zero invocations are allowed for this
 	 * parameterized test.
 	 *
-	 * <p>Set this attribute to {@code true} if the absence of arguments is
+	 * <p>Set this attribute to {@code true} if the absence of invocations is
 	 * expected in some cases and should not cause a test failure.
 	 *
 	 * <p>Defaults to {@code false}.
