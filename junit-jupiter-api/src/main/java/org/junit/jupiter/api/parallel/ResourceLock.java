@@ -46,11 +46,14 @@ import org.junit.jupiter.api.BeforeEach;
  *
  * <p>This annotation can be repeated to declare the use of multiple shared resources.
  *
+ * <p>Uniqueness of a shared resource is identified by both {@link #value()} and
+ * {@link #mode()}. Duplicated shared resources do not cause errors.
+ *
  * <p>Since JUnit Jupiter 5.4, this annotation is {@linkplain Inherited inherited}
  * within class hierarchies.
  *
  * <p>Since JUnit Jupiter 5.12, this annotation supports adding shared resources
- * dynamically at runtime via {@link ResourceLock#providers}.
+ * dynamically at runtime via {@link #providers}.
  *
  * <p>Resources declared "statically" using {@link #value()} and {@link #mode()}
  * are combined with "dynamic" resources added via {@link #providers()}.
@@ -58,9 +61,29 @@ import org.junit.jupiter.api.BeforeEach;
  * and resource "B" via a provider returning {@code new Lock("B")} will result
  * in two shared resources "A" and "B".
  *
+ * <p>Since JUnit Jupiter 5.12, this annotation supports declaring "static"
+ * shared resources for <em>direct</em> child nodes via the {@link #target()}
+ * attribute.
+ *
+ * <p>Using the {@link ResourceLockTarget#CHILDREN} in a class-level
+ * annotation has the same semantics as adding an annotation with the same
+ * {@link #value()} and {@link #mode()} to each test method declared
+ * in this class.
+ *
+ * <p>It may improve parallelization when a test class declares a
+ * {@link ResourceAccessMode#READ READ} lock, but only a few methods hold
+ * {@link ResourceAccessMode#READ_WRITE READ_WRITE} lock.
+ *
+ * <p>Note that the {@code target = CHILDREN} means that
+ * {@link #value()} and {@link #mode()} no longer apply to a node
+ * declaring the annotation. However, the {@link #providers()} attribute
+ * remains applicable, and the target of "dynamic" shared resources
+ * added via implementations of {@link ResourceLocksProvider} is not changed.
+ *
  * @see Isolated
  * @see Resources
  * @see ResourceAccessMode
+ * @see ResourceLockTarget
  * @see ResourceLocks
  * @see ResourceLocksProvider
  * @since 5.3
@@ -91,6 +114,20 @@ public @interface ResourceLock {
 	 * @see ResourceLocksProvider.Lock#getAccessMode()
 	 */
 	ResourceAccessMode mode() default ResourceAccessMode.READ_WRITE;
+
+	/**
+	 * The target of a resource created from {@link #value()} and {@link #mode()}.
+	 *
+	 * <p>Defaults to {@link ResourceLockTarget#SELF SELF}.
+	 *
+	 * <p>Note that using {@link ResourceLockTarget#CHILDREN} in
+	 * a method-level annotation results in an exception.
+	 *
+	 * @see ResourceLockTarget
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	ResourceLockTarget target() default ResourceLockTarget.SELF;
 
 	/**
 	 * An array of one or more classes implementing {@link ResourceLocksProvider}.
