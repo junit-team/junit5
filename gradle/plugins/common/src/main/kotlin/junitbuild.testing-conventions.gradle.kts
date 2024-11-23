@@ -1,7 +1,7 @@
 
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
-import org.gradle.api.tasks.PathSensitivity.NONE
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
@@ -41,7 +41,8 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 abstract class HtmlReportParameters : CommandLineArgumentProvider {
 
 	@get:InputFiles
-	@get:PathSensitive(NONE)
+	@get:PathSensitive(RELATIVE)
+	@get:SkipWhenEmpty
 	abstract val eventXmlFiles: ConfigurableFileCollection
 
 	@get:OutputFile
