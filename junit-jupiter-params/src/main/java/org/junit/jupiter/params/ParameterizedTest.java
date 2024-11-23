@@ -304,7 +304,7 @@ public @interface ParameterizedTest {
 	 * @since 5.12
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
-	boolean requireArguments() default true;
+	boolean allowZeroInvocations() default false;
 
 	/**
 	 * Configure how the number of arguments provided by an {@link ArgumentsSource} are validated.

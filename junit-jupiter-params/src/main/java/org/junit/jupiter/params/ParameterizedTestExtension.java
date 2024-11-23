@@ -86,7 +86,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
-						Preconditions.condition(invocationCount.get() > 0 || !methodContext.annotation.requireArguments(),
+						Preconditions.condition(invocationCount.get() > 0 || methodContext.annotation.allowZeroInvocations(),
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
 	}
@@ -94,7 +94,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	@Override
 	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext extensionContext) {
 		ParameterizedTestMethodContext methodContext = getMethodContext(extensionContext);
-		return !methodContext.annotation.requireArguments();
+		return methodContext.annotation.allowZeroInvocations();
 	}
 
 	private ParameterizedTestMethodContext getMethodContext(ExtensionContext extensionContext) {
