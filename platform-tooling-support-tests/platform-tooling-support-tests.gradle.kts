@@ -140,6 +140,7 @@ tasks.test {
 		dependsOn(normalizeMavenRepo)
 		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
+	environment.remove("JAVA_TOOL_OPTIONS")
 
 	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
 	jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
