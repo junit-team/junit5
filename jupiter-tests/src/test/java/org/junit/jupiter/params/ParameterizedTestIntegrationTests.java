@@ -2422,7 +2422,7 @@ class ParameterizedTestIntegrationTests {
 			fail("This test should not be executed, because no arguments are provided.");
 		}
 
-		@ParameterizedTest(requireArguments = false)
+		@ParameterizedTest(allowZeroInvocations = true)
 		@MethodSource("zeroArgumentsProvider")
 		void testThatDoesNotRequireArguments(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
