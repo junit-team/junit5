@@ -106,7 +106,7 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		CommandResult<?> result = runCommand( //
 			new CommandLine(command), //
 			args.toArray(new String[0]), //
-			Optional.of(new OutputConfig(commandLine)) //
+			Optional.of(new OutputStreamConfig(commandLine)) //
 		);
 		this.commandResult = result;
 
@@ -131,18 +131,18 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		err.flush();
 	}
 
-	CommandResult<?> run(String[] args, Optional<OutputConfig> outputConfig) {
+	CommandResult<?> run(String[] args, Optional<OutputStreamConfig> outputStreamConfig) {
 		CommandLine commandLine = new CommandLine(this) //
 				.addSubcommand(new DiscoverTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ExecuteTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ListTestEnginesCommand());
-		return runCommand(commandLine, args, outputConfig);
+		return runCommand(commandLine, args, outputStreamConfig);
 	}
 
 	private static CommandResult<Object> runCommand(CommandLine commandLine, String[] args,
-			Optional<OutputConfig> outputConfig) {
+			Optional<OutputStreamConfig> outputStreamConfig) {
 		BaseCommand.initialize(commandLine);
-		outputConfig.ifPresent(it -> it.applyTo(commandLine));
+		outputStreamConfig.ifPresent(it -> it.applyTo(commandLine));
 		int exitCode = commandLine.execute(args);
 		return CommandResult.create(exitCode, getLikelyExecutedCommand(commandLine).getExecutionResult());
 	}

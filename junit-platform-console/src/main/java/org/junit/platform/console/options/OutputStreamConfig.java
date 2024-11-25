@@ -14,16 +14,16 @@ import java.io.PrintWriter;
 
 import picocli.CommandLine;
 
-class OutputConfig {
+class OutputStreamConfig {
 
 	private final PrintWriter out;
 	private final PrintWriter err;
 
-	OutputConfig(CommandLine commandLine) {
+	OutputStreamConfig(CommandLine commandLine) {
 		this(commandLine.getOut(), commandLine.getErr());
 	}
 
-	OutputConfig(PrintWriter out, PrintWriter err) {
+	OutputStreamConfig(PrintWriter out, PrintWriter err) {
 		this.out = out;
 		this.err = err;
 	}
