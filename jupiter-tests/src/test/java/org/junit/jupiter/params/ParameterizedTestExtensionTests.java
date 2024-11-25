@@ -325,7 +325,7 @@ class ParameterizedTestExtensionTests {
 
 	static class TestCaseAllowNoArgumentsMethod {
 
-		@ParameterizedTest(requireArguments = false)
+		@ParameterizedTest(allowZeroInvocations = true)
 		void method() {
 		}
 	}

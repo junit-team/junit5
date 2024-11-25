@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
 
 import org.xmlunit.assertj3.XmlAssert;
 import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
@@ -34,8 +35,8 @@ class XmlAssertions {
 
 	private static void verifyContent(Path xmlFile) {
 		var expected = """
-				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.1.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.1.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.1.0"
-				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.1.0"
+				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
+				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0"
 				                  xmlns:junit="https://schemas.junit.org/open-test-reporting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				                  xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
 				          <infrastructure>
@@ -46,9 +47,9 @@ class XmlAssertions {
 				            <java:javaVersion>${xmlunit.ignore}</java:javaVersion>
 				            <java:fileEncoding>${xmlunit.ignore}</java:fileEncoding>
 				            <java:heapSize max="${xmlunit.isNumber}"/>
-				            <git:repository originUrl="${xmlunit.matchesRegex(https://.+)}"/>
+				            <git:repository originUrl="${xmlunit.matchesRegex#(git@|https://).+#}"/>
 				            <git:branch>${xmlunit.ignore}</git:branch>
-				            <git:commit>${xmlunit.matchesRegex([0-9a-f]{40})}</git:commit>
+				            <git:commit>${xmlunit.matchesRegex#[0-9a-f]{40}#}</git:commit>
 				            <git:status clean="${xmlunit.ignore}">${xmlunit.ignore}</git:status>
 				          </infrastructure>
 				          <e:started id="1" name="JUnit Jupiter" time="${xmlunit.isDateTime}">
@@ -156,7 +157,8 @@ class XmlAssertions {
 				""";
 
 		XmlAssert.assertThat(xmlFile).and(expected) //
-				.withDifferenceEvaluator(new PlaceholderDifferenceEvaluator()) //
+				.withDifferenceEvaluator(new PlaceholderDifferenceEvaluator(Pattern.quote("${"), Pattern.quote("}"),
+					Pattern.quote("#"), Pattern.quote("#"), ",")) //
 				.ignoreWhitespace() //
 				.areIdentical();
 	}
