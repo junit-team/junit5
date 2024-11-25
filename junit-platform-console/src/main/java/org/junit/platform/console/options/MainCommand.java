@@ -139,7 +139,7 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		return runCommand(commandLine, args, outputStreamConfig);
 	}
 
-	private static CommandResult<Object> runCommand(CommandLine commandLine, String[] args,
+	private static CommandResult<?> runCommand(CommandLine commandLine, String[] args,
 			Optional<OutputStreamConfig> outputStreamConfig) {
 		BaseCommand.initialize(commandLine);
 		outputStreamConfig.ifPresent(it -> it.applyTo(commandLine));
