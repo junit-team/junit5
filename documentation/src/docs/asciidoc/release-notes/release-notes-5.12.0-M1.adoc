@@ -90,7 +90,7 @@ JUnit repository on GitHub.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
 * Allow declaring "shared resources" for _direct_ child nodes via the new
-  `@ResourceLock(target = CHILDREN)` attribute. It may improve parallelization when
+  `@ResourceLock(target = CHILDREN)` attribute. This may improve parallelization when
   a test class declares a `READ` lock, but only a few methods hold a `READ_WRITE` lock.
 * Extensions that implement `TestInstancePreConstructCallback`, `TestInstanceFactory`,
   `TestInstancePostProcessor`, `ParameterResolver`, or `InvocationInterceptor` may

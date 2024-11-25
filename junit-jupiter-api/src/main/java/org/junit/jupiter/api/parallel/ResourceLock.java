@@ -67,10 +67,10 @@ import org.junit.jupiter.api.BeforeEach;
  *
  * <p>Using the {@link ResourceLockTarget#CHILDREN} in a class-level
  * annotation has the same semantics as adding an annotation with the same
- * {@link #value()} and {@link #mode()} to each test method declared
- * in this class.
+ * {@link #value()} and {@link #mode()} to each test method and nested test
+ * class declared in this class.
  *
- * <p>It may improve parallelization when a test class declares a
+ * <p>This may improve parallelization when a test class declares a
  * {@link ResourceAccessMode#READ READ} lock, but only a few methods hold
  * {@link ResourceAccessMode#READ_WRITE READ_WRITE} lock.
  *

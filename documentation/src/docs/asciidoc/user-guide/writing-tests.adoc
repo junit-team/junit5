@@ -3035,15 +3035,15 @@ the `{ResourceLockTarget}` enum.
 
 Using the `target = CHILDREN` in a class-level `{ResourceLock}` annotation
 has the same semantics as adding an annotation with the same `value` and `mode`
-to each test method declared in this class.
+to each test method and nested test class declared in this class.
 
-It may improve parallelization when a test class declares a `READ` lock,
+This may improve parallelization when a test class declares a `READ` lock,
 but only a few methods hold a `READ_WRITE` lock.
 
 Tests in the following example would run in the `SAME_THREAD` if the `{ResourceLock}`
-doesn't have the `target = CHILDREN`. This is because the test class declares a `READ`
+didn't have `target = CHILDREN`. This is because the test class declares a `READ`
 shared resource, but one test method holds a `READ_WRITE` lock,
-which forces the `SAME_THREAD` execution mode for all the test methods.
+which would force the `SAME_THREAD` execution mode for all the test methods.
 
 [source,java]
 .Declaring shared resources for child nodes with `target` attribute

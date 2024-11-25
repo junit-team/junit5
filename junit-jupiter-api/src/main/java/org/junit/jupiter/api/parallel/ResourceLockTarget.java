@@ -37,8 +37,11 @@ public enum ResourceLockTarget {
 	 *     <li>a test class
 	 *     - test methods and nested test classes declared in the class.</li>
 	 *     <li>a nested test class
-	 *     - test methods declared in the nested class.</li>
-	 *     <li>a test method - considered to have no children.</li>
+	 *     - test methods and nested test classes declared in the nested class.
+	 *     </li>
+	 *     <li>a test method
+	 *     - considered to have no children. Using {@code CHILDREN} for
+	 *     a test method results in an exception.</li>
 	 * </ul>
 	 */
 	CHILDREN
