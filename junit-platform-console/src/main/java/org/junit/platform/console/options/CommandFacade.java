@@ -33,10 +33,18 @@ public class CommandFacade {
 		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
-	public CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+	public CommandResult<?> run(String[] args) {
+		return run(args, Optional.empty());
+	}
+
+	public CommandResult<?> run(String[] args, PrintWriter out, PrintWriter err) {
+		return run(args, Optional.of(new OutputConfig(out, err)));
+	}
+
+	private CommandResult<?> run(String[] args, Optional<OutputConfig> outputConfig) {
 		Optional<String> version = ManifestVersionProvider.getImplementationVersion();
 		System.setProperty("junit.docs.version",
 			version.map(it -> it.endsWith("-SNAPSHOT") ? "snapshot" : it).orElse("current"));
-		return new MainCommand(consoleTestExecutorFactory).run(out, err, args);
+		return new MainCommand(consoleTestExecutorFactory).run(args, outputConfig);
 	}
 }

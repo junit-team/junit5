@@ -103,10 +103,11 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 		List<String> args = new ArrayList<>(commandLine.getParseResult().expandedArgs());
 		triggeringOption.ifPresent(args::remove);
-		CommandResult<?> result = runCommand(commandLine.getOut(), //
-			commandLine.getErr(), //
+		CommandResult<?> result = runCommand( //
+			new CommandLine(command), //
 			args.toArray(new String[0]), //
-			command);
+			Optional.of(new OutputConfig(commandLine)) //
+		);
 		this.commandResult = result;
 
 		printDeprecationWarning(subcommand, triggeringOption, commandLine);
@@ -130,27 +131,18 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 		err.flush();
 	}
 
-	CommandResult<?> run(PrintWriter out, PrintWriter err, String[] args) {
+	CommandResult<?> run(String[] args, Optional<OutputConfig> outputConfig) {
 		CommandLine commandLine = new CommandLine(this) //
 				.addSubcommand(new DiscoverTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ExecuteTestsCommand(consoleTestExecutorFactory)) //
 				.addSubcommand(new ListTestEnginesCommand());
-		return runCommand(out, err, args, commandLine);
+		return runCommand(commandLine, args, outputConfig);
 	}
 
-	private static CommandResult<?> runCommand(PrintWriter out, PrintWriter err, String[] args, Object command) {
-		return runCommand(out, err, args, new CommandLine(command));
-	}
-
-	private static CommandResult<Object> runCommand(PrintWriter out, PrintWriter err, String[] args,
-			CommandLine commandLine) {
-		commandLine = BaseCommand.initialize(commandLine);
-		if (out != null) {
-			commandLine = commandLine.setOut(out);
-		}
-		if (err != null) {
-			commandLine = commandLine.setErr(err);
-		}
+	private static CommandResult<Object> runCommand(CommandLine commandLine, String[] args,
+			Optional<OutputConfig> outputConfig) {
+		BaseCommand.initialize(commandLine);
+		outputConfig.ifPresent(it -> it.applyTo(commandLine));
 		int exitCode = commandLine.execute(args);
 		return CommandResult.create(exitCode, getLikelyExecutedCommand(commandLine).getExecutionResult());
 	}

@@ -30,38 +30,23 @@ import org.junit.platform.console.tasks.ConsoleTestExecutor;
 public class ConsoleLauncher {
 
 	public static void main(String... args) {
-		CommandResult<?> result = run(null, null, args);
+		CommandResult<?> result = newCommandFacade().run(args);
 		System.exit(result.getExitCode());
 	}
 
 	@API(status = INTERNAL, since = "1.0")
 	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String... args) {
-		ConsoleLauncher consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, out, err);
-		return consoleLauncher.run(args);
-	}
-
-	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
-	private final PrintWriter out;
-	private final PrintWriter err;
-
-	ConsoleLauncher(ConsoleTestExecutor.Factory consoleTestExecutorFactory, PrintWriter out, PrintWriter err) {
-		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
-		this.out = out;
-		this.err = err;
-	}
-
-	CommandResult<?> run(String... args) {
 		try {
-			return new CommandFacade(consoleTestExecutorFactory).run(out, err, args);
+			return newCommandFacade().run(args, out, err);
 		}
 		finally {
-			if (out != null) {
-				out.flush();
-			}
-			if (err != null) {
-				err.flush();
-			}
+			out.flush();
+			err.flush();
 		}
+	}
+
+	private static CommandFacade newCommandFacade() {
+		return new CommandFacade(ConsoleTestExecutor::new);
 	}
 
 }
