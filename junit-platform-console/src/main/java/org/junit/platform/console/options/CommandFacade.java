@@ -38,7 +38,13 @@ public class CommandFacade {
 	}
 
 	public CommandResult<?> run(String[] args, PrintWriter out, PrintWriter err) {
-		return run(args, Optional.of(new OutputStreamConfig(out, err)));
+		try {
+			return run(args, Optional.of(new OutputStreamConfig(out, err)));
+		}
+		finally {
+			out.flush();
+			err.flush();
+		}
 	}
 
 	private CommandResult<?> run(String[] args, Optional<OutputStreamConfig> outputStreamConfig) {

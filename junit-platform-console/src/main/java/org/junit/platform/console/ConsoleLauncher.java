@@ -36,13 +36,7 @@ public class ConsoleLauncher {
 
 	@API(status = INTERNAL, since = "1.0")
 	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String... args) {
-		try {
-			return newCommandFacade().run(args, out, err);
-		}
-		finally {
-			out.flush();
-			err.flush();
-		}
+		return newCommandFacade().run(args, out, err);
 	}
 
 	private static CommandFacade newCommandFacade() {
