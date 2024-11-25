@@ -30,9 +30,7 @@ import org.junit.platform.console.tasks.ConsoleTestExecutor;
 public class ConsoleLauncher {
 
 	public static void main(String... args) {
-		PrintWriter out = new PrintWriter(System.out);
-		PrintWriter err = new PrintWriter(System.err);
-		CommandResult<?> result = run(out, err, args);
+		CommandResult<?> result = run(null, null, args);
 		System.exit(result.getExitCode());
 	}
 
@@ -57,8 +55,12 @@ public class ConsoleLauncher {
 			return new CommandFacade(consoleTestExecutorFactory).run(out, err, args);
 		}
 		finally {
-			out.flush();
-			err.flush();
+			if (out != null) {
+				out.flush();
+			}
+			if (err != null) {
+				err.flush();
+			}
 		}
 	}
 

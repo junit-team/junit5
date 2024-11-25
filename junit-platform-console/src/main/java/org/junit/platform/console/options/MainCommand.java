@@ -144,10 +144,14 @@ class MainCommand implements Callable<Object>, IExitCodeGenerator {
 
 	private static CommandResult<Object> runCommand(PrintWriter out, PrintWriter err, String[] args,
 			CommandLine commandLine) {
-		int exitCode = BaseCommand.initialize(commandLine) //
-				.setOut(out) //
-				.setErr(err) //
-				.execute(args);
+		commandLine = BaseCommand.initialize(commandLine);
+		if (out != null) {
+			commandLine = commandLine.setOut(out);
+		}
+		if (err != null) {
+			commandLine = commandLine.setErr(err);
+		}
+		int exitCode = commandLine.execute(args);
 		return CommandResult.create(exitCode, getLikelyExecutedCommand(commandLine).getExecutionResult());
 	}
 
