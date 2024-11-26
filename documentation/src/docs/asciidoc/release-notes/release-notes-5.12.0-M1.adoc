@@ -91,6 +91,9 @@ JUnit repository on GitHub.
   the absence of invocations is expected in some cases and should not cause a test failure.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
+* Allow declaring "shared resources" for _direct_ child nodes via the new
+  `@ResourceLock(target = CHILDREN)` attribute. This may improve parallelization when
+  a test class declares a `READ` lock, but only a few methods hold a `READ_WRITE` lock.
 * Extensions that implement `TestInstancePreConstructCallback`, `TestInstanceFactory`,
   `TestInstancePostProcessor`, `ParameterResolver`, or `InvocationInterceptor` may
   override the `getTestInstantiationExtensionContextScope()` method to enable receiving

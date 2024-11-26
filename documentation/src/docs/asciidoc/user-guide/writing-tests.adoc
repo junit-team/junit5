@@ -2992,7 +2992,7 @@ Note that resources declared statically with `{ResourceLock}` annotation are com
 resources added dynamically by `{ResourceLocksProvider}` implementations.
 
 If the tests in the following example were run in parallel _without_ the use of
-{ResourceLock}, they would be _flaky_. Sometimes they would pass, and at other times they
+`{ResourceLock}`, they would be _flaky_. Sometimes they would pass, and at other times they
 would fail due to the inherent race condition of writing and then reading the same JVM
 System Property.
 
@@ -3027,6 +3027,28 @@ include::{testDir}/example/sharedresources/StaticSharedResourcesDemo.java[tags=u
 .Adding shared resources "dynamically" with `{ResourceLocksProvider}` implementation
 ----
 include::{testDir}/example/sharedresources/DynamicSharedResourcesDemo.java[tags=user_guide]
+----
+
+Also, "static" shared resources can be declared for _direct_ child nodes via the `target`
+attribute in the `{ResourceLock}` annotation, the attribute accepts a value from
+the `{ResourceLockTarget}` enum.
+
+Specifying `target = CHILDREN` in a class-level `{ResourceLock}` annotation
+has the same semantics as adding an annotation with the same `value` and `mode`
+to each test method and nested test class declared in this class.
+
+This may improve parallelization when a test class declares a `READ` lock,
+but only a few methods hold a `READ_WRITE` lock.
+
+Tests in the following example would run in the `SAME_THREAD` if the `{ResourceLock}`
+didn't have `target = CHILDREN`. This is because the test class declares a `READ`
+shared resource, but one test method holds a `READ_WRITE` lock,
+which would force the `SAME_THREAD` execution mode for all the test methods.
+
+[source,java]
+.Declaring shared resources for child nodes with `target` attribute
+----
+include::{testDir}/example/sharedresources/ChildrenSharedResourcesDemo.java[tags=user_guide]
 ----
 
 

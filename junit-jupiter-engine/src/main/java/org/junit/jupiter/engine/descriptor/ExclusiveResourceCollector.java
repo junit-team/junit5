@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.jupiter.api.parallel.ResourceLockTarget.SELF;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
@@ -22,6 +23,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -42,7 +44,7 @@ abstract class ExclusiveResourceCollector {
 		}
 
 		@Override
-		public Stream<ExclusiveResource> getStaticResources() {
+		Stream<ExclusiveResource> getStaticResourcesFor(ResourceLockTarget target) {
 			return Stream.empty();
 		}
 
@@ -55,10 +57,10 @@ abstract class ExclusiveResourceCollector {
 
 	Stream<ExclusiveResource> getAllExclusiveResources(
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
-		return Stream.concat(getStaticResources(), getDynamicResources(providerToLocks));
+		return Stream.concat(getStaticResourcesFor(SELF), getDynamicResources(providerToLocks));
 	}
 
-	abstract Stream<ExclusiveResource> getStaticResources();
+	abstract Stream<ExclusiveResource> getStaticResourcesFor(ResourceLockTarget target);
 
 	abstract Stream<ExclusiveResource> getDynamicResources(
 			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks);
@@ -78,9 +80,10 @@ abstract class ExclusiveResourceCollector {
 		}
 
 		@Override
-		public Stream<ExclusiveResource> getStaticResources() {
+		Stream<ExclusiveResource> getStaticResourcesFor(ResourceLockTarget target) {
 			return annotations.stream() //
 					.filter(annotation -> StringUtils.isNotBlank(annotation.value())) //
+					.filter(annotation -> annotation.target() == target) //
 					.map(annotation -> new ExclusiveResource(annotation.value(), toLockMode(annotation.mode())));
 		}
 

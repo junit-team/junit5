@@ -11,27 +11,46 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Throwables.getRootCause;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
+import org.junit.platform.testkit.engine.EngineTestKit;
+import org.junit.platform.testkit.engine.Event;
+import org.junit.platform.testkit.engine.Events;
 
 /**
  * Integration tests for {@link ResourceLock} and {@link ResourceLocksProvider}.
@@ -64,7 +83,6 @@ class ResourceLockAnnotationTests {
 		assertThat(methodResources).isEmpty();
 
 		var nestedClassResources = getNestedClassResources(
-				NoSharedResourcesTestCase.class,
 				NoSharedResourcesTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).isEmpty();
@@ -86,16 +104,23 @@ class ResourceLockAnnotationTests {
 				SharedResourcesViaAnnotationValueTestCase.class
 		);
 		assertThat(methodResources).containsExactlyInAnyOrder(
+				new ExclusiveResource("a3", LockMode.READ_WRITE),
 				new ExclusiveResource("b1", LockMode.READ),
 				new ExclusiveResource("b2", LockMode.READ_WRITE)
 		);
 
 		var nestedClassResources = getNestedClassResources(
-				SharedResourcesViaAnnotationValueTestCase.class,
 				SharedResourcesViaAnnotationValueTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
-				new ExclusiveResource("c1", LockMode.READ),
+				new ExclusiveResource("a3", LockMode.READ_WRITE),
+				new ExclusiveResource("c1", LockMode.READ)
+		);
+
+		var nestedClassMethodResources = getMethodResources(
+				SharedResourcesViaAnnotationValueTestCase.NestedClass.class
+		);
+		assertThat(nestedClassMethodResources).containsExactlyInAnyOrder(
 				new ExclusiveResource("c2", LockMode.READ)
 		);
 		// @formatter:on
@@ -121,7 +146,6 @@ class ResourceLockAnnotationTests {
 		);
 
 		var nestedClassResources = getNestedClassResources(
-				SharedResourcesViaAnnotationProvidersTestCase.class,
 				SharedResourcesViaAnnotationProvidersTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
@@ -139,27 +163,74 @@ class ResourceLockAnnotationTests {
 		);
 		assertThat(classResources).containsExactlyInAnyOrder(
 				new ExclusiveResource("a1", LockMode.READ_WRITE),
-				new ExclusiveResource("a2", LockMode.READ)
+				new ExclusiveResource("a3", LockMode.READ)
 		);
 
 		var methodResources = getMethodResources(
 				SharedResourcesViaAnnotationValueAndProvidersTestCase.class
 		);
 		assertThat(methodResources).containsExactlyInAnyOrder(
+				new ExclusiveResource("a2", LockMode.READ_WRITE),
 				new ExclusiveResource("b1", LockMode.READ),
 				new ExclusiveResource("b2", LockMode.READ)
 		);
 
 		var nestedClassResources = getNestedClassResources(
-				SharedResourcesViaAnnotationValueAndProvidersTestCase.class,
 				SharedResourcesViaAnnotationValueAndProvidersTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).containsExactlyInAnyOrder(
+				new ExclusiveResource("a2", LockMode.READ_WRITE),
 				new ExclusiveResource("c1", LockMode.READ_WRITE),
 				new ExclusiveResource("c2", LockMode.READ_WRITE),
 				new ExclusiveResource("c3", LockMode.READ_WRITE)
 		);
 		// @formatter:on
+	}
+
+	@Test
+	void sharedResourcesHavingTheSameValueAndModeAreDeduplicated() {
+		// @formatter:off
+		var methodResources = getMethodResources(
+				SharedResourcesHavingTheSameValueAndModeAreDeduplicatedTestCase.class
+		);
+		assertThat(methodResources).containsExactlyInAnyOrder(
+				new ExclusiveResource("a1", LockMode.READ_WRITE)
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void sharedResourcesHavingTheSameValueButDifferentModeAreNotDeduplicated() {
+		// @formatter:off
+		var methodResources = getMethodResources(
+				SharedResourcesHavingTheSameValueButDifferentModeAreNotDeduplicatedTestCase.class
+		);
+		assertThat(methodResources).containsExactlyInAnyOrder(
+				new ExclusiveResource("a1", LockMode.READ),
+				new ExclusiveResource("a1", LockMode.READ_WRITE)
+		);
+		// @formatter:on
+	}
+
+	static Stream<Class<?>> testMethodsCanNotDeclareSharedResourcesForChildrenArguments() {
+		// @formatter:off
+		return Stream.of(
+				TestCanNotDeclareSharedResourcesForChildrenTestCase.class,
+				ParameterizedTestCanNotDeclareSharedResourcesForChildrenTestCase.class,
+				RepeatedTestCanNotDeclareSharedResourcesForChildrenTestCase.class,
+				TestFactoryCanNotDeclareSharedResourcesForChildrenTestCase.class
+		);
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@MethodSource("testMethodsCanNotDeclareSharedResourcesForChildrenArguments")
+	void testMethodsCanNotDeclareSharedResourcesForChildren(Class<?> testClass) {
+		var messageTemplate = "'ResourceLockTarget.CHILDREN' is not supported for methods. Invalid method: %s";
+		assertThrowsJunitExceptionWithMessage( //
+			testClass, //
+			messageTemplate.formatted(getDeclaredTestMethod(testClass)) //
+		);
 	}
 
 	@Test
@@ -176,7 +247,6 @@ class ResourceLockAnnotationTests {
 		assertThat(methodResources).isEmpty();
 
 		var nestedClassResources = getNestedClassResources(
-				EmptyAnnotationTestCase.class,
 				EmptyAnnotationTestCase.NestedClass.class
 		);
 		assertThat(nestedClassResources).isEmpty();
@@ -192,24 +262,47 @@ class ResourceLockAnnotationTests {
 	}
 
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
+		var descriptor = new TestMethodTestDescriptor( //
+			uniqueId, testClass, getDeclaredTestMethod(testClass), configuration //
+		);
+		descriptor.setParent(getClassTestDescriptor(testClass));
+		return descriptor.getExclusiveResources();
+	}
+
+	private static Method getDeclaredTestMethod(Class<?> testClass) {
 		try {
-			// @formatter:off
-			var descriptor = new TestMethodTestDescriptor(
-				uniqueId, testClass, testClass.getDeclaredMethod("test"), configuration
-			);
-			// @formatter:on
-			descriptor.setParent(getClassTestDescriptor(testClass));
-			return descriptor.getExclusiveResources();
+			return testClass.getDeclaredMethod("test");
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass, Class<?> nestedClass) {
-		var descriptor = new NestedClassTestDescriptor(uniqueId, nestedClass, configuration);
-		descriptor.setParent(getClassTestDescriptor(testClass));
+	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass) {
+		var descriptor = new NestedClassTestDescriptor(uniqueId, testClass, configuration);
+		descriptor.setParent(getClassTestDescriptor(testClass.getEnclosingClass()));
 		return descriptor.getExclusiveResources();
+	}
+
+	private static void assertThrowsJunitExceptionWithMessage(Class<?> testClass, String message) {
+		// @formatter:off
+		var events = execute(testClass);
+		assertThat(events.filter(finishedWithFailure(instanceOf(JUnitException.class))::matches))
+				.hasSize(1)
+				.map(Event::getPayload)
+				.map(payload -> (TestExecutionResult) payload.orElseThrow())
+				.map(payload -> getRootCause(payload.getThrowable().orElseThrow()))
+				.first()
+				.is(instanceOf(JUnitException.class))
+				.has(message(message));
+		// @formatter:on
+	}
+
+	private static Events execute(Class<?> testCase) {
+		var discoveryRequests = request() //
+				.selectors(DiscoverySelectors.selectClass(testCase)) //
+				.build();
+		return EngineTestKit.execute("junit-jupiter", discoveryRequests).allEvents();
 	}
 
 	// -------------------------------------------------------------------------
@@ -229,18 +322,23 @@ class ResourceLockAnnotationTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock("a1")
 	@ResourceLock(value = "a2", mode = ResourceAccessMode.READ_WRITE)
+	@ResourceLock(value = "a3", mode = ResourceAccessMode.READ_WRITE, target = ResourceLockTarget.CHILDREN)
 	static class SharedResourcesViaAnnotationValueTestCase {
 
 		@Test
 		@ResourceLock(value = "b1", mode = ResourceAccessMode.READ)
-		@ResourceLock("b2")
+		@ResourceLock(value = "b2", target = ResourceLockTarget.SELF)
 		void test() {
 		}
 
 		@Nested
 		@ResourceLock(value = "c1", mode = ResourceAccessMode.READ)
-		@ResourceLock(value = "c2", mode = ResourceAccessMode.READ)
+		@ResourceLock(value = "c2", mode = ResourceAccessMode.READ, target = ResourceLockTarget.CHILDREN)
 		class NestedClass {
+
+			@Test
+			void test() {
+			}
 		}
 	}
 
@@ -302,8 +400,12 @@ class ResourceLockAnnotationTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock( //
 			value = "a1", //
-			mode = ResourceAccessMode.READ_WRITE, //
-			providers = SharedResourcesViaAnnotationValueAndProvidersTestCase.ClassLevelProvider.class //
+			providers = SharedResourcesViaAnnotationValueAndProvidersTestCase.FirstClassLevelProvider.class //
+	)
+	@ResourceLock( //
+			value = "a2", //
+			target = ResourceLockTarget.CHILDREN, //
+			providers = SharedResourcesViaAnnotationValueAndProvidersTestCase.SecondClassLevelProvider.class //
 	)
 	static class SharedResourcesViaAnnotationValueAndProvidersTestCase {
 
@@ -318,12 +420,15 @@ class ResourceLockAnnotationTests {
 		class NestedClass {
 		}
 
-		static class ClassLevelProvider implements ResourceLocksProvider {
+		static class FirstClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
 			public Set<Lock> provideForClass(Class<?> testClass) {
-				return Set.of(new Lock("a2", ResourceAccessMode.READ));
+				return Set.of(new Lock("a3", ResourceAccessMode.READ));
 			}
+		}
+
+		static class SecondClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
 			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
@@ -346,6 +451,74 @@ class ResourceLockAnnotationTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ResourceLock( //
+			value = "a1", //
+			target = ResourceLockTarget.CHILDREN, //
+			providers = SharedResourcesHavingTheSameValueAndModeAreDeduplicatedTestCase.Provider.class //
+	)
+	static class SharedResourcesHavingTheSameValueAndModeAreDeduplicatedTestCase {
+
+		@Test
+		@ResourceLock(value = "a1")
+		void test() {
+		}
+
+		static class Provider implements ResourceLocksProvider {
+
+			@Override
+			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+				return Set.of(new Lock("a1"));
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ResourceLock(value = "a1", mode = ResourceAccessMode.READ_WRITE, target = ResourceLockTarget.CHILDREN)
+	static class SharedResourcesHavingTheSameValueButDifferentModeAreNotDeduplicatedTestCase {
+
+		@Test
+		@ResourceLock(value = "a1", mode = ResourceAccessMode.READ)
+		void test() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class TestCanNotDeclareSharedResourcesForChildrenTestCase {
+
+		@Test
+		@ResourceLock(value = "a1", target = ResourceLockTarget.CHILDREN)
+		void test() {
+		}
+	}
+
+	static class ParameterizedTestCanNotDeclareSharedResourcesForChildrenTestCase {
+
+		@ParameterizedTest
+		@ValueSource(ints = { 1, 2, 3 })
+		@ResourceLock(value = "a1", target = ResourceLockTarget.CHILDREN)
+		void test() {
+		}
+	}
+
+	static class RepeatedTestCanNotDeclareSharedResourcesForChildrenTestCase {
+
+		@RepeatedTest(5)
+		@ResourceLock(value = "a1", target = ResourceLockTarget.CHILDREN)
+		void test() {
+		}
+	}
+
+	static class TestFactoryCanNotDeclareSharedResourcesForChildrenTestCase {
+
+		@TestFactory
+		@ResourceLock(value = "a1", target = ResourceLockTarget.CHILDREN)
+		Stream<DynamicTest> test() {
+			return Stream.of(DynamicTest.dynamicTest("Dynamic test", () -> {
+			}));
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ResourceLock
 	static class EmptyAnnotationTestCase {
 
@@ -357,40 +530,6 @@ class ResourceLockAnnotationTests {
 		@Nested
 		@ResourceLock
 		class NestedClass {
-		}
-	}
-
-	static class NestedNestedTestCase {
-
-		@SuppressWarnings("JUnitMalformedDeclaration")
-		@Nested
-		@ResourceLock(providers = NestedNestedTestCase.Provider.class)
-		static class NestedClass {
-
-			@Nested
-			class NestedClassTwo {
-
-				@Test
-				void test() {
-				}
-			}
-		}
-
-		static class Provider implements ResourceLocksProvider {
-			@Override
-			public Set<Lock> provideForClass(Class<?> testClass) {
-				return ResourceLocksProvider.super.provideForClass(testClass);
-			}
-
-			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
-				return ResourceLocksProvider.super.provideForNestedClass(testClass);
-			}
-
-			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
-				return ResourceLocksProvider.super.provideForMethod(testClass, testMethod);
-			}
 		}
 	}
 
