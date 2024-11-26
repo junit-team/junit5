@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.test;
@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 
@@ -65,14 +64,11 @@ class ResourceLocksProviderTests {
 	}
 
 	private Stream<Event> execute(Class<?> testCase) {
-		// @formatter:off
-		var discoveryRequest = request()
-				.selectors(Stream.of(testCase).map(DiscoverySelectors::selectClass).toList())
-				.build();
-		return EngineTestKit.execute("junit-jupiter", discoveryRequest)
-				.allEvents()
+		return EngineTestKit.engine("junit-jupiter") //
+				.selectors(selectClass(testCase)) //
+				.execute() //
+				.allEvents() //
 				.stream();
-		// @formatter:on
 	}
 
 	// -------------------------------------------------------------------------

@@ -12,8 +12,8 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Throwables.getRootCause;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
@@ -46,7 +46,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
@@ -299,10 +298,10 @@ class ResourceLockAnnotationTests {
 	}
 
 	private static Events execute(Class<?> testCase) {
-		var discoveryRequests = request() //
-				.selectors(DiscoverySelectors.selectClass(testCase)) //
-				.build();
-		return EngineTestKit.execute("junit-jupiter", discoveryRequests).allEvents();
+		return EngineTestKit.engine("junit-jupiter") //
+				.selectors(selectClass(testCase)) //
+				.execute() //
+				.allEvents();
 	}
 
 	// -------------------------------------------------------------------------
