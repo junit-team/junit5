@@ -8,11 +8,10 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.jupiter.api.parallel;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.util.Throwables.getRootCause;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.support.hierarchical.ExclusiveResource.LockMode;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
@@ -31,11 +30,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import org.junit.jupiter.api.parallel.ResourceAccessMode;
-import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.api.parallel.ResourceLockTarget;
-import org.junit.jupiter.api.parallel.ResourceLocksProvider;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
@@ -47,16 +42,14 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
-import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
-import org.junit.platform.testkit.engine.Events;
 
 /**
  * Integration tests for {@link ResourceLock} and {@link ResourceLocksProvider}.
  *
  * @since 5.12
  */
-class ResourceLockAnnotationTests {
+class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	private static final UniqueId uniqueId = UniqueId.root("enigma", "foo");
 
@@ -283,9 +276,9 @@ class ResourceLockAnnotationTests {
 		return descriptor.getExclusiveResources();
 	}
 
-	private static void assertThrowsJunitExceptionWithMessage(Class<?> testClass, String message) {
+	private void assertThrowsJunitExceptionWithMessage(Class<?> testClass, String message) {
 		// @formatter:off
-		var events = execute(testClass);
+		var events = executeTestsForClass(testClass).allEvents();
 		assertThat(events.filter(finishedWithFailure(instanceOf(JUnitException.class))::matches))
 				.hasSize(1)
 				.map(Event::getPayload)
@@ -295,13 +288,6 @@ class ResourceLockAnnotationTests {
 				.is(instanceOf(JUnitException.class))
 				.has(message(message));
 		// @formatter:on
-	}
-
-	private static Events execute(Class<?> testCase) {
-		return EngineTestKit.engine("junit-jupiter") //
-				.selectors(selectClass(testCase)) //
-				.execute() //
-				.allEvents();
 	}
 
 	// -------------------------------------------------------------------------

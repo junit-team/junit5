@@ -23,9 +23,9 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.TestSource;
 
 /**

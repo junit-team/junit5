@@ -8,14 +8,13 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.jupiter.api.parallel;
 
 import static java.util.Collections.emptySet;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.test;
@@ -27,9 +26,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceLock;
-import org.junit.jupiter.api.parallel.ResourceLocksProvider;
-import org.junit.platform.testkit.engine.EngineTestKit;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.testkit.engine.Event;
 
 /**
@@ -37,7 +34,7 @@ import org.junit.platform.testkit.engine.Event;
  *
  * @since 5.12
  */
-class ResourceLocksProviderTests {
+class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void classLevelProvider() {
@@ -64,11 +61,7 @@ class ResourceLocksProviderTests {
 	}
 
 	private Stream<Event> execute(Class<?> testCase) {
-		return EngineTestKit.engine("junit-jupiter") //
-				.selectors(selectClass(testCase)) //
-				.execute() //
-				.allEvents() //
-				.stream();
+		return executeTestsForClass(testCase).allEvents().stream();
 	}
 
 	// -------------------------------------------------------------------------

@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 

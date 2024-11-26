@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
+import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**

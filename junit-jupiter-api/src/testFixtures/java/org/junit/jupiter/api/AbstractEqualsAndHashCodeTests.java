@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform;
+package org.junit.jupiter.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

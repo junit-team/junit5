@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.discovery;
 
+import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.UniqueId;
 
 /**
