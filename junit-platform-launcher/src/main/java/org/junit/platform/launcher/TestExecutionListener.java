@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -193,6 +194,7 @@ public interface TestExecutionListener {
 	 * @param testIdentifier describes the test or container to which the entry pertains
 	 * @param file the published {@code FileEntry}
 	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
 	default void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
 	}
 }

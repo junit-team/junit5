@@ -64,6 +64,7 @@ public class Event {
 	 * @since 1.12
 	 * @see EventType#FILE_ENTRY_PUBLISHED
 	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Event fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
 		Preconditions.notNull(file, "FileEntry must not be null");
 		return new Event(EventType.FILE_ENTRY_PUBLISHED, testDescriptor, file);
