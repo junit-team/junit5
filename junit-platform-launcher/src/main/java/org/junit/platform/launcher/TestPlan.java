@@ -88,7 +88,7 @@ public class TestPlan {
 	 * this test plan; never {@code null}
 	 * @return a new test plan
 	 */
-	@API(status = INTERNAL, since = "1.0")
+	@API(status = INTERNAL, since = "1.12")
 	public static TestPlan from(Collection<TestDescriptor> engineDescriptors,
 			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
