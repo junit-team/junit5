@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
@@ -42,6 +43,8 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 
 	@Override
 	public Path createOutputDirectory(TestDescriptor testDescriptor) throws IOException {
+		Preconditions.notNull(testDescriptor, "testDescriptor must not be null");
+
 		List<Segment> segments = testDescriptor.getUniqueId().getSegments();
 		Path relativePath = segments.stream() //
 				.skip(1) //
