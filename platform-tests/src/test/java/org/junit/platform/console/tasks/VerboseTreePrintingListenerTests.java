@@ -15,11 +15,13 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -27,7 +29,7 @@ import org.junit.platform.launcher.TestIdentifier;
 /**
  * @since 1.3.2
  */
-class VerboseTreeListenerTests {
+class VerboseTreePrintingListenerTests {
 
 	private static final String EOL = System.lineSeparator();
 
@@ -54,6 +56,15 @@ class VerboseTreeListenerTests {
 		var lines = lines(stringWriter);
 
 		assertLinesMatch(List.of("  reports: ReportEntry \\[timestamp = .+, foo = 'bar'\\]"), List.of(lines));
+	}
+
+	@Test
+	void fileEntryPublished() {
+		var stringWriter = new StringWriter();
+		listener(stringWriter).fileEntryPublished(newTestIdentifier(), FileEntry.from(Path.of("test.txt")));
+		var lines = lines(stringWriter);
+
+		assertLinesMatch(List.of("  reports: FileEntry \\[timestamp = .+, file = test.txt\\]"), List.of(lines));
 	}
 
 	@Test

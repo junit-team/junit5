@@ -10,9 +10,8 @@
 
 package platform.tooling.support.tests;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
+import static org.junit.platform.reporting.testutil.FileUtils.findPath;
+
 import java.nio.file.Path;
 import java.util.regex.Pattern;
 
@@ -22,22 +21,18 @@ import org.xmlunit.placeholder.PlaceholderDifferenceEvaluator;
 class XmlAssertions {
 
 	static void verifyContainsExpectedStartedOpenTestReport(Path testResultsDir) {
-		try (var files = Files.list(testResultsDir)) {
-			Path xmlFile = files.filter(it -> it.getFileName().toString().startsWith("junit-platform-events-")) //
-					.findAny() //
-					.orElseThrow(() -> new AssertionError("Missing open-test-reporting XML file in " + testResultsDir));
-			verifyContent(xmlFile);
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
+		var xmlFile = findPath(testResultsDir, "glob:**/open-test-report.xml");
+		verifyContent(xmlFile);
 	}
 
 	private static void verifyContent(Path xmlFile) {
 		var expected = """
-				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0" xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0" xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
+				        <e:events xmlns="https://schemas.opentest4j.org/reporting/core/0.2.0"
+				                  xmlns:e="https://schemas.opentest4j.org/reporting/events/0.2.0"
+				                  xmlns:git="https://schemas.opentest4j.org/reporting/git/0.2.0"
 				                  xmlns:java="https://schemas.opentest4j.org/reporting/java/0.2.0"
-				                  xmlns:junit="https://schemas.junit.org/open-test-reporting" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				                  xmlns:junit="https://schemas.junit.org/open-test-reporting"
+				                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 				                  xsi:schemaLocation="https://schemas.junit.org/open-test-reporting https://junit.org/junit5/schemas/open-test-reporting/junit-1.9.xsd">
 				          <infrastructure>
 				            <hostName>${xmlunit.ignore}</hostName>

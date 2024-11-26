@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.testkit.engine.Assertions.assertEquals;
 
@@ -124,6 +125,20 @@ public class EventStatistics {
 	public EventStatistics reportingEntryPublished(long expected) {
 		this.executables.add(
 			() -> assertEquals(expected, this.events.reportingEntryPublished().count(), "reporting entry published"));
+		return this;
+	}
+
+	/**
+	 * Specify the number of expected <em>file entry publication</em> events.
+	 *
+	 * @param expected the expected number of events
+	 * @return this {@code EventStatistics} for method chaining
+	 * @since 1.12
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	public EventStatistics fileEntryPublished(long expected) {
+		this.executables.add(
+			() -> assertEquals(expected, this.events.fileEntryPublished().count(), "file entry published"));
 		return this;
 	}
 

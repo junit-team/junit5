@@ -21,12 +21,14 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -92,7 +94,7 @@ class TreePrinterTests {
 		c1.addChild(m1);
 
 		var m2 = new TreeNode(identifier("m-2", "method two")).setResult(successful());
-		m2.addReportEntry(ReportEntry.from("key", "m-2"));
+		m2.addFileEntry(FileEntry.from(Path.of("test.txt")));
 		c1.addChild(m2);
 
 		new TreePrinter(out, Theme.UNICODE, ColorPalette.NONE).print(root);
@@ -105,7 +107,7 @@ class TreePrinterTests {
 			"      ├─ method one ✔", //
 			"      │     ....-..-..T..:...* key = `m-1`", //
 			"      └─ method two ✔", //
-			"            ....-..-..T..:...* key = `m-2`" //
+			"            ....-..-..T..:...* file:.*" //
 		), //
 			actual());
 	}

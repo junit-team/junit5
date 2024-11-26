@@ -10,77 +10,92 @@
 
 package org.junit.platform.launcher.listeners;
 
+import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.STRING;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.launcher.LauncherConstants;
 
 class OutputDirTests {
 
+	@TempDir
+	Path cwd;
+
 	@Test
 	void getOutputDirUsesCustomOutputDir() throws Exception {
-		String customDir = "build/UniqueIdTrackingListenerIntegrationTests";
-		Path outputDir = OutputDir.create(Optional.of(customDir)).toPath();
-		assertThat(Files.isSameFile(Paths.get(customDir), outputDir)).isTrue();
+		var customDir = cwd.resolve("custom-dir");
+		var outputDir = OutputDir.create(Optional.of(customDir.toAbsolutePath().toString())).toPath();
+		assertThat(Files.isSameFile(customDir, outputDir)).isTrue();
 		assertThat(outputDir).exists();
 	}
 
 	@Test
-	void getOutputDirFallsBackToCurrentWorkingDir() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking";
-		String expected = cwd;
+	void getOutputDirUsesCustomOutputDirWithPlaceholder() {
+		var customDir = cwd.resolve("build").resolve("junit-" + LauncherConstants.OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER);
+		var outputDir = OutputDir.create(Optional.of(customDir.toAbsolutePath().toString())).toPath();
+		assertThat(outputDir).exists() //
+				.hasParent(cwd.resolve("build")) //
+				.extracting(it -> it.getFileName().toString(), as(STRING)) //
+				.matches("junit-\\d+");
+	}
 
-		assertOutputDirIsDetected(cwd, expected);
+	@Test
+	void getOutputDirFallsBackToCurrentWorkingDir() throws Exception {
+		var expected = cwd;
+
+		assertOutputDirIsDetected(expected);
 	}
 
 	@Test
 	void getOutputDirDetectsMavenPom() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking/maven";
-		String expected = cwd + "/target";
+		Files.createFile(cwd.resolve("pom.xml"));
+		var expected = cwd.resolve("target");
 
-		assertOutputDirIsDetected(cwd, expected);
+		assertOutputDirIsDetected(expected);
 	}
 
 	@Test
 	void getOutputDirDetectsGradleGroovyDefaultBuildScript() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking/gradle/groovy";
-		String expected = cwd + "/build";
+		Files.createFile(cwd.resolve("build.gradle"));
+		var expected = cwd.resolve("build");
 
-		assertOutputDirIsDetected(cwd, expected);
+		assertOutputDirIsDetected(expected);
 	}
 
 	@Test
 	void getOutputDirDetectsGradleGroovyCustomBuildScript() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking/gradle/groovy/sub-project";
-		String expected = cwd + "/build";
+		Files.createFile(cwd.resolve("sub-project.gradle"));
+		var expected = cwd.resolve("build");
 
-		assertOutputDirIsDetected(cwd, expected);
+		assertOutputDirIsDetected(expected);
 	}
 
 	@Test
 	void getOutputDirDetectsGradleKotlinDefaultBuildScript() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking/gradle/kotlin";
-		String expected = cwd + "/build";
+		Files.createFile(cwd.resolve("build.gradle.kts"));
+		var expected = cwd.resolve("build");
 
-		assertOutputDirIsDetected(cwd, expected);
+		assertOutputDirIsDetected(expected);
 	}
 
 	@Test
 	void getOutputDirDetectsGradleKotlinCustomBuildScript() throws Exception {
-		String cwd = "src/test/resources/listeners/uidtracking/gradle/kotlin/sub-project";
-		String expected = cwd + "/build";
+		Files.createFile(cwd.resolve("sub-project.gradle.kts"));
+		var expected = cwd.resolve("build");
 
-		assertOutputDirIsDetected(cwd, expected);
+		assertOutputDirIsDetected(expected);
 	}
 
-	private void assertOutputDirIsDetected(String cwd, String expected) throws IOException {
-		Path outputDir = OutputDir.createSafely(Optional.empty(), () -> Paths.get(cwd)).toPath();
-		assertThat(Files.isSameFile(Paths.get(expected), outputDir)).isTrue();
+	private void assertOutputDirIsDetected(Path expected) throws IOException {
+		var outputDir = OutputDir.createSafely(Optional.empty(), () -> cwd).toPath();
+		assertThat(Files.isSameFile(expected, outputDir)).isTrue();
 		assertThat(outputDir).exists();
 	}
 

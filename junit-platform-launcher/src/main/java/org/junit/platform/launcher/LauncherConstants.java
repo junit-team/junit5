@@ -191,6 +191,34 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public static final String STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME = "junit.platform.stacktrace.pruning.enabled";
 
+	/**
+	 * Property name used to configure the output directory for reporting.
+	 *
+	 * <p>If set, value must be a valid path that will be created if it doesn't
+	 * exist. If not set, the default output directory will be determined by the
+	 * reporting engine based on the current working directory.
+	 *
+	 * @since 1.12
+	 * @see #OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER
+	 * @see org.junit.platform.engine.reporting.OutputDirectoryProvider
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	public static final String OUTPUT_DIR_PROPERTY_NAME = "junit.platform.reporting.output.dir";
+
+	/**
+	 * Placeholder for use in {@link #OUTPUT_DIR_PROPERTY_NAME} that will be
+	 * replaced with a unique number.
+	 *
+	 * <p>This can be used to create a unique output directory for each test
+	 * run. For example, if multiple forks are used, each fork can be configured
+	 * to write its output to a separate directory.
+	 *
+	 * @since 1.12
+	 * @see #OUTPUT_DIR_PROPERTY_NAME
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	public static final String OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER = "{uniqueNumber}";
+
 	private LauncherConstants() {
 		/* no-op */
 	}

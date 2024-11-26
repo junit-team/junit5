@@ -236,7 +236,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			@Override
 			public void close() throws IOException {
-				TempDirFactory.super.close();
+				fileSystem.close();
 			}
 		}
 
