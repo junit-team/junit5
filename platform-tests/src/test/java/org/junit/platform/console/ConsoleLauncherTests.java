@@ -22,7 +22,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
  * @since 1.0
@@ -36,8 +35,7 @@ class ConsoleLauncherTests {
 	@EmptySource
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayHelp(String command) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		var exitCode = consoleLauncher.run(command, "--help").getExitCode();
+		var exitCode = ConsoleLauncher.run(printSink, printSink, command, "--help").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertThat(output()).contains("--help");
@@ -47,8 +45,7 @@ class ConsoleLauncherTests {
 	@EmptySource
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayVersion(String command) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		var exitCode = consoleLauncher.run(command, "--version").getExitCode();
+		var exitCode = ConsoleLauncher.run(printSink, printSink, command, "--version").getExitCode();
 
 		assertEquals(0, exitCode);
 		assertThat(output()).contains("JUnit Platform Console Launcher");
@@ -57,8 +54,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void displayBanner(String command) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		consoleLauncher.run(command);
+		ConsoleLauncher.run(printSink, printSink, command);
 
 		assertThat(output()).contains("Thanks for using JUnit!");
 	}
@@ -66,8 +62,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void disableBanner(String command, int expectedExitCode) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		var exitCode = consoleLauncher.run(command, "--disable-banner").getExitCode();
+		var exitCode = ConsoleLauncher.run(printSink, printSink, command, "--disable-banner").getExitCode();
 
 		assertEquals(expectedExitCode, exitCode);
 		assertThat(output()).doesNotContain("Thanks for using JUnit!");
@@ -76,8 +71,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void executeWithUnknownCommandLineOption(String command) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		var exitCode = consoleLauncher.run(command, "--all").getExitCode();
+		var exitCode = ConsoleLauncher.run(printSink, printSink, command, "--all").getExitCode();
 
 		assertEquals(-1, exitCode);
 		assertThat(output()).contains("Unknown option: '--all'").contains("Usage:");
@@ -90,8 +84,7 @@ class ConsoleLauncherTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("commandsWithEmptyOptionExitCodes")
 	void executeWithoutCommandLineOptions(String command, int expectedExitCode) {
-		var consoleLauncher = new ConsoleLauncher(ConsoleTestExecutor::new, printSink, printSink);
-		var actualExitCode = consoleLauncher.run(command).getExitCode();
+		var actualExitCode = ConsoleLauncher.run(printSink, printSink, command).getExitCode();
 
 		assertEquals(expectedExitCode, actualExitCode);
 	}

@@ -6,7 +6,13 @@ import org.gradle.api.file.ConfigurableFileCollection
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.provider.ListProperty
 import org.gradle.api.provider.Property
-import org.gradle.api.tasks.*
+import org.gradle.api.tasks.CacheableTask
+import org.gradle.api.tasks.Classpath
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.SourceSetContainer
+import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import org.gradle.jvm.toolchain.JavaLauncher
 import org.gradle.jvm.toolchain.JavaToolchainService
@@ -16,7 +22,6 @@ import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecOperations
 import trackOperationSystemAsInput
 import java.io.ByteArrayOutputStream
-import java.util.*
 import javax.inject.Inject
 
 @CacheableTask
@@ -95,6 +100,15 @@ abstract class RunConsoleLauncher @Inject constructor(private val execOperations
     )
     fun setDebug(enabled: Boolean) {
         debugging.set(enabled)
+    }
+
+    @Suppress("unused")
+    @Option(
+        option = "show-output",
+        description = "Show output"
+    )
+    fun setShowOutput(showOutput: Boolean) {
+        hideOutput.set(!showOutput)
     }
 
 }
