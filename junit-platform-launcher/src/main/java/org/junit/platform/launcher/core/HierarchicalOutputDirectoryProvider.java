@@ -10,27 +10,28 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.unmodifiableSet;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
+/**
+ * Hierarchical {@link OutputDirectoryProvider} that creates directories based on
+ * the unique ID segments of a {@link TestDescriptor}.
+ *
+ * @since 1.12
+ */
 class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 
-	private static final Set<Character> FORBIDDEN_CHARS = unmodifiableSet(
-		new HashSet<>(Arrays.asList('\0', '/', '\\', ':', '*', '?', '"', '<', '>', '|')));
-	private static final char REPLACEMENT = '_';
+	private static final Pattern FORBIDDEN_CHARS = Pattern.compile("[^a-z0-9.,_\\-() ]", Pattern.CASE_INSENSITIVE);
+	private static final String REPLACEMENT = "_";
 
 	private final Supplier<Path> rootDirSupplier;
 	private volatile Path rootDir;
@@ -62,15 +63,6 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 	}
 
 	private static String sanitizeName(String value) {
-		StringBuilder result = new StringBuilder(value.length());
-		for (int i = 0; i < value.length(); i++) {
-			char c = value.charAt(i);
-			result.append(isForbiddenCharacter(c) ? REPLACEMENT : c);
-		}
-		return result.toString();
-	}
-
-	private static boolean isForbiddenCharacter(char c) {
-		return FORBIDDEN_CHARS.contains(c) || Character.isISOControl(c);
+		return FORBIDDEN_CHARS.matcher(value).replaceAll(REPLACEMENT);
 	}
 }

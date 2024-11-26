@@ -70,14 +70,14 @@ public class HierarchicalOutputDirectoryProviderTests {
 
 	@Test
 	void replacesForbiddenCharacters() throws Exception {
-		var uniqueId = UniqueId.forEngine("engine<>") //
+		var uniqueId = UniqueId.forEngine("Engine<>") //
 				.append("irrelevant", "*/abc");
 		when(testDescriptor.getUniqueId()).thenReturn(uniqueId);
 
 		var outputDir = provider.createOutputDirectory(testDescriptor);
 
 		assertThat(outputDir) //
-				.isEqualTo(tempDir.resolve(Path.of("engine__", "__abc"))) //
+				.isEqualTo(tempDir.resolve(Path.of("Engine__", "__abc"))) //
 				.exists();
 	}
 }
