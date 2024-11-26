@@ -3033,7 +3033,7 @@ Also, "static" shared resources can be declared for _direct_ child nodes via the
 attribute in the `{ResourceLock}` annotation, the attribute accepts a value from
 the `{ResourceLockTarget}` enum.
 
-Using the `target = CHILDREN` in a class-level `{ResourceLock}` annotation
+Specifying `target = CHILDREN` in a class-level `{ResourceLock}` annotation
 has the same semantics as adding an annotation with the same `value` and `mode`
 to each test method and nested test class declared in this class.
 
