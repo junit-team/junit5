@@ -16,6 +16,8 @@ dependencies {
 
 	compileOnly(libs.openTestReporting.events)
 
+	implementation(libs.java.diff.utils)
+
 	shadowed(libs.picocli)
 
 	osgiVerification(projects.junitJupiterEngine)
@@ -29,7 +31,9 @@ tasks {
 			"--add-modules", "org.opentest4j.reporting.events",
 			"--add-reads", "${project.projects.junitPlatformReporting.javaModuleName}=org.opentest4j.reporting.events",
 			"--add-modules", "info.picocli",
-			"--add-reads", "${javaModuleName}=info.picocli"
+			"--add-reads", "${javaModuleName}=info.picocli",
+			"--add-modules", "io.github.javadiffutils",
+			"--add-reads", "${javaModuleName}=io.github.javadiffutils"
 		))
 	}
 	shadowJar {
