@@ -1077,8 +1077,9 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
 * `{TestReporterParameterResolver}`: if a constructor or method parameter is of type
   `{TestReporter}`, the `TestReporterParameterResolver` will supply an instance of
   `TestReporter`. The `TestReporter` can be used to publish additional data about the
-  current test run. The data can be consumed via the `reportingEntryPublished()` method in
-  a `{TestExecutionListener}`, allowing it to be viewed in IDEs or included in reports.
+  current test run or attach files to it. The data can be consumed in a
+  `{TestExecutionListener}` via the `reportingEntryPublished()` or `fileEntryPublished()`
+  method, respectively. This allows them to be viewed in IDEs or included in reports.
 +
 In JUnit Jupiter you should use `TestReporter` where you used to print information to
 `stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will output all
