@@ -10,9 +10,10 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
+
 import java.net.URI;
 
-import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test;
  * @since 1.3
  * @see DiscoverySelectorsTests
  */
-class ClasspathRootSelectorTests extends AbstractEqualsAndHashCodeTests {
+class ClasspathRootSelectorTests {
 
 	@Test
 	void equalsAndHashCode() throws Exception {

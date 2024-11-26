@@ -12,10 +12,10 @@ package org.junit.platform.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.AbstractEqualsAndHashCodeTests;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -26,7 +26,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  * @since 1.3
  * @see DiscoverySelectorsTests
  */
-class MethodSelectorTests extends AbstractEqualsAndHashCodeTests {
+class MethodSelectorTests {
 
 	private static final String TEST_CASE_NAME = TestCase.class.getName();
 

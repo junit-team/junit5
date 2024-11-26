@@ -13,14 +13,18 @@ package org.junit.jupiter.api;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Abstract base class for unit tests that wish to test
+ * Assertions for unit tests that wish to test
  * {@link Object#equals(Object)} and {@link Object#hashCode()}.
  *
  * @since 1.3
  */
-public abstract class AbstractEqualsAndHashCodeTests {
+public class EqualsAndHashCodeAssertions {
 
-	protected final <T> void assertEqualsAndHashCode(T equal1, T equal2, T different) {
+	private EqualsAndHashCodeAssertions() {
+	}
+
+	@SuppressWarnings("EqualsWithItself")
+	public static <T> void assertEqualsAndHashCode(T equal1, T equal2, T different) {
 		assertThat(equal1).isNotNull();
 		assertThat(equal2).isNotNull();
 		assertThat(different).isNotNull();
