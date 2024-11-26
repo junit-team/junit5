@@ -297,6 +297,13 @@ public class TestPlan {
 		return this.configurationParameters;
 	}
 
+	/**
+	 * Get the {@link OutputDirectoryProvider} for this test plan.
+	 *
+	 * @return the output directory provider; never {@code null}
+	 * @since 1.12
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return this.outputDirectoryProvider;
 	}
