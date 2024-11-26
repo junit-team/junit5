@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
@@ -30,6 +31,7 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
@@ -287,6 +289,21 @@ public final class LauncherDiscoveryRequestBuilder {
 		return this;
 	}
 
+	/**
+	 * Set the {@link OutputDirectoryProvider} to use for the request.
+	 *
+	 * <p>If not specified, a default provider will be used that can be
+	 * configured via the {@value LauncherConstants#OUTPUT_DIR_PROPERTY_NAME}
+	 * configuration parameter.
+	 *
+	 * @param outputDirectoryProvider the output directory provider to use;
+	 *                                never {@code null}
+	 * @return this builder for method chaining
+	 * @since 1.12
+	 * @see OutputDirectoryProvider
+	 * @see LauncherConstants#OUTPUT_DIR_PROPERTY_NAME
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public LauncherDiscoveryRequestBuilder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 		this.outputDirectoryProvider = Preconditions.notNull(outputDirectoryProvider,
 			"outputDirectoryProvider must not be null");

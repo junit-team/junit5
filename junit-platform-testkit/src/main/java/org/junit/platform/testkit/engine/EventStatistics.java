@@ -132,6 +132,7 @@ public class EventStatistics {
 	 *
 	 * @param expected the expected number of events
 	 * @return this {@code EventStatistics} for method chaining
+	 * @since 1.12
 	 */
 	public EventStatistics fileEntryPublished(long expected) {
 		this.executables.add(

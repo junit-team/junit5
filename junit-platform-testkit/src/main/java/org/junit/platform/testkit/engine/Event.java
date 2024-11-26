@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
@@ -53,13 +54,14 @@ public class Event {
 	}
 
 	/**
-	 * Create an {@code Event} for a published file for the
-	 * supplied {@link TestDescriptor} and {@link FileEntry}.
+	 * Create an {@code Event} for a published file for the supplied
+	 * {@link TestDescriptor} and {@link FileEntry}.
 	 *
-	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
-	 * never {@code null}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the
+	 *                       event; never {@code null}
 	 * @param file the {@code FileEntry} that was published; never {@code null}
 	 * @return the newly created {@code Event}
+	 * @since 1.12
 	 * @see EventType#FILE_ENTRY_PUBLISHED
 	 */
 	public static Event fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {

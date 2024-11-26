@@ -427,6 +427,19 @@ public final class EngineTestKit {
 			return this;
 		}
 
+		/**
+		 * Set the {@link OutputDirectoryProvider} to use.
+		 *
+		 * <p>If not specified, a default provider will be used that throws an
+		 * exception when attempting to create output directories. This is done
+		 * to avoid accidentally writing output files to the file system.
+		 *
+		 * @param outputDirectoryProvider the output directory provider to use;
+		 *                                never {@code null}
+		 * @return this builder for method chaining
+		 * @since 1.12
+		 * @see OutputDirectoryProvider
+		 */
 		@API(status = EXPERIMENTAL, since = "1.12")
 		public Builder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 			this.requestBuilder.outputDirectoryProvider(outputDirectoryProvider);
