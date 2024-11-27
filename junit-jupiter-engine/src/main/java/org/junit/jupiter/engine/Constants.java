@@ -80,6 +80,8 @@ public final class Constants {
 	 * {@code org.example.TheirExtension}.
 	 * </ul>
 	 *
+	 * <p>Note: A class that matches both an inclusion and exclusion pattern will be excluded.
+	 *
 	 * @see JupiterConfiguration#EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME
 	 */
 	public static final String EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME;
@@ -114,6 +116,8 @@ public final class Constants {
 	 * extensions whose FQCN is exactly {@code org.example.MyExtension} or
 	 * {@code org.example.TheirExtension}.
 	 * </ul>
+	 *
+	 * <p>Note: A class that matches both an inclusion and exclusion pattern will be excluded.
 	 *
 	 * @see JupiterConfiguration#EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME
 	 */
