@@ -10,6 +10,11 @@
 
 package platform.tooling.support.tests;
 
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.apache.commons.io.file.PathUtils;
+
 public class Projects {
 
 	public static final String ANT_STARTER = "ant-starter";
@@ -27,5 +32,9 @@ public class Projects {
 	public static final String VINTAGE = "vintage";
 
 	private Projects() {
+	}
+
+	static void copyToWorkspace(String antStarter, Path workspace) throws IOException {
+		PathUtils.copyDirectory(Path.of("projects").resolve(antStarter), workspace);
 	}
 }

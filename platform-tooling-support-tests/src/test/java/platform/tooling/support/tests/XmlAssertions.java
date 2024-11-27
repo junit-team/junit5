@@ -42,10 +42,6 @@ class XmlAssertions {
 				            <java:javaVersion>${xmlunit.ignore}</java:javaVersion>
 				            <java:fileEncoding>${xmlunit.ignore}</java:fileEncoding>
 				            <java:heapSize max="${xmlunit.isNumber}"/>
-				            <git:repository originUrl="${xmlunit.matchesRegex#(git@|https://).+#}"/>
-				            <git:branch>${xmlunit.ignore}</git:branch>
-				            <git:commit>${xmlunit.matchesRegex#[0-9a-f]{40}#}</git:commit>
-				            <git:status clean="${xmlunit.ignore}">${xmlunit.ignore}</git:status>
 				          </infrastructure>
 				          <e:started id="1" name="JUnit Jupiter" time="${xmlunit.isDateTime}">
 				            <metadata>

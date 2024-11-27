@@ -11,19 +11,20 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
+import java.nio.file.Path;
 import java.util.List;
-
-import de.sormuras.bartholdy.tool.Java;
 
 import org.apache.tools.ant.Main;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessStarter;
 
 /**
  * @since 1.3
@@ -32,20 +33,17 @@ class AntStarterTests {
 
 	@ResourceLock(Projects.ANT_STARTER)
 	@Test
-	void ant_starter() {
-		var request = Request.builder() //
-				.setTool(new Java()) //
-				.setProject(Projects.ANT_STARTER) //
+	@Timeout(60)
+	void ant_starter(@TempDir Path workspace) throws Exception {
+		copyToWorkspace(Projects.ANT_STARTER, workspace);
+
+		var result = ProcessStarter.java() //
+				.workingDir(workspace) //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
-				.addArguments("-verbose") //
-				.build();
+				.startAndWait();
 
-		var result = request.run();
-
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(0, result.getExitCode());
-		assertEquals("", result.getOutput("err"), "error log isn't empty");
+		assertEquals(0, result.exitCode());
+		assertEquals("", result.stdErr(), "error log isn't empty");
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
@@ -58,9 +56,10 @@ class AntStarterTests {
 			"     \\[java\\] \\[         5 tests successful      \\]", //
 			"     \\[java\\] \\[         0 tests failed          \\]", //
 			">> TAIL >>"), //
-			result.getOutputLines("out"));
+			result.stdOutLines());
 
-		var testResultsDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("build/test-report");
+		var testResultsDir = workspace.resolve("build/test-report");
 		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
 	}
+
 }
