@@ -44,9 +44,6 @@ val mavenDistributionClasspath = configurations.resolvable("mavenDistributionCla
 }
 
 dependencies {
-	implementation(libs.bartholdy) {
-		because("manage external tool installations")
-	}
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}
