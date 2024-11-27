@@ -16,8 +16,6 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Fix support for disabling ANSI colors on the console when the `NO_COLOR` environment
-  variable is available.
 * Enable auto-flushing of output in the `ConsoleLauncher` to fix issues with buffering,
   in particular when using the `--details=testfeed` option.
 
