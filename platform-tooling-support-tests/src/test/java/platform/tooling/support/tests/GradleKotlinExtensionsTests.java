@@ -11,21 +11,18 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
-import java.nio.file.Paths;
-
-import de.sormuras.bartholdy.tool.GradleWrapper;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
 import platform.tooling.support.process.ProcessStarters;
 
 /**
@@ -35,21 +32,15 @@ class GradleKotlinExtensionsTests {
 
 	@ResourceLock(Projects.GRADLE_KOTLIN_EXTENSIONS)
 	@Test
-	void gradle_wrapper() {
-		var result = Request.builder() //
-				.setTool(new GradleWrapper(Paths.get(".."))) //
-				.setProject(Projects.GRADLE_KOTLIN_EXTENSIONS) //
+	void gradle_wrapper(@TempDir Path workspace) throws Exception {
+		var result = ProcessStarters.gradlew() //
+				.workingDir(copyToWorkspace(Projects.GRADLE_KOTLIN_EXTENSIONS, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
-				.setTimeout(TOOL_TIMEOUT) //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.setJavaHome(ProcessStarters.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
-				.build() //
-				.run();
+				.startAndWait();
 
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(0, result.getExitCode(), "result=" + result);
-		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
+		assertEquals(0, result.exitCode(), "result=" + result);
+		assertTrue(result.stdOut().lines().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
 	}
 }
