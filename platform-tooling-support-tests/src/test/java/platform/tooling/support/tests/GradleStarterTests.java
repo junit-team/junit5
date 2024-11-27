@@ -20,7 +20,6 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -32,7 +31,6 @@ import platform.tooling.support.process.ProcessStarters;
  */
 class GradleStarterTests {
 
-	@ResourceLock(Projects.GRADLE_STARTER)
 	@Test
 	void gradle_wrapper(@TempDir Path workspace) throws Exception {
 		var result = ProcessStarters.gradlew() //
