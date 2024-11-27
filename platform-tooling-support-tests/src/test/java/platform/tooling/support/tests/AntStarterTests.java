@@ -22,7 +22,6 @@ import org.apache.tools.ant.Main;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.process.ProcessStarters;
 
@@ -31,7 +30,6 @@ import platform.tooling.support.process.ProcessStarters;
  */
 class AntStarterTests {
 
-	@ResourceLock(Projects.ANT_STARTER)
 	@Test
 	@Timeout(60)
 	void ant_starter(@TempDir Path workspace) throws Exception {

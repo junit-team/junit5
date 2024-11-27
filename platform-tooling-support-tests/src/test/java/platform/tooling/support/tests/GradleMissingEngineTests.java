@@ -18,7 +18,6 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.platform.reporting.testutil.FileUtils;
 import org.opentest4j.TestAbortedException;
 
@@ -31,7 +30,6 @@ import platform.tooling.support.process.ProcessStarters;
  */
 class GradleMissingEngineTests {
 
-	@ResourceLock(Projects.GRADLE_MISSING_ENGINE)
 	@Test
 	void gradle_wrapper(@TempDir Path workspace) throws Exception {
 		var result = ProcessStarters.gradlew() //

@@ -23,7 +23,6 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.parallel.ResourceLock;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.process.ProcessStarters;
@@ -36,7 +35,6 @@ import platform.tooling.support.process.ProcessStarters;
 @EnabledIfEnvironmentVariable(named = "GRAALVM_HOME", matches = ".+")
 class GraalVmStarterTests {
 
-	@ResourceLock(Projects.GRAALVM_STARTER)
 	@Test
 	@Timeout(value = 10, unit = MINUTES)
 	void runsTestsInNativeImage(@TempDir Path workspace) throws Exception {

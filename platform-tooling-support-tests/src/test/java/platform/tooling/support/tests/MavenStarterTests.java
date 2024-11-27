@@ -20,7 +20,6 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -38,7 +37,6 @@ class MavenStarterTests {
 	@GlobalResource
 	MavenRepoProxy mavenRepoProxy;
 
-	@ResourceLock(Projects.MAVEN_STARTER)
 	@Test
 	void verifyMavenStarterProject(@TempDir Path workspace) throws Exception {
 		var result = ProcessStarters.maven() //
