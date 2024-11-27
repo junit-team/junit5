@@ -134,17 +134,21 @@ public final class VintageTestEngine implements TestEngine {
 			throw ExceptionUtils.throwAsUncheckedException(e.getCause());
 		}
 		finally {
-			try {
-				executorService.shutdown();
-				if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-					logger.warn(() -> "Executor service did not terminate within the specified timeout");
-					executorService.shutdownNow();
-				}
+			shutdownExecutorService(executorService);
+		}
+	}
+
+	private void shutdownExecutorService(ExecutorService executorService) {
+		try {
+			executorService.shutdown();
+			if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+				logger.warn(() -> "Executor service did not terminate within the specified timeout");
+				executorService.shutdownNow();
 			}
-			catch (InterruptedException e) {
-				logger.warn(e, () -> "Interruption while waiting for executor service to shut down");
-				Thread.currentThread().interrupt();
-			}
+		}
+		catch (InterruptedException e) {
+			logger.warn(e, () -> "Interruption while waiting for executor service to shut down");
+			Thread.currentThread().interrupt();
 		}
 	}
 
