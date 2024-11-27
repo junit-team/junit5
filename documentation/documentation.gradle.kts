@@ -6,7 +6,7 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import java.nio.file.Files
+import org.jetbrains.kotlin.incremental.deleteRecursivelyOrThrow
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -165,9 +165,7 @@ tasks {
 		args.addAll("--exclude-tag", "timeout")
 
 		doFirst {
-			consoleLauncherTestEventXmlFiles.files.forEach {
-				Files.delete(it.toPath())
-			}
+			consoleLauncherTestReportsDir.get().asFile.deleteRecursivelyOrThrow()
 		}
 
 		finalizedBy(generateOpenTestHtmlReport)
