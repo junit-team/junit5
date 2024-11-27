@@ -12,22 +12,18 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
-import java.nio.file.Paths;
-
-import de.sormuras.bartholdy.Tool;
-import de.sormuras.bartholdy.tool.GradleWrapper;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.platform.reporting.testutil.FileUtils;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
 import platform.tooling.support.process.ProcessStarters;
 
 /**
@@ -37,31 +33,19 @@ class GradleMissingEngineTests {
 
 	@ResourceLock(Projects.GRADLE_MISSING_ENGINE)
 	@Test
-	void gradle_wrapper() {
-		test(new GradleWrapper(Paths.get("..")));
-	}
-
-	private void test(Tool gradle) {
-		var request = Request.builder() //
-				.setProject(Projects.GRADLE_MISSING_ENGINE) //
-				.setTool(gradle) //
+	void gradle_wrapper(@TempDir Path workspace) throws Exception {
+		var result = ProcessStarters.gradlew() //
+				.workingDir(copyToWorkspace(Projects.GRADLE_MISSING_ENGINE, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.setJavaHome(ProcessStarters.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
-				.setTimeout(TOOL_TIMEOUT) //
-				.build();
+				.startAndWait();
 
-		var result = request.run();
-
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(1, result.getExitCode());
-		assertThat(result.getOutputLines("err")) //
+		assertEquals(1, result.exitCode());
+		assertThat(result.stdErrLines()) //
 				.contains("FAILURE: Build failed with an exception.");
 
-		var htmlFile = FileUtils.findPath(Request.WORKSPACE.resolve(request.getWorkspace()),
-			"glob:**/build/reports/tests/test/classes/*.html");
+		var htmlFile = FileUtils.findPath(workspace, "glob:**/build/reports/tests/test/classes/*.html");
 		assertThat(htmlFile).content() //
 				.contains("Cannot create Launcher without at least one TestEngine");
 	}

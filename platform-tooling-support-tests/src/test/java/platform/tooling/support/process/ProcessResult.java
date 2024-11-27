@@ -17,4 +17,8 @@ public record ProcessResult(int exitCode, Duration duration, String stdOut, Stri
 	public List<String> stdOutLines() {
 		return stdOut.lines().toList();
 	}
+
+	public List<String> stdErrLines() {
+		return stdErr.lines().toList();
+	}
 }
