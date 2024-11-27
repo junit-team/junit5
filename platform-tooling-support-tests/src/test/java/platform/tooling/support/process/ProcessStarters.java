@@ -23,7 +23,7 @@ public class ProcessStarters {
 		return javaCommand(currentJdkHome(), "java");
 	}
 
-	private static Path currentJdkHome() {
+	public static Path currentJdkHome() {
 		var executable = ProcessHandle.current().info().command().map(Path::of).orElseThrow();
 		// path element count is 3 or higher: "<JAVA_HOME>/bin/java[.exe]"
 		return executable.getParent().getParent().toAbsolutePath();

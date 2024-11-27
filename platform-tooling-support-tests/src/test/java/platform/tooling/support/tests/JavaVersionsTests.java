@@ -13,13 +13,12 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
+import static platform.tooling.support.process.ProcessStarters.currentJdkHome;
 import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-
-import de.sormuras.bartholdy.tool.Java;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -50,7 +49,7 @@ class JavaVersionsTests {
 
 	@Test
 	void java_default() throws Exception {
-		var actualLines = execute(new Java().getHome(), MavenEnvVars.FOR_JDK24_AND_LATER);
+		var actualLines = execute(currentJdkHome(), MavenEnvVars.FOR_JDK24_AND_LATER);
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
