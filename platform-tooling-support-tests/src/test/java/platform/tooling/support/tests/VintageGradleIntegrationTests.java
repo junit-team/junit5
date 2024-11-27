@@ -11,65 +11,58 @@
 package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
-import java.nio.file.Paths;
-
-import de.sormuras.bartholdy.Result;
-import de.sormuras.bartholdy.tool.GradleWrapper;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessResult;
 import platform.tooling.support.process.ProcessStarters;
 
 class VintageGradleIntegrationTests {
 
+	@TempDir
+	Path workspace;
+
 	@Test
-	void unsupportedVersion() {
+	void unsupportedVersion() throws Exception {
 		var result = run("4.11");
 
-		assertThat(result.getExitCode()).isGreaterThan(0);
-		assertThat(result.getOutput("out")) //
+		assertThat(result.exitCode()).isGreaterThan(0);
+		assertThat(result.stdOut()) //
 				.doesNotContain("STARTED") //
 				.contains("Unsupported version of junit:junit: 4.11");
 	}
 
 	@ParameterizedTest(name = "{0}")
 	@ValueSource(strings = { "4.12", "4.13.2" })
-	void supportedVersions(String version) {
+	void supportedVersions(String version) throws Exception {
 		var result = run(version);
 
-		assertThat(result.getExitCode()).isGreaterThan(0);
-		assertThat(result.getOutput("out")) //
+		assertThat(result.exitCode()).isGreaterThan(0);
+		assertThat(result.stdOut()) //
 				.contains("VintageTest > success PASSED") //
 				.contains("VintageTest > failure FAILED");
 
-		var testResultsDir = Request.WORKSPACE.resolve("vintage-gradle-" + version).resolve("build/test-results/test");
+		var testResultsDir = workspace.resolve("build/test-results/test");
 		assertThat(testResultsDir.resolve("TEST-com.example.vintage.VintageTest.xml")).isRegularFile();
 	}
 
-	private Result run(String version) {
-		var result = Request.builder() //
-				.setTool(new GradleWrapper(Paths.get(".."))) //
+	private ProcessResult run(String version) throws Exception {
+		return ProcessStarters.gradlew() //
+				.workingDir(copyToWorkspace(Projects.VINTAGE, workspace)) //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.setJavaHome(ProcessStarters.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
-				.setProject(Projects.VINTAGE) //
-				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
-				.setTimeout(TOOL_TIMEOUT) //
-				.build() //
-				.run();
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-		return result;
+				.startAndWait();
 	}
 
 }
