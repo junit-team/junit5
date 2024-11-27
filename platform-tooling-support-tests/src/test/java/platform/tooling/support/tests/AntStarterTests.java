@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
-import platform.tooling.support.process.ProcessStarter;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.3
@@ -35,10 +35,8 @@ class AntStarterTests {
 	@Test
 	@Timeout(60)
 	void ant_starter(@TempDir Path workspace) throws Exception {
-		copyToWorkspace(Projects.ANT_STARTER, workspace);
-
-		var result = ProcessStarter.java() //
-				.workingDir(workspace) //
+		var result = ProcessStarters.java() //
+				.workingDir(copyToWorkspace(Projects.ANT_STARTER, workspace)) //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
 				.startAndWait();
 

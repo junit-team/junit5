@@ -28,6 +28,7 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.3
@@ -47,7 +48,7 @@ class GradleMissingEngineTests {
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
+				.setJavaHome(ProcessStarters.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.setTimeout(TOOL_TIMEOUT) //
 				.build();
 

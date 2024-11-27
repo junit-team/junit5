@@ -13,24 +13,20 @@ package platform.tooling.support.tests;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
-import java.nio.file.Paths;
-import java.time.Duration;
-
-import de.sormuras.bartholdy.tool.GradleWrapper;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.ResourceLock;
-import org.opentest4j.TestAbortedException;
 
-import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.9.1
@@ -43,23 +39,16 @@ class GraalVmStarterTests {
 	@ResourceLock(Projects.GRAALVM_STARTER)
 	@Test
 	@Timeout(value = 10, unit = MINUTES)
-	void runsTestsInNativeImage() {
-		var request = Request.builder() //
-				.setTool(new GradleWrapper(Paths.get(".."))) //
-				.setProject(Projects.GRAALVM_STARTER) //
-				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
+	void runsTestsInNativeImage(@TempDir Path workspace) throws Exception {
+		var result = ProcessStarters.gradlew() //
+				.workingDir(copyToWorkspace(Projects.GRAALVM_STARTER, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
 					"--warning-mode=fail") //
-				.setTimeout(Duration.ofMinutes(10)) //
-				.build();
+				.startAndWait();
 
-		var result = request.run();
-
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(0, result.getExitCode());
-		assertThat(result.getOutputLines("out")) //
+		assertEquals(0, result.exitCode());
+		assertThat(result.stdOutLines()) //
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 1 = 2 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 100 = 101 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("ClassLevelAnnotationTests$Inner > test() SUCCESSFUL")) //
