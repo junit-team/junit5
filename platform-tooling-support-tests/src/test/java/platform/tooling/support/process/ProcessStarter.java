@@ -1,3 +1,13 @@
+/*
+ * Copyright 2015-2024 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
 package platform.tooling.support.process;
 
 import static org.codehaus.groovy.runtime.ProcessGroovyMethods.consumeProcessErrorStream;
@@ -18,26 +28,6 @@ import org.apache.commons.io.output.TeeOutputStream;
 
 public class ProcessStarter {
 
-	public static ProcessStarter java() {
-		return javaCommand(currentJdkHome(), "java");
-	}
-
-	private static Path currentJdkHome() {
-		var executable = ProcessHandle.current().info().command().map(Path::of).orElseThrow();
-		// path element count is 3 or higher: "<JAVA_HOME>/bin/java[.exe]"
-		return executable.getParent().getParent().toAbsolutePath();
-	}
-
-	public static ProcessStarter java(Path javaHome) {
-		return javaCommand(javaHome, "java");
-	}
-
-	private static ProcessStarter javaCommand(Path javaHome, String commandName) {
-		return new ProcessStarter() //
-				.executable(javaHome.resolve("bin").resolve(commandName)) //
-				.putEnvironment("JAVA_HOME", javaHome.toString());
-	}
-
 	private Path executable;
 	private Path workingDir;
 	private final List<String> arguments = new ArrayList<>();
@@ -56,6 +46,10 @@ public class ProcessStarter {
 	public ProcessStarter addArguments(String... arguments) {
 		this.arguments.addAll(List.of(arguments));
 		return this;
+	}
+
+	public ProcessStarter putEnvironment(String key, Path value) {
+		return putEnvironment(key, value.toAbsolutePath().toString());
 	}
 
 	public ProcessStarter putEnvironment(String key, String value) {
@@ -82,7 +76,7 @@ public class ProcessStarter {
 			var outThread = consumeProcessOutputStream(process, new TeeOutputStream(System.out, out));
 			var errThread = consumeProcessErrorStream(process, new TeeOutputStream(System.err, err));
 			return new WatchedProcess(start, process, new WatchedOutput(outThread, out),
-					new WatchedOutput(errThread, err));
+				new WatchedOutput(errThread, err));
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException("Failed to start process: " + command, e);

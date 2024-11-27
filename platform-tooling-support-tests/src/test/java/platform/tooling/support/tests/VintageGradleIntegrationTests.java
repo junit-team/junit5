@@ -27,6 +27,7 @@ import org.opentest4j.TestAbortedException;
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessStarters;
 
 class VintageGradleIntegrationTests {
 
@@ -58,7 +59,7 @@ class VintageGradleIntegrationTests {
 		var result = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.setJavaHome(Helper.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
+				.setJavaHome(ProcessStarters.getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.setProject(Projects.VINTAGE) //
 				.setWorkspace("vintage-gradle-" + version) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
