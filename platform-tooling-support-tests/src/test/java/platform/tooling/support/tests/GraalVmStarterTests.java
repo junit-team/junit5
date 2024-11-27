@@ -10,6 +10,7 @@
 
 package platform.tooling.support.tests;
 
+import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -21,6 +22,7 @@ import de.sormuras.bartholdy.tool.GradleWrapper;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -40,6 +42,7 @@ class GraalVmStarterTests {
 
 	@ResourceLock(Projects.GRAALVM_STARTER)
 	@Test
+	@Timeout(value = 10, unit = MINUTES)
 	void runsTestsInNativeImage() {
 		var request = Request.builder() //
 				.setTool(new GradleWrapper(Paths.get(".."))) //
