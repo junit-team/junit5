@@ -13,7 +13,7 @@ plugins {
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_11
+	mainJavaVersion = JavaVersion.VERSION_21
 }
 
 spotless {
@@ -50,15 +50,18 @@ dependencies {
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}
+	implementation(libs.groovy4) {
+		because("it provides convenience methods to handle process output")
+	}
+	implementation(libs.opentest4j) {
+		because("it throws TestAbortedException to abort tests")
+	}
 
 	testImplementation(libs.archunit) {
 		because("checking the architecture of JUnit 5")
 	}
 	testImplementation(libs.apiguardian) {
 		because("we validate that public classes are annotated")
-	}
-	testImplementation(libs.groovy4) {
-		because("it provides convenience methods to handle process output")
 	}
 	testImplementation(libs.bndlib) {
 		because("parsing OSGi metadata")

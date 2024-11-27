@@ -52,8 +52,7 @@ public class ProcessStarters {
 
 	public static ProcessStarter maven() {
 		var starter = new ProcessStarter() //
-				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin/mvn")) //
-				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new));
+				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin/mvn"));
 		return withCommonEnvironmentVariables(starter);
 	}
 
