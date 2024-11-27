@@ -57,6 +57,11 @@ public class ProcessStarter {
 		return this;
 	}
 
+	public ProcessStarter putEnvironment(Map<String, String> values) {
+		environment.putAll(values);
+		return this;
+	}
+
 	public ProcessResult startAndWait() throws InterruptedException {
 		return start().waitFor();
 	}

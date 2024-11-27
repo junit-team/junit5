@@ -50,6 +50,13 @@ public class ProcessStarters {
 		return withCommonEnvironmentVariables(starter);
 	}
 
+	public static ProcessStarter maven() {
+		var starter = new ProcessStarter() //
+				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin/mvn")) //
+				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new));
+		return withCommonEnvironmentVariables(starter);
+	}
+
 	private static ProcessStarter withCommonEnvironmentVariables(ProcessStarter starter) {
 		starter.putEnvironment("JUNIT_JUPITER_VERSION", Helper.version("junit-jupiter"));
 		starter.putEnvironment("JUNIT_VINTAGE_VERSION", Helper.version("junit-vintage"));
