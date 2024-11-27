@@ -14,6 +14,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -95,6 +96,12 @@ final class DisplayNameUtils {
 			createDisplayNameSupplierForMethod(testClass, testMethod, configuration));
 	}
 
+	static String determineDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration) {
+		return determineDisplayName(testMethod,
+				createDisplayNameSupplierForMethod(enclosingInstanceTypes, testClass, testMethod, configuration));
+	}
+
 	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass, JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
 			generator -> generator.generateDisplayNameForClass(testClass));
@@ -106,10 +113,22 @@ final class DisplayNameUtils {
 			generator -> generator.generateDisplayNameForNestedClass(testClass));
 	}
 
+	static Supplier<String> createDisplayNameSupplierForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			JupiterConfiguration configuration) {
+		return createDisplayNameSupplier(testClass, configuration,
+				generator -> generator.generateDisplayNameForNestedClass(enclosingInstanceTypes, testClass));
+	}
+
 	private static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
 			generator -> generator.generateDisplayNameForMethod(testClass, testMethod));
+	}
+
+	private static Supplier<String> createDisplayNameSupplierForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration) {
+		return createDisplayNameSupplier(testClass, configuration,
+				generator -> generator.generateDisplayNameForMethod(enclosingInstanceTypes, testClass, testMethod));
 	}
 
 	private static Supplier<String> createDisplayNameSupplier(Class<?> testClass, JupiterConfiguration configuration,
