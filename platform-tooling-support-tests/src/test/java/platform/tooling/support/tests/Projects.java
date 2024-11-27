@@ -34,8 +34,8 @@ public class Projects {
 	private Projects() {
 	}
 
-	static Path copyToWorkspace(String antStarter, Path workspace) throws IOException {
-		PathUtils.copyDirectory(Path.of("projects").resolve(antStarter), workspace);
+	static Path copyToWorkspace(String project, Path workspace) throws IOException {
+		PathUtils.copyDirectory(getSourceDirectory(project), workspace);
 		return workspace;
 	}
 
