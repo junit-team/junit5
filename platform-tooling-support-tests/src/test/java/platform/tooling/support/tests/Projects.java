@@ -38,4 +38,8 @@ public class Projects {
 		PathUtils.copyDirectory(Path.of("projects").resolve(antStarter), workspace);
 		return workspace;
 	}
+
+	static Path getSourceDirectory(String project) {
+		return Path.of("projects").resolve(project);
+	}
 }

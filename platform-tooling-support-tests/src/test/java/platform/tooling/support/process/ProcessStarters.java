@@ -33,7 +33,11 @@ public class ProcessStarters {
 		return javaCommand(javaHome, "java");
 	}
 
-	private static ProcessStarter javaCommand(Path javaHome, String commandName) {
+	public static ProcessStarter javaCommand(String commandName) {
+		return javaCommand(currentJdkHome(), commandName);
+	}
+
+	public static ProcessStarter javaCommand(Path javaHome, String commandName) {
 		return new ProcessStarter() //
 				.executable(javaHome.resolve("bin").resolve(commandName)) //
 				.putEnvironment("JAVA_HOME", javaHome);
