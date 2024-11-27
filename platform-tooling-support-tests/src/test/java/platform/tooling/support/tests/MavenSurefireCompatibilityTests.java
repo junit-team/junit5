@@ -12,21 +12,20 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
-import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
-import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.9.2
@@ -36,37 +35,31 @@ class MavenSurefireCompatibilityTests {
 	@GlobalResource
 	LocalMavenRepo localMavenRepo;
 
-	@ResourceLock(Projects.MAVEN_SUREFIRE_COMPATIBILITY)
 	@ParameterizedTest
 	@CsvSource(delimiter = '|', nullValues = "<none>", textBlock = """
 			2.22.2   | --activate-profiles=manual-platform-dependency
 			3.0.0-M4 | <none>
 			""")
-	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg) throws IOException {
-		var extraArgs = extraArg == null ? new Object[0] : new Object[] { extraArg };
-		var request = Request.builder() //
-				.setTool(Request.maven()) //
-				.setProject(Projects.MAVEN_SUREFIRE_COMPATIBILITY) //
+	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg, @TempDir Path workspace)
+			throws Exception {
+		var extraArgs = extraArg == null ? new String[0] : new String[] { extraArg };
+		var result = ProcessStarters.maven() //
+				.workingDir(copyToWorkspace(Projects.MAVEN_SUREFIRE_COMPATIBILITY, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
 				.addArguments(extraArgs) //
-				.setTimeout(TOOL_TIMEOUT) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.build();
+				.putEnvironment("JAVA_HOME", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+				.startAndWait();
 
-		var result = request.run();
+		assertEquals(0, result.exitCode());
+		assertEquals("", result.stdErr());
 
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(0, result.getExitCode());
-		assertEquals("", result.getOutput("err"));
-
-		var output = result.getOutputLines("out");
+		var output = result.stdOutLines();
 		assertTrue(output.contains("[INFO] BUILD SUCCESS"));
 		assertTrue(output.contains("[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0"));
 
-		var targetDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("target");
+		var targetDir = workspace.resolve("target");
 		try (var stream = Files.list(targetDir)) {
 			assertThat(stream.filter(file -> file.getFileName().toString().startsWith("junit-platform-unique-ids"))) //
 					.hasSize(1);
