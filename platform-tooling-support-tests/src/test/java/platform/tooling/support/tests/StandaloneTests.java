@@ -41,7 +41,6 @@ import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
 import platform.tooling.support.ThirdPartyJars;
 import platform.tooling.support.process.ProcessResult;
 import platform.tooling.support.process.ProcessStarters;
@@ -463,7 +462,6 @@ class StandaloneTests {
 
 		assertEquals(1, result.exitCode());
 
-		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
 		assertLinesMatch(expectedOutLines, result.stdOutLines());
@@ -526,7 +524,7 @@ class StandaloneTests {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
-		path.add(Request.WORKSPACE.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());
+		path.add(workspace.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());
 		path.add(jar.toString());
 		var result = ProcessStarters.java() //
 				.addArguments("--show-version") //
