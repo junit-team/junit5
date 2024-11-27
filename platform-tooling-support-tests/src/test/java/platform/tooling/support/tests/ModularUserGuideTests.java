@@ -13,7 +13,6 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -25,13 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.spi.ToolProvider;
 
-import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.launcher.LauncherConstants;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.ThirdPartyJars;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.5
@@ -118,61 +118,33 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static void junit(Path temp, Writer out, Writer err) throws Exception {
-		var command = new ArrayList<String>();
+	private static void junit(Path temp) throws Exception {
 		var projectDir = Path.of("../documentation");
-		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
 
-		command.add("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr"));
+		var result = ProcessStarters.java() //
+				.workingDir(projectDir) //
+				.addArguments("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr")) //
+				.addArguments("--show-version", "--show-module-resolution") //
+				.addArguments("--module-path", String.join(File.pathSeparator, //
+					temp.resolve("destination").toString(), //
+					temp.resolve("lib").toString() //
+				)) //
+				.addArguments("--add-modules", "documentation") //
+				.addArguments("--patch-module",
+					"documentation=" + projectDir.resolve("src/test/resources").toAbsolutePath()) //
+				.addArguments("--module", "org.junit.platform.console") //
+				.addArguments("execute") //
+				.addArguments("--scan-modules") //
+				.addArguments("--config", "enableHttpServer=true") //
+				.addArguments("--config", LauncherConstants.OUTPUT_DIR_PROPERTY_NAME + "=" + temp.resolve("reports")) //
+				.addArguments("--fail-if-no-tests") //
+				.addArguments("--include-classname", ".*Tests") //
+				.addArguments("--include-classname", ".*Demo") //
+				.addArguments("--exclude-tag", "exclude") //
+				.addArguments("--exclude-tag", "exclude") //
+				.startAndWait();
 
-		command.add("--show-version");
-		command.add("--show-module-resolution");
-
-		command.add("--module-path");
-		command.add(String.join(File.pathSeparator, //
-			temp.resolve("destination").toString(), //
-			temp.resolve("lib").toString() //
-		));
-
-		command.add("--add-modules");
-		command.add("documentation");
-
-		// TODO This `patch-module` should work! Why doesn't it?
-		// command.add("--patch-module");
-		// command.add("documentation=../documentation/src/test/resources/");
-		Files.copy(projectDir.resolve("src/test/resources/two-column.csv"),
-			temp.resolve("destination/documentation/two-column.csv"));
-
-		command.add("--module");
-		command.add("org.junit.platform.console");
-
-		command.add("execute");
-		command.add("--scan-modules");
-
-		command.add("--config");
-		command.add("enableHttpServer=true");
-
-		command.add("--fail-if-no-tests");
-		command.add("--include-classname");
-		command.add(".*Tests");
-		command.add("--include-classname");
-		command.add(".*Demo");
-		command.add("--exclude-tag");
-		command.add("exclude");
-
-		// System.out.println("______________");
-		// command.forEach(System.out::println);
-
-		var builder = new ProcessBuilder(command).directory(projectDir.toFile());
-		var java = builder.start();
-		ProcessGroovyMethods.waitForProcessOutput(java, out, err);
-		var code = java.exitValue();
-
-		if (code != 0) {
-			System.out.println(out);
-			System.err.println(err);
-			fail("Unexpected exit code: " + code);
-		}
+		assertEquals(0, result.exitCode());
 	}
 
 	@Test
@@ -205,7 +177,7 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// listing.forEach(System.out::println);
 
-		junit(temp, out, err);
+		junit(temp);
 	}
 
 }
