@@ -75,7 +75,7 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Predicate<Class<? extends Extension>> createExtensionFilterByPatterns() {
+	public Predicate<Class<? extends Extension>> getFilterForAutoDetectedExtensions() {
 		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(
 			getExtensionAutodetectionIncludePattern().orElse(ClassNamePatternFilterUtils.ALL_PATTERN)) //
 				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(

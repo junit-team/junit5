@@ -48,8 +48,8 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
-	public Predicate<Class<? extends Extension>> createExtensionFilterByPatterns() {
-		return delegate.createExtensionFilterByPatterns();
+	public Predicate<Class<? extends Extension>> getFilterForAutoDetectedExtensions() {
+		return delegate.getFilterForAutoDetectedExtensions();
 	}
 
 	@Override

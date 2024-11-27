@@ -97,7 +97,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry,
 			JupiterConfiguration configuration) {
-		Predicate<Class<? extends Extension>> filter = configuration.createExtensionFilterByPatterns();
+		Predicate<Class<? extends Extension>> filter = configuration.getFilterForAutoDetectedExtensions();
 
 		ServiceLoader<Extension> serviceLoader = ServiceLoader.load(Extension.class,
 			ClassLoaderUtils.getDefaultClassLoader());
