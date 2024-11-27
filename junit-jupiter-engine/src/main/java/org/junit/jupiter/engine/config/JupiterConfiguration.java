@@ -51,7 +51,7 @@ public interface JupiterConfiguration {
 	String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;;
 	String DEFAULT_TEST_INSTANTIATION_EXTENSION_CONTEXT_SCOPE_PROPERTY_NAME = ExtensionContextScope.DEFAULT_SCOPE_PROPERTY_NAME;
 
-	Predicate<Class<? extends Extension>> createExtensionFilterByPatterns();
+	Predicate<Class<? extends Extension>> getFilterForAutoDetectedExtensions();
 
 	Optional<String> getRawConfigurationParameter(String key);
 
