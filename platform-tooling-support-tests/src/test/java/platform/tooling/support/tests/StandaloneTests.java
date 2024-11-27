@@ -15,6 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
+import static platform.tooling.support.tests.Projects.getSourceDirectory;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,31 +29,38 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import de.sormuras.bartholdy.Result;
-import de.sormuras.bartholdy.jdk.Jar;
-import de.sormuras.bartholdy.jdk.Javac;
-import de.sormuras.bartholdy.tool.Java;
-
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.parallel.Execution;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.Request;
 import platform.tooling.support.ThirdPartyJars;
+import platform.tooling.support.process.ProcessResult;
+import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.4
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Execution(CONCURRENT)
 class StandaloneTests {
 
-	@ResourceLock(Projects.STANDALONE)
+	@TempDir
+	static Path workspace;
+
+	@BeforeAll
+	static void prepareWorkspace() throws IOException {
+		copyToWorkspace(Projects.STANDALONE, workspace);
+	}
+
 	@Test
 	void jarFileWithoutCompiledModuleDescriptorClass() throws Exception {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
@@ -66,17 +77,15 @@ class StandaloneTests {
 		assertTrue(found.isEmpty(), jar + " must not contain any " + name + " files: " + found);
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
-	void listAllObservableEngines() {
-		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments("engines", "--disable-ansi-colors", "--disable-banner").build() //
-				.run(false);
+	void listAllObservableEngines() throws Exception {
+		var result = ProcessStarters.java() //
+				.workingDir(getSourceDirectory(Projects.STANDALONE)) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
+				.addArguments("engines", "--disable-ansi-colors", "--disable-banner") //
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(0, result.exitCode());
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var suiteVersion = Helper.version("junit-platform-suite-engine");
@@ -86,22 +95,19 @@ class StandaloneTests {
 				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%s)
 				junit-vintage (org.junit.vintage:junit-vintage-engine:%s)
 				""".formatted(jupiterVersion, suiteVersion, vintageVersion).lines(), //
-			result.getOutput("out").lines());
+			result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
-	void printVersionViaJar() {
-		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+	void printVersionViaJar() throws Exception {
+		var result = ProcessStarters.java() //
+				.workingDir(getSourceDirectory(Projects.STANDALONE)) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("--version", "--disable-ansi-colors") //
 				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
-				.build() //
-				.run();
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(0, result.exitCode());
 
 		var version = Helper.version("junit-platform-console");
 		assertLinesMatch("""
@@ -109,12 +115,11 @@ class StandaloneTests {
 				JVM: .*
 				OS: .*
 				""".formatted(version).lines(), //
-			result.getOutputLines("out").stream());
+			result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
-	void printVersionViaModule() {
+	void printVersionViaModule() throws Exception {
 		var junitJars = Stream.of("junit-platform-console", "junit-platform-reporting", "junit-platform-engine",
 			"junit-platform-launcher", "junit-platform-commons") //
 				.map(MavenRepo::jar);
@@ -125,17 +130,15 @@ class StandaloneTests {
 		var modulePath = Stream.concat(junitJars, thirdPartyJars) //
 				.map(String::valueOf) //
 				.collect(joining(File.pathSeparator));
-		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
+		var result = ProcessStarters.java() //
+				.workingDir(getSourceDirectory(Projects.STANDALONE)) //
 				.addArguments("--module-path", modulePath) //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("--version", "--disable-ansi-colors") //
 				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
-				.build() //
-				.run();
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(0, result.exitCode());
 
 		var version = Helper.version("junit-platform-console");
 		assertLinesMatch("""
@@ -143,49 +146,46 @@ class StandaloneTests {
 				JVM: .*
 				OS: .*
 				""".formatted(version).lines(), //
-			result.getOutputLines("out").stream());
+			result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(1)
+	@Execution(SAME_THREAD)
 	void compile() throws Exception {
-		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
-		var result = Request.builder() //
-				.setTool(new Javac()) //
-				.setProject(Projects.STANDALONE) //
+		var result = ProcessStarters.javaCommand("javac") //
+				.workingDir(workspace) //
 				.addArguments("-Xlint:-options") //
 				.addArguments("--release", "8") //
 				.addArguments("-proc:none") //
-				.addArguments("-d", workspace.resolve("bin")) //
-				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone")) //
-				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java")) //
-				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java")) //
-				.addArguments(workspace.resolve("src/standalone/SuiteIntegration.java")) //
-				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java")).build() //
-				.run();
+				.addArguments("-d", workspace.resolve("bin").toString()) //
+				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone").toString()) //
+				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java").toString()) //
+				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java").toString()) //
+				.addArguments(workspace.resolve("src/standalone/SuiteIntegration.java").toString()) //
+				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java").toString()) //
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
-		assertTrue(result.getOutput("out").isEmpty());
-		assertTrue(result.getOutput("err").isEmpty());
+		assertEquals(0, result.exitCode());
+		assertTrue(result.stdOut().isEmpty());
+		assertTrue(result.stdErr().isEmpty());
 
 		// create "tests.jar" that'll be picked-up by "testWithJarredTestClasses()" later
 		var jarFolder = Files.createDirectories(workspace.resolve("jar"));
-		var jarResult = Request.builder() //
-				.setTool(new Jar()) //
-				.setProject(Projects.STANDALONE) //
+		var jarResult = ProcessStarters.javaCommand("jar") //
+				.workingDir(workspace) //
 				.addArguments("--create") //
-				.addArguments("--file", jarFolder.resolve("tests.jar")) //
-				.addArguments("-C", workspace.resolve("bin"), ".") //
-				.build().run(false);
-		assertEquals(0, jarResult.getExitCode(), String.join("\n", jarResult.getOutputLines("out")));
+				.addArguments("--file", jarFolder.resolve("tests.jar").toString()) //
+				.addArguments("-C", workspace.resolve("bin").toString(), ".") //
+				.startAndWait();
+		assertEquals(0, jarResult.exitCode());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
-	void discoverTree() {
-		Result result = discover("--details-theme=ascii");
+	@Execution(SAME_THREAD)
+	void discoverTree() throws Exception {
+		var result = discover("--details-theme=ascii");
 
 		var expected = """
 				.
@@ -214,14 +214,14 @@ class StandaloneTests {
 				[         9 tests found      ]
 
 				""".stripIndent();
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
-	void discoverFlat() {
-		Result result = discover("--details=flat");
+	@Execution(SAME_THREAD)
+	void discoverFlat() throws Exception {
+		var result = discover("--details=flat");
 
 		var expected = """
 				JUnit Platform Suite ([engine:junit-platform-suite])
@@ -249,13 +249,14 @@ class StandaloneTests {
 				[         9 tests found      ]
 
 				""".stripIndent();
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
 	@Test
 	@Order(2)
-	void discoverVerbose() {
-		Result result = discover("--details=verbose", "--details-theme=ascii");
+	@Execution(SAME_THREAD)
+	void discoverVerbose() throws Exception {
+		var result = discover("--details=verbose", "--details-theme=ascii");
 
 		var expected = """
 				+-- JUnit Platform Suite
@@ -333,23 +334,23 @@ class StandaloneTests {
 				[         9 tests found      ]
 
 				""".stripIndent();
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
-	void discoverNone() {
-		Result result = discover("--details=none");
+	@Execution(SAME_THREAD)
+	void discoverNone() throws Exception {
+		var result = discover("--details=none");
 
-		assertThat(result.getOutputLines("out")).isEmpty();
+		assertThat(result.stdOut()).isEmpty();
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
-	void discoverSummary() {
-		Result result = discover("--details=summary");
+	@Execution(SAME_THREAD)
+	void discoverSummary() throws Exception {
+		var result = discover("--details=summary");
 
 		var expected = """
 
@@ -357,14 +358,14 @@ class StandaloneTests {
 				[         9 tests found      ]
 
 				""".stripIndent();
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(2)
-	void discoverTestFeed() {
-		Result result = discover("--details=testfeed");
+	@Execution(SAME_THREAD)
+	void discoverTestFeed() throws Exception {
+		var result = discover("--details=testfeed");
 		var expected = """
 				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
 				JUnit Jupiter > JupiterIntegration > successful()
@@ -381,55 +382,51 @@ class StandaloneTests {
 
 				""".stripIndent();
 
-		assertLinesMatch(expected.lines(), result.getOutputLines("out").stream());
+		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
-	private static Result discover(String... args) {
-		var result = Request.builder() //
+	private static ProcessResult discover(String... args) throws Exception {
+		var result = ProcessStarters.java() //
+				.workingDir(workspace) //
 				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("discover") //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
-				.addArguments((Object[]) args) //
-				.build() //
-				.run(false);
+				.addArguments(args) //
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(0, result.exitCode());
 		return result;
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(3)
-	void execute() throws IOException {
-		var result = Request.builder() //
+	@Execution(SAME_THREAD)
+	void execute() throws Exception {
+		var result = ProcessStarters.java() //
+				.workingDir(workspace) //
 				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
-				.addArguments("--classpath", "bin").build() //
-				.run(false);
+				.addArguments("--classpath", "bin") //
+				.startAndWait();
 
-		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(1, result.exitCode());
 
-		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
-		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		List<String> actualErrLines = result.getOutputLines("err");
+		assertLinesMatch(expectedOutLines, result.stdOutLines());
+		var actualErrLines = result.stdErrLines();
 		if (actualErrLines.getFirst().contains("stty: /dev/tty: No such device or address")) {
 			// Happens intermittently on GitHub Actions on Windows
 			actualErrLines = new ArrayList<>(actualErrLines);
@@ -439,84 +436,78 @@ class StandaloneTests {
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
-		assertTrue(result.getOutput("err").contains("junit-jupiter"
+		assertTrue(result.stdErr().contains("junit-jupiter"
 				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
-		assertTrue(result.getOutput("err").contains("junit-vintage"
+		assertTrue(result.stdErr().contains("junit-vintage"
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(4)
-	void executeOnJava8() throws IOException {
-		Java java8 = getJava8();
-		var result = Request.builder() //
-				.setTool(java8) //
-				.setJavaHome(java8.getHome()) //
-				.setProject(Projects.STANDALONE) //
+	@Execution(SAME_THREAD)
+	void executeOnJava8() throws Exception {
+		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var result = ProcessStarters.java(java8Home) //
+				.workingDir(workspace) //
 				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
-				.addArguments("--classpath", "bin").build() //
-				.run(false);
+				.addArguments("--classpath", "bin") //
+				.startAndWait();
 
-		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(1, result.exitCode());
 
 		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
-		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+		assertLinesMatch(expectedOutLines, result.stdOutLines());
+		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
-		assertTrue(result.getOutput("err").contains("junit-jupiter"
+		assertTrue(result.stdErr().contains("junit-jupiter"
 				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
-		assertTrue(result.getOutput("err").contains("junit-vintage"
+		assertTrue(result.stdErr().contains("junit-vintage"
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(5)
+	@Execution(SAME_THREAD)
 	// https://github.com/junit-team/junit5/issues/2600
-	void executeOnJava8SelectPackage() throws IOException {
-		Java java8 = getJava8();
-		var result = Request.builder() //
-				.setTool(java8) //
-				.setJavaHome(java8.getHome()) //
-				.setProject(Projects.STANDALONE) //
-				.addArguments("-showversion") //
+	void executeOnJava8SelectPackage() throws Exception {
+		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var result = ProcessStarters.java(java8Home) //
+				.workingDir(workspace).addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
 				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
-				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone")) //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--select-package", Projects.STANDALONE) //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
-				.addArguments("--classpath", "bin").build() //
-				.run(false);
+				.addArguments("--classpath", "bin") //
+				.startAndWait();
 
-		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
+		assertEquals(1, result.exitCode());
 
-		var workspace = Request.WORKSPACE.resolve(Projects.STANDALONE);
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
 		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
-		assertLinesMatch(expectedOutLines, result.getOutputLines("out"));
-		assertLinesMatch(expectedErrLines, result.getOutputLines("err"));
+		assertLinesMatch(expectedOutLines, result.stdOutLines());
+		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
 		var jupiterVersion = Helper.version("junit-jupiter-engine");
 		var vintageVersion = Helper.version("junit-vintage-engine");
-		assertTrue(result.getOutput("err").contains("junit-jupiter"
+		assertTrue(result.stdErr().contains("junit-jupiter"
 				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
-		assertTrue(result.getOutput("err").contains("junit-vintage"
+		assertTrue(result.stdErr().contains("junit-vintage"
 				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 
@@ -527,19 +518,17 @@ class StandaloneTests {
 		return expectedErrLines;
 	}
 
-	@ResourceLock(Projects.STANDALONE)
 	@Test
 	@Order(6)
+	@Execution(SAME_THREAD)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
-	void executeWithJarredTestClasses() {
+	void executeWithJarredTestClasses() throws Exception {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
 		path.add(Request.WORKSPACE.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());
 		path.add(jar.toString());
-		var result = Request.builder() //
-				.setTool(new Java()) //
-				.setProject(Projects.STANDALONE) //
+		var result = ProcessStarters.java() //
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
@@ -550,32 +539,8 @@ class StandaloneTests {
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--fail-if-no-tests") //
-				.build() //
-				.run(false);
+				.startAndWait();
 
-		assertEquals(1, result.getExitCode(), () -> getExitCodeMessage(result));
-	}
-
-	private static String getExitCodeMessage(Result result) {
-		return "Exit codes don't match. Stdout:\n" + result.getOutput("out") + //
-				"\n\nStderr:\n" + result.getOutput("err") + "\n";
-	}
-
-	/**
-	 * Special override of class {@link Java} to resolve against a different {@code JAVA_HOME}.
-	 */
-	private static Java getJava8() {
-		Path java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
-		return new Java() {
-			@Override
-			public Path getHome() {
-				return java8Home;
-			}
-
-			@Override
-			public String getVersion() {
-				return "8";
-			}
-		};
+		assertEquals(1, result.exitCode());
 	}
 }
