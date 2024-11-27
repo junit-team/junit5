@@ -76,12 +76,15 @@ class MultiReleaseJarTests {
 
 		var result = mvn(variant);
 
-		result.getOutputLines("out").forEach(System.out::println);
+		var outputLines = result.getOutputLines("out");
+		outputLines.forEach(System.out::println);
 		result.getOutputLines("err").forEach(System.err::println);
 
 		assertEquals(0, result.getExitCode());
 		assertEquals("", result.getOutput("err"));
-		assertTrue(result.getOutputLines("out").contains("[INFO] BUILD SUCCESS"));
+		assertTrue(outputLines.contains("[INFO] BUILD SUCCESS"));
+		assertFalse(outputLines.contains("[WARNING] "), "Warning marker detected");
+		assertFalse(outputLines.contains("[ERROR] "), "Error marker detected");
 
 		var workspace = Path.of("build/test-workspace/multi-release-jar", variant);
 		var actualLines = Files.readAllLines(workspace.resolve("target/junit-platform/console-launcher.out.log"));
