@@ -33,9 +33,11 @@ import java.util.Set;
 import java.util.spi.ToolProvider;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -73,6 +75,14 @@ class ToolProviderTests {
 		}
 		catch (Exception e) {
 			throw new AssertionError("Preparing local library folder failed", e);
+		}
+	}
+
+	@AfterAll
+	static void triggerReleaseOfFileHandlesOnWindows() throws Exception {
+		if (OS.current() == OS.WINDOWS) {
+			System.gc();
+			Thread.sleep(1_000);
 		}
 	}
 
