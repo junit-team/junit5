@@ -10,21 +10,21 @@
 
 package platform.tooling.support.process;
 
-import static org.codehaus.groovy.runtime.ProcessGroovyMethods.consumeProcessErrorStream;
-import static org.codehaus.groovy.runtime.ProcessGroovyMethods.consumeProcessOutputStream;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.output.TeeOutputStream;
+import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 
 public class ProcessStarter {
 
@@ -74,17 +74,21 @@ public class ProcessStarter {
 				builder.directory(workingDir.toFile());
 			}
 			builder.environment().putAll(environment);
-			var start = Instant.now();
-			var out = new ByteArrayOutputStream();
-			var err = new ByteArrayOutputStream();
 			var process = builder.start();
-			var outThread = consumeProcessOutputStream(process, new TeeOutputStream(System.out, out));
-			var errThread = consumeProcessErrorStream(process, new TeeOutputStream(System.err, err));
-			return new WatchedProcess(start, process, new WatchedOutput(outThread, out),
-				new WatchedOutput(errThread, err));
+			var out = forwardAndCaptureOutput(process, System.out, ProcessGroovyMethods::consumeProcessOutputStream);
+			var err = forwardAndCaptureOutput(process, System.err, ProcessGroovyMethods::consumeProcessErrorStream);
+			return new WatchedProcess(process, out, err);
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException("Failed to start process: " + command, e);
 		}
 	}
+
+	private static WatchedOutput forwardAndCaptureOutput(Process process, PrintStream delegate,
+			BiFunction<Process, OutputStream, Thread> captureAction) {
+		var capturingStream = new ByteArrayOutputStream();
+		var thread = captureAction.apply(process, new TeeOutputStream(delegate, capturingStream));
+		return new WatchedOutput(thread, capturingStream);
+	}
+
 }
