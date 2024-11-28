@@ -91,7 +91,8 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the nested class; never blank
 	 */
 	default String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-		throw new UnsupportedOperationException("Implement generateDisplayNameForNestedClass(List<Class<?>>, Class<?>) instead");
+		throw new UnsupportedOperationException(
+			"Implement generateDisplayNameForNestedClass(List<Class<?>>, Class<?>) instead");
 	}
 
 	/**
@@ -121,7 +122,8 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the test; never blank
 	 */
 	default String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-		throw new UnsupportedOperationException("Implement generateDisplayNameForMethod(List<Class<?>>, Class<?>, Method) instead");
+		throw new UnsupportedOperationException(
+			"Implement generateDisplayNameForMethod(List<Class<?>>, Class<?>, Method) instead");
 	}
 
 	/**
@@ -285,9 +287,11 @@ public interface DisplayNameGenerator {
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return getSentenceBeginning(enclosingInstanceTypes, testClass) + getFragmentSeparator(testClass)
-					+ getGeneratorFor(testClass).generateDisplayNameForMethod(enclosingInstanceTypes, testClass, testMethod);
+					+ getGeneratorFor(testClass).generateDisplayNameForMethod(enclosingInstanceTypes, testClass,
+						testMethod);
 		}
 
 		private String getSentenceBeginning(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
@@ -319,10 +323,13 @@ public interface DisplayNameGenerator {
 					.filter(IndicativeSentences.class::equals)//
 					.isPresent();
 
-			String prefix = (buildPrefix ? getSentenceBeginning(enclosingInstanceTypes, enclosingInstanceType) + getFragmentSeparator(testClass) : "");
+			String prefix = (buildPrefix
+					? getSentenceBeginning(enclosingInstanceTypes, enclosingInstanceType)
+							+ getFragmentSeparator(testClass)
+					: "");
 
 			return prefix + displayName.orElseGet(
-					() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(testClass));
+				() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(testClass));
 		}
 
 		/**
