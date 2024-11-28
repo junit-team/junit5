@@ -13,6 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static platform.tooling.support.Helper.loadModuleDirectoryNames;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -22,6 +23,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.spi.ToolProvider;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +32,7 @@ import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.launcher.LauncherConstants;
 
-import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
 import platform.tooling.support.ThirdPartyJars;
 import platform.tooling.support.process.ProcessStarters;
 
@@ -89,7 +92,7 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
 		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
-		Helper.loadAllJUnitModules(lib);
+		loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());
 
@@ -156,7 +159,7 @@ class ModularUserGuideTests {
 		// args.forEach(System.out::println);
 
 		assertTrue(err.toString().isBlank(), () -> err + "\n\n" + String.join("\n", args));
-		var listing = Helper.treeWalk(temp);
+		var listing = treeWalk(temp);
 		assertLinesMatch(List.of( //
 			"destination", //
 			">> CLASSES >>", //
@@ -178,6 +181,31 @@ class ModularUserGuideTests {
 		// listing.forEach(System.out::println);
 
 		junit(temp);
+	}
+
+	private static void loadAllJUnitModules(Path target) throws Exception {
+		for (var module : loadModuleDirectoryNames()) {
+			var jar = MavenRepo.jar(module);
+			Files.copy(jar, target.resolve(jar.getFileName()));
+		}
+	}
+
+	private static List<String> treeWalk(Path root) {
+		var lines = new ArrayList<String>();
+		treeWalk(root, lines::add);
+		return lines;
+	}
+
+	private static void treeWalk(Path root, Consumer<String> out) {
+		try (var stream = Files.walk(root)) {
+			stream.map(root::relativize) //
+					.map(path -> path.toString().replace('\\', '/')) //
+					.sorted().filter(Predicate.not(String::isEmpty)) //
+					.forEach(out);
+		}
+		catch (Exception e) {
+			throw new Error("Walking tree failed: " + root, e);
+		}
 	}
 
 }
