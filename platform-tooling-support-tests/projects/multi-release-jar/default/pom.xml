@@ -45,7 +45,7 @@
             <plugin>
                 <groupId>de.sormuras.junit</groupId>
                 <artifactId>junit-platform-maven-plugin</artifactId>
-                <version>1.1.7</version>
+                <version>1.1.8</version>
                 <extensions>true</extensions>
                 <configuration>
                     <executor>JAVA</executor>
