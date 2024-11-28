@@ -67,7 +67,7 @@ public class ProcessStarter {
 	}
 
 	public WatchedProcess start() {
-		var command = Stream.concat(Stream.of(executable.toAbsolutePath().toString()), arguments.stream()).toList();
+		var command = Stream.concat(Stream.of(executable.toString()), arguments.stream()).toList();
 		try {
 			var builder = new ProcessBuilder().command(command);
 			if (workingDir != null) {
