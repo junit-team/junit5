@@ -36,13 +36,13 @@ public class WatchedProcess {
 			}
 			finally {
 				try {
-					out.join();
+					out.thread().join();
 				}
 				finally {
-					err.join();
+					err.thread().join();
 				}
 			}
-			return new ProcessResult(exitCode, out.getStreamAsString(), err.getStreamAsString());
+			return new ProcessResult(exitCode, out.streamAsString(), err.streamAsString());
 		}
 		finally {
 			process.destroyForcibly();

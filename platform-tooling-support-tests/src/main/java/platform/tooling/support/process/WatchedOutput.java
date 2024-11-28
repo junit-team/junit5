@@ -13,23 +13,11 @@ package platform.tooling.support.process;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.Charset;
 
-public class WatchedOutput {
+record WatchedOutput(Thread thread, ByteArrayOutputStream stream) {
 
 	private static final Charset CHARSET = Charset.forName(System.getProperty("native.encoding"));
 
-	private final Thread thread;
-	private final ByteArrayOutputStream stream;
-
-	WatchedOutput(Thread thread, ByteArrayOutputStream stream) {
-		this.thread = thread;
-		this.stream = stream;
-	}
-
-	void join() throws InterruptedException {
-		thread.join();
-	}
-
-	public String getStreamAsString() {
+	String streamAsString() {
 		return stream.toString(CHARSET);
 	}
 }
