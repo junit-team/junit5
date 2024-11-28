@@ -23,7 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
 
-import platform.tooling.support.process.ProcessStarters;
+import platform.tooling.support.ProcessStarters;
 
 /**
  * @since 1.3

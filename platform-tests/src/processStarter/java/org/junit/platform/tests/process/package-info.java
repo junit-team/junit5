@@ -4,4 +4,4 @@
  * @since 1.12
  */
 
-package platform.tooling.support.process;
+package org.junit.platform.tests.process;

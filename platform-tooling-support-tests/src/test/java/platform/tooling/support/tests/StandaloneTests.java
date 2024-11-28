@@ -37,13 +37,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.platform.tests.process.ProcessResult;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
+import platform.tooling.support.ProcessStarters;
 import platform.tooling.support.ThirdPartyJars;
-import platform.tooling.support.process.ProcessResult;
-import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.4

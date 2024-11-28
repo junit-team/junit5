@@ -33,8 +33,8 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.launcher.LauncherConstants;
 
 import platform.tooling.support.MavenRepo;
+import platform.tooling.support.ProcessStarters;
 import platform.tooling.support.ThirdPartyJars;
-import platform.tooling.support.process.ProcessStarters;
 
 /**
  * @since 1.5
