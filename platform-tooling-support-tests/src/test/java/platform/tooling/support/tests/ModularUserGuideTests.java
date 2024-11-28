@@ -122,7 +122,7 @@ class ModularUserGuideTests {
 	}
 
 	private static void junit(Path temp) throws Exception {
-		var projectDir = Path.of("../documentation");
+		var projectDir = Path.of("../documentation").toAbsolutePath();
 
 		var result = ProcessStarters.java() //
 				.workingDir(projectDir) //
@@ -133,8 +133,7 @@ class ModularUserGuideTests {
 					temp.resolve("lib").toString() //
 				)) //
 				.addArguments("--add-modules", "documentation") //
-				.addArguments("--patch-module",
-					"documentation=" + projectDir.resolve("src/test/resources").toAbsolutePath()) //
+				.addArguments("--patch-module", "documentation=" + projectDir.resolve("src/test/resources")) //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("execute") //
 				.addArguments("--scan-modules") //

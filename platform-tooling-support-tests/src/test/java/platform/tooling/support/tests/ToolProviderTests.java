@@ -57,7 +57,7 @@ class ToolProviderTests {
 	@BeforeAll
 	static void prepareLocalLibraryDirectoryWithJUnitPlatformModules() {
 		try {
-			var lib = Files.createDirectories(ToolProviderTests.lib);
+			Files.createDirectories(lib);
 			try (var directoryStream = Files.newDirectoryStream(lib, "*.jar")) {
 				for (Path jarFile : directoryStream) {
 					Files.delete(jarFile);
