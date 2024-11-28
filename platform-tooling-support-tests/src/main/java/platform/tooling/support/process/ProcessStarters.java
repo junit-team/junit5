@@ -13,6 +13,7 @@ package platform.tooling.support.process;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.junit.jupiter.api.condition.OS;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -45,15 +46,20 @@ public class ProcessStarters {
 
 	public static ProcessStarter gradlew() {
 		var starter = new ProcessStarter() //
-				.executable(Path.of("..").resolve("gradlew")) //
+				.executable(Path.of("..").resolve(windowsOrOtherExecutable("gradlew.bat", "gradlew"))) //
 				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new));
 		return withCommonEnvironmentVariables(starter);
 	}
 
 	public static ProcessStarter maven() {
 		var starter = new ProcessStarter() //
-				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin/mvn"));
+				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin").resolve(
+					windowsOrOtherExecutable("mvn.cmd", "mvn")));
 		return withCommonEnvironmentVariables(starter);
+	}
+
+	private static String windowsOrOtherExecutable(String cmdOrExe, String other) {
+		return OS.current() == OS.WINDOWS ? cmdOrExe : other;
 	}
 
 	private static ProcessStarter withCommonEnvironmentVariables(ProcessStarter starter) {
