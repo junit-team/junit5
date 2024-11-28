@@ -47,11 +47,13 @@ dependencies {
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
 	}
-	implementation(libs.groovy4) {
-		because("it provides convenience methods to handle process output")
+	implementation(projects.platformTests) {
+		capabilities {
+			requireFeature("process-starter")
+		}
 	}
 	implementation(projects.junitJupiterApi) {
-		because("it throws TestAbortedException to abort tests and uses the OS enum")
+		because("it uses the OS enum to support Windows")
 	}
 
 	testImplementation(libs.archunit) {

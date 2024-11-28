@@ -8,15 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package platform.tooling.support.process;
+package platform.tooling.support;
 
 import java.nio.file.Path;
 import java.util.Optional;
 
 import org.junit.jupiter.api.condition.OS;
+import org.junit.platform.tests.process.ProcessStarter;
 import org.opentest4j.TestAbortedException;
-
-import platform.tooling.support.Helper;
 
 public class ProcessStarters {
 

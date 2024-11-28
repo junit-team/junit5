@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package platform.tooling.support.process;
+package org.junit.platform.tests.process;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

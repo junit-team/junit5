@@ -13,7 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
-import static platform.tooling.support.process.ProcessStarters.currentJdkHome;
+import static platform.tooling.support.ProcessStarters.currentJdkHome;
 import static platform.tooling.support.tests.Projects.copyToWorkspace;
 
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.process.ProcessStarters;
+import platform.tooling.support.ProcessStarters;
 
 /**
  * @since 1.4

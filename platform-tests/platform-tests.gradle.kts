@@ -1,3 +1,5 @@
+
+import junitbuild.extensions.capitalized
 import org.gradle.api.tasks.PathSensitivity.NONE
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
@@ -7,6 +9,18 @@ plugins {
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
 	id("junitbuild.jmh-conventions")
+}
+
+val processStarter by sourceSets.creating {
+	java {
+		srcDir("src/processStarter/java")
+	}
+}
+
+java {
+	registerFeature(processStarter.name) {
+		usingSourceSet(processStarter)
+	}
 }
 
 dependencies {
@@ -37,6 +51,11 @@ dependencies {
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
 	testImplementation(testFixtures(projects.junitPlatformReporting))
+	testImplementation(projects.platformTests) {
+		capabilities {
+			requireFeature("process-starter")
+		}
+	}
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
@@ -44,9 +63,20 @@ dependencies {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
-	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
+	// --- https://openjdk.java.net/projects/code-tools/jmh/ ----------------------
 	jmh(projects.junitJupiterApi)
 	jmh(libs.junit4)
+
+	// --- ProcessStarter dependencies --------------------------------------------
+	processStarter.implementationConfigurationName(libs.groovy4) {
+		because("it provides convenience methods to handle process output")
+	}
+	processStarter.implementationConfigurationName(libs.commons.io) {
+		because("it uses TeeOutputStream")
+	}
+	processStarter.implementationConfigurationName(libs.opentest4j) {
+		because("it throws TestAbortedException")
+	}
 }
 
 jmh {
@@ -79,6 +109,12 @@ tasks {
 		useJUnitPlatform {
 			includeTags("junit4")
 		}
+	}
+	named<JavaCompile>(processStarter.compileJavaTaskName).configure {
+		options.release = 21
+	}
+	named<Checkstyle>("checkstyle${processStarter.name.capitalized()}").configure {
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
 	}
 }
 

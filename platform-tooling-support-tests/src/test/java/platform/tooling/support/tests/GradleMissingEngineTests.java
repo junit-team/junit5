@@ -23,7 +23,7 @@ import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.process.ProcessStarters;
+import platform.tooling.support.ProcessStarters;
 
 /**
  * @since 1.3

@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.tests.process.ProcessResult;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.process.ProcessResult;
-import platform.tooling.support.process.ProcessStarters;
+import platform.tooling.support.ProcessStarters;
 
 class VintageMavenIntegrationTests {
 
