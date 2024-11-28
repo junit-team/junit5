@@ -111,7 +111,7 @@ tasks {
 		}
 	}
 	named<JavaCompile>(processStarter.compileJavaTaskName).configure {
-		options.release = 21
+		options.release = javaLibrary.testJavaVersion.majorVersion.toInt()
 	}
 	named<Checkstyle>("checkstyle${processStarter.name.capitalized()}").configure {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
