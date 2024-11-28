@@ -45,7 +45,7 @@ public class ProcessStarters {
 
 	public static ProcessStarter gradlew() {
 		return new ProcessStarter() //
-				.executable(Path.of("..").resolve(windowsOrOtherExecutable("gradlew.bat", "gradlew"))) //
+				.executable(Path.of("..").resolve(windowsOrOtherExecutable("gradlew.bat", "gradlew")).toAbsolutePath()) //
 				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
 				.addArguments("-PjupiterVersion=" + Helper.version("junit-jupiter")) //
 				.addArguments("-PvintageVersion=" + Helper.version("junit-vintage")) //
@@ -55,7 +55,7 @@ public class ProcessStarters {
 	public static ProcessStarter maven() {
 		return new ProcessStarter() //
 				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin").resolve(
-					windowsOrOtherExecutable("mvn.cmd", "mvn"))) //
+					windowsOrOtherExecutable("mvn.cmd", "mvn")).toAbsolutePath()) //
 				.addArguments("-Djunit.jupiter.version=" + Helper.version("junit-jupiter")) //
 				.addArguments("-Djunit.bom.version=" + Helper.version("junit-jupiter")) //
 				.addArguments("-Djunit.vintage.version=" + Helper.version("junit-vintage")) //
