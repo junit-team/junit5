@@ -2,10 +2,8 @@ plugins {
 	java
 }
 
-// grab jupiter version from system environment
-val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
-val vintageVersion: String = System.getenv("JUNIT_VINTAGE_VERSION")
-val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
+val jupiterVersion: String by project
+val platformVersion: String by project
 
 repositories {
 	maven { url = uri(file(System.getProperty("maven.repo"))) }
