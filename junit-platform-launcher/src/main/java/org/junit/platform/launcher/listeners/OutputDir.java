@@ -36,8 +36,12 @@ public class OutputDir {
 		Pattern.quote(OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER));
 
 	public static OutputDir create(Optional<String> customDir) {
+		return create(customDir, () -> Paths.get("."));
+	}
+
+	static OutputDir create(Optional<String> customDir, Supplier<Path> currentWorkingDir) {
 		try {
-			return createSafely(customDir, () -> Paths.get(".").toAbsolutePath());
+			return createSafely(customDir, currentWorkingDir);
 		}
 		catch (IOException e) {
 			throw new UncheckedIOException("Failed to create output dir", e);
@@ -53,7 +57,7 @@ public class OutputDir {
 
 	private static OutputDir createSafely(Optional<String> customDir, Supplier<Path> currentWorkingDir,
 			SecureRandom random) throws IOException {
-		Path cwd = currentWorkingDir.get();
+		Path cwd = currentWorkingDir.get().toAbsolutePath();
 		Path outputDir;
 
 		if (customDir.isPresent() && StringUtils.isNotBlank(customDir.get())) {

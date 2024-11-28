@@ -17,8 +17,10 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.logging.Logger;
@@ -125,6 +127,8 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	 */
 	public static final String DEFAULT_OUTPUT_FILE_PREFIX = "junit-platform-unique-ids";
 
+	static final String WORKING_DIR_PROPERTY_NAME = "junit.platform.listeners.uid.tracking.working.dir";
+
 	private final Logger logger = LoggerFactory.getLogger(UniqueIdTrackingListener.class);
 
 	private final List<String> uniqueIds = new ArrayList<>();
@@ -201,7 +205,9 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private Path createOutputFile(ConfigurationParameters configurationParameters) {
 		String prefix = configurationParameters.get(OUTPUT_FILE_PREFIX_PROPERTY_NAME) //
 				.orElse(DEFAULT_OUTPUT_FILE_PREFIX);
-		return OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME)) //
+		Supplier<Path> workingDirSupplier = () -> configurationParameters.get(WORKING_DIR_PROPERTY_NAME).map(
+			Paths::get).orElseGet(() -> Paths.get("."));
+		return OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME), workingDirSupplier) //
 				.createFile(prefix, "txt");
 	}
 
