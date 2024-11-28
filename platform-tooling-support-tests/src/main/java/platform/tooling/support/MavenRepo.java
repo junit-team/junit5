@@ -45,7 +45,7 @@ public class MavenRepo {
 
 	private static Path artifact(String artifactId, Predicate<String> fileNamePredicate) {
 		var parentDir = dir() //
-				.resolve(Helper.groupId(artifactId).replace('.', File.separatorChar)) //
+				.resolve(groupId(artifactId).replace('.', File.separatorChar)) //
 				.resolve(artifactId) //
 				.resolve(Helper.version(artifactId));
 		try (var files = Files.list(parentDir)) {
@@ -57,4 +57,16 @@ public class MavenRepo {
 		}
 	}
 
+	private static String groupId(String artifactId) {
+		if (artifactId.startsWith("junit-jupiter")) {
+			return "org.junit.jupiter";
+		}
+		if (artifactId.startsWith("junit-platform")) {
+			return "org.junit.platform";
+		}
+		if (artifactId.startsWith("junit-vintage")) {
+			return "org.junit.vintage";
+		}
+		return "org.junit";
+	}
 }
