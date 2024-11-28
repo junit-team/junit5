@@ -50,8 +50,10 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(testClass, configuration), configuration);
 	}
 
-	public NestedClassTestDescriptor(UniqueId uniqueId, List<Class<?>> enclosingInstanceTypes, Class<?> testClass, JupiterConfiguration configuration) {
-		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(enclosingInstanceTypes, testClass, configuration), configuration);
+	public NestedClassTestDescriptor(UniqueId uniqueId, List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass,
+			createDisplayNameSupplierForNestedClass(enclosingInstanceTypes, testClass, configuration), configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
