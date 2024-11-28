@@ -9,9 +9,8 @@ repositories {
 	mavenCentral()
 }
 
-// grab jupiter version from system environment
-val jupiterVersion = System.getenv("JUNIT_JUPITER_VERSION")
-val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
+val jupiterVersion: String by project
+val platformVersion: String by project
 
 dependencies {
 	testImplementation(kotlin("stdlib-jdk8"))

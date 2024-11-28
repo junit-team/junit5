@@ -9,17 +9,18 @@ repositories {
 	mavenCentral()
 }
 
+val platformVersion: String by project
+val vintageVersion: String by project
+
 dependencies {
 	val junit4Version = System.getProperty("junit4Version", "4.12")
 	testImplementation("junit:junit:$junit4Version")
 
-	val vintageVersion = System.getenv("JUNIT_VINTAGE_VERSION") ?: "5.3.2"
 	testImplementation("org.junit.vintage:junit-vintage-engine:$vintageVersion") {
 		exclude(group = "junit")
 		because("we want to override it to test against different versions")
 	}
 
-	val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
 }
 

@@ -45,28 +45,26 @@ public class ProcessStarters {
 	}
 
 	public static ProcessStarter gradlew() {
-		var starter = new ProcessStarter() //
+		return new ProcessStarter() //
 				.executable(Path.of("..").resolve(windowsOrOtherExecutable("gradlew.bat", "gradlew"))) //
-				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new));
-		return withCommonEnvironmentVariables(starter);
+				.putEnvironment("JAVA_HOME", getGradleJavaHome().orElseThrow(TestAbortedException::new)) //
+				.addArguments("-PjupiterVersion=" + Helper.version("junit-jupiter")) //
+				.addArguments("-PvintageVersion=" + Helper.version("junit-vintage")) //
+				.addArguments("-PplatformVersion=" + Helper.version("junit-platform"));
 	}
 
 	public static ProcessStarter maven() {
-		var starter = new ProcessStarter() //
+		return new ProcessStarter() //
 				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin").resolve(
-					windowsOrOtherExecutable("mvn.cmd", "mvn")));
-		return withCommonEnvironmentVariables(starter);
+					windowsOrOtherExecutable("mvn.cmd", "mvn"))) //
+				.addArguments("-Djunit.jupiter.version=" + Helper.version("junit-jupiter")) //
+				.addArguments("-Djunit.bom.version=" + Helper.version("junit-jupiter")) //
+				.addArguments("-Djunit.vintage.version=" + Helper.version("junit-vintage")) //
+				.addArguments("-Djunit.platform.version=" + Helper.version("junit-platform"));
 	}
 
 	private static String windowsOrOtherExecutable(String cmdOrExe, String other) {
 		return OS.current() == OS.WINDOWS ? cmdOrExe : other;
-	}
-
-	private static ProcessStarter withCommonEnvironmentVariables(ProcessStarter starter) {
-		starter.putEnvironment("JUNIT_JUPITER_VERSION", Helper.version("junit-jupiter"));
-		starter.putEnvironment("JUNIT_VINTAGE_VERSION", Helper.version("junit-vintage"));
-		starter.putEnvironment("JUNIT_PLATFORM_VERSION", Helper.version("junit-platform"));
-		return starter;
 	}
 
 	public static Optional<Path> getGradleJavaHome() {

@@ -3,8 +3,8 @@ plugins {
 	id("org.graalvm.buildtools.native")
 }
 
-val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
-val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
+val jupiterVersion: String by project
+val platformVersion: String by project
 
 repositories {
 	maven { url = uri(file(System.getProperty("maven.repo"))) }
