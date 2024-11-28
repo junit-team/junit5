@@ -50,8 +50,8 @@ dependencies {
 	implementation(libs.groovy4) {
 		because("it provides convenience methods to handle process output")
 	}
-	implementation(libs.opentest4j) {
-		because("it throws TestAbortedException to abort tests")
+	implementation(projects.junitJupiterApi) {
+		because("it throws TestAbortedException to abort tests and uses the OS enum")
 	}
 
 	testImplementation(libs.archunit) {
