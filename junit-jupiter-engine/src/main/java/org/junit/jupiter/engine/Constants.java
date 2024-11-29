@@ -91,7 +91,7 @@ public final class Constants {
 	 * @see #DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME
 	 * @see org.junit.jupiter.api.extension.ExecutionCondition
 	 */
-	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.DEACTIVATE_ALL_PATTERN;
+	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.ALL_PATTERN;
 
 	/**
 	 * Property name used to set the default display name generator class name: {@value}

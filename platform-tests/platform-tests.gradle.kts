@@ -1,4 +1,5 @@
-import org.gradle.api.tasks.PathSensitivity.NONE
+
+import junitbuild.extensions.capitalized
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
 
@@ -7,6 +8,18 @@ plugins {
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
 	id("junitbuild.jmh-conventions")
+}
+
+val processStarter by sourceSets.creating {
+	java {
+		srcDir("src/processStarter/java")
+	}
+}
+
+java {
+	registerFeature(processStarter.name) {
+		usingSourceSet(processStarter)
+	}
 }
 
 dependencies {
@@ -32,10 +45,16 @@ dependencies {
 		exclude(group = "org.junit.vintage")
 	}
 	testImplementation(libs.joox)
-	testImplementation(libs.openTestReporting.tooling)
+	testImplementation(libs.openTestReporting.tooling.core)
 	testImplementation(libs.picocli)
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
+	testImplementation(projects.platformTests) {
+		capabilities {
+			requireFeature("process-starter")
+		}
+	}
 
 	// --- Test run-time dependencies ---------------------------------------------
 	testRuntimeOnly(projects.junitVintageEngine)
@@ -43,9 +62,20 @@ dependencies {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
 
-	// --- https://openjdk.java.net/projects/code-tools/jmh/ -----------------------
+	// --- https://openjdk.java.net/projects/code-tools/jmh/ ----------------------
 	jmh(projects.junitJupiterApi)
 	jmh(libs.junit4)
+
+	// --- ProcessStarter dependencies --------------------------------------------
+	processStarter.implementationConfigurationName(libs.groovy4) {
+		because("it provides convenience methods to handle process output")
+	}
+	processStarter.implementationConfigurationName(libs.commons.io) {
+		because("it uses TeeOutputStream")
+	}
+	processStarter.implementationConfigurationName(libs.opentest4j) {
+		because("it throws TestAbortedException")
+	}
 }
 
 jmh {
@@ -72,23 +102,28 @@ tasks {
 	test {
 		// Additional inputs for remote execution with Test Distribution
 		inputs.dir("src/test/resources").withPathSensitivity(RELATIVE)
-		inputs.file(buildFile).withPathSensitivity(NONE) // for UniqueIdTrackingListenerIntegrationTests
 	}
 	test_4_12 {
 		useJUnitPlatform {
 			includeTags("junit4")
 		}
 	}
+	named<JavaCompile>(processStarter.compileJavaTaskName).configure {
+		options.release = javaLibrary.testJavaVersion.majorVersion.toInt()
+	}
+	named<Checkstyle>("checkstyle${processStarter.name.capitalized()}").configure {
+		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))
+	}
 }
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
 	}
 }

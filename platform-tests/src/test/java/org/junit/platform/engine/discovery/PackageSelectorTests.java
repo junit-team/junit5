@@ -10,8 +10,9 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
+
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 
 /**
  * Unit tests for {@link PackageSelector}.
@@ -19,7 +20,7 @@ import org.junit.platform.AbstractEqualsAndHashCodeTests;
  * @since 1.3
  * @see DiscoverySelectorsTests
  */
-class PackageSelectorTests extends AbstractEqualsAndHashCodeTests {
+class PackageSelectorTests {
 
 	@Test
 	void equalsAndHashCode() {

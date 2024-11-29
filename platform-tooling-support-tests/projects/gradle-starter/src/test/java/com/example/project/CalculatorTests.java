@@ -12,12 +12,18 @@ package com.example.project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class CalculatorTests {
+
+	@BeforeAll
+	static void printJavaVersion() {
+		System.out.println("Using Java version: " + System.getProperty("java.specification.version"));
+	}
 
 	@Test
 	@DisplayName("1 + 1 = 2")

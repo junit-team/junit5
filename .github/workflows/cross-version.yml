@@ -62,10 +62,16 @@ jobs:
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
+            -Ptesting.enableJaCoCo=false \
             -PjavaToolchain.version=${{ matrix.jdk.version }} \
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
             build \
-            --configuration-cache
+            --no-configuration-cache #Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        if: ${{ always() }}
+        with:
+          name: Open Test Reports (${{ github.job }} ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }}))
+          path: '**/build/reports/open-test-report.html'
   openj9:
     strategy:
       fail-fast: false
@@ -96,9 +102,15 @@ jobs:
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
+            -Ptesting.enableJaCoCo=false \
             -PjavaToolchain.version=${{ matrix.jdk }} \
             -PjavaToolchain.implementation=j9 \
             -Dscan.tag.JDK_${{ matrix.jdk }} \
             -Dscan.tag.OpenJ9 \
             build \
-            --configuration-cache
+            --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
+      - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+        if: ${{ always() }}
+        with:
+          name: Open Test Reports (${{ github.job }})
+          path: '**/build/reports/open-test-report.html'

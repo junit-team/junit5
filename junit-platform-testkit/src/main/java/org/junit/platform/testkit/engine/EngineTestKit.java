@@ -13,15 +13,18 @@ package org.junit.platform.testkit.engine;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -34,6 +37,7 @@ import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
@@ -249,7 +253,7 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		ExecutionRequest request = new ExecutionRequest(engineTestDescriptor, listener,
+		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
 			discoveryRequest.getConfigurationParameters());
 		testEngine.execute(request);
 	}
@@ -295,7 +299,8 @@ public final class EngineTestKit {
 	public static final class Builder {
 
 		private final LauncherDiscoveryRequestBuilder requestBuilder = LauncherDiscoveryRequestBuilder.request() //
-				.enableImplicitConfigurationParameters(false);
+				.enableImplicitConfigurationParameters(false) //
+				.outputDirectoryProvider(DisabledOutputDirectoryProvider.INSTANCE);
 		private final TestEngine testEngine;
 
 		private Builder(TestEngine testEngine) {
@@ -423,6 +428,25 @@ public final class EngineTestKit {
 		}
 
 		/**
+		 * Set the {@link OutputDirectoryProvider} to use.
+		 *
+		 * <p>If not specified, a default provider will be used that throws an
+		 * exception when attempting to create output directories. This is done
+		 * to avoid accidentally writing output files to the file system.
+		 *
+		 * @param outputDirectoryProvider the output directory provider to use;
+		 *                                never {@code null}
+		 * @return this builder for method chaining
+		 * @since 1.12
+		 * @see OutputDirectoryProvider
+		 */
+		@API(status = EXPERIMENTAL, since = "1.12")
+		public Builder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
+			this.requestBuilder.outputDirectoryProvider(outputDirectoryProvider);
+			return this;
+		}
+
+		/**
 		 * Execute tests for the configured {@link TestEngine},
 		 * {@linkplain DiscoverySelector discovery selectors},
 		 * {@linkplain DiscoveryFilter discovery filters}, and
@@ -441,6 +465,27 @@ public final class EngineTestKit {
 			return executionRecorder.getExecutionResults();
 		}
 
+		private static class DisabledOutputDirectoryProvider implements OutputDirectoryProvider {
+
+			public static final OutputDirectoryProvider INSTANCE = new DisabledOutputDirectoryProvider();
+
+			private static final String FAILURE_MESSAGE = "Writing outputs is disabled by default when using EngineTestKit. "
+					+ "To enable, configure a custom OutputDirectoryProvider via EngineTestKit#outputDirectoryProvider.";
+
+			private DisabledOutputDirectoryProvider() {
+			}
+
+			@Override
+			public Path getRootDirectory() {
+				throw new JUnitException(FAILURE_MESSAGE);
+			}
+
+			@Override
+			public Path createOutputDirectory(TestDescriptor testDescriptor) {
+				throw new JUnitException(FAILURE_MESSAGE);
+			}
+
+		}
 	}
 
 }

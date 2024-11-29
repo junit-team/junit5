@@ -11,6 +11,8 @@
 package org.junit.platform.console.tasks;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.console.tasks.DiscoveryRequestCreator.toDiscoveryRequestBuilder;
+import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
 import java.io.PrintWriter;
 import java.net.URL;
@@ -32,6 +34,7 @@ import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -75,7 +78,7 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		Optional<DetailsPrintingListener> commandLineTestPrinter = createDetailsPrintingListener(out);
 
-		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
+		LauncherDiscoveryRequest discoveryRequest = toDiscoveryRequestBuilder(discoveryOptions).build();
 		TestPlan testPlan = launcher.discover(discoveryRequest);
 
 		commandLineTestPrinter.ifPresent(printer -> printer.listTests(testPlan));
@@ -98,8 +101,10 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
 
-		LauncherDiscoveryRequest discoveryRequest = new DiscoveryRequestCreator().toDiscoveryRequest(discoveryOptions);
-		launcher.execute(discoveryRequest);
+		LauncherDiscoveryRequestBuilder discoveryRequestBuilder = toDiscoveryRequestBuilder(discoveryOptions);
+		reportsDir.ifPresent(dir -> discoveryRequestBuilder.configurationParameter(OUTPUT_DIR_PROPERTY_NAME,
+			dir.toAbsolutePath().toString()));
+		launcher.execute(discoveryRequestBuilder.build());
 
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {

@@ -3,8 +3,8 @@ plugins {
 	id("org.graalvm.buildtools.native")
 }
 
-val jupiterVersion: String = System.getenv("JUNIT_JUPITER_VERSION")
-val platformVersion: String = System.getenv("JUNIT_PLATFORM_VERSION")
+val jupiterVersion: String by project
+val platformVersion: String by project
 
 repositories {
 	maven { url = uri(file(System.getProperty("maven.repo"))) }
@@ -31,6 +31,8 @@ tasks.test {
 graalvmNative {
 	binaries {
 		named("test") {
+			// TODO #3040 Add to native-image.properties
+			buildArgs.add("--initialize-at-build-time=org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider")
 			buildArgs.add("-H:+ReportExceptionStackTraces")
 		}
 	}

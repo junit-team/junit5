@@ -20,13 +20,14 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+	osgiVerification(libs.openTestReporting.tooling.spi)
 }
 
 tasks {
 	compileModule {
 		options.compilerArgs.addAll(listOf(
 			"--add-modules", "org.opentest4j.reporting.events",
-			"--add-reads", "${project.projects.junitPlatformReporting.dependencyProject.javaModuleName}=org.opentest4j.reporting.events",
+			"--add-reads", "${project.projects.junitPlatformReporting.javaModuleName}=org.opentest4j.reporting.events",
 			"--add-modules", "info.picocli",
 			"--add-reads", "${javaModuleName}=info.picocli"
 		))

@@ -41,7 +41,7 @@ public class ClassNamePatternFilterUtils {
 		/* no-op */
 	}
 
-	public static final String DEACTIVATE_ALL_PATTERN = "*";
+	public static final String ALL_PATTERN = "*";
 
 	/**
 	 * Create a {@link Predicate} that can be used to exclude (i.e., filter out)
@@ -51,7 +51,7 @@ public class ClassNamePatternFilterUtils {
 	 * @param patterns a comma-separated list of patterns
 	 */
 	public static <T> Predicate<T> excludeMatchingClasses(String patterns) {
-		return excludeMatchingClasses(patterns, object -> object.getClass().getName());
+		return matchingClasses(patterns, object -> object.getClass().getName(), FilterType.EXCLUDE);
 	}
 
 	/**
@@ -61,26 +61,57 @@ public class ClassNamePatternFilterUtils {
 	 * @param patterns a comma-separated list of patterns
 	 */
 	public static Predicate<String> excludeMatchingClassNames(String patterns) {
-		return excludeMatchingClasses(patterns, Function.identity());
+		return matchingClasses(patterns, Function.identity(), FilterType.EXCLUDE);
 	}
 
-	private static <T> Predicate<T> excludeMatchingClasses(String patterns, Function<T, String> classNameGetter) {
+	/**
+	 * Create a {@link Predicate} that can be used to include (i.e., filter in)
+	 * objects of type {@code T} whose fully qualified class names match any of
+	 * the supplied patterns.
+	 *
+	 * @param patterns a comma-separated list of patterns
+	 */
+	public static <T> Predicate<T> includeMatchingClasses(String patterns) {
+		return matchingClasses(patterns, object -> object.getClass().getName(), FilterType.INCLUDE);
+	}
+
+	/**
+	 * Create a {@link Predicate} that can be used to include (i.e., filter in)
+	 * fully qualified class names matching any of the supplied patterns.
+	 *
+	 * @param patterns a comma-separated list of patterns
+	 */
+	public static Predicate<String> includeMatchingClassNames(String patterns) {
+		return matchingClasses(patterns, Function.identity(), FilterType.INCLUDE);
+	}
+
+	private enum FilterType {
+		INCLUDE, EXCLUDE
+	}
+
+	private static <T> Predicate<T> matchingClasses(String patterns, Function<T, String> classNameProvider,
+			FilterType type) {
 		// @formatter:off
 		return Optional.ofNullable(patterns)
 				.filter(StringUtils::isNotBlank)
 				.map(String::trim)
-				.map(trimmedPatterns -> createPredicateFromPatterns(trimmedPatterns, classNameGetter))
-				.orElse(object -> true);
+				.map(trimmedPatterns -> createPredicateFromPatterns(trimmedPatterns, classNameProvider, type))
+				.orElse(type == FilterType.EXCLUDE ? __ -> true : __ -> false);
 		// @formatter:on
 	}
 
-	private static <T> Predicate<T> createPredicateFromPatterns(String patterns,
-			Function<T, String> classNameProvider) {
-		if (DEACTIVATE_ALL_PATTERN.equals(patterns)) {
-			return object -> false;
+	private static <T> Predicate<T> createPredicateFromPatterns(String patterns, Function<T, String> classNameProvider,
+			FilterType mode) {
+		if (ALL_PATTERN.equals(patterns)) {
+			return __ -> mode == FilterType.INCLUDE;
 		}
+
 		List<Pattern> patternList = convertToRegularExpressions(patterns);
-		return object -> patternList.stream().noneMatch(it -> it.matcher(classNameProvider.apply(object)).matches());
+		return object -> {
+			boolean isMatchingAnyPattern = patternList.stream().anyMatch(
+				pattern -> pattern.matcher(classNameProvider.apply(object)).matches());
+			return (mode == FilterType.INCLUDE) == isMatchingAnyPattern;
+		};
 	}
 
 	private static List<Pattern> convertToRegularExpressions(String patterns) {

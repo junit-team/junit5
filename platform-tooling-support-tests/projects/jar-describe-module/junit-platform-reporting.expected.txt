@@ -8,4 +8,6 @@ requires org.apiguardian.api static transitive
 requires org.junit.platform.commons
 requires org.junit.platform.engine transitive
 requires org.junit.platform.launcher transitive
+requires org.opentest4j.reporting.tooling.spi
 provides org.junit.platform.launcher.TestExecutionListener with org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener
+provides org.opentest4j.reporting.tooling.spi.htmlreport.Contributor with org.junit.platform.reporting.open.xml.JUnitContributor

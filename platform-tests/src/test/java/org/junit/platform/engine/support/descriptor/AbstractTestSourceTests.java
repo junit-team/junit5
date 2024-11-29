@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.TestSource;
 
 /**
@@ -34,7 +33,7 @@ import org.junit.platform.engine.TestSource;
  *
  * @since 1.0
  */
-abstract class AbstractTestSourceTests extends AbstractEqualsAndHashCodeTests {
+abstract class AbstractTestSourceTests {
 
 	abstract Stream<? extends Serializable> createSerializableInstances() throws Exception;
 

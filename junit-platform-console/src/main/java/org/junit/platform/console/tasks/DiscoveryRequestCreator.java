@@ -42,7 +42,6 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
-import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 /**
@@ -50,7 +49,7 @@ import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
  */
 class DiscoveryRequestCreator {
 
-	LauncherDiscoveryRequest toDiscoveryRequest(TestDiscoveryOptions options) {
+	static LauncherDiscoveryRequestBuilder toDiscoveryRequestBuilder(TestDiscoveryOptions options) {
 		LauncherDiscoveryRequestBuilder requestBuilder = request();
 		List<? extends DiscoverySelector> selectors = createDiscoverySelectors(options);
 		requestBuilder.selectors(selectors);
@@ -58,10 +57,10 @@ class DiscoveryRequestCreator {
 		requestBuilder.configurationParameters(options.getConfigurationParameters());
 		requestBuilder.configurationParametersResources(
 			options.getConfigurationParametersResources().toArray(new String[0]));
-		return requestBuilder.build();
+		return requestBuilder;
 	}
 
-	private List<? extends DiscoverySelector> createDiscoverySelectors(TestDiscoveryOptions options) {
+	private static List<? extends DiscoverySelector> createDiscoverySelectors(TestDiscoveryOptions options) {
 		List<DiscoverySelector> explicitSelectors = options.getExplicitSelectors();
 		if (options.isScanClasspath()) {
 			Preconditions.condition(explicitSelectors.isEmpty(),
@@ -77,12 +76,12 @@ class DiscoveryRequestCreator {
 			"Please specify an explicit selector option or use --scan-class-path or --scan-modules");
 	}
 
-	private List<ClasspathRootSelector> createClasspathRootSelectors(TestDiscoveryOptions options) {
+	private static List<ClasspathRootSelector> createClasspathRootSelectors(TestDiscoveryOptions options) {
 		Set<Path> classpathRoots = determineClasspathRoots(options);
 		return selectClasspathRoots(classpathRoots);
 	}
 
-	private Set<Path> determineClasspathRoots(TestDiscoveryOptions options) {
+	private static Set<Path> determineClasspathRoots(TestDiscoveryOptions options) {
 		if (options.getSelectedClasspathEntries().isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
@@ -91,7 +90,7 @@ class DiscoveryRequestCreator {
 		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
 	}
 
-	private void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
+	private static void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,
 			List<? extends DiscoverySelector> selectors) {
 		requestBuilder.filters(includedClassNamePatterns(options, selectors));
 
@@ -133,7 +132,7 @@ class DiscoveryRequestCreator {
 		}
 	}
 
-	private ClassNameFilter includedClassNamePatterns(TestDiscoveryOptions options,
+	private static ClassNameFilter includedClassNamePatterns(TestDiscoveryOptions options,
 			List<? extends DiscoverySelector> selectors) {
 		Stream<String> patternStreams = Stream.concat( //
 			options.getIncludedClassNamePatterns().stream(), //

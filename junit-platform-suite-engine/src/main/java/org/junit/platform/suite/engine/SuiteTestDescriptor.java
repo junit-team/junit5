@@ -26,6 +26,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
@@ -53,15 +54,18 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 
 	private final SuiteLauncherDiscoveryRequestBuilder discoveryRequestBuilder = request();
 	private final ConfigurationParameters configurationParameters;
+	private final OutputDirectoryProvider outputDirectoryProvider;
 	private final Boolean failIfNoTests;
 	private final Class<?> suiteClass;
 
 	private LauncherDiscoveryResult launcherDiscoveryResult;
 	private SuiteLauncher launcher;
 
-	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters) {
+	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
+			OutputDirectoryProvider outputDirectoryProvider) {
 		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
+		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
 	}
@@ -99,6 +103,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 				.enableImplicitConfigurationParameters(false)
 				.parentConfigurationParameters(configurationParameters)
 				.applyConfigurationParametersFromSuite(suiteClass)
+				.outputDirectoryProvider(outputDirectoryProvider)
 				.build();
 		// @formatter:on
 		this.launcher = SuiteLauncher.create();

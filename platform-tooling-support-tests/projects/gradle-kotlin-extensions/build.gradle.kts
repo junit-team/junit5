@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	kotlin("jvm") version "2.0.21"
+	kotlin("jvm") version "2.1.0"
 }
 
 repositories {
@@ -9,12 +9,19 @@ repositories {
 	mavenCentral()
 }
 
-// grab jupiter version from system environment
-val jupiterVersion = System.getenv("JUNIT_JUPITER_VERSION")
+val jupiterVersion: String by project
+val platformVersion: String by project
 
 dependencies {
 	testImplementation(kotlin("stdlib-jdk8"))
 	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+}
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(8)
+	}
 }
 
 tasks.withType<KotlinCompile>().configureEach {

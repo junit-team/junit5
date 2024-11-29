@@ -10,10 +10,12 @@
 
 package org.junit.jupiter.api.extension;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,6 +27,7 @@ import java.util.function.Function;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -363,6 +366,22 @@ public interface ExtensionContext {
 	default void publishReportEntry(String value) {
 		this.publishReportEntry("value", value);
 	}
+
+	/**
+	 * Publish a file with the supplied name written by the supplied action and
+	 * attach it to the current test or container.
+	 * <p>
+	 * The file will be resolved in the report output directory prior to
+	 * invoking the supplied action.
+	 *
+	 * @param fileName the name of the file to be attached; never {@code null} or blank
+	 *                 and must not contain any path separators
+	 * @param action   the action to be executed to write the file; never {@code null}
+	 * @since 5.12
+	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	void publishFile(String fileName, ThrowingConsumer<Path> action);
 
 	/**
 	 * Get the {@link Store} for the supplied {@link Namespace}.

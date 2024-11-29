@@ -34,7 +34,7 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@4f3212b61783c3c68e8309a0f18a699764811cda # v3
+      uses: github/codeql-action/init@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3
       with:
         languages: ${{ matrix.language }}
         tools: linked
@@ -47,4 +47,4 @@ jobs:
           -Dscan.tag.CodeQL \
           allMainClasses
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@4f3212b61783c3c68e8309a0f18a699764811cda # v3
+      uses: github/codeql-action/analyze@f09c1c0a94de965c15400f5634aa42fac8fb8f88 # v3

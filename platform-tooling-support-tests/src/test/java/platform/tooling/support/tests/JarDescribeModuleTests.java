@@ -11,27 +11,20 @@
 package platform.tooling.support.tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static platform.tooling.support.tests.Projects.getSourceDirectory;
 
 import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Collectors;
-
-import de.sormuras.bartholdy.jdk.Jar;
 
 import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
+import platform.tooling.support.ProcessStarters;
 
 /**
  * @since 1.3
@@ -39,32 +32,23 @@ import platform.tooling.support.Request;
 @Order(Integer.MAX_VALUE)
 class JarDescribeModuleTests {
 
-	@ResourceLock(Projects.JAR_DESCRIBE_MODULE)
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void describeModule(String module) throws Exception {
+		var sourceDirectory = getSourceDirectory(Projects.JAR_DESCRIBE_MODULE);
 		var modulePath = MavenRepo.jar(module);
-		var result = Request.builder() //
-				.setTool(new Jar()) //
-				.setProject(Projects.JAR_DESCRIBE_MODULE) //
-				.setProjectToWorkspaceCopyFileFilter(file -> file.getName().startsWith(module)) //
-				.setWorkspace("jar-describe-module/" + module) //
-				.addArguments("--describe-module", "--file", modulePath) //
-				.build() //
-				.run();
 
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
+		var result = ProcessStarters.javaCommand("jar") //
+				.workingDir(sourceDirectory) //
+				.addArguments("--describe-module", "--file", modulePath.toAbsolutePath().toString()) //
+				.startAndWait();
 
-		assertEquals(0, result.getExitCode());
-		assertEquals("", result.getOutput("err"), "error log isn't empty");
-		var expected = Paths.get("build", "test-workspace", "jar-describe-module", module, module + ".expected.txt");
-		if (Files.notExists(expected)) {
-			result.getOutputLines("out").forEach(System.err::println);
-			fail("No such file: " + expected);
-		}
-		var expectedLines = Files.lines(expected).map(Helper::replaceVersionPlaceholders).collect(Collectors.toList());
-		var origin = Path.of("projects", "jar-describe-module", module + ".expected.txt").toUri();
-		assertLinesMatch(expectedLines, result.getOutputLines("out"), () -> String.format("%s\nError", origin));
+		assertEquals(0, result.exitCode());
+		assertEquals("", result.stdErr(), "error log isn't empty");
+
+		var expectedLines = replaceVersionPlaceholders(
+			Files.readString(sourceDirectory.resolve(module + ".expected.txt")).trim());
+		assertLinesMatch(expectedLines.lines().toList(), result.stdOut().trim().lines().toList());
 	}
 
 	@ParameterizedTest
@@ -76,6 +60,13 @@ class JarDescribeModuleTests {
 		for (var packageName : moduleDescriptor.packages()) {
 			assertTrue(packageName.startsWith(moduleName));
 		}
+	}
+
+	private static String replaceVersionPlaceholders(String line) {
+		line = line.replace("${jupiterVersion}", Helper.version("junit-jupiter"));
+		line = line.replace("${vintageVersion}", Helper.version("junit-vintage"));
+		line = line.replace("${platformVersion}", Helper.version("junit-platform"));
+		return line;
 	}
 
 }

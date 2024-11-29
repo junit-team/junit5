@@ -10,6 +10,7 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -80,6 +82,17 @@ public class ExecutionRecorder implements EngineExecutionListener {
 	@Override
 	public void reportingEntryPublished(TestDescriptor testDescriptor, ReportEntry entry) {
 		this.events.add(Event.reportingEntryPublished(testDescriptor, entry));
+	}
+
+	/**
+	 * Record an {@link Event} for a published {@link FileEntry}.
+	 *
+	 * @since 1.12
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	@Override
+	public void fileEntryPublished(TestDescriptor testDescriptor, FileEntry file) {
+		this.events.add(Event.fileEntryPublished(testDescriptor, file));
 	}
 
 	/**

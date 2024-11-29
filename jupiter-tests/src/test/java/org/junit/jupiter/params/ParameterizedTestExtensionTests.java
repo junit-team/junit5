@@ -22,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -34,6 +35,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
+import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
@@ -276,6 +278,10 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
+			public void publishFile(String fileName, ThrowingConsumer<Path> action) {
+			}
+
+			@Override
 			public Store getStore(Namespace namespace) {
 				var store = new NamespaceAwareStore(this.store, namespace);
 				method //
@@ -325,7 +331,7 @@ class ParameterizedTestExtensionTests {
 
 	static class TestCaseAllowNoArgumentsMethod {
 
-		@ParameterizedTest(requireArguments = false)
+		@ParameterizedTest(allowZeroInvocations = true)
 		void method() {
 		}
 	}

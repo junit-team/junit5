@@ -19,6 +19,7 @@ module org.junit.platform.reporting {
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;
+	requires org.opentest4j.reporting.tooling.spi;
 
 	// exports org.junit.platform.reporting; empty package
 	exports org.junit.platform.reporting.legacy;
@@ -27,4 +28,7 @@ module org.junit.platform.reporting {
 
 	provides org.junit.platform.launcher.TestExecutionListener
 			with org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener;
+
+	provides org.opentest4j.reporting.tooling.spi.htmlreport.Contributor
+			with org.junit.platform.reporting.open.xml.JUnitContributor;
 }

@@ -10,8 +10,9 @@
 
 package org.junit.platform.engine.discovery;
 
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
+
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.engine.UniqueId;
 
 /**
@@ -20,7 +21,7 @@ import org.junit.platform.engine.UniqueId;
  * @since 1.3
  * @see DiscoverySelectorsTests
  */
-class UniqueIdSelectorTests extends AbstractEqualsAndHashCodeTests {
+class UniqueIdSelectorTests {
 
 	@Test
 	void equalsAndHashCode() {

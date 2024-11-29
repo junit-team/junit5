@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -26,6 +27,8 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.launcher.core.OutputDirectoryProviders;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
 import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
@@ -40,10 +43,13 @@ class SuiteTestDescriptorTests {
 	final UniqueId jupiterEngineId = suiteId.append("engine", JupiterEngineDescriptor.ENGINE_ID);
 	final UniqueId testClassId = jupiterEngineId.append(ClassTestDescriptor.SEGMENT_TYPE,
 		SingleTestTestCase.class.getName());
-	final UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+	final UniqueId methodId = testClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE,
+		"test(%s)".formatted(TestReporter.class.getName()));
 
 	final ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
-	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters);
+	final OutputDirectoryProvider outputDirectoryProvider = OutputDirectoryProviders.dummyOutputDirectoryProvider();
+	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters,
+		outputDirectoryProvider);
 
 	@Test
 	void suiteIsEmptyBeforeDiscovery() {

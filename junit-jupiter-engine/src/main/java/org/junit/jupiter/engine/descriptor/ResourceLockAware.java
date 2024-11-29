@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.jupiter.api.parallel.ResourceLockTarget.CHILDREN;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Set;
@@ -37,11 +39,15 @@ interface ResourceLockAware extends TestDescriptor {
 			return determineOwnExclusiveResources();
 		}
 
+		Stream<ExclusiveResource> parentStaticResourcesForChildren = ancestors.getLast() //
+				.getExclusiveResourceCollector().getStaticResourcesFor(CHILDREN);
+
 		Stream<ExclusiveResource> ancestorDynamicResources = ancestors.stream() //
 				.map(ResourceLockAware::getExclusiveResourceCollector) //
 				.flatMap(collector -> collector.getDynamicResources(this::evaluateResourceLocksProvider));
 
-		return Stream.concat(ancestorDynamicResources, determineOwnExclusiveResources());
+		return Stream.of(ancestorDynamicResources, parentStaticResourcesForChildren, determineOwnExclusiveResources())//
+				.flatMap(s -> s);
 	}
 
 	default Stream<ExclusiveResource> determineOwnExclusiveResources() {

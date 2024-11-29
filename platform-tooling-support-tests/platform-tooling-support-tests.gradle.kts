@@ -13,7 +13,7 @@ plugins {
 }
 
 javaLibrary {
-	mainJavaVersion = JavaVersion.VERSION_11
+	mainJavaVersion = JavaVersion.VERSION_21
 }
 
 spotless {
@@ -44,11 +44,16 @@ val mavenDistributionClasspath = configurations.resolvable("mavenDistributionCla
 }
 
 dependencies {
-	implementation(libs.bartholdy) {
-		because("manage external tool installations")
-	}
 	implementation(libs.commons.io) {
 		because("moving/deleting directory trees")
+	}
+	implementation(projects.platformTests) {
+		capabilities {
+			requireFeature("process-starter")
+		}
+	}
+	implementation(projects.junitJupiterApi) {
+		because("it uses the OS enum to support Windows")
 	}
 
 	testImplementation(libs.archunit) {
@@ -56,9 +61,6 @@ dependencies {
 	}
 	testImplementation(libs.apiguardian) {
 		because("we validate that public classes are annotated")
-	}
-	testImplementation(libs.groovy4) {
-		because("it provides convenience methods to handle process output")
 	}
 	testImplementation(libs.bndlib) {
 		because("parsing OSGi metadata")
@@ -71,12 +73,14 @@ dependencies {
 	}
 	testImplementation(libs.bundles.xmlunit)
 	testImplementation(testFixtures(projects.junitJupiterApi))
+	testImplementation(testFixtures(projects.junitPlatformReporting))
 
 	thirdPartyJars(libs.junit4)
 	thirdPartyJars(libs.assertj)
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
 	thirdPartyJars(libs.opentest4j)
+	thirdPartyJars(libs.openTestReporting.tooling.spi)
 	thirdPartyJars(libs.jimfs)
 
 	antJars(platform(projects.junitBom))
@@ -108,7 +112,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 	val tempRepoName: String by rootProject
 
 	// All maven-aware projects must be published to the local temp repository
-	(mavenizedProjects + projects.junitBom.dependencyProject)
+	(mavenizedProjects + dependencyProject(projects.junitBom))
 		.map { project -> project.tasks.named("publishAllPublicationsTo${tempRepoName.capitalized()}Repository") }
 		.forEach { dependsOn(it) }
 
@@ -138,6 +142,7 @@ tasks.test {
 		dependsOn(normalizeMavenRepo)
 		jvmArgumentProviders += MavenRepo(project, normalizeMavenRepo.map { it.destinationDir })
 	}
+	environment.remove("JAVA_TOOL_OPTIONS")
 
 	jvmArgumentProviders += JarPath(project, thirdPartyJarsClasspath.get(), "thirdPartyJars")
 	jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
@@ -168,6 +173,10 @@ tasks.test {
 		}
 	}
 	jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
+
+	val gradleJavaVersion = JavaVersion.current().majorVersion.toInt()
+	jvmArgumentProviders += JavaHomeDir(project, gradleJavaVersion, develocity.testDistribution.enabled)
+	systemProperty("gradle.java.version", gradleJavaVersion)
 }
 
 class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : CommandLineArgumentProvider {

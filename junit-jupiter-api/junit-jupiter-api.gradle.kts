@@ -15,6 +15,8 @@ dependencies {
 
 	compileOnly(kotlin("stdlib"))
 
+	testFixturesImplementation(libs.assertj)
+
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
 }

@@ -4,7 +4,7 @@ inputs:
   arguments:
     required: true
     description: Gradle arguments
-    default: :platform-tooling-support-tests:test build --configuration-cache
+    default: :platform-tooling-support-tests:test build --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
   encryptionKey:
     required: true
     description: Gradle cache encryption key
@@ -16,3 +16,8 @@ runs:
       with:
         arguments: ${{ inputs.arguments }}
         encryptionKey: ${{ inputs.encryptionKey }}
+    - uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4
+      if: ${{ always() }}
+      with:
+        name: Open Test Reports (${{ github.job }})
+        path: '**/build/reports/open-test-report.html'

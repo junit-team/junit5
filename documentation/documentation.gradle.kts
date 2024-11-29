@@ -6,6 +6,7 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.jetbrains.kotlin.incremental.deleteRecursivelyOrThrow
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -144,23 +145,38 @@ require(externalModulesWithoutModularJavadoc.values.all { it.endsWith("/") }) {
 
 tasks {
 
+	val consoleLauncherTestReportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
+	val consoleLauncherTestEventXmlFiles =
+		files(consoleLauncherTestReportsDir.map { it.asFileTree.matching { include("**/open-test-report.xml") } })
+
 	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
 		args.addAll("execute")
 		args.addAll("--scan-classpath")
 		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
-		val reportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
-		outputs.dir(reportsDir)
+		outputs.dir(consoleLauncherTestReportsDir)
 		argumentProviders.add(CommandLineArgumentProvider {
 			listOf(
-				"--reports-dir=${reportsDir.get()}",
-				"--config=junit.platform.reporting.output.dir=${reportsDir.get()}"
-
+				"--reports-dir=${consoleLauncherTestReportsDir.get()}",
 			)
 		})
 		args.addAll("--include-classname", ".*Tests")
 		args.addAll("--include-classname", ".*Demo")
 		args.addAll("--exclude-tag", "exclude")
 		args.addAll("--exclude-tag", "timeout")
+
+		doFirst {
+			consoleLauncherTestReportsDir.get().asFile.deleteRecursivelyOrThrow()
+		}
+
+		finalizedBy(generateOpenTestHtmlReport)
+	}
+
+	generateOpenTestHtmlReport {
+		mustRunAfter(consoleLauncherTest)
+		inputs.files(consoleLauncherTestEventXmlFiles).withPathSensitivity(RELATIVE).skipWhenEmpty()
+		argumentProviders += CommandLineArgumentProvider {
+			consoleLauncherTestEventXmlFiles.files.map { it.absolutePath }.toList()
+		}
 	}
 
 	register<RunConsoleLauncher>("consoleLauncher") {
@@ -535,14 +551,14 @@ tasks {
 
 eclipse {
 	classpath {
-		plusConfigurations.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
-		plusConfigurations.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
+		plusConfigurations.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }
 
 idea {
 	module {
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitPlatformConsole.dependencyProject.configurations["shadowedClasspath"])
-		scopes["PROVIDED"]!!["plus"]!!.add(projects.junitJupiterParams.dependencyProject.configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
+		scopes["PROVIDED"]!!["plus"]!!.add(dependencyProject(projects.junitJupiterParams).configurations["shadowedClasspath"])
 	}
 }

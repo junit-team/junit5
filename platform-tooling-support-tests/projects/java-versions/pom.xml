@@ -9,8 +9,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.jupiter.version>${env.JUNIT_JUPITER_VERSION}</junit.jupiter.version>
-        <junit.platform.version>${env.JUNIT_PLATFORM_VERSION}</junit.platform.version>
     </properties>
 
     <dependencies>
@@ -53,9 +51,11 @@
             <url>file://${maven.repo}</url>
             <snapshots>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </snapshots>
             <releases>
                 <enabled>true</enabled>
+                <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
     </repositories>

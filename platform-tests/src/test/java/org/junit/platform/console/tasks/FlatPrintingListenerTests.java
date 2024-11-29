@@ -18,11 +18,13 @@ import static org.junit.platform.engine.TestExecutionResult.failed;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.file.Path;
 
 import org.assertj.core.util.Maps;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.launcher.TestIdentifier;
@@ -58,6 +60,19 @@ class FlatPrintingListenerTests {
 			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
 			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported values: ReportEntry [timestamp =")), //
 			() -> assertTrue(lines[1].endsWith(", foo = 'bar']")));
+	}
+
+	@Test
+	void fileEntryPublished() {
+		var stringWriter = new StringWriter();
+		listener(stringWriter).fileEntryPublished(newTestIdentifier(), FileEntry.from(Path.of("test.txt")));
+		var lines = lines(stringWriter);
+
+		assertEquals(2, lines.length);
+		assertAll("lines in the output", //
+			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
+			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported file: FileEntry [timestamp =")), //
+			() -> assertTrue(lines[1].endsWith(", file = test.txt]")));
 	}
 
 	@Test
