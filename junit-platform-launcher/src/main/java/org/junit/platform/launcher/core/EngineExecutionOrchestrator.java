@@ -195,7 +195,7 @@ public class EngineExecutionOrchestrator {
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
-			testEngine.execute(new ExecutionRequest(engineDescriptor, delayingListener, configurationParameters));
+			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters));
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {

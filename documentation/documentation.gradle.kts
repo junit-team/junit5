@@ -6,7 +6,7 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import java.nio.file.Files
+import org.jetbrains.kotlin.incremental.deleteRecursivelyOrThrow
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -147,7 +147,7 @@ tasks {
 
 	val consoleLauncherTestReportsDir = project.layout.buildDirectory.dir("console-launcher-test-results")
 	val consoleLauncherTestEventXmlFiles =
-		files(consoleLauncherTestReportsDir.map { it.asFileTree.matching { include("junit-platform-events-*.xml") } })
+		files(consoleLauncherTestReportsDir.map { it.asFileTree.matching { include("**/open-test-report.xml") } })
 
 	val consoleLauncherTest by registering(RunConsoleLauncher::class) {
 		args.addAll("execute")
@@ -157,7 +157,6 @@ tasks {
 		argumentProviders.add(CommandLineArgumentProvider {
 			listOf(
 				"--reports-dir=${consoleLauncherTestReportsDir.get()}",
-				"--config=junit.platform.reporting.output.dir=${consoleLauncherTestReportsDir.get()}",
 			)
 		})
 		args.addAll("--include-classname", ".*Tests")
@@ -166,9 +165,7 @@ tasks {
 		args.addAll("--exclude-tag", "timeout")
 
 		doFirst {
-			consoleLauncherTestEventXmlFiles.files.forEach {
-				Files.delete(it.toPath())
-			}
+			consoleLauncherTestReportsDir.get().asFile.deleteRecursivelyOrThrow()
 		}
 
 		finalizedBy(generateOpenTestHtmlReport)
@@ -176,6 +173,7 @@ tasks {
 
 	generateOpenTestHtmlReport {
 		mustRunAfter(consoleLauncherTest)
+		inputs.files(consoleLauncherTestEventXmlFiles).withPathSensitivity(RELATIVE).skipWhenEmpty()
 		argumentProviders += CommandLineArgumentProvider {
 			consoleLauncherTestEventXmlFiles.files.map { it.absolutePath }.toList()
 		}

@@ -33,14 +33,16 @@ import java.util.Set;
 import java.util.spi.ToolProvider;
 import java.util.stream.StreamSupport;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
+import org.junit.jupiter.api.io.TempDir;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
 import platform.tooling.support.ThirdPartyJars;
 
 /**
@@ -49,12 +51,13 @@ import platform.tooling.support.ThirdPartyJars;
 @Order(Integer.MAX_VALUE)
 class ToolProviderTests {
 
-	private static final Path LIB = Request.WORKSPACE.resolve("tool-provider-tests/lib");
+	@TempDir
+	static Path lib;
 
 	@BeforeAll
 	static void prepareLocalLibraryDirectoryWithJUnitPlatformModules() {
 		try {
-			var lib = Files.createDirectories(LIB);
+			Files.createDirectories(lib);
 			try (var directoryStream = Files.newDirectoryStream(lib, "*.jar")) {
 				for (Path jarFile : directoryStream) {
 					Files.delete(jarFile);
@@ -75,13 +78,21 @@ class ToolProviderTests {
 		}
 	}
 
+	@AfterAll
+	static void triggerReleaseOfFileHandlesOnWindows() throws Exception {
+		if (OS.current() == OS.WINDOWS) {
+			System.gc();
+			Thread.sleep(1_000);
+		}
+	}
+
 	@Test
 	void findAndRunJUnitOnTheClassPath() {
-		try (var loader = new URLClassLoader("junit", urls(LIB), ClassLoader.getPlatformClassLoader())) {
+		try (var loader = new URLClassLoader("junit", urls(lib), ClassLoader.getPlatformClassLoader())) {
 			var sl = ServiceLoader.load(ToolProvider.class, loader);
 			var junit = StreamSupport.stream(sl.spliterator(), false).filter(p -> p.name().equals("junit")).findFirst();
 
-			assertTrue(junit.isPresent(), "Tool 'junit' not found in: " + LIB);
+			assertTrue(junit.isPresent(), "Tool 'junit' not found in: " + lib);
 			assertJUnitPrintsHelpMessage(junit.get());
 		}
 		catch (IOException e) {
@@ -92,7 +103,7 @@ class ToolProviderTests {
 	@Test
 	@DisabledOnOpenJ9
 	void findAndRunJUnitOnTheModulePath() {
-		var finder = ModuleFinder.of(LIB);
+		var finder = ModuleFinder.of(lib);
 		var modules = finder.findAll().stream() //
 				.map(ModuleReference::descriptor) //
 				.map(ModuleDescriptor::toNameAndVersion) //

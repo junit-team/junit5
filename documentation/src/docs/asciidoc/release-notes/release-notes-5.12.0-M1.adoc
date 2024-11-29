@@ -16,8 +16,8 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Fix support for disabling ANSI colors on the console when the `NO_COLOR` environment
-  variable is available.
+* Enable auto-flushing of output in the `ConsoleLauncher` to fix issues with buffering,
+  in particular when using the `--details=testfeed` option.
 
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -38,11 +38,16 @@ JUnit repository on GitHub.
   `--select-file` and `--select-resource`.
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
 * Add `--select-unique-id` support to ConsoleLauncher.
+* Add `getOutputDirectoryProvider()` method to `EngineDiscoveryRequest` and `TestPlan` to
+  allow test engines to publish/attach files to containers and tests by calling
+  `EngineExecutionListener.fileEntryPublished(...)`. Registered `TestExecutionListeners`
+  can then access these files by overriding the `fileEntryPublished(...)` method.
 * The following improvements have been made to the open-test-reporting XML output:
   - Information about the Git repository, the current branch, the commit hash, and the
     current worktree status are now included in the XML report, if applicable.
   - A section containing JUnit-specific metadata about each test/container to the HTML
     report is now written by open-test-reporting when added to the classpath/module path
+  - Information about published files is now included as attachments.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
@@ -85,10 +90,13 @@ JUnit repository on GitHub.
 * Extensions based on `TestTemplateInvocationContextProvider` can now allow returning zero
   invocation contexts by overriding the new `mayReturnZeroTestTemplateInvocationContexts`
   method.
-* The new `@ParameterizedTest(requireArguments = false)` attribute allows to specify that
-  the absence of arguments is expected in some cases and should not cause a test failure.
+* The new `@ParameterizedTest(allowZeroInvocations = true)` attribute allows to specify that
+  the absence of invocations is expected in some cases and should not cause a test failure.
 * Allow determining "shared resources" at runtime via the new `@ResourceLock#providers`
   attribute that accepts implementations of `ResourceLocksProvider`.
+* Allow declaring "shared resources" for _direct_ child nodes via the new
+  `@ResourceLock(target = CHILDREN)` attribute. This may improve parallelization when
+  a test class declares a `READ` lock, but only a few methods hold a `READ_WRITE` lock.
 * Extensions that implement `TestInstancePreConstructCallback`, `TestInstanceFactory`,
   `TestInstancePostProcessor`, `ParameterResolver`, or `InvocationInterceptor` may
   override the `getTestInstantiationExtensionContextScope()` method to enable receiving
@@ -107,6 +115,8 @@ JUnit repository on GitHub.
 * When enabled via the `junit.jupiter.execution.timeout.threaddump.enabled` configuration
   parameter, an implementation of `PreInterruptCallback` is registered that writes a
   thread dump to `System.out` prior to interrupting a test thread due to a timeout.
+* `TestReporter` now allows publishing files for a test method or test class which can be
+  used to include them in test reports, such as the Open Test Reporting format.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]

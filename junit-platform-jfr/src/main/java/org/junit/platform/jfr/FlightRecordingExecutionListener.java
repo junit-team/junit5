@@ -26,6 +26,7 @@ import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
@@ -97,6 +98,14 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 		}
 	}
 
+	@Override
+	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
+		FileEntryEvent event = new FileEntryEvent();
+		event.uniqueId = testIdentifier.getUniqueId();
+		event.path = file.getFile().toAbsolutePath().toString();
+		event.commit();
+	}
+
 	@Category({ "JUnit", "Execution" })
 	@StackTrace(false)
 	abstract static class ExecutionEvent extends Event {
@@ -158,5 +167,15 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 		String key;
 		@Label("Value")
 		String value;
+	}
+
+	@Label("File Entry")
+	@Name("org.junit.FileEntry")
+	static class FileEntryEvent extends ExecutionEvent {
+		@UniqueId
+		@Label("Unique Id")
+		String uniqueId;
+		@Label("Path")
+		String path;
 	}
 }

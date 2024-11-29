@@ -77,7 +77,7 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 					Preconditions.condition(maxPoolSizeFactor.compareTo(BigDecimal.ONE) >= 0,
 						() -> String.format(
 							"Factor '%s' specified via configuration parameter '%s' must be greater than or equal to 1",
-							factor, CONFIG_DYNAMIC_FACTOR_PROPERTY_NAME));
+							factor, CONFIG_DYNAMIC_MAX_POOL_SIZE_FACTOR_PROPERTY_NAME));
 					return maxPoolSizeFactor.multiply(BigDecimal.valueOf(parallelism)).intValue();
 				}).orElseGet(() -> 256 + parallelism);
 

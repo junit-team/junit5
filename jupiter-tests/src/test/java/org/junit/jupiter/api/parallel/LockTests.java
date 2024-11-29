@@ -8,22 +8,22 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.engine.support.descriptor;
+package org.junit.jupiter.api.parallel;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.ResourceLocksProvider.Lock;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 
 /**
  * Unit tests for {@link Lock}.
  *
  * @since 5.12
  */
-class LockTests extends AbstractEqualsAndHashCodeTests {
+class LockTests {
 
 	@Test
 	void readWriteModeSetByDefault() {

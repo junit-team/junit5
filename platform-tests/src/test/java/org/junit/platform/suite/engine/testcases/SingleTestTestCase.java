@@ -10,7 +10,10 @@
 
 package org.junit.platform.suite.engine.testcases;
 
+import java.nio.file.Files;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestReporter;
 
 /**
  * @since 1.8
@@ -18,6 +21,7 @@ import org.junit.jupiter.api.Test;
 public class SingleTestTestCase {
 
 	@Test
-	void test() {
+	void test(TestReporter testReporter) {
+		testReporter.publishFile("test.txt", file -> Files.writeString(file, "test"));
 	}
 }

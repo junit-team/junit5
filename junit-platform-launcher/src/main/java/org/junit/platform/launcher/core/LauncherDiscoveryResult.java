@@ -23,6 +23,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
 /**
  * Represents the result of test discovery of the configured
@@ -35,11 +36,13 @@ public class LauncherDiscoveryResult {
 
 	private final Map<TestEngine, TestDescriptor> testEngineDescriptors;
 	private final ConfigurationParameters configurationParameters;
+	private final OutputDirectoryProvider outputDirectoryProvider;
 
 	LauncherDiscoveryResult(Map<TestEngine, TestDescriptor> testEngineDescriptors,
-			ConfigurationParameters configurationParameters) {
+			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
 		this.testEngineDescriptors = unmodifiableMap(new LinkedHashMap<>(testEngineDescriptors));
 		this.configurationParameters = configurationParameters;
+		this.outputDirectoryProvider = outputDirectoryProvider;
 	}
 
 	public TestDescriptor getEngineTestDescriptor(TestEngine testEngine) {
@@ -47,7 +50,11 @@ public class LauncherDiscoveryResult {
 	}
 
 	ConfigurationParameters getConfigurationParameters() {
-		return configurationParameters;
+		return this.configurationParameters;
+	}
+
+	OutputDirectoryProvider getOutputDirectoryProvider() {
+		return this.outputDirectoryProvider;
 	}
 
 	public Collection<TestEngine> getTestEngines() {
@@ -60,15 +67,16 @@ public class LauncherDiscoveryResult {
 
 	public LauncherDiscoveryResult withRetainedEngines(Predicate<? super TestDescriptor> predicate) {
 		Map<TestEngine, TestDescriptor> prunedTestEngineDescriptors = retainEngines(predicate);
-		if (prunedTestEngineDescriptors.size() < testEngineDescriptors.size()) {
-			return new LauncherDiscoveryResult(prunedTestEngineDescriptors, configurationParameters);
+		if (prunedTestEngineDescriptors.size() < this.testEngineDescriptors.size()) {
+			return new LauncherDiscoveryResult(prunedTestEngineDescriptors, this.configurationParameters,
+				this.outputDirectoryProvider);
 		}
 		return this;
 	}
 
 	private Map<TestEngine, TestDescriptor> retainEngines(Predicate<? super TestDescriptor> predicate) {
 		// @formatter:off
-		return testEngineDescriptors.entrySet()
+		return this.testEngineDescriptors.entrySet()
 				.stream()
 				.filter(entry -> predicate.test(entry.getValue()))
 				.collect(toMap(Map.Entry::getKey, Map.Entry::getValue));

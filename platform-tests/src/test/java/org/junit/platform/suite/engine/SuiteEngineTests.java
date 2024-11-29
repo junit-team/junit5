@@ -10,9 +10,11 @@
 
 package org.junit.platform.suite.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
+import static org.junit.platform.launcher.core.OutputDirectoryProviders.hierarchicalOutputDirectoryProvider;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -24,7 +26,10 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
@@ -65,11 +70,15 @@ import org.junit.platform.testkit.engine.EngineTestKit;
  */
 class SuiteEngineTests {
 
+	@TempDir
+	private Path outputDir;
+
 	@Test
 	void selectClasses() {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(SelectClassesSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -168,6 +177,7 @@ class SuiteEngineTests {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(SuiteSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -184,6 +194,7 @@ class SuiteEngineTests {
 				.append(SuiteTestDescriptor.SEGMENT_TYPE, SelectClassesSuite.class.getName());
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectUniqueId(uniqId))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -239,6 +250,7 @@ class SuiteEngineTests {
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectUniqueId(uniqueId))
 				.selectors(selectClass(SelectClassesSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -391,6 +403,7 @@ class SuiteEngineTests {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(CyclicSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.allEvents()
 				.assertThatEvents()
@@ -417,6 +430,7 @@ class SuiteEngineTests {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(ThreePartCyclicSuite.PartA.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.allEvents()
 				.assertThatEvents()
@@ -429,12 +443,28 @@ class SuiteEngineTests {
 		// @formatter:off
 		EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(SelectByIdentifierSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
 				.execute()
 				.testEvents()
 				.assertThatEvents()
 				.haveExactly(1, event(test(SelectByIdentifierSuite.class.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
+	}
+
+	@Test
+	void passesOutputDirectoryProviderToEnginesInSuite() {
+		// @formatter:off
+		EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SelectClassesSuite.class))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
+		// @formatter:on
+
+		assertThat(outputDir).isDirectoryRecursivelyContaining("glob:**/test.txt");
 	}
 
 	@Suite

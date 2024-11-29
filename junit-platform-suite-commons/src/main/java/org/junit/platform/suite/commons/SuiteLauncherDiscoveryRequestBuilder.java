@@ -41,6 +41,7 @@ import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
@@ -258,6 +259,12 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 */
 	public SuiteLauncherDiscoveryRequestBuilder enableImplicitConfigurationParameters(boolean enabled) {
 		this.delegate.enableImplicitConfigurationParameters(enabled);
+		return this;
+	}
+
+	public SuiteLauncherDiscoveryRequestBuilder outputDirectoryProvider(
+			OutputDirectoryProvider outputDirectoryProvider) {
+		delegate.outputDirectoryProvider(outputDirectoryProvider);
 		return this;
 	}
 

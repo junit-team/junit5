@@ -359,8 +359,7 @@ class DiscoveryRequestCreatorTests {
 	}
 
 	private LauncherDiscoveryRequest convert() {
-		var creator = new DiscoveryRequestCreator();
-		return creator.toDiscoveryRequest(options);
+		return DiscoveryRequestCreator.toDiscoveryRequestBuilder(options).build();
 	}
 
 	private void assertIncludes(Filter<String> filter, String included) {

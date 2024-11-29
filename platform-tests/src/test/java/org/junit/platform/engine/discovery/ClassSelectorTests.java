@@ -12,9 +12,9 @@ package org.junit.platform.engine.discovery;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.AbstractEqualsAndHashCodeTests;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -23,7 +23,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  * @since 1.3
  * @see DiscoverySelectorsTests
  */
-class ClassSelectorTests extends AbstractEqualsAndHashCodeTests {
+class ClassSelectorTests {
 
 	@Test
 	void equalsAndHashCode() {

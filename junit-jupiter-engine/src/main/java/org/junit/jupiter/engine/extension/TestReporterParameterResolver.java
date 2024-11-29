@@ -34,7 +34,7 @@ class TestReporterParameterResolver implements ParameterResolver {
 
 	@Override
 	public TestReporter resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return extensionContext::publishReportEntry;
+		return new DefaultTestReporter(extensionContext);
 	}
 
 }

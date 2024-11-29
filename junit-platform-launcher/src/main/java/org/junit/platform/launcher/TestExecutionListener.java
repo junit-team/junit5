@@ -10,12 +10,14 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 
 /**
@@ -184,4 +186,15 @@ public interface TestExecutionListener {
 	default void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
 	}
 
+	/**
+	 * Called when a file has been published for the supplied {@link TestIdentifier}.
+	 *
+	 * <p>Can be called at any time during the execution of a test plan.
+	 *
+	 * @param testIdentifier describes the test or container to which the entry pertains
+	 * @param file the published {@code FileEntry}
+	 */
+	@API(status = EXPERIMENTAL, since = "1.12")
+	default void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
+	}
 }

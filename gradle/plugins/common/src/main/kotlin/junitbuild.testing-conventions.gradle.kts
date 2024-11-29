@@ -1,15 +1,19 @@
 
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
-import org.gradle.api.tasks.PathSensitivity.NONE
+import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
-import java.nio.file.Files
 
 plugins {
 	`java-library`
 	id("junitbuild.build-parameters")
+}
+
+var javaAgent = configurations.dependencyScope("javaAgent")
+var javaAgentClasspath = configurations.resolvable("javaAgentClasspath") {
+	extendsFrom(javaAgent.get())
 }
 
 var openTestReportingCli = configurations.dependencyScope("openTestReportingCli")
@@ -26,7 +30,7 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 		eventXmlFiles.from(tasks.withType<Test>().map {
 			objects.fileTree()
 				.from(it.reports.junitXml.outputLocation)
-				.include("junit-platform-events-*.xml")
+				.include("junit-*/open-test-report.xml")
 		})
 		outputLocation = layout.buildDirectory.file("reports/open-test-report.html")
 	}
@@ -36,7 +40,8 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 abstract class HtmlReportParameters : CommandLineArgumentProvider {
 
 	@get:InputFiles
-	@get:PathSensitive(NONE)
+	@get:PathSensitive(RELATIVE)
+	@get:SkipWhenEmpty
 	abstract val eventXmlFiles: ConfigurableFileCollection
 
 	@get:OutputFile
@@ -113,14 +118,20 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
-			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}"
+			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}/junit-{uniqueNumber}",
 		)
 	}
 
-	val reportFiles = objects.fileTree().from(reports.junitXml.outputLocation).matching { include("junit-platform-events-*.xml") }
+	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
+		classpath.from(javaAgentClasspath)
+	}
+
+	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
-		reportFiles.files.forEach {
-			Files.delete(it.toPath())
+		reportDirTree.visit {
+			if (name.startsWith("junit-")) {
+				file.deleteRecursively()
+			}
 		}
 	}
 
@@ -129,7 +140,7 @@ tasks.withType<Test>().configureEach {
 
 dependencies {
 	testImplementation(dependencyFromLibs("assertj"))
-	testImplementation(dependencyFromLibs("mockito"))
+	testImplementation(dependencyFromLibs("mockito-junit-jupiter"))
 	testImplementation(dependencyFromLibs("testingAnnotations"))
 	testImplementation(project(":junit-jupiter"))
 
@@ -147,4 +158,17 @@ dependencies {
 
 	openTestReportingCli(dependencyFromLibs("openTestReporting-cli"))
 	openTestReportingCli(project(":junit-platform-reporting"))
+
+	javaAgent(dependencyFromLibs("mockito-core")) {
+		isTransitive = false
+	}
+}
+
+abstract class JavaAgentArgumentProvider : CommandLineArgumentProvider {
+
+	@get:Classpath
+	abstract val classpath: ConfigurableFileCollection
+
+	override fun asArguments() = listOf("-javaagent:${classpath.singleFile.absolutePath}")
+
 }

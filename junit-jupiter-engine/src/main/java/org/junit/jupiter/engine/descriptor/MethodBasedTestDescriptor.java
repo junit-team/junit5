@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.parallel.ResourceLockTarget.CHILDREN;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
@@ -82,7 +84,15 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 	@Override
 	public ExclusiveResourceCollector getExclusiveResourceCollector() {
 		// There's no need to cache this as this method should only be called once
-		return ExclusiveResourceCollector.from(getTestMethod());
+		ExclusiveResourceCollector collector = ExclusiveResourceCollector.from(getTestMethod());
+
+		if (collector.getStaticResourcesFor(CHILDREN).findAny().isPresent()) {
+			String message = "'ResourceLockTarget.CHILDREN' is not supported for methods." + //
+					" Invalid method: " + getTestMethod();
+			throw new JUnitException(message);
+		}
+
+		return collector;
 	}
 
 	@Override

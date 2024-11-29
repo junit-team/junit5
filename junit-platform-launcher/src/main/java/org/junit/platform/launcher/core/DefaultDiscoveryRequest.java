@@ -20,6 +20,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.EngineFilter;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -51,15 +52,19 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	// Listener for test discovery that may abort on errors.
 	private final LauncherDiscoveryListener discoveryListener;
 
+	private final OutputDirectoryProvider outputDirectoryProvider;
+
 	DefaultDiscoveryRequest(List<DiscoverySelector> selectors, List<EngineFilter> engineFilters,
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
-			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener) {
+			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener,
+			OutputDirectoryProvider outputDirectoryProvider) {
 		this.selectors = selectors;
 		this.engineFilters = engineFilters;
 		this.discoveryFilters = discoveryFilters;
 		this.postDiscoveryFilters = postDiscoveryFilters;
 		this.configurationParameters = configurationParameters;
 		this.discoveryListener = discoveryListener;
+		this.outputDirectoryProvider = outputDirectoryProvider;
 	}
 
 	@Override
@@ -91,7 +96,11 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 
 	@Override
 	public LauncherDiscoveryListener getDiscoveryListener() {
-		return discoveryListener;
+		return this.discoveryListener;
 	}
 
+	@Override
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return this.outputDirectoryProvider;
+	}
 }

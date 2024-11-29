@@ -12,49 +12,39 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static platform.tooling.support.Helper.TOOL_TIMEOUT;
+import static platform.tooling.support.tests.Projects.copyToWorkspace;
 import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpectedStartedOpenTestReport;
 
-import java.nio.file.Paths;
-
-import de.sormuras.bartholdy.tool.GradleWrapper;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.ResourceLock;
+import org.junit.jupiter.api.io.TempDir;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
-import platform.tooling.support.Request;
+import platform.tooling.support.ProcessStarters;
 
 /**
  * @since 1.3
  */
 class GradleStarterTests {
 
-	@ResourceLock(Projects.GRADLE_STARTER)
 	@Test
-	void gradle_wrapper() {
-		var request = Request.builder() //
-				.setTool(new GradleWrapper(Paths.get(".."))) //
-				.setProject(Projects.GRADLE_STARTER) //
+	void gradle_wrapper(@TempDir Path workspace) throws Exception {
+		var result = ProcessStarters.gradlew() //
+				.workingDir(copyToWorkspace(Projects.GRADLE_STARTER, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache") //
-				.setTimeout(TOOL_TIMEOUT) //
-				.setJavaHome(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.build();
+				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
+				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.startAndWait();
 
-		var result = request.run();
+		assertEquals(0, result.exitCode());
+		assertTrue(result.stdOut().lines().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
+		assertThat(result.stdOut()).contains("Using Java version: 1.8");
 
-		assertFalse(result.isTimedOut(), () -> "tool timed out: " + result);
-
-		assertEquals(0, result.getExitCode());
-		assertTrue(result.getOutputLines("out").stream().anyMatch(line -> line.contains("BUILD SUCCESSFUL")));
-		assertThat(result.getOutput("out")).contains("Using Java version: 1.8");
-
-		var testResultsDir = Request.WORKSPACE.resolve(request.getWorkspace()).resolve("build/test-results/test");
+		var testResultsDir = workspace.resolve("build/test-results/test");
 		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
 	}
 }

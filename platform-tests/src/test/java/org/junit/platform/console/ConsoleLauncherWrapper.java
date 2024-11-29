@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Optional;
 
+import org.junit.platform.console.options.CommandFacade;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 /**
@@ -26,16 +27,14 @@ class ConsoleLauncherWrapper {
 
 	private final StringWriter out = new StringWriter();
 	private final StringWriter err = new StringWriter();
-	private final ConsoleLauncher consoleLauncher;
+	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
 	ConsoleLauncherWrapper() {
 		this(ConsoleTestExecutor::new);
 	}
 
 	private ConsoleLauncherWrapper(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
-		var outWriter = new PrintWriter(out, false);
-		var errWriter = new PrintWriter(err, false);
-		this.consoleLauncher = new ConsoleLauncher(consoleTestExecutorFactory, outWriter, errWriter);
+		this.consoleTestExecutorFactory = consoleTestExecutorFactory;
 	}
 
 	public ConsoleLauncherWrapperResult execute(String... args) {
@@ -47,7 +46,9 @@ class ConsoleLauncherWrapper {
 	}
 
 	public ConsoleLauncherWrapperResult execute(Optional<Integer> expectedCode, String... args) {
-		var result = consoleLauncher.run(args);
+		var outWriter = new PrintWriter(out, false);
+		var errWriter = new PrintWriter(err, false);
+		var result = new CommandFacade(consoleTestExecutorFactory).run(args, outWriter, errWriter);
 		var code = result.getExitCode();
 		var outText = out.toString();
 		var errText = err.toString();

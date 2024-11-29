@@ -13,7 +13,7 @@ package platform.tooling.support.tests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import static platform.tooling.support.Helper.loadModuleDirectoryNames;
 
 import java.io.File;
 import java.io.PrintWriter;
@@ -23,14 +23,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.spi.ToolProvider;
 
-import org.codehaus.groovy.runtime.ProcessGroovyMethods;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.launcher.LauncherConstants;
 
-import platform.tooling.support.Helper;
+import platform.tooling.support.MavenRepo;
+import platform.tooling.support.ProcessStarters;
 import platform.tooling.support.ThirdPartyJars;
 
 /**
@@ -89,7 +92,7 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
 		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
-		Helper.loadAllJUnitModules(lib);
+		loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());
 
@@ -118,61 +121,32 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static void junit(Path temp, Writer out, Writer err) throws Exception {
-		var command = new ArrayList<String>();
-		var projectDir = Path.of("../documentation");
-		command.add(Path.of(System.getProperty("java.home"), "bin", "java").toString());
+	private static void junit(Path temp) throws Exception {
+		var projectDir = Path.of("../documentation").toAbsolutePath();
 
-		command.add("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr"));
+		var result = ProcessStarters.java() //
+				.workingDir(projectDir) //
+				.addArguments("-XX:StartFlightRecording:filename=" + temp.resolve("user-guide.jfr")) //
+				.addArguments("--show-version", "--show-module-resolution") //
+				.addArguments("--module-path", String.join(File.pathSeparator, //
+					temp.resolve("destination").toString(), //
+					temp.resolve("lib").toString() //
+				)) //
+				.addArguments("--add-modules", "documentation") //
+				.addArguments("--patch-module", "documentation=" + projectDir.resolve("src/test/resources")) //
+				.addArguments("--module", "org.junit.platform.console") //
+				.addArguments("execute") //
+				.addArguments("--scan-modules") //
+				.addArguments("--config", "enableHttpServer=true") //
+				.addArguments("--config", LauncherConstants.OUTPUT_DIR_PROPERTY_NAME + "=" + temp.resolve("reports")) //
+				.addArguments("--fail-if-no-tests") //
+				.addArguments("--include-classname", ".*Tests") //
+				.addArguments("--include-classname", ".*Demo") //
+				.addArguments("--exclude-tag", "exclude") //
+				.addArguments("--exclude-tag", "exclude") //
+				.startAndWait();
 
-		command.add("--show-version");
-		command.add("--show-module-resolution");
-
-		command.add("--module-path");
-		command.add(String.join(File.pathSeparator, //
-			temp.resolve("destination").toString(), //
-			temp.resolve("lib").toString() //
-		));
-
-		command.add("--add-modules");
-		command.add("documentation");
-
-		// TODO This `patch-module` should work! Why doesn't it?
-		// command.add("--patch-module");
-		// command.add("documentation=../documentation/src/test/resources/");
-		Files.copy(projectDir.resolve("src/test/resources/two-column.csv"),
-			temp.resolve("destination/documentation/two-column.csv"));
-
-		command.add("--module");
-		command.add("org.junit.platform.console");
-
-		command.add("execute");
-		command.add("--scan-modules");
-
-		command.add("--config");
-		command.add("enableHttpServer=true");
-
-		command.add("--fail-if-no-tests");
-		command.add("--include-classname");
-		command.add(".*Tests");
-		command.add("--include-classname");
-		command.add(".*Demo");
-		command.add("--exclude-tag");
-		command.add("exclude");
-
-		// System.out.println("______________");
-		// command.forEach(System.out::println);
-
-		var builder = new ProcessBuilder(command).directory(projectDir.toFile());
-		var java = builder.start();
-		ProcessGroovyMethods.waitForProcessOutput(java, out, err);
-		var code = java.exitValue();
-
-		if (code != 0) {
-			System.out.println(out);
-			System.err.println(err);
-			fail("Unexpected exit code: " + code);
-		}
+		assertEquals(0, result.exitCode());
 	}
 
 	@Test
@@ -184,7 +158,7 @@ class ModularUserGuideTests {
 		// args.forEach(System.out::println);
 
 		assertTrue(err.toString().isBlank(), () -> err + "\n\n" + String.join("\n", args));
-		var listing = Helper.treeWalk(temp);
+		var listing = treeWalk(temp);
 		assertLinesMatch(List.of( //
 			"destination", //
 			">> CLASSES >>", //
@@ -205,7 +179,32 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// listing.forEach(System.out::println);
 
-		junit(temp, out, err);
+		junit(temp);
+	}
+
+	private static void loadAllJUnitModules(Path target) throws Exception {
+		for (var module : loadModuleDirectoryNames()) {
+			var jar = MavenRepo.jar(module);
+			Files.copy(jar, target.resolve(jar.getFileName()));
+		}
+	}
+
+	private static List<String> treeWalk(Path root) {
+		var lines = new ArrayList<String>();
+		treeWalk(root, lines::add);
+		return lines;
+	}
+
+	private static void treeWalk(Path root, Consumer<String> out) {
+		try (var stream = Files.walk(root)) {
+			stream.map(root::relativize) //
+					.map(path -> path.toString().replace('\\', '/')) //
+					.sorted().filter(Predicate.not(String::isEmpty)) //
+					.forEach(out);
+		}
+		catch (Exception e) {
+			throw new Error("Walking tree failed: " + root, e);
+		}
 	}
 
 }

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
@@ -30,6 +31,11 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
 
 class ReflectionTestCase {
+
+	@BeforeAll
+	static void printJavaVersion() {
+		System.out.println("Using Java version: " + System.getProperty("java.specification.version"));
+	}
 
 	@TestFactory
 	Stream<DynamicNode> canReadParameters() {
