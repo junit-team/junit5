@@ -5,6 +5,7 @@ import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.internal.os.OperatingSystem
+import java.io.OutputStream
 
 plugins {
 	`java-library`
@@ -33,6 +34,13 @@ val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 				.include("junit-*/open-test-report.xml")
 		})
 		outputLocation = layout.buildDirectory.file("reports/open-test-report.html")
+	}
+	if (buildParameters.testing.hideOpenTestReportHtmlGeneratorOutput) {
+		standardOutput = object : OutputStream() {
+			override fun write(b: Int) {
+				// discard output
+			}
+		}
 	}
 	outputs.cacheIf { true }
 }
