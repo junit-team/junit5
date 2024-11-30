@@ -29,6 +29,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -103,6 +104,28 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			ClassLoaderUtils.getDefaultClassLoader());
 		ServiceLoaderUtils.filter(serviceLoader, filter) //
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
+
+		logExcludedExtensions(serviceLoader, filter);
+	}
+
+	private static void logExcludedExtensions(ServiceLoader<Extension> serviceLoader,
+			Predicate<Class<? extends Extension>> filter) {
+		List<Class<? extends Extension>> excludeExtensions = new ArrayList<>();
+		serviceLoader.forEach(extension -> {
+			if (!filter.test(extension.getClass())) {
+				excludeExtensions.add(extension.getClass());
+			}
+		});
+
+		if (!excludeExtensions.isEmpty()) {
+			// @formatter:off
+			List<String> excludeExtensionNames = excludeExtensions
+					.stream()
+					.map(Class::getName)
+					.collect(Collectors.toList());
+			// @formatter:on
+			logger.config(() -> String.format("Excluded auto-detected extensions: %s", excludeExtensionNames));
+		}
 	}
 
 	/**
