@@ -48,8 +48,8 @@ JUnit repository on GitHub.
   - A section containing JUnit-specific metadata about each test/container to the HTML
     report is now written by open-test-reporting when added to the classpath/module path
   - Information about published files is now included as attachments.
+* Introduced contracts for Kotlin-specific assertion methods.
 
-* Introduced kotlin contracts for kotlin assertion methods.
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
 === JUnit Jupiter
