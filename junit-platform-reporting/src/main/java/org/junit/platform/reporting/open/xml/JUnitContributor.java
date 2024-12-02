@@ -24,7 +24,6 @@ import org.opentest4j.reporting.schema.Namespace;
 import org.opentest4j.reporting.tooling.spi.htmlreport.Contributor;
 import org.opentest4j.reporting.tooling.spi.htmlreport.KeyValuePairs;
 import org.opentest4j.reporting.tooling.spi.htmlreport.Section;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -42,8 +41,8 @@ public class JUnitContributor implements Contributor {
 	}
 
 	@Override
-	public List<Section> contributeSectionsForTestNode(Element testNodeElement) {
-		return findChild(testNodeElement, Namespace.REPORTING_CORE, "metadata") //
+	public List<Section> contributeSectionsForTestNode(Context context) {
+		return findChild(context.element(), Namespace.REPORTING_CORE, "metadata") //
 				.map(metadata -> {
 					Map<String, String> table = new LinkedHashMap<>();
 					findChild(metadata, JUnitFactory.NAMESPACE, "type") //
