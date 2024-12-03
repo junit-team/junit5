@@ -16,9 +16,11 @@ import org.junit.jupiter.api.condition.JRE;
 
 final class MavenEnvVars {
 
-	// https://issues.apache.org/jira/browse/MNG-8248
 	static final Map<String, String> FOR_JDK24_AND_LATER = JRE.currentVersion().compareTo(JRE.JAVA_24) >= 0 //
-			? Map.of("MAVEN_OPTS", "--enable-native-access=ALL-UNNAMED") //
+			? Map.of("MAVEN_OPTS", String.join(" ", //
+				"--enable-native-access=ALL-UNNAMED", // https://issues.apache.org/jira/browse/MNG-8248
+				"--sun-misc-unsafe-memory-access=allow" // https://issues.apache.org/jira/browse/MNG-8399
+			)) //
 			: Map.of();
 
 	private MavenEnvVars() {
