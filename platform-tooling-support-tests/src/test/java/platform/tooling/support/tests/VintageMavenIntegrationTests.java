@@ -61,9 +61,8 @@ class VintageMavenIntegrationTests {
 	}
 
 	private ProcessResult run(String version) throws Exception {
-		return ProcessStarters.maven() //
+		return ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.VINTAGE, workspace)) //
-				.putEnvironment("JAVA_HOME", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.addArguments("clean", "test", "--update-snapshots", "--batch-mode") //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Djunit4Version=" + version) //
