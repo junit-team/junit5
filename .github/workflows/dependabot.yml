@@ -3,4 +3,4 @@ updates:
   - package-ecosystem: "gradle"
     directory: "/"                  # Root directory where the main pom.xml is located
     schedule:
-      interval: "daily"  
+      interval: "weekly"  
