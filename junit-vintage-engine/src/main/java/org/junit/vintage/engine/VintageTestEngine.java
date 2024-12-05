@@ -95,14 +95,16 @@ public final class VintageTestEngine implements TestEngine {
 		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
 
 		if (parallelExecutionEnabled) {
-			executeInParallel(engineDescriptor, engineExecutionListener, request);
+			if (executeInParallel(engineDescriptor, engineExecutionListener, request)) {
+				Thread.currentThread().interrupt();
+			}
 		}
 		else {
 			executeSequentially(engineDescriptor, engineExecutionListener);
 		}
 	}
 
-	private void executeInParallel(VintageEngineDescriptor engineDescriptor,
+	private boolean executeInParallel(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
 		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize(request));
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
@@ -125,12 +127,13 @@ public final class VintageTestEngine implements TestEngine {
 		}
 
 		CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0]));
+		boolean wasInterrupted = false;
 		try {
 			allOf.get();
 		}
 		catch (InterruptedException e) {
 			logger.warn(e, () -> "Interruption while waiting for parallel test execution to finish");
-			Thread.currentThread().interrupt();
+			wasInterrupted = true;
 		}
 		catch (ExecutionException e) {
 			throw ExceptionUtils.throwAsUncheckedException(e.getCause());
@@ -138,6 +141,7 @@ public final class VintageTestEngine implements TestEngine {
 		finally {
 			shutdownExecutorService(executorService);
 		}
+		return wasInterrupted;
 	}
 
 	private void shutdownExecutorService(ExecutorService executorService) {
