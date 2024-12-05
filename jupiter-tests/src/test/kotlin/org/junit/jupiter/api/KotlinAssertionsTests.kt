@@ -247,6 +247,89 @@ class KotlinAssertionsTests {
         assertMessageStartsWith(result, "Should be a String")
     }
 
+    @Test
+    fun `assertInstanceOf with compiler smart cast`() {
+        val maybeString: Any = "string"
+
+        assertInstanceOf<String>(maybeString)
+        assertFalse(maybeString.isEmpty()) // A smart cast to a String object.
+    }
+
+    @Test
+    fun `assertInstanceOf with compiler nullable smart cast`() {
+        val maybeString: Any? = "string"
+
+        assertInstanceOf<String>(maybeString)
+        assertFalse(maybeString.isEmpty()) // A smart cast to a non-nullable String object.
+    }
+
+    @Test
+    fun `assertInstanceOf with a null value`() {
+        val error =
+            assertThrows<AssertionFailedError> {
+                assertInstanceOf<String>(null)
+            }
+
+        assertMessageStartsWith(error, "Unexpected null value")
+    }
+
+    @Test
+    fun `assertInstanceOf with message and compiler smart cast`() {
+        val maybeString: Any = "string"
+
+        assertInstanceOf<String>(maybeString, "maybeString is not an instance of String")
+        assertFalse(maybeString.isEmpty()) // A smart cast to a String object.
+    }
+
+    @Test
+    fun `assertInstanceOf with message supplier and compiler smart cast`() {
+        val maybeString: Any = "string"
+
+        val valueInMessageSupplier: Int
+
+        assertInstanceOf<String>(maybeString) {
+            valueInMessageSupplier = 20 // Val can be assigned in the message supplier lambda.
+
+            "maybeString is not an instance of String"
+        }
+
+        assertFalse(maybeString.isEmpty()) // A smart cast to a String object.
+    }
+
+    @Test
+    fun `assertNull with compiler smart cast`() {
+        val nullableString: String? = null
+
+        assertNull(nullableString)
+        // Even safe call is not allowed because compiler knows that nullableString is always null.
+        // nullableString?.isEmpty()
+    }
+
+    @Test
+    fun `assertNull with message and compiler smart cast`() {
+        val nullableString: String? = null
+
+        assertNull(nullableString, "nullableString is not null")
+        // Even safe call is not allowed because compiler knows that nullableString is always null.
+        // nullableString?.isEmpty()
+    }
+
+    @Test
+    fun `assertNull with message supplier and compiler smart cast`() {
+        val nullableString: String? = null
+
+        val valueInMessageSupplier: Int
+
+        assertNull(nullableString) {
+            valueInMessageSupplier = 20 // Val can be assigned in the message supplier lambda.
+
+            "nullableString is not null"
+        }
+
+        // Even safe call is not allowed because compiler knows that nullableString is always null.
+        // nullableString?.isEmpty()
+    }
+
     companion object {
         fun assertExpectedExceptionTypes(
             multipleFailuresError: MultipleFailuresError,
