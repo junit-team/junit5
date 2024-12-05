@@ -155,6 +155,41 @@ internal class KotlinAssertTimeoutAssertionsTests {
         assertMessageStartsWith(error, "Tempus Fugit ==> execution exceeded timeout of 10 ms by")
     }
 
+    @Test
+    fun `assertTimeout with value initialization in lambda`() {
+        val value: Int
+
+        assertTimeout(ofMillis(500)) { value = 10 }
+
+        assertEquals(10, value)
+    }
+
+    @Test
+    fun `assertTimeout with message and value initialization in lambda`() {
+        val value: Int
+
+        assertTimeout(ofMillis(500), "message") { value = 10 }
+
+        assertEquals(10, value)
+    }
+
+    @Test
+    fun `assertTimeout with message supplier and value initialization in lambda`() {
+        val value: Int
+        val valueInMessageSupplier: Int
+
+        assertTimeout(
+            timeout = ofMillis(500),
+            message = {
+                valueInMessageSupplier = 20 // Val can be assigned in the message supplier lambda.
+                "message"
+            },
+            executable = { value = 10 }
+        )
+
+        assertEquals(10, value)
+    }
+
     // -- executable - preemptively ---
 
     @Test
@@ -285,6 +320,20 @@ internal class KotlinAssertTimeoutAssertionsTests {
                 }
             }
         assertMessageEquals(error, "Tempus Fugit ==> execution timed out after 10 ms")
+    }
+
+    @Test
+    fun `assertTimeoutPreemptively with message supplier and value initialization in lambda`() {
+        val valueInMessageSupplier: Int
+
+        assertTimeoutPreemptively(
+            timeout = ofMillis(500),
+            message = {
+                valueInMessageSupplier = 20 // Val can be assigned in the message supplier lambda.
+                "message"
+            },
+            executable = {}
+        )
     }
 
     /**

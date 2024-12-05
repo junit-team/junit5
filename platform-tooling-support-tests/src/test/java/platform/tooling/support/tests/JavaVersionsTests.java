@@ -55,9 +55,8 @@ class JavaVersionsTests {
 	}
 
 	List<String> execute(Path javaHome, Map<String, String> environmentVars) throws Exception {
-		var result = ProcessStarters.maven() //
+		var result = ProcessStarters.maven(javaHome) //
 				.workingDir(copyToWorkspace(Projects.JAVA_VERSIONS, workspace)) //
-				.putEnvironment("JAVA_HOME", javaHome) //
 				.putEnvironment(environmentVars) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //

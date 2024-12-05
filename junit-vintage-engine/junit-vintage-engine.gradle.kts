@@ -89,3 +89,10 @@ tasks {
 		dependsOn(testWithoutJUnit4)
 	}
 }
+
+eclipse {
+	classpath {
+		// Avoid exposing test resources to dependent projects
+		containsTestFixtures = false
+	}
+}

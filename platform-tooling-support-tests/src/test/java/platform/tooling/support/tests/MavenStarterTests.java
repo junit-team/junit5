@@ -39,12 +39,11 @@ class MavenStarterTests {
 
 	@Test
 	void verifyMavenStarterProject(@TempDir Path workspace) throws Exception {
-		var result = ProcessStarters.maven() //
+		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_STARTER, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
-				.putEnvironment("JAVA_HOME", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

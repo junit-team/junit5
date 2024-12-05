@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertInstanceOf
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.assertTimeout
 import org.junit.jupiter.api.assertTimeoutPreemptively
@@ -106,6 +108,30 @@ class KotlinAssertionsDemo {
             // Simulate task that takes more than 10 ms.
             Thread.sleep(100)
         }
+    }
+
+    @Test
+    fun `assertNotNull with a smart cast`() {
+        val nullablePerson: Person? = person
+
+        assertNotNull(nullablePerson)
+
+        // The compiler smart casts nullablePerson to a non-nullable object.
+        // The safe call operator (?.) isn't required.
+        assertEquals(person.firstName, nullablePerson.firstName)
+        assertEquals(person.lastName, nullablePerson.lastName)
+    }
+
+    @Test
+    fun `assertInstanceOf with a smart cast`() {
+        val maybePerson: Any = person
+
+        assertInstanceOf<Person>(maybePerson)
+
+        // The compiler smart casts maybePerson to a Person object,
+        // allowing to access the Person properties.
+        assertEquals(person.firstName, maybePerson.firstName)
+        assertEquals(person.lastName, maybePerson.lastName)
     }
 }
 // end::user_guide[]

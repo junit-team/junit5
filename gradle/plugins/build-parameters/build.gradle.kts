@@ -76,6 +76,10 @@ buildParameters {
 		integer("retries") {
 			description = "Configures the number of times failing test are retried"
 		}
+		bool("hideOpenTestReportHtmlGeneratorOutput") {
+			description = "Whether or not to hide the output of the OpenTestReportHtmlGenerator"
+			defaultValue = true
+		}
 	}
 	group("publishing") {
 		bool("signArtifacts") {
