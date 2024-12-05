@@ -43,13 +43,12 @@ class MavenSurefireCompatibilityTests {
 	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg, @TempDir Path workspace)
 			throws Exception {
 		var extraArgs = extraArg == null ? new String[0] : new String[] { extraArg };
-		var result = ProcessStarters.maven() //
+		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_SUREFIRE_COMPATIBILITY, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
 				.addArguments(extraArgs) //
-				.putEnvironment("JAVA_HOME", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

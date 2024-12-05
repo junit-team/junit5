@@ -53,9 +53,14 @@ public class ProcessStarters {
 	}
 
 	public static ProcessStarter maven() {
+		return maven(currentJdkHome());
+	}
+
+	public static ProcessStarter maven(Path javaHome) {
 		return new ProcessStarter() //
 				.executable(Path.of(System.getProperty("mavenDistribution")).resolve("bin").resolve(
 					windowsOrOtherExecutable("mvn.cmd", "mvn")).toAbsolutePath()) //
+				.putEnvironment("JAVA_HOME", javaHome) //
 				.addArguments("-Djunit.jupiter.version=" + Helper.version("junit-jupiter")) //
 				.addArguments("-Djunit.bom.version=" + Helper.version("junit-jupiter")) //
 				.addArguments("-Djunit.vintage.version=" + Helper.version("junit-vintage")) //
