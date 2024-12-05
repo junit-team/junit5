@@ -124,7 +124,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 					.map(Class::getName)
 					.collect(Collectors.toList());
 			// @formatter:on
-			logger.config(() -> String.format("Excluded auto-detected extensions: %s", excludeExtensionNames));
+			logger.config(() -> String.format("Excluded auto-detected extensions due to configured includes/excludes: %s", excludeExtensionNames));
 		}
 	}
 
