@@ -51,6 +51,8 @@ public final class VintageTestEngine implements TestEngine {
 
 	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
+	private static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+	private static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Override
 	public String getId() {
@@ -84,16 +86,16 @@ public final class VintageTestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		VintageEngineDescriptor engineDescriptor = (VintageEngineDescriptor) request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineDescriptor);
-		executeAllChildren(engineDescriptor, engineExecutionListener);
+		executeAllChildren(engineDescriptor, engineExecutionListener, request);
 		engineExecutionListener.executionFinished(engineDescriptor, successful());
 	}
 
 	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
-			EngineExecutionListener engineExecutionListener) {
-		boolean parallelExecutionEnabled = getParallelExecutionEnabled();
+			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
+		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
 
 		if (parallelExecutionEnabled) {
-			executeInParallel(engineDescriptor, engineExecutionListener);
+			executeInParallel(engineDescriptor, engineExecutionListener, request);
 		}
 		else {
 			executeSequentially(engineDescriptor, engineExecutionListener);
@@ -101,8 +103,8 @@ public final class VintageTestEngine implements TestEngine {
 	}
 
 	private void executeInParallel(VintageEngineDescriptor engineDescriptor,
-			EngineExecutionListener engineExecutionListener) {
-		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize());
+			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
+		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize(request));
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 
 		List<CompletableFuture<Void>> futures = new ArrayList<>();
@@ -161,13 +163,20 @@ public final class VintageTestEngine implements TestEngine {
 		}
 	}
 
-	private boolean getParallelExecutionEnabled() {
-		// get parallel execution enabled from configuration
-		return true;
+	private boolean getParallelExecutionEnabled(ExecutionRequest request) {
+		return request.getConfigurationParameters().getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false);
 	}
 
-	private int getThreadPoolSize() {
-		// get thread pool size from configuration
+	private int getThreadPoolSize(ExecutionRequest request) {
+		Optional<String> poolSize = request.getConfigurationParameters().get(PARALLEL_POOL_SIZE);
+		if (poolSize.isPresent()) {
+			try {
+				return Integer.parseInt(poolSize.get());
+			}
+			catch (NumberFormatException e) {
+				logger.warn(() -> "Invalid value for parallel pool size: " + poolSize.get());
+			}
+		}
 		return DEFAULT_THREAD_POOL_SIZE;
 	}
 
