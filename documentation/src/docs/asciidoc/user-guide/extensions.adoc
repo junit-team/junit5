@@ -292,16 +292,7 @@ name in a file named `org.junit.jupiter.api.extension.Extension` within the
 [[automatic-extension-registration-pattern-matching]]
 ===== Pattern Matching Syntax
 
-Pattern matching syntax is used to automatically detect and register extensions. Here are some examples of pattern matching syntax:
-
-- `*`: includes all extensions.
-- `org.junit.*`: includes every extension under the `org.junit` base package and any of its subpackages.
-- `*.MyExtension`: includes every extension whose simple class name is exactly `MyExtension`.
-- `*System*`: includes every extension whose FQCN contains `System`.
-- `*System*, *Dev*`: includes every extension whose FQCN contains `System` or `Dev`.
-- `org.example.MyExtension, org.example.TheirExtension`: includes extensions whose FQCN is exactly `org.example.MyExtension` or `org.example.TheirExtension`.
-
-> **Note**: A class that matches both an inclusion and exclusion pattern will be excluded.
+Refer to <<running-tests-config-params-deactivation-pattern>> for details.
 
 [[extensions-registration-automatic-enabling]]
 ===== Enabling Automatic Extension Detection
