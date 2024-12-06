@@ -51,7 +51,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
-	private static final String PARALLEL_EXECUTION_ENABLED = "junit.jupiter.execution.parallel.enabled";
+	private static final String PARALLEL_EXECUTION_ENABLED = "junit.vintage.execution.parallel.enabled";
 	private static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Override
