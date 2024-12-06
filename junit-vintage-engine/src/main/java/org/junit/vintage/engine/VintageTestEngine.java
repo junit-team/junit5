@@ -113,13 +113,7 @@ public final class VintageTestEngine implements TestEngine {
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			TestDescriptor descriptor = iterator.next();
 			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-				RunnerTestDescriptor testDescriptor = (RunnerTestDescriptor) descriptor;
-				try {
-					runnerExecutor.execute(testDescriptor);
-				}
-				catch (Exception e) {
-					engineExecutionListener.executionSkipped(testDescriptor, e.getMessage());
-				}
+				runnerExecutor.execute((RunnerTestDescriptor) descriptor);
 			}, executorService);
 
 			futures.add(future);
