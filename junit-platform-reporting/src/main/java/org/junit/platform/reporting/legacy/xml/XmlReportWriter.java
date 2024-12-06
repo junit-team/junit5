@@ -38,6 +38,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -46,6 +47,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.TreeSet;
+import java.util.function.IntPredicate;
 import java.util.regex.Pattern;
 
 import javax.xml.stream.XMLOutputFactory;
@@ -71,6 +73,13 @@ class XmlReportWriter {
 	// Using zero-width assertions in the split pattern simplifies the splitting process: All split parts
 	// (including the first and last one) can be used directly, without having to re-add separator characters.
 	private static final Pattern CDATA_SPLIT_PATTERN = Pattern.compile("(?<=]])(?=>)");
+
+	private static final IntPredicate ALLOWED_ATTRIBUTE_CHAR = ((IntPredicate) XmlReportWriter::isAllowedXmlCharacter) //
+			.and(((IntPredicate) XmlReportWriter::isSpace).or(((IntPredicate) Character::isWhitespace).negate()));
+
+	private static boolean isSpace(int codePoint) {
+		return codePoint == ' ';
+	}
 
 	private final XmlReportData reportData;
 
@@ -328,7 +337,7 @@ class XmlReportWriter {
 	}
 
 	private void writeAttributeSafely(XMLStreamWriter writer, String name, String value) throws XMLStreamException {
-		writer.writeAttribute(name, escapeIllegalChars(value));
+		writer.writeAttribute(name, escapeIllegalChars(value, ALLOWED_ATTRIBUTE_CHAR));
 	}
 
 	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
@@ -338,16 +347,21 @@ class XmlReportWriter {
 	}
 
 	static String escapeIllegalChars(String text) {
-		if (text.codePoints().allMatch(XmlReportWriter::isAllowedXmlCharacter)) {
+		return escapeIllegalChars(text, XmlReportWriter::isAllowedXmlCharacter);
+	}
+
+	private static String escapeIllegalChars(String text, IntPredicate allowedPredicate) {
+		if (text.codePoints().allMatch(allowedPredicate)) {
 			return text;
 		}
 		StringBuilder result = new StringBuilder(text.length() * 2);
+		Formatter formatter = new Formatter(result);
 		text.codePoints().forEach(codePoint -> {
-			if (isAllowedXmlCharacter(codePoint)) {
+			if (allowedPredicate.test(codePoint)) {
 				result.appendCodePoint(codePoint);
 			}
 			else { // use a Character Reference (cf. https://www.w3.org/TR/xml/#NT-CharRef)
-				result.append("&#").append(codePoint).append(';');
+				formatter.format("&#%d;", codePoint);
 			}
 		});
 		return result.toString();

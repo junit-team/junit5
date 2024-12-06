@@ -41,6 +41,7 @@ dependencies {
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(testFixtures(projects.junitJupiterEngine))
 	testImplementation(libs.apiguardian)
+	testImplementation(libs.commons.text)
 	testImplementation(libs.jfrunit) {
 		exclude(group = "org.junit.vintage")
 	}

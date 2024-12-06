@@ -10,6 +10,8 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.text.StringEscapeUtils.unescapeXml;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.joox.JOOX.$;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,6 +31,7 @@ import java.io.Writer;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.joox.Match;
@@ -249,10 +252,34 @@ class XmlReportWriterTests {
 		writeXmlReport(testPlan, reportData, assertingWriter);
 	}
 
-	@ParameterizedTest(name = "{index}")
+	@ParameterizedTest(name = "[{index}]")
 	@MethodSource("stringPairs")
 	void escapesIllegalChars(String input, String output) {
 		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));
+	}
+
+	@Test
+	void writesValidXmlForExceptionMessagesContainingLineBreaks() throws Exception {
+		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
+
+		var allWhitespaceCharacters = IntStream.range(0, 0x10000) //
+				.filter(Character::isWhitespace) //
+				.mapToObj(Character::toString) //
+				.collect(joining());
+
+		var message = "a" + allWhitespaceCharacters + " b<&>";
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var assertionError = new AssertionError(message);
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
+
+		var testsuite = writeXmlReport(testPlan, reportData);
+
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+
+		var attributeValue = testsuite.find("failure").attr("message");
+		assertThat(unescapeXml(attributeValue)).isEqualTo(message);
 	}
 
 	static Stream<Arguments> stringPairs() {
@@ -262,8 +289,9 @@ class XmlReportWriterTests {
 			arguments("\t", "\t"), //
 			arguments("\r", "\r"), //
 			arguments("\n", "\n"), //
-			arguments("\u001f", "&#31;"), //
-			arguments("\u0020", "\u0020"), //
+			arguments("\u001f", "&#" + 0x1f + ";"), //
+			arguments("✅", "✅"), //
+			arguments(" ", " "), //
 			arguments("foo!", "foo!"), //
 			arguments("\uD801\uDC00", "\uD801\uDC00") //
 		);
