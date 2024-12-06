@@ -975,6 +975,7 @@ parameters_ used for the following features.
 - <<extensions-conditions-deactivation>>
 - <<launcher-api-listeners-custom-deactivation>>
 - <<stacktrace-pruning>>
+- <<extensions-registration-automatic-filtering>>
 
 If the value for the given _configuration parameter_ consists solely of an asterisk
 (`+++*+++`), the pattern will match against all candidate classes. Otherwise, the value
