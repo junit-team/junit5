@@ -1,3 +1,4 @@
+
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +26,6 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
@@ -49,7 +49,7 @@ public class ExpressionLanguageTests {
 			Function<String, Optional<String>> configurationSupplier) {
 
 		var method = ReflectionUtils.findMethods(testCase.getClass(),
-				it -> "method".equals(it.getName())).stream().findFirst();
+			it -> "method".equals(it.getName())).stream().findFirst();
 
 		return new ExtensionContext() {
 
@@ -137,7 +137,8 @@ public class ExpressionLanguageTests {
 			public Store getStore(Namespace namespace) {
 				var store = new NamespaceAwareStore(this.store, namespace);
 				method //
-						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class), Optional.of(it.getAnnotation(ExpressionLanguage.class)))) //
+						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class),
+							Optional.of(it.getAnnotation(ExpressionLanguage.class)))) //
 						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
 				return store;
 			}
@@ -184,7 +185,8 @@ public class ExpressionLanguageTests {
 
 			@Override
 			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-				return Stream.of(arguments(new TestCaseWithAnnotatedMethod.Foo("123")), arguments(new TestCaseWithAnnotatedMethod.Foo("456")));
+				return Stream.of(arguments(new TestCaseWithAnnotatedMethod.Foo("123")),
+					arguments(new TestCaseWithAnnotatedMethod.Foo("456")));
 			}
 		}
 	}

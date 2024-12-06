@@ -51,9 +51,11 @@ class ParameterizedTestMethodContext {
 	private final Resolver[] resolvers;
 	private final List<ResolverType> resolverTypes;
 
-	ParameterizedTestMethodContext(Method method, ParameterizedTest parameterizedTestAnnotation, Optional<ExpressionLanguage> expressionLanguageAnnotation) {
+	ParameterizedTestMethodContext(Method method, ParameterizedTest parameterizedTestAnnotation,
+			Optional<ExpressionLanguage> expressionLanguageAnnotation) {
 		this.method = Preconditions.notNull(method, "method must not be null");
-		this.parameterizedTestAnnotation = Preconditions.notNull(parameterizedTestAnnotation, "parameterizedTestAnnotation must not be null");
+		this.parameterizedTestAnnotation = Preconditions.notNull(parameterizedTestAnnotation,
+			"parameterizedTestAnnotation must not be null");
 		this.expressionLanguageAnnotation = expressionLanguageAnnotation;
 		this.parameters = method.getParameters();
 		this.resolvers = new Resolver[this.parameters.length];

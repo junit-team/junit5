@@ -46,8 +46,10 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 
 		Method templateMethod = context.getTestMethod().get();
-		Optional<ExpressionLanguage> expressionLanguageAnnotation = findAnnotation(templateMethod, ExpressionLanguage.class);
-		Optional<ParameterizedTest> parameterizedTestAnnotation = findAnnotation(templateMethod, ParameterizedTest.class);
+		Optional<ExpressionLanguage> expressionLanguageAnnotation = findAnnotation(templateMethod,
+			ExpressionLanguage.class);
+		Optional<ParameterizedTest> parameterizedTestAnnotation = findAnnotation(templateMethod,
+			ParameterizedTest.class);
 		if (!parameterizedTestAnnotation.isPresent()) {
 			return false;
 		}

@@ -332,7 +332,8 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class), Optional.empty());
+		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class),
+			Optional.empty());
 		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
 	}
 
