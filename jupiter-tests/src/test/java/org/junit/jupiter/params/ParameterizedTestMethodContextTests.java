@@ -13,6 +13,8 @@ package org.junit.jupiter.params;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.CsvToPerson;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.Person;
@@ -42,7 +44,8 @@ class ParameterizedTestMethodContextTests {
 
 	private ParameterizedTestMethodContext createMethodContext(Class<?> testClass, String methodName) {
 		var method = ReflectionUtils.findMethods(testClass, m -> m.getName().equals(methodName)).getFirst();
-		return new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class),
+				Optional.empty());
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

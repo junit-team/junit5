@@ -46,13 +46,14 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		}
 
 		Method templateMethod = context.getTestMethod().get();
-		Optional<ParameterizedTest> annotation = findAnnotation(templateMethod, ParameterizedTest.class);
-		if (!annotation.isPresent()) {
+		Optional<ExpressionLanguage> expressionLanguageAnnotation = findAnnotation(templateMethod, ExpressionLanguage.class);
+		Optional<ParameterizedTest> parameterizedTestAnnotation = findAnnotation(templateMethod, ParameterizedTest.class);
+		if (!parameterizedTestAnnotation.isPresent()) {
 			return false;
 		}
 
 		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(templateMethod,
-			annotation.get());
+			parameterizedTestAnnotation.get(), expressionLanguageAnnotation);
 
 		Preconditions.condition(methodContext.hasPotentiallyValidSignature(),
 			() -> String.format(
@@ -86,7 +87,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 					return createInvocationContext(formatter, methodContext, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
-						Preconditions.condition(invocationCount.get() > 0 || methodContext.annotation.allowZeroInvocations(),
+						Preconditions.condition(invocationCount.get() > 0 || methodContext.parameterizedTestAnnotation.allowZeroInvocations(),
 								"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"));
 		// @formatter:on
 	}
@@ -94,7 +95,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	@Override
 	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext extensionContext) {
 		ParameterizedTestMethodContext methodContext = getMethodContext(extensionContext);
-		return methodContext.annotation.allowZeroInvocations();
+		return methodContext.parameterizedTestAnnotation.allowZeroInvocations();
 	}
 
 	private ParameterizedTestMethodContext getMethodContext(ExtensionContext extensionContext) {
@@ -115,7 +116,7 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 	private ParameterizedTestNameFormatter createNameFormatter(ExtensionContext extensionContext,
 			ParameterizedTestMethodContext methodContext) {
 
-		String name = methodContext.annotation.name();
+		String name = methodContext.parameterizedTestAnnotation.name();
 		String pattern = name.equals(DEFAULT_DISPLAY_NAME)
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
 						.orElse(ParameterizedTest.DEFAULT_DISPLAY_NAME)

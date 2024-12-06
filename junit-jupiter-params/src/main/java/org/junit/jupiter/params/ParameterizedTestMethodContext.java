@@ -44,15 +44,17 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestMethodContext {
 
 	final Method method;
-	final ParameterizedTest annotation;
+	final ParameterizedTest parameterizedTestAnnotation;
+	final Optional<ExpressionLanguage> expressionLanguageAnnotation;
 
 	private final Parameter[] parameters;
 	private final Resolver[] resolvers;
 	private final List<ResolverType> resolverTypes;
 
-	ParameterizedTestMethodContext(Method method, ParameterizedTest annotation) {
+	ParameterizedTestMethodContext(Method method, ParameterizedTest parameterizedTestAnnotation, Optional<ExpressionLanguage> expressionLanguageAnnotation) {
 		this.method = Preconditions.notNull(method, "method must not be null");
-		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
+		this.parameterizedTestAnnotation = Preconditions.notNull(parameterizedTestAnnotation, "parameterizedTestAnnotation must not be null");
+		this.expressionLanguageAnnotation = expressionLanguageAnnotation;
 		this.parameters = method.getParameters();
 		this.resolvers = new Resolver[this.parameters.length];
 		this.resolverTypes = new ArrayList<>(this.parameters.length);

@@ -35,6 +35,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
@@ -331,7 +332,7 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
+		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class), Optional.empty());
 		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
 	}
 

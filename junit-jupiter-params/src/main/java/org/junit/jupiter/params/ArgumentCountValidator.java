@@ -69,7 +69,7 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	}
 
 	private ArgumentCountValidationMode getArgumentCountValidationMode(ExtensionContext extensionContext) {
-		ParameterizedTest parameterizedTest = methodContext.annotation;
+		ParameterizedTest parameterizedTest = methodContext.parameterizedTestAnnotation;
 		if (parameterizedTest.argumentCountValidation() != ArgumentCountValidationMode.DEFAULT) {
 			return parameterizedTest.argumentCountValidation();
 		}

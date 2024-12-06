@@ -285,7 +285,7 @@ class ParameterizedTestExtensionTests {
 			public Store getStore(Namespace namespace) {
 				var store = new NamespaceAwareStore(this.store, namespace);
 				method //
-						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class))) //
+						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class), Optional.empty())) //
 						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
 				return store;
 			}
