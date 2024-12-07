@@ -9,9 +9,9 @@
         <value>
           <package name="" withSubpackages="true" static="true" />
           <emptyLine />
-          <package name="javax" withSubpackages="true" static="false" />
-          <emptyLine />
           <package name="java" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="javax" withSubpackages="true" static="false" />
           <emptyLine />
           <package name="jdk" withSubpackages="true" static="false" />
           <emptyLine />
