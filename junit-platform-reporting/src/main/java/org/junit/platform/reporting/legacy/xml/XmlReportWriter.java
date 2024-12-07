@@ -68,6 +68,8 @@ import org.junit.platform.reporting.legacy.xml.XmlReportWriter.AggregatedTestRes
  */
 class XmlReportWriter {
 
+	static final char ILLEGAL_CHARACTER_REPLACEMENT = '\uFFFD';
+
 	// Using zero-width assertions in the split pattern simplifies the splitting process: All split parts
 	// (including the first and last one) can be used directly, without having to re-add separator characters.
 	private static final Pattern CDATA_SPLIT_PATTERN = Pattern.compile("(?<=]])(?=>)");
@@ -328,16 +330,16 @@ class XmlReportWriter {
 	}
 
 	private void writeAttributeSafely(XMLStreamWriter writer, String name, String value) throws XMLStreamException {
-		writer.writeAttribute(name, escapeIllegalChars(value));
+		writer.writeAttribute(name, replaceIllegalCharacters(value));
 	}
 
 	private void writeCDataSafely(XMLStreamWriter writer, String data) throws XMLStreamException {
-		for (String safeDataPart : CDATA_SPLIT_PATTERN.split(escapeIllegalChars(data))) {
+		for (String safeDataPart : CDATA_SPLIT_PATTERN.split(replaceIllegalCharacters(data))) {
 			writer.writeCData(safeDataPart);
 		}
 	}
 
-	static String escapeIllegalChars(String text) {
+	static String replaceIllegalCharacters(String text) {
 		if (text.codePoints().allMatch(XmlReportWriter::isAllowedXmlCharacter)) {
 			return text;
 		}
@@ -346,14 +348,14 @@ class XmlReportWriter {
 			if (isAllowedXmlCharacter(codePoint)) {
 				result.appendCodePoint(codePoint);
 			}
-			else { // use a Character Reference (cf. https://www.w3.org/TR/xml/#NT-CharRef)
-				result.append("&#").append(codePoint).append(';');
+			else {
+				result.append(ILLEGAL_CHARACTER_REPLACEMENT);
 			}
 		});
 		return result.toString();
 	}
 
-	private static boolean isAllowedXmlCharacter(int codePoint) {
+	static boolean isAllowedXmlCharacter(int codePoint) {
 		// source: https://www.w3.org/TR/xml/#charsets
 		return codePoint == 0x9 //
 				|| codePoint == 0xA //
