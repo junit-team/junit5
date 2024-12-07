@@ -11,8 +11,8 @@ plugins {
 
 val woodstox = configurations.dependencyScope("woodstox")
 val woodstoxRuntimeClasspath = configurations.resolvable("woodstoxRuntimeClasspath") {
-    extendsFrom(configurations.testRuntimeClasspath.get())
-    extendsFrom(woodstox.get())
+	extendsFrom(configurations.testRuntimeClasspath.get())
+	extendsFrom(woodstox.get())
 }
 
 dependencies {
