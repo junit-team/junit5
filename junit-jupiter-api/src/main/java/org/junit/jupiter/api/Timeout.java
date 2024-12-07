@@ -26,6 +26,9 @@ import org.apiguardian.api.API;
 /**
  * {@code @Timeout} is used to define a timeout for a method or all testable
  * methods within one class and its {@link Nested @Nested} classes.
+*
+ *<p>Inheritance Considerations: {@code @Timeout} is an annotation and not a class; therefore, it does not support traditional inheritance mechanisms. 
+ * Instead, its behavior at the class level is influenced by the {@link Inherited @Inherited} meta-annotation, which propagates the annotation to subclasses when applied to a class.
  *
  * <p>This annotation may also be used on lifecycle methods annotated with
  * {@link BeforeAll @BeforeAll}, {@link BeforeEach @BeforeEach},
