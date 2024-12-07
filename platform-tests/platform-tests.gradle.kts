@@ -22,6 +22,12 @@ java {
 	}
 }
 
+val woodstox = configurations.dependencyScope("woodstox")
+val woodstoxRuntimeClasspath = configurations.resolvable("woodstoxRuntimeClasspath") {
+	extendsFrom(configurations.testRuntimeClasspath.get())
+	extendsFrom(woodstox.get())
+}
+
 dependencies {
 	// --- Things we are testing --------------------------------------------------
 	testImplementation(projects.junitPlatformCommons)
@@ -61,6 +67,7 @@ dependencies {
 	testRuntimeOnly(libs.groovy4) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}
+	woodstox(libs.woodstox)
 
 	// --- https://openjdk.java.net/projects/code-tools/jmh/ ----------------------
 	jmh(projects.junitJupiterApi)
@@ -107,6 +114,16 @@ tasks {
 		useJUnitPlatform {
 			includeTags("junit4")
 		}
+	}
+	val testWoodstox by registering(Test::class) {
+		val test by testing.suites.existing(JvmTestSuite::class)
+		testClassesDirs = files(test.map { it.sources.output.classesDirs })
+		classpath = files(sourceSets.main.map { it.output }) + files(test.map { it.sources.output }) + woodstoxRuntimeClasspath.get()
+		group = JavaBasePlugin.VERIFICATION_GROUP
+		setIncludes(listOf("**/org/junit/platform/reporting/**"))
+	}
+	check {
+		dependsOn(testWoodstox)
 	}
 	named<JavaCompile>(processStarter.compileJavaTaskName).configure {
 		options.release = javaLibrary.testJavaVersion.majorVersion.toInt()
