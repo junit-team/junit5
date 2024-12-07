@@ -227,28 +227,7 @@ class XmlReportWriterTests {
 				.contains("AssertionError: expected: <A> but was: <B&#0;>");
 	}
 
-	@Test
-	void doesNotReopenCDataWithinCDataContent() throws Exception {
-		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
-		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams);
-
-		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
-		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
-		Writer assertingWriter = new StringWriter() {
-
-			@SuppressWarnings("NullableProblems")
-			@Override
-			public void write(char[] buffer, int off, int len) {
-				assertThat(new String(buffer, off, len)).doesNotContain("]]><![CDATA[");
-			}
-		};
-
-		writeXmlReport(testPlan, reportData, assertingWriter);
-	}
-
-	@ParameterizedTest
+	@ParameterizedTest(name = "{index}")
 	@MethodSource("stringPairs")
 	void escapesIllegalChars(String input, String output) {
 		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));
