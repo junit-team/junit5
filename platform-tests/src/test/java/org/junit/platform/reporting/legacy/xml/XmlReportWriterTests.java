@@ -20,6 +20,7 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.ILLEGAL_CHARACTER_REPLACEMENT;
 import static org.mockito.Mockito.mock;
 
 import java.io.StringReader;
@@ -219,29 +220,30 @@ class XmlReportWriterTests {
 
 		assertValidAccordingToJenkinsSchema(testsuite.document());
 		assertThat(testsuite.find("property").matchAttr("name", "foo\\.bar").attr("value")) //
-				.isEqualTo("&#1;");
+				.isEqualTo(String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT));
 		var failure = testsuite.find("failure");
 		assertThat(failure.attr("message")) //
-				.isEqualTo("expected: <A> but was: <B&#0;>");
+				.isEqualTo("expected: <A> but was: <B" + ILLEGAL_CHARACTER_REPLACEMENT + ">");
 		assertThat(failure.text()) //
-				.contains("AssertionError: expected: <A> but was: <B&#0;>");
+				.contains("AssertionError: expected: <A> but was: <B" + ILLEGAL_CHARACTER_REPLACEMENT + ">");
 	}
 
-	@ParameterizedTest(name = "{index}")
+	@ParameterizedTest(name = "[{index}]")
 	@MethodSource("stringPairs")
-	void escapesIllegalChars(String input, String output) {
-		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));
+	void replacesIllegalCharacters(String input, String output) {
+		assertEquals(output, XmlReportWriter.replaceIllegalCharacters(input));
 	}
 
 	static Stream<Arguments> stringPairs() {
 		return Stream.of( //
-			arguments("\0", "&#0;"), //
-			arguments("\1", "&#1;"), //
+			arguments("\0", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
+			arguments("\1", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
 			arguments("\t", "\t"), //
 			arguments("\r", "\r"), //
 			arguments("\n", "\n"), //
-			arguments("\u001f", "&#31;"), //
-			arguments("\u0020", "\u0020"), //
+			arguments("\u001f", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
+			arguments("✅", "✅"), //
+			arguments(" ", " "), //
 			arguments("foo!", "foo!"), //
 			arguments("\uD801\uDC00", "\uD801\uDC00") //
 		);
