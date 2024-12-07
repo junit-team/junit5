@@ -10,9 +10,11 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.joox.JOOX.$;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.TestExecutionResult.failed;
@@ -30,6 +32,7 @@ import java.io.Writer;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.joox.Match;
@@ -37,6 +40,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -233,6 +237,41 @@ class XmlReportWriterTests {
 	@MethodSource("stringPairs")
 	void replacesIllegalCharacters(String input, String output) {
 		assertEquals(output, XmlReportWriter.replaceIllegalCharacters(input));
+	}
+
+	@Test
+	void writesValidXmlForExceptionMessagesContainingLineBreaks() throws Exception {
+		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
+		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
+		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
+
+		var allWhitespaceCharacters = IntStream.range(0, 0x10000) //
+				.filter(Character::isWhitespace) //
+				.filter(XmlReportWriter::isAllowedXmlCharacter) //
+				.mapToObj(Character::toString) //
+				.collect(joining());
+
+		var message = "a" + allWhitespaceCharacters + " b<&>";
+		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
+		var assertionError = new AssertionError(message);
+		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
+
+		var testsuite = writeXmlReport(testPlan, reportData);
+
+		assertValidAccordingToJenkinsSchema(testsuite.document());
+
+		var attributeValue = testsuite.find("failure").attr("message");
+		assertNotNull(attributeValue);
+
+		var stax2Absent = ReflectionSupport.tryToLoadClass(
+			"org.codehaus.stax2.XMLOutputFactory2").toOptional().isEmpty();
+		var expectedValue = attributeValue;
+		if (stax2Absent) {
+			// If Stax2 is absent, [\r\n\t] are not replaced and XML parsers normalize them
+			// to a single space as specified in https://www.w3.org/TR/xml/#AVNormalize
+			expectedValue = attributeValue.replaceAll("[\\r\\n\\t]", " ");
+		}
+		assertThat(attributeValue).isEqualTo(expectedValue);
 	}
 
 	static Stream<Arguments> stringPairs() {
