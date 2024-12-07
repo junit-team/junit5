@@ -160,3 +160,13 @@ for JUnit 4 based test reports that was made popular by the Ant build system.
 
 The `LegacyXmlReportGeneratingListener` is used by the <<running-tests-console-launcher>>
 as well.
+
+[TIP]
+====
+The legacy XML format uses XML attributes for exception messages. The default XML writer
+in the JDK does not escape newlines, tabs, and carriage returns in attribute values.
+Therefore, if you have exception messages that contain these characters and want to
+process them with downstream tools, you should consider adding a STaX2 implementation
+such as link:https://github.com/FasterXML/woodstox[Woodstox] to your test runtime
+classpath or module path.
+====
