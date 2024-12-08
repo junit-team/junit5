@@ -35,9 +35,12 @@ class EnabledOnJreCondition extends BooleanExecutionCondition<EnabledOnJre> {
 
 	@Override
 	boolean isEnabled(EnabledOnJre annotation) {
-		JRE[] versions = annotation.value();
-		Preconditions.condition(versions.length > 0, "You must declare at least one JRE in @EnabledOnJre");
-		return Arrays.stream(versions).anyMatch(JRE::isCurrentVersion);
+		JRE[] jres = annotation.value();
+		int[] featureVersions = annotation.featureVersions();
+		Preconditions.condition(jres.length > 0 || featureVersions.length > 0,
+			"You must declare at least one JRE or feature version in @EnabledOnJre");
+		return Arrays.stream(jres).anyMatch(JRE::isCurrentVersion)
+				|| Arrays.stream(featureVersions).anyMatch(JRE::isCurrentFeatureVersion);
 	}
 
 }
