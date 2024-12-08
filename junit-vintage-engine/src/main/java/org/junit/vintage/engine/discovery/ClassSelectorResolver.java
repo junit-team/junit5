@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.util.ClassFilter;
+import org.junit.platform.commons.support.scanning.ClassFilter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.UniqueId.Segment;
