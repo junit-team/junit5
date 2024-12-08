@@ -18,6 +18,7 @@ import static org.junit.platform.engine.support.descriptor.ClasspathResourceSour
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -65,6 +66,11 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, configuration);
+	}
+
+	public TestFactoryTestDescriptor(UniqueId uniqueId, List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			Method testMethod, JupiterConfiguration configuration) {
+		super(uniqueId, enclosingInstanceTypes, testClass, testMethod, configuration);
 	}
 
 	// --- Filterable ----------------------------------------------------------
