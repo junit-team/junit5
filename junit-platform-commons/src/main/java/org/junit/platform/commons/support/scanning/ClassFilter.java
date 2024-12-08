@@ -8,20 +8,21 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support.scanning;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Class-related predicate used by reflection utilities.
  *
  * @since 1.1
  */
-@API(status = INTERNAL, since = "1.1")
+@API(status = EXPERIMENTAL, since = "1.12")
 public class ClassFilter {
 
 	/**
