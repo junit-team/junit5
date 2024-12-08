@@ -18,6 +18,7 @@ import java.util.ServiceLoader;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
+import org.junit.platform.commons.support.scanning.DefaultClasspathScanner;
 
 /**
  * @since 1.12
