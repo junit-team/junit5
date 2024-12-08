@@ -55,6 +55,8 @@ JUnit repository on GitHub.
 * Output written to `System.out` and `System.err` from non-test threads is now attributed
   to the most recent test or container that was started or has written output.
 * Introduced contracts for Kotlin-specific assertion methods.
+* New public interface `ClasspathScanner` allowing third parties to provide a custom
+  implementation for scanning the classpath for classes and resources.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
