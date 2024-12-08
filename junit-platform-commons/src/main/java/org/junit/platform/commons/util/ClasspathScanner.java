@@ -188,8 +188,7 @@ class ClasspathScanner {
 					// @formatter:off
 					loadClass.apply(fullyQualifiedClassName, getClassLoader())
 							.toOptional()
-							// Always use ".filter(classFilter)" to include future predicates.
-							.filter(classFilter)
+							.filter(classFilter::match)
 							.ifPresent(classConsumer);
 					// @formatter:on
 				}

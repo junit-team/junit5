@@ -225,8 +225,6 @@ public class ModuleUtils {
 							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
 							.map(this::loadClassUnchecked)
-							// Always use ".filter(classFilter)" to include future predicates.
-							.filter(classFilter)
 							.collect(Collectors.toList());
 					// @formatter:on
 				}

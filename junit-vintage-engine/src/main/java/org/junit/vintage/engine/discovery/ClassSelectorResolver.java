@@ -59,7 +59,7 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private Resolution resolveTestClass(Class<?> testClass, Context context) {
-		if (!classFilter.test(testClass)) {
+		if (!classFilter.match(testClass) || !classFilter.match(testClass.getName())) {
 			return unresolved();
 		}
 		Runner runner = RUNNER_BUILDER.safeRunnerForClass(testClass);
