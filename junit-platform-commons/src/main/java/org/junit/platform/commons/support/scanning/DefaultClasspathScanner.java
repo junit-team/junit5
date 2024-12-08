@@ -8,13 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support.scanning;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
-import static org.junit.platform.commons.util.ClasspathFilters.CLASS_FILE_SUFFIX;
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.support.scanning.ClasspathFilters.CLASS_FILE_SUFFIX;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.io.IOException;
@@ -35,13 +36,17 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.support.scanning.ClassFilter;
-import org.junit.platform.commons.support.scanning.ClasspathScanner;
+import org.junit.platform.commons.util.ClasspathResource;
+import org.junit.platform.commons.util.CloseablePath;
+import org.junit.platform.commons.util.PackageUtils;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 
 /**
  * <h2>DISCLAIMER</h2>
@@ -52,7 +57,8 @@ import org.junit.platform.commons.support.scanning.ClasspathScanner;
  *
  * @since 1.0
  */
-class DefaultClasspathScanner implements ClasspathScanner {
+@API(status = INTERNAL, since = "1.12")
+public class DefaultClasspathScanner implements ClasspathScanner {
 
 	private static final Logger logger = LoggerFactory.getLogger(DefaultClasspathScanner.class);
 
@@ -71,7 +77,7 @@ class DefaultClasspathScanner implements ClasspathScanner {
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> loadClass;
 
-	DefaultClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
+	public DefaultClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
 			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass) {
 
 		this.classLoaderSupplier = classLoaderSupplier;
