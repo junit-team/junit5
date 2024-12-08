@@ -10,20 +10,30 @@
 
 package org.junit.platform.commons.util;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.net.URI;
 import java.util.Objects;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.support.Resource;
 
 /**
+ * <h2>DISCLAIMER</h2>
+ *
+ * <p>These utilities are intended solely for usage within the JUnit framework
+ * itself. <strong>Any usage by external parties is not supported.</strong>
+ * Use at your own risk!
+ *
  * @since 1.11
  */
-class ClasspathResource implements Resource {
+@API(status = INTERNAL, since = "1.12")
+public class ClasspathResource implements Resource {
 
 	private final String name;
 	private final URI uri;
 
-	ClasspathResource(String name, URI uri) {
+	public ClasspathResource(String name, URI uri) {
 		this.name = Preconditions.notNull(name, "name must not be null");
 		this.uri = Preconditions.notNull(uri, "uri must not be null");
 	}
