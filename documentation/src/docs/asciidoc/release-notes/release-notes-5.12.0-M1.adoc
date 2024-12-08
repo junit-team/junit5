@@ -49,6 +49,8 @@ JUnit repository on GitHub.
     report is now written by open-test-reporting when added to the classpath/module path
   - Information about published files is now included as attachments.
 * Introduced contracts for Kotlin-specific assertion methods.
+* New public interface `ClasspathScanner` allowing third parties to provide a custom
+  implementation for scanning the classpath for classes and resources.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
