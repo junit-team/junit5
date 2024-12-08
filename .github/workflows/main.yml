@@ -91,7 +91,7 @@ jobs:
           publish -x check \
           prepareGitHubAttestation
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@619dbb2e03e0189af0c55118e7d3c5e129e99726 # v2.0.0
+      uses: actions/attest-build-provenance@c4fbc648846ca6f503a13a2281a5e7b98aa57202 # v2.0.1
       with:
         subject-path: documentation/build/attestation/*.jar
 
