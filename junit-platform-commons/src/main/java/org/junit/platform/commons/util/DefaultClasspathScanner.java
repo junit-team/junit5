@@ -40,6 +40,8 @@ import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.support.scanning.ClassFilter;
+import org.junit.platform.commons.support.scanning.ClasspathScanner;
 
 /**
  * <h2>DISCLAIMER</h2>
@@ -50,9 +52,9 @@ import org.junit.platform.commons.support.Resource;
  *
  * @since 1.0
  */
-class ClasspathScanner {
+class DefaultClasspathScanner implements ClasspathScanner {
 
-	private static final Logger logger = LoggerFactory.getLogger(ClasspathScanner.class);
+	private static final Logger logger = LoggerFactory.getLogger(DefaultClasspathScanner.class);
 
 	private static final char CLASSPATH_RESOURCE_PATH_SEPARATOR = '/';
 	private static final String CLASSPATH_RESOURCE_PATH_SEPARATOR_STRING = String.valueOf(
@@ -69,14 +71,14 @@ class ClasspathScanner {
 
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> loadClass;
 
-	ClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
+	DefaultClasspathScanner(Supplier<ClassLoader> classLoaderSupplier,
 			BiFunction<String, ClassLoader, Try<Class<?>>> loadClass) {
 
 		this.classLoaderSupplier = classLoaderSupplier;
 		this.loadClass = loadClass;
 	}
 
-	List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
+	public List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
@@ -87,14 +89,14 @@ class ClasspathScanner {
 		return findClassesForUris(roots, basePackageName, classFilter);
 	}
 
-	List<Class<?>> scanForClassesInClasspathRoot(URI root, ClassFilter classFilter) {
+	public List<Class<?>> scanForClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
 
 		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
 	}
 
-	List<Resource> scanForResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
+	public List<Resource> scanForResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
 			"basePackageName must not be null or blank");
@@ -105,7 +107,7 @@ class ClasspathScanner {
 		return findResourcesForUris(roots, basePackageName, resourceFilter);
 	}
 
-	List<Resource> scanForResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
+	public List<Resource> scanForResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
 
@@ -308,7 +310,7 @@ class ClasspathScanner {
 		Set<URI> uriSet = new LinkedHashSet<>(getRootUrisForPackage(basePackageName));
 		if (!basePackageName.isEmpty() && !basePackageName.endsWith(PACKAGE_SEPARATOR_STRING)) {
 			getRootUrisForPackage(basePackageName + PACKAGE_SEPARATOR_STRING).stream() //
-					.map(ClasspathScanner::removeTrailingClasspathResourcePathSeparator) //
+					.map(DefaultClasspathScanner::removeTrailingClasspathResourcePathSeparator) //
 					.forEach(uriSet::add);
 		}
 		return new ArrayList<>(uriSet);

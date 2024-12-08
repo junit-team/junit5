@@ -50,14 +50,15 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.support.scanning.ClassFilter;
 
 /**
- * Unit tests for {@link ClasspathScanner}.
+ * Unit tests for {@link DefaultClasspathScanner}.
  *
  * @since 1.0
  */
 @TrackLogRecords
-class ClasspathScannerTests {
+class DefaultClasspathScannerTests {
 
 	private static final ClassFilter allClasses = ClassFilter.of(type -> true);
 	private static final Predicate<Resource> allResources = type -> true;
@@ -67,8 +68,8 @@ class ClasspathScannerTests {
 	private final BiFunction<String, ClassLoader, Try<Class<?>>> trackingClassLoader = (name,
 			classLoader) -> ReflectionUtils.tryToLoadClass(name, classLoader).ifSuccess(loadedClasses::add);
 
-	private final ClasspathScanner classpathScanner = new ClasspathScanner(ClassLoaderUtils::getDefaultClassLoader,
-		trackingClassLoader);
+	private final DefaultClasspathScanner classpathScanner = new DefaultClasspathScanner(
+		ClassLoaderUtils::getDefaultClassLoader, trackingClassLoader);
 
 	@Test
 	void scanForClassesInClasspathRootWhenMalformedClassnameInternalErrorOccursWithNullDetailedMessage(
@@ -152,7 +153,7 @@ class ClasspathScannerTests {
 
 	private void assertDebugMessageLogged(LogRecordListener listener, String regex) {
 		// @formatter:off
-		assertThat(listener.stream(ClasspathScanner.class, Level.FINE)
+		assertThat(listener.stream(DefaultClasspathScanner.class, Level.FINE)
 				.map(LogRecord::getMessage)
 				.filter(m -> m.matches(regex))
 		).hasSize(1);
@@ -187,7 +188,7 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var classes = classpathScanner.scanForClassesInClasspathRoot(jarfile.toURI(), allClasses);
 			assertThat(classes).extracting(Class::getName) //
@@ -211,7 +212,7 @@ class ClasspathScannerTests {
 		var jarfile = getClass().getResource(resourceName);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarfile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(jarfile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName) //
@@ -228,7 +229,7 @@ class ClasspathScannerTests {
 		var shadowedJarFile = getClass().getResource("/jartest-shadowed.jar");
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile, shadowedJarFile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var resources = classpathScanner.scanForResourcesInClasspathRoot(shadowedJarFile.toURI(), allResources);
 			assertThat(resources).extracting(Resource::getName).containsExactlyInAnyOrder(
@@ -238,7 +239,7 @@ class ClasspathScannerTests {
 				"META-INF/MANIFEST.MF");
 
 			assertThat(resources).extracting(Resource::getUri) //
-					.map(ClasspathScannerTests::jarFileAndEntry) //
+					.map(DefaultClasspathScannerTests::jarFileAndEntry) //
 					.containsExactlyInAnyOrder(
 						// This resource only exists in the shadowed jar file
 						"jartest-shadowed.jar!/org/junit/platform/jartest/included/unique.resource",
@@ -256,13 +257,13 @@ class ClasspathScannerTests {
 		var shadowedJarFile = getClass().getResource("/jartest-shadowed.jar");
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile, shadowedJarFile }, null)) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included",
 				allResources);
 
 			assertThat(resources).extracting(Resource::getUri) //
-					.map(ClasspathScannerTests::jarFileAndEntry) //
+					.map(DefaultClasspathScannerTests::jarFileAndEntry) //
 					.containsExactlyInAnyOrder(
 						// This resource only exists in the shadowed jar file
 						"jartest-shadowed.jar!/org/junit/platform/jartest/included/unique.resource",
@@ -329,7 +330,8 @@ class ClasspathScannerTests {
 		var parent = ClassLoader.getPlatformClassLoader();
 		var layer = ModuleLayer.defineModulesWithOneLoader(configuration, List.of(boot), parent).layer();
 
-		var classpathScanner = new ClasspathScanner(() -> layer.findLoader(root), ReflectionUtils::tryToLoadClass);
+		var classpathScanner = new DefaultClasspathScanner(() -> layer.findLoader(root),
+			ReflectionUtils::tryToLoadClass);
 		{
 			var classes = classpathScanner.scanForClassesInPackage("foo", allClasses);
 			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
@@ -348,7 +350,7 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForClassesInPackage("org.junit.platform.jartest.included", allClasses));
@@ -369,7 +371,7 @@ class ClasspathScannerTests {
 		var jarUri = URI.create("jar:" + jarFile);
 
 		try (var classLoader = new URLClassLoader(new URL[] { jarFile })) {
-			var classpathScanner = new ClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
+			var classpathScanner = new DefaultClasspathScanner(() -> classLoader, ReflectionUtils::tryToLoadClass);
 
 			var results = executeConcurrently(10,
 				() -> classpathScanner.scanForResourcesInPackage("org.junit.platform.jartest.included", allResources));
@@ -410,9 +412,9 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInPackageWithFilter() {
-		var thisClassOnly = ClassFilter.of(clazz -> clazz == ClasspathScannerTests.class);
+		var thisClassOnly = ClassFilter.of(clazz -> clazz == DefaultClasspathScannerTests.class);
 		var classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", thisClassOnly);
-		assertSame(ClasspathScannerTests.class, classes.get(0));
+		assertSame(DefaultClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
@@ -471,34 +473,34 @@ class ClasspathScannerTests {
 
 	@Test
 	void scanForClassesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
+		var scanner = new DefaultClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
 		var classes = scanner.scanForClassesInPackage("org.junit.platform.commons", allClasses);
 		assertThat(classes).isEmpty();
 	}
 
 	@Test
 	void scanForResourcesInPackageWhenIOExceptionOccurs() {
-		var scanner = new ClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
+		var scanner = new DefaultClasspathScanner(ThrowingClassLoader::new, ReflectionUtils::tryToLoadClass);
 		var classes = scanner.scanForResourcesInPackage("org.junit.platform.commons", allResources);
 		assertThat(classes).isEmpty();
 	}
 
 	@Test
 	void scanForClassesInPackageOnlyLoadsClassesThatAreIncludedByTheClassNameFilter() {
-		Predicate<String> classNameFilter = name -> ClasspathScannerTests.class.getName().equals(name);
+		Predicate<String> classNameFilter = name -> DefaultClasspathScannerTests.class.getName().equals(name);
 		var classFilter = ClassFilter.of(classNameFilter, type -> true);
 
 		classpathScanner.scanForClassesInPackage("org.junit.platform.commons", classFilter);
 
-		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+		assertThat(loadedClasses).containsExactly(DefaultClasspathScannerTests.class);
 	}
 
 	@Test
 	void findAllClassesInClasspathRoot() throws Exception {
-		var thisClassOnly = ClassFilter.of(clazz -> clazz == ClasspathScannerTests.class);
+		var thisClassOnly = ClassFilter.of(clazz -> clazz == DefaultClasspathScannerTests.class);
 		var root = getTestClasspathRoot();
 		var classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
-		assertSame(ClasspathScannerTests.class, classes.get(0));
+		assertSame(DefaultClasspathScannerTests.class, classes.get(0));
 	}
 
 	@Test
@@ -543,7 +545,7 @@ class ClasspathScannerTests {
 		var classes = classpathScanner.scanForClassesInClasspathRoot(root, allClasses);
 
 		assertThat(classes).hasSizeGreaterThanOrEqualTo(20);
-		assertTrue(classes.contains(ClasspathScannerTests.class));
+		assertTrue(classes.contains(DefaultClasspathScannerTests.class));
 	}
 
 	@Test
@@ -566,16 +568,17 @@ class ClasspathScannerTests {
 
 	@Test
 	void onlyLoadsClassesInClasspathRootThatAreIncludedByTheClassNameFilter() throws Exception {
-		var classFilter = ClassFilter.of(name -> ClasspathScannerTests.class.getName().equals(name), type -> true);
+		var classFilter = ClassFilter.of(name -> DefaultClasspathScannerTests.class.getName().equals(name),
+			type -> true);
 		var root = getTestClasspathRoot();
 
 		classpathScanner.scanForClassesInClasspathRoot(root, classFilter);
 
-		assertThat(loadedClasses).containsExactly(ClasspathScannerTests.class);
+		assertThat(loadedClasses).containsExactly(DefaultClasspathScannerTests.class);
 	}
 
 	private static URI uriOf(String name) {
-		var resource = ClasspathScannerTests.class.getResource(name);
+		var resource = DefaultClasspathScannerTests.class.getResource(name);
 		try {
 			return requireNonNull(resource).toURI();
 		}
