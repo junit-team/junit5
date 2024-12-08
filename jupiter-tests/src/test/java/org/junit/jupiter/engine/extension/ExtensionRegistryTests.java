@@ -60,6 +60,7 @@ class ExtensionRegistryTests {
 	void newRegistryWithoutParentHasDefaultExtensionsPlusAutodetectedExtensionsLoadedViaServiceLoader() {
 
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(__ -> true);
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
