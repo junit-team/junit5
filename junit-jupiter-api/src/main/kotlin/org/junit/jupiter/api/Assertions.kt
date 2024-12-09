@@ -107,7 +107,7 @@ fun assertAll(vararg executables: () -> Unit) = assertAll(executables.toList().s
 fun assertAll(
     heading: String?,
     vararg executables: () -> Unit
-) = assertAll(heading, executables.toList().stream())
+) = assertAll(heading, executables.toList())
 
 /**
  * Example usage:
@@ -267,7 +267,11 @@ fun assertNotNull(
  * ```
  * @see Assertions.assertThrows
  */
+@OptIn(ExperimentalContracts::class)
 inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
     val throwable: Throwable? =
         try {
             executable()
@@ -394,8 +398,8 @@ inline fun <R> assertDoesNotThrow(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
         callsInPlace(message, AT_MOST_ONCE)
+        callsInPlace(executable, EXACTLY_ONCE)
     }
 
     return Assertions.assertDoesNotThrow(
@@ -478,8 +482,8 @@ fun <R> assertTimeout(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
         callsInPlace(message, AT_MOST_ONCE)
+        callsInPlace(executable, EXACTLY_ONCE)
     }
 
     return Assertions.assertTimeout(timeout, executable, message)
@@ -495,11 +499,17 @@ fun <R> assertTimeout(
  * @see Assertions.assertTimeoutPreemptively
  * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     executable: () -> R
-): R = Assertions.assertTimeoutPreemptively(timeout, executable)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+    return Assertions.assertTimeoutPreemptively(timeout, executable)
+}
 
 /**
  * Example usage:
@@ -511,12 +521,18 @@ fun <R> assertTimeoutPreemptively(
  * @see Assertions.assertTimeoutPreemptively
  * @param R the result of the [executable].
  */
+@OptIn(ExperimentalContracts::class)
 @API(status = STABLE, since = "5.11")
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     message: String,
     executable: () -> R
-): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)
+): R {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+    return Assertions.assertTimeoutPreemptively(timeout, executable, message)
+}
 
 /**
  * Example usage:
@@ -537,6 +553,7 @@ fun <R> assertTimeoutPreemptively(
 ): R {
     contract {
         callsInPlace(message, AT_MOST_ONCE)
+        callsInPlace(executable, EXACTLY_ONCE)
     }
 
     return Assertions.assertTimeoutPreemptively(timeout, executable, message)
