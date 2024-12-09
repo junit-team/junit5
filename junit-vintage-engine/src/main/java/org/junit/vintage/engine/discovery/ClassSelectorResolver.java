@@ -43,7 +43,10 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(ClassSelector selector, Context context) {
-		return resolveTestClass(selector.getJavaClass(), context);
+		if (classFilter.match(selector.getClassName())) {
+			return resolveTestClassThatPassedNameFilter(selector.getJavaClass(), context);
+		}
+		return unresolved();
 	}
 
 	@Override
@@ -51,15 +54,17 @@ class ClassSelectorResolver implements SelectorResolver {
 		Segment lastSegment = selector.getUniqueId().getLastSegment();
 		if (SEGMENT_TYPE_RUNNER.equals(lastSegment.getType())) {
 			String testClassName = lastSegment.getValue();
-			Class<?> testClass = ReflectionSupport.tryToLoadClass(testClassName)//
-					.getOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
-			return resolveTestClass(testClass, context);
+			if (classFilter.match(testClassName)) {
+				Class<?> testClass = ReflectionSupport.tryToLoadClass(testClassName)//
+						.getOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
+				return resolveTestClassThatPassedNameFilter(testClass, context);
+			}
 		}
 		return unresolved();
 	}
 
-	private Resolution resolveTestClass(Class<?> testClass, Context context) {
-		if (!classFilter.match(testClass) || !classFilter.match(testClass.getName())) {
+	private Resolution resolveTestClassThatPassedNameFilter(Class<?> testClass, Context context) {
+		if (!classFilter.match(testClass)) {
 			return unresolved();
 		}
 		Runner runner = RUNNER_BUILDER.safeRunnerForClass(testClass);
