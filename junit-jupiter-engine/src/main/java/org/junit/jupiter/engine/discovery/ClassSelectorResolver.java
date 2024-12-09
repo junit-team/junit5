@@ -82,8 +82,9 @@ class ClassSelectorResolver implements SelectorResolver {
 	@Override
 	public Resolution resolve(NestedClassSelector selector, Context context) {
 		if (isNestedTestClass.test(selector.getNestedClass())) {
-			return toResolution(context.addToParent(() -> selectClass(selector.getEnclosingClasses()),
-				parent -> Optional.of(newNestedClassTestDescriptor(parent, selector.getNestedClass()))));
+			return toResolution(
+				context.addToParent(() -> selectClass(selector.getEnclosingClasses()), parent -> Optional.of(
+					newNestedClassTestDescriptor(parent, selector.getEnclosingClasses(), selector.getNestedClass()))));
 		}
 		return unresolved();
 	}
@@ -125,6 +126,13 @@ class ClassSelectorResolver implements SelectorResolver {
 		return new NestedClassTestDescriptor(
 			parent.getUniqueId().append(NestedClassTestDescriptor.SEGMENT_TYPE, testClass.getSimpleName()), testClass,
 			configuration);
+	}
+
+	private NestedClassTestDescriptor newNestedClassTestDescriptor(TestDescriptor parent,
+			List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
+		return new NestedClassTestDescriptor(
+			parent.getUniqueId().append(NestedClassTestDescriptor.SEGMENT_TYPE, testClass.getSimpleName()),
+			enclosingInstanceTypes, testClass, configuration);
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {

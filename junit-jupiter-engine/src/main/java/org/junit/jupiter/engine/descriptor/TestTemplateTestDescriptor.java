@@ -50,6 +50,11 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		super(uniqueId, testClass, templateMethod, configuration);
 	}
 
+	public TestTemplateTestDescriptor(UniqueId uniqueId, List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			Method templateMethod, JupiterConfiguration configuration) {
+		super(uniqueId, enclosingInstanceTypes, testClass, templateMethod, configuration);
+	}
+
 	// --- Filterable ----------------------------------------------------------
 
 	@Override
