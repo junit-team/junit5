@@ -45,7 +45,7 @@ JUnit repository on GitHub.
 [[release-notes-5.11.4-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* JAVA_25 has been added to the JRE enum for use with JRE-based execution conditions.
+* `JAVA_25` has been added to the `JRE` enum for use with JRE-based execution conditions.
 
 
 [[release-notes-5.11.4-junit-vintage]]
