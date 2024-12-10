@@ -38,6 +38,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.support.scanning.ClassFilter;
 
 /**
  * Collection of utilities for working with {@code java.lang.Module}
@@ -225,8 +226,6 @@ public class ModuleUtils {
 							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
 							.map(this::loadClassUnchecked)
-							// Always use ".filter(classFilter)" to include future predicates.
-							.filter(classFilter)
 							.collect(Collectors.toList());
 					// @formatter:on
 				}
