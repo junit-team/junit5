@@ -126,4 +126,5 @@ jobs:
           gitPublishPush \
           -Dscan.tag.Documentation
       env:
-        GRGIT_USER: ${{ secrets.GH_TOKEN }}
+        GIT_USERNAME: git
+        GIT_PASSWORD: ${{ secrets.GH_TOKEN }}

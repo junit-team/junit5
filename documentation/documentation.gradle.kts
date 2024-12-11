@@ -108,6 +108,9 @@ gitPublish {
 	sign = false
 	fetchDepth = 1
 
+	username = providers.environmentVariable("GIT_USERNAME")
+	password = providers.environmentVariable("GIT_PASSWORD")
+
 	contents {
 		from(docsDir)
 		into("docs")
