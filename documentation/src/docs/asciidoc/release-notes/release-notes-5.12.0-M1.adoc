@@ -16,8 +16,7 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Enable auto-flushing of output in the `ConsoleLauncher` to fix issues with buffering,
-  in particular when using the `--details=testfeed` option.
+* ❓
 
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
