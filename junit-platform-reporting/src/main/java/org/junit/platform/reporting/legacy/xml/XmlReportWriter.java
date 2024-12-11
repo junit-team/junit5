@@ -115,10 +115,12 @@ class XmlReportWriter {
 	private void writeXmlReport(TestIdentifier testIdentifier, Map<TestIdentifier, AggregatedTestResult> tests,
 			Writer out) throws XMLStreamException {
 
-		new XmlReport(out).write(testIdentifier, tests);
+		try (XmlReport report = new XmlReport(out)) {
+			report.write(testIdentifier, tests);
+		}
 	}
 
-	class XmlReport implements AutoCloseable {
+	private class XmlReport implements AutoCloseable {
 
 		private final XMLStreamWriter xml;
 		private final ReplacingWriter out;
