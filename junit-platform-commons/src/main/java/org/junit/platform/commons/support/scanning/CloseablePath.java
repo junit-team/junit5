@@ -8,10 +8,9 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support.scanning;
 
 import static java.util.Collections.emptyMap;
-import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,19 +27,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
-import org.apiguardian.api.API;
-
 /**
- * <h2>DISCLAIMER</h2>
- *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
- * Use at your own risk!
- *
  * @since 1.0
  */
-@API(status = INTERNAL, since = "1.12")
-public final class CloseablePath implements Closeable {
+final class CloseablePath implements Closeable {
 
 	private static final String FILE_URI_SCHEME = "file";
 	static final String JAR_URI_SCHEME = "jar";
@@ -57,7 +47,7 @@ public final class CloseablePath implements Closeable {
 	private final Path path;
 	private final Closeable delegate;
 
-	public static CloseablePath create(URI uri) throws URISyntaxException {
+	static CloseablePath create(URI uri) throws URISyntaxException {
 		return create(uri, it -> FileSystems.newFileSystem(it, emptyMap()));
 	}
 

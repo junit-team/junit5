@@ -62,6 +62,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.DefaultResource;
 import org.junit.platform.commons.support.Resource;
 import org.junit.platform.commons.support.scanning.ClassFilter;
 import org.junit.platform.commons.support.scanning.ClasspathScanner;
@@ -936,7 +937,7 @@ public final class ReflectionUtils {
 			List<URL> resources = Collections.list(classLoader.getResources(canonicalClasspathResourceName));
 			return resources.stream().map(url -> {
 				try {
-					return new ClasspathResource(canonicalClasspathResourceName, url.toURI());
+					return new DefaultResource(canonicalClasspathResourceName, url.toURI());
 				}
 				catch (URISyntaxException e) {
 					throw ExceptionUtils.throwAsUncheckedException(e);

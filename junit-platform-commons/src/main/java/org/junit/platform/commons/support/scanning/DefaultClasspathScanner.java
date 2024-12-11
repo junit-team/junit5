@@ -41,9 +41,8 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.DefaultResource;
 import org.junit.platform.commons.support.Resource;
-import org.junit.platform.commons.util.ClasspathResource;
-import org.junit.platform.commons.util.CloseablePath;
 import org.junit.platform.commons.util.PackageUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -84,6 +83,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		this.loadClass = loadClass;
 	}
 
+	@Override
 	public List<Class<?>> scanForClassesInPackage(String basePackageName, ClassFilter classFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
@@ -95,6 +95,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		return findClassesForUris(roots, basePackageName, classFilter);
 	}
 
+	@Override
 	public List<Class<?>> scanForClassesInClasspathRoot(URI root, ClassFilter classFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(classFilter, "classFilter must not be null");
@@ -102,6 +103,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		return findClassesForUri(root, PackageUtils.DEFAULT_PACKAGE_NAME, classFilter);
 	}
 
+	@Override
 	public List<Resource> scanForResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
 		Preconditions.condition(
 			PackageUtils.DEFAULT_PACKAGE_NAME.equals(basePackageName) || isNotBlank(basePackageName),
@@ -113,6 +115,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		return findResourcesForUris(roots, basePackageName, resourceFilter);
 	}
 
+	@Override
 	public List<Resource> scanForResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
 		Preconditions.notNull(root, "root must not be null");
 		Preconditions.notNull(resourceFilter, "resourceFilter must not be null");
@@ -215,7 +218,7 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 		try {
 			String fullyQualifiedResourceName = determineFullyQualifiedResourceName(baseDir, basePackageName,
 				resourceFile);
-			Resource resource = new ClasspathResource(fullyQualifiedResourceName, resourceFile.toUri());
+			Resource resource = new DefaultResource(fullyQualifiedResourceName, resourceFile.toUri());
 			if (resourceFilter.test(resource)) {
 				resourceConsumer.accept(resource);
 			}

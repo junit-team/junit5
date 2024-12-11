@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -16,7 +16,8 @@ import java.net.URI;
 import java.util.Objects;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * <h2>DISCLAIMER</h2>
@@ -28,12 +29,12 @@ import org.junit.platform.commons.support.Resource;
  * @since 1.11
  */
 @API(status = INTERNAL, since = "1.12")
-public class ClasspathResource implements Resource {
+public class DefaultResource implements Resource {
 
 	private final String name;
 	private final URI uri;
 
-	public ClasspathResource(String name, URI uri) {
+	public DefaultResource(String name, URI uri) {
 		this.name = Preconditions.notNull(name, "name must not be null");
 		this.uri = Preconditions.notNull(uri, "uri must not be null");
 	}
@@ -54,7 +55,7 @@ public class ClasspathResource implements Resource {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		ClasspathResource that = (ClasspathResource) o;
+		DefaultResource that = (DefaultResource) o;
 		return name.equals(that.name) && uri.equals(that.uri);
 	}
 

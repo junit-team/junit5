@@ -36,7 +36,9 @@ class ClasspathScannerLoader {
 		}
 
 		if (classpathScanners.size() > 1) {
-			throw new JUnitException("There should not be more than one ClasspathScanner implementation provided.");
+			throw new JUnitException(String.format(
+				"There should not be more than one ClasspathScanner implementation present on the classpath but there were %d: %s",
+				classpathScanners.size(), classpathScanners));
 		}
 
 		return new DefaultClasspathScanner(ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
