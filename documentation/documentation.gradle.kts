@@ -105,6 +105,8 @@ val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSH
 
 gitPublish {
 	repoUri = "https://github.com/junit-team/junit5.git"
+	referenceRepoUri = rootDir.toURI().toString()
+
 	branch = "gh-pages"
 	sign = false
 	fetchDepth = 1
