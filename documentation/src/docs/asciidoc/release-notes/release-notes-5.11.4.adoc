@@ -1,9 +1,9 @@
 [[release-notes-5.11.4]]
 == 5.11.4
 
-*Date of Release:* ❓
+*Date of Release:* December 13, 2024
 
-*Scope:* ❓
+*Scope:* Bug fixes and enhancements since 5.11.3
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/86?closed=1+[5.11.4] milestone page in the
@@ -23,29 +23,9 @@ JUnit repository on GitHub.
 * Enable auto-flushing of output in the `ConsoleLauncher` to fix issues with buffering,
   in particular when using the `--details=testfeed` option.
 
-[[release-notes-5.11.4-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.4-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.11.4-junit-jupiter]]
 === JUnit Jupiter
-
-[[release-notes-5.11.4-junit-jupiter-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.4-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
 
 [[release-notes-5.11.4-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -56,17 +36,4 @@ JUnit repository on GitHub.
 [[release-notes-5.11.4-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.11.4-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.11.4-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.11.4-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
