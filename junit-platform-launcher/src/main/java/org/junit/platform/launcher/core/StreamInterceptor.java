@@ -15,12 +15,15 @@ import java.io.PrintStream;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Consumer;
 
 /**
  * @since 1.3
  */
 class StreamInterceptor extends PrintStream {
+
+	private final Deque<RewindableByteArrayOutputStream> mostRecentOutputs = new ConcurrentLinkedDeque<>();
 
 	private final PrintStream originalStream;
 	private final Consumer<PrintStream> unregisterAction;
@@ -56,11 +59,18 @@ class StreamInterceptor extends PrintStream {
 	}
 
 	void capture() {
-		output.get().mark();
+		RewindableByteArrayOutputStream out = output.get();
+		out.mark();
+		pushToTop(out);
 	}
 
 	String consume() {
-		return output.get().rewind();
+		RewindableByteArrayOutputStream out = output.get();
+		String result = out.rewind();
+		if (!out.isMarked()) {
+			mostRecentOutputs.remove(out);
+		}
+		return result;
 	}
 
 	void unregister() {
@@ -69,8 +79,9 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(int b) {
-		RewindableByteArrayOutputStream out = output.get();
-		if (out.isMarked() && out.size() < maxNumberOfBytesPerThread) {
+		RewindableByteArrayOutputStream out = getOutput();
+		if (out != null && out.size() < maxNumberOfBytesPerThread) {
+			pushToTop(out);
 			out.write(b);
 		}
 		super.write(b);
@@ -83,14 +94,27 @@ class StreamInterceptor extends PrintStream {
 
 	@Override
 	public void write(byte[] buf, int off, int len) {
-		RewindableByteArrayOutputStream out = output.get();
-		if (out.isMarked()) {
+		RewindableByteArrayOutputStream out = getOutput();
+		if (out != null) {
 			int actualLength = Math.max(0, Math.min(len, maxNumberOfBytesPerThread - out.size()));
 			if (actualLength > 0) {
+				pushToTop(out);
 				out.write(buf, off, actualLength);
 			}
 		}
 		super.write(buf, off, len);
+	}
+
+	private void pushToTop(RewindableByteArrayOutputStream out) {
+		if (!out.equals(mostRecentOutputs.peek())) {
+			mostRecentOutputs.remove(out);
+			mostRecentOutputs.push(out);
+		}
+	}
+
+	private RewindableByteArrayOutputStream getOutput() {
+		RewindableByteArrayOutputStream out = output.get();
+		return out.isMarked() ? out : mostRecentOutputs.peek();
 	}
 
 	static class RewindableByteArrayOutputStream extends ByteArrayOutputStream {

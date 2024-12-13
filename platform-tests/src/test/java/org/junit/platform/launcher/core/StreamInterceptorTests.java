@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.IntStream;
 
+import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -27,17 +28,19 @@ import org.junit.jupiter.api.Test;
  */
 class StreamInterceptorTests {
 
-	private ByteArrayOutputStream originalOut = new ByteArrayOutputStream();
-	private PrintStream targetStream = new PrintStream(originalOut);
+	final ByteArrayOutputStream originalOut = new ByteArrayOutputStream();
+	PrintStream targetStream = new PrintStream(originalOut);
+
+	@AutoClose
+	StreamInterceptor streamInterceptor;
 
 	@Test
 	void interceptsWriteOperationsToStreamPerThread() {
-		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+		streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
 			3).orElseThrow(RuntimeException::new);
 		// @formatter:off
 		IntStream.range(0, 1000)
 				.parallel()
-				.peek(i -> targetStream.println(i))
 				.mapToObj(String::valueOf)
 				.peek(i -> streamInterceptor.capture())
 				.peek(i -> targetStream.println(i))
@@ -49,7 +52,7 @@ class StreamInterceptorTests {
 	void unregisterRestoresOriginalStream() {
 		var originalStream = targetStream;
 
-		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+		streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
 			3).orElseThrow(RuntimeException::new);
 		assertSame(streamInterceptor, targetStream);
 
@@ -61,8 +64,8 @@ class StreamInterceptorTests {
 	void writeForwardsOperationsToOriginalStream() throws IOException {
 		var originalStream = targetStream;
 
-		StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream, 2).orElseThrow(
-			RuntimeException::new);
+		streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+			2).orElseThrow(RuntimeException::new);
 		assertNotSame(originalStream, targetStream);
 
 		targetStream.write('a');
@@ -73,7 +76,7 @@ class StreamInterceptorTests {
 
 	@Test
 	void handlesNestedCaptures() {
-		var streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+		streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
 			100).orElseThrow(RuntimeException::new);
 
 		String outermost, inner, innermost;
@@ -99,5 +102,20 @@ class StreamInterceptorTests {
 			() -> assertEquals("before inner - after inner", inner), //
 			() -> assertEquals("innermost", innermost) //
 		);
+	}
+
+	@Test
+	void capturesOutputFromNonTestThreads() throws Exception {
+		streamInterceptor = StreamInterceptor.register(targetStream, newStream -> this.targetStream = newStream,
+			100).orElseThrow(RuntimeException::new);
+
+		streamInterceptor.capture();
+		var thread = new Thread(() -> {
+			targetStream.println("from non-test thread");
+		});
+		thread.start();
+		thread.join();
+
+		assertEquals("from non-test thread", streamInterceptor.consume().trim());
 	}
 }
