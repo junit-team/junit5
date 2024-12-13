@@ -47,6 +47,7 @@ JUnit repository on GitHub.
   - A section containing JUnit-specific metadata about each test/container to the HTML
     report is now written by open-test-reporting when added to the classpath/module path
   - Information about published files is now included as attachments.
+  - If output capturing is enabled, the captured output is now included in the XML report.
 * Introduced contracts for Kotlin-specific assertion methods.
 
 

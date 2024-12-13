@@ -126,6 +126,8 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += CommandLineArgumentProvider {
 		listOf(
 			"-Djunit.platform.reporting.open.xml.enabled=true",
+			"-Djunit.platform.output.capture.stdout=true",
+			"-Djunit.platform.output.capture.stderr=true",
 			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}/junit-{uniqueNumber}",
 		)
 	}
