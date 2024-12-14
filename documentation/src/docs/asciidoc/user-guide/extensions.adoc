@@ -289,11 +289,6 @@ Specifically, a custom extension can be registered by supplying its fully qualif
 name in a file named `org.junit.jupiter.api.extension.Extension` within the
 `/META-INF/services` folder in its enclosing JAR file.
 
-[[automatic-extension-registration-pattern-matching]]
-===== Pattern Matching Syntax
-
-Refer to <<running-tests-config-params-deactivation-pattern>> for details.
-
 [[extensions-registration-automatic-enabling]]
 ===== Enabling Automatic Extension Detection
 
@@ -311,6 +306,25 @@ following system property.
 When auto-detection is enabled, extensions discovered via the `{ServiceLoader}` mechanism
 will be added to the extension registry after JUnit Jupiter's global extensions (e.g.,
 support for `TestInfo`, `TestReporter`, etc.).
+
+[[extensions-registration-automatic-filtering]]
+===== Filtering Auto-detected Extensions
+
+The list of auto-detected extensions can be filtered using include and exclude patterns
+via the following <<running-tests-config-params, configuration parameters>>:
+
+`junit.jupiter.extensions.autodetection.include=<patterns>`::
+    Comma-separated list of _include_ patterns for auto-detected extensions.
+`junit.jupiter.extensions.autodetection.exclude=<patterns>`::
+    Comma-separated list of _exclude_ patterns for auto-detected extensions.
+
+Include patterns are applied _before_ exclude patterns. If both include and exclude
+patterns are provided, only extensions that match at least one include pattern and do not
+match any exclude pattern will be auto-detected.
+
+See <<running-tests-config-params-deactivation-pattern>> for details on the pattern syntax.
+
+[[extensions-registration-automatic-conditional]]
 
 [[extensions-registration-inheritance]]
 ==== Extension Inheritance
@@ -373,7 +387,7 @@ following system property.
 [[extensions-conditions-deactivation-patterns]]
 ===== Pattern Matching Syntax
 
-Pattern matching syntax is used to automatically detect and register extensions. For more details, refer to the <<automatic-extension-registration-pattern-matching,Pattern Matching Syntax>> section.
+Refer to <<running-tests-config-params-deactivation-pattern>> for details.
 
 [[extensions-test-instance-pre-construct-callback]]
 === Test Instance Pre-construct Callback
