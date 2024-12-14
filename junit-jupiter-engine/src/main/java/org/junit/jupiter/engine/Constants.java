@@ -168,15 +168,6 @@ public final class Constants {
 	public static final String DEACTIVATE_ALL_CONDITIONS_PATTERN = ClassNamePatternFilterUtils.ALL_PATTERN;
 
 	/**
-	 * A blank pattern used for class name filtering: {@value}
-	 *
-	 * <p>This constant is used to represent an empty or blank pattern in class name filtering operations.
-	 *
-	 * @see ClassNamePatternFilterUtils#BLANK
-	 */
-	public static final String BLANK = ClassNamePatternFilterUtils.BLANK;
-
-	/**
 	 * Property name used to set the default display name generator class name: {@value}
 	 *
 	 * @see DisplayNameGenerator#DEFAULT_GENERATOR_PROPERTY_NAME
