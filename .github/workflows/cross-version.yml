@@ -22,8 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         jdk:
-        - version: 22
-          type: ga
         - version: 23
           type: ga
         - version: 24
