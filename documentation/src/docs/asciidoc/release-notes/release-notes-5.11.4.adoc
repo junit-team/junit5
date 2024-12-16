@@ -1,7 +1,7 @@
 [[release-notes-5.11.4]]
 == 5.11.4
 
-*Date of Release:* December 13, 2024
+*Date of Release:* December 16, 2024
 
 *Scope:* Bug fixes and enhancements since 5.11.3
 
