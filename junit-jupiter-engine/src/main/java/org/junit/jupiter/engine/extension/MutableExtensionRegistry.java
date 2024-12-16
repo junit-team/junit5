@@ -98,28 +98,28 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry,
 			JupiterConfiguration configuration) {
+
 		Predicate<Class<? extends Extension>> filter = configuration.getFilterForAutoDetectedExtensions();
+		List<Class<? extends Extension>> excludedExtensions = new ArrayList<>();
 
 		ServiceLoader<Extension> serviceLoader = ServiceLoader.load(Extension.class,
 			ClassLoaderUtils.getDefaultClassLoader());
-		ServiceLoaderUtils.filter(serviceLoader, filter) //
+		ServiceLoaderUtils.filter(serviceLoader, clazz -> {
+			boolean included = filter.test(clazz);
+			if (!included) {
+				excludedExtensions.add(clazz);
+			}
+			return included;
+		}) //
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
 
-		logExcludedExtensions(serviceLoader, filter);
+		logExcludedExtensions(excludedExtensions);
 	}
 
-	private static void logExcludedExtensions(ServiceLoader<Extension> serviceLoader,
-			Predicate<Class<? extends Extension>> filter) {
-		List<Class<? extends Extension>> excludeExtensions = new ArrayList<>();
-		serviceLoader.forEach(extension -> {
-			if (!filter.test(extension.getClass())) {
-				excludeExtensions.add(extension.getClass());
-			}
-		});
-
-		if (!excludeExtensions.isEmpty()) {
+	private static void logExcludedExtensions(List<Class<? extends Extension>> excludedExtensions) {
+		if (!excludedExtensions.isEmpty()) {
 			// @formatter:off
-			List<String> excludeExtensionNames = excludeExtensions
+			List<String> excludeExtensionNames = excludedExtensions
 					.stream()
 					.map(Class::getName)
 					.collect(Collectors.toList());
