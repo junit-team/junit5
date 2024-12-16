@@ -52,6 +52,8 @@ JUnit repository on GitHub.
   - If <<../user-guide/index.adoc#running-tests-capturing-output, output capturing>> is
     enabled, the captured output written to `System.out` and `System.err` is now included
     in the XML report.
+* Output written to `System.out` and `System.err` from non-test threads is now attributed
+  to the most recent test or container that was started or has written output.
 * Introduced contracts for Kotlin-specific assertion methods.
 
 
