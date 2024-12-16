@@ -80,19 +80,21 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 
 	@Override
 	public Predicate<Class<? extends Extension>> getFilterForAutoDetectedExtensions() {
-		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(
-			getExtensionAutodetectionIncludePattern().orElse(ClassNamePatternFilterUtils.ALL_PATTERN)) //
-				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(
-					getExtensionAutodetectionExcludePattern().orElse(ClassNamePatternFilterUtils.BLANK)));
+		String includePattern = getExtensionAutoDetectionIncludePattern();
+		String excludePattern = getExtensionAutoDetectionExcludePattern();
+		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(includePattern) //
+				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(excludePattern));
 		return clazz -> predicate.test(clazz.getName());
 	}
 
-	private Optional<String> getExtensionAutodetectionIncludePattern() {
-		return configurationParameters.get(EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME);
+	private String getExtensionAutoDetectionIncludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME) //
+				.orElse(ClassNamePatternFilterUtils.ALL_PATTERN);
 	}
 
-	private Optional<String> getExtensionAutodetectionExcludePattern() {
-		return configurationParameters.get(EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME);
+	private String getExtensionAutoDetectionExcludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME) //
+				.orElse(ClassNamePatternFilterUtils.BLANK);
 	}
 
 	@Override
