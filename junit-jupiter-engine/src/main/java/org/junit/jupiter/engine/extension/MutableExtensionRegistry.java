@@ -28,6 +28,8 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -38,6 +40,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.ServiceLoaderUtils;
 
 /**
  * Default, mutable implementation of {@link ExtensionRegistry}.
@@ -83,7 +86,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		extensionRegistry.registerDefaultExtension(new TempDirectory(configuration));
 
 		if (configuration.isExtensionAutoDetectionEnabled()) {
-			registerAutoDetectedExtensions(extensionRegistry);
+			registerAutoDetectedExtensions(extensionRegistry, configuration);
 		}
 
 		if (configuration.isThreadDumpOnTimeoutEnabled()) {
@@ -93,9 +96,37 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		return extensionRegistry;
 	}
 
-	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry) {
-		ServiceLoader.load(Extension.class, ClassLoaderUtils.getDefaultClassLoader())//
+	private static void registerAutoDetectedExtensions(MutableExtensionRegistry extensionRegistry,
+			JupiterConfiguration configuration) {
+
+		Predicate<Class<? extends Extension>> filter = configuration.getFilterForAutoDetectedExtensions();
+		List<Class<? extends Extension>> excludedExtensions = new ArrayList<>();
+
+		ServiceLoader<Extension> serviceLoader = ServiceLoader.load(Extension.class,
+			ClassLoaderUtils.getDefaultClassLoader());
+		ServiceLoaderUtils.filter(serviceLoader, clazz -> {
+			boolean included = filter.test(clazz);
+			if (!included) {
+				excludedExtensions.add(clazz);
+			}
+			return included;
+		}) //
 				.forEach(extensionRegistry::registerAutoDetectedExtension);
+
+		logExcludedExtensions(excludedExtensions);
+	}
+
+	private static void logExcludedExtensions(List<Class<? extends Extension>> excludedExtensions) {
+		if (!excludedExtensions.isEmpty()) {
+			// @formatter:off
+			List<String> excludeExtensionNames = excludedExtensions
+					.stream()
+					.map(Class::getName)
+					.collect(Collectors.toList());
+			// @formatter:on
+			logger.config(() -> String.format(
+				"Excluded auto-detected extensions due to configured includes/excludes: %s", excludeExtensionNames));
+		}
 	}
 
 	/**

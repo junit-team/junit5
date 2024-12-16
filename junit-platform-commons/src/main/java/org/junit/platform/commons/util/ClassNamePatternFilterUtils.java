@@ -43,6 +43,8 @@ public class ClassNamePatternFilterUtils {
 
 	public static final String ALL_PATTERN = "*";
 
+	public static final String BLANK = "";
+
 	/**
 	 * Create a {@link Predicate} that can be used to exclude (i.e., filter out)
 	 * objects of type {@code T} whose fully qualified class names match any of
@@ -101,16 +103,16 @@ public class ClassNamePatternFilterUtils {
 	}
 
 	private static <T> Predicate<T> createPredicateFromPatterns(String patterns, Function<T, String> classNameProvider,
-			FilterType mode) {
+			FilterType type) {
 		if (ALL_PATTERN.equals(patterns)) {
-			return __ -> mode == FilterType.INCLUDE;
+			return type == FilterType.INCLUDE ? __ -> true : __ -> false;
 		}
 
 		List<Pattern> patternList = convertToRegularExpressions(patterns);
 		return object -> {
 			boolean isMatchingAnyPattern = patternList.stream().anyMatch(
 				pattern -> pattern.matcher(classNameProvider.apply(object)).matches());
-			return (mode == FilterType.INCLUDE) == isMatchingAnyPattern;
+			return (type == FilterType.INCLUDE) == isMatchingAnyPattern;
 		};
 	}
 

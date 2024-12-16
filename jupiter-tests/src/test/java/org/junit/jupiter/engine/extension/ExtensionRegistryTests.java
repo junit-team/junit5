@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 
 /**
  * Tests for the {@link MutableExtensionRegistry}.
@@ -60,15 +62,80 @@ class ExtensionRegistryTests {
 	void newRegistryWithoutParentHasDefaultExtensionsPlusAutodetectedExtensionsLoadedViaServiceLoader() {
 
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(__ -> true);
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
 
-		assertEquals(NUM_DEFAULT_EXTENSIONS + 1, extensions.size());
+		assertEquals(NUM_DEFAULT_EXTENSIONS + 2, extensions.size());
+		assertDefaultGlobalExtensionsAreRegistered(4);
+
+		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
+		assertEquals(4, countExtensions(registry, BeforeAllCallback.class));
+	}
+
+	@Test
+	void registryIncludesAndExcludesSpecificAutoDetectedExtensions() {
+		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
+			extensionFilter(ServiceLoaderExtension.class.getName(), ConfigLoaderExtension.class.getName()));
+		registry = createRegistryWithDefaultExtensions(configuration);
+
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(NUM_DEFAULT_EXTENSIONS, extensions.size());
 		assertDefaultGlobalExtensionsAreRegistered(3);
 
 		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
 		assertEquals(3, countExtensions(registry, BeforeAllCallback.class));
+	}
+
+	@Test
+	void registryIncludesAllAutoDetectedExtensionsAndExcludesNone() {
+		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(extensionFilter("*", ""));
+		registry = createRegistryWithDefaultExtensions(configuration);
+
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(NUM_DEFAULT_EXTENSIONS + 2, extensions.size());
+		assertDefaultGlobalExtensionsAreRegistered(4);
+
+		assertExtensionRegistered(registry, ServiceLoaderExtension.class);
+		assertExtensionRegistered(registry, ConfigLoaderExtension.class);
+		assertEquals(4, countExtensions(registry, BeforeAllCallback.class));
+	}
+
+	@Test
+	void registryIncludesSpecificAutoDetectedExtensionsAndExcludesAll() {
+		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
+			extensionFilter(ServiceLoaderExtension.class.getName(), "*"));
+		registry = createRegistryWithDefaultExtensions(configuration);
+
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(NUM_CORE_EXTENSIONS, extensions.size());
+		assertDefaultGlobalExtensionsAreRegistered(2);
+
+		assertExtensionNotRegistered(registry, ServiceLoaderExtension.class);
+		assertEquals(2, countExtensions(registry, BeforeAllCallback.class));
+	}
+
+	@Test
+	void registryIncludesAndExcludesSameAutoDetectedExtension() {
+		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
+			extensionFilter(ServiceLoaderExtension.class.getName(), ServiceLoaderExtension.class.getName()));
+		registry = createRegistryWithDefaultExtensions(configuration);
+
+		List<Extension> extensions = registry.getExtensions(Extension.class);
+
+		assertEquals(NUM_CORE_EXTENSIONS, extensions.size());
+		assertDefaultGlobalExtensionsAreRegistered(2);
+
+		assertExtensionNotRegistered(registry, ServiceLoaderExtension.class);
+		assertEquals(2, countExtensions(registry, BeforeAllCallback.class));
 	}
 
 	@Test
@@ -156,6 +223,11 @@ class ExtensionRegistryTests {
 			() -> extensionType.getSimpleName() + " should be present");
 	}
 
+	private void assertExtensionNotRegistered(ExtensionRegistry registry, Class<? extends Extension> extensionType) {
+		assertTrue(registry.getExtensions(extensionType).isEmpty(),
+			() -> extensionType.getSimpleName() + " should not be present");
+	}
+
 	private void assertDefaultGlobalExtensionsAreRegistered() {
 		assertDefaultGlobalExtensionsAreRegistered(2);
 	}
@@ -174,6 +246,12 @@ class ExtensionRegistryTests {
 		assertEquals(1, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 		assertEquals(1, countExtensions(registry, InvocationInterceptor.class));
+	}
+
+	private static Predicate<Class<? extends Extension>> extensionFilter(String includes, String excludes) {
+		var nameFilter = ClassNamePatternFilterUtils.includeMatchingClassNames(includes) //
+				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(excludes));
+		return clazz -> nameFilter.test(clazz.getName());
 	}
 
 	// -------------------------------------------------------------------------
