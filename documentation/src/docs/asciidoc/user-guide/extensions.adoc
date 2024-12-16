@@ -324,8 +324,6 @@ match any exclude pattern will be auto-detected.
 
 See <<running-tests-config-params-deactivation-pattern>> for details on the pattern syntax.
 
-[[extensions-registration-automatic-conditional]]
-
 [[extensions-registration-inheritance]]
 ==== Extension Inheritance
 
