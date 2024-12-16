@@ -20,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -77,10 +78,7 @@ class ExtensionRegistryTests {
 	void registryIncludesAndExcludesSpecificAutoDetectedExtensions() {
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
 		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
-			clazz -> ClassNamePatternFilterUtils.includeMatchingClassNames(
-				"org.junit.jupiter.engine.extension.ServiceLoaderExtension").and(
-					ClassNamePatternFilterUtils.excludeMatchingClassNames(
-						"org.junit.jupiter.engine.extension.ConfigLoaderExtension")).test(clazz.getName()));
+			extensionFilter(ServiceLoaderExtension.class.getName(), ConfigLoaderExtension.class.getName()));
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
@@ -95,9 +93,7 @@ class ExtensionRegistryTests {
 	@Test
 	void registryIncludesAllAutoDetectedExtensionsAndExcludesNone() {
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
-		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
-			clazz -> ClassNamePatternFilterUtils.includeMatchingClassNames("*").and(
-				ClassNamePatternFilterUtils.excludeMatchingClassNames("")).test(clazz.getName()));
+		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(extensionFilter("*", ""));
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
@@ -114,9 +110,7 @@ class ExtensionRegistryTests {
 	void registryIncludesSpecificAutoDetectedExtensionsAndExcludesAll() {
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
 		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
-			clazz -> ClassNamePatternFilterUtils.includeMatchingClassNames(
-				"org.junit.jupiter.engine.extension.ServiceLoaderExtension").and(
-					ClassNamePatternFilterUtils.excludeMatchingClassNames("*")).test(clazz.getName()));
+			extensionFilter(ServiceLoaderExtension.class.getName(), "*"));
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
@@ -132,10 +126,7 @@ class ExtensionRegistryTests {
 	void registryIncludesAndExcludesSameAutoDetectedExtension() {
 		when(configuration.isExtensionAutoDetectionEnabled()).thenReturn(true);
 		when(configuration.getFilterForAutoDetectedExtensions()).thenReturn(
-			clazz -> ClassNamePatternFilterUtils.includeMatchingClassNames(
-				"org.junit.jupiter.engine.extension.ServiceLoaderExtension").and(
-					ClassNamePatternFilterUtils.excludeMatchingClassNames(
-						"org.junit.jupiter.engine.extension.ServiceLoaderExtension")).test(clazz.getName()));
+			extensionFilter(ServiceLoaderExtension.class.getName(), ServiceLoaderExtension.class.getName()));
 		registry = createRegistryWithDefaultExtensions(configuration);
 
 		List<Extension> extensions = registry.getExtensions(Extension.class);
@@ -255,6 +246,12 @@ class ExtensionRegistryTests {
 		assertEquals(1, countExtensions(registry, ExecutionCondition.class));
 		assertEquals(1, countExtensions(registry, TestTemplateInvocationContextProvider.class));
 		assertEquals(1, countExtensions(registry, InvocationInterceptor.class));
+	}
+
+	private static Predicate<Class<? extends Extension>> extensionFilter(String includes, String excludes) {
+		var nameFilter = ClassNamePatternFilterUtils.includeMatchingClassNames(includes) //
+				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(excludes));
+		return clazz -> nameFilter.test(clazz.getName());
 	}
 
 	// -------------------------------------------------------------------------
