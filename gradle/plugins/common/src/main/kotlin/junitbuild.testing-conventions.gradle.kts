@@ -129,6 +129,8 @@ tasks.withType<Test>().configureEach {
 			"-Djunit.platform.reporting.output.dir=${reports.junitXml.outputLocation.get().asFile.absolutePath}/junit-{uniqueNumber}",
 		)
 	}
+	systemProperty("junit.platform.output.capture.stdout", "true")
+	systemProperty("junit.platform.output.capture.stderr", "true")
 
 	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
 		classpath.from(javaAgentClasspath)
