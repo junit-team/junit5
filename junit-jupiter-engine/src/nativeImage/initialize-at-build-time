@@ -16,7 +16,6 @@ org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
 org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
 org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor
 org.junit.jupiter.engine.execution.ConditionEvaluator
-org.junit.jupiter.engine.execution.ExecutableInvoker
 org.junit.jupiter.engine.execution.InterceptingExecutableInvoker
 org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall
 org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall$VoidMethodInterceptorCall
