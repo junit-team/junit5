@@ -33,7 +33,7 @@ val validationTask = tasks.register("validateNativeImageProperties") {
 	dependsOn(tasks.jar)
 	doLast {
 		val zipEntries = ZipFile(tasks.jar.get().archiveFile.get().asFile).use { zipFile ->
-			zipFile.entries().asSequence().map { it.name }.toList()
+			zipFile.entries().asSequence().map { it.name }.toSet()
 		}
 		val missingClasses = extension.initializeAtBuildTime.get().filter { className ->
 			!zipEntries.contains("${className.replace('.', '/')}.class")
