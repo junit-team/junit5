@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.native-image-properties")
 	id("junitbuild.shadow-conventions")
 	`java-test-fixtures`
 }
@@ -20,6 +21,13 @@ dependencies {
 	osgiVerification(libs.openTestReporting.tooling.spi)
 
 	testFixturesApi(projects.junitJupiterApi)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener",
+		"org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.api.DocumentWriter$1",
+	)
 }
 
 tasks {

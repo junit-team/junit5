@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.native-image-properties")
 }
 
 description = "JUnit Platform Suite Engine"
@@ -15,4 +16,13 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.platform.suite.engine.SuiteEngineDescriptor",
+		"org.junit.platform.suite.engine.SuiteLauncher",
+		"org.junit.platform.suite.engine.SuiteTestDescriptor",
+		"org.junit.platform.suite.engine.SuiteTestEngine",
+	)
 }

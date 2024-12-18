@@ -2,6 +2,7 @@ plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.jmh-conventions")
+	id("junitbuild.native-image-properties")
 }
 
 description = "JUnit Jupiter Params"
@@ -18,6 +19,13 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.jupiter.params.provider.EnumSource\$Mode",
+		"org.junit.jupiter.params.provider.EnumSource\$Mode\$Validator"
+	)
 }
 
 tasks {

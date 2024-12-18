@@ -31,8 +31,7 @@ tasks.test {
 graalvmNative {
 	binaries {
 		named("test") {
-			// TODO #3040 Add to native-image.properties
-			buildArgs.add("--initialize-at-build-time=org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider")
+			buildArgs.add("--strict-image-heap")
 			buildArgs.add("-H:+ReportExceptionStackTraces")
 		}
 	}

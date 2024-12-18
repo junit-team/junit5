@@ -1,6 +1,7 @@
 plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.code-generator")
+	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 
@@ -19,6 +20,15 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.jupiter.api.DisplayNameGenerator\$Standard",
+		"org.junit.jupiter.api.TestInstance\$Lifecycle",
+		"org.junit.jupiter.api.condition.OS",
+		"org.junit.jupiter.api.extension.ConditionEvaluationResult",
+	)
 }
 
 tasks {

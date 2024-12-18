@@ -3,6 +3,7 @@ import junitbuild.java.UpdateJarAction
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 
@@ -12,6 +13,16 @@ dependencies {
 	api(platform(projects.junitBom))
 
 	compileOnlyApi(libs.apiguardian)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.platform.commons.util.StringUtils",
+		"org.junit.platform.commons.logging.LoggerFactory\$DelegatingLogger",
+		"org.junit.platform.commons.logging.LoggerFactory",
+		"org.junit.platform.commons.util.ReflectionUtils",
+		"org.junit.platform.commons.util.LruCache",
+	)
 }
 
 tasks.jar {

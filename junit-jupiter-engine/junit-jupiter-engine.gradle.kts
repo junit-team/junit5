@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.kotlin-library-conventions")
+	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 
@@ -13,6 +14,34 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	osgiVerification(projects.junitPlatformLauncher)
+}
+
+nativeImageProperties {
+	initializeAtBuildTime.addAll(
+		"org.junit.jupiter.engine.JupiterTestEngine",
+		"org.junit.jupiter.engine.config.CachingJupiterConfiguration",
+		"org.junit.jupiter.engine.config.DefaultJupiterConfiguration",
+		"org.junit.jupiter.engine.config.EnumConfigurationParameterConverter",
+		"org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter",
+		"org.junit.jupiter.engine.descriptor.ClassTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.DynamicDescendantFilter",
+		"org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector\$1",
+		"org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor",
+		"org.junit.jupiter.engine.descriptor.JupiterTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.JupiterTestDescriptor$1",
+		"org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor",
+		"org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor",
+		"org.junit.jupiter.engine.execution.ConditionEvaluator",
+		"org.junit.jupiter.engine.execution.ExecutableInvoker",
+		"org.junit.jupiter.engine.execution.InterceptingExecutableInvoker",
+		"org.junit.jupiter.engine.execution.InterceptingExecutableInvoker\$ReflectiveInterceptorCall",
+		"org.junit.jupiter.engine.execution.InterceptingExecutableInvoker\$ReflectiveInterceptorCall\$VoidMethodInterceptorCall",
+		"org.junit.jupiter.engine.execution.InvocationInterceptorChain",
+	)
 }
 
 tasks {
