@@ -21,13 +21,6 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.jupiter.params.provider.EnumSource\$Mode",
-		"org.junit.jupiter.params.provider.EnumSource\$Mode\$Validator"
-	)
-}
-
 tasks {
 	jar {
 		bundle {

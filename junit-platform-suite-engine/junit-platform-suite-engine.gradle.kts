@@ -17,12 +17,3 @@ dependencies {
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
 }
-
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.platform.suite.engine.SuiteEngineDescriptor",
-		"org.junit.platform.suite.engine.SuiteLauncher",
-		"org.junit.platform.suite.engine.SuiteTestDescriptor",
-		"org.junit.platform.suite.engine.SuiteTestEngine",
-	)
-}

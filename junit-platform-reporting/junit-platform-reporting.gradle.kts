@@ -23,13 +23,6 @@ dependencies {
 	testFixturesApi(projects.junitJupiterApi)
 }
 
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.platform.reporting.open.xml.OpenTestReportGeneratingListener",
-		"org.junit.platform.reporting.shadow.org.opentest4j.reporting.events.api.DocumentWriter$1",
-	)
-}
-
 tasks {
 	shadowJar {
 		listOf("events", "schema").forEach { name ->

@@ -29,16 +29,6 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.vintage.engine.VintageTestEngine",
-		"org.junit.vintage.engine.descriptor.RunnerTestDescriptor",
-		"org.junit.vintage.engine.descriptor.VintageEngineDescriptor",
-		"org.junit.vintage.engine.support.UniqueIdReader",
-		"org.junit.vintage.engine.support.UniqueIdStringifier",
-	)
-}
-
 tasks {
 	compileTestFixturesGroovy {
 		javaLauncher = project.javaToolchains.launcherFor {

@@ -22,15 +22,6 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.jupiter.api.DisplayNameGenerator\$Standard",
-		"org.junit.jupiter.api.TestInstance\$Lifecycle",
-		"org.junit.jupiter.api.condition.OS",
-		"org.junit.jupiter.api.extension.ConditionEvaluationResult",
-	)
-}
-
 tasks {
 	jar {
 		bundle {

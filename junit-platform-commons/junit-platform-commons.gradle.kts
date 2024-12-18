@@ -15,16 +15,6 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 }
 
-nativeImageProperties {
-	initializeAtBuildTime.addAll(
-		"org.junit.platform.commons.util.StringUtils",
-		"org.junit.platform.commons.logging.LoggerFactory\$DelegatingLogger",
-		"org.junit.platform.commons.logging.LoggerFactory",
-		"org.junit.platform.commons.util.ReflectionUtils",
-		"org.junit.platform.commons.util.LruCache",
-	)
-}
-
 tasks.jar {
 	val release9ClassesDir = sourceSets.mainRelease9.get().output.classesDirs.singleFile
 	inputs.dir(release9ClassesDir).withPathSensitivity(PathSensitivity.RELATIVE)
