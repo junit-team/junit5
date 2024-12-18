@@ -31,15 +31,14 @@ val propertyFileTask = tasks.register<WriteProperties>("nativeImageProperties") 
 val validationTask = tasks.register("validateNativeImageProperties") {
 	dependsOn(tasks.jar)
 	doLast {
-		val missingClasses = ZipFile(tasks.jar.get().archiveFile.get().asFile).use { zipFile ->
-			extension.initializeAtBuildTime.get().filter { className ->
-				zipFile.entries().asSequence().none {
-					it.name == className.replace('.', '/') + ".class"
-				}
-			}
+		val zipEntries = ZipFile(tasks.jar.get().archiveFile.get().asFile).use { zipFile ->
+			zipFile.entries().asSequence().map { it.name }.toList()
+		}
+		val missingClasses = extension.initializeAtBuildTime.get().filter { className ->
+			!zipEntries.contains("${className.replace('.', '/')}.class")
 		}
 		if (missingClasses.isNotEmpty()) {
-			throw GradleException("The following classes were specified as initialized-at-build-time but do not exist (you should probably remove them from nativeImageProperties.initializeAtBuildTime): $missingClasses")
+			throw GradleException("The following classes were specified as initialize-at-build-time but do not exist (you should probably remove them from nativeImageProperties.initializeAtBuildTime):\n${missingClasses.joinToString("\n- ", "- ")}")
 		}
 	}
 }
