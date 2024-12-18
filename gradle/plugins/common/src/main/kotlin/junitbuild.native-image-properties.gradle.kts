@@ -19,6 +19,7 @@ val outputDir = layout.buildDirectory.dir("resources/nativeImage")
 
 val propertyFileTask = tasks.register<WriteProperties>("nativeImageProperties") {
 	destinationFile = outputDir.map { it.file("META-INF/native-image/${project.group}/${project.name}/native-image.properties") }
+	// see https://www.graalvm.org/latest/reference-manual/native-image/overview/BuildConfiguration/#configuration-file-format
 	property("Args", extension.initializeAtBuildTime.map {
 		if (it.isEmpty()) {
 			""
