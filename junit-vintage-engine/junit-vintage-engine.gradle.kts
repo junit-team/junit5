@@ -1,6 +1,7 @@
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.junit4-compatibility")
+	id("junitbuild.native-image-properties")
 	id("junitbuild.testing-conventions")
 	`java-test-fixtures`
 	groovy

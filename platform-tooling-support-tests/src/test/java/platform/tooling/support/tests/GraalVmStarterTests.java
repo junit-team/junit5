@@ -53,6 +53,7 @@ class GraalVmStarterTests {
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 1 = 2 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 100 = 101 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("ClassLevelAnnotationTests$Inner > test() SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("com.example.project.VintageTests > test SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("BUILD SUCCESSFUL"));
 	}
 }
