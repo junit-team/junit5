@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly;
@@ -81,7 +82,7 @@ public class FlightRecordingExecutionListenerIntegrationTests {
 		@Test
 		void test(TestReporter reporter) {
 			reporter.publishEntry("message", "Hello JFR!");
-			reporter.publishFile("test.txt", file -> Files.writeString(file, "test"));
+			reporter.publishFile("test.txt", MediaType.TEXT_PLAIN_UTF_8, file -> Files.writeString(file, "test"));
 		}
 
 		@Test

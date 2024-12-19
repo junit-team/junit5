@@ -15,7 +15,9 @@ import java.util.Map;
 
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.function.ThrowingConsumer;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 1.12
@@ -34,7 +36,14 @@ class DefaultTestReporter implements TestReporter {
 	}
 
 	@Override
-	public void publishFile(String fileName, ThrowingConsumer<Path> action) {
-		extensionContext.publishFile(fileName, action);
+	public void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action) {
+		extensionContext.publishFile(name, mediaType, action);
+	}
+
+	@Override
+	public void publishDirectory(String name, ThrowingConsumer<Path> action) {
+		Preconditions.notNull(name, "name must not be null");
+		Preconditions.notNull(action, "action must not be null");
+		extensionContext.publishDirectory(name, action);
 	}
 }

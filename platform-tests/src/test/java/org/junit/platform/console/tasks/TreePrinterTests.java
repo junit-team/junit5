@@ -94,7 +94,7 @@ class TreePrinterTests {
 		c1.addChild(m1);
 
 		var m2 = new TreeNode(identifier("m-2", "method two")).setResult(successful());
-		m2.addFileEntry(FileEntry.from(Path.of("test.txt")));
+		m2.addFileEntry(FileEntry.from(Path.of("test.txt"), "text/plain"));
 		c1.addChild(m2);
 
 		new TreePrinter(out, Theme.UNICODE, ColorPalette.NONE).print(root);

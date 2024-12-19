@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toCollection;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -115,18 +117,52 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
-	public void publishFile(String fileName, ThrowingConsumer<Path> action) {
+	public void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action) {
+		Preconditions.notNull(name, "name must not be null");
+		Preconditions.notNull(mediaType, "mediaType must not be null");
+		Preconditions.notNull(action, "action must not be null");
+
+		publishFileEntry(name, action, file -> {
+			Preconditions.condition(Files.isRegularFile(file), () -> "Published path must be a regular file: " + file);
+			return FileEntry.from(file, mediaType.toString());
+		});
+	}
+
+	@Override
+	public void publishDirectory(String name, ThrowingConsumer<Path> action) {
+		Preconditions.notNull(name, "name must not be null");
+		Preconditions.notNull(action, "action must not be null");
+
+		ThrowingConsumer<Path> enhancedAction = path -> {
+			Files.createDirectory(path);
+			action.accept(path);
+		};
+		publishFileEntry(name, enhancedAction, file -> {
+			Preconditions.condition(Files.isDirectory(file), () -> "Published path must be a directory: " + file);
+			return FileEntry.from(file, null);
+		});
+	}
+
+	private void publishFileEntry(String name, ThrowingConsumer<Path> action,
+			Function<Path, FileEntry> fileEntryCreator) {
+		Path dir = createOutputDirectory();
+		Path path = dir.resolve(name);
+		Preconditions.condition(path.getParent().equals(dir), () -> "name must not contain path separators: " + name);
 		try {
-			Path dir = configuration.getOutputDirectoryProvider().createOutputDirectory(this.testDescriptor);
-			try {
-				Path file = dir.resolve(fileName);
-				action.accept(file);
-				this.engineExecutionListener.fileEntryPublished(this.testDescriptor, FileEntry.from(file));
-			}
-			catch (Throwable t) {
-				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-				throw new JUnitException("Failed to publish file", t);
-			}
+			action.accept(path);
+		}
+		catch (Throwable t) {
+			UnrecoverableExceptions.rethrowIfUnrecoverable(t);
+			throw new JUnitException("Failed to publish path", t);
+		}
+		Preconditions.condition(Files.exists(path), () -> "Published path must exist: " + path);
+		FileEntry fileEntry = fileEntryCreator.apply(path);
+		this.engineExecutionListener.fileEntryPublished(this.testDescriptor, fileEntry);
+	}
+
+	private Path createOutputDirectory() {
+		try {
+			return configuration.getOutputDirectoryProvider().createOutputDirectory(this.testDescriptor);
 		}
 		catch (IOException e) {
 			throw new JUnitException("Failed to create output directory", e);

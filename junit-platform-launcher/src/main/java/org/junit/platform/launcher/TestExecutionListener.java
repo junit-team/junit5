@@ -187,7 +187,8 @@ public interface TestExecutionListener {
 	}
 
 	/**
-	 * Called when a file has been published for the supplied {@link TestIdentifier}.
+	 * Called when a file or directory has been published for the supplied
+	 * {@link TestIdentifier}.
 	 *
 	 * <p>Can be called at any time during the execution of a test plan.
 	 *

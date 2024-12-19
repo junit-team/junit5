@@ -28,7 +28,6 @@ import static org.junit.platform.testkit.engine.EventType.FINISHED;
 import static org.junit.platform.testkit.engine.EventType.SKIPPED;
 import static org.junit.platform.testkit.engine.EventType.STARTED;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -482,9 +481,8 @@ public final class EventConditions {
 	 * @since 1.12
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
-	public static Condition<Event> fileEntry(Predicate<Path> filePredicate) {
-		return new Condition<>(byPayload(FileEntry.class, it -> filePredicate.test(it.getFile())),
-			"event for file entry with custom predicate");
+	public static Condition<Event> fileEntry(Predicate<FileEntry> predicate) {
+		return new Condition<>(byPayload(FileEntry.class, predicate), "event for file entry with custom predicate");
 	}
 
 }
