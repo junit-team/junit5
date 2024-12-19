@@ -146,14 +146,21 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void doesNotThrowExceptionWhenParametrizedTestDoesNotRequireArguments() {
-		var extensionContextWithAnnotatedTestMethod = getExtensionContextReturningSingleMethod(
-			new TestCaseAllowNoArgumentsMethod());
+		var extensionContext = getExtensionContextReturningSingleMethod(new TestCaseAllowNoArgumentsMethod());
 
-		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(
-			extensionContextWithAnnotatedTestMethod);
+		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext);
 		// cause the stream to be evaluated
 		stream.toArray();
 		stream.close();
+	}
+
+	@Test
+	void throwsExceptionWhenParameterizedTestHasNoArgumentsSource() {
+		var extensionContext = getExtensionContextReturningSingleMethod(new TestCaseWithNoArgumentsSource());
+
+		assertThrows(PreconditionViolationException.class,
+			() -> this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext),
+			"Configuration error: You must configure at least one arguments source for this @ParameterizedTest");
 	}
 
 	@Test
@@ -323,8 +330,8 @@ class ParameterizedTestExtensionTests {
 
 	static class TestCaseWithAnnotatedMethod {
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@ParameterizedTest
+		@ArgumentsSource(ZeroArgumentsProvider.class)
 		void method() {
 		}
 	}
@@ -332,7 +339,24 @@ class ParameterizedTestExtensionTests {
 	static class TestCaseAllowNoArgumentsMethod {
 
 		@ParameterizedTest(allowZeroInvocations = true)
+		@ArgumentsSource(ZeroArgumentsProvider.class)
 		void method() {
+		}
+	}
+
+	static class TestCaseWithNoArgumentsSource {
+
+		@ParameterizedTest(allowZeroInvocations = true)
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		void method() {
+		}
+	}
+
+	static class ZeroArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			return Stream.empty();
 		}
 	}
 

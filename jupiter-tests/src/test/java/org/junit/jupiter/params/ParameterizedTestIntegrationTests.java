@@ -457,7 +457,7 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void failsWhenArgumentsAreNotRequiredAndNoneProvided() {
+	void doesNotFailWhenArgumentsAreNotRequiredAndNoneProvided() {
 		var result = execute(ZeroArgumentsTestCase.class, "testThatDoesNotRequireArguments", String.class);
 		result.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), event(container(ZeroArgumentsTestCase.class), started()),
@@ -465,6 +465,15 @@ class ParameterizedTestIntegrationTests {
 			event(container("testThatDoesNotRequireArguments"), finishedSuccessfully()),
 			event(container(ZeroArgumentsTestCase.class), finishedSuccessfully()),
 			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void failsWhenNoArgumentsSourceIsDeclared() {
+		var result = execute(ZeroArgumentsTestCase.class, "testThatHasNoArgumentsSource", String.class);
+		result.containerEvents().assertThatEvents() //
+				.haveExactly(1, //
+					event(displayName("testThatHasNoArgumentsSource(String)"), finishedWithFailure(message(
+						"Configuration error: You must configure at least one arguments source for this @ParameterizedTest"))));
 	}
 
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
@@ -2426,6 +2435,12 @@ class ParameterizedTestIntegrationTests {
 		@MethodSource("zeroArgumentsProvider")
 		void testThatDoesNotRequireArguments(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
+		}
+
+		@ParameterizedTest(allowZeroInvocations = true)
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		void testThatHasNoArgumentsSource(String argument) {
+			fail("This test should not be executed, because no arguments source is declared.");
 		}
 
 		public static Stream<Arguments> zeroArgumentsProvider() {
