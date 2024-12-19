@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.reporting.testutil.FileUtils;
+import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -31,13 +32,13 @@ import platform.tooling.support.ProcessStarters;
 class GradleMissingEngineTests {
 
 	@Test
-	void gradle_wrapper(@TempDir Path workspace) throws Exception {
+	void gradle_wrapper(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.gradlew() //
 				.workingDir(copyToWorkspace(Projects.GRADLE_MISSING_ENGINE, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.startAndWait();
+				.redirectOutput(outputFiles).startAndWait();
 
 		assertEquals(1, result.exitCode());
 		assertThat(result.stdErrLines()) //

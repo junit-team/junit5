@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.ProcessStarters;
@@ -38,7 +39,7 @@ class MultiReleaseJarTests {
 	MavenRepoProxy mavenRepoProxy;
 
 	@Test
-	void checkDefault(@TempDir Path workspace) throws Exception {
+	void checkDefault(@TempDir Path workspace, @FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 		var expectedLines = List.of( //
 			">> BANNER >>", //
 			".", //
@@ -76,6 +77,7 @@ class MultiReleaseJarTests {
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode") //
 				.addArguments("test") //
 				.putEnvironment(MavenEnvVars.FOR_JDK24_AND_LATER) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

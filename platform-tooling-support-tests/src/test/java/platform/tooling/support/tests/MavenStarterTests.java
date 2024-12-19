@@ -20,6 +20,7 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -38,12 +39,14 @@ class MavenStarterTests {
 	MavenRepoProxy mavenRepoProxy;
 
 	@Test
-	void verifyMavenStarterProject(@TempDir Path workspace) throws Exception {
+	void verifyMavenStarterProject(@TempDir Path workspace, @FilePrefix("maven") OutputFiles outputFiles)
+			throws Exception {
 		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_STARTER, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

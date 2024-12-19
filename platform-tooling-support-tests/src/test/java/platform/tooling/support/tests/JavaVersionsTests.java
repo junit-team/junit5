@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
@@ -39,22 +40,22 @@ class JavaVersionsTests {
 	Path workspace;
 
 	@Test
-	void java_8() throws Exception {
+	void java_8(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 		var java8Home = Helper.getJavaHome("8");
 		assumeTrue(java8Home.isPresent(), "Java 8 installation directory not found!");
-		var actualLines = execute(java8Home.get(), Map.of());
+		var actualLines = execute(java8Home.get(), outputFiles, Map.of());
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
 	@Test
-	void java_default() throws Exception {
-		var actualLines = execute(currentJdkHome(), MavenEnvVars.FOR_JDK24_AND_LATER);
+	void java_default(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
+		var actualLines = execute(currentJdkHome(), outputFiles, MavenEnvVars.FOR_JDK24_AND_LATER);
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
 
-	List<String> execute(Path javaHome, Map<String, String> environmentVars) throws Exception {
+	List<String> execute(Path javaHome, OutputFiles outputFiles, Map<String, String> environmentVars) throws Exception {
 		var result = ProcessStarters.maven(javaHome) //
 				.workingDir(copyToWorkspace(Projects.JAVA_VERSIONS, workspace)) //
 				.putEnvironment(environmentVars) //

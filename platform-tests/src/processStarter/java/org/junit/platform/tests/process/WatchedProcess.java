@@ -10,6 +10,10 @@
 
 package org.junit.platform.tests.process;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Optional;
+
 public class WatchedProcess {
 
 	private final Process process;
@@ -46,6 +50,19 @@ public class WatchedProcess {
 		}
 		finally {
 			process.destroyForcibly();
+			closeQuietly(out.fileStream());
+			closeQuietly(err.fileStream());
+		}
+	}
+
+	private static void closeQuietly(Optional<OutputStream> fileStream) {
+		if (fileStream.isEmpty()) {
+			return;
+		}
+		try {
+			fileStream.get().close();
+		}
+		catch (IOException ignore) {
 		}
 	}
 }

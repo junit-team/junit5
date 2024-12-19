@@ -10,15 +10,7 @@
 
 package org.junit.platform.tests.process;
 
-import static org.junit.platform.tests.process.ProcessStarter.OUTPUT_ENCODING;
+import java.nio.file.Path;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
-import java.util.Optional;
-
-record WatchedOutput(Thread thread, ByteArrayOutputStream stream, Optional<OutputStream> fileStream) {
-
-	String streamAsString() {
-		return stream.toString(OUTPUT_ENCODING);
-	}
+public record OutputFiles(Path stdOut, Path stdErr) {
 }
