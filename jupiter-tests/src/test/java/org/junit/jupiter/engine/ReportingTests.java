@@ -31,10 +31,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.reporting.FileEntry;
 
 /**
  * @since 5.0
@@ -72,13 +74,13 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 						.fileEntryPublished(testFileEntries)) //
 				.assertThatEvents() //
 				.haveExactly(2, reportEntry(Map.of("value", "@BeforeEach"))) //
-				.haveExactly(2, fileEntry(nameAndContent("beforeEach"))) //
+				.haveExactly(2, fileEntry(nameAndContent("beforeEach", MediaType.TEXT_PLAIN_UTF_8))) //
 				.haveExactly(1, reportEntry(Map.of())) //
 				.haveExactly(1, reportEntry(Map.of("user name", "dk38"))) //
 				.haveExactly(1, reportEntry(Map.of("value", "message"))) //
-				.haveExactly(1, fileEntry(nameAndContent("succeedingTest"))) //
+				.haveExactly(1, fileEntry(nameAndContent("succeedingTest", MediaType.APPLICATION_OCTET_STREAM))) //
 				.haveExactly(2, reportEntry(Map.of("value", "@AfterEach"))) //
-				.haveExactly(2, fileEntry(nameAndContent("afterEach")));
+				.haveExactly(2, fileEntry(nameAndContent("afterEach", MediaType.TEXT_PLAIN_UTF_8)));
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -87,19 +89,21 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 		public MyReportingTestCase(TestReporter reporter) {
 			// Reported on class-level for PER_CLASS lifecycle and on method-level for PER_METHOD lifecycle
 			reporter.publishEntry("Constructor");
-			reporter.publishFile("constructor", file -> Files.writeString(file, "constructor"));
+			reporter.publishFile("constructor", MediaType.TEXT_PLAIN_UTF_8,
+				file -> Files.writeString(file, "constructor"));
 		}
 
 		@BeforeEach
 		void beforeEach(TestReporter reporter) {
 			reporter.publishEntry("@BeforeEach");
-			reporter.publishFile("beforeEach", file -> Files.writeString(file, "beforeEach"));
+			reporter.publishFile("beforeEach", MediaType.TEXT_PLAIN_UTF_8,
+				file -> Files.writeString(file, "beforeEach"));
 		}
 
 		@AfterEach
 		void afterEach(TestReporter reporter) {
 			reporter.publishEntry("@AfterEach");
-			reporter.publishFile("afterEach", file -> Files.writeString(file, "afterEach"));
+			reporter.publishFile("afterEach", MediaType.TEXT_PLAIN_UTF_8, file -> Files.writeString(file, "afterEach"));
 		}
 
 		@Test
@@ -107,7 +111,8 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 			reporter.publishEntry(Map.of());
 			reporter.publishEntry("user name", "dk38");
 			reporter.publishEntry("message");
-			reporter.publishFile("succeedingTest", file -> Files.writeString(file, "succeedingTest"));
+			reporter.publishFile("succeedingTest", MediaType.APPLICATION_OCTET_STREAM,
+				file -> Files.writeString(file, "succeedingTest"));
 		}
 
 		@Test
@@ -135,8 +140,8 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static Predicate<Path> nameAndContent(String expectedName) {
-		return file -> {
+	private static Predicate<FileEntry> nameAndContent(String expectedName, MediaType mediaType) {
+		Predicate<Path> filePredicate = file -> {
 			try {
 				return Path.of(expectedName).equals(file.getFileName()) && expectedName.equals(Files.readString(file));
 			}
@@ -144,6 +149,8 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 				throw new UncheckedIOException(e);
 			}
 		};
+		return fileEntry -> filePredicate.test(fileEntry.getPath()) //
+				&& mediaType.toString().equals(fileEntry.getMediaType().orElse(null));
 	}
 
 }

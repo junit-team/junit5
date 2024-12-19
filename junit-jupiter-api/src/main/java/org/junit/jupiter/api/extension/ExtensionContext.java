@@ -374,14 +374,32 @@ public interface ExtensionContext {
 	 * The file will be resolved in the report output directory prior to
 	 * invoking the supplied action.
 	 *
-	 * @param fileName the name of the file to be attached; never {@code null} or blank
-	 *                 and must not contain any path separators
-	 * @param action   the action to be executed to write the file; never {@code null}
+	 * @param name      the name of the file to be attached; never {@code null}
+	 *                  or blank and must not contain any path separators
+	 * @param mediaType the media type of the file; never {@code null}; use
+	 *                  {@link MediaType#APPLICATION_OCTET_STREAM} if unknown
+	 * @param action    the action to be executed to write the file; never {@code null}
 	 * @since 5.12
 	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
-	void publishFile(String fileName, ThrowingConsumer<Path> action);
+	void publishFile(String name, MediaType mediaType, ThrowingConsumer<Path> action);
+
+	/**
+	 * Publish a directory with the supplied name written by the supplied action
+	 * and attach it to the current test or container.
+	 * <p>
+	 * The directory will be resolved and created in the report output directory
+	 * prior to invoking the supplied action.
+	 *
+	 * @param name   the name of the directory to be attached; never {@code null}
+	 *               or blank and must not contain any path separators
+	 * @param action the action to be executed to write the file; never {@code null}
+	 * @since 5.12
+	 * @see org.junit.platform.engine.EngineExecutionListener#fileEntryPublished
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	void publishDirectory(String name, ThrowingConsumer<Path> action);
 
 	/**
 	 * Get the {@link Store} for the supplied {@link Namespace}.

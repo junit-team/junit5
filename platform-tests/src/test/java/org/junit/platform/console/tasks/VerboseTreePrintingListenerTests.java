@@ -61,10 +61,13 @@ class VerboseTreePrintingListenerTests {
 	@Test
 	void fileEntryPublished() {
 		var stringWriter = new StringWriter();
-		listener(stringWriter).fileEntryPublished(newTestIdentifier(), FileEntry.from(Path.of("test.txt")));
+		listener(stringWriter).fileEntryPublished(newTestIdentifier(),
+			FileEntry.from(Path.of("test.txt"), "text/plain"));
 		var lines = lines(stringWriter);
 
-		assertLinesMatch(List.of("  reports: FileEntry \\[timestamp = .+, file = test.txt\\]"), List.of(lines));
+		assertLinesMatch(
+			List.of("  reports: FileEntry \\[timestamp = .+, path = test.txt, mediaType = 'text/plain'\\]"),
+			List.of(lines));
 	}
 
 	@Test

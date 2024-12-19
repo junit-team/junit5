@@ -14,35 +14,41 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * {@code FileEntry} encapsulates a file to be published to the reporting
- * infrastructure.
+ * {@code FileEntry} encapsulates a file or directory to be published to the
+ * reporting infrastructure.
  *
  * @since 1.12
- * @see #from(Path)
+ * @see #from(Path, String)
  */
 @API(status = EXPERIMENTAL, since = "1.12")
 public final class FileEntry {
 
 	/**
-	 * Factory for creating a new {@code FileEntry} from the supplied file.
+	 * Factory for creating a new {@code FileEntry} from the supplied path and
+	 * media type.
 	 *
-	 * @param file the file to publish; never {@code null}
+	 * @param path the path to publish; never {@code null}
+	 * @param mediaType the media type of the path to publish; may be
+	 * {@code null}
 	 */
-	public static FileEntry from(Path file) {
-		return new FileEntry(file);
+	public static FileEntry from(Path path, String mediaType) {
+		return new FileEntry(path, mediaType);
 	}
 
 	private final LocalDateTime timestamp = LocalDateTime.now();
-	private final Path file;
+	private final Path path;
+	private final String mediaType;
 
-	private FileEntry(Path file) {
-		this.file = Preconditions.notNull(file, "file must not be null");
+	private FileEntry(Path path, String mediaType) {
+		this.path = Preconditions.notNull(path, "path must not be null");
+		this.mediaType = mediaType;
 	}
 
 	/**
@@ -55,19 +61,31 @@ public final class FileEntry {
 	}
 
 	/**
-	 * Get the file to be published.
+	 * Get the path to be published.
 	 *
-	 * @return the file to publish; never {@code null}
+	 * @return the path to publish; never {@code null}
 	 */
-	public Path getFile() {
-		return file;
+	public Path getPath() {
+		return path;
+	}
+
+	/**
+	 * Get the media type of the path to be published.
+	 *
+	 * @return the media type of the path to publish; never {@code null}
+	 */
+	public Optional<String> getMediaType() {
+		return Optional.ofNullable(mediaType);
 	}
 
 	@Override
 	public String toString() {
 		ToStringBuilder builder = new ToStringBuilder(this);
 		builder.append("timestamp", this.timestamp);
-		builder.append("file", this.file);
+		builder.append("path", this.path);
+		if (this.mediaType != null) {
+			builder.append("mediaType", this.mediaType);
+		}
 		return builder.toString();
 	}
 

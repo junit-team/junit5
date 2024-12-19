@@ -14,6 +14,7 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.MediaType;
 
 /**
  * @since 1.8
@@ -22,6 +23,6 @@ public class SingleTestTestCase {
 
 	@Test
 	void test(TestReporter testReporter) {
-		testReporter.publishFile("test.txt", file -> Files.writeString(file, "test"));
+		testReporter.publishFile("test.txt", MediaType.TEXT_PLAIN_UTF_8, file -> Files.writeString(file, "test"));
 	}
 }

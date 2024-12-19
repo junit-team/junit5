@@ -65,14 +65,15 @@ class FlatPrintingListenerTests {
 	@Test
 	void fileEntryPublished() {
 		var stringWriter = new StringWriter();
-		listener(stringWriter).fileEntryPublished(newTestIdentifier(), FileEntry.from(Path.of("test.txt")));
+		listener(stringWriter).fileEntryPublished(newTestIdentifier(),
+			FileEntry.from(Path.of("test.txt"), "text/plain"));
 		var lines = lines(stringWriter);
 
 		assertEquals(2, lines.length);
 		assertAll("lines in the output", //
 			() -> assertEquals("Reported:    demo-test ([engine:demo-engine])", lines[0]), //
 			() -> assertTrue(lines[1].startsWith(INDENTATION + "=> Reported file: FileEntry [timestamp =")), //
-			() -> assertTrue(lines[1].endsWith(", file = test.txt]")));
+			() -> assertTrue(lines[1].endsWith(", path = test.txt, mediaType = 'text/plain']")));
 	}
 
 	@Test

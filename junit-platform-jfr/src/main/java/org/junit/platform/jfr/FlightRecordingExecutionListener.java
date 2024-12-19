@@ -102,7 +102,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 	public void fileEntryPublished(TestIdentifier testIdentifier, FileEntry file) {
 		FileEntryEvent event = new FileEntryEvent();
 		event.uniqueId = testIdentifier.getUniqueId();
-		event.path = file.getFile().toAbsolutePath().toString();
+		event.path = file.getPath().toAbsolutePath().toString();
 		event.commit();
 	}
 

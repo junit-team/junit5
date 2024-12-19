@@ -158,7 +158,7 @@ class TreePrinter {
 		out.print(indent);
 		out.print(fileEntry.getTimestamp());
 		out.print(" ");
-		out.print(color(Style.SUCCESSFUL, fileEntry.getFile().toUri().toString()));
+		out.print(color(Style.SUCCESSFUL, fileEntry.getPath().toUri().toString()));
 		out.println();
 	}
 
