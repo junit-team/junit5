@@ -13,7 +13,7 @@ package org.junit.vintage.engine.discovery;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.util.ClassFilter;
+import org.junit.platform.commons.support.scanning.ClassFilter;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;

@@ -62,7 +62,10 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.commons.support.DefaultResource;
 import org.junit.platform.commons.support.Resource;
+import org.junit.platform.commons.support.scanning.ClassFilter;
+import org.junit.platform.commons.support.scanning.ClasspathScanner;
 
 /**
  * Collection of utilities for working with the Java reflection APIs.
@@ -148,8 +151,7 @@ public final class ReflectionUtils {
 
 	private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
 
-	private static final ClasspathScanner classpathScanner = new ClasspathScanner(
-		ClassLoaderUtils::getDefaultClassLoader, ReflectionUtils::tryToLoadClass);
+	private static final ClasspathScanner classpathScanner = ClasspathScannerLoader.getInstance();
 
 	/**
 	 * Cache for equivalent methods on an interface implemented by the declaring class.
@@ -935,7 +937,7 @@ public final class ReflectionUtils {
 			List<URL> resources = Collections.list(classLoader.getResources(canonicalClasspathResourceName));
 			return resources.stream().map(url -> {
 				try {
-					return new ClasspathResource(canonicalClasspathResourceName, url.toURI());
+					return new DefaultResource(canonicalClasspathResourceName, url.toURI());
 				}
 				catch (URISyntaxException e) {
 					throw ExceptionUtils.throwAsUncheckedException(e);

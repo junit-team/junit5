@@ -40,7 +40,7 @@ public final class PackageUtils {
 		/* no-op */
 	}
 
-	static final String DEFAULT_PACKAGE_NAME = "";
+	public static final String DEFAULT_PACKAGE_NAME = "";
 
 	/**
 	 * Get the package attribute for the supplied {@code type} using the
