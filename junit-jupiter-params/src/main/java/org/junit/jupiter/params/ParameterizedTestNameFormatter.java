@@ -46,6 +46,7 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestNameFormatter {
 
 	private final PartialFormatter[] partialFormatters;
+	private final boolean useExpressionLanguageFormatter = false; // TODO jgauthier
 
 	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
 			int argumentMaxLength) {
@@ -129,10 +130,10 @@ class ParameterizedTestNameFormatter {
 		return minimum;
 	}
 
-	private static PartialFormatter determineNonPlaceholderFormatter(String segment, int argumentMaxLength) {
-		return segment.contains("{") //
-				? new MessageFormatPartialFormatter(segment, argumentMaxLength) //
-				: (context, result) -> result.append(segment);
+	private NonPlaceholderFormatter determineNonPlaceholderFormatter(String segment, int argumentMaxLength) {
+		return useExpressionLanguageFormatter
+				? new ExpressionLanguageNonPlaceholderFormatter(argumentsContext -> "") // TODO jgauthier
+				: new DefaultNonPlaceholderFormatter(segment, argumentMaxLength);
 	}
 
 	private PartialFormatters createPartialFormatters(String displayName, ParameterizedTestMethodContext methodContext,
@@ -143,15 +144,15 @@ class ParameterizedTestNameFormatter {
 				argumentMaxLength));
 
 		PartialFormatters formatters = new PartialFormatters();
-		formatters.put(INDEX_PLACEHOLDER, PartialFormatter.INDEX);
+		formatters.put(INDEX_PLACEHOLDER, PlaceholderFormatter.INDEX);
 		formatters.put(DISPLAY_NAME_PLACEHOLDER, (context, result) -> result.append(displayName));
-		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, PartialFormatter.ARGUMENT_SET_NAME);
+		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, PlaceholderFormatter.ARGUMENT_SET_NAME);
 		formatters.put(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesFormatter);
 		formatters.put(ARGUMENTS_PLACEHOLDER, new CachingByArgumentsLengthPartialFormatter(
 			length -> new MessageFormatPartialFormatter(argumentsPattern(length), argumentMaxLength)));
 		formatters.put(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER, (context, result) -> {
 			PartialFormatter formatterToUse = context.arguments instanceof ArgumentSet //
-					? PartialFormatter.ARGUMENT_SET_NAME //
+					? PlaceholderFormatter.ARGUMENT_SET_NAME //
 					: argumentsWithNamesFormatter;
 			formatterToUse.append(context, result);
 		});
@@ -199,20 +200,25 @@ class ParameterizedTestNameFormatter {
 	@FunctionalInterface
 	private interface PartialFormatter {
 
+		void append(ArgumentsContext context, StringBuffer result);
+	}
+
+	private interface PlaceholderFormatter extends PartialFormatter {
+
 		PartialFormatter INDEX = (context, result) -> result.append(context.invocationIndex);
 
 		PartialFormatter ARGUMENT_SET_NAME = (context, result) -> {
 			if (!(context.arguments instanceof ArgumentSet)) {
 				throw new ExtensionConfigurationException(
-					String.format("When the display name pattern for a @ParameterizedTest contains %s, "
-							+ "the arguments must be supplied as an ArgumentSet.",
-						ARGUMENT_SET_NAME_PLACEHOLDER));
+						String.format("When the display name pattern for a @ParameterizedTest contains %s, "
+										+ "the arguments must be supplied as an ArgumentSet.",
+								ARGUMENT_SET_NAME_PLACEHOLDER));
 			}
 			result.append(((ArgumentSet) context.arguments).getName());
 		};
-
-		void append(ArgumentsContext context, StringBuffer result);
 	}
+
+	private interface NonPlaceholderFormatter extends PartialFormatter {}
 
 	private static class MessageFormatPartialFormatter implements PartialFormatter {
 
@@ -289,4 +295,38 @@ class ParameterizedTestNameFormatter {
 		}
 	}
 
+	private static class DefaultNonPlaceholderFormatter implements NonPlaceholderFormatter {
+
+		private final PartialFormatter delegate;
+
+		public DefaultNonPlaceholderFormatter(String segment, int argumentMaxLength) {
+			this.delegate = segment.contains("{") //
+				? new MessageFormatPartialFormatter(segment, argumentMaxLength) //
+				: (context, result) -> result.append(segment);
+		}
+
+		@Override
+		public void append(ArgumentsContext context, StringBuffer result) {
+			delegate.append(context, result);
+		}
+	}
+
+	private interface ExpressionLanguageAdapter {
+
+		String format(ArgumentsContext argumentsContext);
+	}
+
+	private static class ExpressionLanguageNonPlaceholderFormatter implements NonPlaceholderFormatter {
+
+		private final ExpressionLanguageAdapter expressionLanguageAdapter;
+
+		public ExpressionLanguageNonPlaceholderFormatter(ExpressionLanguageAdapter expressionLanguageAdapter) {
+			this.expressionLanguageAdapter = expressionLanguageAdapter;
+		}
+
+		@Override
+		public void append(ArgumentsContext argumentsContext, StringBuffer result) {
+			result.append(expressionLanguageAdapter.format(argumentsContext));
+		}
+	}
 }
