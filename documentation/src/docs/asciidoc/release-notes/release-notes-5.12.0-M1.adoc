@@ -10,6 +10,17 @@ link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1] milestone page in the
 JUnit repository on GitHub.
 
 
+[[release-notes-5.12.0-M1-overall-improvements]]
+=== Overall Improvements
+
+[[release-notes-5.12.0-M1-overall-new-features-and-improvements]]
+==== New Features and Improvements
+
+* All affected JAR files now include `native-image.properties` files that contain the
+  `--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
+  to newer versions of JUnit.
+
+
 [[release-notes-5.12.0-M1-junit-platform]]
 === JUnit Platform
 
