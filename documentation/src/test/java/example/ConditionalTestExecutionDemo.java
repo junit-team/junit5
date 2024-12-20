@@ -12,6 +12,8 @@ package example;
 
 import static org.junit.jupiter.api.condition.JRE.JAVA_10;
 import static org.junit.jupiter.api.condition.JRE.JAVA_11;
+import static org.junit.jupiter.api.condition.JRE.JAVA_17;
+import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.OS.LINUX;
@@ -23,6 +25,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.DisabledIf;
@@ -38,6 +41,7 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledInNativeImage;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.JRE;
 
 class ConditionalTestExecutionDemo {
 
@@ -99,6 +103,16 @@ class ConditionalTestExecutionDemo {
 	}
 	// end::user_guide_architecture[]
 
+	@Test
+	@EnabledOnJre(value = { JAVA_17, JAVA_18 }, featureVersions = { 20, 21 })
+	void onJava17or18or20or21() {
+	}
+
+	@Test
+	@EnabledOnJre(featureVersions = 21)
+	void onlyOnJava21() {
+	}
+
 	// tag::user_guide_jre[]
 	@Test
 	@EnabledOnJre(JAVA_8)
@@ -121,6 +135,45 @@ class ConditionalTestExecutionDemo {
 	@Test
 	@EnabledForJreRange(min = JAVA_9)
 	void fromJava9toCurrentJavaFeatureNumber() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(minFeatureVersion = 10)
+	void fromJava10toCurrentJavaFeatureNumber() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(minFeatureVersion = 25)
+	void fromJava25toCurrentJavaFeatureNumber() {
+		// ...
+	}
+
+	@Disabled("DEMO: intended to fail")
+	@Test
+	@EnabledForJreRange(minFeatureVersion = 99, max = JRE.JAVA_17)
+	void fromJava99toJava17() {
+		// ...
+	}
+
+	@Disabled("DEMO: intended to fail")
+	@Test
+	@EnabledForJreRange(min = JAVA_11, minFeatureVersion = 10)
+	void competingJreAndMinFeatureVersions() {
+		// ...
+	}
+
+	@Disabled("DEMO: intended to fail")
+	@Test
+	@EnabledForJreRange(max = JAVA_11, maxFeatureVersion = 10)
+	void competingJreAndMaxFeatureVersions() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(minFeatureVersion = 10, maxFeatureVersion = 25)
+	void fromJava17to25() {
 		// ...
 	}
 
