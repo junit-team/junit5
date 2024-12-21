@@ -19,6 +19,8 @@ include::{includedir}/link-attributes.adoc[]
 
 include::{basedir}/release-notes-5.12.0-M1.adoc[]
 
+include::{basedir}/release-notes-5.11.4.adoc[]
+
 include::{basedir}/release-notes-5.11.3.adoc[]
 
 include::{basedir}/release-notes-5.11.2.adoc[]

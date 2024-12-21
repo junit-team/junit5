@@ -19,6 +19,7 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -31,12 +32,13 @@ import platform.tooling.support.ProcessStarters;
 class ReflectionCompatibilityTests {
 
 	@Test
-	void gradle_wrapper(@TempDir Path workspace) throws Exception {
+	void gradle_wrapper(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.gradlew() //
 				.workingDir(copyToWorkspace(Projects.REFLECTION_TESTS, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

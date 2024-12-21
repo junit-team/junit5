@@ -28,3 +28,5 @@
   since: '5.11'
 - version: 24
   since: '5.11'
+- version: 25
+  since: '5.11.4'

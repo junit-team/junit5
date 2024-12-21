@@ -10,6 +10,7 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
+import static java.util.stream.Collectors.joining;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.joox.JOOX.$;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +22,7 @@ import static org.junit.platform.launcher.LauncherConstants.STDERR_REPORT_ENTRY_
 import static org.junit.platform.launcher.LauncherConstants.STDOUT_REPORT_ENTRY_KEY;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.reporting.legacy.xml.XmlReportAssertions.assertValidAccordingToJenkinsSchema;
+import static org.junit.platform.reporting.legacy.xml.XmlReportWriter.ILLEGAL_CHARACTER_REPLACEMENT;
 import static org.mockito.Mockito.mock;
 
 import java.io.StringReader;
@@ -29,6 +31,7 @@ import java.io.Writer;
 import java.time.Clock;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.joox.Match;
@@ -220,50 +223,55 @@ class XmlReportWriterTests {
 
 		assertValidAccordingToJenkinsSchema(testsuite.document());
 		assertThat(testsuite.find("property").matchAttr("name", "foo\\.bar").attr("value")) //
-				.isEqualTo("&#1;");
+				.isEqualTo(String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT));
 		var failure = testsuite.find("failure");
 		assertThat(failure.attr("message")) //
-				.isEqualTo("expected: <A> but was: <B&#0;>");
+				.isEqualTo("expected: <A> but was: <B" + ILLEGAL_CHARACTER_REPLACEMENT + ">");
 		assertThat(failure.text()) //
-				.contains("AssertionError: expected: <A> but was: <B&#0;>");
+				.contains("AssertionError: expected: <A> but was: <B" + ILLEGAL_CHARACTER_REPLACEMENT + ">");
+	}
+
+	@ParameterizedTest(name = "[{index}]")
+	@MethodSource("stringPairs")
+	void replacesIllegalCharacters(String input, String output) {
+		assertEquals(output, XmlReportWriter.replaceIllegalCharacters(input));
 	}
 
 	@Test
-	void doesNotReopenCDataWithinCDataContent() throws Exception {
+	void writesValidXmlForExceptionMessagesContainingLineBreaks() throws Exception {
 		var uniqueId = engineDescriptor.getUniqueId().append("test", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(uniqueId, "test"));
 		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
+		var allWhitespaceCharacters = IntStream.range(0, 0x10000) //
+				.filter(Character::isWhitespace) //
+				.filter(XmlReportWriter::isAllowedXmlCharacter) //
+				.mapToObj(Character::toString) //
+				.collect(joining());
+
+		var message = "a" + allWhitespaceCharacters + " b<&>";
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
-		var assertionError = new AssertionError("<foo><![CDATA[bar]]></foo>");
+		var assertionError = new AssertionError(message);
 		reportData.markFinished(testPlan.getTestIdentifier(uniqueId), failed(assertionError));
-		Writer assertingWriter = new StringWriter() {
 
-			@SuppressWarnings("NullableProblems")
-			@Override
-			public void write(char[] buffer, int off, int len) {
-				assertThat(new String(buffer, off, len)).doesNotContain("]]><![CDATA[");
-			}
-		};
+		var testsuite = writeXmlReport(testPlan, reportData);
 
-		writeXmlReport(testPlan, reportData, assertingWriter);
-	}
+		assertValidAccordingToJenkinsSchema(testsuite.document());
 
-	@ParameterizedTest(name = "{index}")
-	@MethodSource("stringPairs")
-	void escapesIllegalChars(String input, String output) {
-		assertEquals(output, XmlReportWriter.escapeIllegalChars(input));
+		var attributeValue = testsuite.find("failure").attr("message");
+		assertThat(attributeValue).isEqualTo(message);
 	}
 
 	static Stream<Arguments> stringPairs() {
 		return Stream.of( //
-			arguments("\0", "&#0;"), //
-			arguments("\1", "&#1;"), //
+			arguments("\0", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
+			arguments("\1", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
 			arguments("\t", "\t"), //
 			arguments("\r", "\r"), //
 			arguments("\n", "\n"), //
-			arguments("\u001f", "&#31;"), //
-			arguments("\u0020", "\u0020"), //
+			arguments("\u001f", String.valueOf(ILLEGAL_CHARACTER_REPLACEMENT)), //
+			arguments("✅", "✅"), //
+			arguments(" ", " "), //
 			arguments("foo!", "foo!"), //
 			arguments("\uD801\uDC00", "\uD801\uDC00") //
 		);

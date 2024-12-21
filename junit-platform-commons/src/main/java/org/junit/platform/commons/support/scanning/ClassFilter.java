@@ -8,30 +8,28 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support.scanning;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * Class-related predicate used by reflection utilities.
  *
- * <h2>DISCLAIMER</h2>
- *
- * <p>These utilities are intended solely for usage within the JUnit framework
- * itself. <strong>Any usage by external parties is not supported.</strong>
- * Use at your own risk!
- *
  * @since 1.1
  */
-@API(status = INTERNAL, since = "1.1")
-public class ClassFilter implements Predicate<Class<?>> {
+@API(status = EXPERIMENTAL, since = "1.12")
+public class ClassFilter {
 
 	/**
 	 * Create a {@link ClassFilter} instance that accepts all names but filters classes.
+	 *
+	 * @param classPredicate the class type predicate; never {@code null}
+	 * @return an instance of {@code ClassFilter}; never {@code null}
 	 */
 	public static ClassFilter of(Predicate<Class<?>> classPredicate) {
 		return of(name -> true, classPredicate);
@@ -39,6 +37,10 @@ public class ClassFilter implements Predicate<Class<?>> {
 
 	/**
 	 * Create a {@link ClassFilter} instance that filters by names and classes.
+	 *
+	 * @param namePredicate the class name predicate; never {@code null}
+	 * @param classPredicate the class type predicate; never {@code null}
+	 * @return an instance of {@code ClassFilter}; never {@code null}
 	 */
 	public static ClassFilter of(Predicate<String> namePredicate, Predicate<Class<?>> classPredicate) {
 		return new ClassFilter(namePredicate, classPredicate);
@@ -53,26 +55,25 @@ public class ClassFilter implements Predicate<Class<?>> {
 	}
 
 	/**
-	 * Test name using the stored name predicate.
+	 * Test the given name using the stored name predicate.
+	 *
+	 * @param name the name to test; never {@code null}
+	 * @return {@code true} if the input name matches the predicate, otherwise
+	 * {@code false}
 	 */
 	public boolean match(String name) {
 		return namePredicate.test(name);
 	}
 
 	/**
-	 * Test class using the stored class predicate.
+	 * Test the given class using the stored class predicate.
+	 *
+	 * @param type the type to test; never {@code null}
+	 * @return {@code true} if the input type matches the predicate, otherwise
+	 * {@code false}
 	 */
 	public boolean match(Class<?> type) {
 		return classPredicate.test(type);
 	}
 
-	/**
-	 * @implNote This implementation combines all tests stored in the predicates
-	 * of this instance. Any new predicate must be added to this test method as
-	 * well.
-	 */
-	@Override
-	public boolean test(Class<?> type) {
-		return match(type.getName()) && match(type);
-	}
 }

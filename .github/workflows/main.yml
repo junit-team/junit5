@@ -39,7 +39,7 @@ jobs:
           jacocoRootReport \
           --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@015f24e6818733317a2da2edd6290ab26238649a # v5
+      uses: codecov/codecov-action@1e68e06f1dbfde0e4cefc87efeba9e4643565303 # v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -91,7 +91,7 @@ jobs:
           publish -x check \
           prepareGitHubAttestation
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@619dbb2e03e0189af0c55118e7d3c5e129e99726 # v2.0.0
+      uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
       with:
         subject-path: documentation/build/attestation/*.jar
 
@@ -118,6 +118,11 @@ jobs:
         arguments: |
           prepareDocsForUploadToGhPages \
           -Dscan.tag.Documentation
+    - name: Configure Git
+      shell: bash
+      run: |
+        git config --global user.name "JUnit Team"
+        git config --global user.email "team@junit.org"
     - name: Upload Documentation
       if: github.event_name == 'push' && github.repository == 'junit-team/junit5' && github.ref == 'refs/heads/main'
       uses: ./.github/actions/run-gradle
@@ -127,4 +132,5 @@ jobs:
           gitPublishPush \
           -Dscan.tag.Documentation
       env:
-        GRGIT_USER: ${{ secrets.GH_TOKEN }}
+        GIT_USERNAME: git
+        GIT_PASSWORD: ${{ secrets.GH_TOKEN }}

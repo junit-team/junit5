@@ -50,6 +50,80 @@ import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigura
 public final class Constants {
 
 	/**
+	 * Property name used to include patterns for auto-detecting extensions: {@value}
+	 *
+	 * <h4>Pattern Matching Syntax</h4>
+	 *
+	 * <p>If the property value consists solely of an asterisk ({@code *}), all
+	 * extensions will be included. Otherwise, the property value will be treated
+	 * as a comma-separated list of patterns where each individual pattern will be
+	 * matched against the fully qualified class name (<em>FQCN</em>) of each extension.
+	 * Any dot ({@code .}) in a pattern will match against a dot ({@code .})
+	 * or a dollar sign ({@code $}) in a FQCN. Any asterisk ({@code *}) will match
+	 * against one or more characters in a FQCN. All other characters in a pattern
+	 * will be matched one-to-one against a FQCN.
+	 *
+	 * <h4>Examples</h4>
+	 *
+	 * <ul>
+	 * <li>{@code *}: includes all extensions.
+	 * <li>{@code org.junit.*}: includes every extension under the {@code org.junit}
+	 * base package and any of its subpackages.
+	 * <li>{@code *.MyExtension}: includes every extension whose simple class name is
+	 * exactly {@code MyExtension}.
+	 * <li>{@code *System*}: includes every extension whose FQCN contains
+	 * {@code System}.
+	 * <li>{@code *System*, *Dev*}: includes every extension whose FQCN contains
+	 * {@code System} or {@code Dev}.
+	 * <li>{@code org.example.MyExtension, org.example.TheirExtension}: includes
+	 * extensions whose FQCN is exactly {@code org.example.MyExtension} or
+	 * {@code org.example.TheirExtension}.
+	 * </ul>
+	 *
+	 * <p>Note: A class that matches both an inclusion and exclusion pattern will be excluded.
+	 *
+	 * @see JupiterConfiguration#EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME
+	 */
+	public static final String EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME;
+
+	/**
+	 * Property name used to exclude patterns for auto-detecting extensions: {@value}
+	 *
+	 * <h4>Pattern Matching Syntax</h4>
+	 *
+	 * <p>If the property value consists solely of an asterisk ({@code *}), all
+	 * extensions will be excluded. Otherwise, the property value will be treated
+	 * as a comma-separated list of patterns where each individual pattern will be
+	 * matched against the fully qualified class name (<em>FQCN</em>) of each extension.
+	 * Any dot ({@code .}) in a pattern will match against a dot ({@code .})
+	 * or a dollar sign ({@code $}) in a FQCN. Any asterisk ({@code *}) will match
+	 * against one or more characters in a FQCN. All other characters in a pattern
+	 * will be matched one-to-one against a FQCN.
+	 *
+	 * <h4>Examples</h4>
+	 *
+	 * <ul>
+	 * <li>{@code *}: excludes all extensions.
+	 * <li>{@code org.junit.*}: excludes every extension under the {@code org.junit}
+	 * base package and any of its subpackages.
+	 * <li>{@code *.MyExtension}: excludes every extension whose simple class name is
+	 * exactly {@code MyExtension}.
+	 * <li>{@code *System*}: excludes every extension whose FQCN contains
+	 * {@code System}.
+	 * <li>{@code *System*, *Dev*}: excludes every extension whose FQCN contains
+	 * {@code System} or {@code Dev}.
+	 * <li>{@code org.example.MyExtension, org.example.TheirExtension}: excludes
+	 * extensions whose FQCN is exactly {@code org.example.MyExtension} or
+	 * {@code org.example.TheirExtension}.
+	 * </ul>
+	 *
+	 * <p>Note: A class that matches both an inclusion and exclusion pattern will be excluded.
+	 *
+	 * @see JupiterConfiguration#EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME
+	 */
+	public static final String EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME = JupiterConfiguration.EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME;
+
+	/**
 	 * Property name used to provide patterns for deactivating conditions: {@value}
 	 *
 	 * <h4>Pattern Matching Syntax</h4>

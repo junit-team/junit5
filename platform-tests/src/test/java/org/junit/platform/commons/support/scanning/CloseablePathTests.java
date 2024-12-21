@@ -8,12 +8,11 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.commons.util;
+package org.junit.platform.commons.support.scanning;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
-import static org.junit.platform.commons.util.CloseablePath.JAR_URI_SCHEME;
+import static org.junit.platform.commons.support.scanning.CloseablePath.JAR_URI_SCHEME;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.only;
@@ -32,7 +31,8 @@ import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.commons.util.CloseablePath.FileSystemProvider;
+import org.junit.platform.commons.support.scanning.CloseablePath.FileSystemProvider;
+import org.junit.platform.commons.test.ConcurrencyTestingUtils;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 
 class CloseablePathTests {
@@ -92,7 +92,8 @@ class CloseablePathTests {
 		when(fileSystemProvider.newFileSystem(any())) //
 				.thenAnswer(invocation -> FileSystems.newFileSystem((URI) invocation.getArgument(0), Map.of()));
 
-		paths = executeConcurrently(numThreads, () -> CloseablePath.create(uri, fileSystemProvider));
+		paths = ConcurrencyTestingUtils.executeConcurrently(numThreads,
+			() -> CloseablePath.create(uri, fileSystemProvider));
 		verify(fileSystemProvider, only()).newFileSystem(jarUri);
 
 		// Close all but the first path

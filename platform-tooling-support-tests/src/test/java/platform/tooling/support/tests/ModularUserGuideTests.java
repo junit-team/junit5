@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.launcher.LauncherConstants;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.ProcessStarters;
@@ -121,7 +122,7 @@ class ModularUserGuideTests {
 		return args;
 	}
 
-	private static void junit(Path temp) throws Exception {
+	private static void junit(Path temp, OutputFiles outputFiles) throws Exception {
 		var projectDir = Path.of("../documentation").toAbsolutePath();
 
 		var result = ProcessStarters.java() //
@@ -144,13 +145,15 @@ class ModularUserGuideTests {
 				.addArguments("--include-classname", ".*Demo") //
 				.addArguments("--exclude-tag", "exclude") //
 				.addArguments("--exclude-tag", "exclude") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
 	}
 
 	@Test
-	void runTestsFromUserGuideWithinModularBoundaries(@TempDir Path temp) throws Exception {
+	void runTestsFromUserGuideWithinModularBoundaries(@TempDir Path temp,
+			@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var out = new StringWriter();
 		var err = new StringWriter();
 
@@ -179,7 +182,7 @@ class ModularUserGuideTests {
 		// System.out.println("______________");
 		// listing.forEach(System.out::println);
 
-		junit(temp);
+		junit(temp, outputFiles);
 	}
 
 	private static void loadAllJUnitModules(Path target) throws Exception {

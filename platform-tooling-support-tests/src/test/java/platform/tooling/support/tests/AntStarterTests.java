@@ -22,6 +22,7 @@ import org.apache.tools.ant.Main;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.ProcessStarters;
 
@@ -32,10 +33,11 @@ class AntStarterTests {
 
 	@Test
 	@Timeout(60)
-	void ant_starter(@TempDir Path workspace) throws Exception {
+	void ant_starter(@TempDir Path workspace, @FilePrefix("ant") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.java() //
 				.workingDir(copyToWorkspace(Projects.ANT_STARTER, workspace)) //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -57,5 +59,4 @@ class AntStarterTests {
 		var testResultsDir = workspace.resolve("build/test-report");
 		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
 	}
-
 }

@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -198,15 +197,12 @@ public class LauncherFactory {
 		config.getAdditionalTestExecutionListeners().forEach(launcher::registerTestExecutionListeners);
 	}
 
-	private static Stream<TestExecutionListener> loadAndFilterTestExecutionListeners(
+	private static Iterable<TestExecutionListener> loadAndFilterTestExecutionListeners(
 			ConfigurationParameters configurationParameters) {
-		Iterable<TestExecutionListener> listeners = ServiceLoaderRegistry.load(TestExecutionListener.class);
-		String deactivatedListenersPattern = configurationParameters.get(
-			DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME).orElse(null);
-		// @formatter:off
-		return StreamSupport.stream(listeners.spliterator(), false)
-				.filter(ClassNamePatternFilterUtils.excludeMatchingClasses(deactivatedListenersPattern));
-		// @formatter:on
+		Predicate<String> classNameFilter = configurationParameters.get(DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME) //
+				.map(ClassNamePatternFilterUtils::excludeMatchingClassNames) //
+				.orElse(__ -> true);
+		return ServiceLoaderRegistry.load(TestExecutionListener.class, classNameFilter);
 	}
 
 }

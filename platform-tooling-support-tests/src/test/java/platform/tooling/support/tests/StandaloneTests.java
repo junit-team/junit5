@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
+import org.junit.platform.tests.process.OutputFiles;
 import org.junit.platform.tests.process.ProcessResult;
 import org.opentest4j.TestAbortedException;
 
@@ -77,11 +78,12 @@ class StandaloneTests {
 	}
 
 	@Test
-	void listAllObservableEngines() throws Exception {
+	void listAllObservableEngines(@FilePrefix("java") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.java() //
 				.workingDir(getSourceDirectory(Projects.STANDALONE)) //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("engines", "--disable-ansi-colors", "--disable-banner") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -98,12 +100,13 @@ class StandaloneTests {
 	}
 
 	@Test
-	void printVersionViaJar() throws Exception {
+	void printVersionViaJar(@FilePrefix("java") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.java() //
 				.workingDir(getSourceDirectory(Projects.STANDALONE)) //
 				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("--version", "--disable-ansi-colors") //
 				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -118,7 +121,7 @@ class StandaloneTests {
 	}
 
 	@Test
-	void printVersionViaModule() throws Exception {
+	void printVersionViaModule(@FilePrefix("java") OutputFiles outputFiles) throws Exception {
 		var junitJars = Stream.of("junit-platform-console", "junit-platform-reporting", "junit-platform-engine",
 			"junit-platform-launcher", "junit-platform-commons") //
 				.map(MavenRepo::jar);
@@ -135,6 +138,7 @@ class StandaloneTests {
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("--version", "--disable-ansi-colors") //
 				.putEnvironment("CLICOLOR_FORCE", "1") // enable ANSI colors by default (see https://picocli.info/#_heuristics_for_enabling_ansi)
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -151,7 +155,8 @@ class StandaloneTests {
 	@Test
 	@Order(1)
 	@Execution(SAME_THREAD)
-	void compile() throws Exception {
+	void compile(@FilePrefix("javac") OutputFiles javacOutputFiles, @FilePrefix("jar") OutputFiles jarOutputFiles)
+			throws Exception {
 		var result = ProcessStarters.javaCommand("javac") //
 				.workingDir(workspace) //
 				.addArguments("-Xlint:-options") //
@@ -163,6 +168,7 @@ class StandaloneTests {
 				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java").toString()) //
 				.addArguments(workspace.resolve("src/standalone/SuiteIntegration.java").toString()) //
 				.addArguments(workspace.resolve("src/standalone/VintageIntegration.java").toString()) //
+				.redirectOutput(javacOutputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -176,6 +182,7 @@ class StandaloneTests {
 				.addArguments("--create") //
 				.addArguments("--file", jarFolder.resolve("tests.jar").toString()) //
 				.addArguments("-C", workspace.resolve("bin").toString(), ".") //
+				.redirectOutput(jarOutputFiles) //
 				.startAndWait();
 		assertEquals(0, jarResult.exitCode());
 	}
@@ -183,8 +190,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverTree() throws Exception {
-		var result = discover("--details-theme=ascii");
+	void discoverTree(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details-theme=ascii");
 
 		var expected = """
 				.
@@ -219,8 +226,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverFlat() throws Exception {
-		var result = discover("--details=flat");
+	void discoverFlat(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details=flat");
 
 		var expected = """
 				JUnit Platform Suite ([engine:junit-platform-suite])
@@ -254,8 +261,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverVerbose() throws Exception {
-		var result = discover("--details=verbose", "--details-theme=ascii");
+	void discoverVerbose(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details=verbose", "--details-theme=ascii");
 
 		var expected = """
 				+-- JUnit Platform Suite
@@ -339,8 +346,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverNone() throws Exception {
-		var result = discover("--details=none");
+	void discoverNone(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details=none");
 
 		assertThat(result.stdOut()).isEmpty();
 	}
@@ -348,8 +355,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverSummary() throws Exception {
-		var result = discover("--details=summary");
+	void discoverSummary(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details=summary");
 
 		var expected = """
 
@@ -363,8 +370,8 @@ class StandaloneTests {
 	@Test
 	@Order(2)
 	@Execution(SAME_THREAD)
-	void discoverTestFeed() throws Exception {
-		var result = discover("--details=testfeed");
+	void discoverTestFeed(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var result = discover(outputFiles, "--details=testfeed");
 		var expected = """
 				JUnit Platform Suite > SuiteIntegration > JUnit Jupiter > SuiteIntegration$SingleTestContainer > successful()
 				JUnit Jupiter > JupiterIntegration > successful()
@@ -384,7 +391,7 @@ class StandaloneTests {
 		assertLinesMatch(expected.lines(), result.stdOut().lines());
 	}
 
-	private static ProcessResult discover(String... args) throws Exception {
+	private static ProcessResult discover(OutputFiles outputFiles, String... args) throws Exception {
 		var result = ProcessStarters.java() //
 				.workingDir(workspace) //
 				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
@@ -395,6 +402,7 @@ class StandaloneTests {
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
 				.addArguments(args) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -404,7 +412,7 @@ class StandaloneTests {
 	@Test
 	@Order(3)
 	@Execution(SAME_THREAD)
-	void execute() throws Exception {
+	void execute(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.java() //
 				.workingDir(workspace) //
 				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
@@ -418,6 +426,7 @@ class StandaloneTests {
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(1, result.exitCode());
@@ -444,7 +453,7 @@ class StandaloneTests {
 	@Test
 	@Order(4)
 	@Execution(SAME_THREAD)
-	void executeOnJava8() throws Exception {
+	void executeOnJava8(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace) //
@@ -458,6 +467,7 @@ class StandaloneTests {
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(1, result.exitCode());
@@ -479,7 +489,7 @@ class StandaloneTests {
 	@Order(5)
 	@Execution(SAME_THREAD)
 	// https://github.com/junit-team/junit5/issues/2600
-	void executeOnJava8SelectPackage() throws Exception {
+	void executeOnJava8SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace).addArguments("-showversion") //
@@ -492,6 +502,7 @@ class StandaloneTests {
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--classpath", "bin") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(1, result.exitCode());
@@ -520,7 +531,7 @@ class StandaloneTests {
 	@Order(6)
 	@Execution(SAME_THREAD)
 	@Disabled("https://github.com/junit-team/junit5/issues/1724")
-	void executeWithJarredTestClasses() throws Exception {
+	void executeWithJarredTestClasses(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
 		var jar = MavenRepo.jar("junit-platform-console-standalone");
 		var path = new ArrayList<String>();
 		// path.add("bin"); // "exploded" test classes are found, see also test() above
@@ -537,6 +548,7 @@ class StandaloneTests {
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
 				.addArguments("--fail-if-no-tests") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(1, result.exitCode());

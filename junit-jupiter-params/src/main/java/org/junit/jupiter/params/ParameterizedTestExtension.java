@@ -14,6 +14,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
@@ -74,8 +75,13 @@ class ParameterizedTestExtension implements TestTemplateInvocationContextProvide
 		ParameterizedTestNameFormatter formatter = createNameFormatter(extensionContext, methodContext);
 		AtomicLong invocationCount = new AtomicLong(0);
 
+		List<ArgumentsSource> argumentsSources = findRepeatableAnnotations(methodContext.method, ArgumentsSource.class);
+
+		Preconditions.notEmpty(argumentsSources,
+			"Configuration error: You must configure at least one arguments source for this @ParameterizedTest");
+
 		// @formatter:off
-		return findRepeatableAnnotations(methodContext.method, ArgumentsSource.class)
+		return argumentsSources
 				.stream()
 				.map(ArgumentsSource::value)
 				.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsProvider.class, clazz, extensionContext))

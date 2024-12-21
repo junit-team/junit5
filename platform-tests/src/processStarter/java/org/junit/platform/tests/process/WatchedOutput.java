@@ -10,14 +10,15 @@
 
 package org.junit.platform.tests.process;
 
+import static org.junit.platform.tests.process.ProcessStarter.OUTPUT_ENCODING;
+
 import java.io.ByteArrayOutputStream;
-import java.nio.charset.Charset;
+import java.io.OutputStream;
+import java.util.Optional;
 
-record WatchedOutput(Thread thread, ByteArrayOutputStream stream) {
-
-	private static final Charset CHARSET = Charset.forName(System.getProperty("native.encoding"));
+record WatchedOutput(Thread thread, ByteArrayOutputStream stream, Optional<OutputStream> fileStream) {
 
 	String streamAsString() {
-		return stream.toString(CHARSET);
+		return stream.toString(OUTPUT_ENCODING);
 	}
 }

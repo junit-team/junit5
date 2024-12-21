@@ -268,6 +268,8 @@ fun assertNotNull(
  * @see Assertions.assertThrows
  */
 inline fun <reified T : Throwable> assertThrows(executable: () -> Unit): T {
+    // no contract for `executable` because it is expected to throw an exception instead
+    // of being executed completely (see https://youtrack.jetbrains.com/issue/KT-27748)
     val throwable: Throwable? =
         try {
             executable()
@@ -314,6 +316,8 @@ inline fun <reified T : Throwable> assertThrows(
 ): T {
     contract {
         callsInPlace(message, AT_MOST_ONCE)
+        // no contract for `executable` because it is expected to throw an exception instead
+        // of being executed completely (see https://youtrack.jetbrains.com/issue/KT-27748)
     }
 
     val throwable: Throwable? =
@@ -499,7 +503,10 @@ fun <R> assertTimeout(
 fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     executable: () -> R
-): R = Assertions.assertTimeoutPreemptively(timeout, executable)
+): R =
+    // no contract for `executable` because it might be interrupted and throw an exception
+    // (see https://youtrack.jetbrains.com/issue/KT-27748)
+    Assertions.assertTimeoutPreemptively(timeout, executable)
 
 /**
  * Example usage:
@@ -516,7 +523,10 @@ fun <R> assertTimeoutPreemptively(
     timeout: Duration,
     message: String,
     executable: () -> R
-): R = Assertions.assertTimeoutPreemptively(timeout, executable, message)
+): R =
+    // no contract for `executable` because it might be interrupted and throw an exception
+    // (see https://youtrack.jetbrains.com/issue/KT-27748)
+    Assertions.assertTimeoutPreemptively(timeout, executable, message)
 
 /**
  * Example usage:
@@ -537,6 +547,8 @@ fun <R> assertTimeoutPreemptively(
 ): R {
     contract {
         callsInPlace(message, AT_MOST_ONCE)
+        // no contract for `executable` because it might be interrupted and throw an exception
+        // (see https://youtrack.jetbrains.com/issue/KT-27748)
     }
 
     return Assertions.assertTimeoutPreemptively(timeout, executable, message)

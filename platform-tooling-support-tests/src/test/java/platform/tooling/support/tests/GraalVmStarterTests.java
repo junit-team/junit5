@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.condition.EnabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.DisabledOnOpenJ9;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.MavenRepo;
 import platform.tooling.support.ProcessStarters;
@@ -37,12 +38,14 @@ class GraalVmStarterTests {
 
 	@Test
 	@Timeout(value = 10, unit = MINUTES)
-	void runsTestsInNativeImage(@TempDir Path workspace) throws Exception {
+	void runsTestsInNativeImage(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles)
+			throws Exception {
 		var result = ProcessStarters.gradlew() //
 				.workingDir(copyToWorkspace(Projects.GRAALVM_STARTER, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
 					"--warning-mode=fail") //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());
@@ -50,6 +53,7 @@ class GraalVmStarterTests {
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 1 = 2 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("CalculatorTests > 1 + 100 = 101 SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("ClassLevelAnnotationTests$Inner > test() SUCCESSFUL")) //
+				.anyMatch(line -> line.contains("com.example.project.VintageTests > test SUCCESSFUL")) //
 				.anyMatch(line -> line.contains("BUILD SUCCESSFUL"));
 	}
 }

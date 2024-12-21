@@ -105,9 +105,14 @@ val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSH
 
 gitPublish {
 	repoUri = "https://github.com/junit-team/junit5.git"
+	referenceRepoUri = rootDir.toURI().toString()
+
 	branch = "gh-pages"
 	sign = false
 	fetchDepth = 1
+
+	username = providers.environmentVariable("GIT_USERNAME")
+	password = providers.environmentVariable("GIT_PASSWORD")
 
 	contents {
 		from(docsDir)
@@ -153,6 +158,8 @@ tasks {
 		args.addAll("execute")
 		args.addAll("--scan-classpath")
 		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
+		args.addAll("--config=junit.platform.output.capture.stdout=true")
+		args.addAll("--config=junit.platform.output.capture.stderr=true")
 		outputs.dir(consoleLauncherTestReportsDir)
 		argumentProviders.add(CommandLineArgumentProvider {
 			listOf(

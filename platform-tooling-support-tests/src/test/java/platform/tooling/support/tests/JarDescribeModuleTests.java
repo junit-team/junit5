@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.tests.process.OutputFiles;
 
 import platform.tooling.support.Helper;
 import platform.tooling.support.MavenRepo;
@@ -34,13 +35,14 @@ class JarDescribeModuleTests {
 
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
-	void describeModule(String module) throws Exception {
+	void describeModule(String module, @FilePrefix("jar") OutputFiles outputFiles) throws Exception {
 		var sourceDirectory = getSourceDirectory(Projects.JAR_DESCRIBE_MODULE);
 		var modulePath = MavenRepo.jar(module);
 
 		var result = ProcessStarters.javaCommand("jar") //
 				.workingDir(sourceDirectory) //
 				.addArguments("--describe-module", "--file", modulePath.toAbsolutePath().toString()) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

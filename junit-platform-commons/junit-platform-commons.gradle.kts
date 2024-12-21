@@ -3,6 +3,7 @@ import junitbuild.java.UpdateJarAction
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.java-multi-release-sources")
+	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 
@@ -30,6 +31,7 @@ tasks.jar {
 tasks.codeCoverageClassesJar {
 	exclude("org/junit/platform/commons/util/ModuleUtils.class")
 	exclude("org/junit/platform/commons/util/PackageNameUtils.class")
+	exclude("org/junit/platform/commons/util/ServiceLoaderUtils.class")
 }
 
 eclipse {

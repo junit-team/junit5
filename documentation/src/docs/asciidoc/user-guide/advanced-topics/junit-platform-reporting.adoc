@@ -44,6 +44,9 @@ The listener is auto-registered and can be configured via the following
 If enabled, the listener creates an XML report file named `open-test-report.xml` in the
 configured <<junit-platform-reporting-output-directory, output directory>>.
 
+If <<running-tests-capturing-output, output capturing>> is enabled, the captured output
+written to `System.out` and `System.err` will be included in the report as well.
+
 TIP: The {OpenTestReportingCliTool} can be used to convert from the event-based format to
 the hierarchical format which is more human-readable.
 

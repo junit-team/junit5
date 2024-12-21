@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
 import platform.tooling.support.Helper;
@@ -40,8 +41,8 @@ class MavenSurefireCompatibilityTests {
 			2.22.2   | --activate-profiles=manual-platform-dependency
 			3.0.0-M4 | <none>
 			""")
-	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg, @TempDir Path workspace)
-			throws Exception {
+	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg, @TempDir Path workspace,
+			@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 		var extraArgs = extraArg == null ? new String[0] : new String[] { extraArg };
 		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_SUREFIRE_COMPATIBILITY, workspace)) //
@@ -49,6 +50,7 @@ class MavenSurefireCompatibilityTests {
 				.addArguments("-Dsurefire.version=" + surefireVersion) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
 				.addArguments(extraArgs) //
+				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(0, result.exitCode());

@@ -26,6 +26,7 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutionCondition;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
@@ -75,6 +76,25 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		this.configurationParameters = Preconditions.notNull(configurationParameters,
 			"ConfigurationParameters must not be null");
 		this.outputDirectoryProvider = outputDirectoryProvider;
+	}
+
+	@Override
+	public Predicate<Class<? extends Extension>> getFilterForAutoDetectedExtensions() {
+		String includePattern = getExtensionAutoDetectionIncludePattern();
+		String excludePattern = getExtensionAutoDetectionExcludePattern();
+		Predicate<String> predicate = ClassNamePatternFilterUtils.includeMatchingClassNames(includePattern) //
+				.and(ClassNamePatternFilterUtils.excludeMatchingClassNames(excludePattern));
+		return clazz -> predicate.test(clazz.getName());
+	}
+
+	private String getExtensionAutoDetectionIncludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_INCLUDE_PROPERTY_NAME) //
+				.orElse(ClassNamePatternFilterUtils.ALL_PATTERN);
+	}
+
+	private String getExtensionAutoDetectionExcludePattern() {
+		return configurationParameters.get(EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME) //
+				.orElse(ClassNamePatternFilterUtils.BLANK);
 	}
 
 	@Override

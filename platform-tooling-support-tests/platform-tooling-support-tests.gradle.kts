@@ -165,6 +165,12 @@ tasks.test {
 		dir("${rootDir}/documentation/src/test").withPathSensitivity(RELATIVE)
 	}
 
+	// Disable capturing output since parallel execution is enabled and output of
+	// external processes happens on non-test threads which can't reliably be
+	// attributed to the test that started the process.
+	systemProperty("junit.platform.output.capture.stdout", "false")
+	systemProperty("junit.platform.output.capture.stderr", "false")
+
 	develocity {
 		testDistribution {
 			requirements.add("jdk=8")

@@ -3,17 +3,17 @@ ant = "1.10.15"
 apiguardian = "1.1.2"
 asciidoctorj-pdf = "2.3.19"
 asciidoctor-plugins = "4.0.3" # Check if workaround in documentation.gradle.kts can be removed when upgrading
-assertj = "3.26.3"
+assertj = "3.27.0"
 bnd = "7.1.0"
-checkstyle = "10.20.2"
-eclipse = "4.32.0"
+checkstyle = "10.21.0"
+eclipse = "4.34.0"
 jackson = "2.18.2"
 jacoco = "0.8.12"
 jmh = "1.37"
 junit4 = "4.13.2"
 junit4Min = "4.12"
 ktlint = "1.5.0"
-log4j = "2.24.2"
+log4j = "2.24.3"
 mockito = "5.14.2"
 opentest4j = "1.3.0"
 openTestReporting = "0.2.0-SNAPSHOT"
@@ -47,7 +47,7 @@ jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess"
 joox = { module = "org.jooq:joox", version = "2.0.1" }
 jte = { module = "gg.jte:jte", version = "3.1.15" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
-kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.9.0" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.10.0" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
 log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4j" }
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.9" }
@@ -68,6 +68,7 @@ univocity-parsers = { module = "com.sonofab1rd:univocity-parsers", version = "2.
 xmlunit-assertj = { module = "org.xmlunit:xmlunit-assertj3", version.ref = "xmlunit" }
 xmlunit-placeholders = { module = "org.xmlunit:xmlunit-placeholders", version.ref = "xmlunit" }
 testingAnnotations = { module = "com.gradle:develocity-testing-annotations", version = "2.0.1" }
+woodstox = { module = "com.fasterxml.woodstox:woodstox-core", version = "7.1.0" }
 
 # Only declared here so Dependabot knows when to update the referenced versions
 asciidoctorj-pdf = { module = "org.asciidoctor:asciidoctorj-pdf", version.ref = "asciidoctorj-pdf" }
@@ -88,12 +89,12 @@ asciidoctorPdf = { id = "org.asciidoctor.jvm.pdf", version.ref = "asciidoctor-pl
 bnd = { id = "biz.aQute.bnd", version.ref = "bnd" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.0.2" }
-develocity = { id = "com.gradle.develocity", version = "3.18.2" }
+develocity = { id = "com.gradle.develocity", version = "3.19" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.9.0" }
-gitPublish = { id = "org.ajoberstar.git-publish", version = "4.2.2" }
+gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.0" }
 jmh = { id = "me.champeau.jmh", version = "0.7.2" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.11" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.5" }
-spotless = { id = "com.diffplug.spotless", version = "7.0.0.BETA4" }
+spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 versions = { id = "com.github.ben-manes.versions", version = "0.51.0" }

@@ -10,14 +10,24 @@ link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1] milestone page in the
 JUnit repository on GitHub.
 
 
+[[release-notes-5.12.0-M1-overall-improvements]]
+=== Overall Improvements
+
+[[release-notes-5.12.0-M1-overall-new-features-and-improvements]]
+==== New Features and Improvements
+
+* All affected JAR files now include `native-image.properties` files that contain the
+  `--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
+  to newer versions of JUnit.
+
+
 [[release-notes-5.12.0-M1-junit-platform]]
 === JUnit Platform
 
 [[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Enable auto-flushing of output in the `ConsoleLauncher` to fix issues with buffering,
-  in particular when using the `--details=testfeed` option.
+* ❓
 
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -42,13 +52,22 @@ JUnit repository on GitHub.
   allow test engines to publish/attach files to containers and tests by calling
   `EngineExecutionListener.fileEntryPublished(...)`. Registered `TestExecutionListeners`
   can then access these files by overriding the `fileEntryPublished(...)` method.
-* The following improvements have been made to the open-test-reporting XML output:
+* The following improvements have been made to the
+  <<../user-guide/index.adoc#junit-platform-reporting-open-test-reporting, Open Test Reporting>>
+  XML output:
   - Information about the Git repository, the current branch, the commit hash, and the
     current worktree status are now included in the XML report, if applicable.
   - A section containing JUnit-specific metadata about each test/container to the HTML
     report is now written by open-test-reporting when added to the classpath/module path
   - Information about published files is now included as attachments.
+  - If <<../user-guide/index.adoc#running-tests-capturing-output, output capturing>> is
+    enabled, the captured output written to `System.out` and `System.err` is now included
+    in the XML report.
+* Output written to `System.out` and `System.err` from non-test threads is now attributed
+  to the most recent test or container that was started or has written output.
 * Introduced contracts for Kotlin-specific assertion methods.
+* New public interface `ClasspathScanner` allowing third parties to provide a custom
+  implementation for scanning the classpath for classes and resources.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
