@@ -50,11 +50,11 @@ import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
- * Unit tests for {@link ConversionSupport}.
+ * Unit tests for {@link DefaultConverter}.
  *
- * @since 5.12
+ * @since 1.13
  */
-class ConversionSupportTests {
+class DefaultConverterTests {
 
 	@Test
 	void isAwareOfNull() {
@@ -105,18 +105,22 @@ class ConversionSupportTests {
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
 			double.class, void.class })
 	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
+		assertThat(canConvert(null, type)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert(null, type)) //
-				.withMessage("Cannot convert null to primitive value of type " + type.getCanonicalName());
+				.withMessage("Cannot convert null to primitive value of type %s", type.getCanonicalName());
 	}
 
 	@ParameterizedTest(name = "[{index}] {0}")
 	@ValueSource(classes = { Boolean.class, Character.class, Short.class, Byte.class, Integer.class, Long.class,
 			Float.class, Double.class })
 	void throwsExceptionWhenConvertingTheWordNullToPrimitiveWrapperType(Class<?> type) {
+		assertThat(canConvert("null", type)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("null", type)) //
 				.withMessage("Failed to convert String \"null\" to type " + type.getCanonicalName());
+
+		assertThat(canConvert("NULL", type)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("NULL", type)) //
 				.withMessage("Failed to convert String \"NULL\" to type " + type.getCanonicalName());
@@ -124,24 +128,28 @@ class ConversionSupportTests {
 
 	@Test
 	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
+		assertThat(canConvert("ab", char.class)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("ab", char.class)) //
 				.withMessage("Failed to convert String \"ab\" to type char") //
 				.havingCause() //
 				.withMessage("String must have length of 1: ab");
 
+		assertThat(canConvert("tru", boolean.class)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("tru", boolean.class)) //
 				.withMessage("Failed to convert String \"tru\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): tru");
 
+		assertThat(canConvert("null", boolean.class)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("null", boolean.class)) //
 				.withMessage("Failed to convert String \"null\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): null");
 
+		assertThat(canConvert("NULL", boolean.class)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("NULL", boolean.class)) //
 				.withMessage("Failed to convert String \"NULL\" to type boolean") //
@@ -151,6 +159,7 @@ class ConversionSupportTests {
 
 	@Test
 	void throwsExceptionWhenImplicitConversionIsUnsupported() {
+		assertThat(canConvert("foo", Enigma.class)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
 				.isThrownBy(() -> convert("foo", Enigma.class)) //
 				.withMessage("No built-in converter for source type java.lang.String and target type %s",
@@ -232,7 +241,10 @@ class ConversionSupportTests {
 			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
-			var clazz = (Class<?>) convert(customTypeName, Class.class, classLoader(declaringExecutable));
+			var classLoader = classLoader(declaringExecutable);
+			assertThat(canConvert(customTypeName, Class.class, classLoader)).isTrue();
+
+			var clazz = (Class<?>) convert(customTypeName, Class.class, classLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
@@ -309,7 +321,9 @@ class ConversionSupportTests {
 
 	// -------------------------------------------------------------------------
 
-	private void assertConverts(String input, Class<?> targetClass, Object expectedOutput) {
+	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
+		assertThat(canConvert(input, targetClass)).isTrue();
+
 		var result = convert(input, targetClass);
 
 		assertThat(result) //
@@ -317,16 +331,24 @@ class ConversionSupportTests {
 				.isEqualTo(expectedOutput);
 	}
 
-	private Object convert(String input, Class<?> targetClass) {
+	private boolean canConvert(Object input, Class<?> targetClass) {
+		return canConvert(input, targetClass, classLoader());
+	}
+
+	private Object convert(Object input, Class<?> targetClass) {
 		return convert(input, targetClass, classLoader());
 	}
 
-	private Object convert(String input, Class<?> targetClass, ClassLoader classLoader) {
-		return ConversionSupport.convert(input, targetClass, classLoader);
+	private boolean canConvert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+		return DefaultConverter.INSTANCE.canConvert(input, targetClass, classLoader);
+	}
+
+	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+		return DefaultConverter.INSTANCE.convert(input, targetClass, classLoader);
 	}
 
 	private static ClassLoader classLoader() {
-		Method declaringExecutable = ReflectionSupport.findMethod(ConversionSupportTests.class, "foo").get();
+		Method declaringExecutable = ReflectionSupport.findMethod(DefaultConverterTests.class, "foo").get();
 		return classLoader(declaringExecutable);
 	}
 
