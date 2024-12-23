@@ -10,16 +10,16 @@
 
 package org.junit.platform.commons.support.conversion;
 
-class StringToEnumConverter implements StringToObjectConverter {
+class StringToEnumConverter extends StringToObjectConverter {
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return targetType.isEnum();
 	}
 
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Object convert(String source, Class targetType) throws Exception {
+	public Object convert(String source, Class targetType, ClassLoader classLoader) {
 		return Enum.valueOf(targetType, source);
 	}
 
