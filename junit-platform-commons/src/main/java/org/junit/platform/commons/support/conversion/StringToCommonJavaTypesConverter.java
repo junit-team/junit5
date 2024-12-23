@@ -23,9 +23,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToCommonJavaTypesConverter implements StringToObjectConverter {
+class StringToCommonJavaTypesConverter extends StringToObjectConverter {
 
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
 		// java.io and java.nio
@@ -42,14 +43,14 @@ class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 	);
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(@Nullable Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) throws Exception {
+	public Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader) {
 		Function<String, ?> converter = Preconditions.notNull(CONVERTERS.get(targetType),
-			() -> "No registered converter for %s".formatted(targetType.getName()));
+			() -> "No registered converter for %s".formatted(targetType != null ? targetType.getName() : null));
 		return converter.apply(source);
 	}
 
