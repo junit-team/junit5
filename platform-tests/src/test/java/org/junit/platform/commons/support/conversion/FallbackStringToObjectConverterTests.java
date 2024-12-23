@@ -21,6 +21,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.support.conversion.FallbackStringToObjectConverter.IsFactoryConstructor;
 import org.junit.platform.commons.support.conversion.FallbackStringToObjectConverter.IsFactoryMethod;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -87,13 +88,13 @@ class FallbackStringToObjectConverterTests {
 	@Test
 	@DisplayName("Cannot convert String to Diary because Diary has neither a static factory method nor a factory constructor")
 	void cannotConvertStringToDiary() {
-		assertThat(converter.canConvertTo(Diary.class)).isFalse();
+		assertThat(converter.canConvert(Diary.class)).isFalse();
 	}
 
 	@Test
 	@DisplayName("Cannot convert String to Magazine because Magazine has multiple static factory methods")
 	void cannotConvertStringToMagazine() {
-		assertThat(converter.canConvertTo(Magazine.class)).isFalse();
+		assertThat(converter.canConvert(Magazine.class)).isFalse();
 	}
 
 	// -------------------------------------------------------------------------
@@ -120,7 +121,7 @@ class FallbackStringToObjectConverterTests {
 	}
 
 	private static void assertConverts(String input, Class<?> targetType, Object expectedOutput) throws Exception {
-		assertThat(converter.canConvertTo(targetType)).isTrue();
+		assertThat(converter.canConvert(targetType)).isTrue();
 
 		var result = converter.convert(input, targetType);
 
