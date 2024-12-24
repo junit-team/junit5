@@ -43,7 +43,13 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 
 	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ExtensionContext context, EnumSource enumSource) {
 		Class<E> enumClass = determineEnumClass(context, enumSource);
-		return EnumSet.allOf(enumClass);
+		E[] constants = enumClass.getEnumConstants();
+		if (constants.length == 0) {
+			return EnumSet.noneOf(enumClass);
+		}
+		E from = enumSource.from().isEmpty() ? constants[0] : Enum.valueOf(enumClass, enumSource.from());
+		E to = enumSource.to().isEmpty() ? constants[constants.length - 1] : Enum.valueOf(enumClass, enumSource.to());
+		return EnumSet.range(from, to);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

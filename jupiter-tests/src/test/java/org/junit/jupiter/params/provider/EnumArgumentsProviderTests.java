@@ -12,8 +12,10 @@ package org.junit.jupiter.params.provider;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithTwoConstants.BAR;
-import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithTwoConstants.FOO;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.BAR;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.BAZ;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.FOO;
+import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.QUX;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -34,21 +36,22 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void providesAllEnumConstants() {
-		var arguments = provideArguments(EnumWithTwoConstants.class);
+		var arguments = provideArguments(EnumWithFourConstants.class);
 
-		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
+		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR }, new Object[] { BAZ },
+			new Object[] { QUX });
 	}
 
 	@Test
 	void provideSingleEnumConstant() {
-		var arguments = provideArguments(EnumWithTwoConstants.class, "FOO");
+		var arguments = provideArguments(EnumWithFourConstants.class, "FOO");
 
 		assertThat(arguments).containsExactly(new Object[] { FOO });
 	}
 
 	@Test
 	void provideAllEnumConstantsWithNamingAll() {
-		var arguments = provideArguments(EnumWithTwoConstants.class, "FOO", "BAR");
+		var arguments = provideArguments(EnumWithFourConstants.class, "FOO", "BAR");
 
 		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
 	}
@@ -56,32 +59,33 @@ class EnumArgumentsProviderTests {
 	@Test
 	void duplicateConstantNameIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, "FOO", "BAR", "FOO").findAny());
+			() -> provideArguments(EnumWithFourConstants.class, "FOO", "BAR", "FOO").findAny());
 		assertThat(exception).hasMessageContaining("Duplicate enum constant name(s) found");
 	}
 
 	@Test
 	void invalidConstantNameIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, "FO0", "B4R").findAny());
+			() -> provideArguments(EnumWithFourConstants.class, "FO0", "B4R").findAny());
 		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
 	}
 
 	@Test
 	void invalidPatternIsDetected() {
 		Exception exception = assertThrows(PreconditionViolationException.class,
-			() -> provideArguments(EnumWithTwoConstants.class, Mode.MATCH_ALL, "(", ")").findAny());
+			() -> provideArguments(EnumWithFourConstants.class, Mode.MATCH_ALL, "(", ")").findAny());
 		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
 
 	@Test
 	void providesEnumConstantsBasedOnTestMethod() throws Exception {
 		when(extensionContext.getRequiredTestMethod()).thenReturn(
-			TestCase.class.getDeclaredMethod("methodWithCorrectParameter", EnumWithTwoConstants.class));
+			TestCase.class.getDeclaredMethod("methodWithCorrectParameter", EnumWithFourConstants.class));
 
 		var arguments = provideArguments(NullEnum.class);
 
-		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR });
+		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR }, new Object[] { BAZ },
+			new Object[] { QUX });
 	}
 
 	@Test
@@ -104,8 +108,64 @@ class EnumArgumentsProviderTests {
 		assertThat(exception).hasMessageStartingWith("Test method must declare at least one parameter");
 	}
 
+	@Test
+	void providesEnumConstantsStartingFromBar() {
+		var arguments = provideArguments(EnumWithFourConstants.class, "BAR", "", Mode.INCLUDE);
+
+		assertThat(arguments).containsExactly(new Object[] { BAR }, new Object[] { BAZ }, new Object[] { QUX });
+	}
+
+	@Test
+	void providesEnumConstantsEndingAtBaz() {
+		var arguments = provideArguments(EnumWithFourConstants.class, "", "BAZ", Mode.INCLUDE);
+
+		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAR }, new Object[] { BAZ });
+	}
+
+	@Test
+	void providesEnumConstantsFromBarToBaz() {
+		var arguments = provideArguments(EnumWithFourConstants.class, "BAR", "BAZ", Mode.INCLUDE);
+
+		assertThat(arguments).containsExactly(new Object[] { BAR }, new Object[] { BAZ });
+	}
+
+	@Test
+	void providesEnumConstantsFromFooToBazWhileExcludingBar() {
+		var arguments = provideArguments(EnumWithFourConstants.class, "FOO", "BAZ", Mode.EXCLUDE, "BAR");
+
+		assertThat(arguments).containsExactly(new Object[] { FOO }, new Object[] { BAZ });
+	}
+
+	@Test
+	void providesNoEnumConstant() {
+		var arguments = provideArguments(EnumWithNoConstant.class);
+
+		assertThat(arguments).isEmpty();
+	}
+
+	@Test
+	void invalidConstantNameIsDetectedInRange() {
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(EnumWithFourConstants.class, "FOO", "BAZ", Mode.EXCLUDE, "QUX").findAny());
+		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
+	}
+
+	@Test
+	void invalidStartingRangeIsDetected() {
+		Exception exception = assertThrows(IllegalArgumentException.class,
+			() -> provideArguments(EnumWithFourConstants.class, "B4R", "", Mode.INCLUDE).findAny());
+		assertThat(exception).hasMessageContaining("No enum constant");
+	}
+
+	@Test
+	void invalidEndingRangeIsDetected() {
+		Exception exception = assertThrows(IllegalArgumentException.class,
+			() -> provideArguments(EnumWithFourConstants.class, "", "B4R", Mode.INCLUDE).findAny());
+		assertThat(exception).hasMessageContaining("No enum constant");
+	}
+
 	static class TestCase {
-		void methodWithCorrectParameter(EnumWithTwoConstants parameter) {
+		void methodWithCorrectParameter(EnumWithFourConstants parameter) {
 		}
 
 		void methodWithIncorrectParameter(Object parameter) {
@@ -115,8 +175,11 @@ class EnumArgumentsProviderTests {
 		}
 	}
 
-	enum EnumWithTwoConstants {
-		FOO, BAR
+	enum EnumWithFourConstants {
+		FOO, BAR, BAZ, QUX
+	}
+
+	enum EnumWithNoConstant {
 	}
 
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, String... names) {
@@ -124,12 +187,20 @@ class EnumArgumentsProviderTests {
 	}
 
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, Mode mode, String... names) {
+		return provideArguments(enumClass, "", "", mode, names);
+	}
+
+	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, String from, String to, Mode mode,
+			String... names) {
 		var annotation = mock(EnumSource.class);
 		when(annotation.value()).thenAnswer(invocation -> enumClass);
+		when(annotation.from()).thenAnswer(invocation -> from);
+		when(annotation.to()).thenAnswer(invocation -> to);
 		when(annotation.mode()).thenAnswer(invocation -> mode);
 		when(annotation.names()).thenAnswer(invocation -> names);
-		when(annotation.toString()).thenReturn(String.format("@EnumSource(value=%s.class, mode=%s, names=%s)",
-			enumClass.getSimpleName(), mode, Arrays.toString(names)));
+		when(annotation.toString()).thenReturn(
+			String.format("@EnumSource(value=%s.class, from=%s, to=%s, mode=%s, names=%s)", enumClass.getSimpleName(),
+				from, to, mode, Arrays.toString(names)));
 
 		var provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
