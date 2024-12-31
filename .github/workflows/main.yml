@@ -69,7 +69,7 @@ jobs:
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
-    needs: Linux
+    needs: macOS
     runs-on: ubuntu-latest
     permissions:
       attestations: write # required for build provenance attestation
@@ -100,7 +100,7 @@ jobs:
     concurrency:
       group: github-pages-${{ github.ref }}
       cancel-in-progress: true
-    needs: Linux
+    needs: macOS
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository
