@@ -457,23 +457,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private MethodSelector toMethodSelector(Class<?> suiteClass, SelectMethod annotation) {
 		if (!annotation.value().isEmpty()) {
-			Preconditions.condition(annotation.type() == Class.class,
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"type must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.typeName().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"type name must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.name().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"method name must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.parameterTypes().length == 0,
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"parameter types must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.parameterTypeNames().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"parameter type names must not be set in conjunction with fully qualified method name"));
-
-			return DiscoverySelectors.selectMethod(annotation.value());
+			return toMethodSelectorFromFQMN(suiteClass, annotation);
 		}
 
 		Class<?> type = annotation.type() == Class.class ? null : annotation.type();
@@ -487,25 +471,44 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 					"either parameter type names or parameter types must be set but not both"));
 		}
+		return toMethodSelector(suiteClass, type, typeName, parameterTypes, methodName, parameterTypeNames);
+	}
+
+	private static MethodSelector toMethodSelectorFromFQMN(Class<?> suiteClass, SelectMethod annotation) {
+		Preconditions.condition(annotation.type() == Class.class,
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"type must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.typeName().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"type name must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.name().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"method name must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.parameterTypes().length == 0,
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"parameter types must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.parameterTypeNames().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"parameter type names must not be set in conjunction with fully qualified method name"));
+
+		return DiscoverySelectors.selectMethod(annotation.value());
+	}
+
+	private static MethodSelector toMethodSelector(Class<?> suiteClass, Class<?> type, String typeName,
+			Class<?>[] parameterTypes, String methodName, String parameterTypeNames) {
 		if (type == null) {
 			Preconditions.notBlank(typeName, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 				"type must be set or type name must not be blank"));
-			if (parameterTypes == null) {
-				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames);
-			}
-			else {
-				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
-			}
+			return parameterTypes == null //
+					? DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames) //
+					: DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
 		}
 		else {
 			Preconditions.condition(typeName == null, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 				"either type name or type must be set but not both"));
-			if (parameterTypes == null) {
-				return DiscoverySelectors.selectMethod(type, methodName, parameterTypeNames);
-			}
-			else {
-				return DiscoverySelectors.selectMethod(type, methodName, parameterTypes);
-			}
+			return parameterTypes == null //
+					? DiscoverySelectors.selectMethod(type, methodName, parameterTypeNames) //
+					: DiscoverySelectors.selectMethod(type, methodName, parameterTypes);
 		}
 	}
 
