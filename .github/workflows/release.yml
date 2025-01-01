@@ -20,6 +20,9 @@ jobs:
   verify_reproducibility:
     name: Verify artifacts are reproducible
     runs-on: ubuntu-24.04 # required to get a recent version of `jc`
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
     steps:
       - name: Check out repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -48,3 +51,7 @@ jobs:
             -Pmanifest.createdBy="${{ steps.referenceJar.outputs.createdBy }}" \
             :verifyArtifactsInStagingRepositoryAreReproducible \
             --remote-repo-url=${{ steps.stagingRepo.outputs.url }}
+      - name: Generate build provenance attestations
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: build/repo/**/*.jar
