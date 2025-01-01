@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Version to be released (e.g. "5.12.0-M1")
+        required: true
+      stagingRepoId:
+        description: ID of the Nexus staging repository (e.g. "orgjunit-1159")
+        required: true
+
+permissions: read-all
+
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+
+jobs:
+
+  verify_reproducibility:
+    name: Verify artifacts are reproducible
+    runs-on: ubuntu-24.04 # required to get a recent version of `jc`
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          # TODO ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Set staging repository URL
+        id: stagingRepo
+        run: echo "url=https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content" > "$GITHUB_OUTPUT"
+      - name: Download reference JAR from staging repository
+        id: referenceJar
+        run: |
+          curl --silent --fail --location --output /tmp/reference.jar \
+            "${{ steps.stagingRepo.outputs.url }}/org/junit/jupiter/junit-jupiter-api/${{ github.event.inputs.releaseVersion }}/junit-jupiter-api-${{ github.event.inputs.releaseVersion }}.jar"
+          sudo apt-get update && sudo apt-get install --yes jc
+          unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
+          echo "createdBy=$(jq --raw-output .Created_By /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "buildTimestamp=$(jq --raw-output .Build_Date /tmp/manifest.json) $(jq --raw-output .Build_Time /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+      - name: Verify artifacts
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --rerun-tasks \
+            -Pmanifest.buildTimestamp="${{ steps.referenceJar.outputs.buildTimestamp }}" \
+            -Pmanifest.createdBy="${{ steps.referenceJar.outputs.createdBy }}" \
+            :verifyArtifactsInStagingRepositoryAreReproducible \
+            --remote-repo-url=${{ steps.stagingRepo.outputs.url }}
+      - name: Generate build provenance attestations
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: build/repo/**/*.jar
