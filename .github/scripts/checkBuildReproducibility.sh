@@ -1,8 +1,9 @@
 #!/bin/bash -e
 
-rm -rf checksums*
+rm -f checksums-1.txt checksums-2.txt
 
-export SOURCE_DATE_EPOCH=$(date +%s)
+SOURCE_DATE_EPOCH=$(date +%s)
+export SOURCE_DATE_EPOCH
 
 function calculate_checksums() {
     OUTPUT=$1
@@ -20,7 +21,7 @@ function calculate_checksums() {
         | grep '/build/libs/' \
         | grep --invert-match 'javadoc' \
         | sort \
-        | xargs sha256sum > "${OUTPUT}"
+        | xargs sha512sum > "${OUTPUT}"
 }
 
 
