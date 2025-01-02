@@ -11,14 +11,11 @@
 package org.junit.vintage.engine.samples.junit4;
 
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static org.junit.Assert.fail;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -29,227 +26,42 @@ import org.junit.runner.RunWith;
 @RunWith(Enclosed.class)
 public class JUnit4ParallelTestCase {
 
-	public static class SuccessfulParallelTestCase {
-		public static Set<String> threadNames;
-		static AtomicInteger sharedResource;
-		static CountDownLatch countDownLatch;
+	public static class AbstractBlockingTestCase {
+
+		public static final Set<String> threadNames = ConcurrentHashMap.newKeySet();
+		public static CountDownLatch countDownLatch;
 
 		@Rule
 		public final TestWatcher testWatcher = new TestWatcher() {
 			@Override
 			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
+				AbstractBlockingTestCase.threadNames.add(Thread.currentThread().getName());
 			}
 		};
 
-		@BeforeClass
-		public static void initialize() {
-			sharedResource = new AtomicInteger();
-			countDownLatch = new CountDownLatch(3);
-			threadNames = new HashSet<>();
+		@Test
+		public void test() throws Exception {
+			countDownAndBlock(countDownLatch);
 		}
 
-		@Test
-		public void firstTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
+		@SuppressWarnings("ResultOfMethodCallIgnored")
+		private static void countDownAndBlock(CountDownLatch countDownLatch) throws InterruptedException {
+			countDownLatch.countDown();
+			countDownLatch.await(estimateSimulatedTestDurationInMilliseconds(), MILLISECONDS);
 		}
 
-		@Test
-		public void secondTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
-
-		@Test
-		public void thirdTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
+		private static long estimateSimulatedTestDurationInMilliseconds() {
+			var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
+			return runningInCi ? 1000 : 100;
 		}
 	}
 
-	public static class ConcurrentIncrementTestCase {
-		public static Set<String> threadNames;
-		static AtomicInteger sharedResource;
-		static CountDownLatch countDownLatch;
-
-		@Rule
-		public final TestWatcher testWatcher = new TestWatcher() {
-			@Override
-			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
-			}
-		};
-
-		@BeforeClass
-		public static void initialize() {
-			sharedResource = new AtomicInteger();
-			countDownLatch = new CountDownLatch(3);
-			threadNames = new HashSet<>();
-		}
-
-		@Test
-		public void firstTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
-
-		@Test
-		public void secondTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
-
-		@Test
-		public void thirdTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
+	public static class FirstTestCase extends AbstractBlockingTestCase {
 	}
 
-	public static class AtomicOperationParallelTestCase {
-		public static Set<String> threadNames;
-		static AtomicInteger sharedResource;
-		static CountDownLatch countDownLatch;
-
-		@Rule
-		public final TestWatcher testWatcher = new TestWatcher() {
-			@Override
-			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
-			}
-		};
-
-		@BeforeClass
-		public static void initialize() {
-			sharedResource = new AtomicInteger();
-			countDownLatch = new CountDownLatch(3);
-			threadNames = new HashSet<>();
-		}
-
-		@Test
-		public void firstTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
-
-		@Test
-		public void secondTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
-
-		@Test
-		public void thirdTest() throws Exception {
-			incrementAndBlock(sharedResource, countDownLatch);
-		}
+	public static class SecondTestCase extends AbstractBlockingTestCase {
 	}
 
-	public static class FailingParallelTestCase {
-		public static Set<String> threadNames;
-
-		@Rule
-		public final TestWatcher testWatcher = new TestWatcher() {
-			@Override
-			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
-			}
-		};
-
-		@BeforeClass
-		public static void initialize() {
-			threadNames = new HashSet<>();
-		}
-
-		@Test
-		public void firstTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void secondTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void thirdTest() {
-			fail("failing test");
-		}
-	}
-
-	public static class ConcurrentFailureTestCase {
-		public static Set<String> threadNames;
-
-		@Rule
-		public final TestWatcher testWatcher = new TestWatcher() {
-			@Override
-			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
-			}
-		};
-
-		@BeforeClass
-		public static void initialize() {
-			threadNames = new HashSet<>();
-		}
-
-		@Test
-		public void firstTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void secondTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void thirdTest() {
-			fail("failing test");
-		}
-	}
-
-	public static class ParallelFailingTestCase {
-		public static Set<String> threadNames;
-
-		@Rule
-		public final TestWatcher testWatcher = new TestWatcher() {
-			@Override
-			protected void starting(Description description) {
-				super.starting(description);
-				threadNames.add(Thread.currentThread().getName());
-			}
-		};
-
-		@BeforeClass
-		public static void initialize() {
-			threadNames = new HashSet<>();
-		}
-
-		@Test
-		public void firstTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void secondTest() {
-			fail("failing test");
-		}
-
-		@Test
-		public void thirdTest() {
-			fail("failing test");
-		}
-	}
-
-	@SuppressWarnings("ResultOfMethodCallIgnored")
-	private static int incrementAndBlock(AtomicInteger sharedResource, CountDownLatch countDownLatch)
-			throws InterruptedException {
-		var value = sharedResource.incrementAndGet();
-		countDownLatch.countDown();
-		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
-		return value;
-	}
-
-	private static long estimateSimulatedTestDurationInMiliseconds() {
-		var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
-		return runningInCi ? 1000 : 100;
+	public static class ThirdTestCase extends AbstractBlockingTestCase {
 	}
 }

@@ -11,23 +11,20 @@
 package org.junit.vintage.engine.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
-import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.AtomicOperationParallelTestCase;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.ConcurrentFailureTestCase;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.ConcurrentIncrementTestCase;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.FailingParallelTestCase;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.ParallelFailingTestCase;
-import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.SuccessfulParallelTestCase;
+import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
+import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.AbstractBlockingTestCase;
+import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.FirstTestCase;
+import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.ThirdTestCase;
 
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
@@ -41,6 +38,7 @@ import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
 import org.junit.platform.testkit.engine.Events;
 import org.junit.vintage.engine.VintageTestEngine;
+import org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.SecondTestCase;
 
 class ParallelExecutionIntegrationTests {
 
@@ -48,38 +46,25 @@ class ParallelExecutionIntegrationTests {
 	private static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Test
-	void successfulParallelTest(TestReporter reporter) {
-		var events = executeInParallelSuccessfully(3, SuccessfulParallelTestCase.class,
-			ConcurrentIncrementTestCase.class, AtomicOperationParallelTestCase.class).list();
+	void executesTestClassesInParallel(TestReporter reporter) {
+		AbstractBlockingTestCase.threadNames.clear();
+		AbstractBlockingTestCase.countDownLatch = new CountDownLatch(3);
 
-		var startedTimestamps = getTimestampsFor(events, event(test(), started()));
-		var finishedTimestamps = getTimestampsFor(events, event(test(), finishedSuccessfully()));
-		var threadNames = new HashSet<>(Set.of(SuccessfulParallelTestCase.threadNames,
-			ConcurrentIncrementTestCase.threadNames, AtomicOperationParallelTestCase.threadNames));
+		var events = executeInParallelSuccessfully(3, FirstTestCase.class, SecondTestCase.class,
+			ThirdTestCase.class).list();
 
-		reporter.publishEntry("startedTimestamps", startedTimestamps.toString());
-		reporter.publishEntry("finishedTimestamps", finishedTimestamps.toString());
-
-		assertThat(startedTimestamps).hasSize(9);
-		assertThat(finishedTimestamps).hasSize(9);
-		assertThat(threadNames).hasSize(3);
-	}
-
-	@Test
-	void failingParallelTest(TestReporter reporter) {
-		var events = executeInParallel(3, FailingParallelTestCase.class, ConcurrentFailureTestCase.class,
-			ParallelFailingTestCase.class).list();
-
-		var startedTimestamps = getTimestampsFor(events, event(test(), started()));
-		var finishedTimestamps = getTimestampsFor(events, event(test(), finishedWithFailure()));
-		var threadNames = new HashSet<>(Set.of(FailingParallelTestCase.threadNames,
-			ConcurrentFailureTestCase.threadNames, ParallelFailingTestCase.threadNames));
+		var startedTimestamps = getTimestampsFor(events, event(container(SEGMENT_TYPE_RUNNER), started()));
+		var finishedTimestamps = getTimestampsFor(events,
+			event(container(SEGMENT_TYPE_RUNNER), finishedSuccessfully()));
+		var threadNames = new HashSet<>(AbstractBlockingTestCase.threadNames);
 
 		reporter.publishEntry("startedTimestamps", startedTimestamps.toString());
 		reporter.publishEntry("finishedTimestamps", finishedTimestamps.toString());
 
-		assertThat(startedTimestamps).hasSize(9);
-		assertThat(finishedTimestamps).hasSize(9);
+		assertThat(startedTimestamps).hasSize(3);
+		assertThat(finishedTimestamps).hasSize(3);
+		assertThat(startedTimestamps).allMatch(startTimestamp -> finishedTimestamps.stream().noneMatch(
+			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
 		assertThat(threadNames).hasSize(3);
 	}
 
@@ -103,10 +88,6 @@ class ParallelExecutionIntegrationTests {
 		}
 	}
 
-	private Events executeInParallel(int poolSize, Class<?>... testClasses) {
-		return execute(poolSize, testClasses).allEvents();
-	}
-
 	private static EngineExecutionResults execute(int poolSize, Class<?>... testClass) {
 		return EngineTestKit.execute(new VintageTestEngine(), request(poolSize, testClass));
 	}
@@ -116,9 +97,11 @@ class ParallelExecutionIntegrationTests {
 				.map(DiscoverySelectors::selectClass) //
 				.toArray(ClassSelector[]::new);
 
-		return LauncherDiscoveryRequestBuilder.request().selectors(classSelectors).configurationParameter(
-			PARALLEL_EXECUTION_ENABLED, String.valueOf(true)).configurationParameter(PARALLEL_POOL_SIZE,
-				String.valueOf(poolSize)).build();
+		return LauncherDiscoveryRequestBuilder.request() //
+				.selectors(classSelectors) //
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true)) //
+				.configurationParameter(PARALLEL_POOL_SIZE, String.valueOf(poolSize)) //
+				.build();
 	}
 
 }
