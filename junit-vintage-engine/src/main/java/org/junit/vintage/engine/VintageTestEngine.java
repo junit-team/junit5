@@ -11,7 +11,6 @@
 package org.junit.vintage.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
@@ -61,7 +60,7 @@ public final class VintageTestEngine implements TestEngine {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = STABLE, since = "5.12")
+	@API(status = INTERNAL, since = "5.12")
 	public static final String PARALLEL_EXECUTION_ENABLED = "junit.vintage.execution.parallel.enabled";
 
 	/**
@@ -73,7 +72,7 @@ public final class VintageTestEngine implements TestEngine {
 	 *
 	 * @since 5.12
 	 */
-	@API(status = STABLE, since = "5.12")
+	@API(status = INTERNAL, since = "5.12")
 	public static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Override
