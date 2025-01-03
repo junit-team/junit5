@@ -69,6 +69,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
+      - uses: sbt/setup-sbt@v1
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Inject staging repository URL
