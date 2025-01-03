@@ -176,3 +176,38 @@ jobs:
         timeout-minutes: 30
         run: |
           find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
+
+  update_samples:
+    name: Update samples
+    needs: wait_for_maven_central
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out samples repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          repository: junit-team/junit5-samples
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Set up JDK
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
+        with:
+          java-version: 21
+          distribution: temurin
+      - uses: sbt/setup-sbt@v1
+      - name: Update JUnit dependencies in samples
+        run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
+      - name: Build samples
+        run: java src/Builder.java
+      - name: Create release branch
+        run: |
+          git config user.name "JUnit Team"
+          git config user.email "team@junit.org"
+          git switch -c "r${{ github.event.inputs.releaseVersion }}"
+          git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
+          git push origin "r${{ github.event.inputs.releaseVersion }}"
+      - name: Update main branch (only for GA releases)
+        if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
+        run: |
+          git switch main
+          git merge --ff-only "r${{ github.event.inputs.releaseVersion }}"
+          git push origin main
