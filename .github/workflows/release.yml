@@ -53,6 +53,11 @@ jobs:
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
         with:
           subject-path: build/repo/**/*.jar
+      - name: Upload local repository for later jobs
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        with:
+          name: local-maven-repository
+          path: build/repo
 
   verify_consumability:
     name: Verify artifacts are consumable
@@ -156,3 +161,18 @@ jobs:
                 milestone_number: milestone.number,
                 state: 'closed'
             });
+
+  wait_for_maven_central:
+    name: Wait for sync to Maven Central
+    needs: release_staging_repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download local Maven repository
+        uses: actions/download-artifact@v4
+        with:
+          name: local-maven-repository
+          path: build/repo
+      - name: Wait for sync to Maven Central
+        timeout-minutes: 30
+        run: |
+          find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
