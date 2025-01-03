@@ -211,3 +211,28 @@ jobs:
           git switch main
           git merge --ff-only "r${{ github.event.inputs.releaseVersion }}"
           git push origin main
+
+  create_github_release:
+    name: Create GitHub release
+    needs: wait_for_maven_central
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub release
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const releaseVersion = "${{ github.event.inputs.releaseVersion }}";
+            const jupiterVersion = releaseVersion;
+            const vintageVersion = releaseVersion;
+            const platformVersion = "1." + releaseVersion.substring(2);
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `r${releaseVersion}`,
+              name: `JUnit ${releaseVersion}`,
+              generate_release_notes: true,
+              body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
+              prerelease: releaseVersion.includes("-"),
+            });
