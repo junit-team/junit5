@@ -94,3 +94,41 @@ jobs:
           arguments: |
             releaseSonatypeStagingRepository \
             --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
+
+  publish_documentation:
+    name: Publish documentation
+    needs: release_staging_repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Configure Git
+        run: |
+          git config --global user.name "JUnit Team"
+          git config --global user.email "team@junit.org"
+      - name: Build and publish documentation
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --no-build-cache \
+            --no-configuration-cache \
+            clean \
+            gitPublishPush \
+            -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
+      - name: Wait for deployment to GitHub Pages
+        id: pagesDeployment
+        timeout-minutes: 20
+        run: |
+          URL="https://junit.org/junit5/docs/${{ github.event.inputs.releaseVersion }}/user-guide/junit-user-guide-${{ github.event.inputs.releaseVersion }}.pdf"
+          ./.github/scripts/waitForUrl.sh "$URL"
+          echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
+      - name: Verify integrity of PDF version of User Guide
+        timeout-minutes: 15
+        run: |
+          curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
+          sudo apt-get update && sudo apt-get install --yes poppler-utils
+          pdfinfo /tmp/junit-user-guide.pdf
