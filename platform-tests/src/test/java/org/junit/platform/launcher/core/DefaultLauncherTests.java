@@ -197,7 +197,7 @@ class DefaultLauncherTests {
 		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
 		assertThat(testExecutionResult.getValue().getThrowable().get()) //
 				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test
@@ -221,7 +221,7 @@ class DefaultLauncherTests {
 		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
 		assertThat(testExecutionResult.getValue().getThrowable().get()) //
 				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test
@@ -245,7 +245,7 @@ class DefaultLauncherTests {
 		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
 		assertThat(testExecutionResult.getValue().getThrowable().get()) //
 				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test
@@ -271,7 +271,7 @@ class DefaultLauncherTests {
 		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
 		assertThat(testExecutionResult.getValue().getThrowable().get()) //
 				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test
@@ -298,8 +298,8 @@ class DefaultLauncherTests {
 		assertThat(testExecutionResult.getValue().getThrowable()).isPresent();
 		assertThat(testExecutionResult.getValue().getThrowable().get()) //
 				.hasMessage("TestEngine with ID 'TestEngineStub' failed to execute tests") //
-				.hasCauseReference(rootCause) //
-				.hasSuppressedException(originalFailure);
+				.hasSuppressedException(originalFailure) //
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test

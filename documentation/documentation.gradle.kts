@@ -93,15 +93,15 @@ asciidoctorj {
 }
 
 val buildRevision: String by rootProject.extra
-val snapshot = rootProject.version.toString().contains("SNAPSHOT")
-val docsVersion = if (snapshot) "snapshot" else rootProject.version
-val releaseBranch = if (snapshot) "HEAD" else "r${rootProject.version}"
+val snapshot = version.isSnapshot()
+val docsVersion = if (snapshot) "snapshot" else version
+val releaseBranch = if (snapshot) "HEAD" else "r${version}"
 val docsDir = layout.buildDirectory.dir("ghpages-docs")
 val replaceCurrentDocs = buildParameters.documentation.replaceCurrentDocs
 val uploadPdfs = !snapshot
-val userGuidePdfFileName = "junit-user-guide-${rootProject.version}.pdf"
-val ota4jDocVersion = if (libs.versions.opentest4j.get().contains("SNAPSHOT")) "snapshot" else libs.versions.opentest4j.get()
-val apiGuardianDocVersion = if (libs.versions.apiguardian.get().contains("SNAPSHOT")) "snapshot" else libs.versions.apiguardian.get()
+val userGuidePdfFileName = "junit-user-guide-${version}.pdf"
+val ota4jDocVersion = libs.versions.opentest4j.map { if (it.isSnapshot()) "snapshot" else it }.get()
+val apiGuardianDocVersion = libs.versions.apiguardian.map { if (it.isSnapshot()) "snapshot" else it }.get()
 
 gitPublish {
 	repoUri = "https://github.com/junit-team/junit5.git"

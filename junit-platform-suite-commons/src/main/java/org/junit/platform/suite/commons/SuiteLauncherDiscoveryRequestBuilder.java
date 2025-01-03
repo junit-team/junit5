@@ -338,6 +338,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 *   <li>{@link SelectModules}</li>
 	 *   <li>{@link SelectUris}</li>
 	 *   <li>{@link SelectPackages}</li>
+	 *   <li>{@link Select}</li>
 	 * </ul>
 	 *
 	 * @param suiteClass the class to apply the discovery selectors and filter
@@ -349,71 +350,84 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	public SuiteLauncherDiscoveryRequestBuilder applySelectorsAndFiltersFromSuite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 
-		// Annotations in alphabetical order (except @SelectClasses)
-		// @formatter:off
-		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value)
-				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
-				.map(ClassNameFilter::excludeClassNamePatterns)
-				.ifPresent(this::filters);
-		findAnnotationValues(suiteClass, ExcludeEngines.class, ExcludeEngines::value)
-				.map(EngineFilter::excludeEngines)
-				.ifPresent(this::filters);
-		findAnnotationValues(suiteClass, ExcludePackages.class, ExcludePackages::value)
-				.map(PackageNameFilter::excludePackageNames)
-				.ifPresent(this::filters);
-		findAnnotationValues(suiteClass, ExcludeTags.class, ExcludeTags::value)
-				.map(TagFilter::excludeTags)
-				.ifPresent(this::filters);
-		// Process @SelectClasses before @IncludeClassNamePatterns, since the names
+		addExcludeFilters(suiteClass);
+		// Process @SelectClasses and @SelectMethod before @IncludeClassNamePatterns, since the names
 		// of selected classes get automatically added to the include filter.
-		findAnnotation(suiteClass, SelectClasses.class)
-				.map(annotation -> selectClasses(suiteClass, annotation))
+		addClassAndMethodSelectors(suiteClass);
+		addIncludeFilters(suiteClass);
+		addOtherSelectors(suiteClass);
+		return this;
+	}
+
+	private void addExcludeFilters(Class<?> suiteClass) {
+		findAnnotationValues(suiteClass, ExcludeClassNamePatterns.class, ExcludeClassNamePatterns::value) //
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed) //
+				.map(ClassNameFilter::excludeClassNamePatterns) //
+				.ifPresent(this::filters);
+		findAnnotationValues(suiteClass, ExcludeEngines.class, ExcludeEngines::value) //
+				.map(EngineFilter::excludeEngines) //
+				.ifPresent(this::filters);
+		findAnnotationValues(suiteClass, ExcludePackages.class, ExcludePackages::value) //
+				.map(PackageNameFilter::excludePackageNames) //
+				.ifPresent(this::filters);
+		findAnnotationValues(suiteClass, ExcludeTags.class, ExcludeTags::value) //
+				.map(TagFilter::excludeTags) //
+				.ifPresent(this::filters);
+	}
+
+	private void addClassAndMethodSelectors(Class<?> suiteClass) {
+		findAnnotation(suiteClass, SelectClasses.class) //
+				.map(annotation -> selectClasses(suiteClass, annotation)) //
 				.ifPresent(this::selectors);
-		findRepeatableAnnotations(suiteClass, SelectMethod.class)
-				.stream()
-				.map(annotation -> selectMethod(suiteClass, annotation))
+		findRepeatableAnnotations(suiteClass, SelectMethod.class) //
+				.stream() //
+				.map(annotation -> selectMethod(suiteClass, annotation)) //
 				.forEach(this::selectors);
-		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value)
-				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed)
-				.map(this::createIncludeClassNameFilter)
+	}
+
+	private void addIncludeFilters(Class<?> suiteClass) {
+		findAnnotationValues(suiteClass, IncludeClassNamePatterns.class, IncludeClassNamePatterns::value) //
+				.flatMap(SuiteLauncherDiscoveryRequestBuilder::trimmed) //
+				.map(this::createIncludeClassNameFilter) //
 				.ifPresent(filters -> {
 					this.includeClassNamePatternsUsed = true;
 					filters(filters);
 				});
-		findAnnotationValues(suiteClass, IncludeEngines.class, IncludeEngines::value)
-				.map(EngineFilter::includeEngines)
+		findAnnotationValues(suiteClass, IncludeEngines.class, IncludeEngines::value) //
+				.map(EngineFilter::includeEngines) //
 				.ifPresent(this::filters);
-		findAnnotationValues(suiteClass, IncludePackages.class, IncludePackages::value)
-				.map(PackageNameFilter::includePackageNames)
+		findAnnotationValues(suiteClass, IncludePackages.class, IncludePackages::value) //
+				.map(PackageNameFilter::includePackageNames) //
 				.ifPresent(this::filters);
-		findAnnotationValues(suiteClass, IncludeTags.class, IncludeTags::value)
-				.map(TagFilter::includeTags)
+		findAnnotationValues(suiteClass, IncludeTags.class, IncludeTags::value) //
+				.map(TagFilter::includeTags) //
 				.ifPresent(this::filters);
-		findRepeatableAnnotations(suiteClass, SelectClasspathResource.class)
-				.stream()
-				.map(annotation -> selectClasspathResource(annotation.value(), annotation.line(), annotation.column()))
+	}
+
+	private void addOtherSelectors(Class<?> suiteClass) {
+		findRepeatableAnnotations(suiteClass, SelectClasspathResource.class) //
+				.stream() //
+				.map(annotation -> selectClasspathResource(annotation.value(), annotation.line(), annotation.column())) //
 				.forEach(this::selectors);
-		findAnnotationValues(suiteClass, SelectDirectories.class, SelectDirectories::value)
-				.map(AdditionalDiscoverySelectors::selectDirectories)
+		findAnnotationValues(suiteClass, SelectDirectories.class, SelectDirectories::value) //
+				.map(AdditionalDiscoverySelectors::selectDirectories) //
 				.ifPresent(this::selectors);
-		findRepeatableAnnotations(suiteClass, SelectFile.class)
-				.stream()
-				.map(annotation -> selectFile(annotation.value(), annotation.line(), annotation.column()))
+		findRepeatableAnnotations(suiteClass, SelectFile.class) //
+				.stream() //
+				.map(annotation -> selectFile(annotation.value(), annotation.line(), annotation.column())) //
 				.forEach(this::selectors);
-		findAnnotationValues(suiteClass, SelectModules.class, SelectModules::value)
-				.map(AdditionalDiscoverySelectors::selectModules)
+		findAnnotationValues(suiteClass, SelectModules.class, SelectModules::value) //
+				.map(AdditionalDiscoverySelectors::selectModules) //
 				.ifPresent(this::selectors);
-		findAnnotationValues(suiteClass, SelectUris.class, SelectUris::value)
-				.map(AdditionalDiscoverySelectors::selectUris)
+		findAnnotationValues(suiteClass, SelectUris.class, SelectUris::value) //
+				.map(AdditionalDiscoverySelectors::selectUris) //
 				.ifPresent(this::selectors);
-		findAnnotationValues(suiteClass, SelectPackages.class, SelectPackages::value)
-				.map(AdditionalDiscoverySelectors::selectPackages)
+		findAnnotationValues(suiteClass, SelectPackages.class, SelectPackages::value) //
+				.map(AdditionalDiscoverySelectors::selectPackages) //
 				.ifPresent(this::selectors);
-		findAnnotationValues(suiteClass, Select.class, Select::value)
-				.map(AdditionalDiscoverySelectors::parseIdentifiers)
+		findAnnotationValues(suiteClass, Select.class, Select::value) //
+				.map(AdditionalDiscoverySelectors::parseIdentifiers) //
 				.ifPresent(this::selectors);
-		// @formatter:on
-		return this;
 	}
 
 	/**
@@ -457,23 +471,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private MethodSelector toMethodSelector(Class<?> suiteClass, SelectMethod annotation) {
 		if (!annotation.value().isEmpty()) {
-			Preconditions.condition(annotation.type() == Class.class,
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"type must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.typeName().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"type name must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.name().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"method name must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.parameterTypes().length == 0,
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"parameter types must not be set in conjunction with fully qualified method name"));
-			Preconditions.condition(annotation.parameterTypeNames().isEmpty(),
-				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-					"parameter type names must not be set in conjunction with fully qualified method name"));
-
-			return DiscoverySelectors.selectMethod(annotation.value());
+			return toMethodSelectorFromFQMN(suiteClass, annotation);
 		}
 
 		Class<?> type = annotation.type() == Class.class ? null : annotation.type();
@@ -487,25 +485,44 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 					"either parameter type names or parameter types must be set but not both"));
 		}
+		return toMethodSelector(suiteClass, type, typeName, parameterTypes, methodName, parameterTypeNames);
+	}
+
+	private static MethodSelector toMethodSelectorFromFQMN(Class<?> suiteClass, SelectMethod annotation) {
+		Preconditions.condition(annotation.type() == Class.class,
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"type must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.typeName().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"type name must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.name().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"method name must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.parameterTypes().length == 0,
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"parameter types must not be set in conjunction with fully qualified method name"));
+		Preconditions.condition(annotation.parameterTypeNames().isEmpty(),
+			() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+				"parameter type names must not be set in conjunction with fully qualified method name"));
+
+		return DiscoverySelectors.selectMethod(annotation.value());
+	}
+
+	private static MethodSelector toMethodSelector(Class<?> suiteClass, Class<?> type, String typeName,
+			Class<?>[] parameterTypes, String methodName, String parameterTypeNames) {
 		if (type == null) {
 			Preconditions.notBlank(typeName, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 				"type must be set or type name must not be blank"));
-			if (parameterTypes == null) {
-				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames);
-			}
-			else {
-				return DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
-			}
+			return parameterTypes == null //
+					? DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames) //
+					: DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
 		}
 		else {
 			Preconditions.condition(typeName == null, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
 				"either type name or type must be set but not both"));
-			if (parameterTypes == null) {
-				return DiscoverySelectors.selectMethod(type, methodName, parameterTypeNames);
-			}
-			else {
-				return DiscoverySelectors.selectMethod(type, methodName, parameterTypes);
-			}
+			return parameterTypes == null //
+					? DiscoverySelectors.selectMethod(type, methodName, parameterTypeNames) //
+					: DiscoverySelectors.selectMethod(type, methodName, parameterTypes);
 		}
 	}
 

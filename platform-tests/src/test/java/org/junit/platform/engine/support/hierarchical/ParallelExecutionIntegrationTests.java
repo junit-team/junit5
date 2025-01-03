@@ -957,7 +957,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMilliseconds(), MILLISECONDS);
 		return value;
 	}
 
@@ -966,7 +966,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.get();
 		countDownLatch.countDown();
-		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMilliseconds(), MILLISECONDS);
 		assertEquals(value, sharedResource.get());
 	}
 
@@ -980,7 +980,7 @@ class ParallelExecutionIntegrationTests {
 	 *
 	 * Currently, CI is known to be slow.
 	 */
-	private static long estimateSimulatedTestDurationInMiliseconds() {
+	private static long estimateSimulatedTestDurationInMilliseconds() {
 		var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
 		return runningInCi ? 1000 : 100;
 	}

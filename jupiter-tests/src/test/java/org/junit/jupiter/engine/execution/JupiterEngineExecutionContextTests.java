@@ -98,7 +98,7 @@ class JupiterEngineExecutionContextTests {
 
 		assertThat(actualException) //
 				.hasMessage("Failed to close extension context") //
-				.hasCauseReference(expectedCause);
+				.cause().isSameAs(expectedCause);
 	}
 
 }

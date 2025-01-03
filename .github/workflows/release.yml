@@ -1,0 +1,238 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Version to be released (e.g. "5.12.0-M1")
+        required: true
+      stagingRepoId:
+        description: ID of the Nexus staging repository (e.g. "orgjunit-1159")
+        required: true
+
+permissions: read-all
+
+env:
+  DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+  STAGING_REPO_URL: https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content
+
+jobs:
+
+  verify_reproducibility:
+    name: Verify artifacts are reproducible
+    runs-on: ubuntu-24.04 # required to get a recent version of `jc`
+    permissions:
+      attestations: write # required for build provenance attestation
+      id-token: write # required for build provenance attestation
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Download reference JAR from staging repository
+        id: referenceJar
+        run: |
+          curl --silent --fail --location --output /tmp/reference.jar \
+            "${{ env.STAGING_REPO_URL }}/org/junit/jupiter/junit-jupiter-api/${{ github.event.inputs.releaseVersion }}/junit-jupiter-api-${{ github.event.inputs.releaseVersion }}.jar"
+          sudo apt-get update && sudo apt-get install --yes jc
+          unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
+          echo "createdBy=$(jq --raw-output .Created_By /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "buildTimestamp=$(jq --raw-output .Build_Date /tmp/manifest.json) $(jq --raw-output .Build_Time /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
+      - name: Verify artifacts
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --rerun-tasks \
+            -Pmanifest.buildTimestamp="${{ steps.referenceJar.outputs.buildTimestamp }}" \
+            -Pmanifest.createdBy="${{ steps.referenceJar.outputs.createdBy }}" \
+            :verifyArtifactsInStagingRepositoryAreReproducible \
+            --remote-repo-url=${{ env.STAGING_REPO_URL }}
+      - name: Generate build provenance attestations
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: build/repo/**/*.jar
+      - name: Upload local repository for later jobs
+        uses: actions/upload-artifact@6f51ac03b9356f520e9adb1b1b7802705f340c2b # v4
+        with:
+          name: local-maven-repository
+          path: build/repo
+
+  verify_consumability:
+    name: Verify artifacts are consumable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out samples repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          repository: junit-team/junit5-samples
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Set up JDK
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
+        with:
+          java-version: 21
+          distribution: temurin
+      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1
+      - name: Update JUnit dependencies in samples
+        run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
+      - name: Inject staging repository URL
+        run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
+      - name: Build samples
+        run: java src/Builder.java
+
+  release_staging_repo:
+    name: Release staging repository
+    needs: [verify_reproducibility, verify_consumability]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Release staging repository
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            releaseSonatypeStagingRepository \
+            --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
+
+  publish_documentation:
+    name: Publish documentation
+    needs: release_staging_repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Configure Git
+        run: |
+          git config --global user.name "JUnit Team"
+          git config --global user.email "team@junit.org"
+      - name: Build and publish documentation
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --no-build-cache \
+            --no-configuration-cache \
+            clean \
+            gitPublishPush \
+            -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
+      - name: Wait for deployment to GitHub Pages
+        id: pagesDeployment
+        timeout-minutes: 20
+        run: |
+          URL="https://junit.org/junit5/docs/${{ github.event.inputs.releaseVersion }}/user-guide/junit-user-guide-${{ github.event.inputs.releaseVersion }}.pdf"
+          ./.github/scripts/waitForUrl.sh "$URL"
+          echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
+      - name: Verify integrity of PDF version of User Guide
+        timeout-minutes: 15
+        run: |
+          curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
+          sudo apt-get update && sudo apt-get install --yes poppler-utils
+          pdfinfo /tmp/junit-user-guide.pdf
+
+  close_github_milestone:
+    name: Close GitHub milestone
+    needs: release_staging_repo
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close milestone
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const openMilestones = await github.rest.issues.listMilestones({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+            });
+            const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
+            await github.rest.issues.updateMilestone({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                milestone_number: milestone.number,
+                state: 'closed'
+            });
+
+  wait_for_maven_central:
+    name: Wait for sync to Maven Central
+    needs: release_staging_repo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download local Maven repository
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
+        with:
+          name: local-maven-repository
+          path: build/repo
+      - name: Wait for sync to Maven Central
+        timeout-minutes: 30
+        run: |
+          find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
+
+  update_samples:
+    name: Update samples
+    needs: wait_for_maven_central
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out samples repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          repository: junit-team/junit5-samples
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Set up JDK
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
+        with:
+          java-version: 21
+          distribution: temurin
+      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1
+      - name: Update JUnit dependencies in samples
+        run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
+      - name: Build samples
+        run: java src/Builder.java
+      - name: Create release branch
+        run: |
+          git config user.name "JUnit Team"
+          git config user.email "team@junit.org"
+          git switch -c "r${{ github.event.inputs.releaseVersion }}"
+          git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
+          git push origin "r${{ github.event.inputs.releaseVersion }}"
+      - name: Update main branch (only for GA releases)
+        if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
+        run: |
+          git switch main
+          git merge --ff-only "r${{ github.event.inputs.releaseVersion }}"
+          git push origin main
+
+  create_github_release:
+    name: Create GitHub release
+    needs: wait_for_maven_central
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub release
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const releaseVersion = "${{ github.event.inputs.releaseVersion }}";
+            const jupiterVersion = releaseVersion;
+            const vintageVersion = releaseVersion;
+            const platformVersion = "1." + releaseVersion.substring(2);
+            await github.rest.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: `r${releaseVersion}`,
+              name: `JUnit ${releaseVersion}`,
+              generate_release_notes: true,
+              body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
+              prerelease: releaseVersion.includes("-"),
+            });
