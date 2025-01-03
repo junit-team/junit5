@@ -155,4 +155,11 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduced support for parallel execution in the JUnit Vintage engine.
+- Added the `junit.vintage.execution.parallel.enabled` property to enable or disable parallel execution.
+  Defaults to `false`.
+- Added the `junit.vintage.execution.parallel.pool-size` property to configure the size of the thread pool used for
+  parallel execution. Defaults to the number of available processors.
+- Enhanced the `VintageTestEngine` to respect these properties and execute tests in parallel when enabled.
+- Improved test execution performance by allowing multiple tests to run concurrently, reducing overall
+  test suite execution time.
