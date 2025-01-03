@@ -16,7 +16,7 @@ env:
 
 jobs:
   Linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Check out repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
@@ -70,7 +70,7 @@ jobs:
   publish_artifacts:
     name: Publish Snapshot Artifacts
     needs: macOS
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       attestations: write # required for build provenance attestation
       id-token: write # required for build provenance attestation
@@ -101,7 +101,7 @@ jobs:
       group: github-pages-${{ github.ref }}
       cancel-in-progress: true
     needs: macOS
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Check out repository
       uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4

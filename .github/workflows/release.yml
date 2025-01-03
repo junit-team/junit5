@@ -56,7 +56,7 @@ jobs:
 
   verify_consumability:
     name: Verify artifacts are consumable
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out samples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
