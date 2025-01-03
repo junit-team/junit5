@@ -76,3 +76,21 @@ jobs:
         run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
       - name: Build samples
         run: java src/Builder.java
+
+  release_staging_repo:
+    name: Release staging repository
+    needs: [verify_reproducibility, verify_consumability]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+      - name: Release staging repository
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            releaseSonatypeStagingRepository \
+            --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
