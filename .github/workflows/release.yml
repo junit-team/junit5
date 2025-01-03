@@ -74,7 +74,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@v1
+      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Inject staging repository URL
@@ -168,7 +168,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download local Maven repository
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
           name: local-maven-repository
           path: build/repo
@@ -193,7 +193,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@v1
+      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Build samples
