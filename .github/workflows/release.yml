@@ -14,6 +14,7 @@ permissions: read-all
 
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
+  STAGING_REPO_URL: https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content
 
 jobs:
 
@@ -29,14 +30,11 @@ jobs:
         with:
           fetch-depth: 1
           # TODO ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
-      - name: Set staging repository URL
-        id: stagingRepo
-        run: echo "url=https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content" > "$GITHUB_OUTPUT"
       - name: Download reference JAR from staging repository
         id: referenceJar
         run: |
           curl --silent --fail --location --output /tmp/reference.jar \
-            "${{ steps.stagingRepo.outputs.url }}/org/junit/jupiter/junit-jupiter-api/${{ github.event.inputs.releaseVersion }}/junit-jupiter-api-${{ github.event.inputs.releaseVersion }}.jar"
+            "${{ env.STAGING_REPO_URL }}/org/junit/jupiter/junit-jupiter-api/${{ github.event.inputs.releaseVersion }}/junit-jupiter-api-${{ github.event.inputs.releaseVersion }}.jar"
           sudo apt-get update && sudo apt-get install --yes jc
           unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
           echo "createdBy=$(jq --raw-output .Created_By /tmp/manifest.json)" >> "$GITHUB_OUTPUT"
@@ -50,8 +48,30 @@ jobs:
             -Pmanifest.buildTimestamp="${{ steps.referenceJar.outputs.buildTimestamp }}" \
             -Pmanifest.createdBy="${{ steps.referenceJar.outputs.createdBy }}" \
             :verifyArtifactsInStagingRepositoryAreReproducible \
-            --remote-repo-url=${{ steps.stagingRepo.outputs.url }}
+            --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
         with:
           subject-path: build/repo/**/*.jar
+
+  verify_consumability:
+    name: Verify artifacts are consumable
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out samples repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          repository: junit-team/junit5-samples
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 1
+      - name: Set up JDK
+        uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
+        with:
+          java-version: 21
+          distribution: temurin
+      - name: Update JUnit dependencies in samples
+        run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
+      - name: Inject staging repository URL
+        run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
+      - name: Build samples
+        run: java src/Builder.java
