@@ -148,6 +148,14 @@ class ParameterizedTestDemo {
 	}
 	// end::EnumSource_include_example[]
 
+	// tag::EnumSource_range_example[]
+	@ParameterizedTest
+	@EnumSource(from = "HOURS", to = "DAYS")
+	void testWithEnumSourceRange(ChronoUnit unit) {
+		assertTrue(EnumSet.of(ChronoUnit.HOURS, ChronoUnit.HALF_DAYS, ChronoUnit.DAYS).contains(unit));
+	}
+	// end::EnumSource_range_example[]
+
 	// tag::EnumSource_exclude_example[]
 	@ParameterizedTest
 	@EnumSource(mode = EXCLUDE, names = { "ERAS", "FOREVER" })
@@ -163,6 +171,15 @@ class ParameterizedTestDemo {
 		assertTrue(unit.name().endsWith("DAYS"));
 	}
 	// end::EnumSource_regex_example[]
+
+	// tag::EnumSource_range_exclude_example[]
+	@ParameterizedTest
+	@EnumSource(from = "HOURS", to = "DAYS", mode = EXCLUDE, names = { "HALF_DAYS" })
+	void testWithEnumSourceRangeExclude(ChronoUnit unit) {
+		assertTrue(EnumSet.of(ChronoUnit.HOURS, ChronoUnit.DAYS).contains(unit));
+		assertFalse(EnumSet.of(ChronoUnit.HALF_DAYS).contains(unit));
+	}
+	// end::EnumSource_range_exclude_example[]
 
 	// tag::simple_MethodSource_example[]
 	@ParameterizedTest
