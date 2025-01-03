@@ -164,6 +164,20 @@ class EnumArgumentsProviderTests {
 		assertThat(exception).hasMessageContaining("No enum constant");
 	}
 
+	@Test
+	void invalidRangeOrderIsDetected() {
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(EnumWithFourConstants.class, "BAR", "FOO", Mode.INCLUDE).findAny());
+		assertThat(exception).hasMessageContaining("Invalid enum range");
+	}
+
+	@Test
+	void invalidRangeIsDetectedWhenEnumWithNoConstantIsProvided() {
+		Exception exception = assertThrows(PreconditionViolationException.class,
+			() -> provideArguments(EnumWithNoConstant.class, "BAR", "FOO", Mode.INCLUDE).findAny());
+		assertThat(exception).hasMessageContaining("No enum constant");
+	}
+
 	static class TestCase {
 		void methodWithCorrectParameter(EnumWithFourConstants parameter) {
 		}

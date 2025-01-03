@@ -99,7 +99,10 @@ public @interface EnumSource {
 	 * @see #names
 	 * @see #to
 	 * @see #mode
+	 *
+	 * @since 5.12
 	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
 	String from() default "";
 
 	/**
@@ -112,11 +115,18 @@ public @interface EnumSource {
 	 * @see #names
 	 * @see #from
 	 * @see #mode
+	 *
+	 * @since 5.12
 	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
 	String to() default "";
 
 	/**
 	 * The enum constant selection mode.
+	 *
+	 * <p>The mode only applies to the {@link #names} attribute and does not change
+	 * the behavior of {@link #from} and {@link #to}, which always define a range
+	 * based on the natural order of the enum constants.
 	 *
 	 * <p>Defaults to {@link Mode#INCLUDE INCLUDE}.
 	 *
@@ -126,6 +136,8 @@ public @interface EnumSource {
 	 * @see Mode#MATCH_ANY
 	 * @see Mode#MATCH_NONE
 	 * @see #names
+	 * @see #from
+	 * @see #to
 	 */
 	Mode mode() default Mode.INCLUDE;
 

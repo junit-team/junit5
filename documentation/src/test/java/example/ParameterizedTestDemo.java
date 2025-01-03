@@ -174,7 +174,7 @@ class ParameterizedTestDemo {
 
 	// tag::EnumSource_range_exclude_example[]
 	@ParameterizedTest
-	@EnumSource(mode = EXCLUDE, from = "HOURS", to = "DAYS", names = { "HALF_DAYS" })
+	@EnumSource(from = "HOURS", to = "DAYS", mode = EXCLUDE, names = { "HALF_DAYS" })
 	void testWithEnumSourceRangeExclude(ChronoUnit unit) {
 		assertTrue(EnumSet.of(ChronoUnit.HOURS, ChronoUnit.DAYS).contains(unit));
 		assertFalse(EnumSet.of(ChronoUnit.HALF_DAYS).contains(unit));
