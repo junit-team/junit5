@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          # TODO ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
       - name: Download reference JAR from staging repository
         id: referenceJar
         run: |
