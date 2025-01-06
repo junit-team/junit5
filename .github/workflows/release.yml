@@ -124,7 +124,9 @@ jobs:
           git config --global user.email "team@junit.org"
       - name: Build and publish documentation
         uses: ./.github/actions/run-gradle
-        if: ${{ !github.event.inputs.dryRun }}
+        env:
+          GIT_USERNAME: git
+          GIT_PASSWORD: ${{ secrets.GH_TOKEN }}
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
