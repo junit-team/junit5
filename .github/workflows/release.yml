@@ -9,11 +9,6 @@ on:
       stagingRepoId:
         description: ID of the Nexus staging repository (e.g. "orgjunit-1159")
         required: true
-      dryRun:
-        description: Whether to perform a dry run
-        type: boolean
-        required: false
-        default: false
 
 permissions: read-all
 
@@ -57,7 +52,6 @@ jobs:
             --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
-        if: ${{ !github.event.inputs.dryRun }}
         with:
           subject-path: build/repo/**/*.jar
       - name: Upload local repository for later jobs
@@ -104,7 +98,6 @@ jobs:
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
-            ${{ github.event.inputs.dryRun && '--dry-run' || '' }} \
             releaseSonatypeStagingRepository \
             --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
 
@@ -133,7 +126,7 @@ jobs:
             --no-build-cache \
             --no-configuration-cache \
             clean \
-            ${{ github.event.inputs.dryRun && 'gitPublishCommit' || 'gitPublishPush' }} \
+            gitPublishPush \
             -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
       - name: Wait for deployment to GitHub Pages
         id: pagesDeployment
@@ -157,7 +150,6 @@ jobs:
       issues: write
     steps:
       - name: Find milestone
-        if: ${{ !github.event.inputs.dryRun }}
         id: milestoneNumber
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
@@ -229,13 +221,13 @@ jobs:
           git switch -c "${{ env.RELEASE_TAG }}"
           git status
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
-          ${{ github.event.inputs.dryRun && '' || format('git push origin {0}', env.RELEASE_TAG) }}
+          git push origin "${{ env.RELEASE_TAG }}"
       - name: Update main branch (only for GA releases)
         if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
         run: |
           git switch main
           git merge --ff-only "${{ env.RELEASE_TAG }}"
-          ${{ github.event.inputs.dryRun && '' || 'git push origin main' }}
+          git push origin main
 
   create_github_release:
     name: Create GitHub release
@@ -245,7 +237,6 @@ jobs:
       contents: write
     steps:
       - name: Create GitHub release
-        if: ${{ !github.event.inputs.dryRun }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
           script: |
