@@ -9,12 +9,18 @@ on:
       stagingRepoId:
         description: ID of the Nexus staging repository (e.g. "orgjunit-1159")
         required: true
+      dryRun:
+        description: Whether to perform a dry run
+        type: boolean
+        required: false
+        default: false
 
 permissions: read-all
 
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
   STAGING_REPO_URL: https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content
+  RELEASE_TAG: r${{ github.event.inputs.releaseVersion }}
 
 jobs:
 
@@ -29,7 +35,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Download reference JAR from staging repository
         id: referenceJar
         run: |
@@ -51,6 +57,7 @@ jobs:
             --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
         uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        if: ${{ !github.event.inputs.dryRun }}
         with:
           subject-path: build/repo/**/*.jar
       - name: Upload local repository for later jobs
@@ -91,12 +98,13 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Release staging repository
         uses: ./.github/actions/run-gradle
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
+            ${{ github.event.inputs.dryRun && '--dry-run' || '' }} \
             releaseSonatypeStagingRepository \
             --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
 
@@ -109,20 +117,21 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Configure Git
         run: |
           git config --global user.name "JUnit Team"
           git config --global user.email "team@junit.org"
       - name: Build and publish documentation
         uses: ./.github/actions/run-gradle
+        if: ${{ !github.event.inputs.dryRun }}
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
             --no-build-cache \
             --no-configuration-cache \
             clean \
-            gitPublishPush \
+            ${{ github.event.inputs.dryRun && 'gitPublishCommit' || 'gitPublishPush' }} \
             -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
       - name: Wait for deployment to GitHub Pages
         id: pagesDeployment
@@ -145,9 +154,11 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Close milestone
+      - name: Find milestone
+        id: milestoneNumber
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
+          result-encoding: string
           script: |
             const openMilestones = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,
@@ -155,10 +166,16 @@ jobs:
                 state: 'open'
             });
             const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
+            return milestone.number;
+      - name: Close milestone
+        if: ${{ !github.event.inputs.dryRun }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
             await github.rest.issues.updateMilestone({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                milestone_number: milestone.number,
+                milestone_number: ${{ steps.milestoneNumber.outputs.result }},
                 state: 'closed'
             });
 
@@ -202,15 +219,15 @@ jobs:
         run: |
           git config user.name "JUnit Team"
           git config user.email "team@junit.org"
-          git switch -c "r${{ github.event.inputs.releaseVersion }}"
+          git switch -c "${{ env.RELEASE_TAG }}"
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
-          git push origin "r${{ github.event.inputs.releaseVersion }}"
+          ${{ github.event.inputs.dryRun && '' || format('git push origin {0}', env.RELEASE_TAG) }}
       - name: Update main branch (only for GA releases)
         if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
         run: |
           git switch main
-          git merge --ff-only "r${{ github.event.inputs.releaseVersion }}"
-          git push origin main
+          git merge --ff-only "${{ env.RELEASE_TAG }}"
+          ${{ github.event.inputs.dryRun && '' || 'git push origin main' }}
 
   create_github_release:
     name: Create GitHub release
@@ -219,7 +236,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Create GitHub release
+      - name: Prepare request body
+        id: requestBody
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
           script: |
@@ -227,7 +245,7 @@ jobs:
             const jupiterVersion = releaseVersion;
             const vintageVersion = releaseVersion;
             const platformVersion = "1." + releaseVersion.substring(2);
-            await github.rest.repos.createRelease({
+            return {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `r${releaseVersion}`,
@@ -235,4 +253,10 @@ jobs:
               generate_release_notes: true,
               body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
               prerelease: releaseVersion.includes("-"),
-            });
+            };
+      - name: Create GitHub release
+        if: ${{ !github.event.inputs.dryRun }}
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            await github.rest.repos.createRelease(JSON.parse(`${{ steps.requestBody.outputs.result }}`));
