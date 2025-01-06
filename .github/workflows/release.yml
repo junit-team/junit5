@@ -168,6 +168,9 @@ jobs:
                 state: 'open'
             });
             const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
+            if (!milestone) {
+                throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
+            }
             return milestone.number;
       - name: Close milestone
         if: ${{ !github.event.inputs.dryRun }}
