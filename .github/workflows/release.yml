@@ -25,7 +25,7 @@ env:
 jobs:
 
   verify_reproducibility:
-    name: Verify artifacts are reproducible
+    name: Verify reproducibility
     runs-on: ubuntu-24.04 # required to get a recent version of `jc`
     permissions:
       attestations: write # required for build provenance attestation
@@ -67,7 +67,7 @@ jobs:
           path: build/repo
 
   verify_consumability:
-    name: Verify artifacts are consumable
+    name: Verify consumability
     runs-on: ubuntu-latest
     steps:
       - name: Check out samples repository
@@ -90,7 +90,7 @@ jobs:
         run: java src/Builder.java
 
   release_staging_repo:
-    name: Release staging repository
+    name: Release staging repo
     needs: [verify_reproducibility, verify_consumability]
     runs-on: ubuntu-latest
     steps:
@@ -180,7 +180,7 @@ jobs:
             });
 
   wait_for_maven_central:
-    name: Wait for sync to Maven Central
+    name: Wait for Maven Central
     needs: release_staging_repo
     runs-on: ubuntu-latest
     steps:
