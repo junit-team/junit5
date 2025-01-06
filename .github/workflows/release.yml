@@ -230,6 +230,7 @@ jobs:
           git config user.name "JUnit Team"
           git config user.email "team@junit.org"
           git switch -c "${{ env.RELEASE_TAG }}"
+          git status
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
           ${{ github.event.inputs.dryRun && '' || format('git push origin {0}', env.RELEASE_TAG) }}
       - name: Update main branch (only for GA releases)
