@@ -157,6 +157,7 @@ jobs:
       issues: write
     steps:
       - name: Find milestone
+        if: ${{ !github.event.inputs.dryRun }}
         id: milestoneNumber
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
@@ -171,18 +172,14 @@ jobs:
             if (!milestone) {
                 throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
             }
-            return milestone.number;
-      - name: Close milestone
-        if: ${{ !github.event.inputs.dryRun }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
-        with:
-          script: |
-            await github.rest.issues.updateMilestone({
+            const requestBody = {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                milestone_number: ${{ steps.milestoneNumber.outputs.result }},
+                milestone_number: milestone.number,
                 state: 'closed'
-            });
+            };
+            console.log(requestBody);
+            await github.rest.issues.updateMilestone(requestBody);
 
   wait_for_maven_central:
     name: Wait for Maven Central
@@ -247,8 +244,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Prepare request body
-        id: requestBody
+      - name: Create GitHub release
+        if: ${{ !github.event.inputs.dryRun }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
           script: |
@@ -256,7 +253,7 @@ jobs:
             const jupiterVersion = releaseVersion;
             const vintageVersion = releaseVersion;
             const platformVersion = "1." + releaseVersion.substring(2);
-            return {
+            const requestBody = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `r${releaseVersion}`,
@@ -265,9 +262,5 @@ jobs:
               body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
               prerelease: releaseVersion.includes("-"),
             };
-      - name: Create GitHub release
-        if: ${{ !github.event.inputs.dryRun }}
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
-        with:
-          script: |
-            await github.rest.repos.createRelease(JSON.parse(`${{ steps.requestBody.outputs.result }}`));
+            console.log(requestBody);
+            await github.rest.repos.createRelease(requestBody);
