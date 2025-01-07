@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -15,6 +15,8 @@ import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.vintage.engine.Constants.PARALLEL_POOL_SIZE;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.AbstractBlockingTestCase;
 import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.FirstTestCase;
@@ -41,9 +43,6 @@ import org.junit.vintage.engine.VintageTestEngine;
 import org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.SecondTestCase;
 
 class ParallelExecutionIntegrationTests {
-
-	private static final String PARALLEL_EXECUTION_ENABLED = "junit.vintage.execution.parallel.enabled";
-	private static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Test
 	void executesTestClassesInParallel(TestReporter reporter) {

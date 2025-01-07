@@ -12,6 +12,8 @@ package org.junit.vintage.engine;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.vintage.engine.Constants.PARALLEL_POOL_SIZE;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.ENGINE_ID;
 
 import java.util.ArrayList;
@@ -51,29 +53,6 @@ public final class VintageTestEngine implements TestEngine {
 
 	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
-
-	/**
-	 * Indicates whether parallel execution is enabled for the JUnit Vintage engine.
-	 *
-	 * <p>Set this property to {@code true} to enable parallel execution of tests.
-	 * Defaults to {@code false}.
-	 *
-	 * @since 5.12
-	 */
-	@API(status = INTERNAL, since = "5.12")
-	public static final String PARALLEL_EXECUTION_ENABLED = "junit.vintage.execution.parallel.enabled";
-
-	/**
-	 * Specifies the size of the thread pool to be used for parallel execution.
-	 *
-	 * <p>Set this property to an integer value to specify the number of threads
-	 * to be used for parallel execution. Defaults to the number of available
-	 * processors.
-	 *
-	 * @since 5.12
-	 */
-	@API(status = INTERNAL, since = "5.12")
-	public static final String PARALLEL_POOL_SIZE = "junit.vintage.execution.parallel.pool-size";
 
 	@Override
 	public String getId() {
