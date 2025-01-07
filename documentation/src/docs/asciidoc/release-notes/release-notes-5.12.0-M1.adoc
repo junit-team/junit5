@@ -44,6 +44,10 @@ JUnit repository on GitHub.
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
   `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
+* New `--exclude-methodname` and `--include-methodname` options added to the
+  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
+  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
+  will exclude all methods called `methodName` under package `org.example`.
 * Add support for passing line and column number to `ConsoleLauncher` via
   `--select-file` and `--select-resource`.
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
@@ -96,10 +100,6 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New `--exclude-methodname` and `--include-methodname` options added to the
-  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
-  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
-  will exclude all methods called `methodName` under package `org.example`.
 * In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
   types such as `LocalDate` if the new `nullable` attribute in
   `@JavaTimeConversionPattern` is set to `true`.
