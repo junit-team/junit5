@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -957,7 +957,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.incrementAndGet();
 		countDownLatch.countDown();
-		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMilliseconds(), MILLISECONDS);
 		return value;
 	}
 
@@ -966,7 +966,7 @@ class ParallelExecutionIntegrationTests {
 			throws InterruptedException {
 		var value = sharedResource.get();
 		countDownLatch.countDown();
-		countDownLatch.await(estimateSimulatedTestDurationInMiliseconds(), MILLISECONDS);
+		countDownLatch.await(estimateSimulatedTestDurationInMilliseconds(), MILLISECONDS);
 		assertEquals(value, sharedResource.get());
 	}
 
@@ -980,7 +980,7 @@ class ParallelExecutionIntegrationTests {
 	 *
 	 * Currently, CI is known to be slow.
 	 */
-	private static long estimateSimulatedTestDurationInMiliseconds() {
+	private static long estimateSimulatedTestDurationInMilliseconds() {
 		var runningInCi = Boolean.parseBoolean(System.getenv("CI"));
 		return runningInCi ? 1000 : 100;
 	}

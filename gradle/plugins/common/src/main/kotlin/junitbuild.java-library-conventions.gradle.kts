@@ -120,6 +120,17 @@ if (project in mavenizedProjects) {
 		}
 	}
 
+	if (!project.version.isSnapshot()) {
+		configurations {
+			compileClasspath {
+				resolutionStrategy.failOnChangingVersions()
+			}
+			runtimeClasspath {
+				resolutionStrategy.failOnChangingVersions()
+			}
+		}
+	}
+
 } else {
 	tasks {
 		jar {
