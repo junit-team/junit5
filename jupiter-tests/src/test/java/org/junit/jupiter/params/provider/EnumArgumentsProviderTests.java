@@ -58,21 +58,21 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void duplicateConstantNameIsDetected() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "FOO", "BAR", "FOO").findAny());
 		assertThat(exception).hasMessageContaining("Duplicate enum constant name(s) found");
 	}
 
 	@Test
 	void invalidConstantNameIsDetected() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "FO0", "B4R").findAny());
 		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
 	}
 
 	@Test
 	void invalidPatternIsDetected() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithFourConstants.class, Mode.MATCH_ALL, "(", ")").findAny());
 		assertThat(exception).hasMessageContaining("Pattern compilation failed");
 	}
@@ -93,7 +93,7 @@ class EnumArgumentsProviderTests {
 		when(extensionContext.getRequiredTestMethod()).thenReturn(
 			TestCase.class.getDeclaredMethod("methodWithIncorrectParameter", Object.class));
 
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class).findAny());
 		assertThat(exception).hasMessageStartingWith("First parameter must reference an Enum type");
 	}
@@ -103,7 +103,7 @@ class EnumArgumentsProviderTests {
 		when(extensionContext.getRequiredTestMethod()).thenReturn(
 			TestCase.class.getDeclaredMethod("methodWithoutParameters"));
 
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class).findAny());
 		assertThat(exception).hasMessageStartingWith("Test method must declare at least one parameter");
 	}
@@ -145,35 +145,35 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void invalidConstantNameIsDetectedInRange() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "FOO", "BAZ", Mode.EXCLUDE, "QUX").findAny());
 		assertThat(exception).hasMessageContaining("Invalid enum constant name(s) in");
 	}
 
 	@Test
 	void invalidStartingRangeIsDetected() {
-		Exception exception = assertThrows(IllegalArgumentException.class,
+		var exception = assertThrows(IllegalArgumentException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "B4R", "", Mode.INCLUDE).findAny());
 		assertThat(exception).hasMessageContaining("No enum constant");
 	}
 
 	@Test
 	void invalidEndingRangeIsDetected() {
-		Exception exception = assertThrows(IllegalArgumentException.class,
+		var exception = assertThrows(IllegalArgumentException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "", "B4R", Mode.INCLUDE).findAny());
 		assertThat(exception).hasMessageContaining("No enum constant");
 	}
 
 	@Test
 	void invalidRangeOrderIsDetected() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithFourConstants.class, "BAR", "FOO", Mode.INCLUDE).findAny());
 		assertThat(exception).hasMessageContaining("Invalid enum range");
 	}
 
 	@Test
 	void invalidRangeIsDetectedWhenEnumWithNoConstantIsProvided() {
-		Exception exception = assertThrows(PreconditionViolationException.class,
+		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(EnumWithNoConstant.class, "BAR", "FOO", Mode.INCLUDE).findAny());
 		assertThat(exception).hasMessageContaining("No enum constant");
 	}
@@ -207,11 +207,11 @@ class EnumArgumentsProviderTests {
 	private <E extends Enum<E>> Stream<Object[]> provideArguments(Class<E> enumClass, String from, String to, Mode mode,
 			String... names) {
 		var annotation = mock(EnumSource.class);
-		when(annotation.value()).thenAnswer(invocation -> enumClass);
-		when(annotation.from()).thenAnswer(invocation -> from);
-		when(annotation.to()).thenAnswer(invocation -> to);
-		when(annotation.mode()).thenAnswer(invocation -> mode);
-		when(annotation.names()).thenAnswer(invocation -> names);
+		when(annotation.value()).thenAnswer(__ -> enumClass);
+		when(annotation.from()).thenReturn(from);
+		when(annotation.to()).thenReturn(to);
+		when(annotation.mode()).thenReturn(mode);
+		when(annotation.names()).thenReturn(names);
 		when(annotation.toString()).thenReturn(
 			String.format("@EnumSource(value=%s.class, from=%s, to=%s, mode=%s, names=%s)", enumClass.getSimpleName(),
 				from, to, mode, Arrays.toString(names)));
