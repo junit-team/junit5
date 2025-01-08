@@ -1560,12 +1560,26 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_example_au
 ----
 
 The annotation provides an optional `names` attribute that lets you specify which
-constants shall be used, like in the following example. If omitted, all constants will be
-used.
+constants shall be used, like in the following example.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_include_example]
+----
+
+In addition to `names`, you can use the `from` and `to` attributes to specify a range of
+constants. The range starts from the constant specified in the `from` attribute and
+includes all subsequent constants up to and including the one specified in the `to`
+attribute, based on the natural order of the enum constants.
+
+If `from` and `to` attributes are omitted, they default to the first and last constants
+in the enum type, respectively. If all `names`, `from`, and `to` attributes are omitted,
+all constants will be used. The following example demonstrates how to specify a range of
+constants.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_range_example]
 ----
 
 The `@EnumSource` annotation also provides an optional `mode` attribute that enables
@@ -1581,6 +1595,14 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_exclude_ex
 [source,java,indent=0]
 ----
 include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_regex_example]
+----
+
+You can also combine `mode` with the `from`, `to` and `names` attributes to define a
+range of constants while excluding specific values from that range as shown below.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=EnumSource_range_exclude_example]
 ----
 
 [[writing-tests-parameterized-tests-sources-MethodSource]]

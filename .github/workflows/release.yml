@@ -15,11 +15,12 @@ permissions: read-all
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
   STAGING_REPO_URL: https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content
+  RELEASE_TAG: r${{ github.event.inputs.releaseVersion }}
 
 jobs:
 
   verify_reproducibility:
-    name: Verify artifacts are reproducible
+    name: Verify reproducibility
     runs-on: ubuntu-24.04 # required to get a recent version of `jc`
     permissions:
       attestations: write # required for build provenance attestation
@@ -29,7 +30,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Download reference JAR from staging repository
         id: referenceJar
         run: |
@@ -60,14 +61,14 @@ jobs:
           path: build/repo
 
   verify_consumability:
-    name: Verify artifacts are consumable
+    name: Verify consumability
     runs-on: ubuntu-latest
     steps:
       - name: Check out samples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
-          repository: junit-team/junit5-samples
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository_owner }}/junit5-samples
+          token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 1
       - name: Set up JDK
         uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
@@ -83,7 +84,7 @@ jobs:
         run: java src/Builder.java
 
   release_staging_repo:
-    name: Release staging repository
+    name: Release staging repo
     needs: [verify_reproducibility, verify_consumability]
     runs-on: ubuntu-latest
     steps:
@@ -91,7 +92,7 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Release staging repository
         uses: ./.github/actions/run-gradle
         with:
@@ -109,13 +110,16 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
           fetch-depth: 1
-          ref: "refs/tags/r${{ github.event.inputs.releaseVersion }}"
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Configure Git
         run: |
           git config --global user.name "JUnit Team"
           git config --global user.email "team@junit.org"
       - name: Build and publish documentation
         uses: ./.github/actions/run-gradle
+        env:
+          GIT_USERNAME: git
+          GIT_PASSWORD: ${{ secrets.GH_TOKEN }}
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
@@ -145,9 +149,11 @@ jobs:
     permissions:
       issues: write
     steps:
-      - name: Close milestone
+      - name: Find milestone
+        id: milestoneNumber
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
         with:
+          result-encoding: string
           script: |
             const openMilestones = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,
@@ -155,18 +161,28 @@ jobs:
                 state: 'open'
             });
             const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
-            await github.rest.issues.updateMilestone({
+            if (!milestone) {
+                throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
+            }
+            const requestBody = {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 milestone_number: milestone.number,
                 state: 'closed'
-            });
+            };
+            console.log(requestBody);
+            await github.rest.issues.updateMilestone(requestBody);
 
   wait_for_maven_central:
-    name: Wait for sync to Maven Central
+    name: Wait for Maven Central
     needs: release_staging_repo
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Download local Maven repository
         uses: actions/download-artifact@fa0a91b85d4f404e444e00e005971372dc801d16 # v4
         with:
@@ -185,8 +201,8 @@ jobs:
       - name: Check out samples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
         with:
-          repository: junit-team/junit5-samples
-          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository_owner }}/junit5-samples
+          token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 1
       - name: Set up JDK
         uses: actions/setup-java@7a6d8a8234af8eb26422e24e3006232cccaa061b # v4
@@ -202,14 +218,15 @@ jobs:
         run: |
           git config user.name "JUnit Team"
           git config user.email "team@junit.org"
-          git switch -c "r${{ github.event.inputs.releaseVersion }}"
+          git switch -c "${{ env.RELEASE_TAG }}"
+          git status
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
-          git push origin "r${{ github.event.inputs.releaseVersion }}"
+          git push origin "${{ env.RELEASE_TAG }}"
       - name: Update main branch (only for GA releases)
         if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
         run: |
           git switch main
-          git merge --ff-only "r${{ github.event.inputs.releaseVersion }}"
+          git merge --ff-only "${{ env.RELEASE_TAG }}"
           git push origin main
 
   create_github_release:
@@ -227,7 +244,7 @@ jobs:
             const jupiterVersion = releaseVersion;
             const vintageVersion = releaseVersion;
             const platformVersion = "1." + releaseVersion.substring(2);
-            await github.rest.repos.createRelease({
+            const requestBody = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `r${releaseVersion}`,
@@ -235,4 +252,6 @@ jobs:
               generate_release_notes: true,
               body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
               prerelease: releaseVersion.includes("-"),
-            });
+            };
+            console.log(requestBody);
+            await github.rest.repos.createRelease(requestBody);
