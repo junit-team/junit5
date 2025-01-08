@@ -160,4 +160,6 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduced support for executing top-level test classes in parallel. Please refer to the
+  <<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
+  more information.
