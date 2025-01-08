@@ -137,6 +137,8 @@ JUnit repository on GitHub.
   thread dump to `System.out` prior to interrupting a test thread due to a timeout.
 * `TestReporter` now allows publishing files for a test method or test class which can be
   used to include them in test reports, such as the Open Test Reporting format.
+* New `from` and `to` attributes added to `@EnumSource` to support range selection of
+  enum constants.
 * Auto-registered extensions can now be
   <<../user-guide/index.adoc#extensions-registration-automatic-filtering, filtered>> using
   include and exclude patterns that can be specified as configuration parameters.

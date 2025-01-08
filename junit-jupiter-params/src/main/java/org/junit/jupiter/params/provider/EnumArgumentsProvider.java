@@ -43,7 +43,19 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 
 	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ExtensionContext context, EnumSource enumSource) {
 		Class<E> enumClass = determineEnumClass(context, enumSource);
-		return EnumSet.allOf(enumClass);
+		E[] constants = enumClass.getEnumConstants();
+		if (constants.length == 0) {
+			Preconditions.condition(enumSource.from().isEmpty() && enumSource.to().isEmpty(),
+				"No enum constant in " + enumClass.getSimpleName() + ", but 'from' or 'to' is not empty.");
+			return EnumSet.noneOf(enumClass);
+		}
+		E from = enumSource.from().isEmpty() ? constants[0] : Enum.valueOf(enumClass, enumSource.from());
+		E to = enumSource.to().isEmpty() ? constants[constants.length - 1] : Enum.valueOf(enumClass, enumSource.to());
+		Preconditions.condition(from.compareTo(to) <= 0,
+			() -> String.format(
+				"Invalid enum range: 'from' (%s) must come before 'to' (%s) in the natural order of enum constants.",
+				from, to));
+		return EnumSet.range(from, to);
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
