@@ -83,9 +83,41 @@ jobs:
       - name: Build samples
         run: java src/Builder.java
 
+  close_github_milestone:
+    name: Close GitHub milestone
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close GitHub milestone
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          result-encoding: string
+          script: |
+            const openMilestones = await github.rest.issues.listMilestones({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open'
+            });
+            const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
+            if (!milestone) {
+                throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
+            }
+            if (milestone.open_issues > 0) {
+                throw new Error(`Milestone "${{ github.event.inputs.releaseVersion }}" has ${milestone.open_issues} open issue(s)`);
+            }
+            const requestBody = {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                milestone_number: milestone.number,
+                state: 'closed'
+            };
+            console.log(requestBody);
+            await github.rest.issues.updateMilestone(requestBody);
+
   release_staging_repo:
     name: Release staging repo
-    needs: [verify_reproducibility, verify_consumability]
+    needs: [verify_reproducibility, verify_consumability, close_github_milestone]
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -141,37 +173,6 @@ jobs:
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           sudo apt-get update && sudo apt-get install --yes poppler-utils
           pdfinfo /tmp/junit-user-guide.pdf
-
-  close_github_milestone:
-    name: Close GitHub milestone
-    needs: release_staging_repo
-    runs-on: ubuntu-latest
-    permissions:
-      issues: write
-    steps:
-      - name: Find milestone
-        id: milestoneNumber
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
-        with:
-          result-encoding: string
-          script: |
-            const openMilestones = await github.rest.issues.listMilestones({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                state: 'open'
-            });
-            const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
-            if (!milestone) {
-                throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
-            }
-            const requestBody = {
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                milestone_number: milestone.number,
-                state: 'closed'
-            };
-            console.log(requestBody);
-            await github.rest.issues.updateMilestone(requestBody);
 
   wait_for_maven_central:
     name: Wait for Maven Central
