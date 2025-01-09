@@ -110,7 +110,8 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 milestone_number: milestone.number,
-                state: 'closed'
+                state: 'closed',
+                due_on: new Date().toISOString()
             };
             console.log(requestBody);
             await github.rest.issues.updateMilestone(requestBody);
