@@ -147,6 +147,10 @@ jobs:
         with:
           fetch-depth: 1
           ref: "refs/tags/${{ env.RELEASE_TAG }}"
+      - name: Install Graphviz and Poppler
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes graphviz poppler-utils
       - name: Configure Git
         run: |
           git config --global user.name "JUnit Team"
@@ -175,7 +179,6 @@ jobs:
         timeout-minutes: 15
         run: |
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
-          sudo apt-get update && sudo apt-get install --yes poppler-utils
           pdfinfo /tmp/junit-user-guide.pdf
 
   wait_for_maven_central:
