@@ -176,7 +176,6 @@ jobs:
           ./.github/scripts/waitForUrl.sh "$URL"
           echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
       - name: Verify integrity of PDF version of User Guide
-        timeout-minutes: 15
         run: |
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           pdfinfo /tmp/junit-user-guide.pdf
