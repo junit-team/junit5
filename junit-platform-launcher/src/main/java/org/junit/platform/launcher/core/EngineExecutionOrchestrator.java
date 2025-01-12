@@ -200,8 +200,15 @@ public class EngineExecutionOrchestrator {
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-			delayingListener.reportEngineFailure(new JUnitException(
-				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
+			JUnitException cause = null;
+			if (throwable instanceof LinkageError) {
+				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			}
+			if (cause == null) {
+				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
+				cause = new JUnitException(message, throwable);
+			}
+			delayingListener.reportEngineFailure(cause);
 		}
 	}
 }
