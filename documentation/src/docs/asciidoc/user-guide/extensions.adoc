@@ -868,8 +868,12 @@ order to align with the behavior of the JUnit Platform and JUnit Jupiter.
 These include methods to check whether an element is annotated or meta-annotated with a
 particular annotation, to search for specific annotations, and to find annotated methods
 and fields in a class or interface. Some of these methods search on implemented
-interfaces and within class hierarchies to find annotations. Consult the Javadoc for
-`{AnnotationSupport}` for further details.
+interfaces and within class hierarchies to find annotations.
+
+**Note:** `isAnnotated` method does not find repeatable annotations. To check for repeatable annotations,
+use the `findRepeatableAnnotations` method and verify that the returned list is not empty.
+
+Consult the Javadoc for `{AnnotationSupport}` for further details.
 
 NOTE: See also: <<extensions-supported-utilities-search-semantics>>
 
