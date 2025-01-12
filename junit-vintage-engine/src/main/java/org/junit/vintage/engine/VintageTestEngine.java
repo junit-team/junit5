@@ -165,6 +165,14 @@ public final class VintageTestEngine implements TestEngine {
 		return request.getConfigurationParameters().getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false);
 	}
 
+	private boolean getParallelClassExecutionEnabled(ExecutionRequest request) {
+		return request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
+	}
+
+	private boolean getParallelMethodExecutionEnabled(ExecutionRequest request) {
+		return request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
+	}
+
 	private int getThreadPoolSize(ExecutionRequest request) {
 		Optional<String> poolSize = request.getConfigurationParameters().get(PARALLEL_POOL_SIZE);
 		if (poolSize.isPresent()) {
