@@ -21,6 +21,26 @@ Artifacts for final releases and milestones are deployed to {Maven_Central}, and
 artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
 {snapshot-repo}/org/junit/[/org/junit].
 
+The sections below list all artifacts with their versions for the three groups:
+<<dependency-metadata-junit-platform, Platform>>,
+<<dependency-metadata-junit-jupiter, Jupiter>>, and
+<<dependency-metadata-junit-vintage, Vintage>>.
+The <<dependency-metadata-junit-bom, Bill of Materials (BOM)>> contains a list of all
+of the above artifacts and their versions.
+
+[TIP]
+.Aligning dependency versions
+====
+To ensure that all JUnit artifacts are compatible with each other, their versions should
+be aligned.
+If you rely on <<running-tests-build-spring-boot, Spring Boot>> for dependency management,
+please see the corresponding section.
+Otherwise, instead of managing individual versions of the JUnit artifacts, it is
+recommended to apply the <<dependency-metadata-junit-bom, BOM>> to your project.
+Please refer to the corresponding sections for <<running-tests-build-maven-bom, Maven>> or
+<<running-tests-build-gradle-bom, Gradle>>.
+====
+
 [[dependency-metadata-junit-platform]]
 ==== JUnit Platform
 

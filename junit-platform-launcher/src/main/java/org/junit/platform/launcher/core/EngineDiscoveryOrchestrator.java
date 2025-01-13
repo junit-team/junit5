@@ -156,8 +156,14 @@ public class EngineDiscoveryOrchestrator {
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
-			JUnitException cause = new JUnitException(message, throwable);
+			JUnitException cause = null;
+			if (throwable instanceof LinkageError) {
+				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			}
+			if (cause == null) {
+				String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
+				cause = new JUnitException(message, throwable);
+			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
 			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}
