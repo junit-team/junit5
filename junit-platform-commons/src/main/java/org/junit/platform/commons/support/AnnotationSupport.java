@@ -80,7 +80,7 @@ public final class AnnotationSupport {
 	 * {@code element}.
 	 *
 	 * <p><strong>Note:</strong> This method does not find repeatable annotations.
-	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(Optional, Class)}
+	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(AnnotatedElement, Class)}
 	 * and verify that the returned list is not empty.
 	 *
 	 * @param element the element on which to search for the annotation; may be
