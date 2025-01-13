@@ -55,6 +55,10 @@ public interface AnnotatedElementContext {
 	 * <em>present</em> or <em>meta-present</em> on the {@link AnnotatedElement} for
 	 * this context.
 	 *
+	 * <p><strong>Note:</strong> This method does not find repeatable annotations.
+	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(Class)}
+	 * and verify that the returned list is not empty.
+	 *
 	 * <h4>WARNING</h4>
 	 * <p>Favor the use of this method over directly invoking
 	 * {@link AnnotatedElement#isAnnotationPresent(Class)} due to a bug in {@code javac}

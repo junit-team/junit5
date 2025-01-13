@@ -54,6 +54,10 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied optional
 	 * {@code element}.
 	 *
+	 * <p><strong>Note:</strong> This method does not find repeatable annotations.
+	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(Optional, Class)}
+	 * and verify that the returned list is not empty.
+	 *
 	 * @param element an {@link Optional} containing the element on which to
 	 * search for the annotation; may be {@code null} or <em>empty</em>
 	 * @param annotationType the annotation type to search for; never {@code null}
@@ -61,6 +65,7 @@ public final class AnnotationSupport {
 	 * @since 1.3
 	 * @see #isAnnotated(AnnotatedElement, Class)
 	 * @see #findAnnotation(Optional, Class)
+	 * @see #findRepeatableAnnotations(Optional, Class)
 	 */
 	@API(status = MAINTAINED, since = "1.3")
 	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
@@ -74,12 +79,17 @@ public final class AnnotationSupport {
 	 * <em>present</em> or <em>meta-present</em> on the supplied
 	 * {@code element}.
 	 *
+	 * <p><strong>Note:</strong> This method does not find repeatable annotations.
+	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(AnnotatedElement, Class)}
+	 * and verify that the returned list is not empty.
+	 *
 	 * @param element the element on which to search for the annotation; may be
 	 * {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @return {@code true} if the annotation is present or meta-present
 	 * @see #isAnnotated(Optional, Class)
 	 * @see #findAnnotation(AnnotatedElement, Class)
+	 * @see #findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 		return AnnotationUtils.isAnnotated(element, annotationType);
