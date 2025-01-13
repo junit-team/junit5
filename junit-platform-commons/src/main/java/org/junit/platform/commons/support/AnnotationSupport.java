@@ -89,7 +89,7 @@ public final class AnnotationSupport {
 	 * @return {@code true} if the annotation is present or meta-present
 	 * @see #isAnnotated(Optional, Class)
 	 * @see #findAnnotation(AnnotatedElement, Class)
-	 * @see #findRepeatableAnnotations(Optional, Class)
+	 * @see #findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
 	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
 		return AnnotationUtils.isAnnotated(element, annotationType);
