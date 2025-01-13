@@ -870,7 +870,7 @@ particular annotation, to search for specific annotations, and to find annotated
 and fields in a class or interface. Some of these methods search on implemented
 interfaces and within class hierarchies to find annotations.
 
-**Note:** `isAnnotated` method does not find repeatable annotations. To check for repeatable annotations,
+NOTE: The `isAnnotated()` methods do not find repeatable annotations. To check for repeatable annotations,
 use one of the `findRepeatableAnnotations()` methods and verify that the returned list is not empty.
 
 Consult the Javadoc for `{AnnotationSupport}` for further details.
