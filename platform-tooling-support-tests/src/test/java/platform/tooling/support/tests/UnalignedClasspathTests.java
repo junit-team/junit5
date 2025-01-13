@@ -20,11 +20,11 @@ import static platform.tooling.support.tests.Projects.copyToWorkspace;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.tests.process.OutputFiles;
 
@@ -44,9 +44,9 @@ class UnalignedClasspathTests {
 	MavenRepoProxy mavenRepoProxy;
 
 	@ParameterizedTest
-	@MethodSource("javaHomes")
+	@MethodSource("javaVersions")
 	@Execution(SAME_THREAD)
-	void verifyErrorMessageForUnalignedClasspath(Path javaHome, @TempDir Path workspace,
+	void verifyErrorMessageForUnalignedClasspath(JRE jre, Path javaHome, @TempDir Path workspace,
 			@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 		var starter = ProcessStarters.maven(javaHome) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_STARTER, workspace)) //
@@ -54,6 +54,7 @@ class UnalignedClasspathTests {
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("-Djunit.platform.commons.version=1.11.4").addArguments("--update-snapshots",
 					"--batch-mode", "verify") //
+				.putEnvironment(MavenEnvVars.forJre(jre)) //
 				.redirectOutput(outputFiles);
 		var result = starter.startAndWait();
 
@@ -65,10 +66,10 @@ class UnalignedClasspathTests {
 						+ "on the classpath/module path not being properly aligned");
 	}
 
-	static Stream<Named<Path>> javaHomes() {
+	static Stream<Arguments> javaVersions() {
 		return Stream.concat( //
-			Helper.getJavaHome("8").map(path -> Named.of(JRE.JAVA_8.name(), path)).stream(), //
-			Stream.of(Named.of(JRE.currentVersion().name(), currentJdkHome())) //
+			Helper.getJavaHome("8").map(path -> Arguments.of(JRE.JAVA_8, path)).stream(), //
+			Stream.of(Arguments.of(JRE.currentVersion(), currentJdkHome())) //
 		);
 	}
 }
