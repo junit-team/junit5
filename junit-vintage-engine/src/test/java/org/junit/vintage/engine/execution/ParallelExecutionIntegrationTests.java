@@ -15,7 +15,9 @@ import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.vintage.engine.Constants.PARALLEL_CLASS_EXECUTION;
 import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.vintage.engine.Constants.PARALLEL_METHOD_EXECUTION;
 import static org.junit.vintage.engine.Constants.PARALLEL_POOL_SIZE;
 import static org.junit.vintage.engine.descriptor.VintageTestDescriptor.SEGMENT_TYPE_RUNNER;
 import static org.junit.vintage.engine.samples.junit4.JUnit4ParallelTestCase.AbstractBlockingTestCase;
@@ -100,6 +102,8 @@ class ParallelExecutionIntegrationTests {
 				.selectors(classSelectors) //
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED, String.valueOf(true)) //
 				.configurationParameter(PARALLEL_POOL_SIZE, String.valueOf(poolSize)) //
+				.configurationParameter(PARALLEL_CLASS_EXECUTION, String.valueOf(true)) //
+				.configurationParameter(PARALLEL_METHOD_EXECUTION, String.valueOf(true)) //
 				.build();
 	}
 

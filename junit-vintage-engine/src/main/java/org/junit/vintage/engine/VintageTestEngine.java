@@ -54,6 +54,9 @@ public final class VintageTestEngine implements TestEngine {
 	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
 
+	private boolean classes;
+	private boolean methods;
+
 	@Override
 	public String getId() {
 		return ENGINE_ID;
@@ -92,15 +95,23 @@ public final class VintageTestEngine implements TestEngine {
 
 	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
-		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
+		initializeParallelExecution(request);
 
-		if (parallelExecutionEnabled) {
-			if (executeInParallel(engineDescriptor, engineExecutionListener, request)) {
-				Thread.currentThread().interrupt();
-			}
-		}
-		else {
+		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
+		if (!parallelExecutionEnabled) {
 			executeSequentially(engineDescriptor, engineExecutionListener);
+			return;
+		}
+
+		if (!classes && !methods) {
+			logger.warn(() -> "Parallel execution is enabled but no scope is defined. "
+					+ "Falling back to sequential execution.");
+			executeSequentially(engineDescriptor, engineExecutionListener);
+			return;
+		}
+
+		if (executeInParallel(engineDescriptor, engineExecutionListener, request)) {
+			Thread.currentThread().interrupt();
 		}
 	}
 
@@ -165,12 +176,9 @@ public final class VintageTestEngine implements TestEngine {
 		return request.getConfigurationParameters().getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false);
 	}
 
-	private boolean getParallelClassExecutionEnabled(ExecutionRequest request) {
-		return request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
-	}
-
-	private boolean getParallelMethodExecutionEnabled(ExecutionRequest request) {
-		return request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
+	private void initializeParallelExecution(ExecutionRequest request) {
+		classes = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
+		methods = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
 	}
 
 	private int getThreadPoolSize(ExecutionRequest request) {
