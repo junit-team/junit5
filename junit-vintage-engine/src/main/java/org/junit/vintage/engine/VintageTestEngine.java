@@ -36,6 +36,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.vintage.engine.descriptor.RunnerScheduler;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 import org.junit.vintage.engine.discovery.VintageDiscoverer;
@@ -120,15 +121,21 @@ public final class VintageTestEngine implements TestEngine {
 		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize(request));
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 
-		List<CompletableFuture<Void>> futures = new ArrayList<>();
-		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
-			TestDescriptor descriptor = iterator.next();
-			CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-				runnerExecutor.execute((RunnerTestDescriptor) descriptor);
-			}, executorService);
+		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(engineDescriptor,
+			executorService);
 
+		List<CompletableFuture<Void>> futures = new ArrayList<>();
+		if (!classes) {
+			for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
+				runnerExecutor.execute(runnerTestDescriptor);
+			}
+			return false;
+		}
+
+		for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
+			CompletableFuture<Void> future = CompletableFuture.runAsync(
+				() -> runnerExecutor.execute(runnerTestDescriptor), executorService);
 			futures.add(future);
-			iterator.remove();
 		}
 
 		CompletableFuture<Void> allOf = CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0]));
@@ -147,6 +154,41 @@ public final class VintageTestEngine implements TestEngine {
 			shutdownExecutorService(executorService);
 		}
 		return wasInterrupted;
+	}
+
+	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
+			ExecutorService executorService) {
+		runnerTestDescriptor.setScheduler(new RunnerScheduler() {
+			@Override
+			public void schedule(Runnable childStatement) {
+				executorService.submit(childStatement);
+			}
+
+			@Override
+			public void finished() {
+				try {
+					executorService.shutdown();
+					executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+				}
+				catch (InterruptedException e) {
+					logger.warn(e, () -> "Interruption while waiting for parallel test execution to finish");
+				}
+			}
+		});
+
+		return runnerTestDescriptor;
+	}
+
+	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
+			ExecutorService executorService) {
+		List<RunnerTestDescriptor> runnerTestDescriptors = new ArrayList<>();
+		for (TestDescriptor descriptor : engineDescriptor.getModifiableChildren()) {
+			RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) descriptor;
+			if (methods) {
+				runnerTestDescriptors.add(parallelMethodExecutor(runnerTestDescriptor, executorService));
+			}
+		}
+		return runnerTestDescriptors;
 	}
 
 	private void shutdownExecutorService(ExecutorService executorService) {

@@ -47,6 +47,16 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private boolean wasFiltered;
 	private List<Filter> filters = new ArrayList<>();
 
+	private volatile RunnerScheduler scheduler = new RunnerScheduler() {
+		public void schedule(Runnable childStatement) {
+			childStatement.run();
+		}
+
+		public void finished() {
+			// do nothing
+		}
+	};
+
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner, boolean ignored) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
 		this.runner = runner;
@@ -159,6 +169,10 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 
 	public boolean isIgnored() {
 		return ignored;
+	}
+
+	public void setScheduler(RunnerScheduler scheduler) {
+		this.scheduler = scheduler;
 	}
 
 	private static class ExcludeDescriptionFilter extends Filter {
