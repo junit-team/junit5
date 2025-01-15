@@ -171,8 +171,11 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 		return ignored;
 	}
 
-	public void setScheduler(RunnerScheduler scheduler) {
-		this.scheduler = scheduler;
+	public void setScheduler(org.junit.runners.model.RunnerScheduler scheduler) {
+		Runner runner = getRunnerToReport(); 
+		if (runner instanceof ParentRunner) {
+			((ParentRunner<?>) runner).setScheduler(scheduler);
+		}
 	}
 
 	private static class ExcludeDescriptionFilter extends Filter {
