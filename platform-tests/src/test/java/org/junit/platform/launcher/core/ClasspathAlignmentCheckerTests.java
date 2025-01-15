@@ -51,7 +51,7 @@ class ClasspathAlignmentCheckerTests {
 						+ "JUnit jars on the classpath/module path not being properly aligned.") //
 				.hasMessageContaining("Please ensure consistent versions are used") //
 				.hasMessageFindingMatch("https://junit\\.org/junit5/docs/.*/user-guide/#dependency-metadata") //
-				.hasMessageContaining("The following versions were detected:") //
+				.hasMessageContaining("The following conflicting versions were detected:") //
 				.hasMessageContaining("- org.junit.jupiter.api: 1.0.0") //
 				.hasMessageContaining("- org.junit.jupiter.engine: 2.0.0") //
 				.cause().isSameAs(cause);

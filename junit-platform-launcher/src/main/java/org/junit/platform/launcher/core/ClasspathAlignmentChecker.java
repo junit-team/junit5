@@ -87,7 +87,7 @@ class ClasspathAlignmentChecker {
 						ClasspathAlignmentChecker.class.getPackage().getImplementationVersion())) //
 					.append("/user-guide/#dependency-metadata).") //
 					.append(lineBreak) //
-					.append("The following versions were detected:").append(lineBreak);
+					.append("The following conflicting versions were detected:").append(lineBreak);
 			packagesByVersions.values().stream() //
 					.flatMap(List::stream) //
 					.sorted(comparing(Package::getName)) //
