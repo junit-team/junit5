@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.tests.process.OutputFiles;
 
@@ -50,7 +51,7 @@ class JavaVersionsTests {
 
 	@Test
 	void java_default(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
-		var actualLines = execute(currentJdkHome(), outputFiles, MavenEnvVars.FOR_JDK24_AND_LATER);
+		var actualLines = execute(currentJdkHome(), outputFiles, MavenEnvVars.forJre(JRE.currentVersion()));
 
 		assertTrue(actualLines.contains("[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 1"));
 	}
