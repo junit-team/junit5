@@ -36,7 +36,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.vintage.engine.descriptor.RunnerScheduler;
+import org.junit.runners.model.RunnerScheduler;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 import org.junit.vintage.engine.discovery.VintageDiscoverer;
@@ -124,7 +124,6 @@ public final class VintageTestEngine implements TestEngine {
 		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(engineDescriptor,
 			executorService);
 
-		List<CompletableFuture<Void>> futures = new ArrayList<>();
 		if (!classes) {
 			for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
 				runnerExecutor.execute(runnerTestDescriptor);
@@ -132,6 +131,7 @@ public final class VintageTestEngine implements TestEngine {
 			return false;
 		}
 
+		List<CompletableFuture<Void>> futures = new ArrayList<>();
 		for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(
 				() -> runnerExecutor.execute(runnerTestDescriptor), executorService);
@@ -167,8 +167,9 @@ public final class VintageTestEngine implements TestEngine {
 			@Override
 			public void finished() {
 				try {
-					executorService.shutdown();
-					executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+					if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+						logger.warn(() -> "Executor service did not terminate within the specified timeout");
+					}
 				}
 				catch (InterruptedException e) {
 					logger.warn(e, () -> "Interruption while waiting for parallel test execution to finish");
@@ -184,9 +185,12 @@ public final class VintageTestEngine implements TestEngine {
 		List<RunnerTestDescriptor> runnerTestDescriptors = new ArrayList<>();
 		for (TestDescriptor descriptor : engineDescriptor.getModifiableChildren()) {
 			RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) descriptor;
+
 			if (methods) {
 				runnerTestDescriptors.add(parallelMethodExecutor(runnerTestDescriptor, executorService));
+				continue;
 			}
+			runnerTestDescriptors.add(runnerTestDescriptor);
 		}
 		return runnerTestDescriptors;
 	}

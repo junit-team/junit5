@@ -32,6 +32,8 @@ import org.junit.runner.Runner;
 import org.junit.runner.manipulation.Filter;
 import org.junit.runner.manipulation.Filterable;
 import org.junit.runner.manipulation.NoTestsRemainException;
+import org.junit.runners.ParentRunner;
+import org.junit.runners.model.RunnerScheduler;
 
 /**
  * @since 4.12
@@ -46,16 +48,6 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 	private final boolean ignored;
 	private boolean wasFiltered;
 	private List<Filter> filters = new ArrayList<>();
-
-	private volatile RunnerScheduler scheduler = new RunnerScheduler() {
-		public void schedule(Runnable childStatement) {
-			childStatement.run();
-		}
-
-		public void finished() {
-			// do nothing
-		}
-	};
 
 	public RunnerTestDescriptor(UniqueId uniqueId, Class<?> testClass, Runner runner, boolean ignored) {
 		super(uniqueId, runner.getDescription(), testClass.getSimpleName(), ClassSource.from(testClass));
@@ -171,8 +163,8 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 		return ignored;
 	}
 
-	public void setScheduler(org.junit.runners.model.RunnerScheduler scheduler) {
-		Runner runner = getRunnerToReport(); 
+	public void setScheduler(RunnerScheduler scheduler) {
+		Runner runner = getRunnerToReport();
 		if (runner instanceof ParentRunner) {
 			((ParentRunner<?>) runner).setScheduler(scheduler);
 		}
