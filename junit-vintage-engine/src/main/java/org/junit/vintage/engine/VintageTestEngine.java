@@ -36,7 +36,6 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
-import org.junit.runners.model.RunnerScheduler;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 import org.junit.vintage.engine.discovery.VintageDiscoverer;
@@ -158,24 +157,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
 			ExecutorService executorService) {
-		runnerTestDescriptor.setScheduler(new RunnerScheduler() {
-			@Override
-			public void schedule(Runnable childStatement) {
-				executorService.submit(childStatement);
-			}
-
-			@Override
-			public void finished() {
-				try {
-					if (!executorService.awaitTermination(SHUTDOWN_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-						logger.warn(() -> "Executor service did not terminate within the specified timeout");
-					}
-				}
-				catch (InterruptedException e) {
-					logger.warn(e, () -> "Interruption while waiting for parallel test execution to finish");
-				}
-			}
-		});
+		runnerTestDescriptor.setExecutorService(executorService);
 
 		return runnerTestDescriptor;
 	}
