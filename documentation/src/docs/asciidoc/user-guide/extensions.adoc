@@ -871,6 +871,9 @@ and fields in a class or interface. Some of these methods search on implemented
 interfaces and within class hierarchies to find annotations. Consult the Javadoc for
 `{AnnotationSupport}` for further details.
 
+NOTE: The `isAnnotated()` methods do not find repeatable annotations. To check for repeatable annotations,
+use one of the `findRepeatableAnnotations()` methods and verify that the returned list is not empty.
+
 NOTE: See also: <<extensions-supported-utilities-search-semantics>>
 
 [[extensions-supported-utilities-classes]]
