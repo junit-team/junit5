@@ -126,21 +126,6 @@ public final class ReflectionUtils {
 		BOTTOM_UP
 	}
 
-	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
-	private static final Pattern VM_INTERNAL_OBJECT_ARRAY_PATTERN = Pattern.compile("^(\\[+)L(.+);$");
-
-	/**
-	 * Pattern: "[x", "[[[[x", etc., where x is Z, B, C, D, F, I, J, S, etc.
-	 *
-	 * <p>The pattern intentionally captures the last bracket with the
-	 * capital letter so that the combination can be looked up via
-	 * {@link #classNameToTypeMap}. For example, the last matched group
-	 * will contain {@code "[I"} instead of {@code "I"}.
-	 *
-	 * @see Class#getName()
-	 */
-	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = Pattern.compile("^(\\[+)(\\[[ZBCDFIJS])$");
-
 	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
 	// ?> => non-capturing atomic group
 	// ++ => possessive quantifier
@@ -856,32 +841,8 @@ public final class ReflectionUtils {
 		}
 
 		return Try.call(() -> {
-			Matcher matcher;
-
-			// Primitive arrays such as "[I", "[[[[D", etc.
-			matcher = VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN.matcher(trimmedName);
-			if (matcher.matches()) {
-				String brackets = matcher.group(1);
-				String componentTypeName = matcher.group(2);
-				// Calculate dimensions by counting brackets.
-				int dimensions = brackets.length();
-
-				return loadArrayType(classLoader, componentTypeName, dimensions);
-			}
-
-			// Object arrays such as "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
-			matcher = VM_INTERNAL_OBJECT_ARRAY_PATTERN.matcher(trimmedName);
-			if (matcher.matches()) {
-				String brackets = matcher.group(1);
-				String componentTypeName = matcher.group(2);
-				// Calculate dimensions by counting brackets.
-				int dimensions = brackets.length();
-
-				return loadArrayType(classLoader, componentTypeName, dimensions);
-			}
-
 			// Arrays such as "java.lang.String[]", "int[]", "int[][][][]", etc.
-			matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(trimmedName);
+			Matcher matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(trimmedName);
 			if (matcher.matches()) {
 				String componentTypeName = matcher.group(1);
 				String bracketPairs = matcher.group(2);
