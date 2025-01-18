@@ -254,7 +254,7 @@ public final class EngineTestKit {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
 		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters());
+			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider());
 		testEngine.execute(request);
 	}
 
