@@ -95,7 +95,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	private void executeAllChildren(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
-		initializeParallelExecution(request);
+		initializeParallelExecutionParameters(request);
 
 		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
 		if (!parallelExecutionEnabled) {
@@ -155,13 +155,6 @@ public final class VintageTestEngine implements TestEngine {
 		return wasInterrupted;
 	}
 
-	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
-			ExecutorService executorService) {
-		runnerTestDescriptor.setExecutorService(executorService);
-
-		return runnerTestDescriptor;
-	}
-
 	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
 			ExecutorService executorService) {
 		List<RunnerTestDescriptor> runnerTestDescriptors = new ArrayList<>();
@@ -175,6 +168,12 @@ public final class VintageTestEngine implements TestEngine {
 			runnerTestDescriptors.add(runnerTestDescriptor);
 		}
 		return runnerTestDescriptors;
+	}
+
+	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
+			ExecutorService executorService) {
+		runnerTestDescriptor.setExecutorService(executorService);
+		return runnerTestDescriptor;
 	}
 
 	private void shutdownExecutorService(ExecutorService executorService) {
@@ -204,7 +203,7 @@ public final class VintageTestEngine implements TestEngine {
 		return request.getConfigurationParameters().getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false);
 	}
 
-	private void initializeParallelExecution(ExecutionRequest request) {
+	private void initializeParallelExecutionParameters(ExecutionRequest request) {
 		classes = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
 		methods = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
 	}
