@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -200,8 +200,15 @@ public class EngineExecutionOrchestrator {
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-			delayingListener.reportEngineFailure(new JUnitException(
-				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
+			JUnitException cause = null;
+			if (throwable instanceof LinkageError) {
+				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			}
+			if (cause == null) {
+				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
+				cause = new JUnitException(message, throwable);
+			}
+			delayingListener.reportEngineFailure(cause);
 		}
 	}
 }

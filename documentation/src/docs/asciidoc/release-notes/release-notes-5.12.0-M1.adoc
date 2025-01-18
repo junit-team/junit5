@@ -44,6 +44,10 @@ JUnit repository on GitHub.
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
 * Support both the primitive type `void` and the wrapper type `Void` in the internal
   `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
+* New `--exclude-methodname` and `--include-methodname` options added to the
+  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
+  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
+  will exclude all methods called `methodName` under package `org.example`.
 * Add support for passing line and column number to `ConsoleLauncher` via
   `--select-file` and `--select-resource`.
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
@@ -96,10 +100,6 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New `--exclude-methodname` and `--include-methodname` options added to the
-  `ConsoleLauncher` to include or exclude methods based on fully qualified method names
-  without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
-  will exclude all methods called `methodName` under package `org.example`.
 * In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
   types such as `LocalDate` if the new `nullable` attribute in
   `@JavaTimeConversionPattern` is set to `true`.
@@ -137,6 +137,11 @@ JUnit repository on GitHub.
   thread dump to `System.out` prior to interrupting a test thread due to a timeout.
 * `TestReporter` now allows publishing files for a test method or test class which can be
   used to include them in test reports, such as the Open Test Reporting format.
+* New `from` and `to` attributes added to `@EnumSource` to support range selection of
+  enum constants.
+* Auto-registered extensions can now be
+  <<../user-guide/index.adoc#extensions-registration-automatic-filtering, filtered>> using
+  include and exclude patterns that can be specified as configuration parameters.
 
 
 [[release-notes-5.12.0-M1-junit-vintage]]
@@ -155,4 +160,6 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduced support for executing top-level test classes in parallel. Please refer to the
+  <<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
+  more information.

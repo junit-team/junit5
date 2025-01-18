@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -156,8 +156,14 @@ public class EngineDiscoveryOrchestrator {
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-			String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
-			JUnitException cause = new JUnitException(message, throwable);
+			JUnitException cause = null;
+			if (throwable instanceof LinkageError) {
+				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			}
+			if (cause == null) {
+				String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
+				cause = new JUnitException(message, throwable);
+			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
 			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
 		}

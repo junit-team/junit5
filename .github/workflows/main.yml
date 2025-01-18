@@ -23,7 +23,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install GraalVM
-      uses: graalvm/setup-graalvm@4a200f28cd70d1940b5e33bd00830b7dc71a7e2b # v1
+      uses: graalvm/setup-graalvm@c09e29bb115a83bd4b7c7e99bb46e2e8a1c50466 # v1
       with:
         distribution: graalvm-community
         version: 'latest'
@@ -69,7 +69,7 @@ jobs:
 
   publish_artifacts:
     name: Publish Snapshot Artifacts
-    needs: Linux
+    needs: macOS
     runs-on: ubuntu-latest
     permissions:
       attestations: write # required for build provenance attestation
@@ -100,7 +100,7 @@ jobs:
     concurrency:
       group: github-pages-${{ github.ref }}
       cancel-in-progress: true
-    needs: Linux
+    needs: macOS
     runs-on: ubuntu-latest
     steps:
     - name: Check out repository

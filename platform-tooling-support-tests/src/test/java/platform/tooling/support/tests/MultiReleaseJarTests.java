@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.tests.process.OutputFiles;
 
@@ -76,7 +77,7 @@ class MultiReleaseJarTests {
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode") //
 				.addArguments("test") //
-				.putEnvironment(MavenEnvVars.FOR_JDK24_AND_LATER) //
+				.putEnvironment(MavenEnvVars.forJre(JRE.currentVersion())) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 

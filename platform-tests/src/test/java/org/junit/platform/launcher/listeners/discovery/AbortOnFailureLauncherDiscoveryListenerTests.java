@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -69,7 +69,7 @@ class AbortOnFailureLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 		assertThat(exception).hasMessage("TestEngine with ID 'some-engine' failed to discover tests");
 		assertThat(exception.getCause()) //
 				.hasMessageEndingWith("resolution failed") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 	@Test
@@ -90,7 +90,7 @@ class AbortOnFailureLauncherDiscoveryListenerTests extends AbstractLauncherDisco
 		var exception = assertThrows(JUnitException.class, () -> launcher.discover(request));
 		assertThat(exception) //
 				.hasMessage("TestEngine with ID 'some-engine' failed to discover tests") //
-				.hasCauseReference(rootCause);
+				.cause().isSameAs(rootCause);
 	}
 
 }

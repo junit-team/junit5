@@ -36,6 +36,31 @@ annotated with `@Category(Example.class)`, it will be tagged with `"com.acme.Exa
 Similar to the `Categories` runner in JUnit 4, this information can be used to filter the
 discovered tests before executing them (see <<running-tests>> for details).
 
+[[migrating-from-junit4-parallel-execution]]
+=== Parallel Execution
+
+The JUnit Vintage test engine supports parallel execution of top-level test classes,
+allowing existing JUnit 3 and JUnit 4 tests to benefit from improved performance through
+concurrent test execution. It can be enabled and configured using the following
+<<running-tests-config-params, configuration parameters>>:
+
+`junit.vintage.execution.parallel.enabled=true|false`::
+  Enable/disable parallel execution (defaults to `false`).
+
+`junit.vintage.execution.parallel.pool-size=<number>`::
+  Specifies the size of the thread pool to be used for parallel execution. By default, the
+  number of available processors is used.
+
+Example configuration in `junit-platform.properties`:
+
+[source,properties]
+----
+junit.vintage.execution.parallel.enabled=true
+junit.vintage.execution.parallel.pool-size=4
+----
+
+With these properties set, the `VintageTestEngine` will execute tests in parallel,
+potentially significantly reducing the overall test suite execution time.
 
 [[migrating-from-junit4-tips]]
 === Migration Tips

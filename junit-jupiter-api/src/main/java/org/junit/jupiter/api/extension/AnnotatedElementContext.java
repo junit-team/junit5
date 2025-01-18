@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2024 the original author or authors.
+ * Copyright 2015-2025 the original author or authors.
  *
  * All rights reserved. This program and the accompanying materials are
  * made available under the terms of the Eclipse Public License v2.0 which
@@ -54,6 +54,10 @@ public interface AnnotatedElementContext {
 	 * Determine if an annotation of {@code annotationType} is either
 	 * <em>present</em> or <em>meta-present</em> on the {@link AnnotatedElement} for
 	 * this context.
+	 *
+	 * <p><strong>Note:</strong> This method does not find repeatable annotations.
+	 * To check for repeatable annotations, use {@link #findRepeatableAnnotations(Class)}
+	 * and verify that the returned list is not empty.
 	 *
 	 * <h4>WARNING</h4>
 	 * <p>Favor the use of this method over directly invoking

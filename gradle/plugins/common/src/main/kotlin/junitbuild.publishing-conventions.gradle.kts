@@ -5,8 +5,6 @@ plugins {
 	id("junitbuild.build-parameters")
 }
 
-val isSnapshot = project.version.toString().contains("SNAPSHOT")
-
 val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
 val vintageProjects: List<Project> by rootProject
@@ -40,7 +38,7 @@ tasks.withType<PublishToMavenLocal>().configureEach {
 	dependsOn(tasks.build)
 }
 
-val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(isSnapshot || buildParameters.ci))
+val signArtifacts = buildParameters.publishing.signArtifacts.getOrElse(!(project.version.isSnapshot() || buildParameters.ci))
 
 signing {
 	useGpgCmd()

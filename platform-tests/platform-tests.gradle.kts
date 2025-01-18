@@ -47,6 +47,7 @@ dependencies {
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(testFixtures(projects.junitJupiterEngine))
 	testImplementation(libs.apiguardian)
+	testImplementation(libs.classgraph)
 	testImplementation(libs.jfrunit) {
 		exclude(group = "org.junit.vintage")
 	}
@@ -63,7 +64,11 @@ dependencies {
 	}
 
 	// --- Test run-time dependencies ---------------------------------------------
-	testRuntimeOnly(projects.junitVintageEngine)
+	val mavenizedProjects: List<Project> by rootProject
+	mavenizedProjects.filter { it.path != projects.junitPlatformConsoleStandalone.path }.forEach {
+		// Add all projects to the classpath for tests using classpath scanning
+		testRuntimeOnly(it)
+	}
 	testRuntimeOnly(libs.groovy4) {
 		because("`ReflectionUtilsTests.findNestedClassesWithInvalidNestedClassFile` needs it")
 	}

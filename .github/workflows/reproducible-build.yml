@@ -32,5 +32,4 @@ jobs:
           --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
     - name: Build and compare checksums
       shell: bash
-      run: |
-        ./gradle/scripts/checkBuildReproducibility.sh
+      run: ./.github/scripts/checkBuildReproducibility.sh

@@ -6,6 +6,17 @@ dependencies {
 	checkstyle(dependencyFromLibs("nohttp-checkstyle"))
 }
 
+configurations.checkstyle {
+	resolutionStrategy {
+		eachDependency {
+			// Workaround for CVE-2024-12798 and CVE-2024-12801
+			if (requested.group == "ch.qos.logback") {
+				useVersion(requiredVersionFromLibs("logback"))
+			}
+		}
+	}
+}
+
 tasks.register<Checkstyle>("checkstyleNohttp") {
 	group = "verification"
 	description = "Checks for illegal uses of http://"
