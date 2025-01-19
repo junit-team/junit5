@@ -28,7 +28,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * <p>Each shared resource is represented by an instance of {@link Lock}.
  *
  * <p>Adding shared resources via this API has the same semantics as declaring
- * them declaratively via {@link ResouceLock @ResourceLock(value, mode)}, but for
+ * them declaratively via {@link ResourceLock @ResourceLock(value, mode)}, but for
  * some use cases the programmatic approach may be more flexible and less verbose.
  *
  * <p>Implementations must provide a no-args constructor.
@@ -77,7 +77,7 @@ public interface ResourceLocksProvider {
 	 *
 	 * @param testClass a nested test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 * @see Nested
+	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
 	default Set<Lock> provideForNestedClass(Class<?> testClass) {
 		return emptySet();
@@ -97,10 +97,11 @@ public interface ResourceLocksProvider {
 	 * has the same semantics as annotating a test method
 	 * with analogous {@code @ResourceLock(value, mode)}.
 	 *
-	 * @param testClass the test class or {@code @Nested} test class that contains
-	 * the {@code testMethod}
+	 * @param testClass the test class or {@link org.junit.jupiter.api.Nested @Nested}
+	 * test class that contains the {@code testMethod}
 	 * @param testMethod a test method for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
+	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
 	default Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
 		return emptySet();
