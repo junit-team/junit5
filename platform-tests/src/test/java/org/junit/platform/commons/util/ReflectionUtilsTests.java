@@ -1596,7 +1596,6 @@ class ReflectionUtilsTests {
 
 			var methods = findMethods(child, method -> true, TOP_DOWN);
 			assertEquals(9, methods.size());
-			methods.forEach(System.err::println);
 			assertThat(methods.subList(0, 2)).containsOnly(ifcMethod1, ifcMethod2);
 			assertThat(methods.subList(2, 6)).containsOnly(parentMethod1, parentMethod2, parentMethod4, parentMethod5);
 			assertThat(methods.subList(6, 9)).containsOnly(childMethod1, childMethod4, childMethod5);
