@@ -31,17 +31,17 @@ public enum ResourceLockTarget {
 	/**
 	 * Add a shared resource to the <em>direct</em> children of the current node.
 	 *
-	 * <p>Examples of "parent - child" relationship in the context of
-	 * {@link ResourceLockTarget}:
+	 * <p>Examples of "parent - child" relationships in the context of
+	 * {@code ResourceLockTarget}:
 	 * <ul>
-	 *     <li>a test class
-	 *     - test methods and nested test classes declared in the class.</li>
-	 *     <li>a nested test class
-	 *     - test methods and nested test classes declared in the nested class.
-	 *     </li>
-	 *     <li>a test method
-	 *     - considered to have no children. Using {@code CHILDREN} for
-	 *     a test method results in an exception.</li>
+	 *   <li><strong>test class</strong>: test methods and nested test classes
+	 *   declared in the test class are children of the test class.</li>
+	 *   <li><strong>nested test class</strong>: test methods and nested test
+	 *   classes declared in the nested class are children of the nested test class.
+	 *   </li>
+	 *   <li><strong>test method</strong>: test methods are not considered to have
+	 *   children. Using {@code CHILDREN} for a test method results in an
+	 *   exception.</li>
 	 * </ul>
 	 */
 	CHILDREN
