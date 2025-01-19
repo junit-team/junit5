@@ -42,8 +42,10 @@ JUnit repository on GitHub.
   `addClassContainerSelectorResolver()`.
 * Introduce `ReflectionSupport.makeAccessible(Field)` for third-party use rather than
   calling the internal `ReflectionUtils.makeAccessible(Field)` method directly.
-* Support both the primitive type `void` and the wrapper type `Void` in the internal
-  `ReflectionUtils` to allow `String` to `Class` conversion in parameterized tests.
+* The `ReflectionSupport.tryToLoadClass(...)` utility methods now support lookups for the
+  `"void"` pseudo-type, which indirectly supports `String` to `Class` conversion for
+  `"void"` in parameterized tests in JUnit Jupiter.
+* `ReflectionUtils` now treats `Void` as a _wrapper_ type for the `void` pseudo-type.
 * New `--exclude-methodname` and `--include-methodname` options added to the
   `ConsoleLauncher` to include or exclude methods based on fully qualified method names
   without parameters. For example, `--exclude-methodname=^org\.example\..+#methodname`
