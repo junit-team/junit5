@@ -71,7 +71,6 @@ JUnit repository on GitHub.
     in the XML report.
 * Output written to `System.out` and `System.err` from non-test threads is now attributed
   to the most recent test or container that was started or has written output.
-* Introduced contracts for Kotlin-specific assertion methods.
 * New public interface `ClasspathScanner` allowing third parties to provide a custom
   implementation for scanning the classpath for classes and resources.
 
@@ -102,6 +101,7 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
+* Introduced contracts for Kotlin-specific assertion methods.
 * In a `@ParameterizedTest` method, a `null` value can now be supplied for Java Date/Time
   types such as `LocalDate` if the new `nullable` attribute in
   `@JavaTimeConversionPattern` is set to `true`.
