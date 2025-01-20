@@ -816,6 +816,10 @@ class ReflectionUtilsTests {
 		void tryToLoadClassForPrimitive() {
 			assertThat(ReflectionUtils.tryToLoadClass(int.class.getName())).isEqualTo(success(int.class));
 			assertThat(ReflectionUtils.tryToLoadClass(void.class.getName())).isEqualTo(success(void.class));
+
+			// The following should be equivalent to the above, but just to be sure...
+			assertThat(ReflectionUtils.tryToLoadClass("int")).isEqualTo(success(int.class));
+			assertThat(ReflectionUtils.tryToLoadClass("void")).isEqualTo(success(void.class));
 		}
 
 		@Test
