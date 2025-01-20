@@ -263,7 +263,6 @@ public final class ReflectionUtils {
 		primitivesToWrappers.put(long.class, Long.class);
 		primitivesToWrappers.put(float.class, Float.class);
 		primitivesToWrappers.put(double.class, Double.class);
-		primitivesToWrappers.put(void.class, Void.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}

@@ -52,7 +52,6 @@ JUnit repository on GitHub.
 * The `ReflectionSupport.tryToLoadClass(...)` utility methods now support lookups for the
   `"void"` pseudo-type, which indirectly supports `String` to `Class` conversion for
   `"void"` in parameterized tests in JUnit Jupiter.
-* `ReflectionUtils` now treats `Void` as a _wrapper_ type for the `void` pseudo-type.
 * New `addResourceContainerSelectorResolver()` method in
   `EngineDiscoveryRequestResolver.Builder` which supports the discovery of class path
   resource based tests, analogous to the existing `addClassContainerSelectorResolver()`

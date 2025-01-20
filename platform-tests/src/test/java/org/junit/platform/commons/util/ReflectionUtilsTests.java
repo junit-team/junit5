@@ -561,7 +561,9 @@ class ReflectionUtilsTests {
 			// Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, int.class));
 			assertTrue(ReflectionUtils.isAssignableTo(Boolean.class, boolean.class));
-			assertTrue(ReflectionUtils.isAssignableTo(Void.class, void.class));
+
+			// Void to void
+			assertFalse(ReflectionUtils.isAssignableTo(Void.class, void.class));
 
 			// Widening Conversions from Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, long.class));
