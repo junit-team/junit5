@@ -116,7 +116,7 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Tries to get the {@linkplain Resource resources} for the supplied classpath
+	 * Try to get the {@linkplain Resource resources} for the supplied classpath
 	 * resource name.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
@@ -130,7 +130,8 @@ public final class ReflectionSupport {
 	 * @return a successful {@code Try} containing the loaded resources or a failed
 	 * {@code Try} containing the exception if no such resources could be loaded;
 	 * never {@code null}
-	 * @since 1.11
+	 * @since 1.12
+	 * @see #tryToGetResources(String, ClassLoader)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName) {
@@ -138,7 +139,7 @@ public final class ReflectionSupport {
 	}
 
 	/**
-	 * Tries to load the {@linkplain Resource resources} for the supplied classpath
+	 * Try to load the {@linkplain Resource resources} for the supplied classpath
 	 * resource name, using the supplied {@link ClassLoader}.
 	 *
 	 * <p>The name of a <em>classpath resource</em> must follow the semantics
@@ -153,7 +154,8 @@ public final class ReflectionSupport {
 	 * @return a successful {@code Try} containing the loaded resources or a failed
 	 * {@code Try} containing the exception if no such resources could be loaded;
 	 * never {@code null}
-	 * @since 1.11
+	 * @since 1.12
+	 * @see #tryToGetResources(String)
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Try<Set<Resource>> tryToGetResources(String classpathResourceName, ClassLoader classLoader) {
@@ -201,7 +203,6 @@ public final class ReflectionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-
 		return ReflectionUtils.findAllResourcesInClasspathRoot(root, resourceFilter);
 	}
 
@@ -248,7 +249,6 @@ public final class ReflectionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-
 		return ReflectionUtils.streamAllResourcesInClasspathRoot(root, resourceFilter);
 	}
 
@@ -296,7 +296,6 @@ public final class ReflectionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
-
 		return ReflectionUtils.findAllResourcesInPackage(basePackageName, resourceFilter);
 	}
 
@@ -370,6 +369,7 @@ public final class ReflectionSupport {
 	 * @see #findAllClassesInClasspathRoot(URI, Predicate, Predicate)
 	 * @see #findAllClassesInPackage(String, Predicate, Predicate)
 	 */
+	@API(status = MAINTAINED, since = "1.1.1")
 	public static List<Class<?>> findAllClassesInModule(String moduleName, Predicate<Class<?>> classFilter,
 			Predicate<String> classNameFilter) {
 
@@ -394,7 +394,6 @@ public final class ReflectionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-
 		return ReflectionUtils.findAllResourcesInModule(moduleName, resourceFilter);
 	}
 
@@ -441,7 +440,6 @@ public final class ReflectionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.11")
 	public static Stream<Resource> streamAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-
 		return ReflectionUtils.streamAllResourcesInModule(moduleName, resourceFilter);
 	}
 
@@ -711,10 +709,10 @@ public final class ReflectionSupport {
 	 *
 	 * @param field the field to make accessible; never {@code null}
 	 * @return the supplied field
-	 * @since 1.11.1
+	 * @since 1.12
 	 * @see Field#setAccessible(boolean)
 	 */
-	@API(status = EXPERIMENTAL, since = "1.11.1")
+	@API(status = EXPERIMENTAL, since = "1.12")
 	public static Field makeAccessible(Field field) {
 		return ReflectionUtils.makeAccessible(Preconditions.notNull(field, "field must not be null"));
 	}

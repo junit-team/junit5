@@ -2011,7 +2011,7 @@ public final class ReflectionUtils {
 		return executable;
 	}
 
-	@API(status = INTERNAL, since = "1.11")
+	@API(status = INTERNAL, since = "1.12")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	public static Field makeAccessible(Field field) {
 		if ((!isPublic(field) || !isPublic(field.getDeclaringClass()) || isFinal(field)) && !field.isAccessible()) {
