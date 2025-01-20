@@ -93,19 +93,19 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 
 	/**
 	 * Signal that this provider may provide zero
-	 * {@linkplain TestTemplateInvocationContext invocation contexts} in the
-	 * supplied {@code context}.
+	 * {@linkplain TestTemplateInvocationContext invocation contexts} for the test
+	 * template method represented by the supplied {@code context}.
 	 *
 	 * <p>If this method returns {@code false} (which is the default) and the
 	 * provider returns an empty stream from
 	 * {@link #provideTestTemplateInvocationContexts}, this will be considered
-	 * an execution error. Override this method to ignore the absence of
-	 * invocation contexts for this provider.
+	 * an execution error. Override this method to return {@code true} to ignore
+	 * the absence of invocation contexts for this provider.
 	 *
 	 * @param context the extension context for the test template method about
 	 * to be invoked; never {@code null}
 	 * @return {@code true} to allow zero contexts, {@code false} to fail
-	 * execution in case of zero contexts.
+	 * execution in case of zero contexts
 	 *
 	 * @since 5.12
 	 */
