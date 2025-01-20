@@ -417,9 +417,8 @@ public final class ReflectionUtils {
 	 * supplied target type for the purpose of reflective method invocations.
 	 *
 	 * <p>In contrast to {@link Class#isAssignableFrom(Class)}, this method
-	 * returns {@code true} if the target type represents a primitive type (or
-	 * {@code void}) whose wrapper matches the supplied source type. In addition,
-	 * this method also supports
+	 * returns {@code true} if the target type represents a primitive type whose
+	 * wrapper matches the supplied source type. In addition, this method also supports
 	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
 	 * widening conversions</a> for primitive target types.
 	 *
@@ -453,9 +452,8 @@ public final class ReflectionUtils {
 	 * type for the purpose of reflective method invocations.
 	 *
 	 * <p>In contrast to {@link Class#isInstance(Object)}, this method returns
-	 * {@code true} if the target type represents a primitive type (or {@code void})
-	 * whose wrapper matches the supplied object's type. In addition, this method
-	 * also supports
+	 * {@code true} if the target type represents a primitive type whose wrapper
+	 * matches the supplied object's type. In addition, this method also supports
 	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
 	 * widening conversions</a> for primitive types and their corresponding
 	 * wrapper types.
@@ -549,12 +547,11 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Get the wrapper type for the supplied primitive type (or {@code void}).
+	 * Get the wrapper type for the supplied primitive type.
 	 *
-	 * @param type the primitive type (or {@code void}) for which to retrieve the
-	 * wrapper type
+	 * @param type the primitive type for which to retrieve the wrapper type
 	 * @return the corresponding wrapper type or {@code null} if the
-	 * supplied type is {@code null} or not a primitive type or {@code void}
+	 * supplied type is {@code null} or not a primitive type
 	 */
 	public static Class<?> getWrapperType(Class<?> type) {
 		return primitiveToWrapperMap.get(type);
