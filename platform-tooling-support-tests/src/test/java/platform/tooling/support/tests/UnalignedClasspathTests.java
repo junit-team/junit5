@@ -37,10 +37,10 @@ import platform.tooling.support.ProcessStarters;
  */
 class UnalignedClasspathTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
-	@GlobalResource
+	@ManagedResource
 	MavenRepoProxy mavenRepoProxy;
 
 	@ParameterizedTest

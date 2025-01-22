@@ -34,7 +34,7 @@ import platform.tooling.support.ProcessStarters;
  */
 class JavaVersionsTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
 	@TempDir

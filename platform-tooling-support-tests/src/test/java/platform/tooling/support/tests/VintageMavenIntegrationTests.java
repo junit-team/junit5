@@ -29,7 +29,7 @@ import platform.tooling.support.ProcessStarters;
 
 class VintageMavenIntegrationTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
 	@TempDir
