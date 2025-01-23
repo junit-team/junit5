@@ -33,7 +33,7 @@ import platform.tooling.support.ProcessStarters;
  */
 class MavenSurefireCompatibilityTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
 	@ParameterizedTest

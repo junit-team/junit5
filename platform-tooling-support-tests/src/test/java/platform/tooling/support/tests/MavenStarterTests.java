@@ -32,10 +32,10 @@ import platform.tooling.support.ProcessStarters;
  */
 class MavenStarterTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
-	@GlobalResource
+	@ManagedResource
 	MavenRepoProxy mavenRepoProxy;
 
 	@Test
