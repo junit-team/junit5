@@ -10,11 +10,14 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -82,14 +85,41 @@ public interface DisplayNameGenerator {
 	String generateDisplayNameForClass(Class<?> testClass);
 
 	/**
-	 * Generate a display name for the given {@link Nested @Nested} inner test class.
+	 * Generate a display name for the given {@link Nested @Nested} inner test
+	 * class.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 * <p>If it returns {@code null}, the default display name generator will be
+	 * used instead.
 	 *
 	 * @param nestedClass the class to generate a name for; never {@code null}
 	 * @return the display name for the nested class; never blank
+	 * @deprecated in favor of {@link #generateDisplayNameForNestedClass(List, Class)}
 	 */
-	String generateDisplayNameForNestedClass(Class<?> nestedClass);
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@API(status = DEPRECATED, since = "5.12")
+	@Deprecated
+	default String generateDisplayNameForNestedClass(@SuppressWarnings("unused") Class<?> nestedClass) {
+		throw new UnsupportedOperationException(
+			"Implement generateDisplayNameForNestedClass(List<Class<?>>, Class<?>) instead");
+	}
+
+	/**
+	 * Generate a display name for the given {@link Nested @Nested} inner test
+	 * class.
+	 *
+	 * <p>If it returns {@code null}, the default display name generator will be
+	 * used instead.
+	 *
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances; never {@code null}
+	 * @param nestedClass the class to generate a name for; never {@code null}
+	 * @return the display name for the nested class; never blank
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	default String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
+		return generateDisplayNameForNestedClass(nestedClass);
+	}
 
 	/**
 	 * Generate a display name for the given method.
@@ -103,8 +133,38 @@ public interface DisplayNameGenerator {
 	 * @param testClass the class the test method is invoked on; never {@code null}
 	 * @param testMethod method to generate a display name for; never {@code null}
 	 * @return the display name for the test; never blank
+	 * @deprecated in favor of {@link #generateDisplayNameForMethod(List, Class, Method)}
 	 */
-	String generateDisplayNameForMethod(Class<?> testClass, Method testMethod);
+	@SuppressWarnings("DeprecatedIsStillUsed")
+	@API(status = DEPRECATED, since = "5.12")
+	@Deprecated
+	default String generateDisplayNameForMethod(@SuppressWarnings("unused") Class<?> testClass,
+			@SuppressWarnings("unused") Method testMethod) {
+		throw new UnsupportedOperationException(
+			"Implement generateDisplayNameForMethod(List<Class<?>>, Class<?>, Method) instead");
+	}
+
+	/**
+	 * Generate a display name for the given method.
+	 *
+	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 *
+	 * @implNote The class instance supplied as {@code testClass} may differ from
+	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for
+	 * example, when a test method is inherited from a superclass.
+	 *
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances; never {@code null}
+	 * @param testClass the class the test method is invoked on; never {@code null}
+	 * @param testMethod method to generate a display name for; never {@code null}
+	 * @return the display name for the test; never blank
+	 * @since 5.12
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12")
+	default String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			Method testMethod) {
+		return generateDisplayNameForMethod(testClass, testMethod);
+	}
 
 	/**
 	 * Generate a string representation of the formal parameters of the supplied
@@ -142,12 +202,13 @@ public interface DisplayNameGenerator {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 			return nestedClass.getSimpleName();
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return testMethod.getName() + parameterTypesAsString(testMethod);
 		}
 	}
@@ -168,7 +229,8 @@ public interface DisplayNameGenerator {
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			String displayName = testMethod.getName();
 			if (hasParameters(testMethod)) {
 				displayName += ' ' + parameterTypesAsString(testMethod);
@@ -202,13 +264,15 @@ public interface DisplayNameGenerator {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			return replaceUnderscores(super.generateDisplayNameForNestedClass(nestedClass));
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
+			return replaceUnderscores(super.generateDisplayNameForNestedClass(enclosingInstanceTypes, nestedClass));
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return replaceUnderscores(super.generateDisplayNameForMethod(testClass, testMethod));
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
+			return replaceUnderscores(
+				super.generateDisplayNameForMethod(enclosingInstanceTypes, testClass, testMethod));
 		}
 
 		private static String replaceUnderscores(String name) {
@@ -243,17 +307,21 @@ public interface DisplayNameGenerator {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
-			return getSentenceBeginning(nestedClass);
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
+			return getSentenceBeginning(enclosingInstanceTypes, nestedClass);
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
-			return getSentenceBeginning(testClass) + getFragmentSeparator(testClass)
-					+ getGeneratorFor(testClass).generateDisplayNameForMethod(testClass, testMethod);
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
+			// TODO Pass enclosingInstanceTypes to getSentenceBeginning()
+			return getSentenceBeginning(enclosingInstanceTypes, testClass) + getFragmentSeparator(testClass)
+					+ getGeneratorFor(testClass).generateDisplayNameForMethod(enclosingInstanceTypes, testClass,
+						testMethod);
 		}
 
-		private String getSentenceBeginning(Class<?> testClass) {
+		private String getSentenceBeginning(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
+			// TODO Use last element of enclosingInstanceTypes and remove it for later calls
 			Class<?> enclosingClass = testClass.getEnclosingClass();
 			boolean topLevelTestClass = (enclosingClass == null || isStatic(testClass));
 			Optional<String> displayName = findAnnotation(testClass, DisplayName.class)//
@@ -280,10 +348,12 @@ public interface DisplayNameGenerator {
 					.filter(IndicativeSentences.class::equals)//
 					.isPresent();
 
-			String prefix = (buildPrefix ? getSentenceBeginning(enclosingClass) + getFragmentSeparator(testClass) : "");
+			String prefix = (buildPrefix
+					? getSentenceBeginning(enclosingInstanceTypes, enclosingClass) + getFragmentSeparator(testClass)
+					: "");
 
 			return prefix + displayName.orElseGet(
-				() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(testClass));
+				() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(enclosingInstanceTypes, testClass));
 		}
 
 		/**
@@ -349,6 +419,7 @@ public interface DisplayNameGenerator {
 				SearchOption.INCLUDE_ENCLOSING_CLASSES);
 		}
 
+		@SuppressWarnings("SameParameterValue")
 		private static Predicate<Class<?>> not(Class<?> clazz) {
 			return ((Predicate<Class<?>>) clazz::equals).negate();
 		}

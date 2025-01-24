@@ -20,6 +20,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.lang.reflect.Method;
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Stack;
 
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -217,12 +218,13 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 			return "nn";
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return "nn";
 		}
 	}

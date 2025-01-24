@@ -15,6 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -238,12 +239,13 @@ class DisplayNameUtilsTests {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 			return null;
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return null;
 		}
 

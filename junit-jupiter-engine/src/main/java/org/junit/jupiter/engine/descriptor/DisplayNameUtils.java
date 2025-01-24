@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -96,20 +97,22 @@ final class DisplayNameUtils {
 	}
 
 	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass, JupiterConfiguration configuration) {
+		// TODO Compute enclosing test classes
 		return createDisplayNameSupplier(testClass, configuration,
 			generator -> generator.generateDisplayNameForClass(testClass));
 	}
 
 	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass,
 			JupiterConfiguration configuration) {
+		// TODO Compute enclosing test classes
 		return createDisplayNameSupplier(testClass, configuration,
-			generator -> generator.generateDisplayNameForNestedClass(testClass));
+			generator -> generator.generateDisplayNameForNestedClass(emptyList(), testClass));
 	}
 
 	private static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
-			generator -> generator.generateDisplayNameForMethod(testClass, testMethod));
+			generator -> generator.generateDisplayNameForMethod(emptyList(), testClass, testMethod));
 	}
 
 	private static Supplier<String> createDisplayNameSupplier(Class<?> testClass, JupiterConfiguration configuration,
