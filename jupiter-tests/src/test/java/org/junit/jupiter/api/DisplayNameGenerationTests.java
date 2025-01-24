@@ -198,6 +198,23 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@Test
+	void indicativeSentencesRuntimeEnclosingType() {
+		check(IndicativeSentencesRuntimeEnclosingTypeScenarioOneTestCase.class, //
+			"CONTAINER: Scenario 1", //
+			"CONTAINER: Scenario 1 -> Level 1", //
+			"CONTAINER: Scenario 1 -> Level 1 -> Level 2", //
+			"TEST: Scenario 1 -> Level 1 -> Level 2 -> this is a test"//
+		);
+
+		check(IndicativeSentencesRuntimeEnclosingTypeScenarioTwoTestCase.class, //
+			"CONTAINER: Scenario 2", //
+			"CONTAINER: Scenario 2 -> Level 1", //
+			"CONTAINER: Scenario 2 -> Level 1 -> Level 2", //
+			"TEST: Scenario 2 -> Level 1 -> Level 2 -> this is a test"//
+		);
+	}
+
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
 		var descriptors = discoverTests(request).getDescendants();

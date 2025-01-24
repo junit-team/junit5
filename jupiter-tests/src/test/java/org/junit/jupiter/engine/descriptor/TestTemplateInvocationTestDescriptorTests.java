@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class TestTemplateInvocationTestDescriptorTests {
 		JupiterConfiguration configuration = mock();
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		TestTemplateTestDescriptor parent = new TestTemplateTestDescriptor(UniqueId.root("segment", "template"),
-			testClass, testTemplateMethod, configuration);
+			testClass, testTemplateMethod, List::of, configuration);
 		TestTemplateInvocationContext invocationContext = mock();
 		when(invocationContext.getDisplayName(anyInt())).thenReturn("invocation");
 

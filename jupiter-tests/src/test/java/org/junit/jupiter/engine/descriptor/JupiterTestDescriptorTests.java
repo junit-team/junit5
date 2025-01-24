@@ -113,7 +113,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethod() throws Exception {
 		Class<?> testClass = TestCase.class;
 		Method testMethod = testClass.getDeclaredMethod("test");
-		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, testClass, testMethod,
+		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, testClass, testMethod, List::of,
 			configuration);
 
 		assertEquals(uniqueId, descriptor.getUniqueId());
@@ -127,7 +127,7 @@ class JupiterTestDescriptorTests {
 		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, TestCase.class, configuration);
 		Method testMethod = TestCase.class.getDeclaredMethod("foo");
 		TestMethodTestDescriptor methodDescriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 		classDescriptor.addChild(methodDescriptor);
 
 		assertEquals(testMethod, methodDescriptor.getTestMethod());
@@ -143,7 +143,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithCustomTestAnnotation() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("customTestAnnotation");
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("custom name", descriptor.getDisplayName(), "display name:");
@@ -155,7 +155,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithParameters() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String, BigDecimal)", descriptor.getDisplayName(), "display name");
@@ -166,7 +166,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithPrimitiveArrayParameter() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("test", int[].class);
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(int[])", descriptor.getDisplayName(), "display name");
@@ -177,7 +177,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithObjectArrayParameter() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("test", String[].class);
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String[])", descriptor.getDisplayName(), "display name");
@@ -188,7 +188,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithMultidimensionalPrimitiveArrayParameter() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("test", int[][][][][].class);
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(int[][][][][])", descriptor.getDisplayName(), "display name");
@@ -199,7 +199,7 @@ class JupiterTestDescriptorTests {
 	void constructFromMethodWithMultidimensionalObjectArrayParameter() throws Exception {
 		Method testMethod = TestCase.class.getDeclaredMethod("test", String[][][][][].class);
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 		assertEquals("test(String[][][][][])", descriptor.getDisplayName(), "display name");
@@ -210,7 +210,7 @@ class JupiterTestDescriptorTests {
 	void constructFromInheritedMethod() throws Exception {
 		Method testMethod = ConcreteTestCase.class.getMethod("theTest");
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ConcreteTestCase.class, testMethod,
-			configuration);
+			List::of, configuration);
 
 		assertEquals(testMethod, descriptor.getTestMethod());
 
@@ -230,7 +230,7 @@ class JupiterTestDescriptorTests {
 		assertEquals("class-display-name", descriptor.getDisplayName());
 		assertEquals(getClass().getName(), descriptor.getLegacyReportingName());
 
-		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class, configuration);
+		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class, List::of, configuration);
 		assertEquals("nested-class-display-name", descriptor.getDisplayName());
 		assertEquals(NestedTestCase.class.getName(), descriptor.getLegacyReportingName());
 
@@ -249,7 +249,7 @@ class JupiterTestDescriptorTests {
 		assertEquals(getClass().getSimpleName(), descriptor.getDisplayName());
 		assertEquals(getClass().getName(), descriptor.getLegacyReportingName());
 
-		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class, configuration);
+		descriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class, List::of, configuration);
 		assertEquals(NestedTestCase.class.getSimpleName(), descriptor.getDisplayName());
 		assertEquals(NestedTestCase.class.getName(), descriptor.getLegacyReportingName());
 
@@ -269,7 +269,7 @@ class JupiterTestDescriptorTests {
 		ClassBasedTestDescriptor parentDescriptor = new ClassTestDescriptor(uniqueId, StaticTestCase.class,
 			configuration);
 		ClassBasedTestDescriptor nestedDescriptor = new NestedClassTestDescriptor(uniqueId, NestedTestCase.class,
-			configuration);
+			List::of, configuration);
 		assertThat(parentDescriptor.getEnclosingTestClasses()).isEmpty();
 		assertThat(nestedDescriptor.getEnclosingTestClasses()).isEmpty();
 

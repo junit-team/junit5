@@ -418,7 +418,7 @@ public class ExtensionContextTests {
 			named("method", (JupiterConfiguration configuration) -> {
 				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").orElseThrow();
 				var methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
-				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method,
+				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method, List::of,
 					configuration);
 				return new MethodExtensionContext(null, null, methodTestDescriptor, configuration, extensionRegistry,
 					null);
@@ -428,7 +428,7 @@ public class ExtensionContextTests {
 
 	private NestedClassTestDescriptor nestedClassDescriptor() {
 		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
-			configuration);
+			List::of, configuration);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
@@ -443,7 +443,7 @@ public class ExtensionContextTests {
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
-				OuterClass.class.getDeclaredMethod("aMethod"), configuration);
+				OuterClass.class.getDeclaredMethod("aMethod"), List::of, configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

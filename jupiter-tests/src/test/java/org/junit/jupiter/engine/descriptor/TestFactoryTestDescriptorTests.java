@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -147,7 +148,7 @@ class TestFactoryTestDescriptorTests {
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
 			descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,
-				testMethod, jupiterConfiguration);
+				testMethod, List::of, jupiterConfiguration);
 			when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		}
 

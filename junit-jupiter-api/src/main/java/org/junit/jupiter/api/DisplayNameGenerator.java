@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -314,15 +315,14 @@ public interface DisplayNameGenerator {
 		@Override
 		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
 				Method testMethod) {
-			// TODO Pass enclosingInstanceTypes to getSentenceBeginning()
 			return getSentenceBeginning(enclosingInstanceTypes, testClass) + getFragmentSeparator(testClass)
 					+ getGeneratorFor(testClass).generateDisplayNameForMethod(enclosingInstanceTypes, testClass,
 						testMethod);
 		}
 
 		private String getSentenceBeginning(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
-			// TODO Use last element of enclosingInstanceTypes and remove it for later calls
-			Class<?> enclosingClass = testClass.getEnclosingClass();
+			Class<?> enclosingClass = enclosingInstanceTypes.isEmpty() ? null
+					: enclosingInstanceTypes.get(enclosingInstanceTypes.size() - 1);
 			boolean topLevelTestClass = (enclosingClass == null || isStatic(testClass));
 			Optional<String> displayName = findAnnotation(testClass, DisplayName.class)//
 					.map(DisplayName::value).map(String::trim);
@@ -348,12 +348,16 @@ public interface DisplayNameGenerator {
 					.filter(IndicativeSentences.class::equals)//
 					.isPresent();
 
+			List<Class<?>> remainingEnclosingInstanceTypes = enclosingInstanceTypes.isEmpty() ? emptyList()
+					: enclosingInstanceTypes.subList(0, enclosingInstanceTypes.size() - 1);
+
 			String prefix = (buildPrefix
-					? getSentenceBeginning(enclosingInstanceTypes, enclosingClass) + getFragmentSeparator(testClass)
+					? getSentenceBeginning(remainingEnclosingInstanceTypes, enclosingClass)
+							+ getFragmentSeparator(testClass)
 					: "");
 
-			return prefix + displayName.orElseGet(
-				() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(enclosingInstanceTypes, testClass));
+			return prefix + displayName.orElseGet(() -> getGeneratorFor(testClass).generateDisplayNameForNestedClass(
+				remainingEnclosingInstanceTypes, testClass));
 		}
 
 		/**

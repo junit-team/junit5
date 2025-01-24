@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -46,8 +47,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
-			JupiterConfiguration configuration) {
-		super(uniqueId, testClass, templateMethod, configuration);
+			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
+		super(uniqueId, testClass, templateMethod, enclosingInstanceTypes, configuration);
 	}
 
 	// --- Filterable ----------------------------------------------------------
