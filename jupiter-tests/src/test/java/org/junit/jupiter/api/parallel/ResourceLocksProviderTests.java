@@ -68,7 +68,7 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Stream<Event> execute(Class<?> testCase) {
-		return executeTestsForClass(testCase).allEvents().debug().stream();
+		return executeTestsForClass(testCase).allEvents().stream();
 	}
 
 	// -------------------------------------------------------------------------
