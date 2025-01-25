@@ -20,6 +20,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.test;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -60,8 +61,14 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 		assertThat(events.filter(event(test(), finishedSuccessfully())::matches)).hasSize(2);
 	}
 
+	@Test
+	void providesAccessToRuntimeEnclosingInstances() {
+		var events = execute(SubClassLevelProviderTestCase.class);
+		assertThat(events.filter(event(test(), finishedSuccessfully())::matches)).hasSize(2);
+	}
+
 	private Stream<Event> execute(Class<?> testCase) {
-		return executeTestsForClass(testCase).allEvents().stream();
+		return executeTestsForClass(testCase).allEvents().debug().stream();
 	}
 
 	// -------------------------------------------------------------------------
@@ -108,28 +115,35 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			private static boolean isProvideForNestedClassCalled = false;
 			private static boolean isProvideForNestedTestMethodCalled = false;
 
+			private Class<?> testClass;
+
 			@Override
 			public Set<Lock> provideForClass(Class<?> testClass) {
+				this.testClass = testClass;
 				isProvideForClassCalled = true;
-				assertEquals(ClassLevelProviderTestCase.class, testClass);
+				assertThat(testClass).isAssignableTo(ClassLevelProviderTestCase.class);
 				return emptySet();
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				isProvideForNestedClassCalled = true;
+				assertEquals(List.of(this.testClass), enclosingInstanceTypes);
 				assertEquals(ClassLevelProviderTestCase.NestedClass.class, testClass);
 				return emptySet();
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
-				if (testClass == ClassLevelProviderTestCase.class) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
+				if (ClassLevelProviderTestCase.class.isAssignableFrom(testClass)) {
+					assertEquals(List.of(), enclosingInstanceTypes);
 					assertEquals("test", testMethod.getName());
 					isProvideForTestMethodCalled = true;
 					return emptySet();
 				}
 				if (testClass == ClassLevelProviderTestCase.NestedClass.class) {
+					assertEquals(List.of(this.testClass), enclosingInstanceTypes);
 					assertEquals("nestedTest", testMethod.getName());
 					isProvideForNestedTestMethodCalled = true;
 					return emptySet();
@@ -138,6 +152,9 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 				return emptySet();
 			}
 		}
+	}
+
+	static class SubClassLevelProviderTestCase extends ClassLevelProviderTestCase {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -177,15 +194,18 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				isProvideForNestedClassCalled = true;
+				assertEquals(List.of(NestedClassLevelProviderTestCase.class), enclosingInstanceTypes);
 				assertEquals(NestedClass.class, testClass);
 				return emptySet();
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				isProvideForMethodCalled = true;
+				assertEquals(List.of(NestedClassLevelProviderTestCase.class), enclosingInstanceTypes);
 				assertEquals(NestedClassLevelProviderTestCase.NestedClass.class, testClass);
 				assertEquals("nestedTest", testMethod.getName());
 				return emptySet();
@@ -226,14 +246,16 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				fail("'provideForNestedClass' should not be called");
 				return emptySet();
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				isProvideForMethodCalled = true;
+				assertEquals(List.of(), enclosingInstanceTypes);
 				assertEquals(MethodLevelProviderTestCase.class, testClass);
 				assertEquals("test", testMethod.getName());
 				return emptySet();
@@ -274,14 +296,16 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				fail("'provideForNestedClass' should not be called");
 				return emptySet();
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				isProvideForMethodCalled = true;
+				assertEquals(List.of(MethodLevelProviderInNestedClassTestCase.class), enclosingInstanceTypes);
 				assertEquals(MethodLevelProviderInNestedClassTestCase.NestedClass.class, testClass);
 				assertEquals("nestedTest", testMethod.getName());
 				return emptySet();

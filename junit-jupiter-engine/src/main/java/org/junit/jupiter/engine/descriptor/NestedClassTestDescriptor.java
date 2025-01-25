@@ -95,7 +95,7 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
-		return provider.provideForNestedClass(getTestClass());
+		return provider.provideForNestedClass(getEnclosingTestClasses(), getTestClass());
 	}
 
 }

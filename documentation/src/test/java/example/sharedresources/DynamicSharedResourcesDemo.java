@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -68,7 +69,8 @@ class DynamicSharedResourcesDemo {
 	static class Provider implements ResourceLocksProvider {
 
 		@Override
-		public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+		public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			ResourceAccessMode mode = testMethod.getName().startsWith("canSet") ? READ_WRITE : READ;
 			return Collections.singleton(new Lock(SYSTEM_PROPERTIES, mode));
 		}

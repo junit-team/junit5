@@ -361,7 +361,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b1"));
 			}
 		}
@@ -369,7 +370,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class MethodLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b2"));
 			}
 		}
@@ -377,7 +379,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class NestedClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c1"), new Lock("c2", ResourceAccessMode.READ));
 			}
 		}
@@ -417,12 +419,13 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class SecondClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b2", ResourceAccessMode.READ));
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c2"));
 			}
 		}
@@ -430,7 +433,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class NestedClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c3"));
 			}
 		}
@@ -452,7 +455,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class Provider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("a1"));
 			}
 		}

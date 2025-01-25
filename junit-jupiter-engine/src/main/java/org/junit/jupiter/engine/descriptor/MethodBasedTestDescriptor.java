@@ -16,6 +16,7 @@ import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisp
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -98,7 +99,11 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 
 	@Override
 	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
-		return provider.provideForMethod(getTestClass(), getTestMethod());
+		List<Class<?>> enclosingInstanceTypes = getParent() //
+				.filter(ClassBasedTestDescriptor.class::isInstance) //
+				.map(parent -> ((ClassBasedTestDescriptor) parent).getEnclosingTestClasses()) //
+				.orElseGet(Collections::emptyList);
+		return provider.provideForMethod(enclosingInstanceTypes, getTestClass(), getTestMethod());
 	}
 
 	@Override

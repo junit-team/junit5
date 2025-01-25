@@ -14,6 +14,7 @@ import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -43,7 +44,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public interface ResourceLocksProvider {
 
 	/**
-	 * Add shared resources to a test class.
+	 * Add shared resources for a test class.
 	 *
 	 * <p>Invoked in case a test class or its parent class is annotated with
 	 * {@code @ResourceLock(providers)}.
@@ -60,8 +61,8 @@ public interface ResourceLocksProvider {
 	}
 
 	/**
-	 * Add shared resources to a {@linkplain org.junit.jupiter.api.Nested @Nested}
-	 * test class.
+	 * Add shared resources for a
+	 * {@linkplain org.junit.jupiter.api.Nested @Nested} test class.
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
@@ -75,16 +76,18 @@ public interface ResourceLocksProvider {
 	 * the same semantics as annotating a nested test class with an analogous
 	 * {@code @ResourceLock(value, mode)} declaration.
 	 *
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances; never {@code null}
 	 * @param testClass a nested test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
 	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
-	default Set<Lock> provideForNestedClass(Class<?> testClass) {
+	default Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 		return emptySet();
 	}
 
 	/**
-	 * Add shared resources to a test method.
+	 * Add shared resources for a test method.
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
@@ -97,13 +100,15 @@ public interface ResourceLocksProvider {
 	 * has the same semantics as annotating a test method
 	 * with analogous {@code @ResourceLock(value, mode)}.
 	 *
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances; never {@code null}
 	 * @param testClass the test class or {@link org.junit.jupiter.api.Nested @Nested}
 	 * test class that contains the {@code testMethod}
 	 * @param testMethod a test method for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
 	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
-	default Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+	default Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod) {
 		return emptySet();
 	}
 
