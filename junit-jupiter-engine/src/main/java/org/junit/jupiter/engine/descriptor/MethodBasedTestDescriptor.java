@@ -101,7 +101,8 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
 		List<Class<?>> enclosingInstanceTypes = getParent() //
 				.filter(ClassBasedTestDescriptor.class::isInstance) //
-				.map(parent -> ((ClassBasedTestDescriptor) parent).getEnclosingTestClasses()) //
+				.map(ClassBasedTestDescriptor.class::cast) //
+				.map(ClassBasedTestDescriptor::getEnclosingTestClasses) //
 				.orElseGet(Collections::emptyList);
 		return provider.provideForMethod(enclosingInstanceTypes, getTestClass(), getTestMethod());
 	}
