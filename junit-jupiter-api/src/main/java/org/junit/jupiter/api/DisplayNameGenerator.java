@@ -97,10 +97,9 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the nested class; never blank
 	 * @deprecated in favor of {@link #generateDisplayNameForNestedClass(List, Class)}
 	 */
-	@SuppressWarnings("DeprecatedIsStillUsed")
 	@API(status = DEPRECATED, since = "5.12")
 	@Deprecated
-	default String generateDisplayNameForNestedClass(@SuppressWarnings("unused") Class<?> nestedClass) {
+	default String generateDisplayNameForNestedClass(Class<?> nestedClass) {
 		throw new UnsupportedOperationException(
 			"Implement generateDisplayNameForNestedClass(List<Class<?>>, Class<?>) instead");
 	}
