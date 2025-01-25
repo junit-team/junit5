@@ -78,7 +78,8 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given top-level or {@code static} nested test class.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 * <p>If this method returns {@code null}, the default display name
+	 * generator will be used instead.
 	 *
 	 * @param testClass the class to generate a name for; never {@code null}
 	 * @return the display name for the class; never blank
@@ -89,8 +90,8 @@ public interface DisplayNameGenerator {
 	 * Generate a display name for the given {@link Nested @Nested} inner test
 	 * class.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be
-	 * used instead.
+	 * <p>If this method returns {@code null}, the default display name
+	 * generator will be used instead.
 	 *
 	 * @param nestedClass the class to generate a name for; never {@code null}
 	 * @return the display name for the nested class; never blank
@@ -108,8 +109,8 @@ public interface DisplayNameGenerator {
 	 * Generate a display name for the given {@link Nested @Nested} inner test
 	 * class.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be
-	 * used instead.
+	 * <p>If this method returns {@code null}, the default display name
+	 * generator will be used instead.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
 	 * instances; never {@code null}
@@ -125,7 +126,8 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given method.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 * <p>If this method returns {@code null}, the default display name
+	 * generator will be used instead.
 	 *
 	 * @implNote The class instance supplied as {@code testClass} may differ from
 	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for
@@ -146,7 +148,8 @@ public interface DisplayNameGenerator {
 	/**
 	 * Generate a display name for the given method.
 	 *
-	 * <p>If it returns {@code null}, the default display name generator will be used instead.
+	 * <p>If this method returns {@code null}, the default display name
+	 * generator will be used instead.
 	 *
 	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may differ
 	 * from the classes returned from invocations of {@link Class#getEnclosingClass()}
