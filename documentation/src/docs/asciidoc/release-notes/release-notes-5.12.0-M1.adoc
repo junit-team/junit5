@@ -32,7 +32,8 @@ JUnit repository on GitHub.
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* `SearchOption` and `AnnotationSupport.findAnnotation(Class, Class, SearchOption)` from
+  `junit-platform-commons` have been deprecated.
 
 [[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -75,6 +76,8 @@ JUnit repository on GitHub.
   to the most recent test or container that was started or has written output.
 * New public interface `ClasspathScanner` allowing third parties to provide a custom
   implementation for scanning the classpath for classes and resources.
+* New `AnnotationSupport.findAnnotation(Class, Class, List)` method to support searching
+  for an annotation in an inner class and its runtime enclosing instance types.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
