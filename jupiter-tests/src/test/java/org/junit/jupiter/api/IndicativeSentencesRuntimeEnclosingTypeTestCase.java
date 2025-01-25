@@ -13,7 +13,7 @@ package org.junit.jupiter.api;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 
 /**
- * @since 5.8
+ * @since 5.12
  */
 @DisplayName("Base Scenario")
 @IndicativeSentencesGeneration(separator = " -> ", generator = ReplaceUnderscores.class)

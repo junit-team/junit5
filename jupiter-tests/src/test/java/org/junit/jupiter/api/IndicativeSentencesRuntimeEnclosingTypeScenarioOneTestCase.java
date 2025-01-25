@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.api;
 
+/**
+ * @since 5.12
+ */
 @DisplayName("Scenario 1")
 class IndicativeSentencesRuntimeEnclosingTypeScenarioOneTestCase
 		extends IndicativeSentencesRuntimeEnclosingTypeTestCase {
