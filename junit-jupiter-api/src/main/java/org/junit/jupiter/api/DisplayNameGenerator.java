@@ -136,11 +136,9 @@ public interface DisplayNameGenerator {
 	 * @return the display name for the test; never blank
 	 * @deprecated in favor of {@link #generateDisplayNameForMethod(List, Class, Method)}
 	 */
-	@SuppressWarnings("DeprecatedIsStillUsed")
 	@API(status = DEPRECATED, since = "5.12")
 	@Deprecated
-	default String generateDisplayNameForMethod(@SuppressWarnings("unused") Class<?> testClass,
-			@SuppressWarnings("unused") Method testMethod) {
+	default String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
 		throw new UnsupportedOperationException(
 			"Implement generateDisplayNameForMethod(List<Class<?>>, Class<?>, Method) instead");
 	}
@@ -426,7 +424,6 @@ public interface DisplayNameGenerator {
 				SearchOption.INCLUDE_ENCLOSING_CLASSES);
 		}
 
-		@SuppressWarnings("SameParameterValue")
 		private static Predicate<Class<?>> not(Class<?> clazz) {
 			return ((Predicate<Class<?>>) clazz::equals).negate();
 		}
