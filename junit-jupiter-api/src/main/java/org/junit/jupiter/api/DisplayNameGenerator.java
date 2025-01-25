@@ -118,7 +118,8 @@ public interface DisplayNameGenerator {
 	 * class is inherited from a superclass.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances; never {@code null}
+	 * instances of {@code clazz}, ordered from outermost to innermost,
+	 * excluding {@code class}; never {@code null}
 	 * @param nestedClass the class to generate a name for; never {@code null}
 	 * @return the display name for the nested class; never blank
 	 * @since 5.12
@@ -165,7 +166,8 @@ public interface DisplayNameGenerator {
 	 * method is inherited from a superclass.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances; never {@code null}
+	 * instances of {@code clazz}, ordered from outermost to innermost,
+	 * excluding {@code class}; never {@code null}
 	 * @param testClass the class the test method is invoked on; never {@code null}
 	 * @param testMethod method to generate a display name for; never {@code null}
 	 * @return the display name for the test; never blank
