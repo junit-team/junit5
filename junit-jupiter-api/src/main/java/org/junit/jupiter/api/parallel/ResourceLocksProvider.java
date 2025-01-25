@@ -76,8 +76,14 @@ public interface ResourceLocksProvider {
 	 * the same semantics as annotating a nested test class with an analogous
 	 * {@code @ResourceLock(value, mode)} declaration.
 	 *
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass.
+	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances; never {@code null}
+	 * instances of {@code clazz}, ordered from outermost to innermost,
+	 * excluding {@code class}; never {@code null}
 	 * @param testClass a nested test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
 	 * @see org.junit.jupiter.api.Nested @Nested
@@ -100,8 +106,17 @@ public interface ResourceLocksProvider {
 	 * has the same semantics as annotating a test method
 	 * with analogous {@code @ResourceLock(value, mode)}.
 	 *
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass. Similarly, the class instance
+	 * supplied as {@code testClass} may differ from the class returned by
+	 * {@code testMethod.getDeclaringClass()} &mdash; for example, when a test
+	 * method is inherited from a superclass.
+	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances; never {@code null}
+	 * instances of {@code clazz}, ordered from outermost to innermost,
+	 * excluding {@code class}; never {@code null}
 	 * @param testClass the test class or {@link org.junit.jupiter.api.Nested @Nested}
 	 * test class that contains the {@code testMethod}
 	 * @param testMethod a test method for which to add shared resources
