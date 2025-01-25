@@ -112,6 +112,11 @@ public interface DisplayNameGenerator {
 	 * <p>If this method returns {@code null}, the default display name
 	 * generator will be used instead.
 	 *
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass.
+	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
 	 * instances; never {@code null}
 	 * @param nestedClass the class to generate a name for; never {@code null}
@@ -151,12 +156,13 @@ public interface DisplayNameGenerator {
 	 * <p>If this method returns {@code null}, the default display name
 	 * generator will be used instead.
 	 *
-	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may differ
-	 * from the classes returned from invocations of {@link Class#getEnclosingClass()}
-	 * &mdash; for example, when a nested test class is inherited from a superclass.
-	 * Similarly, the class instance supplied as {@code testClass} may differ from
-	 * the class returned by {@code testMethod.getDeclaringClass()} &mdash; for
-	 * example, when a test method is inherited from a superclass.
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass. Similarly, the class instance
+	 * supplied as {@code testClass} may differ from the class returned by
+	 * {@code testMethod.getDeclaringClass()} &mdash; for example, when a test
+	 * method is inherited from a superclass.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
 	 * instances; never {@code null}
