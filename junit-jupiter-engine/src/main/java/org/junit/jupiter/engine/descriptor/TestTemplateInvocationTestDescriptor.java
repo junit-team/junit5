@@ -59,7 +59,7 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 
 	@Override
 	public String getLegacyReportingName() {
-		return super.getLegacyReportingName() + "[" + index + "]";
+		return super.getLegacyReportingName() + this.invocationContext.getDisplayName(this.index);
 	}
 
 	@Override
