@@ -62,7 +62,7 @@ public interface ResourceLocksProvider {
 
 	/**
 	 * Add shared resources for a
-	 * {@linkplain org.junit.jupiter.api.Nested @Nested} test class.
+	 * {@link org.junit.jupiter.api.Nested @Nested} test class.
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
