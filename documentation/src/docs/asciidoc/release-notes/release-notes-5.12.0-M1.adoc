@@ -86,7 +86,7 @@ JUnit repository on GitHub.
 * Provide _runtime_ enclosing types of `@Nested` test classes and contained test methods
   to `DisplayNameGenerator` implementations. Prior to this change, such generators were
   only able to access the enclosing class in which `@Nested` was declared, but they could
-  not access the concrete type of the enclosing instance.
+  not access the concrete runtime type of the enclosing instance.
 
 [[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
