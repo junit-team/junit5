@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
@@ -98,13 +99,13 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 	}
 
 	@Override
-	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
+	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
 		List<Class<?>> enclosingInstanceTypes = getParent() //
 				.filter(ClassBasedTestDescriptor.class::isInstance) //
 				.map(ClassBasedTestDescriptor.class::cast) //
 				.map(ClassBasedTestDescriptor::getEnclosingTestClasses) //
 				.orElseGet(Collections::emptyList);
-		return provider.provideForMethod(enclosingInstanceTypes, getTestClass(), getTestMethod());
+		return provider -> provider.provideForMethod(enclosingInstanceTypes, getTestClass(), getTestMethod());
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.parallel.ResourceLockTarget.CHILDREN;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
@@ -35,8 +36,10 @@ interface ResourceLockAware extends TestDescriptor {
 			parent = parent.getParent().orElse(null);
 		}
 
+		Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> evaluator = getResourceLocksProviderEvaluator();
+
 		if (ancestors.isEmpty()) {
-			return determineOwnExclusiveResources();
+			return determineOwnExclusiveResources(evaluator);
 		}
 
 		Stream<ExclusiveResource> parentStaticResourcesForChildren = ancestors.getLast() //
@@ -44,18 +47,20 @@ interface ResourceLockAware extends TestDescriptor {
 
 		Stream<ExclusiveResource> ancestorDynamicResources = ancestors.stream() //
 				.map(ResourceLockAware::getExclusiveResourceCollector) //
-				.flatMap(collector -> collector.getDynamicResources(this::evaluateResourceLocksProvider));
+				.flatMap(collector -> collector.getDynamicResources(evaluator));
 
-		return Stream.of(ancestorDynamicResources, parentStaticResourcesForChildren, determineOwnExclusiveResources())//
+		return Stream.of(ancestorDynamicResources, parentStaticResourcesForChildren,
+			determineOwnExclusiveResources(evaluator))//
 				.flatMap(s -> s);
 	}
 
-	default Stream<ExclusiveResource> determineOwnExclusiveResources() {
-		return this.getExclusiveResourceCollector().getAllExclusiveResources(this::evaluateResourceLocksProvider);
+	default Stream<ExclusiveResource> determineOwnExclusiveResources(
+			Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> providerToLocks) {
+		return this.getExclusiveResourceCollector().getAllExclusiveResources(providerToLocks);
 	}
 
 	ExclusiveResourceCollector getExclusiveResourceCollector();
 
-	Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider);
+	Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator();
 
 }
