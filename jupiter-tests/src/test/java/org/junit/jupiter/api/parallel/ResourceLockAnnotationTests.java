@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -255,7 +256,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
 		var descriptor = new TestMethodTestDescriptor( //
-			uniqueId, testClass, getDeclaredTestMethod(testClass), configuration //
+			uniqueId, testClass, getDeclaredTestMethod(testClass), List::of, configuration //
 		);
 		descriptor.setParent(getClassTestDescriptor(testClass));
 		return descriptor.getExclusiveResources();
@@ -271,7 +272,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass) {
-		var descriptor = new NestedClassTestDescriptor(uniqueId, testClass, configuration);
+		var descriptor = new NestedClassTestDescriptor(uniqueId, testClass, List::of, configuration);
 		descriptor.setParent(getClassTestDescriptor(testClass.getEnclosingClass()));
 		return descriptor.getExclusiveResources();
 	}

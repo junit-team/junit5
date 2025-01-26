@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -45,7 +46,7 @@ class TestTemplateTestDescriptorTests {
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
+			MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),
@@ -63,7 +64,7 @@ class TestTemplateTestDescriptorTests {
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
+			MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getDisplayName()).isEqualTo("method-display-name");
@@ -80,7 +81,7 @@ class TestTemplateTestDescriptorTests {
 
 		TestTemplateTestDescriptor testDescriptor = new TestTemplateTestDescriptor(
 			parentUniqueId.append("tmp", "testTemplate()"), MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"), jupiterConfiguration);
+			MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getDisplayName()).isEqualTo("testTemplate()");

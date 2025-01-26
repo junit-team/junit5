@@ -14,6 +14,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -89,10 +90,10 @@ final class DisplayNameUtils {
 		return displayNameSupplier.get();
 	}
 
-	static String determineDisplayNameForMethod(Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration) {
+	static String determineDisplayNameForMethod(Supplier<List<Class<?>>> enclosingInstanceTypes, Class<?> testClass,
+			Method testMethod, JupiterConfiguration configuration) {
 		return determineDisplayName(testMethod,
-			createDisplayNameSupplierForMethod(testClass, testMethod, configuration));
+			createDisplayNameSupplierForMethod(enclosingInstanceTypes, testClass, testMethod, configuration));
 	}
 
 	static Supplier<String> createDisplayNameSupplierForClass(Class<?> testClass, JupiterConfiguration configuration) {
@@ -100,16 +101,16 @@ final class DisplayNameUtils {
 			generator -> generator.generateDisplayNameForClass(testClass));
 	}
 
-	static Supplier<String> createDisplayNameSupplierForNestedClass(Class<?> testClass,
-			JupiterConfiguration configuration) {
+	static Supplier<String> createDisplayNameSupplierForNestedClass(Supplier<List<Class<?>>> enclosingInstanceTypes,
+			Class<?> testClass, JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
-			generator -> generator.generateDisplayNameForNestedClass(testClass));
+			generator -> generator.generateDisplayNameForNestedClass(enclosingInstanceTypes.get(), testClass));
 	}
 
-	private static Supplier<String> createDisplayNameSupplierForMethod(Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration) {
+	private static Supplier<String> createDisplayNameSupplierForMethod(Supplier<List<Class<?>>> enclosingInstanceTypes,
+			Class<?> testClass, Method testMethod, JupiterConfiguration configuration) {
 		return createDisplayNameSupplier(testClass, configuration,
-			generator -> generator.generateDisplayNameForMethod(testClass, testMethod));
+			generator -> generator.generateDisplayNameForMethod(enclosingInstanceTypes.get(), testClass, testMethod));
 	}
 
 	private static Supplier<String> createDisplayNameSupplier(Class<?> testClass, JupiterConfiguration configuration,
