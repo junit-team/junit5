@@ -396,6 +396,7 @@ public interface DisplayNameGenerator {
 
 		/**
 		 * Get the display name generator to use for the supplied test class.
+		 *
 		 * <p>If {@link IndicativeSentencesGeneration @IndicativeSentencesGeneration}
 		 * is present (searching enclosing classes if not found locally), the
 		 * configured {@link IndicativeSentencesGeneration#generator() generator}
