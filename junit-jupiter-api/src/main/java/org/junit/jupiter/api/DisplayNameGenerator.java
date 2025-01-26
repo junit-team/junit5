@@ -427,7 +427,7 @@ public interface DisplayNameGenerator {
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found
 		 */
 		@API(status = INTERNAL, since = "5.12")
-		static Optional<DisplayNameGeneration> findDisplayNameGeneration(Class<?> testClass,
+		private static Optional<DisplayNameGeneration> findDisplayNameGeneration(Class<?> testClass,
 				List<Class<?>> enclosingInstanceTypes) {
 			return findAnnotation(testClass, DisplayNameGeneration.class, enclosingInstanceTypes);
 		}
