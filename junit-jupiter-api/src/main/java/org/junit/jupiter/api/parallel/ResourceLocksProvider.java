@@ -82,8 +82,8 @@ public interface ResourceLocksProvider {
 	 * class is inherited from a superclass.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances of {@code clazz}, ordered from outermost to innermost,
-	 * excluding {@code class}; never {@code null}
+	 * instances for the test class, ordered from outermost to innermost,
+	 * excluding {@code testClass}; never {@code null}
 	 * @param testClass a nested test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
 	 * @see org.junit.jupiter.api.Nested @Nested
@@ -115,8 +115,8 @@ public interface ResourceLocksProvider {
 	 * method is inherited from a superclass.
 	 *
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances of {@code clazz}, ordered from outermost to innermost,
-	 * excluding {@code class}; never {@code null}
+	 * instances for the test class, ordered from outermost to innermost,
+	 * excluding {@code testClass}; never {@code null}
 	 * @param testClass the test class or {@link org.junit.jupiter.api.Nested @Nested}
 	 * test class that contains the {@code testMethod}
 	 * @param testMethod a test method for which to add shared resources
