@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
+import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingInstanceTypesDependentResourceLocksProviderEvaluator;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -96,8 +97,8 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
-		List<Class<?>> enclosingTestClasses = getEnclosingTestClasses();
-		return provider -> provider.provideForNestedClass(enclosingTestClasses, getTestClass());
+		return enclosingInstanceTypesDependentResourceLocksProviderEvaluator(this::getEnclosingTestClasses, (provider,
+				enclosingInstanceTypes) -> provider.provideForNestedClass(enclosingInstanceTypes, getTestClass()));
 	}
 
 }

@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.parallel.ResourceLockTarget.CHILDREN;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisplayNameForMethod;
+import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingInstanceTypesDependentResourceLocksProviderEvaluator;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
@@ -100,12 +101,17 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
-		List<Class<?>> enclosingInstanceTypes = getParent() //
+		return enclosingInstanceTypesDependentResourceLocksProviderEvaluator(this::getEnclosingTestClasses,
+			(provider, enclosingInstanceTypes) -> provider.provideForMethod(enclosingInstanceTypes, getTestClass(),
+				getTestMethod()));
+	}
+
+	private List<Class<?>> getEnclosingTestClasses() {
+		return getParent() //
 				.filter(ClassBasedTestDescriptor.class::isInstance) //
 				.map(ClassBasedTestDescriptor.class::cast) //
 				.map(ClassBasedTestDescriptor::getEnclosingTestClasses) //
 				.orElseGet(Collections::emptyList);
-		return provider -> provider.provideForMethod(enclosingInstanceTypes, getTestClass(), getTestMethod());
 	}
 
 	@Override

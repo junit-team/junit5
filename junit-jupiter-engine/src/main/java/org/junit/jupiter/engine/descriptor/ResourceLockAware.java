@@ -14,8 +14,11 @@ import static org.junit.jupiter.api.parallel.ResourceLockTarget.CHILDREN;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
@@ -62,5 +65,22 @@ interface ResourceLockAware extends TestDescriptor {
 	ExclusiveResourceCollector getExclusiveResourceCollector();
 
 	Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator();
+
+	static Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> enclosingInstanceTypesDependentResourceLocksProviderEvaluator(
+			Supplier<List<Class<?>>> enclosingInstanceTypesSupplier,
+			BiFunction<ResourceLocksProvider, List<Class<?>>, Set<ResourceLocksProvider.Lock>> evaluator) {
+		return new Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>>() {
+
+			private List<Class<?>> enclosingInstanceTypes;
+
+			@Override
+			public Set<ResourceLocksProvider.Lock> apply(ResourceLocksProvider provider) {
+				if (this.enclosingInstanceTypes == null) {
+					this.enclosingInstanceTypes = enclosingInstanceTypesSupplier.get();
+				}
+				return evaluator.apply(provider, this.enclosingInstanceTypes);
+			}
+		};
+	}
 
 }
