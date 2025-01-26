@@ -77,7 +77,7 @@ JUnit repository on GitHub.
 * New public interface `ClasspathScanner` allowing third parties to provide a custom
   implementation for scanning the classpath for classes and resources.
 * New `AnnotationSupport.findAnnotation(Class, Class, List)` method to support searching
-  for an annotation in an inner class and its runtime enclosing instance types.
+  for an annotation on an inner class and its runtime enclosing instance types.
 
 
 [[release-notes-5.12.0-M1-junit-jupiter]]
