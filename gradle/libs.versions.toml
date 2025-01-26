@@ -35,7 +35,7 @@ bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.179" }
 commons-io = { module = "commons-io:commons-io", version = "2.18.0" }
-groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.24" }
+groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.25" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.23" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
