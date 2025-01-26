@@ -436,7 +436,7 @@ public interface DisplayNameGenerator {
 		 * <em>directly present</em>, <em>meta-present</em>, or <em>indirectly present</em>
 		 * on the supplied {@code testClass} or on an enclosing instance type.
 		 *
-		 * @param testClass              the test class on which to find the annotation; never {@code null}
+		 * @param testClass the test class on which to find the annotation; never {@code null}
 		 * @param enclosingInstanceTypes the runtime types of the enclosing
 		 * instances; never {@code null}
 		 * @return an {@code Optional} containing the annotation, potentially empty if not found

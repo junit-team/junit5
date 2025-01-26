@@ -20,7 +20,7 @@ import org.apiguardian.api.API;
  * @since 1.8
  * @see #DEFAULT
  * @see #INCLUDE_ENCLOSING_CLASSES
- * @deprecated because there's only a single non-deprecated search option left
+ * @deprecated because there is only a single non-deprecated search option left
  */
 @Deprecated
 @API(status = DEPRECATED, since = "1.12")
@@ -40,7 +40,7 @@ public enum SearchOption {
 	 * but also search the {@linkplain Class#getEnclosingClass() enclosing class}
 	 * hierarchy for <em>inner classes</em> (i.e., a non-static member classes).
 	 *
-	 * @deprecated because it's preferable to inspect the runtime enclosing
+	 * @deprecated because it is preferable to inspect the runtime enclosing
 	 * types of a class rather than where they are declared.
 	 */
 	@Deprecated @API(status = DEPRECATED, since = "1.12")

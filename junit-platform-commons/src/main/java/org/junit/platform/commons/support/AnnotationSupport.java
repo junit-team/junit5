@@ -191,7 +191,7 @@ public final class AnnotationSupport {
 	 * on the class (i.e., within the class inheritance hierarchy).
 	 *
 	 * <p>If the annotation still has not been found, this method will optionally
-	 * search recursively through supplied the enclosing instance types, starting
+	 * search recursively through the supplied enclosing instance types, starting
 	 * at the innermost enclosing class (the last one in the supplied list of
 	 * {@code enclosingInstanceTypes}).
 	 *
@@ -204,8 +204,8 @@ public final class AnnotationSupport {
 	 * @param clazz the class on which to search for the annotation; may be {@code null}
 	 * @param annotationType the annotation type to search for; never {@code null}
 	 * @param enclosingInstanceTypes the runtime types of the enclosing
-	 * instances of {@code clazz}, ordered from outermost to innermost,
-	 * excluding {@code class}; never {@code null}
+	 * instances for the class, ordered from outermost to innermost,
+	 * excluding {@code clazz}; never {@code null}
 	 * @return an {@code Optional} containing the annotation; never {@code null} but
 	 * potentially empty if {@code clazz} is not an inner class
 	 * @since 1.12
