@@ -27,7 +27,7 @@ spotless {
 		val javaFormatterConfigFile = configDir.file("junit-eclipse-formatter-settings.xml")
 
 		java {
-			licenseHeaderFile(license.headerFile, "(package|import|open|module) ")
+			licenseHeaderFile(license.headerFile, "(package|import) ")
 			importOrderFile(importOrderConfigFile)
 			val fullVersion = requiredVersionFromLibs("eclipse")
 			val majorMinorVersion = "([0-9]+\\.[0-9]+).*".toRegex().matchEntire(fullVersion)!!.let { it.groups[1]!!.value }
