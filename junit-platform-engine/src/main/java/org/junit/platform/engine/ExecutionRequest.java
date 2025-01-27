@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * Provides a single {@link TestEngine} access to the information necessary to
@@ -33,6 +34,8 @@ public class ExecutionRequest {
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
+	// TODO[#4252] get store from constructor
+	private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
 
 	@API(status = INTERNAL, since = "1.0")
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
@@ -85,6 +88,10 @@ public class ExecutionRequest {
 	 */
 	public ConfigurationParameters getConfigurationParameters() {
 		return this.configurationParameters;
+	}
+
+	public NamespacedHierarchicalStore<Namespace> getStore() {
+		return this.store;
 	}
 
 }
