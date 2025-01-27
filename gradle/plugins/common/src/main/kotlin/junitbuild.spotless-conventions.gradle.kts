@@ -66,6 +66,14 @@ spotless {
 			}
 		}
 	}
+
+	pluginManager.withPlugin("groovy") {
+		groovy {
+			licenseHeaderFile(license.headerFile)
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
+	}
 }
 
 tasks {
