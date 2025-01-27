@@ -165,6 +165,12 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void supportsConstructorInjectionOnRecords() {
+		executeTestsForClass(TempDirRecordTestCase.class).testEvents()//
+				.assertStatistics(stats -> stats.started(1).succeeded(1));
+	}
+
+	@Test
 	@DisplayName("does not prevent constructor parameter resolution")
 	void tempDirectoryDoesNotPreventConstructorParameterResolution() {
 		executeTestsForClass(TempDirectoryDoesNotPreventConstructorParameterResolutionTestCase.class).testEvents()//
@@ -1525,6 +1531,14 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 			// never called
 		}
 
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	record TempDirRecordTestCase(@TempDir Path tempDir) {
+		@Test
+		void shouldExists() {
+			assertTrue(Files.exists(tempDir));
+		}
 	}
 
 }

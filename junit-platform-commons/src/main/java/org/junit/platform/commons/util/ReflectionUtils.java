@@ -1993,6 +1993,24 @@ public final class ReflectionUtils {
 		return result;
 	}
 
+	/**
+	 * {@return whether the supplied {@code object} is an instance of a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordObject(Object object) {
+		return object != null && isRecordClass(object.getClass());
+	}
+
+	/**
+	 * {@return whether the supplied {@code clazz} is a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordClass(Class<?> clazz) {
+		return "java.lang.Record".equals(clazz.getSuperclass().getName());
+	}
+
 	private static void getAllAssignmentCompatibleClasses(Class<?> clazz, Set<Class<?>> result) {
 		for (Class<?> current = clazz; current != null; current = current.getSuperclass()) {
 			result.add(current);
