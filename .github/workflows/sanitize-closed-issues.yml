@@ -29,6 +29,14 @@ jobs:
               });
             }
             if (issue.data.state_reason === "not_planned") {
+              if (issue.data.milestone) {
+                await github.rest.issues.update({
+                  issue_number: issue.data.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  milestone: null,
+                });
+              }
               const statusLabels = newLabels.filter(l => l.startsWith("status: "));
               if (statusLabels.length === 0) {
                 await github.rest.issues.createComment({
