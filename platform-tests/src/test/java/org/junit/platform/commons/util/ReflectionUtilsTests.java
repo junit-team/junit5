@@ -285,6 +285,23 @@ class ReflectionUtilsTests {
 			assertThat(interfaceMethod.getDeclaringClass()).isEqualTo(Closeable.class);
 		}
 
+		@Test
+		void isRecordObject() {
+			assertTrue(ReflectionUtils.isRecordObject(new SomeRecord(1)));
+			assertFalse(ReflectionUtils.isRecordObject(new ClassWithOneCustomConstructor("")));
+			assertFalse(ReflectionUtils.isRecordObject(null));
+		}
+
+		@Test
+		void isRecordClass() {
+			assertTrue(ReflectionUtils.isRecordClass(SomeRecord.class));
+			assertFalse(ReflectionUtils.isRecordClass(ClassWithOneCustomConstructor.class));
+			assertFalse(ReflectionUtils.isRecordClass(Object.class));
+		}
+
+		record SomeRecord(int n) {
+		}
+
 		static class ClassWithVoidAndNonVoidMethods {
 
 			void voidMethod() {

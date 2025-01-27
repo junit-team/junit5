@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedFields;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
+import static org.junit.platform.commons.util.ReflectionUtils.isRecordObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,7 +136,9 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private void injectInstanceFields(ExtensionContext context, Object instance) {
-		injectFields(context, instance, instance.getClass(), ModifierSupport::isNotStatic);
+		if (!isRecordObject(instance)) {
+			injectFields(context, instance, instance.getClass(), ModifierSupport::isNotStatic);
+		}
 	}
 
 	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
