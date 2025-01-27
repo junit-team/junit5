@@ -366,6 +366,24 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * {@return whether the supplied {@code object} is an instance of a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordObject(Object object) {
+		return object != null && isRecordClass(object.getClass());
+	}
+
+	/**
+	 * {@return whether the supplied {@code clazz} is a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordClass(Class<?> clazz) {
+		return "java.lang.Record".equals(clazz.getSuperclass().getName());
+	}
+
+	/**
 	 * Determine if the return type of the supplied method is primitive {@code void}.
 	 *
 	 * @param method the method to test; never {@code null}
@@ -1991,24 +2009,6 @@ public final class ReflectionUtils {
 		Set<Class<?>> result = new LinkedHashSet<>();
 		getAllAssignmentCompatibleClasses(clazz, result);
 		return result;
-	}
-
-	/**
-	 * {@return whether the supplied {@code object} is an instance of a record class}
-	 * @since 1.12
-	 */
-	@API(status = INTERNAL, since = "1.12")
-	public static boolean isRecordObject(Object object) {
-		return object != null && isRecordClass(object.getClass());
-	}
-
-	/**
-	 * {@return whether the supplied {@code clazz} is a record class}
-	 * @since 1.12
-	 */
-	@API(status = INTERNAL, since = "1.12")
-	public static boolean isRecordClass(Class<?> clazz) {
-		return "java.lang.Record".equals(clazz.getSuperclass().getName());
 	}
 
 	private static void getAllAssignmentCompatibleClasses(Class<?> clazz, Set<Class<?>> result) {
