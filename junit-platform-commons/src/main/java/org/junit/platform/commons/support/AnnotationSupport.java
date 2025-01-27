@@ -171,6 +171,7 @@ public final class AnnotationSupport {
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.12")
+	@SuppressWarnings("deprecation")
 	public static <A extends Annotation> Optional<A> findAnnotation(Class<?> clazz, Class<A> annotationType,
 			SearchOption searchOption) {
 
