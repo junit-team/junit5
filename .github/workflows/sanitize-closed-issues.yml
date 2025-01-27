@@ -1,0 +1,62 @@
+name: Sanitizes assigned labels and milestone on closed issues
+on:
+  issues:
+    types:
+      - closed
+permissions: read-all
+jobs:
+  label_issues:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+        with:
+          script: |
+            const issue = await github.rest.issues.get({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const originalLabels = issue.data.labels.map(l => l.name);
+            const newLabels = originalLabels.filter(l => l !== "status: in progress" && l !== "status: new");
+            if (newLabels.length !== originalLabels.length) {
+              await github.rest.issues.update({
+                issue_number: issue.data.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: newLabels,
+              });
+            }
+            if (issue.data.state_reason === "not_planned") {
+              const statusLabels = newLabels.filter(l => l.startsWith("status: "));
+              if (statusLabels.length === 0) {
+                await github.rest.issues.createComment({
+                  issue_number: issue.data.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: "Please assign a status label to this issue.",
+                });
+                await github.rest.issues.update({
+                  issue_number: issue.data.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: "open",
+                });
+              }
+            } else {
+              if (!(newLabels.includes("type: task") || newLabels.includes("type: question")) && !issue.data.milestone) {
+                await github.rest.issues.createComment({
+                  issue_number: issue.data.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: "Please assign a milestone to this issue or label it with `type: task` or `type: question`.",
+                });
+                await github.rest.issues.update({
+                  issue_number: issue.data.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  state: "open",
+                });
+              }
+            }
