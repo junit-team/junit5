@@ -215,6 +215,16 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@Test
+	void indicativeSentencesOnSubClass() {
+		check(IndicativeSentencesOnSubClassScenarioOneTestCase.class, //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase", //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1", //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1 -> Level 2", //
+			"TEST: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1 -> Level 2 -> this is a test"//
+		);
+	}
+
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
 		var descriptors = discoverTests(request).getDescendants();
