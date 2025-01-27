@@ -36,6 +36,15 @@ spotless {
 			endWithNewline()
 			removeUnusedImports()
 		}
+
+		format("moduleDescriptor") {
+			target(fileTree(layout.projectDirectory.dir("src/module")) {
+				include("**/module-info.java")
+			})
+			licenseHeaderFile(license.headerFile, "^$")
+			trimTrailingWhitespace()
+			endWithNewline()
+		}
 	}
 
 	pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
