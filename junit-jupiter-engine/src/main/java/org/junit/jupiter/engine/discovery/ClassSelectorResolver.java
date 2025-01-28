@@ -14,6 +14,7 @@ import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor.getEnclosingTestClasses;
 import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
 import static org.junit.platform.commons.support.ReflectionSupport.streamNestedClasses;
@@ -31,9 +32,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
@@ -69,6 +72,9 @@ class ClassSelectorResolver implements SelectorResolver {
 		if (isTestClassWithTests.test(testClass)) {
 			// Nested tests are never filtered out
 			if (classNameFilter.test(testClass.getName())) {
+				if (isAnnotated(testClass, ContainerTemplate.class)) {
+					return resolveContainerTemplate(context, testClass);
+				}
 				return toResolution(
 					context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))));
 			}
@@ -126,6 +132,20 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId uniqueId = parent.getUniqueId().append(NestedClassTestDescriptor.SEGMENT_TYPE,
 			testClass.getSimpleName());
 		return new NestedClassTestDescriptor(uniqueId, testClass, () -> getEnclosingTestClasses(parent), configuration);
+	}
+
+	private Resolution resolveContainerTemplate(Context context, Class<?> testClass) {
+		return context.addToParent(parent -> Optional.of(newContainerTemplateTestDescriptor(parent, testClass))) //
+				.map(Match::exact) //
+				.map(Resolution::match) //
+				.orElse(unresolved());
+	}
+
+	private ContainerTemplateTestDescriptor newContainerTemplateTestDescriptor(TestDescriptor parent,
+			Class<?> testClass) {
+		return new ContainerTemplateTestDescriptor(
+			parent.getUniqueId().append(ContainerTemplateTestDescriptor.SEGMENT_TYPE, testClass.getName()), testClass,
+			configuration);
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {

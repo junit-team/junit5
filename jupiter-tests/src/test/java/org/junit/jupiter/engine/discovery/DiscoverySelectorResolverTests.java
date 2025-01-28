@@ -53,6 +53,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
@@ -190,6 +191,22 @@ class DiscoverySelectorResolverTests {
 		assertThat(uniqueIds).contains(uniqueIdForClass(OtherTestClass.NestedTestClass.class));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test5()"));
 		assertThat(uniqueIds).contains(uniqueIdForMethod(OtherTestClass.NestedTestClass.class, "test6()"));
+	}
+
+	@Test
+	void classResolutionOfContainerTemplate() {
+		var selector = selectClass(ContainerTemplateTestCase.class);
+
+		resolve(request().selectors(selector));
+
+		assertThat(engineDescriptor.getDescendants()).hasSize(1);
+
+		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getDescendants());
+		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
+
+		var containerTemplateSegment = containerTemplateDescriptor.getUniqueId().getLastSegment();
+		assertThat(containerTemplateSegment.getType()).isEqualTo("container-template");
+		assertThat(containerTemplateSegment.getValue()).isEqualTo(ContainerTemplateTestCase.class.getName());
 	}
 
 	@Test
@@ -895,6 +912,13 @@ class MatchingClass {
 }
 
 class OtherClass {
+	@Test
+	void test() {
+	}
+}
+
+@ContainerTemplate
+class ContainerTemplateTestCase {
 	@Test
 	void test() {
 	}
