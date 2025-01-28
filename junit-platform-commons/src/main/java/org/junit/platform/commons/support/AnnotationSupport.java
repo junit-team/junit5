@@ -19,6 +19,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -220,8 +221,9 @@ public final class AnnotationSupport {
 
 		Optional<A> annotation = findAnnotation(clazz, annotationType);
 		if (!annotation.isPresent()) {
-			for (int i = enclosingInstanceTypes.size() - 1; i >= 0; i--) {
-				annotation = findAnnotation(enclosingInstanceTypes.get(i), annotationType);
+			ListIterator<Class<?>> iterator = enclosingInstanceTypes.listIterator(enclosingInstanceTypes.size());
+			while (iterator.hasPrevious()) {
+				annotation = findAnnotation(iterator.previous(), annotationType);
 				if (annotation.isPresent()) {
 					break;
 				}
