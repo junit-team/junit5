@@ -187,6 +187,12 @@ public class KitchenSinkExtension implements
 			ExtensionContext context) {
 		return null;
 	}
+
+	@Override
+	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
+		return false;
+	}
+
 	// --- TestWatcher ---------------------------------------------------------
 
 	@Override

@@ -58,4 +58,24 @@ public interface ContainerTemplateInvocationContextProvider extends Extension {
 	 */
 	Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(ExtensionContext context);
 
+	/**
+	 * Signal that this provider may provide zero
+	 * {@linkplain ContainerTemplateInvocationContext invocation contexts} for
+	 * the container template class represented by the supplied {@code context}.
+	 *
+	 * <p>If this method returns {@code false} (which is the default) and the
+	 * provider returns an empty stream from
+	 * {@link #provideContainerTemplateInvocationContexts}, this will be considered
+	 * an execution error. Override this method to return {@code true} to ignore
+	 * the absence of invocation contexts for this provider.
+	 *
+	 * @param context the extension context for the container template class
+	 * about to be invoked; never {@code null}
+	 * @return {@code true} to allow zero contexts, {@code false} to fail
+	 * execution in case of zero contexts
+	 */
+	default boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
+		return false;
+	}
+
 }

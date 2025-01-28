@@ -23,7 +23,6 @@ import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstrin
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.ContainerTemplate;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
@@ -35,7 +34,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
-	@Disabled("not yet implemented")
+	//	@Disabled("not yet implemented")
 	@Test
 	void executesContainerTemplateClassTwice() {
 		var results = executeTestsForClass(TwoInvocationsTestCase.class);
@@ -44,15 +43,21 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(TwoInvocationsTestCase.class), uniqueIdSubstring("container-template"), started()), //
 			event(dynamicTestRegistered("container-template-invocation:#1"), displayName("[1] A")), //
 			event(container("container-template-invocation:#1"), started()), //
-			event(dynamicTestRegistered("test")), //
-			event(test("test"), started()), //
-			event(test("test"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("a")), //
+			event(dynamicTestRegistered("b")), //
+			event(test("a"), started()), //
+			event(test("a"), finishedSuccessfully()), //
+			event(test("b"), started()), //
+			event(test("b"), finishedSuccessfully()), //
 			event(container("container-template-invocation:#1"), finishedSuccessfully()), //
 			event(dynamicTestRegistered("container-template-invocation:#2"), displayName("[2] B")), //
 			event(container("container-template-invocation:#2"), started()), //
-			event(dynamicTestRegistered("test")), //
-			event(test("test"), started()), //
-			event(test("test"), finishedSuccessfully()), //
+			event(dynamicTestRegistered("a")), //
+			event(dynamicTestRegistered("b")), //
+			event(test("a"), started()), //
+			event(test("a"), finishedSuccessfully()), //
+			event(test("b"), started()), //
+			event(test("b"), finishedSuccessfully()), //
 			event(container("container-template-invocation:#2"), finishedSuccessfully()), //
 			event(container(TwoInvocationsTestCase.class), uniqueIdSubstring("container-template"),
 				finishedSuccessfully()), //
@@ -64,7 +69,11 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
 	static class TwoInvocationsTestCase {
 		@Test
-		void test() {
+		void a() {
+		}
+
+		@Test
+		void b() {
 		}
 	}
 
