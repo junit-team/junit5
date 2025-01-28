@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
-import org.junit.platform.engine.EngineExecutionListener;
 
 /**
  * @since 5.13
@@ -42,8 +41,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-		EngineExecutionListener executionListener = context.getExecutionListener();
-		getChildren().forEach(executionListener::dynamicTestRegistered);
+		Visitor visitor = context.getExecutionListener()::dynamicTestRegistered;
+		getChildren().forEach(child -> child.accept(visitor));
 		return context;
 	}
 
