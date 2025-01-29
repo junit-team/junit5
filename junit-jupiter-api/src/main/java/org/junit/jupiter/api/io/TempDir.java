@@ -46,12 +46,11 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * cases:
  *
  * <ul>
- * <li>If the field type or parameter type is neither {@link Path} nor
-       {@link File}.</li>
+ * <li>If the field type or parameter type is neither {@code Path} nor {@code File}.</li>
  * <li>If a field is declared as {@code final}.</li>
  * <li>If the temporary directory cannot be created.</li>
  * <li>If the field type or parameter type is {@code File} and a custom
- *     {@linkplain TempDir#factory() factory} is used, which creates a temporary
+ *     {@link TempDir#factory() factory} is used, which creates a temporary
  *     directory that does not belong to the
  *     {@linkplain java.nio.file.FileSystems#getDefault() default file system}.
  * </li>
@@ -154,9 +153,10 @@ public @interface TempDir {
 	 * <h4>Supported Values</h4>
 	 * <ul>
 	 * <li>{@code per_context}: creates a single temporary directory for the
-	 * entire test class or method, depending on where it's first declared
+	 * entire test class or method, depending on where {@code @TempDir} is first
+	 * declared</li>
 	 * <li>{@code per_declaration}: creates separate temporary directories for
-	 * each declaration site of the {@code @TempDir} annotation.
+	 * each declaration site of the {@code @TempDir} annotation</li>
 	 * </ul>
 	 *
 	 * <p>If not specified, the default is {@code per_declaration}.
