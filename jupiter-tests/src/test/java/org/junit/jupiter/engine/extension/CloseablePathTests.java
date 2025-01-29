@@ -37,9 +37,16 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import com.google.common.jimfs.Jimfs;
 
@@ -49,11 +56,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
@@ -62,6 +71,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
@@ -273,7 +283,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		@DisplayName("is done for a cleanup mode of ALWAYS")
 		@ParameterizedTest
 		@ElementTypeSource
-		void always(Class<?> elementType) throws IOException {
+		void always(Class<?> elementType, @TrackLogRecords LogRecordListener listener) throws IOException {
 			reset(factory);
 
 			closeablePath = TempDirectory.createTempDir(factory, ALWAYS, elementType, elementContext, extensionContext);
@@ -283,13 +293,17 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			verify(factory).close();
 			assertThat(closeablePath.get()).doesNotExist();
+			assertThat(listener.stream(Level.INFO)).map(LogRecord::getMessage)//
+					.noneMatch(m -> m.startsWith("Skipping cleanup of temp dir"));
 		}
 
 		@DisplayName("is not done for a cleanup mode of NEVER")
 		@ParameterizedTest
 		@ElementTypeSource
-		void never(Class<?> elementType) throws IOException {
+		void never(Class<?> elementType, @TrackLogRecords LogRecordListener listener) throws Exception {
 			reset(factory);
+
+			when(elementContext.getAnnotatedElement()).thenReturn(TestCase.class.getDeclaredField("tempDir"));
 
 			closeablePath = TempDirectory.createTempDir(factory, NEVER, elementType, elementContext, extensionContext);
 			assertThat(closeablePath.get()).isDirectory();
@@ -298,15 +312,56 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			verify(factory).close();
 			assertThat(closeablePath.get()).exists();
+			assertThat(listener.stream(Level.INFO)).map(LogRecord::getMessage)//
+					.anyMatch(m -> m.startsWith("Skipping cleanup of temp dir ")
+							&& m.endsWith(" for field TestCase.tempDir due to CleanupMode.NEVER."));
 		}
 
-		@DisplayName("is not done for a cleanup mode of ON_SUCCESS, if there is an exception")
+		@DisplayName("is not done for a cleanup mode of ON_SUCCESS, if there is an exception (for annotated field)")
 		@ParameterizedTest
 		@ElementTypeSource
-		void onSuccessWithException(Class<?> elementType) throws IOException {
+		void onSuccessWithExceptionForAnnotatedField(Class<?> elementType, @TrackLogRecords LogRecordListener listener)
+				throws Exception {
+
+			Field field = TestCase.class.getDeclaredField("tempDir");
+
+			onSuccessWithException(elementType, listener, field,
+				" for field TestCase.tempDir due to CleanupMode.ON_SUCCESS.");
+		}
+
+		@DisplayName("is not done for a cleanup mode of ON_SUCCESS, if there is an exception (for annotated method parameter)")
+		@ParameterizedTest
+		@ElementTypeSource
+		void onSuccessWithExceptionForAnnotatedMethodParameter(Class<?> elementType,
+				@TrackLogRecords LogRecordListener listener) throws Exception {
+
+			Method method = TestCase.class.getDeclaredMethod("test", TestInfo.class, Path.class);
+			Parameter parameter = method.getParameters()[1];
+
+			onSuccessWithException(elementType, listener, parameter,
+				"for parameter 'tempDir' in method test(TestInfo, Path) due to CleanupMode.ON_SUCCESS.");
+		}
+
+		@DisplayName("is not done for a cleanup mode of ON_SUCCESS, if there is an exception (for annotated constructor parameter)")
+		@ParameterizedTest
+		@ElementTypeSource
+		void onSuccessWithExceptionForAnnotatedConstructorParameter(Class<?> elementType,
+				@TrackLogRecords LogRecordListener listener) throws Exception {
+
+			Constructor<?> constructor = TestCase.class.getDeclaredConstructor(TestInfo.class, Path.class);
+			Parameter parameter = constructor.getParameters()[1];
+
+			onSuccessWithException(elementType, listener, parameter,
+				"for parameter 'tempDir' in constructor TestCase(TestInfo, Path) due to CleanupMode.ON_SUCCESS.");
+		}
+
+		private void onSuccessWithException(Class<?> elementType, @TrackLogRecords LogRecordListener listener,
+				AnnotatedElement annotatedElement, String expectedMessage) throws Exception {
+
 			reset(factory);
 
 			when(extensionContext.getExecutionException()).thenReturn(Optional.of(new Exception()));
+			when(elementContext.getAnnotatedElement()).thenReturn(annotatedElement);
 
 			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementType, elementContext,
 				extensionContext);
@@ -316,12 +371,16 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			verify(factory).close();
 			assertThat(closeablePath.get()).exists();
+			assertThat(listener.stream(Level.INFO)).map(LogRecord::getMessage)//
+					.anyMatch(m -> m.startsWith("Skipping cleanup of temp dir ") && m.endsWith(expectedMessage));
 		}
 
 		@DisplayName("is done for a cleanup mode of ON_SUCCESS, if there is no exception")
 		@ParameterizedTest
 		@ElementTypeSource
-		void onSuccessWithNoException(Class<?> elementType) throws IOException {
+		void onSuccessWithNoException(Class<?> elementType, @TrackLogRecords LogRecordListener listener)
+				throws IOException {
+
 			reset(factory);
 
 			when(extensionContext.getExecutionException()).thenReturn(Optional.empty());
@@ -334,8 +393,21 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 			verify(factory).close();
 			assertThat(closeablePath.get()).doesNotExist();
+			assertThat(listener.stream(Level.INFO)).map(LogRecord::getMessage)//
+					.noneMatch(m -> m.startsWith("Skipping cleanup of temp dir"));
 		}
 
+	}
+
+	static class TestCase {
+
+		Path tempDir;
+
+		TestCase(TestInfo testInfo, Path tempDir) {
+		}
+
+		void test(TestInfo testInfo, Path tempDir) {
+		}
 	}
 
 }

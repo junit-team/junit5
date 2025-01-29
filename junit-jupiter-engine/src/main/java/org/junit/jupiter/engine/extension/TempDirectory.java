@@ -24,6 +24,8 @@ import static org.junit.platform.commons.util.ReflectionUtils.isRecordObject;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.nio.file.DirectoryNotEmptyException;
@@ -63,6 +65,7 @@ import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -288,6 +291,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private final Path dir;
 		private final TempDirFactory factory;
 		private final CleanupMode cleanupMode;
+		private final AnnotatedElement annotatedElement;
 		private final ExtensionContext extensionContext;
 
 		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, Class<?> elementType,
@@ -295,6 +299,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			this.dir = factory.createTempDirectory(elementContext, extensionContext);
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
+			this.annotatedElement = elementContext.getAnnotatedElement();
 			this.extensionContext = extensionContext;
 
 			if (dir == null || !Files.isDirectory(dir)) {
@@ -318,7 +323,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		public void close() throws IOException {
 			try {
 				if (cleanupMode == NEVER || (cleanupMode == ON_SUCCESS && selfOrChildFailed(extensionContext))) {
-					logger.info(() -> "Skipping cleanup of temp dir " + dir + " due to cleanup mode configuration.");
+					logger.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
+						dir, descriptionFor(annotatedElement), cleanupMode.name()));
 					return;
 				}
 
@@ -333,6 +339,33 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			finally {
 				factory.close();
 			}
+		}
+
+		/**
+		 * @since 5.12
+		 */
+		private static String descriptionFor(AnnotatedElement annotatedElement) {
+			if (annotatedElement instanceof Field) {
+				Field field = (Field) annotatedElement;
+				return "field " + field.getDeclaringClass().getSimpleName() + "." + field.getName();
+			}
+			if (annotatedElement instanceof Parameter) {
+				Parameter parameter = (Parameter) annotatedElement;
+				Executable executable = parameter.getDeclaringExecutable();
+				return "parameter '" + parameter.getName() + "' in " + descriptionFor(executable);
+			}
+			throw new IllegalStateException("Unsupported AnnotatedElement type for @TempDir: " + annotatedElement);
+		}
+
+		/**
+		 * @since 5.12
+		 */
+		private static String descriptionFor(Executable executable) {
+			boolean isConstructor = executable instanceof Constructor<?>;
+			String type = isConstructor ? "constructor" : "method";
+			String name = isConstructor ? executable.getDeclaringClass().getSimpleName() : executable.getName();
+			return String.format("%s %s(%s)", type, name,
+				ClassUtils.nullSafeToString(Class::getSimpleName, executable.getParameterTypes()));
 		}
 
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)
