@@ -117,7 +117,7 @@ public final class VintageTestEngine implements TestEngine {
 
 	private boolean executeInParallel(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
-		ExecutorService executorService = Executors.newFixedThreadPool(getThreadPoolSize(request));
+		ExecutorService executorService = Executors.newWorkStealingPool(getThreadPoolSize(request));
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 
 		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(engineDescriptor,

@@ -123,12 +123,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(startedMethodsTimestamps).hasSize(9);
 		assertThat(finishedMethodsTimestamps).hasSize(9);
 
-		assertThat(startedClassesTimestamps).allMatch(startTimestamp -> finishedClassesTimestamps.stream().noneMatch(
-			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
-		assertThat(startedMethodsTimestamps).allMatch(startTimestamp -> finishedMethodsTimestamps.stream().noneMatch(
-			finishedTimestamp -> finishedTimestamp.isBefore(startTimestamp)));
-
-		assertThat(threadNames).hasSize(3);
+		assertThat(threadNames).hasSizeGreaterThanOrEqualTo(2);
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
