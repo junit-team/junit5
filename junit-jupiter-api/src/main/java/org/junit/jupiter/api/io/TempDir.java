@@ -28,21 +28,16 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
 /**
- * {@code @TempDir} can be used to annotate a field in a test class or a
- * parameter in a lifecycle method or test method of type {@link Path} or
- * {@link File} that should be resolved into a temporary directory.
- *
- * <p>Please note that {@code @TempDir} is not supported on constructor
- * parameters. Please use field injection instead by annotating an instance
- * field with {@code @TempDir}.
+ * {@code @TempDir} can be used to annotate a field in a test class or a parameter
+ * in a test class constructor, lifecycle method, or test method of type
+ * {@link Path} or {@link File} that should be resolved into a temporary directory.
  *
  * <h2>Creation</h2>
  *
  * <p>The temporary directory is only created if a field in a test class or a
- * parameter in a lifecycle method or test method is annotated with
- * {@code @TempDir}.
- * An {@link ExtensionConfigurationException} or a
- * {@link ParameterResolutionException} will be thrown in one of the following
+ * parameter in a test class constructor, lifecycle method, or test method is
+ * annotated with {@code @TempDir}. An {@link ExtensionConfigurationException} or
+ * a {@link ParameterResolutionException} will be thrown in one of the following
  * cases:
  *
  * <ul>
@@ -56,15 +51,16 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * </li>
  * </ul>
  *
- * In addition, a {@code ParameterResolutionException} will be thrown for a
- * constructor parameter annotated with {@code @TempDir}.
- *
  * <h2>Scope</h2>
  *
- * <p>By default, a separate temporary directory is created for every
- * declaration of the {@code @TempDir} annotation. If you want to share a
- * temporary directory across all tests in a test class, you should declare the
- * annotation on a {@code static} field or on a parameter of a
+ * <p>By default, a separate temporary directory is created for every declaration
+ * of the {@code @TempDir} annotation. For better isolation when using
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_METHOD @TestInstance(Lifecycle.PER_METHOD)}
+ * semantics, you can annotate an instance field or a parameter in the test class
+ * constructor with {@code @TempDir} so that each test method uses a separate
+ * temporary directory. Alternatively, if you want to share a temporary directory
+ * across all tests in a test class, you should declare the annotation on a
+ * {@code static} field or on a parameter of a
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
  *
  * <h3>Old behavior</h3>

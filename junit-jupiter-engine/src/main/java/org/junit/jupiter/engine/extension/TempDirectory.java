@@ -72,8 +72,9 @@ import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
  * {@code TempDirectory} is a JUnit Jupiter extension that creates and cleans
- * up temporary directories if field in a test class or a parameter in a
- * lifecycle method or test method is annotated with {@code @TempDir}.
+ * up temporary directories if a field in a test class or a parameter in a
+ * test class constructor, lifecycle method, or test method is annotated with
+ * {@code @TempDir}.
  *
  * <p>Consult the Javadoc for {@link TempDir} for details on the contract.
  *
