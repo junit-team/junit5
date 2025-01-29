@@ -104,7 +104,6 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 	 * that {@link TempDirFactory#createTempDirectory(AnnotatedElementContext, ExtensionContext)} may provide.
 	 *
 	 * @since 5.11
-	 *
 	 * @see TempDirFactory
 	 */
 	@Nested
@@ -265,7 +264,6 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 	 * set to {@link CleanupMode#ALWAYS}, {@link CleanupMode#NEVER}, or {@link CleanupMode#ON_SUCCESS}.
 	 *
 	 * @since 5.9
-	 *
 	 * @see TempDir
 	 * @see CleanupMode
 	 */
