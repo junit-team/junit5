@@ -194,7 +194,7 @@ public interface TestDescriptor {
 		Preconditions.notNull(orderer, "orderer must not be null");
 		Set<? extends TestDescriptor> children = getChildren();
 		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(orderer.apply(new ArrayList<>(children)));
-		boolean unmodified = children.size() == orderedChildren.size() && children.containsAll(orderedChildren);
+		boolean unmodified = children.equals(orderedChildren);
 		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
 		orderedChildren.forEach(this::removeChild);
 		orderedChildren.forEach(this::addChild);
