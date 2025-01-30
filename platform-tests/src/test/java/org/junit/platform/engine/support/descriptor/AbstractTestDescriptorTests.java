@@ -128,6 +128,17 @@ class AbstractTestDescriptorTests {
 	}
 
 	@Test
+	void orderChildrenDuplicatesDescriptor() {
+		var exception = assertThrows(JUnitException.class, () -> {
+			group1.orderChildren(children -> {
+				children.set(1,  children.get(0));
+				return children;
+			});
+		});
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
+	}
+
+	@Test
 	void setParentToOtherInstance() {
 		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
 		var group = engineDescriptor.getChildren().iterator().next();
