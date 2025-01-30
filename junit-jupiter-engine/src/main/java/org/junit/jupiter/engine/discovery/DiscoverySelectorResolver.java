@@ -12,14 +12,7 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
-import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.Optional;
-
 import org.apiguardian.api.API;
-import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -53,16 +46,6 @@ public class DiscoverySelectorResolver {
 
 	public void resolveSelectors(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor) {
 		resolver.resolve(request, engineDescriptor);
-	}
-
-	@API(status = INTERNAL, since = "5.13")
-	public static Optional<TestDescriptor> createTestDescriptor(ClassBasedTestDescriptor parent, Class<?> testClass,
-			Method method, JupiterConfiguration configuration) {
-		return Arrays.stream(MethodSelectorResolver.MethodType.values()) //
-				.map(methodType -> methodType.methodPredicate.test(method)
-						? methodType.createTestDescriptor(parent, testClass, method, configuration)
-						: null) //
-				.filter(Objects::nonNull).findFirst();
 	}
 
 }
