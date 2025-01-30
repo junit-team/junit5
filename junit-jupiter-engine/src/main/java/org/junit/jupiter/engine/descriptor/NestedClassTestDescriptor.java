@@ -55,6 +55,18 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 			createDisplayNameSupplierForNestedClass(enclosingInstanceTypes, testClass, configuration), configuration);
 	}
 
+	private NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, displayName, configuration);
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected NestedClassTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new NestedClassTestDescriptor(newUniqueId, getTestClass(), getDisplayName(), configuration);
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
@@ -64,6 +76,8 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
 		return allTags;
 	}
+
+	// --- ClassBasedTestDescriptor ---------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {

@@ -51,6 +51,16 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 		this.index = index;
 	}
 
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new TestTemplateInvocationTestDescriptor(newUniqueId, getTestClass(), getTestMethod(),
+			this.invocationContext, this.index, this.configuration);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
+
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
 		// Resources are already collected and returned by the enclosing container

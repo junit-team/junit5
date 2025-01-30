@@ -47,6 +47,12 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 	}
 
 	@Override
+	protected DynamicContainerTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new DynamicContainerTestDescriptor(newUniqueId, this.index, this.dynamicContainer, this.testSource,
+			this.dynamicDescendantFilter, this.configuration);
+	}
+
+	@Override
 	public Type getType() {
 		return Type.CONTAINER;
 	}

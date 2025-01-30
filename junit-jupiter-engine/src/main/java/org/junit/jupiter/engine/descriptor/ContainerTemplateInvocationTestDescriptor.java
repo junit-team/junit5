@@ -13,8 +13,10 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.UniqueId;
 
 /**
  * @since 5.13
@@ -24,17 +26,19 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	public static final String SEGMENT_TYPE = "container-template-invocation";
 
-	private final ClassBasedTestDescriptor delegate;
-
-	ContainerTemplateInvocationTestDescriptor(ClassBasedTestDescriptor delegate,
-			ContainerTemplateInvocationContext invocationContext, int index) {
-		super(delegate.getUniqueId(), invocationContext.getDisplayName(index), delegate.getSource().orElse(null),
-			delegate.configuration);
-		this.delegate = delegate;
+	ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
+			JupiterConfiguration configuration) {
+		super(uniqueId, displayName, source, configuration);
 	}
 
 	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception {
+	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, getDisplayName(), getSource().orElse(null),
+			this.configuration);
+	}
+
+	@Override
+	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		return context.extend().build();
 	}
 
@@ -48,6 +52,6 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	@Override
 	public Type getType() {
-		return delegate.getType();
+		return Type.CONTAINER;
 	}
 }

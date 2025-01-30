@@ -83,10 +83,25 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration) {
+		this(uniqueId, displayName, testClass, testMethod, configuration, defaultInterceptorCall);
+	}
+
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration, ReflectiveInterceptorCall<Method, Void> interceptorCall) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
 		this.interceptorCall = interceptorCall;
 	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestMethodTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new TestMethodTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
+			this.configuration, interceptorCall);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Type getType() {

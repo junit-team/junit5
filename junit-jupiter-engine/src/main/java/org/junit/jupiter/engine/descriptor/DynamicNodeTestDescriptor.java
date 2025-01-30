@@ -24,7 +24,7 @@ import org.junit.platform.engine.UniqueId;
  */
 abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
-	private final int index;
+	protected final int index;
 
 	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, TestSource testSource,
 			JupiterConfiguration configuration) {

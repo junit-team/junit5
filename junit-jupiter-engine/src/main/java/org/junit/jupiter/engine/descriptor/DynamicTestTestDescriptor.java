@@ -42,6 +42,12 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	}
 
 	@Override
+	protected DynamicTestTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new DynamicTestTestDescriptor(newUniqueId, this.index, this.dynamicTest, this.getSource().orElse(null),
+			this.configuration);
+	}
+
+	@Override
 	public Type getType() {
 		return Type.TEST;
 	}

@@ -51,6 +51,19 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		super(uniqueId, testClass, templateMethod, enclosingInstanceTypes, configuration);
 	}
 
+	private TestTemplateTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method templateMethod,
+			JupiterConfiguration configuration) {
+		super(uniqueId, displayName, testClass, templateMethod, configuration);
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new TestTemplateTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
+			this.configuration);
+	}
+
 	// --- Filterable ----------------------------------------------------------
 
 	@Override

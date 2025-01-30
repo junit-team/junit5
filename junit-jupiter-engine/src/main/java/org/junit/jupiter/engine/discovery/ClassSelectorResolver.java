@@ -72,11 +72,8 @@ class ClassSelectorResolver implements SelectorResolver {
 		if (isTestClassWithTests.test(testClass)) {
 			// Nested tests are never filtered out
 			if (classNameFilter.test(testClass.getName())) {
-				if (isAnnotated(testClass, ContainerTemplate.class)) {
-					return resolveContainerTemplate(context, testClass);
-				}
 				return toResolution(
-					context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))));
+					context.addToParent(parent -> Optional.of(newStaticClassTestDescriptor(parent, testClass))));
 			}
 		}
 		else if (isNestedTestClass.test(testClass)) {
@@ -122,6 +119,12 @@ class ClassSelectorResolver implements SelectorResolver {
 		return unresolved();
 	}
 
+	private ClassBasedTestDescriptor newStaticClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
+		return isAnnotated(testClass, ContainerTemplate.class) //
+				? newContainerTemplateTestDescriptor(parent, testClass) //
+				: newClassTestDescriptor(parent, testClass);
+	}
+
 	private ClassTestDescriptor newClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
 		return new ClassTestDescriptor(
 			parent.getUniqueId().append(ClassTestDescriptor.SEGMENT_TYPE, testClass.getName()), testClass,
@@ -132,13 +135,6 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId uniqueId = parent.getUniqueId().append(NestedClassTestDescriptor.SEGMENT_TYPE,
 			testClass.getSimpleName());
 		return new NestedClassTestDescriptor(uniqueId, testClass, () -> getEnclosingTestClasses(parent), configuration);
-	}
-
-	private Resolution resolveContainerTemplate(Context context, Class<?> testClass) {
-		return context.addToParent(parent -> Optional.of(newContainerTemplateTestDescriptor(parent, testClass))) //
-				.map(Match::exact) //
-				.map(Resolution::match) //
-				.orElse(unresolved());
 	}
 
 	private ContainerTemplateTestDescriptor newContainerTemplateTestDescriptor(TestDescriptor parent,

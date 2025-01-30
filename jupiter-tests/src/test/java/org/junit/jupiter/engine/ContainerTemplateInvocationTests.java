@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.platform.commons.util.FunctionUtils.where;
+import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -18,50 +20,82 @@ import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstring;
 
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
+import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
+import org.junit.platform.testkit.engine.Event;
 
 /**
  * @since 5.13
  */
 public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
-	//	@Disabled("not yet implemented")
 	@Test
 	void executesContainerTemplateClassTwice() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE, TwoInvocationsTestCase.class.getName());
+		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var invocation1MethodAId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
+		var invocation1NestedClassId = invocationId1.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var invocation1NestedMethodBId = invocation1NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocation2MethodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
+		var invocation2NestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var invocation2NestedMethodBId = invocation2NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
+
 		var results = executeTestsForClass(TwoInvocationsTestCase.class);
+
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(TwoInvocationsTestCase.class), uniqueIdSubstring("container-template"), started()), //
-			event(dynamicTestRegistered("container-template-invocation:#1"), displayName("[1] A")), //
-			event(container("container-template-invocation:#1"), started()), //
-			event(dynamicTestRegistered("a")), //
-			event(dynamicTestRegistered("b")), //
-			event(test("a"), started()), //
-			event(test("a"), finishedSuccessfully()), //
-			event(test("b"), started()), //
-			event(test("b"), finishedSuccessfully()), //
-			event(container("container-template-invocation:#1"), finishedSuccessfully()), //
-			event(dynamicTestRegistered("container-template-invocation:#2"), displayName("[2] B")), //
-			event(container("container-template-invocation:#2"), started()), //
-			event(dynamicTestRegistered("a")), //
-			event(dynamicTestRegistered("b")), //
-			event(test("a"), started()), //
-			event(test("a"), finishedSuccessfully()), //
-			event(test("b"), started()), //
-			event(test("b"), finishedSuccessfully()), //
-			event(container("container-template-invocation:#2"), finishedSuccessfully()), //
-			event(container(TwoInvocationsTestCase.class), uniqueIdSubstring("container-template"),
-				finishedSuccessfully()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A")), //
+			event(container(uniqueId(invocationId1)), started()), //
+			event(dynamicTestRegistered(uniqueId(invocation1MethodAId))), //
+			event(dynamicTestRegistered(uniqueId(invocation1NestedClassId))), //
+			event(dynamicTestRegistered(uniqueId(invocation1NestedMethodBId))), //
+			event(test(uniqueId(invocation1MethodAId)), started()), //
+			event(test(uniqueId(invocation1MethodAId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocation1NestedClassId)), started()), //
+			event(test(uniqueId(invocation1NestedMethodBId)), started()), //
+			event(test(uniqueId(invocation1NestedMethodBId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocation1NestedClassId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(invocation2MethodAId))), //
+			event(dynamicTestRegistered(uniqueId(invocation2NestedClassId))), //
+			event(dynamicTestRegistered(uniqueId(invocation2NestedMethodBId))), //
+			event(test(uniqueId(invocation2MethodAId)), started()), //
+			event(test(uniqueId(invocation2MethodAId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocation2NestedClassId)), started()), //
+			event(test(uniqueId(invocation2NestedMethodBId)), started()), //
+			event(test(uniqueId(invocation2NestedMethodBId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocation2NestedClassId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+	}
+
+	// TODO #871 Consider moving to EventConditions
+	private static Condition<Event> uniqueId(UniqueId uniqueId) {
+		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
+			"descriptor with uniqueId '%s'", uniqueId);
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -72,8 +106,11 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		void a() {
 		}
 
-		@Test
-		void b() {
+		@Nested
+		class NestedTestCase {
+			@Test
+			void b() {
+			}
 		}
 	}
 

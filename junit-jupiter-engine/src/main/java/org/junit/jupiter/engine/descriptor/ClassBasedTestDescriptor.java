@@ -107,6 +107,17 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor imp
 		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
 	}
 
+	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
+			JupiterConfiguration configuration) {
+		super(uniqueId, displayName, ClassSource.from(testClass), configuration);
+
+		this.testClass = testClass;
+		this.tags = getTags(testClass);
+		this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
+		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
+		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	public final Class<?> getTestClass() {

@@ -68,6 +68,19 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
 	}
 
+	private TestFactoryTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration) {
+		super(uniqueId, displayName, testClass, testMethod, configuration);
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestFactoryTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new TestFactoryTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
+			this.configuration);
+	}
+
 	// --- Filterable ----------------------------------------------------------
 
 	@Override

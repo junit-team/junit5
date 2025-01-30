@@ -51,6 +51,18 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 		super(uniqueId, testClass, createDisplayNameSupplierForClass(testClass, configuration), configuration);
 	}
 
+	private ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, displayName, configuration);
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected ClassTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new ClassTestDescriptor(newUniqueId, getTestClass(), getDisplayName(), configuration);
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
@@ -58,6 +70,8 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 		// return modifiable copy
 		return new LinkedHashSet<>(this.tags);
 	}
+
+	// --- ClassBasedTestDescriptor --------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {

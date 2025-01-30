@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
@@ -211,6 +212,23 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
 	}
+
+	/**
+	 * {@return a deep copy (with copies of children) of this descriptor with the supplied unique ID}
+	 */
+	protected JupiterTestDescriptor copyIncludingDescendants(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		JupiterTestDescriptor result = withUniqueId(uniqueIdTransformer.apply(getUniqueId()));
+		getChildren().forEach(oldChild -> {
+			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
+			result.addChild(newChild);
+		});
+		return result;
+	}
+
+	/**
+	 * {@return shallow copy (without children) of this descriptor with the supplied unique ID}
+	 */
+	protected abstract JupiterTestDescriptor withUniqueId(UniqueId newUniqueId);
 
 	/**
 	 * @since 5.5

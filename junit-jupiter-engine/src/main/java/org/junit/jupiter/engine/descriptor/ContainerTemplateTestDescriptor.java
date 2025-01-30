@@ -14,17 +14,15 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
-import static org.junit.jupiter.engine.discovery.DiscoverySelectorResolver.createTestDescriptor;
-import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
-import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
-import static org.junit.platform.commons.support.ReflectionSupport.streamMethods;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -51,6 +49,8 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "container-template";
 
+	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
+
 	public ContainerTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, createDisplayNameSupplierForClass(testClass, configuration), configuration);
 	}
@@ -63,9 +63,25 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 		return new LinkedHashSet<>(this.tags);
 	}
 
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected ContainerTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new ContainerTemplateTestDescriptor(newUniqueId, getTestClass(), configuration);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
+
+	@Override
+	public void prune() {
+		super.prune();
+		this.childrenPrototypes.addAll(this.children);
+		this.children.clear();
+	}
+
 	@Override
 	public boolean mayRegisterTests() {
-		return true;
+		return !childrenPrototypes.isEmpty();
 	}
 
 	// --- ClassBasedTestDescriptor ---------------------------------------------
@@ -150,16 +166,58 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	}
 
 	private Optional<TestDescriptor> toTestDescriptor(ContainerTemplateInvocationContext invocationContext, int index) {
-		UniqueId uniqueId = getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
+		UniqueId invocationUniqueId = getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#" + index);
+		ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
+			invocationUniqueId, invocationContext.getDisplayName(index), getSource().orElse(null), this.configuration);
+
+		UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
+
 		// TODO #871 filter descendants
-		// TODO #871 support @Nested classes
-		ClassTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, getTestClass(), this.configuration);
-		ContainerTemplateInvocationTestDescriptor containerDescriptor = new ContainerTemplateInvocationTestDescriptor(
-			classDescriptor, invocationContext, index);
-		streamMethods(getTestClass(), isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN) //
-				.map(method -> createTestDescriptor(classDescriptor, getTestClass(), method, this.configuration)) //
-				.forEach(methodDescriptor -> methodDescriptor.ifPresent(containerDescriptor::addChild));
-		return Optional.of(containerDescriptor);
+
+		this.childrenPrototypes.stream() //
+				.map(JupiterTestDescriptor.class::cast) //
+				.map(it -> it.copyIncludingDescendants(transformer)) //
+				.forEach(containerInvocationDescriptor::addChild);
+
+		return Optional.of(containerInvocationDescriptor);
+	}
+
+	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {
+
+		private final UniqueId oldPrefix;
+		private final UniqueId newPrefix;
+		private final int oldPrefixLength;
+
+		UniqueIdPrefixTransformer(UniqueId oldPrefix, UniqueId newPrefix) {
+			this.oldPrefix = oldPrefix;
+			this.newPrefix = newPrefix;
+			this.oldPrefixLength = oldPrefix.getSegments().size();
+		}
+
+		@Override
+		public UniqueId apply(UniqueId uniqueId) {
+			Preconditions.condition(uniqueId.hasPrefix(oldPrefix),
+				() -> String.format("Unique ID %s does not have the expected prefix %s", uniqueId, oldPrefix));
+			List<UniqueId.Segment> oldSegments = uniqueId.getSegments();
+			List<UniqueId.Segment> suffix = oldSegments.subList(oldPrefixLength, oldSegments.size());
+			UniqueId newValue = newPrefix;
+			for (UniqueId.Segment segment : suffix) {
+				newValue = newValue.append(segment);
+			}
+			return newValue;
+		}
+	}
+
+	private static UniqueId changePrefix(UniqueId oldValue, UniqueId oldPrefix, UniqueId newPrefix) {
+		List<UniqueId.Segment> oldSegments = oldValue.getSegments();
+		Preconditions.condition(oldValue.hasPrefix(oldPrefix), () -> "Old value does not have the expected prefix");
+		List<UniqueId.Segment> suffix = oldSegments.subList(oldPrefix.getSegments().size(), oldSegments.size());
+		UniqueId newValue = newPrefix;
+		for (UniqueId.Segment newSegment : suffix) {
+			newValue = newValue.append(newSegment);
+		}
+		return newValue;
 	}
 
 	private void execute(Node.DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
