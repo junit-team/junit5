@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine;
 
 import static org.junit.platform.commons.util.FunctionUtils.where;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -21,12 +23,14 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 
+import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
@@ -49,7 +53,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	@Test
 	void executesContainerTemplateClassTwice() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE, TwoInvocationsTestCase.class.getName());
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			TwoInvocationsTestCase.class.getName());
 		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var invocation1MethodAId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 		var invocation1NestedClassId = invocationId1.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
@@ -92,6 +97,24 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void executesOnlySelectedMethodsDeclaredInContainerTemplate() {
+		var results = executeTests(selectMethod(TwoInvocationsTestCase.class, "a"));
+
+		results.testEvents() //
+				.assertStatistics(stats -> stats.started(2).succeeded(2)) //
+				.assertEventsMatchLoosely(event(test(displayName("a()")), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesOnlySelectedMethodsDeclaredInNestedClassOfContainerTemplate() {
+		var results = executeTests(selectNestedMethod(List.of(TwoInvocationsTestCase.class),
+			TwoInvocationsTestCase.NestedTestCase.class, "b"));
+
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2)) //
+				.assertEventsMatchLoosely(event(test(displayName("b()")), finishedSuccessfully()));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -109,6 +132,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		@Nested
 		class NestedTestCase {
 			@Test
+			@Tag("nested")
 			void b() {
 			}
 		}
