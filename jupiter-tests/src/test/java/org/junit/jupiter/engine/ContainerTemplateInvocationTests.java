@@ -11,8 +11,10 @@
 package org.junit.jupiter.engine;
 
 import static org.junit.platform.commons.util.FunctionUtils.where;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
+import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -110,6 +112,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	void executesOnlySelectedMethodsDeclaredInNestedClassOfContainerTemplate() {
 		var results = executeTests(selectNestedMethod(List.of(TwoInvocationsTestCase.class),
 			TwoInvocationsTestCase.NestedTestCase.class, "b"));
+
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2)) //
+				.assertEventsMatchLoosely(event(test(displayName("b()")), finishedSuccessfully()));
+	}
+
+	@Test
+	void executesOnlyTestsPassingPostDiscoveryFilter() {
+		var results = executeTests(request -> request //
+				.selectors(selectClass(TwoInvocationsTestCase.class)) //
+				.filters(includeTags("nested")));
 
 		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2)) //
 				.assertEventsMatchLoosely(event(test(displayName("b()")), finishedSuccessfully()));

@@ -199,14 +199,19 @@ class DiscoverySelectorResolverTests {
 
 		resolve(request().selectors(selector));
 
-		assertThat(engineDescriptor.getDescendants()).hasSize(1);
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
-		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getDescendants());
-		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
+		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(containerTemplateDescriptor.mayRegisterTests()).isFalse();
+		assertThat(containerTemplateDescriptor.getDescendants()).hasSize(1);
 
 		var containerTemplateSegment = containerTemplateDescriptor.getUniqueId().getLastSegment();
 		assertThat(containerTemplateSegment.getType()).isEqualTo("container-template");
 		assertThat(containerTemplateSegment.getValue()).isEqualTo(ContainerTemplateTestCase.class.getName());
+
+		containerTemplateDescriptor.prune();
+		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
 	}
 
 	@Test

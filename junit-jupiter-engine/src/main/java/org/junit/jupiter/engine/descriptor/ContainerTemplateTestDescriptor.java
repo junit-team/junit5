@@ -70,6 +70,11 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 		return new ContainerTemplateTestDescriptor(newUniqueId, getTestClass(), configuration);
 	}
 
+	@Override
+	public void prunePriorToFiltering() {
+		// do nothing to allow PostDiscoveryFilters to be applied first
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override

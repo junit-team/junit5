@@ -17,6 +17,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
@@ -40,7 +41,13 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
-		return executeTests(request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()));
+		return executeTests(request -> request.selectors(selectors));
+	}
+
+	protected EngineExecutionResults executeTests(Consumer<LauncherDiscoveryRequestBuilder> configurer) {
+		var builder = request().outputDirectoryProvider(dummyOutputDirectoryProvider());
+		configurer.accept(builder);
+		return executeTests(builder);
 	}
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequestBuilder builder) {
