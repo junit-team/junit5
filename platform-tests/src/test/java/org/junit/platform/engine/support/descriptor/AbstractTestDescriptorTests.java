@@ -117,6 +117,17 @@ class AbstractTestDescriptorTests {
 	}
 
 	@Test
+	void orderChildrenReplacesDescriptor() {
+		var exception = assertThrows(JUnitException.class, () -> {
+			group1.orderChildren(children -> {
+				children.set(0, new LeafDescriptor(UniqueId.root("leaf", "leaf1-3")));
+				return children;
+			});
+		});
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
+	}
+
+	@Test
 	void setParentToOtherInstance() {
 		TestDescriptor newEngine = new EngineDescriptor(UniqueId.forEngine("newEngine"), "newEngine");
 		var group = engineDescriptor.getChildren().iterator().next();
