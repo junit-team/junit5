@@ -23,6 +23,8 @@ JUnit repository on GitHub.
 
 [[release-notes-5.12.0-M1-junit-platform]]
 === JUnit Platform
+* New `TestDescriptor.orderChildren(UnaryOperator<List<TestDescriptor>> orderer)`
+  method to order children in place
 
 [[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
