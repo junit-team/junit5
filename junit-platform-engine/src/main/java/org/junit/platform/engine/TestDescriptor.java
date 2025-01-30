@@ -10,12 +10,16 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -171,6 +175,30 @@ public interface TestDescriptor {
 	 * hierarchy.
 	 */
 	void removeFromHierarchy();
+
+	/**
+	 * Order all children from this descriptor.
+	 *
+	 * <p>The {@code orderer} is provided a modifiable list of children in
+	 * this test descriptor. Never {@code null}. The {@code orderer} may return
+	 * the elements of list in any order but may not add or remove descriptors.
+	 * <p>
+	 * If descriptors were added or removed this method must throw a
+	 * {@link org.junit.platform.commons.JUnitException JUnitException} explaining
+	 * that an {@code orderer} may not remove children from this descriptor.
+	 *
+	 * @param orderer a unary operator to order the children from this test descriptor.
+	 */
+	@API(since = "5.12", status = EXPERIMENTAL)
+	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
+		Preconditions.notNull(orderer, "orderer must not be null");
+		Set<? extends TestDescriptor> children = getChildren();
+		List<? extends TestDescriptor> orderedChildren = orderer.apply(new ArrayList<>(children));
+		boolean unmodified = children.size() == orderedChildren.size() && children.containsAll(orderedChildren);
+		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
+		orderedChildren.forEach(this::removeChild);
+		orderedChildren.forEach(this::addChild);
+	}
 
 	/**
 	 * Determine if this descriptor is a <em>root</em> descriptor.

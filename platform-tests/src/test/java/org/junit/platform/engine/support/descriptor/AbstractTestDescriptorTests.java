@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -38,6 +39,8 @@ class AbstractTestDescriptorTests {
 	private GroupDescriptor group1;
 	private GroupDescriptor group11;
 	private LeafDescriptor leaf111;
+	private LeafDescriptor leaf11;
+	private LeafDescriptor leaf12;
 
 	@BeforeEach
 	void initTree() {
@@ -49,8 +52,10 @@ class AbstractTestDescriptorTests {
 		group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
 		group1.addChild(group11);
 
-		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-1")));
-		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-2")));
+		leaf11 = new LeafDescriptor(UniqueId.root("leaf", "leaf1-1"));
+		group1.addChild(leaf11);
+		leaf12 = new LeafDescriptor(UniqueId.root("leaf", "leaf1-2"));
+		group1.addChild(leaf12);
 
 		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
@@ -76,6 +81,39 @@ class AbstractTestDescriptorTests {
 		assertFalse(group.getParent().isPresent());
 		assertTrue(group.getChildren().isEmpty());
 		assertTrue(formerChildren.stream().noneMatch(d -> d.getParent().isPresent()));
+	}
+
+	@Test
+	void orderChildren() {
+		group1.orderChildren(children -> {
+			children.sort(comparing(TestDescriptor::getDisplayName).reversed());
+			return children;
+		});
+		// Makes the compiler happy
+		List<TestDescriptor> children = new ArrayList<>(group1.getChildren());
+		assertThat(children).containsExactly(leaf12, leaf11, group11);
+	}
+
+	@Test
+	void orderChildrenRemovesDescriptor() {
+		var exception = assertThrows(JUnitException.class, () -> {
+			group1.orderChildren(children -> {
+				children.removeFirst();
+				return children;
+			});
+		});
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
+	}
+
+	@Test
+	void orderChildrenAddsDescriptor() {
+		var exception = assertThrows(JUnitException.class, () -> {
+			group1.orderChildren(children -> {
+				children.add(new LeafDescriptor(UniqueId.root("leaf", "leaf1-3")));
+				return children;
+			});
+		});
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test

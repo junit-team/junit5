@@ -11,14 +11,12 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
@@ -60,9 +58,8 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
 			Function<CHILD, WRAPPER> descriptorWrapperFactory, DescriptorWrapperOrderer descriptorWrapperOrderer) {
 
-		Set<? extends TestDescriptor> children = parentTestDescriptor.getChildren();
-
-		List<WRAPPER> matchingDescriptorWrappers = children.stream()//
+		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
+				.stream()//
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
 				.map(descriptorWrapperFactory)//
@@ -74,50 +71,48 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 		}
 
 		if (descriptorWrapperOrderer.canOrderWrappers()) {
-			List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-					.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
-					.collect(Collectors.toList());
+			parentTestDescriptor.orderChildren(children -> {
+				List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
+						.collect(toList());
 
-			// Make a local copy for later validation
-			Set<WRAPPER> originalWrappers = new LinkedHashSet<>(matchingDescriptorWrappers);
+				// Make a local copy for later validation
+				List<WRAPPER> originalWrappers = new ArrayList<>(matchingDescriptorWrappers);
 
-			descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
+				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
 
-			int difference = matchingDescriptorWrappers.size() - originalWrappers.size();
-			if (difference > 0) {
-				descriptorWrapperOrderer.logDescriptorsAddedWarning(difference);
-			}
-			else if (difference < 0) {
-				descriptorWrapperOrderer.logDescriptorsRemovedWarning(difference);
-			}
+				int difference = matchingDescriptorWrappers.size() - originalWrappers.size();
+				if (difference > 0) {
+					descriptorWrapperOrderer.logDescriptorsAddedWarning(difference);
+				}
+				else if (difference < 0) {
+					descriptorWrapperOrderer.logDescriptorsRemovedWarning(difference);
+				}
 
-			Set<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
-					.filter(originalWrappers::contains)//
-					.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor)//
-					.collect(toCollection(LinkedHashSet::new));
+				List<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
+						.filter(originalWrappers::contains)//
+						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor)//
+						.collect(toList());
 
-			// There is currently no way to removeAll or addAll children at once, so we
-			// first remove them all and then add them all back.
-			Stream.concat(orderedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
-					.forEach(parentTestDescriptor::removeChild);
+				// If we are ordering children of type ClassBasedTestDescriptor, that means we
+				// are ordering top-level classes or @Nested test classes. Thus, the
+				// nonMatchingTestDescriptors list is either empty (for top-level classes) or
+				// contains only local test methods (for @Nested classes) which must be executed
+				// before tests in @Nested test classes. So we add the test methods before adding
+				// the @Nested test classes.
+				if (matchingChildrenType == ClassBasedTestDescriptor.class) {
+					return Stream.concat(nonMatchingTestDescriptors.stream(), orderedTestDescriptors.stream())//
+							.collect(toList());
+				}
+				// Otherwise, we add the ordered descriptors before the non-matching descriptors,
+				// which is the case when we are ordering test methods. In other words, local
+				// test methods always get added before @Nested test classes.
+				else {
+					return Stream.concat(orderedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
+							.collect(toList());
+				}
+			});
 
-			// If we are ordering children of type ClassBasedTestDescriptor, that means we
-			// are ordering top-level classes or @Nested test classes. Thus, the
-			// nonMatchingTestDescriptors list is either empty (for top-level classes) or
-			// contains only local test methods (for @Nested classes) which must be executed
-			// before tests in @Nested test classes. So we add the test methods before adding
-			// the @Nested test classes.
-			if (matchingChildrenType == ClassBasedTestDescriptor.class) {
-				Stream.concat(nonMatchingTestDescriptors.stream(), orderedTestDescriptors.stream())//
-						.forEach(parentTestDescriptor::addChild);
-			}
-			// Otherwise, we add the ordered descriptors before the non-matching descriptors,
-			// which is the case when we are ordering test methods. In other words, local
-			// test methods always get added before @Nested test classes.
-			else {
-				Stream.concat(orderedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
-						.forEach(parentTestDescriptor::addChild);
-			}
 		}
 
 		// Recurse through the children in order to support ordering for @Nested test classes.
