@@ -131,7 +131,7 @@ class AbstractTestDescriptorTests {
 	void orderChildrenDuplicatesDescriptor() {
 		var exception = assertThrows(JUnitException.class, () -> {
 			group1.orderChildren(children -> {
-				children.set(1,  children.get(0));
+				children.set(1, children.getFirst());
 				return children;
 			});
 		});
