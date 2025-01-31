@@ -1,9 +1,24 @@
 [[release-notes-5.12.0-M1]]
 == 5.12.0-M1
 
-*Date of Release:* ❓
+*Date of Release:* January 31, 2025
 
-*Scope:* ❓
+*Scope:*
+
+* Output file attachments for tests and containers
+* Improvements to the Open Test Reporting XML output
+* Resource lock definition improvements
+* Thread dumps on test timeouts
+* Parameterized test validation improvements
+* Filtering support for auto-registered extensions
+* Kotlin contracts for assertions
+* Configurable Jupiter extension context scope
+* Enhancements to the `ConsoleLauncher`
+* Better support for GraalVM native image usage
+* Improved discovery support for file-based test engines
+* Customizable classpath scanning
+* Parallel execution support in JUnit Vintage engine
+* Numerous bug fixes and other enhancements
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1] milestone page in the
@@ -23,11 +38,6 @@ JUnit repository on GitHub.
 
 [[release-notes-5.12.0-M1-junit-platform]]
 === JUnit Platform
-
-[[release-notes-5.12.0-M1-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
 
 [[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
@@ -159,16 +169,6 @@ JUnit repository on GitHub.
 
 [[release-notes-5.12.0-M1-junit-vintage]]
 === JUnit Vintage
-
-[[release-notes-5.12.0-M1-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.12.0-M1-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
 
 [[release-notes-5.12.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
