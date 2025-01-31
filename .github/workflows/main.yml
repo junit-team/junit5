@@ -5,6 +5,8 @@ on:
     branches:
       - main
       - 'releases/**'
+    tags-ignore:
+      - '**'
   pull_request:
     branches:
       - '**'
