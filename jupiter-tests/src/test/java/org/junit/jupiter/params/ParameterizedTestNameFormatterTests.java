@@ -333,7 +333,7 @@ class ParameterizedTestNameFormatterTests {
 
 	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
 		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class),
-			Optional.empty());
+			Optional.ofNullable(method.getAnnotation(ExpressionLanguage.class)));
 		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
 	}
 

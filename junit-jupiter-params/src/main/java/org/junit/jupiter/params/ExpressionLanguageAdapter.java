@@ -1,9 +1,9 @@
 
 package org.junit.jupiter.params;
 
-import java.util.Map;
-
 public interface ExpressionLanguageAdapter {
 
-	String evaluate(String template, Map<String, Object> context);
+	void compile(String template);
+
+	void format(ArgumentsContext argumentsContext, StringBuffer stringBuffer);
 }

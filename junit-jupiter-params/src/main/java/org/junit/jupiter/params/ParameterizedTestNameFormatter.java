@@ -19,6 +19,7 @@ import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDE
 import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.FieldPosition;
 import java.text.Format;
 import java.text.MessageFormat;
@@ -27,12 +28,14 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.params.provider.Arguments;
@@ -46,7 +49,6 @@ import org.junit.platform.commons.util.StringUtils;
 class ParameterizedTestNameFormatter {
 
 	private final PartialFormatter[] partialFormatters;
-	private final boolean useExpressionLanguageFormatter = false; // TODO jgauthier
 
 	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
 			int argumentMaxLength) {
@@ -97,18 +99,36 @@ class ParameterizedTestNameFormatter {
 		while (isNotBlank(unparsedSegment)) {
 			PlaceholderPosition position = findFirstPlaceholder(formatters, unparsedSegment);
 			if (position == null) {
-				result.add(determineNonPlaceholderFormatter(unparsedSegment, argumentMaxLength));
+				result.add(determineNonPlaceholderFormatter(methodContext, unparsedSegment, argumentMaxLength));
 				break;
 			}
 			if (position.index > 0) {
 				String before = unparsedSegment.substring(0, position.index);
-				result.add(determineNonPlaceholderFormatter(before, argumentMaxLength));
+				result.add(determineNonPlaceholderFormatter(methodContext, before, argumentMaxLength));
 			}
 			result.add(formatters.get(position.placeholder));
 			unparsedSegment = unparsedSegment.substring(position.index + position.placeholder.length());
 		}
 
 		return result.toArray(new PartialFormatter[0]);
+	}
+
+	@NotNull
+	private static Optional<ExpressionLanguageAdapter> createExpressionLanguageAdapter(
+			ParameterizedTestMethodContext methodContext,
+			String segment
+	) {
+			return methodContext.expressionLanguageAnnotation.map(ExpressionLanguage::value).map(adapterClass -> {
+				try {
+					ExpressionLanguageAdapter adapterInstance = adapterClass.getDeclaredConstructor().newInstance();
+					adapterInstance.compile(segment);
+					return adapterInstance;
+				} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+					String message = "Failed to initialize expression language for parameterized test. "
+							+ "See nested exception for further details.";
+					throw new JUnitException(message, ex);
+				}
+			});
 	}
 
 	private static PlaceholderPosition findFirstPlaceholder(PartialFormatters formatters, String segment) {
@@ -130,10 +150,11 @@ class ParameterizedTestNameFormatter {
 		return minimum;
 	}
 
-	private NonPlaceholderFormatter determineNonPlaceholderFormatter(String segment, int argumentMaxLength) {
-		return useExpressionLanguageFormatter
-				? new ExpressionLanguageNonPlaceholderFormatter(argumentsContext -> "") // TODO jgauthier
-				: new DefaultNonPlaceholderFormatter(segment, argumentMaxLength);
+	private NonPlaceholderFormatter determineNonPlaceholderFormatter(
+			ParameterizedTestMethodContext methodContext, String segment, int argumentMaxLength) {
+		return createExpressionLanguageAdapter(methodContext, segment)
+				.map(expressionLanguageAdapter -> (NonPlaceholderFormatter) new ExpressionLanguageNonPlaceholderFormatter(expressionLanguageAdapter))
+				.orElseGet(() -> new DefaultNonPlaceholderFormatter(segment, argumentMaxLength));
 	}
 
 	private PartialFormatters createPartialFormatters(String displayName, ParameterizedTestMethodContext methodContext,
@@ -182,19 +203,6 @@ class ParameterizedTestNameFormatter {
 			this.placeholder = placeholder;
 		}
 
-	}
-
-	private static class ArgumentsContext {
-
-		private final int invocationIndex;
-		private final Arguments arguments;
-		private final Object[] consumedArguments;
-
-		ArgumentsContext(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
-			this.invocationIndex = invocationIndex;
-			this.arguments = arguments;
-			this.consumedArguments = consumedArguments;
-		}
 	}
 
 	@FunctionalInterface
@@ -311,22 +319,18 @@ class ParameterizedTestNameFormatter {
 		}
 	}
 
-	private interface ExpressionLanguageAdapter {
-
-		String format(ArgumentsContext argumentsContext);
-	}
-
 	private static class ExpressionLanguageNonPlaceholderFormatter implements NonPlaceholderFormatter {
 
 		private final ExpressionLanguageAdapter expressionLanguageAdapter;
 
 		public ExpressionLanguageNonPlaceholderFormatter(ExpressionLanguageAdapter expressionLanguageAdapter) {
 			this.expressionLanguageAdapter = expressionLanguageAdapter;
+
 		}
 
 		@Override
 		public void append(ArgumentsContext argumentsContext, StringBuffer result) {
-			result.append(expressionLanguageAdapter.format(argumentsContext));
+			expressionLanguageAdapter.format(argumentsContext, result);
 		}
 	}
 }

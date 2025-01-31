@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.params.provider.Arguments;
@@ -47,7 +48,7 @@ public class ParameterizedTestNameFormatterBenchmarks {
 		var method = TestCase.class.getDeclaredMethod("parameterizedTest", int.class);
 		var formatter = new ParameterizedTestNameFormatter(
 			ParameterizedTest.DISPLAY_NAME_PLACEHOLDER + " " + ParameterizedTest.DEFAULT_DISPLAY_NAME + " ({0})",
-			"displayName", new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class)),
+			"displayName", new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class), Optional.ofNullable(method.getAnnotation(ExpressionLanguage.class))),
 			512);
 		for (int i = 0; i < argumentsList.size(); i++) {
 			Arguments arguments = argumentsList.get(i);
