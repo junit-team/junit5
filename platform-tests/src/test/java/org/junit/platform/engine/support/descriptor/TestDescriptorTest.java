@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -28,7 +29,7 @@ class TestDescriptorTest implements TestDescriptorOrderChildrenTest {
 
 	private static class MinimalTestDescriptorImplementation implements TestDescriptor {
 
-		private final LinkedHashSet<TestDescriptor> children = new LinkedHashSet<>();
+		private final Set<TestDescriptor> children = Collections.synchronizedSet(new LinkedHashSet<>());
 
 		@Override
 		public UniqueId getUniqueId() {
@@ -62,7 +63,7 @@ class TestDescriptorTest implements TestDescriptorOrderChildrenTest {
 
 		@Override
 		public Set<? extends TestDescriptor> getChildren() {
-			return children;
+			return Collections.unmodifiableSet(children);
 		}
 
 		@Override
