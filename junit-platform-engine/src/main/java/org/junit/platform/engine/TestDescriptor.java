@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine;
 
-import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -192,12 +191,16 @@ public interface TestDescriptor {
 	@API(since = "5.12", status = EXPERIMENTAL)
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");
-		List<TestDescriptor> copyOfChildren = new ArrayList<>(getChildren());
-		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(copyOfChildren));
+		Set<? extends TestDescriptor> originalChildren = getChildren();
+		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(originalChildren));
 		Preconditions.notNull(suggestedOrder, "orderer may not return null");
-		copyOfChildren.sort(comparingInt(suggestedOrder::indexOf));
-		copyOfChildren.forEach(this::removeChild);
-		copyOfChildren.forEach(this::addChild);
+		suggestedOrder.stream() //
+				.distinct() //
+				.filter(originalChildren::contains)//
+				.forEach(testDescriptor -> {
+					removeChild(testDescriptor);
+					addChild(testDescriptor);
+				});
 	}
 
 	/**
