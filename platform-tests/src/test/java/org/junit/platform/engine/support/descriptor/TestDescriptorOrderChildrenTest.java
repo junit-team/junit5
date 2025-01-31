@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -138,6 +139,17 @@ public interface TestDescriptorOrderChildrenTest {
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> testDescriptor.orderChildren(children -> null));
 		assertThat(exception).hasMessage("orderer may not return null");
+	}
+
+	@Test
+	default void orderChildrenProvidedChildrenAreModifiable() {
+		var testDescriptor = createTestDescriptorWithChildren();
+		AtomicReference<List<TestDescriptor>> childrenRef = new AtomicReference<>();
+		testDescriptor.orderChildren(children -> {
+			childrenRef.set(children);
+			return children;
+		});
+		assertThat(childrenRef.get()).isInstanceOf(ArrayList.class);
 	}
 }
 
