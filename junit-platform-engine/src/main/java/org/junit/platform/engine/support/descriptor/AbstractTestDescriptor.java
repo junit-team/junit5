@@ -11,6 +11,7 @@
 package org.junit.platform.engine.support.descriptor;
 
 import static java.util.Collections.emptySet;
+import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
@@ -153,11 +154,12 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	@Override
 	public void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");
-		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(orderer.apply(new ArrayList<>(children)));
-		boolean unmodified = children.equals(orderedChildren);
-		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
-		children.clear();
-		children.addAll(orderedChildren);
+		List<TestDescriptor> copyOfChildren = new ArrayList<>(this.children);
+		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(copyOfChildren));
+		Preconditions.notNull(suggestedOrder, "orderer may not return null");
+		copyOfChildren.sort(comparingInt(suggestedOrder::indexOf));
+		this.children.clear();
+		this.children.addAll(copyOfChildren);
 	}
 
 	@Override

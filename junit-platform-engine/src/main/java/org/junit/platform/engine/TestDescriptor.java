@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static java.util.Comparator.comparingInt;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -179,25 +180,24 @@ public interface TestDescriptor {
 	/**
 	 * Order all children from this descriptor.
 	 *
-	 * <p>The {@code orderer} is provided a modifiable list of children in
-	 * this test descriptor. Never {@code null}. The {@code orderer} may return
-	 * the elements of list in any order but may not add or remove descriptors.
+	 * <p>The {@code orderer} is provided a modifiable list of child test descriptors in
+	 * this test descriptor. Never {@code null}. The {@code orderer} must return
+	 * a list of descriptors in any order, never {@code null}.
 	 * <p>
-	 * If descriptors were added or removed this method must throw a
-	 * {@link org.junit.platform.commons.JUnitException JUnitException} explaining
-	 * that an {@code orderer} may not remove children from this descriptor.
+	 * If descriptors were added, these descriptors will be ignored. If descriptors
+	 * are removed, the original descriptors will be retained in arbitrary order.
 	 *
 	 * @param orderer a unary operator to order the children from this test descriptor.
 	 */
 	@API(since = "5.12", status = EXPERIMENTAL)
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");
-		Set<? extends TestDescriptor> children = getChildren();
-		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(orderer.apply(new ArrayList<>(children)));
-		boolean unmodified = children.equals(orderedChildren);
-		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
-		orderedChildren.forEach(this::removeChild);
-		orderedChildren.forEach(this::addChild);
+		List<TestDescriptor> copyOfChildren = new ArrayList<>(getChildren());
+		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(copyOfChildren));
+		Preconditions.notNull(suggestedOrder, "orderer may not return null");
+		copyOfChildren.sort(comparingInt(suggestedOrder::indexOf));
+		copyOfChildren.forEach(this::removeChild);
+		copyOfChildren.forEach(this::addChild);
 	}
 
 	/**
