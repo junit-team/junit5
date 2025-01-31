@@ -15,6 +15,7 @@ import com.github.mustachejava.MustacheFactory;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -27,23 +28,26 @@ public class ExpressionLanguageTests {
 	void throwsExceptionWhenParameterizedTestIsNotInvokedAtLeastOnce() {
 		var extensionContext = getExtensionContextReturningSingleMethod(new TestCaseWithAnnotatedMethod());
 		this.parameterizedTestExtension.supportsTestTemplate(extensionContext);
-		var stream = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext);
-		assertThat(stream.findFirst().get().getDisplayName(0)).isEqualTo("hello!");
+		var testTemplateInvocationContexts = this.parameterizedTestExtension.provideTestTemplateInvocationContexts(extensionContext).toList();
+		assertThat(testTemplateInvocationContexts.get(0).getDisplayName(0)).isEqualTo("foo 123");
+		assertThat(testTemplateInvocationContexts.get(1).getDisplayName(0)).isEqualTo("foo 456");
 	}
 
 	static class TestCaseWithAnnotatedMethod {
 
 		@ExpressionLanguage(MustacheAdapter.class)
-		@ParameterizedTest(name = "foo {{name}}")
+		@ParameterizedTest(name = "foo {{bar}}")
 		@ArgumentsSource(FooArgumentsProvider.class)
 		void method() {
 		}
 
 		static class Foo {
 			String bar;
+			String baz;
 
-			public Foo(String bar) {
+			public Foo(String bar, String baz) {
 				this.bar = bar;
+				this.baz = baz;
 			}
 		}
 
@@ -51,8 +55,8 @@ public class ExpressionLanguageTests {
 
 			@Override
 			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-				return Stream.of(arguments(new TestCaseWithAnnotatedMethod.Foo("123")),
-					arguments(new TestCaseWithAnnotatedMethod.Foo("456")));
+				return Stream.of(arguments(new TestCaseWithAnnotatedMethod.Foo("123", "abc")),
+					arguments(new TestCaseWithAnnotatedMethod.Foo("456", "def")));
 			}
 		}
 	}
@@ -72,10 +76,10 @@ public class ExpressionLanguageTests {
 		}
 
 		@Override
-		public void format(ArgumentsContext argumentsContext, StringBuffer stringBuffer) {
+		public void format(Object scope, StringBuffer result) {
 			StringWriter stringWriter = new StringWriter();
-			mustache.execute(stringWriter, argumentsContext);
-			stringBuffer.append(stringWriter);
+			mustache.execute(stringWriter, scope);
+			result.append(stringWriter);
 		}
 	}
 }

@@ -5,5 +5,5 @@ public interface ExpressionLanguageAdapter {
 
 	void compile(String template);
 
-	void format(ArgumentsContext argumentsContext, StringBuffer stringBuffer);
+	void format(Object scope, StringBuffer result);
 }

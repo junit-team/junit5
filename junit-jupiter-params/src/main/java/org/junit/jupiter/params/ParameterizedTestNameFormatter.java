@@ -330,7 +330,7 @@ class ParameterizedTestNameFormatter {
 
 		@Override
 		public void append(ArgumentsContext argumentsContext, StringBuffer result) {
-			expressionLanguageAdapter.format(argumentsContext, result);
+			expressionLanguageAdapter.format(argumentsContext.arguments.get()[0], result);
 		}
 	}
 }
