@@ -155,13 +155,15 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		Preconditions.notNull(orderer, "orderer must not be null");
 		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(this.children));
 		Preconditions.notNull(suggestedOrder, "orderer may not return null");
-		suggestedOrder.stream() //
-				.distinct() //
-				.filter(this.children::contains)//
-				.forEach(testDescriptor -> {
-					this.children.remove(testDescriptor);
-					this.children.add(testDescriptor);
-				});
+
+		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(suggestedOrder);
+		boolean unmodified = this.children.equals(orderedChildren);
+		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
+		Preconditions.condition(this.children.size() == suggestedOrder.size(),
+			"orderer may not add duplicate test descriptors");
+
+		this.children.clear();
+		this.children.addAll(orderedChildren);
 	}
 
 	@Override

@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -76,23 +77,10 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
 						.collect(toList());
 
-				// Make a local copy for later validation
-				List<WRAPPER> originalWrappers = new ArrayList<>(matchingDescriptorWrappers);
-
 				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
 
-				int difference = matchingDescriptorWrappers.size() - originalWrappers.size();
-				if (difference > 0) {
-					descriptorWrapperOrderer.logDescriptorsAddedWarning(difference);
-				}
-				else if (difference < 0) {
-					descriptorWrapperOrderer.logDescriptorsRemovedWarning(difference);
-				}
-
-				List<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
-						.filter(originalWrappers::contains)//
-						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor)//
-						.collect(toList());
+				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
+						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
 
 				// If we are ordering children of type ClassBasedTestDescriptor, that means we
 				// are ordering top-level classes or @Nested test classes. Thus, the
@@ -101,18 +89,17 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 				// before tests in @Nested test classes. So we add the test methods before adding
 				// the @Nested test classes.
 				if (matchingChildrenType == ClassBasedTestDescriptor.class) {
-					return Stream.concat(nonMatchingTestDescriptors.stream(), orderedTestDescriptors.stream())//
+					return Stream.concat(nonMatchingTestDescriptors.stream(), orderedTestDescriptors)//
 							.collect(toList());
 				}
 				// Otherwise, we add the ordered descriptors before the non-matching descriptors,
 				// which is the case when we are ordering test methods. In other words, local
 				// test methods always get added before @Nested test classes.
 				else {
-					return Stream.concat(orderedTestDescriptors.stream(), nonMatchingTestDescriptors.stream())//
+					return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors.stream())//
 							.collect(toList());
 				}
 			});
-
 		}
 
 		// Recurse through the children in order to support ordering for @Nested test classes.
@@ -162,7 +149,43 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 		}
 
 		private void orderWrappers(List<WRAPPER> wrappers) {
+			// Make a local copy for later validation
+			List<WRAPPER> originalWrappers = new ArrayList<>(wrappers);
+
 			this.orderingAction.accept(wrappers);
+
+			warnAboutAndRemoveAddedWrappers(originalWrappers, wrappers);
+			warnAboutAndReAddRemovedWrappers(originalWrappers, wrappers);
+		}
+
+		private void warnAboutAndRemoveAddedWrappers(List<WRAPPER> originalWrappers, List<WRAPPER> wrappers) {
+			int numAddedWrappers = 0;
+			Iterator<?> iterator = wrappers.iterator();
+			while (iterator.hasNext()) {
+				// Avoid ClassCastException if a misbehaving ordered added a non-WRAPPER
+				Object wrapper = iterator.next();
+				//noinspection SuspiciousMethodCalls
+				if (!originalWrappers.contains(wrapper)) {
+					numAddedWrappers++;
+					iterator.remove();
+				}
+			}
+			if (numAddedWrappers > 0) {
+				logDescriptorsAddedWarning(numAddedWrappers);
+			}
+		}
+
+		private void warnAboutAndReAddRemovedWrappers(List<WRAPPER> originalWrappers, List<WRAPPER> wrappers) {
+			int numRemovedWrappers = 0;
+			for (WRAPPER wrapper : originalWrappers) {
+				if (!wrappers.contains(wrapper)) {
+					wrappers.add(numRemovedWrappers, wrapper);
+					numRemovedWrappers++;
+				}
+			}
+			if (numRemovedWrappers > 0) {
+				logDescriptorsRemovedWarning(numRemovedWrappers);
+			}
 		}
 
 		private void logDescriptorsAddedWarning(int number) {

@@ -194,6 +194,13 @@ public interface TestDescriptor {
 		Set<? extends TestDescriptor> originalChildren = getChildren();
 		List<TestDescriptor> suggestedOrder = orderer.apply(new ArrayList<>(originalChildren));
 		Preconditions.notNull(suggestedOrder, "orderer may not return null");
+
+		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(suggestedOrder);
+		boolean unmodified = originalChildren.equals(orderedChildren);
+		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
+		Preconditions.condition(originalChildren.size() == suggestedOrder.size(),
+			"orderer may not add duplicate test descriptors");
+
 		suggestedOrder.stream() //
 				.distinct() //
 				.filter(originalChildren::contains)//

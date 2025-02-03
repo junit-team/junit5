@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -54,10 +55,9 @@ public interface TestDescriptorOrderChildrenTest {
 	@Test
 	default void orderChildrenEmptyList() {
 		var testDescriptor = createTestDescriptorWithChildren();
-		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
-		testDescriptor.orderChildren(children -> emptyList());
-		List<TestDescriptor> children = new ArrayList<>(testDescriptor.getChildren());
-		assertThat(children).isEqualTo(childrenInOriginalOrder);
+		var exception = assertThrows(PreconditionViolationException.class,
+			() -> testDescriptor.orderChildren(children -> emptyList()));
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test
@@ -75,62 +75,46 @@ public interface TestDescriptorOrderChildrenTest {
 	@Test
 	default void orderChildrenRemovesDescriptor() {
 		var testDescriptor = createTestDescriptorWithChildren();
-		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
-		testDescriptor.orderChildren(children -> {
+		UnaryOperator<List<TestDescriptor>> orderer = children -> {
 			children.remove(1);
 			return children;
-		});
-		List<TestDescriptor> children = new ArrayList<>(testDescriptor.getChildren());
-		assertThat(children).isEqualTo(List.of(//
-			childrenInOriginalOrder.get(1), //
-			childrenInOriginalOrder.get(0), //
-			childrenInOriginalOrder.get(2))//
-		);
+		};
+		var exception = assertThrows(PreconditionViolationException.class, () -> testDescriptor.orderChildren(orderer));
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test
 	default void orderChildrenAddsDescriptor() {
 		var testDescriptor = createTestDescriptorWithChildren();
-		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
-		testDescriptor.orderChildren(children -> {
+		UnaryOperator<List<TestDescriptor>> orderer = children -> {
 			children.add(1, new StubTestDescriptor(UniqueId.root("extra", "extra1")));
 			return children;
-		});
-		List<TestDescriptor> children = new ArrayList<>(testDescriptor.getChildren());
-		assertThat(children).isEqualTo(childrenInOriginalOrder);
+		};
+		var exception = assertThrows(PreconditionViolationException.class, () -> testDescriptor.orderChildren(orderer));
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test
 	default void orderChildrenReplacesDescriptor() {
 		var testDescriptor = createTestDescriptorWithChildren();
-		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
-
-		testDescriptor.orderChildren(children -> {
+		UnaryOperator<List<TestDescriptor>> orderer = children -> {
 			children.set(1, new StubTestDescriptor(UniqueId.root("replaced", "replaced1")));
 			return children;
-		});
-		List<TestDescriptor> children = new ArrayList<>(testDescriptor.getChildren());
-		assertThat(children).isEqualTo(List.of(//
-			childrenInOriginalOrder.get(1), //
-			childrenInOriginalOrder.get(0), //
-			childrenInOriginalOrder.get(2))//
-		);
+		};
+		var exception = assertThrows(PreconditionViolationException.class, () -> testDescriptor.orderChildren(orderer));
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test
 	default void orderChildrenDuplicatesDescriptor() {
 		var testDescriptor = createTestDescriptorWithChildren();
 		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
-		testDescriptor.orderChildren(children -> {
+		UnaryOperator<List<TestDescriptor>> orderer = children -> {
 			children.add(1, children.getLast());
 			return children;
-		});
-		List<TestDescriptor> children = new ArrayList<>(testDescriptor.getChildren());
-		assertThat(children).isEqualTo(List.of(//
-			childrenInOriginalOrder.get(0), //
-			childrenInOriginalOrder.get(2), //
-			childrenInOriginalOrder.get(1))//
-		);
+		};
+		var exception = assertThrows(PreconditionViolationException.class, () -> testDescriptor.orderChildren(orderer));
+		assertThat(exception).hasMessage("orderer may not add duplicate test descriptors");
 	}
 
 	@Test
