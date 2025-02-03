@@ -11,7 +11,9 @@
 package org.junit.jupiter.api.condition;
 
 import java.lang.annotation.Annotation;
+import java.util.Arrays;
 import java.util.function.Function;
+import java.util.stream.IntStream;
 
 import org.junit.platform.commons.util.Preconditions;
 
@@ -36,18 +38,23 @@ abstract class AbstractJreCondition<A extends Annotation> extends BooleanExecuti
 		this.annotationName = annotationType.getSimpleName();
 	}
 
-	protected void validateVersions(JRE[] jres, int[] versions) {
+	IntStream validatedVersions(JRE[] jres, int[] versions) {
 		Preconditions.condition(jres.length > 0 || versions.length > 0,
 			() -> "You must declare at least one JRE or version in @" + this.annotationName);
-		for (JRE jre : jres) {
-			Preconditions.condition(jre != JRE.UNDEFINED,
-				() -> "JRE.UNDEFINED is not supported in @" + this.annotationName);
-		}
-		for (int version : versions) {
-			Preconditions.condition(version >= JRE.MINIMUM_VERSION,
-				() -> String.format("Version [%d] in @%s must be greater than or equal to %d", version,
-					this.annotationName, JRE.MINIMUM_VERSION));
-		}
+
+		return IntStream.concat(//
+			Arrays.stream(jres).mapToInt(jre -> {
+				Preconditions.condition(jre != JRE.UNDEFINED,
+					() -> "JRE.UNDEFINED is not supported in @" + this.annotationName);
+				return jre.version();
+			}), //
+			Arrays.stream(versions).map(version -> {
+				Preconditions.condition(version >= JRE.MINIMUM_VERSION,
+					() -> String.format("Version [%d] in @%s must be greater than or equal to %d", version,
+						this.annotationName, JRE.MINIMUM_VERSION));
+				return version;
+			})//
+		);
 	}
 
 }
