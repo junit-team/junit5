@@ -131,7 +131,7 @@ public @interface EnabledForJreRange {
 	 *
 	 * @since 5.12
 	 * @see #min()
-	 * @see JRE#featureVersion()
+	 * @see JRE#version()
 	 * @see Runtime.Version#feature()
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
@@ -149,7 +149,7 @@ public @interface EnabledForJreRange {
 	 *
 	 * @since 5.12
 	 * @see #max()
-	 * @see JRE#featureVersion()
+	 * @see JRE#version()
 	 * @see Runtime.Version#feature()
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")

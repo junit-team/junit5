@@ -106,7 +106,7 @@ public @interface EnabledOnJre {
 	 *
 	 * @since 5.12
 	 * @see #value()
-	 * @see JRE#featureVersion()
+	 * @see JRE#version()
 	 * @see Runtime.Version#feature()
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
