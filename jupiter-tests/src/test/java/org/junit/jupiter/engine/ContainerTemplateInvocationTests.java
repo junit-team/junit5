@@ -14,6 +14,7 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
+import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
 import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.container;
@@ -125,6 +126,19 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2)) //
 				.assertEventsMatchLoosely(event(test(displayName("b()")), finishedSuccessfully()));
+	}
+
+	@Test
+	void prunesEmptyNestedTestClasses() {
+		var results = executeTests(request -> request //
+				.selectors(selectClass(TwoInvocationsTestCase.class)) //
+				.filters(excludeTags("nested")));
+
+		results.containerEvents().assertThatEvents() //
+				.noneMatch(container(TwoInvocationsTestCase.NestedTestCase.class.getSimpleName())::matches);
+
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2)) //
+				.assertEventsMatchLoosely(event(test(displayName("a()")), finishedSuccessfully()));
 	}
 
 	// TODO #871 Consider moving to EventConditions

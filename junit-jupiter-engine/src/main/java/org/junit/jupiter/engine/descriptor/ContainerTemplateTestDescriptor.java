@@ -80,6 +80,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	@Override
 	public void prune() {
 		super.prune();
+		this.children.forEach(child -> child.accept(TestDescriptor::prune));
 		this.childrenPrototypes.addAll(this.children);
 		this.children.clear();
 	}
