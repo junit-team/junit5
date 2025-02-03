@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.jupiter.api.MethodOrderer.Random.RANDOM_SEED_PROPERTY_NAME;
@@ -270,7 +271,7 @@ class OrderedMethodTests {
 
 		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
 
-		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
+		assertThat(callSequence).containsExactly("test1()", "test2()");
 
 		var expectedMessage = "MethodOrderer [" + MisbehavingByAdding.class.getName()
 				+ "] added 2 MethodDescriptor(s) for test class [" + testClass.getName() + "] which will be ignored.";
@@ -282,9 +283,15 @@ class OrderedMethodTests {
 	void misbehavingMethodOrdererThatRemovesElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByRemovingTestCase.class;
 
-		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(3));
+		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(4));
 
-		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()", "test3()");
+		assertThat(callSequence) //
+				.containsExactlyInAnyOrder("test1()", "test2()", "test3()", "test4()") //
+				.containsSubsequence("test3()", "test4()") // ordered in MisbehavingByRemoving
+				.containsSubsequence("test1()", "test3()") // removed item is re-added before ordered item
+				.containsSubsequence("test1()", "test4()") // removed item is re-added before ordered item
+				.containsSubsequence("test2()", "test3()") // removed item is re-added before ordered item
+				.containsSubsequence("test2()", "test4()");// removed item is re-added before ordered item
 
 		var expectedMessage = "MethodOrderer [" + MisbehavingByRemoving.class.getName()
 				+ "] removed 2 MethodDescriptor(s) for test class [" + testClass.getName()
@@ -640,11 +647,11 @@ class OrderedMethodTests {
 		}
 
 		@Test
-		void test1() {
+		void test2() {
 		}
 
 		@Test
-		void test2() {
+		void test1() {
 		}
 	}
 
@@ -659,6 +666,10 @@ class OrderedMethodTests {
 
 		@Test
 		void test1() {
+		}
+
+		@Test
+		void test4() {
 		}
 
 		@Test
@@ -698,6 +709,7 @@ class OrderedMethodTests {
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparing(MethodDescriptor::getDisplayName));
 			context.getMethodDescriptors().add(mockMethodDescriptor());
 			context.getMethodDescriptors().add(mockMethodDescriptor());
 		}
@@ -713,6 +725,7 @@ class OrderedMethodTests {
 
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparing(MethodDescriptor::getDisplayName));
 			context.getMethodDescriptors().remove(0);
 			context.getMethodDescriptors().remove(0);
 		}
