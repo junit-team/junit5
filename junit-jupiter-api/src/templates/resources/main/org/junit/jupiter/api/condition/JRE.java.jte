@@ -120,8 +120,7 @@ public enum JRE {
 	private static JRE determineCurrentJre(int currentVersion) {
 		switch (currentVersion) {
 			case UNDEFINED_VERSION:
-				// null signals that the current JRE version is undefined.
-				return null;<%--
+				return UNDEFINED;<%--
 			--%>@for(var jre : jres)
 			case ${jre.getVersion()}:
 				return JAVA_${jre.getVersion()};<%--
@@ -157,7 +156,7 @@ public enum JRE {
 	/**
 	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
 	 * Java Runtime Environment version for the currently executing JVM or if
-	 * the version is {@link #OTHER}
+	 * the version is {@link #OTHER} or {@link #UNDEFINED}
 	 *
 	 * @see #currentJre()
 	 * @see #currentVersionNumber()
@@ -168,8 +167,7 @@ public enum JRE {
 
 	/**
 	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER} or {@code null} if the current JVM version could not be
-	 * determined
+	 * {@link #OTHER} or {@link #UNDEFINED}
 	 *
 	 * @since 5.7
 	 * @see #currentVersionNumber()
@@ -183,8 +181,7 @@ public enum JRE {
 
 	/**
 	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER} or {@code null} if the current JVM version could not be
-	 * determined
+	 * {@link #OTHER} or {@link #UNDEFINED}
 	 *
 	 * @since 5.12
 	 * @see #currentVersionNumber()
