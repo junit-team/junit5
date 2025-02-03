@@ -14,8 +14,9 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -59,12 +60,12 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
 			Function<CHILD, WRAPPER> descriptorWrapperFactory, DescriptorWrapperOrderer descriptorWrapperOrderer) {
 
-		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
+		Set<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
 				.stream()//
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
 				.map(descriptorWrapperFactory)//
-				.collect(toCollection(ArrayList::new));
+				.collect(toCollection(LinkedHashSet::new));
 
 		// If there are no children to order, abort early.
 		if (matchingDescriptorWrappers.isEmpty()) {
@@ -77,7 +78,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
 						.collect(toList());
 
-				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
+				descriptorWrapperOrderer.orderWrappersWithOrderFrom(matchingDescriptorWrappers);
 
 				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
 						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
@@ -148,43 +149,32 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return this.orderingAction != null;
 		}
 
-		private void orderWrappers(List<WRAPPER> wrappers) {
-			// Make a local copy for later validation
-			List<WRAPPER> originalWrappers = new ArrayList<>(wrappers);
+		private void orderWrappersWithOrderFrom(Set<WRAPPER> wrappers) {
+			List<WRAPPER> orderedWrappers = new ArrayList<>(wrappers);
+			this.orderingAction.accept(orderedWrappers);
+			Set<Object> distinctOrderedWrappers = new LinkedHashSet<>(orderedWrappers);
 
-			this.orderingAction.accept(wrappers);
+			int difference = orderedWrappers.size() - wrappers.size();
+			int distinctDifference = distinctOrderedWrappers.size() - wrappers.size();
+			if (difference > 0) { // difference >= distinctDifference
+				logDescriptorsAddedWarning(difference);
+			}
+			if (distinctDifference < 0) { // distinctDifference <= difference
+				logDescriptorsRemovedWarning(distinctDifference);
+			}
 
-			warnAboutAndRemoveAddedWrappers(originalWrappers, wrappers);
-			warnAboutAndReAddRemovedWrappers(originalWrappers, wrappers);
+			orderWrappersWithOrderFrom(wrappers, distinctOrderedWrappers);
 		}
 
-		private void warnAboutAndRemoveAddedWrappers(List<WRAPPER> originalWrappers, List<WRAPPER> wrappers) {
-			int numAddedWrappers = 0;
-			Iterator<?> iterator = wrappers.iterator();
-			while (iterator.hasNext()) {
-				// Avoid ClassCastException if a misbehaving ordered added a non-WRAPPER
-				Object wrapper = iterator.next();
+		@SuppressWarnings("unchecked")
+		private void orderWrappersWithOrderFrom(Set<WRAPPER> wrappers, Set<Object> orderedWrappers) {
+			// Avoid ClassCastException if a misbehaving ordering action added a non-WRAPPER
+			for (Object wrapper : orderedWrappers) {
 				//noinspection SuspiciousMethodCalls
-				if (!originalWrappers.contains(wrapper)) {
-					numAddedWrappers++;
-					iterator.remove();
+				if (wrappers.remove(wrapper)) {
+					// guaranteed by wrappers.contains
+					wrappers.add((WRAPPER) wrapper);
 				}
-			}
-			if (numAddedWrappers > 0) {
-				logDescriptorsAddedWarning(numAddedWrappers);
-			}
-		}
-
-		private void warnAboutAndReAddRemovedWrappers(List<WRAPPER> originalWrappers, List<WRAPPER> wrappers) {
-			int numRemovedWrappers = 0;
-			for (WRAPPER wrapper : originalWrappers) {
-				if (!wrappers.contains(wrapper)) {
-					wrappers.add(numRemovedWrappers, wrapper);
-					numRemovedWrappers++;
-				}
-			}
-			if (numRemovedWrappers > 0) {
-				logDescriptorsRemovedWarning(numRemovedWrappers);
 			}
 		}
 
