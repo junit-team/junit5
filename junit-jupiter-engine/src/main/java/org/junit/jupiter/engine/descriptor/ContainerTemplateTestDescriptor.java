@@ -10,10 +10,8 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForClass;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -31,7 +29,6 @@ import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvide
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
-import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -50,9 +47,11 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	public static final String SEGMENT_TYPE = "container-template";
 
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
+	private final ClassBasedTestDescriptor delegate;
 
-	public ContainerTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
-		super(uniqueId, testClass, createDisplayNameSupplierForClass(testClass, configuration), configuration);
+	public ContainerTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate) {
+		super(uniqueId, delegate.getTestClass(), delegate.getDisplayName(), delegate.configuration);
+		this.delegate = delegate;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -67,7 +66,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	protected ContainerTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateTestDescriptor(newUniqueId, getTestClass(), configuration);
+		return new ContainerTemplateTestDescriptor(newUniqueId, this.delegate);
 	}
 
 	@Override
@@ -94,31 +93,26 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
-		return emptyList();
+		return delegate.getEnclosingTestClasses();
 	}
 
 	@Override
-	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
+	public TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
 			JupiterEngineExecutionContext context) {
-		return instantiateTestClass(Optional.empty(), registry, extensionContext);
+		return delegate.instantiateTestClass(parentExecutionContext, extensionContext, registry, context);
 	}
 
 	// --- ResourceLockAware ---------------------------------------------------
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
-		return provider -> provider.provideForClass(getTestClass());
+		return delegate.getResourceLocksProviderEvaluator();
 	}
 
 	// --- Node ----------------------------------------------------------------
 
-	@Override
-	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		return super.prepare(context);
-	}
-
-	// TODO copied from ContainerTemplateTestDescriptor
+	// TODO copied from TestTemplateTestDescriptor
 
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,

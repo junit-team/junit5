@@ -95,8 +95,6 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		return emptyList();
 	}
 
-	// --- Node ----------------------------------------------------------------
-
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,

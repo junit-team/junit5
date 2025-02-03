@@ -78,7 +78,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		}
 		else if (isNestedTestClass.test(testClass)) {
 			return toResolution(context.addToParent(() -> DiscoverySelectors.selectClass(testClass.getEnclosingClass()),
-				parent -> Optional.of(newNestedClassTestDescriptor(parent, testClass))));
+				parent -> Optional.of(newMemberClassTestDescriptor(parent, testClass))));
 		}
 		return unresolved();
 	}
@@ -87,7 +87,7 @@ class ClassSelectorResolver implements SelectorResolver {
 	public Resolution resolve(NestedClassSelector selector, Context context) {
 		if (isNestedTestClass.test(selector.getNestedClass())) {
 			return toResolution(context.addToParent(() -> selectClass(selector.getEnclosingClasses()),
-				parent -> Optional.of(newNestedClassTestDescriptor(parent, selector.getNestedClass()))));
+				parent -> Optional.of(newMemberClassTestDescriptor(parent, selector.getNestedClass()))));
 		}
 		return unresolved();
 	}
@@ -120,15 +120,23 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ClassBasedTestDescriptor newStaticClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
+		ClassTestDescriptor classTestDescriptor = newClassTestDescriptor(parent, testClass);
 		return isAnnotated(testClass, ContainerTemplate.class) //
-				? newContainerTemplateTestDescriptor(parent, testClass) //
-				: newClassTestDescriptor(parent, testClass);
+				? newContainerTemplateTestDescriptor(parent, classTestDescriptor) //
+				: classTestDescriptor;
 	}
 
 	private ClassTestDescriptor newClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
 		return new ClassTestDescriptor(
 			parent.getUniqueId().append(ClassTestDescriptor.SEGMENT_TYPE, testClass.getName()), testClass,
 			configuration);
+	}
+
+	private ClassBasedTestDescriptor newMemberClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
+		NestedClassTestDescriptor classTestDescriptor = newNestedClassTestDescriptor(parent, testClass);
+		return isAnnotated(testClass, ContainerTemplate.class) //
+				? newContainerTemplateTestDescriptor(parent, classTestDescriptor) //
+				: classTestDescriptor;
 	}
 
 	private NestedClassTestDescriptor newNestedClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
@@ -138,10 +146,10 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ContainerTemplateTestDescriptor newContainerTemplateTestDescriptor(TestDescriptor parent,
-			Class<?> testClass) {
-		return new ContainerTemplateTestDescriptor(
-			parent.getUniqueId().append(ContainerTemplateTestDescriptor.SEGMENT_TYPE, testClass.getName()), testClass,
-			configuration);
+			ClassBasedTestDescriptor delegate) {
+		String segmentValue = delegate.getUniqueId().getLastSegment().getValue();
+		UniqueId uniqueId = parent.getUniqueId().append(ContainerTemplateTestDescriptor.SEGMENT_TYPE, segmentValue);
+		return new ContainerTemplateTestDescriptor(uniqueId, delegate);
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {
