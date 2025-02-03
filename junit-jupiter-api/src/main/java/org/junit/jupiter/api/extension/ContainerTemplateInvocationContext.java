@@ -10,7 +10,10 @@
 
 package org.junit.jupiter.api.extension;
 
+import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import java.util.List;
 
 import org.apiguardian.api.API;
 
@@ -36,6 +39,23 @@ public interface ContainerTemplateInvocationContext {
 	 */
 	default String getDisplayName(int invocationIndex) {
 		return "[" + invocationIndex + "]";
+	}
+
+	/**
+	 * Get the additional {@linkplain Extension extensions} for this invocation.
+	 *
+	 * <p>The extensions provided by this method will only be used for this
+	 * invocation of the container template. Thus, it does not make sense to
+	 * return an extension that acts solely on the container level (e.g.
+	 * {@link BeforeAllCallback}).
+	 *
+	 * <p>The default implementation returns an empty list.
+	 *
+	 * @return the additional extensions for this invocation; never {@code null}
+	 * or containing {@code null} elements, but potentially empty
+	 */
+	default List<Extension> getAdditionalExtensions() {
+		return emptyList();
 	}
 
 }

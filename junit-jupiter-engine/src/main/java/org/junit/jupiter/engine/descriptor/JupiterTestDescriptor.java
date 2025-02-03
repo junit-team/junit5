@@ -32,6 +32,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
@@ -203,7 +204,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	/**
-	 * Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.
+	 * Must be overridden and return a new context with a new {@link ExtensionContext}
+	 * so cleanUp() does not accidentally close the parent context.
 	 */
 	@Override
 	public abstract JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception;

@@ -180,7 +180,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 		UniqueId invocationUniqueId = getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#" + index);
 		ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
-			invocationUniqueId, invocationContext.getDisplayName(index), getSource().orElse(null), this.configuration);
+			invocationUniqueId, invocationContext, index, getSource().orElse(null), this.configuration);
 
 		UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
 

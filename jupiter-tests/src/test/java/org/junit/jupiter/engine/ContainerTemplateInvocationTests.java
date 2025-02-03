@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -38,7 +39,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
@@ -323,6 +328,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void invocationContextProviderCanRegisterAdditionalExtensions() {
+		var results = executeTestsForClass(AdditionalExtensionRegistrationTestCase.class);
+
+		results.allEvents().debug();
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -395,6 +408,58 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 				var defaultDisplayName = ContainerTemplateInvocationContext.super.getDisplayName(invocationIndex);
 				return "%s %s".formatted(defaultDisplayName, displayName);
 			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(AdditionalExtensionRegistrationTestCase.Ext.class)
+	static class AdditionalExtensionRegistrationTestCase {
+
+		@Test
+		void test(Data data) {
+			assertNotNull(data);
+			assertNotNull(data.value());
+		}
+
+		static class Ext implements ContainerTemplateInvocationContextProvider {
+			@Override
+			public boolean supportsContainerTemplate(ExtensionContext context) {
+				return true;
+			}
+
+			@Override
+			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+					ExtensionContext context) {
+				return Stream.of(new Data("A"), new Data("B")).map(Ctx::new);
+			}
+		}
+
+		record Ctx(Data data) implements ContainerTemplateInvocationContext {
+			@Override
+			public String getDisplayName(int invocationIndex) {
+				return this.data.value();
+			}
+
+			@Override
+			public List<Extension> getAdditionalExtensions() {
+				return List.of(new ParameterResolver() {
+					@Override
+					public boolean supportsParameter(ParameterContext parameterContext,
+							ExtensionContext extensionContext) throws ParameterResolutionException {
+						return Data.class.equals(parameterContext.getParameter().getType());
+					}
+
+					@Override
+					public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+							throws ParameterResolutionException {
+						return Ctx.this.data;
+					}
+				});
+			}
+		}
+
+		record Data(String value) {
 		}
 	}
 }
