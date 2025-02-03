@@ -78,7 +78,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
 						.collect(toList());
 
-				descriptorWrapperOrderer.orderWrappersWithOrderFrom(matchingDescriptorWrappers);
+				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
 
 				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
 						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
@@ -149,7 +149,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return this.orderingAction != null;
 		}
 
-		private void orderWrappersWithOrderFrom(Set<WRAPPER> wrappers) {
+		private void orderWrappers(Set<WRAPPER> wrappers) {
 			List<WRAPPER> orderedWrappers = new ArrayList<>(wrappers);
 			this.orderingAction.accept(orderedWrappers);
 			Set<Object> distinctOrderedWrappers = new LinkedHashSet<>(orderedWrappers);
