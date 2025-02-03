@@ -10,13 +10,13 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import static java.util.stream.Collectors.toCollection;
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -60,12 +60,12 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
 			Function<CHILD, WRAPPER> descriptorWrapperFactory, DescriptorWrapperOrderer descriptorWrapperOrderer) {
 
-		Set<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
+		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
 				.stream()//
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
 				.map(descriptorWrapperFactory)//
-				.collect(toCollection(LinkedHashSet::new));
+				.collect(toList());
 
 		// If there are no children to order, abort early.
 		if (matchingDescriptorWrappers.isEmpty()) {
@@ -149,13 +149,13 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return this.orderingAction != null;
 		}
 
-		private void orderWrappers(Set<WRAPPER> wrappers) {
+		private void orderWrappers(List<WRAPPER> wrappers) {
 			List<WRAPPER> orderedWrappers = new ArrayList<>(wrappers);
 			this.orderingAction.accept(orderedWrappers);
-			Set<Object> distinctOrderedWrappers = new LinkedHashSet<>(orderedWrappers);
+			Map<Object, Integer> distinctWrappersToIndex = distinctWrappersToIndex(orderedWrappers);
 
 			int difference = orderedWrappers.size() - wrappers.size();
-			int distinctDifference = distinctOrderedWrappers.size() - wrappers.size();
+			int distinctDifference = distinctWrappersToIndex.size() - wrappers.size();
 			if (difference > 0) { // difference >= distinctDifference
 				logDescriptorsAddedWarning(difference);
 			}
@@ -163,19 +163,19 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 				logDescriptorsRemovedWarning(distinctDifference);
 			}
 
-			orderWrappersWithOrderFrom(wrappers, distinctOrderedWrappers);
+			wrappers.sort(comparing(wrapper -> distinctWrappersToIndex.getOrDefault(wrapper, -1)));
 		}
 
-		@SuppressWarnings("unchecked")
-		private void orderWrappersWithOrderFrom(Set<WRAPPER> wrappers, Set<Object> orderedWrappers) {
-			// Avoid ClassCastException if a misbehaving ordering action added a non-WRAPPER
-			for (Object wrapper : orderedWrappers) {
-				//noinspection SuspiciousMethodCalls
-				if (wrappers.remove(wrapper)) {
-					// guaranteed by wrappers.contains
-					wrappers.add((WRAPPER) wrapper);
+		private Map<Object, Integer> distinctWrappersToIndex(List<?> wrappers) {
+			Map<Object, Integer> toIndex = new HashMap<>();
+			for (int i = 0; i < wrappers.size(); i++) {
+				// Avoid ClassCastException if a misbehaving ordering action added a non-WRAPPER
+				Object wrapper = wrappers.get(i);
+				if (!toIndex.containsKey(wrapper)) {
+					toIndex.put(wrapper, i);
 				}
 			}
+			return toIndex;
 		}
 
 		private void logDescriptorsAddedWarning(int number) {

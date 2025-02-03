@@ -20,10 +20,14 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPE
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -277,6 +281,15 @@ class OrderedMethodTests {
 				+ "] added 2 MethodDescriptor(s) for test class [" + testClass.getName() + "] which will be ignored.";
 
 		assertExpectedLogMessage(listener, expectedMessage);
+	}
+
+	@Test
+	void misbehavingMethodOrdererThatImpersonatesElements() {
+		Class<?> testClass = MisbehavingByImpersonatingTestCase.class;
+
+		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
+
+		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
 	}
 
 	@Test
@@ -656,6 +669,24 @@ class OrderedMethodTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@TestMethodOrder(MisbehavingByImpersonating.class)
+	static class MisbehavingByImpersonatingTestCase {
+
+		@BeforeEach
+		void trackInvocations(TestInfo testInfo) {
+			callSequence.add(testInfo.getDisplayName());
+		}
+
+		@Test
+		void test2() {
+		}
+
+		@Test
+		void test1() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@TestMethodOrder(MisbehavingByRemoving.class)
 	static class MisbehavingByRemovingTestCase {
 
@@ -719,6 +750,61 @@ class OrderedMethodTests {
 			return (T) Mockito.mock((Class<? super T>) MethodDescriptor.class);
 		}
 
+	}
+
+	static class MisbehavingByImpersonating implements MethodOrderer {
+
+		@Override
+		public void orderMethods(MethodOrdererContext context) {
+			context.getMethodDescriptors().sort(comparing(MethodDescriptor::getDisplayName));
+			MethodDescriptor method1 = context.getMethodDescriptors().get(0);
+			MethodDescriptor method2 = context.getMethodDescriptors().get(1);
+
+			context.getMethodDescriptors().set(0, createMethodDescriptorImpersonator(method1));
+			context.getMethodDescriptors().set(1, createMethodDescriptorImpersonator(method2));
+		}
+
+		@SuppressWarnings("unchecked")
+		static <T> T createMethodDescriptorImpersonator(MethodDescriptor method) {
+			MethodDescriptor stub = new MethodDescriptor() {
+				@Override
+				public Method getMethod() {
+					return null;
+				}
+
+				@Override
+				public String getDisplayName() {
+					return null;
+				}
+
+				@Override
+				public boolean isAnnotated(Class<? extends Annotation> annotationType) {
+					return false;
+				}
+
+				@Override
+				public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
+					return null;
+				}
+
+				@Override
+				public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
+					return null;
+				}
+
+				@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
+				@Override
+				public boolean equals(Object obj) {
+					return method.equals(obj);
+				}
+
+				@Override
+				public int hashCode() {
+					return method.hashCode();
+				}
+			};
+			return (T) stub;
+		}
 	}
 
 	static class MisbehavingByRemoving implements MethodOrderer {
