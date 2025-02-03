@@ -10,9 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static org.junit.jupiter.api.condition.AbstractJreCondition.DISABLED_ON_CURRENT_JRE;
-import static org.junit.jupiter.api.condition.AbstractJreCondition.ENABLED_ON_CURRENT_JRE;
-
 import org.junit.jupiter.api.extension.ExecutionCondition;
 
 /**
@@ -21,17 +18,15 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
  * @since 5.6
  * @see DisabledForJreRange
  */
-class DisabledForJreRangeCondition extends BooleanExecutionCondition<DisabledForJreRange> {
+class DisabledForJreRangeCondition extends AbstractJreRangeCondition<DisabledForJreRange> {
 
 	DisabledForJreRangeCondition() {
-		super(DisabledForJreRange.class, ENABLED_ON_CURRENT_JRE, DISABLED_ON_CURRENT_JRE,
-			DisabledForJreRange::disabledReason);
+		super(DisabledForJreRange.class, DisabledForJreRange::disabledReason);
 	}
 
 	@Override
-	boolean isEnabled(DisabledForJreRange annotation) {
-		return !EnabledForJreRangeCondition.isCurrentVersionWithinRange("DisabledForJreRange", annotation.min(),
-			annotation.max(), annotation.minVersion(), annotation.maxVersion());
+	boolean isEnabled(DisabledForJreRange range) {
+		return !isCurrentVersionWithinRange(range.min(), range.max(), range.minVersion(), range.maxVersion());
 	}
 
 }
