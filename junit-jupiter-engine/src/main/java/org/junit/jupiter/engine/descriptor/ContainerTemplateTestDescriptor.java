@@ -65,6 +65,17 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
+	protected JupiterTestDescriptor copyIncludingDescendants(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		ContainerTemplateTestDescriptor copy = (ContainerTemplateTestDescriptor) super.copyIncludingDescendants(
+			uniqueIdTransformer);
+		this.childrenPrototypes.forEach(oldChild -> {
+			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
+			copy.childrenPrototypes.add(newChild);
+		});
+		return copy;
+	}
+
+	@Override
 	protected ContainerTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
 		return new ContainerTemplateTestDescriptor(newUniqueId, this.delegate);
 	}

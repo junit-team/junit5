@@ -231,6 +231,92 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void executesNestedContainerTemplatesTwiceEach() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			TwoTimesTwoInvocationsTestCase.class.getName());
+
+		var outerInvocation1Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#1");
+		var outerInvocation1NestedContainerTemplateId = outerInvocation1Id.append(
+			ContainerTemplateTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation1InnerInvocation1Id = outerInvocation1NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation1InnerInvocation1NestedMethodId = outerInvocation1InnerInvocation1Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation1InnerInvocation2NestedMethodId = outerInvocation1InnerInvocation2Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+
+		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#2");
+		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
+			ContainerTemplateTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation2InnerInvocation1Id = outerInvocation2NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation2InnerInvocation1NestedMethodId = outerInvocation2InnerInvocation1Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+
+		var results = executeTestsForClass(TwoTimesTwoInvocationsTestCase.class);
+
+		results.allEvents().debug().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(outerContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation1Id)), displayName("[1] A")), //
+			event(container(uniqueId(outerInvocation1Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedContainerTemplateId))), //
+			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation1Id))), //
+			event(container(uniqueId(outerInvocation1InnerInvocation1Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation1NestedMethodId))), //
+			event(test(uniqueId(outerInvocation1InnerInvocation1NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation1InnerInvocation1NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1InnerInvocation1Id)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation2Id))), //
+			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation2NestedMethodId))), //
+			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1Id)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)), displayName("[2] B")), //
+			event(container(uniqueId(outerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
+			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation1Id))), //
+			event(container(uniqueId(outerInvocation2InnerInvocation1Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation1NestedMethodId))), //
+			event(test(uniqueId(outerInvocation2InnerInvocation1NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation2InnerInvocation1NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2InnerInvocation1Id)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2Id))), //
+			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2NestedMethodId))), //
+			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerContainerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -266,6 +352,18 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		class NestedTestCase {
 			@Test
 			void b() {
+			}
+		}
+	}
+
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class TwoTimesTwoInvocationsTestCase {
+		@Nested
+		@ContainerTemplate
+		class NestedTestCase {
+			@Test
+			void test() {
 			}
 		}
 	}
