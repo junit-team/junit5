@@ -189,7 +189,7 @@ public enum JRE {
 	 * @since 5.12
 	 * @see #currentVersionNumber()
 	 */
-	@API(status = EXPERIMENTAL, since = "5.12")
+	@API(status = STABLE, since = "5.12")
 	public static JRE currentJre() {
 		return CURRENT_JRE;
 	}
