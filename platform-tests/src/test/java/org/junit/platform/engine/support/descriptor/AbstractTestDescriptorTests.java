@@ -49,10 +49,8 @@ class AbstractTestDescriptorTests implements TestDescriptorOrderChildrenTests {
 		group11 = new GroupDescriptor(UniqueId.root("group", "group1-1"));
 		group1.addChild(group11);
 
-		var leaf11 = new LeafDescriptor(UniqueId.root("leaf", "leaf1-1"));
-		group1.addChild(leaf11);
-		var leaf12 = new LeafDescriptor(UniqueId.root("leaf", "leaf1-2"));
-		group1.addChild(leaf12);
+		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-1")));
+		group1.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf1-2")));
 
 		group2.addChild(new LeafDescriptor(UniqueId.root("leaf", "leaf2-1")));
 
