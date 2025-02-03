@@ -25,7 +25,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
-public interface TestDescriptorOrderChildrenTest {
+public interface TestDescriptorOrderChildrenTests {
 
 	/**
 	 * @return a test descriptor without any children.

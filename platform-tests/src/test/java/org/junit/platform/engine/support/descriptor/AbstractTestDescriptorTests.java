@@ -32,7 +32,7 @@ import org.junit.platform.engine.UniqueId;
  *
  * @since 1.0
  */
-class AbstractTestDescriptorTests implements TestDescriptorOrderChildrenTest {
+class AbstractTestDescriptorTests implements TestDescriptorOrderChildrenTests {
 
 	private EngineDescriptor engineDescriptor;
 	private GroupDescriptor group1;

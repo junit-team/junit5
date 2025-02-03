@@ -20,7 +20,7 @@ import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 
-class TestDescriptorTest implements TestDescriptorOrderChildrenTest {
+class TestDescriptorTests implements TestDescriptorOrderChildrenTests {
 
 	@Override
 	public TestDescriptor createEmptyTestDescriptor() {
