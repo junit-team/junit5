@@ -114,16 +114,6 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@EnabledOnJre(versions = 26)
-	void onlyOnJava26() {
-	}
-
-	@Test
-	@EnabledOnJre(value = JAVA_25, versions = 26)
-	void onJava25And26() {
-	}
-
-	@Test
 	@EnabledForJreRange(min = JAVA_9, max = JAVA_11)
 	void fromJava9To11() {
 		// ...
@@ -132,18 +122,6 @@ class ConditionalTestExecutionDemo {
 	@Test
 	@EnabledForJreRange(min = JAVA_9)
 	void onJava9AndHigher() {
-		// ...
-	}
-
-	@Test
-	@EnabledForJreRange(minVersion = 26)
-	void onJava26AndHigher() {
-		// ...
-	}
-
-	@Test
-	@EnabledForJreRange(min = JAVA_25, maxVersion = 27)
-	void fromJava25To27() {
 		// ...
 	}
 
@@ -177,6 +155,56 @@ class ConditionalTestExecutionDemo {
 		// ...
 	}
 	// end::user_guide_jre[]
+
+	// tag::user_guide_jre_arbitrary_versions[]
+	@Test
+	@EnabledOnJre(versions = 26)
+	void onlyOnJava26() {
+		// ...
+	}
+
+	@Test
+	@EnabledOnJre(value = JAVA_25, versions = 26)
+	void onJava25And26() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(minVersion = 26)
+	void onJava26AndHigher() {
+		// ...
+	}
+
+	@Test
+	@EnabledForJreRange(min = JAVA_25, maxVersion = 27)
+	void fromJava25To27() {
+		// ...
+	}
+
+	@Test
+	@DisabledOnJre(versions = 26)
+	void notOnJava26() {
+		// ...
+	}
+
+	@Test
+	@DisabledOnJre(value = JAVA_25, versions = 26)
+	void notOnJava25And26() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(minVersion = 26)
+	void notOnJava26AndHigher() {
+		// ...
+	}
+
+	@Test
+	@DisabledForJreRange(min = JAVA_25, maxVersion = 27)
+	void notFromJava25To27() {
+		// ...
+	}
+	// end::user_guide_jre_arbitrary_versions[]
 
 	// tag::user_guide_native[]
 	@Test
