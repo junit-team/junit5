@@ -82,6 +82,8 @@ public enum JRE {
 
 	static final int UNDEFINED_VERSION = -1;
 
+	static final int MINIMUM_VERSION = 8;
+
 	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
 
 	private static final int CURRENT_VERSION = determineCurrentVersion();

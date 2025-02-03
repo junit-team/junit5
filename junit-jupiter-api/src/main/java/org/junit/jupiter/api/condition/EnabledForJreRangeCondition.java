@@ -52,12 +52,12 @@ class EnabledForJreRangeCondition extends BooleanExecutionCondition<EnabledForJr
 			annotationName));
 
 		// Users must supply valid values for minVersion and maxVersion.
-		Preconditions.condition(!minVersionSet || (minVersion >= 8),
-			() -> String.format("@%s's minVersion [%d] must be greater than or equal to 8", annotationName,
-				minVersion));
-		Preconditions.condition(!maxVersionSet || (maxVersion >= 8),
-			() -> String.format("@%s's maxVersion [%d] must be greater than or equal to 8", annotationName,
-				maxVersion));
+		Preconditions.condition(!minVersionSet || (minVersion >= JRE.MINIMUM_VERSION),
+			() -> String.format("@%s's minVersion [%d] must be greater than or equal to %d", annotationName, minVersion,
+				JRE.MINIMUM_VERSION));
+		Preconditions.condition(!maxVersionSet || (maxVersion >= JRE.MINIMUM_VERSION),
+			() -> String.format("@%s's maxVersion [%d] must be greater than or equal to %d", annotationName, maxVersion,
+				JRE.MINIMUM_VERSION));
 
 		// Now that we have checked the basic preconditions, we need to ensure that we are
 		// using valid JRE enum constants.
@@ -72,10 +72,11 @@ class EnabledForJreRangeCondition extends BooleanExecutionCondition<EnabledForJr
 		int max = (maxVersionSet ? maxVersion : maxJre.version());
 
 		// Finally, we need to validate the effective minimum and maximum values.
-		Preconditions.condition((min != 8 || max != Integer.MAX_VALUE),
+		Preconditions.condition((min != JRE.MINIMUM_VERSION || max != Integer.MAX_VALUE),
 			() -> "You must declare a non-default value for the minimum or maximum value in @" + annotationName);
-		Preconditions.condition(min >= 8,
-			() -> String.format("@%s's minimum value [%d] must greater than or equal to 8", annotationName, min));
+		Preconditions.condition(min >= JRE.MINIMUM_VERSION,
+			() -> String.format("@%s's minimum value [%d] must greater than or equal to %d", annotationName, min,
+				JRE.MINIMUM_VERSION));
 		Preconditions.condition(min <= max,
 			() -> String.format("@%s's minimum value [%d] must be less than or equal to its maximum value [%d]",
 				annotationName, min, max));
