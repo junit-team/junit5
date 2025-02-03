@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.condition;
 
 import java.util.Arrays;
+import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.extension.ExecutionCondition;
 
@@ -31,8 +32,8 @@ class EnabledOnJreCondition extends AbstractJreCondition<EnabledOnJre> {
 		JRE[] jres = annotation.value();
 		int[] versions = annotation.versions();
 		validateVersions(jres, versions);
-		return Arrays.stream(jres).anyMatch(JRE::isCurrentVersion)
-				|| Arrays.stream(versions).anyMatch(JRE::isCurrentVersion);
+		return IntStream.concat(Arrays.stream(jres).mapToInt(JRE::version), Arrays.stream(versions))//
+				.anyMatch(JRE::isCurrentVersion);
 	}
 
 }
