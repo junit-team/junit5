@@ -10,11 +10,10 @@
 
 package example;
 
-import static org.junit.jupiter.api.condition.JRE.JAVA_10;
 import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
-import static org.junit.jupiter.api.condition.JRE.JAVA_18;
-import static org.junit.jupiter.api.condition.JRE.JAVA_8;
+import static org.junit.jupiter.api.condition.JRE.JAVA_21;
+import static org.junit.jupiter.api.condition.JRE.JAVA_25;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
@@ -25,7 +24,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledForJreRange;
 import org.junit.jupiter.api.condition.DisabledIf;
@@ -41,7 +39,6 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.jupiter.api.condition.EnabledInNativeImage;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.condition.JRE;
 
 class ConditionalTestExecutionDemo {
 
@@ -103,77 +100,50 @@ class ConditionalTestExecutionDemo {
 	}
 	// end::user_guide_architecture[]
 
-	@Test
-	@EnabledOnJre(value = { JAVA_17, JAVA_18 }, versions = { 20, 21 })
-	void onJava17or18or20or21() {
-	}
-
-	@Test
-	@EnabledOnJre(versions = 21)
-	void onlyOnJava21() {
-	}
-
 	// tag::user_guide_jre[]
 	@Test
-	@EnabledOnJre(JAVA_8)
-	void onlyOnJava8() {
+	@EnabledOnJre(JAVA_17)
+	void onlyOnJava17() {
 		// ...
 	}
 
 	@Test
-	@EnabledOnJre({ JAVA_9, JAVA_10 })
-	void onJava9Or10() {
+	@EnabledOnJre({ JAVA_17, JAVA_21 })
+	void onJava17And21() {
 		// ...
+	}
+
+	@Test
+	@EnabledOnJre(versions = 26)
+	void onlyOnJava26() {
+	}
+
+	@Test
+	@EnabledOnJre(value = JAVA_25, versions = 26)
+	void onJava25And26() {
 	}
 
 	@Test
 	@EnabledForJreRange(min = JAVA_9, max = JAVA_11)
-	void fromJava9to11() {
+	void fromJava9To11() {
 		// ...
 	}
 
 	@Test
 	@EnabledForJreRange(min = JAVA_9)
-	void fromJava9toCurrentJavaFeatureNumber() {
+	void onJava9AndHigher() {
 		// ...
 	}
 
 	@Test
-	@EnabledForJreRange(minVersion = 10)
-	void fromJava10toCurrentJavaFeatureNumber() {
+	@EnabledForJreRange(minVersion = 26)
+	void onJava26AndHigher() {
 		// ...
 	}
 
 	@Test
-	@EnabledForJreRange(minVersion = 25)
-	void fromJava25toCurrentJavaFeatureNumber() {
-		// ...
-	}
-
-	@Disabled("DEMO: intended to fail")
-	@Test
-	@EnabledForJreRange(minVersion = 99, max = JRE.JAVA_17)
-	void fromJava99toJava17() {
-		// ...
-	}
-
-	@Disabled("DEMO: intended to fail")
-	@Test
-	@EnabledForJreRange(min = JAVA_11, minVersion = 10)
-	void competingJreAndMinVersions() {
-		// ...
-	}
-
-	@Disabled("DEMO: intended to fail")
-	@Test
-	@EnabledForJreRange(max = JAVA_11, maxVersion = 10)
-	void competingJreAndMaxVersions() {
-		// ...
-	}
-
-	@Test
-	@EnabledForJreRange(minVersion = 10, maxVersion = 25)
-	void fromJava17to25() {
+	@EnabledForJreRange(min = JAVA_25, maxVersion = 27)
+	void fromJava25To27() {
 		// ...
 	}
 
@@ -191,19 +161,19 @@ class ConditionalTestExecutionDemo {
 
 	@Test
 	@DisabledForJreRange(min = JAVA_9, max = JAVA_11)
-	void notFromJava9to11() {
+	void notFromJava9To11() {
 		// ...
 	}
 
 	@Test
 	@DisabledForJreRange(min = JAVA_9)
-	void notFromJava9toCurrentJavaFeatureNumber() {
+	void notOnJava9AndHigher() {
 		// ...
 	}
 
 	@Test
 	@DisabledForJreRange(max = JAVA_11)
-	void notFromJava8to11() {
+	void notFromJava8To11() {
 		// ...
 	}
 	// end::user_guide_jre[]
