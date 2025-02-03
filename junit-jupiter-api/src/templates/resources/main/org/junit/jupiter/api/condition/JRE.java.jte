@@ -46,7 +46,7 @@ public enum JRE {
 	 * <p>This constant is used by JUnit as a default configuration value but is
 	 * not intended to be used by users.
 	 *
-	 * <p>This constant returns {@code -1} for its {@link #version() version}.
+	 * <p>This constant returns {@code -1} for its {@linkplain #version() version}.
 	 *
 	 * @since 5.12
 	 */
@@ -76,7 +76,7 @@ public enum JRE {
 --%>@endfor
 	 *
 	 * <p>This constant returns {@link Integer#MAX_VALUE} for its
-	 * {@link #version() version}.
+	 * {@linkplain #version() version}.
 	 */
 	OTHER(Integer.MAX_VALUE);
 
