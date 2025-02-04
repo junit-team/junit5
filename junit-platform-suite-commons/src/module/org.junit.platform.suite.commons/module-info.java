@@ -9,7 +9,7 @@
  */
 
 /**
- * Common support utilities for declarative test suite executors.
+ * Common support utilities for declarative test suites.
  *
  * @since 1.8
  */

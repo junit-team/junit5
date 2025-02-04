@@ -21,8 +21,8 @@ import org.junit.platform.launcher.TestPlan;
  * Utility methods for dealing with legacy reporting infrastructure, such as
  * reporting systems built on the Ant-based XML reporting format for JUnit 4.
  *
- * This class was formerly from {@code junit-platform-launcher}
- * in {@link org.junit.platform.launcher.listeners} package.
+ * <p>This class was formerly from {@code junit-platform-launcher} in the
+ * {@link org.junit.platform.launcher.listeners} package.
  *
  * @since 1.0.3
  */

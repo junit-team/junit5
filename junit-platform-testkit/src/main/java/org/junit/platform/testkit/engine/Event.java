@@ -101,8 +101,8 @@ public class Event {
 	 * Create a <em>started</em> {@code Event} for the supplied
 	 * {@link TestDescriptor}.
 	 *
-	 * @param testDescriptor the {@code TestDescriptor} associated with the
-	 * event; never {@code null}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
 	 * @return the newly created {@code Event}
 	 * @see EventType#STARTED
 	 */
@@ -114,8 +114,8 @@ public class Event {
 	 * Create a <em>finished</em> {@code Event} for the supplied
 	 * {@link TestDescriptor} and {@link TestExecutionResult}.
 	 *
-	 * @param testDescriptor the {@code TestDescriptor} associated with the
-	 * event; never {@code null}
+	 * @param testDescriptor the {@code TestDescriptor} associated with the event;
+	 * never {@code null}
 	 * @param result the {@code TestExecutionResult} for the supplied
 	 * {@code TestDescriptor}; never {@code null}
 	 * @return the newly created {@code Event}

@@ -9,7 +9,7 @@
  */
 
 /**
- * Provides the JUnit Jupiter {@linkplain org.junit.platform.engine.TestEngine}
+ * Provides the JUnit Jupiter {@link org.junit.platform.engine.TestEngine}
  * implementation.
  *
  * @since 5.0

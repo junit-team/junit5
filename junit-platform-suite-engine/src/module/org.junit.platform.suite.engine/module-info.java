@@ -9,7 +9,7 @@
  */
 
 /**
- * Provides a {@linkplain org.junit.platform.engine.TestEngine} for running
+ * Provides a {@link org.junit.platform.engine.TestEngine} for running
  * declarative test suites.
  *
  * @since 1.8

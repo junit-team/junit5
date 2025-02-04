@@ -9,7 +9,9 @@
  */
 
 /**
- * Defines JUnit Jupiter API for writing tests.
+ * Defines the JUnit Jupiter API for writing tests.
+ *
+ * @since 5.0
  */
 module org.junit.jupiter.api {
 	requires static transitive org.apiguardian.api;

@@ -11,8 +11,8 @@
 /**
  * Public API for test engines.
  *
- * <p>Provides the {@linkplain org.junit.platform.engine.TestEngine} interface, test discovery
- * and execution reporting support.
+ * <p>Provides the {@link org.junit.platform.engine.TestEngine} interface,
+ * test discovery, and execution reporting support.
  *
  * @since 1.0
  */

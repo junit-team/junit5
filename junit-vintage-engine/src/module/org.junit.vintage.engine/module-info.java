@@ -9,8 +9,8 @@
  */
 
 /**
- * Provides a {@linkplain org.junit.platform.engine.TestEngine} for running
- * JUnit 3 and 4 based tests on the platform.
+ * Provides a {@link org.junit.platform.engine.TestEngine} for running JUnit 3
+ * and 4 based tests on the platform.
  *
  * @since 4.12
  * @provides org.junit.platform.engine.TestEngine The {@code VintageTestEngine}
