@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -57,15 +58,17 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = context.getExtensionRegistry();
-		List<Extension> additionalExtensions = invocationContext.getAdditionalExtensions();
+		List<Extension> additionalExtensions = this.invocationContext.getAdditionalExtensions();
 		if (!additionalExtensions.isEmpty()) {
 			MutableExtensionRegistry childRegistry = createRegistryFrom(registry, Stream.empty());
-			additionalExtensions.forEach(extension -> childRegistry.registerExtension(extension, invocationContext));
+			additionalExtensions.forEach(
+				extension -> childRegistry.registerExtension(extension, this.invocationContext));
 			registry = childRegistry;
 		}
-		// TODO #871 Set a new ExtensionContext for each invocation to avoid the parent one from being closed
+		ExtensionContext extensionContext = new DynamicExtensionContext<>(context.getExtensionContext(),
+			context.getExecutionListener(), this, context.getConfiguration(), registry);
 		return context.extend() //
-				.withExtensionRegistry(registry) //
+				.withExtensionContext(extensionContext).withExtensionRegistry(registry) //
 				.build();
 	}
 

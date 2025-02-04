@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import org.junit.jupiter.api.DynamicNode;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.engine.TestDescriptor;
@@ -44,7 +45,7 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		DynamicExtensionContext extensionContext = new DynamicExtensionContext(context.getExtensionContext(),
+		ExtensionContext extensionContext = new DynamicExtensionContext<>(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), context.getExtensionRegistry());
 		// @formatter:off
 		return context.extend()

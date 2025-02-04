@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -36,11 +37,13 @@ import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -332,6 +335,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	void invocationContextProviderCanRegisterAdditionalExtensions() {
 		var results = executeTestsForClass(AdditionalExtensionRegistrationTestCase.class);
 
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
+	@Test
+	void eachInvocationHasSeparateExtensionContext() {
+		var results = executeTestsForClass(SeparateExtensionContextTestCase.class);
+
 		results.allEvents().debug();
 		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 	}
@@ -460,6 +470,47 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 
 		record Data(String value) {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ExtendWith(SeparateExtensionContextTestCase.SomeResourceExtension.class)
+	static class SeparateExtensionContextTestCase {
+
+		@Test
+		void test(SomeResource someResource) {
+			assertFalse(someResource.closed);
+		}
+
+		static class SomeResourceExtension implements BeforeAllCallback, ParameterResolver {
+
+			@Override
+			public void beforeAll(ExtensionContext context) throws Exception {
+				context.getStore(ExtensionContext.Namespace.GLOBAL).put("someResource", new SomeResource());
+			}
+
+			@Override
+			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return SomeResource.class.equals(parameterContext.getParameter().getType());
+			}
+
+			@Override
+			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+					throws ParameterResolutionException {
+				return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).get("someResource");
+			}
+		}
+
+		static class SomeResource implements CloseableResource {
+			private boolean closed;
+
+			@Override
+			public void close() {
+				this.closed = true;
+			}
 		}
 	}
 }

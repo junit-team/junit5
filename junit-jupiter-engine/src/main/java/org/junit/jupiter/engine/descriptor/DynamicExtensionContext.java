@@ -22,11 +22,10 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 
-class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
+class DynamicExtensionContext<T extends JupiterTestDescriptor> extends AbstractExtensionContext<T> {
 
-	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
+	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
+			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
 		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
 	}
 
