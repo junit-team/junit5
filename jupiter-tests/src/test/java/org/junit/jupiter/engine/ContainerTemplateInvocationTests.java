@@ -13,6 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -27,8 +28,10 @@ import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegis
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -467,6 +470,31 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void failsIfProviderReturnsZeroInvocationContextWithoutOptIn() {
+		var results = executeTestsForClass(InvalidZeroInvocationTestCase.class);
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(InvalidZeroInvocationTestCase.class), started()), //
+			event(container(InvalidZeroInvocationTestCase.class),
+				finishedWithFailure(
+					message("Provider [Ext] did not provide any invocation contexts, but was expected to do so. "
+							+ "You may override mayReturnZeroContainerTemplateInvocationContexts() to allow this."))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void succeedsIfProviderReturnsZeroInvocationContextWithOptIn() {
+		var results = executeTestsForClass(ValidZeroInvocationTestCase.class);
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(ValidZeroInvocationTestCase.class), started()), //
+			event(container(ValidZeroInvocationTestCase.class), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -654,6 +682,61 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		Stream<DynamicTest> test() {
 			return IntStream.of(1, 2) //
 					.mapToObj(i -> dynamicTest("test" + i, () -> assertNotEquals(0, i)));
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(InvalidZeroInvocationTestCase.Ext.class)
+	static class InvalidZeroInvocationTestCase {
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+
+		static class Ext implements ContainerTemplateInvocationContextProvider {
+
+			@Override
+			public boolean supportsContainerTemplate(ExtensionContext context) {
+				return true;
+			}
+
+			@Override
+			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+					ExtensionContext context) {
+				return Stream.empty();
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(ValidZeroInvocationTestCase.Ext.class)
+	static class ValidZeroInvocationTestCase {
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+
+		static class Ext implements ContainerTemplateInvocationContextProvider {
+
+			@Override
+			public boolean supportsContainerTemplate(ExtensionContext context) {
+				return true;
+			}
+
+			@Override
+			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+					ExtensionContext context) {
+				return Stream.empty();
+			}
+
+			@Override
+			public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
+				return true;
+			}
 		}
 	}
 }
