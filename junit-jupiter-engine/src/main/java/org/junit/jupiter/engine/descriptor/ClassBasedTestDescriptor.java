@@ -82,7 +82,8 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.5
  */
 @API(status = INTERNAL, since = "5.5")
-public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor implements ResourceLockAware {
+public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
+		implements ResourceLockAware, TestClassAware {
 
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
@@ -118,13 +119,14 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor imp
 		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
 	}
 
-	// --- TestDescriptor ------------------------------------------------------
+	// --- TestClassAware ------------------------------------------------------
 
+	@Override
 	public final Class<?> getTestClass() {
 		return this.testClass;
 	}
 
-	public abstract List<Class<?>> getEnclosingTestClasses();
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public final Type getType() {

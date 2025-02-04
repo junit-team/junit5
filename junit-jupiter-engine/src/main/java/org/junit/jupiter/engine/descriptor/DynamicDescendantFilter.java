@@ -59,7 +59,7 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 				|| allowedIndices.contains(index);
 	}
 
-	private boolean isEverythingAllowed() {
+	boolean isEverythingAllowed() {
 		return allowedUniqueIds.isEmpty() && allowedIndices.isEmpty();
 	}
 

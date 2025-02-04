@@ -97,6 +97,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		var results = executeTests(DiscoverySelectors.parse(selectorIdentifier).orElseThrow());
 
+		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(uniqueId(containerTemplateId)), started()), //
@@ -547,6 +548,23 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { //
+			"class:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase", //
+			"uid:[engine:junit-jupiter]/[container-template:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase]" //
+	})
+	void executesAllInvocationsForRedundantSelectors(String containerTemplateSelectorIdentifier) {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			TwoInvocationsTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+
+		var results = executeTests(selectUniqueId(invocationId2),
+			DiscoverySelectors.parse(containerTemplateSelectorIdentifier).orElseThrow());
+
+		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	// -------------------------------------------------------------------

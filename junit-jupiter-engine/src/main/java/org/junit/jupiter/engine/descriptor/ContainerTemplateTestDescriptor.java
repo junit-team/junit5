@@ -14,13 +14,16 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -47,6 +50,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	public static final String SEGMENT_TYPE = "container-template";
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+	private final Map<Integer, List<TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
 	private final ClassBasedTestDescriptor delegate;
 
@@ -80,6 +84,12 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
 			copy.childrenPrototypes.add(newChild);
 		});
+		this.childrenPrototypesByIndex.forEach((index, oldChildren) -> {
+			List<TestDescriptor> newChildren = oldChildren.stream() //
+					.map(oldChild -> ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer)) //
+					.collect(Collectors.toCollection(ArrayList::new));
+			copy.childrenPrototypesByIndex.put(index, newChildren);
+		});
 		return copy;
 	}
 
@@ -99,7 +109,17 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	public void prune() {
 		super.prune();
 		this.children.forEach(child -> child.accept(TestDescriptor::prune));
-		this.childrenPrototypes.addAll(this.children);
+		// Second iteration to avoid processing children that were pruned in the first iteration
+		this.children.forEach(child -> {
+			if (child instanceof ContainerTemplateInvocationTestDescriptor) {
+				child.accept(it -> this.dynamicDescendantFilter.allowUniqueIdPrefix(it.getUniqueId()));
+				this.childrenPrototypesByIndex.put(((ContainerTemplateInvocationTestDescriptor) child).getIndex(),
+					new ArrayList<>(child.getChildren()));
+			}
+			else {
+				this.childrenPrototypes.add(child);
+			}
+		});
 		this.children.clear();
 	}
 
@@ -146,6 +166,13 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		return context;
 	}
 
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) {
+		this.childrenPrototypes.clear();
+		this.childrenPrototypesByIndex.clear();
+		this.dynamicDescendantFilter.allowAll();
+	}
+
 	private void executeForProvider(ContainerTemplateInvocationContextProvider provider, AtomicInteger invocationIndex,
 			DynamicTestExecutor dynamicTestExecutor, ExtensionContext extensionContext) {
 
@@ -190,20 +217,26 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		if (getDynamicDescendantFilter().test(invocationUniqueId, index - 1)) {
 
 			ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
-				invocationUniqueId, invocationContext, index, getSource().orElse(null), this.configuration);
-
-			UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
+				invocationUniqueId, this, invocationContext, index, getSource().orElse(null), this.configuration);
 
 			// TODO #871 filter descendants
 
-			this.childrenPrototypes.stream() //
-					.map(JupiterTestDescriptor.class::cast) //
-					.map(it -> it.copyIncludingDescendants(transformer)) //
+			collectChildren(index, invocationUniqueId) //
 					.forEach(containerInvocationDescriptor::addChild);
 
 			return Optional.of(containerInvocationDescriptor);
 		}
 		return Optional.empty();
+	}
+
+	private Stream<? extends TestDescriptor> collectChildren(int index, UniqueId invocationUniqueId) {
+		if (this.childrenPrototypesByIndex.containsKey(index)) {
+			return this.childrenPrototypesByIndex.remove(index).stream();
+		}
+		UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
+		return this.childrenPrototypes.stream() //
+				.map(JupiterTestDescriptor.class::cast) //
+				.map(it -> it.copyIncludingDescendants(transformer));
 	}
 
 	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {

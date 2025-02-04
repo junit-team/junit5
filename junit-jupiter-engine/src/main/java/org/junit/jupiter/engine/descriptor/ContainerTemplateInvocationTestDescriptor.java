@@ -30,18 +30,35 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.13
  */
 @API(status = INTERNAL, since = "5.13")
-public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescriptor {
+public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescriptor implements TestClassAware {
 
 	public static final String SEGMENT_TYPE = "container-template-invocation";
 
+	private final TestClassAware parent;
 	private ContainerTemplateInvocationContext invocationContext;
 	private final int index;
 
-	ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, ContainerTemplateInvocationContext invocationContext,
-			int index, TestSource source, JupiterConfiguration configuration) {
+	public ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, TestClassAware parent,
+			ContainerTemplateInvocationContext invocationContext, int index, TestSource source,
+			JupiterConfiguration configuration) {
 		super(uniqueId, invocationContext.getDisplayName(index), source, configuration);
+		this.parent = parent;
 		this.invocationContext = invocationContext;
 		this.index = index;
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
+	@Override
+	public Class<?> getTestClass() {
+		return parent.getTestClass();
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return parent.getEnclosingTestClasses();
 	}
 
 	@Override
@@ -51,7 +68,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	@Override
 	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, this.invocationContext, this.index,
+		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, parent, this.invocationContext, this.index,
 			getSource().orElse(null), this.configuration);
 	}
 
@@ -81,7 +98,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	}
 
 	@Override
-	public void after(JupiterEngineExecutionContext context) throws Exception {
+	public void cleanUp(JupiterEngineExecutionContext context) {
 		// forget invocationContext so it can be garbage collected
 		this.invocationContext = null;
 	}
