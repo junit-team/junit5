@@ -13,6 +13,7 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -31,13 +32,16 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
@@ -53,6 +57,7 @@ import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescri
 import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
@@ -406,6 +411,62 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void supportsTestFactoryMethodsInsideContainerTemplateClasses() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			CombinationWithTestFactoryTestCase.class.getName());
+		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var testFactoryId1 = invocationId1.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
+		var testFactory1DynamicTestId1 = testFactoryId1.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
+			"#1");
+		var testFactory1DynamicTestId2 = testFactoryId1.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
+			"#2");
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var testFactoryId2 = invocationId2.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
+		var testFactory2DynamicTestId1 = testFactoryId2.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
+			"#1");
+		var testFactory2DynamicTestId2 = testFactoryId2.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
+			"#2");
+
+		var results = executeTestsForClass(CombinationWithTestFactoryTestCase.class);
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId1)),
+				displayName("[1] A of CombinationWithTestFactoryTestCase")), //
+			event(container(uniqueId(invocationId1)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactoryId1))), //
+			event(container(uniqueId(testFactoryId1)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactory1DynamicTestId1))), //
+			event(test(uniqueId(testFactory1DynamicTestId1)), started()), //
+			event(test(uniqueId(testFactory1DynamicTestId1)), finishedSuccessfully()), //
+			event(dynamicTestRegistered(uniqueId(testFactory1DynamicTestId2))), //
+			event(test(uniqueId(testFactory1DynamicTestId2)), started()), //
+			event(test(uniqueId(testFactory1DynamicTestId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testFactoryId1)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)),
+				displayName("[2] B of CombinationWithTestFactoryTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactoryId2))), //
+			event(container(uniqueId(testFactoryId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactory2DynamicTestId1))), //
+			event(test(uniqueId(testFactory2DynamicTestId1)), started()), //
+			event(test(uniqueId(testFactory2DynamicTestId1)), finishedSuccessfully()), //
+			event(dynamicTestRegistered(uniqueId(testFactory2DynamicTestId2))), //
+			event(test(uniqueId(testFactory2DynamicTestId2)), started()), //
+			event(test(uniqueId(testFactory2DynamicTestId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testFactoryId2)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -582,6 +643,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		@ValueSource(ints = { 1, 2 })
 		void test(int i) {
 			assertNotEquals(0, i);
+		}
+	}
+
+	@ContainerTemplate
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	static class CombinationWithTestFactoryTestCase {
+
+		@TestFactory
+		Stream<DynamicTest> test() {
+			return IntStream.of(1, 2) //
+					.mapToObj(i -> dynamicTest("test" + i, () -> assertNotEquals(0, i)));
 		}
 	}
 }
