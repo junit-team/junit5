@@ -173,7 +173,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 
 		return Preconditions.notEmpty(providers,
 			() -> String.format("You must register at least one %s that supports @ContainerTemplate class [%s]",
-				ContainerTemplateInvocationContextProvider.class.getSimpleName(), getTestClass()));
+				ContainerTemplateInvocationContextProvider.class.getSimpleName(), getTestClass().getName()));
 	}
 
 	private Optional<TestDescriptor> toTestDescriptor(ContainerTemplateInvocationContext invocationContext, int index) {

@@ -495,6 +495,21 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@ParameterizedTest
+	@ValueSource(classes = { NoProviderRegisteredTestCase.class, NoSupportingProviderRegisteredTestCase.class })
+	void failsIfNoSupportingProviderIsRegistered(Class<?> testClass) {
+		var results = executeTestsForClass(testClass);
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(testClass), started()), //
+			event(container(testClass),
+				finishedWithFailure(
+					message("You must register at least one ContainerTemplateInvocationContextProvider that supports "
+							+ "@ContainerTemplate class [" + testClass.getName() + "]"))), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
 		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
@@ -736,6 +751,41 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			@Override
 			public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
 				return true;
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	static class NoProviderRegisteredTestCase {
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(NoSupportingProviderRegisteredTestCase.Ext.class)
+	static class NoSupportingProviderRegisteredTestCase {
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+
+		static class Ext implements ContainerTemplateInvocationContextProvider {
+
+			@Override
+			public boolean supportsContainerTemplate(ExtensionContext context) {
+				return false;
+			}
+
+			@Override
+			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+					ExtensionContext context) {
+				throw new RuntimeException("should not be called");
 			}
 		}
 	}
