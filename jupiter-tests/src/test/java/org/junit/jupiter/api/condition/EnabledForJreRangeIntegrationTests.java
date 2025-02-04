@@ -255,7 +255,6 @@ class EnabledForJreRangeIntegrationTests {
 	void minVersion17MaxVersionMaxInteger() {
 		assertTrue(onKnownVersion());
 		assertTrue(JRE.currentVersionNumber() >= 17);
-		assertTrue(JRE.currentVersionNumber() <= Integer.MAX_VALUE);
 	}
 
 	@Test

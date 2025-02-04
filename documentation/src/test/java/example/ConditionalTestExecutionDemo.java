@@ -13,7 +13,6 @@ package example;
 import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
-import static org.junit.jupiter.api.condition.JRE.JAVA_25;
 import static org.junit.jupiter.api.condition.JRE.JAVA_9;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
@@ -164,7 +163,9 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@EnabledOnJre(value = JAVA_25, versions = 26)
+	@EnabledOnJre(versions = { 25, 26 })
+	// Can also be expressed as follows.
+	// @EnabledOnJre(value = JAVA_25, versions = 26)
 	void onJava25And26() {
 		// ...
 	}
@@ -176,7 +177,9 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_25, maxVersion = 27)
+	@EnabledForJreRange(minVersion = 25, maxVersion = 27)
+	// Can also be expressed as follows.
+	// @EnabledForJreRange(min = JAVA_25, maxVersion = 27)
 	void fromJava25To27() {
 		// ...
 	}
@@ -188,7 +191,9 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@DisabledOnJre(value = JAVA_25, versions = 26)
+	@DisabledOnJre(versions = { 25, 26 })
+	// Can also be expressed as follows.
+	// @DisabledOnJre(value = JAVA_25, versions = 26)
 	void notOnJava25And26() {
 		// ...
 	}
@@ -200,7 +205,9 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_25, maxVersion = 27)
+	@DisabledForJreRange(minVersion = 25, maxVersion = 27)
+	// Can also be expressed as follows.
+	// @DisabledForJreRange(min = JAVA_25, maxVersion = 27)
 	void notFromJava25To27() {
 		// ...
 	}

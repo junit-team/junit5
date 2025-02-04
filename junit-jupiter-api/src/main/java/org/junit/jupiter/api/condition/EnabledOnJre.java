@@ -27,8 +27,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * test method is only <em>enabled</em> on one or more specified Java Runtime
  * Environment (JRE) versions.
  *
- * <p>Versions can be specified as {@link JRE} enum constants via {@link #value()}
- * or as integers via {@link #versions()}.
+ * <p>Versions can be specified as {@link JRE} enum constants via
+ * {@link #value() value} or as integers via {@link #versions() versions}.
  *
  * <p>When applied at the class level, all test methods within that class
  * will be enabled on the same specified JRE versions.
@@ -90,7 +90,8 @@ public @interface EnabledOnJre {
 	 * should be enabled, specified as {@link JRE} enum constants.
 	 *
 	 * <p>If a {@code JRE} enum constant does not exist for a particular JRE
-	 * version, you can specify the version via {@link #versions()} instead.
+	 * version, you can specify the version via {@link #versions() versions}
+	 * instead.
 	 *
 	 * @see JRE
 	 * @see #versions()
@@ -102,7 +103,7 @@ public @interface EnabledOnJre {
 	 * should be enabled, specified as integers.
 	 *
 	 * <p>If a {@code JRE} enum constant exists for a particular JRE version, you
-	 * can specify the version via {@link #value()} instead.
+	 * can specify the version via {@link #value() value} instead.
 	 *
 	 * @since 5.12
 	 * @see #value()

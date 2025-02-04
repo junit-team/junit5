@@ -54,7 +54,7 @@ abstract class AbstractJreCondition<A extends Annotation> extends BooleanExecuti
 						this.annotationName, JRE.MINIMUM_VERSION));
 				return version;
 			})//
-		);
+		).distinct();
 	}
 
 }

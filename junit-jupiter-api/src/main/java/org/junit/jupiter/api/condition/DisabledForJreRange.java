@@ -27,8 +27,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * or test method is <em>disabled</em> for a specific range of Java Runtime
  * Environment (JRE) versions.
  *
- * <p>Version ranges can be specified as {@link JRE} enum constants via {@link #min}
- * and {@link #max} or as integers via {@link #minVersion} and {@link #maxVersion}.
+ * <p>Version ranges can be specified as {@link JRE} enum constants via
+ * {@link #min min} and {@link #max max} or as integers via
+ * {@link #minVersion minVersion} and {@link #maxVersion maxVersion}.
  *
  * <p>When applied at the class level, all test methods within that class will
  * be disabled on the same specified JRE versions.
@@ -91,11 +92,12 @@ public @interface DisabledForJreRange {
 	 * be disabled, specified as a {@link JRE} enum constant.
 	 *
 	 * <p>If a {@code JRE} enum constant does not exist for a particular JRE
-	 * version, you can specify the minimum version via {@link #minVersion()}
-	 * instead.
+	 * version, you can specify the minimum version via
+	 * {@link #minVersion() minVersion} instead.
 	 *
 	 * <p>Defaults to {@link JRE#UNDEFINED UNDEFINED}, which will be interpreted
-	 * as {@link JRE#JAVA_8 JAVA_8} if the {@link #minVersion()} is not set.
+	 * as {@link JRE#JAVA_8 JAVA_8} if the {@link #minVersion() minVersion} is
+	 * not set.
 	 *
 	 * @see JRE
 	 * @see #minVersion()
@@ -108,11 +110,12 @@ public @interface DisabledForJreRange {
 	 * be disabled, specified as a {@link JRE} enum constant.
 	 *
 	 * <p>If a {@code JRE} enum constant does not exist for a particular JRE
-	 * version, you can specify the maximum version via {@link #maxVersion()}
-	 * instead.
+	 * version, you can specify the maximum version via
+	 * {@link #maxVersion() maxVersion} instead.
 	 *
 	 * <p>Defaults to {@link JRE#UNDEFINED UNDEFINED}, which will be interpreted
-	 * as {@link JRE#OTHER OTHER} if the {@link #maxVersion()} is not set.
+	 * as {@link JRE#OTHER OTHER} if the {@link #maxVersion() maxVersion} is not
+	 * set.
 	 *
 	 * @see JRE
 	 * @see #maxVersion()
@@ -125,9 +128,10 @@ public @interface DisabledForJreRange {
 	 * be disabled, specified as an integer.
 	 *
 	 * <p>If a {@code JRE} enum constant exists for the particular JRE version,
-	 * you can specify the minimum version via {@link #min()} instead.
+	 * you can specify the minimum version via {@link #min() min} instead.
 	 *
-	 * <p>Defaults to {@code -1} to signal that {@link #min()} should be used instead.
+	 * <p>Defaults to {@code -1} to signal that {@link #min() min} should be used
+	 * instead.
 	 *
 	 * @since 5.12
 	 * @see #min()
@@ -143,9 +147,10 @@ public @interface DisabledForJreRange {
 	 * be disabled, specified as an integer.
 	 *
 	 * <p>If a {@code JRE} enum constant exists for the particular JRE version,
-	 * you can specify the maximum version via {@link #max()} instead.
+	 * you can specify the maximum version via {@link #max() max} instead.
 	 *
-	 * <p>Defaults to {@code -1} to signal that {@link #max()} should be used instead.
+	 * <p>Defaults to {@code -1} to signal that {@link #max() max} should be used
+	 * instead.
 	 *
 	 * @since 5.12
 	 * @see #max()

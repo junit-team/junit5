@@ -22,10 +22,12 @@ import org.junit.platform.commons.util.StringUtils;
 /**
  * Enumeration of Java Runtime Environment (JRE) versions.
  *
- * <p>If the current JRE version cannot be detected &mdash; for example, if the
- * {@code java.version} JVM system property is undefined &mdash; then none of
- * the constants defined in this enum will be considered to be the
- * {@linkplain #isCurrentVersion current JRE version}.
+ * <p>If the current JRE version can be detected but is not one of the predefined
+ * constants in this enum, {@link #OTHER} will be considered to be the
+ * {@linkplain #isCurrentVersion current JRE version}. If the current JRE version
+ * cannot be detected &mdash; for example, if the {@code java.version} JVM system
+ * property is undefined &mdash; {@link #UNDEFINED} will be considered to be the
+ * current JRE version.
  *
  * @since 5.1
 @for(JRE jre : jres)<%--
@@ -76,7 +78,8 @@ public enum JRE {
 --%>@endfor
 	 *
 	 * <p>This constant returns {@link Integer#MAX_VALUE} for its
-	 * {@linkplain #version() version}.
+	 * {@linkplain #version() version}. To retrieve the actual version number,
+	 * use {@link #currentVersionNumber()}.
 	 */
 	OTHER(Integer.MAX_VALUE);
 
