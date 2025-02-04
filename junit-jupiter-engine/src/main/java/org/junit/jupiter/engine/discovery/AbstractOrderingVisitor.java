@@ -75,9 +75,8 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 
 		if (descriptorWrapperOrderer.canOrderWrappers()) {
 			parentTestDescriptor.orderChildren(children -> {
-				List<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor))//
-						.collect(toList());
+				Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
 
 				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
 
@@ -91,14 +90,14 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 				// before tests in @Nested test classes. So we add the test methods before adding
 				// the @Nested test classes.
 				if (matchingChildrenType == ClassBasedTestDescriptor.class) {
-					return Stream.concat(nonMatchingTestDescriptors.stream(), orderedTestDescriptors)//
+					return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
 							.collect(toList());
 				}
 				// Otherwise, we add the ordered descriptors before the non-matching descriptors,
 				// which is the case when we are ordering test methods. In other words, local
 				// test methods always get added before @Nested test classes.
 				else {
-					return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors.stream())//
+					return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
 							.collect(toList());
 				}
 			});
