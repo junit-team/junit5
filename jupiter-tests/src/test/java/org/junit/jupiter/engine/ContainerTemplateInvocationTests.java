@@ -75,8 +75,12 @@ import org.junit.platform.testkit.engine.Event;
  */
 public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
-	@Test
-	void executesContainerTemplateClassTwice() {
+	@ParameterizedTest
+	@ValueSource(strings = { //
+			"class:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase", //
+			"uid:[engine:junit-jupiter]/[container-template:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase]" //
+	})
+	void executesContainerTemplateClassTwice(String selectorIdentifier) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
@@ -89,7 +93,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		var invocation2NestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var invocation2NestedMethodBId = invocation2NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
-		var results = executeTestsForClass(TwoInvocationsTestCase.class);
+		var results = executeTests(DiscoverySelectors.parse(selectorIdentifier).orElseThrow());
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //

@@ -98,23 +98,31 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId.Segment lastSegment = uniqueId.getLastSegment();
 		if (ClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			String className = lastSegment.getValue();
-			return ReflectionSupport.tryToLoadClass(className).toOptional().filter(isTestClassWithTests).map(
-				testClass -> toResolution(
-					context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))))).orElse(
-						unresolved());
+			return ReflectionSupport.tryToLoadClass(className).toOptional() //
+					.filter(isTestClassWithTests) //
+					.map(testClass -> toResolution(
+						context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))))).orElse(
+							unresolved());
 		}
 		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			String simpleClassName = lastSegment.getValue();
 			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 				if (parent instanceof ClassBasedTestDescriptor) {
 					Class<?> parentTestClass = ((ClassBasedTestDescriptor) parent).getTestClass();
-					return ReflectionSupport.findNestedClasses(parentTestClass,
-						isNestedTestClass.and(
-							where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst().flatMap(
-								testClass -> Optional.of(newNestedClassTestDescriptor(parent, testClass)));
+					return ReflectionSupport.findNestedClasses(parentTestClass, isNestedTestClass.and(
+						where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst() //
+							.flatMap(testClass -> Optional.of(newNestedClassTestDescriptor(parent, testClass)));
 				}
 				return Optional.empty();
 			}));
+		}
+		if (ContainerTemplateTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
+			String className = lastSegment.getValue();
+			return ReflectionSupport.tryToLoadClass(className).toOptional() //
+					.filter(isTestClassWithTests) //
+					.filter(testClass -> isAnnotated(testClass, ContainerTemplate.class)) //
+					.map(testClass -> toResolution(context.addToParent(
+						parent -> Optional.of(newStaticClassTestDescriptor(parent, testClass))))).orElse(unresolved());
 		}
 		return unresolved();
 	}
