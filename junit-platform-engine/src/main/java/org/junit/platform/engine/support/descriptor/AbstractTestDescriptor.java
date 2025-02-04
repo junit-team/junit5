@@ -150,6 +150,9 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 		this.children.clear();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");

@@ -177,16 +177,16 @@ public interface TestDescriptor {
 	void removeFromHierarchy();
 
 	/**
-	 * Order all children from this descriptor.
+	 * Order the children from this descriptor.
 	 *
-	 * <p>The {@code orderer} is provided a modifiable list of child test descriptors in
-	 * this test descriptor. Never {@code null}. The {@code orderer} must return
-	 * a list of descriptors in any order, never {@code null}.
-	 * <p>
-	 * If descriptors were added, these descriptors will be ignored. If descriptors
-	 * are removed, the original descriptors will be retained in arbitrary order.
+	 * <p>The {@code orderer} is provided a modifiable list of child test
+	 * descriptors in this test descriptor; never {@code null}. The
+	 * {@code orderer} must return a list containing the same descriptors in any
+	 * order; potentially the same list, but never {@code null}. If descriptors
+	 * were added or removed, an exception is thrown.
 	 *
-	 * @param orderer a unary operator to order the children from this test descriptor.
+	 * @param orderer a unary operator to order the children of this test
+	 * descriptor.
 	 */
 	@API(since = "5.12", status = EXPERIMENTAL)
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
