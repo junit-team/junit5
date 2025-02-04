@@ -104,7 +104,7 @@ public class ExtensionContextTests {
 				() -> assertThat(engineContext.getParent()).isEmpty(),
 				() -> assertThat(engineContext.getRoot()).isSameAs(engineContext),
 				() -> assertThat(engineContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD),
-			    () -> assertThat(engineContext.getExtensions(PreInterruptCallback.class)).isEmpty()
+				() -> assertThat(engineContext.getExtensions(PreInterruptCallback.class)).isEmpty()
 			);
 		// @formatter:on
 		}
@@ -131,7 +131,7 @@ public class ExtensionContextTests {
 			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
 			() -> assertThat(outerExtensionContext.getParent()).isEmpty(),
 			() -> assertThat(outerExtensionContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD),
-		    () -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty()
+			() -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty()
 		);
 		// @formatter:on
 
