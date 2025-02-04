@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 				.filter(matchingChildrenType::isInstance)//
 				.map(matchingChildrenType::cast)//
 				.map(descriptorWrapperFactory)//
-				.collect(toList());
+				.collect(toCollection(ArrayList::new));
 
 		// If there are no children to order, abort early.
 		if (matchingDescriptorWrappers.isEmpty()) {
