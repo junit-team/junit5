@@ -161,9 +161,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 		Set<? extends TestDescriptor> orderedChildren = new LinkedHashSet<>(suggestedOrder);
 		boolean unmodified = this.children.equals(orderedChildren);
-		Preconditions.condition(unmodified, "orderer may not add or remove test descriptors");
-		Preconditions.condition(this.children.size() == suggestedOrder.size(),
-			"orderer may not add duplicate test descriptors");
+		Preconditions.condition(unmodified && this.children.size() == suggestedOrder.size(),
+			"orderer may not add or remove test descriptors");
 
 		this.children.clear();
 		this.children.addAll(orderedChildren);

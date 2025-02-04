@@ -108,13 +108,12 @@ public interface TestDescriptorOrderChildrenTests {
 	@Test
 	default void orderChildrenDuplicatesDescriptor() {
 		var testDescriptor = createTestDescriptorWithChildren();
-		var childrenInOriginalOrder = new ArrayList<>(testDescriptor.getChildren());
 		UnaryOperator<List<TestDescriptor>> orderer = children -> {
 			children.add(1, children.getLast());
 			return children;
 		};
 		var exception = assertThrows(PreconditionViolationException.class, () -> testDescriptor.orderChildren(orderer));
-		assertThat(exception).hasMessage("orderer may not add duplicate test descriptors");
+		assertThat(exception).hasMessage("orderer may not add or remove test descriptors");
 	}
 
 	@Test
