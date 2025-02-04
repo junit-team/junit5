@@ -284,12 +284,14 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	void misbehavingMethodOrdererThatImpersonatesElements() {
+	void misbehavingMethodOrdererThatImpersonatesElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByImpersonatingTestCase.class;
 
 		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
+
+		assertThat(listener.stream(Level.WARNING)).isEmpty();
 	}
 
 	@Test
