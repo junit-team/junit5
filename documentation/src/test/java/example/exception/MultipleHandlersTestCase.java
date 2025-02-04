@@ -10,7 +10,7 @@
 
 package example.exception;
 
-import static example.exception.MultipleHandlersTestCase.ThirdExecutedHandler;
+import example.exception.MultipleHandlersTestCase.ThirdExecutedHandler;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

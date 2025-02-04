@@ -111,6 +111,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromClassTestDescriptor() {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -153,6 +154,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void tagsCanBeRetrievedInExtensionContext() {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -178,6 +180,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromMethodTestDescriptor() {
 		var methodTestDescriptor = methodDescriptor();
 		var classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
