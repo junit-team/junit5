@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -53,6 +54,10 @@ import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.testkit.engine.Event;
@@ -342,8 +347,63 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	void eachInvocationHasSeparateExtensionContext() {
 		var results = executeTestsForClass(SeparateExtensionContextTestCase.class);
 
-		results.allEvents().debug();
 		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
+	@Test
+	void supportsTestTemplateMethodsInsideContainerTemplateClasses() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			CombinationWithTestTemplateTestCase.class.getName());
+		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var testTemplateId1 = invocationId1.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
+		var testTemplate1InvocationId1 = testTemplateId1.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#1");
+		var testTemplate1InvocationId2 = testTemplateId1.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#2");
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var testTemplateId2 = invocationId2.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
+		var testTemplate2InvocationId1 = testTemplateId2.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#1");
+		var testTemplate2InvocationId2 = testTemplateId2.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#2");
+
+		var results = executeTestsForClass(CombinationWithTestTemplateTestCase.class);
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId1)),
+				displayName("[1] A of CombinationWithTestTemplateTestCase")), //
+			event(container(uniqueId(invocationId1)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplateId1))), //
+			event(container(uniqueId(testTemplateId1)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplate1InvocationId1))), //
+			event(test(uniqueId(testTemplate1InvocationId1)), started()), //
+			event(test(uniqueId(testTemplate1InvocationId1)), finishedSuccessfully()), //
+			event(dynamicTestRegistered(uniqueId(testTemplate1InvocationId2))), //
+			event(test(uniqueId(testTemplate1InvocationId2)), started()), //
+			event(test(uniqueId(testTemplate1InvocationId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testTemplateId1)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)),
+				displayName("[2] B of CombinationWithTestTemplateTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplateId2))), //
+			event(container(uniqueId(testTemplateId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplate2InvocationId1))), //
+			event(test(uniqueId(testTemplate2InvocationId1)), started()), //
+			event(test(uniqueId(testTemplate2InvocationId1)), finishedSuccessfully()), //
+			event(dynamicTestRegistered(uniqueId(testTemplate2InvocationId2))), //
+			event(test(uniqueId(testTemplate2InvocationId2)), started()), //
+			event(test(uniqueId(testTemplate2InvocationId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testTemplateId2)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
 	}
 
 	// TODO #871 Consider moving to EventConditions
@@ -511,6 +571,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			public void close() {
 				this.closed = true;
 			}
+		}
+	}
+
+	@ContainerTemplate
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	static class CombinationWithTestTemplateTestCase {
+
+		@ParameterizedTest
+		@ValueSource(ints = { 1, 2 })
+		void test(int i) {
+			assertNotEquals(0, i);
 		}
 	}
 }
