@@ -42,10 +42,11 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * @since 5.13
  */
 @API(status = INTERNAL, since = "5.13")
-public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
+public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor implements Filterable {
 
 	public static final String SEGMENT_TYPE = "container-template";
 
+	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
 	private final ClassBasedTestDescriptor delegate;
 
@@ -60,6 +61,13 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	public Set<TestTag> getTags() {
 		// return modifiable copy
 		return new LinkedHashSet<>(this.tags);
+	}
+
+	// --- Filterable ----------------------------------------------------------
+
+	@Override
+	public DynamicDescendantFilter getDynamicDescendantFilter() {
+		return dynamicDescendantFilter;
 	}
 
 	// --- JupiterTestDescriptor -----------------------------------------------
@@ -179,19 +187,23 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor {
 	private Optional<TestDescriptor> toTestDescriptor(ContainerTemplateInvocationContext invocationContext, int index) {
 		UniqueId invocationUniqueId = getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#" + index);
-		ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
-			invocationUniqueId, invocationContext, index, getSource().orElse(null), this.configuration);
+		if (getDynamicDescendantFilter().test(invocationUniqueId, index - 1)) {
 
-		UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
+			ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
+				invocationUniqueId, invocationContext, index, getSource().orElse(null), this.configuration);
 
-		// TODO #871 filter descendants
+			UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
 
-		this.childrenPrototypes.stream() //
-				.map(JupiterTestDescriptor.class::cast) //
-				.map(it -> it.copyIncludingDescendants(transformer)) //
-				.forEach(containerInvocationDescriptor::addChild);
+			// TODO #871 filter descendants
 
-		return Optional.of(containerInvocationDescriptor);
+			this.childrenPrototypes.stream() //
+					.map(JupiterTestDescriptor.class::cast) //
+					.map(it -> it.copyIncludingDescendants(transformer)) //
+					.forEach(containerInvocationDescriptor::addChild);
+
+			return Optional.of(containerInvocationDescriptor);
+		}
+		return Optional.empty();
 	}
 
 	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {

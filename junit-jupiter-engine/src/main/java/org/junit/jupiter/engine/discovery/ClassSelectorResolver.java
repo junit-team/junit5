@@ -36,7 +36,9 @@ import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
+import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
@@ -124,6 +126,17 @@ class ClassSelectorResolver implements SelectorResolver {
 					.map(testClass -> toResolution(context.addToParent(
 						parent -> Optional.of(newStaticClassTestDescriptor(parent, testClass))))).orElse(unresolved());
 		}
+		if (ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
+			return context.resolve(selectUniqueId(uniqueId.removeLastSegment())) //
+					.map(parent -> {
+						if (parent instanceof Filterable) {
+							((Filterable) parent).getDynamicDescendantFilter().allowUniqueIdPrefix(uniqueId);
+						}
+						return Resolution.match(
+							Match.exact(parent, expansionCallback((ClassBasedTestDescriptor) parent)));
+					}) //
+					.orElse(unresolved());
+		}
 		return unresolved();
 	}
 
@@ -161,20 +174,23 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {
-		return testDescriptor.map(it -> {
-			Class<?> testClass = it.getTestClass();
-			List<Class<?>> testClasses = new ArrayList<>(it.getEnclosingTestClasses());
+		return testDescriptor //
+				.map(it -> Resolution.match(Match.exact(it, expansionCallback(it)))) //
+				.orElse(unresolved());
+	}
+
+	private Supplier<Set<? extends DiscoverySelector>> expansionCallback(ClassBasedTestDescriptor testDescriptor) {
+		return () -> {
+			Class<?> testClass = testDescriptor.getTestClass();
+			List<Class<?>> testClasses = new ArrayList<>(testDescriptor.getEnclosingTestClasses());
 			testClasses.add(testClass);
-			// @formatter:off
-			return Resolution.match(Match.exact(it, () -> {
-				Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN).stream()
-						.map(method -> selectMethod(testClasses, method));
-				Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass, isNestedTestClass)
-						.map(nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
-				return Stream.concat(methods, nestedClasses).collect(toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
-			}));
-			// @formatter:on
-		}).orElse(unresolved());
+			Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod,
+				TOP_DOWN).stream().map(method -> selectMethod(testClasses, method));
+			Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass, isNestedTestClass).map(
+				nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
+			return Stream.concat(methods, nestedClasses).collect(
+				toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
+		};
 	}
 
 	private DiscoverySelector selectClass(List<Class<?>> classes) {
