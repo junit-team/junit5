@@ -33,7 +33,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	public static final String SEGMENT_TYPE = "container-template-invocation";
 
-	private final ContainerTemplateInvocationContext invocationContext;
+	private ContainerTemplateInvocationContext invocationContext;
 	private final int index;
 
 	ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, ContainerTemplateInvocationContext invocationContext,
@@ -41,6 +41,11 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		super(uniqueId, invocationContext.getDisplayName(index), source, configuration);
 		this.invocationContext = invocationContext;
 		this.index = index;
+	}
+
+	@Override
+	public Type getType() {
+		return Type.CONTAINER;
 	}
 
 	@Override
@@ -73,7 +78,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	}
 
 	@Override
-	public Type getType() {
-		return Type.CONTAINER;
+	public void after(JupiterEngineExecutionContext context) throws Exception {
+		// forget invocationContext so it can be garbage collected
+		this.invocationContext = null;
 	}
 }
