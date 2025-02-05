@@ -13,12 +13,15 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.createDisplayNameSupplierForNestedClass;
+import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingInstanceTypesDependentResourceLocksProviderEvaluator;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -46,8 +49,10 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	public static final String SEGMENT_TYPE = "nested-class";
 
-	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, JupiterConfiguration configuration) {
-		super(uniqueId, testClass, createDisplayNameSupplierForNestedClass(testClass, configuration), configuration);
+	public NestedClassTestDescriptor(UniqueId uniqueId, Class<?> testClass,
+			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
+		super(uniqueId, testClass,
+			createDisplayNameSupplierForNestedClass(enclosingInstanceTypes, testClass, configuration), configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -62,7 +67,11 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
-		TestDescriptor parent = getParent().orElse(null);
+		return getEnclosingTestClasses(getParent().orElse(null));
+	}
+
+	@API(status = INTERNAL, since = "5.12")
+	public static List<Class<?>> getEnclosingTestClasses(TestDescriptor parent) {
 		if (parent instanceof ClassBasedTestDescriptor) {
 			ClassBasedTestDescriptor parentClassDescriptor = (ClassBasedTestDescriptor) parent;
 			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
@@ -87,8 +96,9 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	}
 
 	@Override
-	public Set<ResourceLocksProvider.Lock> evaluateResourceLocksProvider(ResourceLocksProvider provider) {
-		return provider.provideForNestedClass(getTestClass());
+	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
+		return enclosingInstanceTypesDependentResourceLocksProviderEvaluator(this::getEnclosingTestClasses, (provider,
+				enclosingInstanceTypes) -> provider.provideForNestedClass(enclosingInstanceTypes, getTestClass()));
 	}
 
 }

@@ -28,6 +28,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -166,7 +167,8 @@ public class EngineExecutionOrchestrator {
 					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
 			}
 			else {
-				execute(engineDescriptor, listener, configurationParameters, testEngine);
+				execute(engineDescriptor, listener, configurationParameters, testEngine,
+					discoveryResult.getOutputDirectoryProvider());
 			}
 		}
 	}
@@ -190,18 +192,27 @@ public class EngineExecutionOrchestrator {
 	}
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
-			ConfigurationParameters configurationParameters, TestEngine testEngine) {
+			ConfigurationParameters configurationParameters, TestEngine testEngine,
+			OutputDirectoryProvider outputDirectoryProvider) {
 
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
-			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters));
+			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
+				outputDirectoryProvider));
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-			delayingListener.reportEngineFailure(new JUnitException(
-				String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId()), throwable));
+			JUnitException cause = null;
+			if (throwable instanceof LinkageError) {
+				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			}
+			if (cause == null) {
+				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
+				cause = new JUnitException(message, throwable);
+			}
+			delayingListener.reportEngineFailure(cause);
 		}
 	}
 }

@@ -104,13 +104,14 @@ public class ExtensionContextTests {
 				() -> assertThat(engineContext.getParent()).isEmpty(),
 				() -> assertThat(engineContext.getRoot()).isSameAs(engineContext),
 				() -> assertThat(engineContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD),
-			    () -> assertThat(engineContext.getExtensions(PreInterruptCallback.class)).isEmpty()
+				() -> assertThat(engineContext.getExtensions(PreInterruptCallback.class)).isEmpty()
 			);
 		// @formatter:on
 		}
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromClassTestDescriptor() {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -130,7 +131,7 @@ public class ExtensionContextTests {
 			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
 			() -> assertThat(outerExtensionContext.getParent()).isEmpty(),
 			() -> assertThat(outerExtensionContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD),
-		    () -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty()
+			() -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty()
 		);
 		// @formatter:on
 
@@ -153,6 +154,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void tagsCanBeRetrievedInExtensionContext() {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
@@ -178,6 +180,7 @@ public class ExtensionContextTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void fromMethodTestDescriptor() {
 		var methodTestDescriptor = methodDescriptor();
 		var classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
@@ -418,7 +421,7 @@ public class ExtensionContextTests {
 			named("method", (JupiterConfiguration configuration) -> {
 				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").orElseThrow();
 				var methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
-				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method,
+				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method, List::of,
 					configuration);
 				return new MethodExtensionContext(null, null, methodTestDescriptor, configuration, extensionRegistry,
 					null);
@@ -428,7 +431,7 @@ public class ExtensionContextTests {
 
 	private NestedClassTestDescriptor nestedClassDescriptor() {
 		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
-			configuration);
+			List::of, configuration);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
@@ -443,7 +446,7 @@ public class ExtensionContextTests {
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
-				OuterClass.class.getDeclaredMethod("aMethod"), configuration);
+				OuterClass.class.getDeclaredMethod("aMethod"), List::of, configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

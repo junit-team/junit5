@@ -20,6 +20,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Tag;
@@ -80,16 +81,24 @@ class AnnotationSupportTests {
 			AnnotationSupport.findAnnotation(element, Override.class));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Test
-	void findAnnotationOnClassPreconditions() {
+	void findAnnotationOnClassWithSearchModePreconditions() {
 		assertPreconditionViolationException("annotationType",
 			() -> AnnotationSupport.findAnnotation(Probe.class, null, SearchOption.INCLUDE_ENCLOSING_CLASSES));
 		assertPreconditionViolationException("SearchOption",
-			() -> AnnotationSupport.findAnnotation(Probe.class, Override.class, null));
+			() -> AnnotationSupport.findAnnotation(Probe.class, Override.class, (SearchOption) null));
 	}
 
 	@Test
-	void findAnnotationOnClassDelegates() {
+	void findAnnotationOnClassWithEnclosingInstanceTypesPreconditions() {
+		assertPreconditionViolationException("enclosingInstanceTypes",
+			() -> AnnotationSupport.findAnnotation(Probe.class, Override.class, (List<Class<?>>) null));
+	}
+
+	@SuppressWarnings("deprecation")
+	@Test
+	void findAnnotationOnClassWithSearchModeDelegates() {
 		Class<?> clazz = Probe.class;
 		assertEquals(AnnotationUtils.findAnnotation(clazz, Tag.class, false),
 			AnnotationSupport.findAnnotation(clazz, Tag.class, SearchOption.DEFAULT));
@@ -109,6 +118,16 @@ class AnnotationSupportTests {
 			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.DEFAULT));
 		assertEquals(AnnotationUtils.findAnnotation(clazz, Override.class, true),
 			AnnotationSupport.findAnnotation(clazz, Override.class, SearchOption.INCLUDE_ENCLOSING_CLASSES));
+	}
+
+	@Test
+	void findAnnotationOnClassWithEnclosingInstanceTypes() {
+		assertThat(AnnotationSupport.findAnnotation(Probe.class, Tag.class, List.of())) //
+				.contains(Probe.class.getDeclaredAnnotation(Tag.class));
+		assertThat(AnnotationSupport.findAnnotation(Probe.InnerClass.class, Tag.class, List.of())) //
+				.isEmpty();
+		assertThat(AnnotationSupport.findAnnotation(Probe.InnerClass.class, Tag.class, List.of(Probe.class))) //
+				.contains(Probe.class.getDeclaredAnnotation(Tag.class));
 	}
 
 	@Test
@@ -301,6 +320,7 @@ class AnnotationSupportTests {
 		void bMethod() {
 		}
 
+		@SuppressWarnings("InnerClassMayBeStatic")
 		class InnerClass {
 		}
 

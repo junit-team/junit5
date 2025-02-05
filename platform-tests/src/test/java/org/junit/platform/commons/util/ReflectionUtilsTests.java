@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.commons.function.Try.success;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.util.ReflectionUtils.findFields;
@@ -284,6 +283,23 @@ class ReflectionUtilsTests {
 			// InputStream implements Closeable directly, so we find the `close` method
 			// in Closeable instead of AutoCloseable.
 			assertThat(interfaceMethod.getDeclaringClass()).isEqualTo(Closeable.class);
+		}
+
+		@Test
+		void isRecordObject() {
+			assertTrue(ReflectionUtils.isRecordObject(new SomeRecord(1)));
+			assertFalse(ReflectionUtils.isRecordObject(new ClassWithOneCustomConstructor("")));
+			assertFalse(ReflectionUtils.isRecordObject(null));
+		}
+
+		@Test
+		void isRecordClass() {
+			assertTrue(ReflectionUtils.isRecordClass(SomeRecord.class));
+			assertFalse(ReflectionUtils.isRecordClass(ClassWithOneCustomConstructor.class));
+			assertFalse(ReflectionUtils.isRecordClass(Object.class));
+		}
+
+		record SomeRecord(int n) {
 		}
 
 		static class ClassWithVoidAndNonVoidMethods {
@@ -561,7 +577,9 @@ class ReflectionUtilsTests {
 			// Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, int.class));
 			assertTrue(ReflectionUtils.isAssignableTo(Boolean.class, boolean.class));
-			assertTrue(ReflectionUtils.isAssignableTo(Void.class, void.class));
+
+			// Void to void
+			assertFalse(ReflectionUtils.isAssignableTo(Void.class, void.class));
 
 			// Widening Conversions from Wrappers to Primitives
 			assertTrue(ReflectionUtils.isAssignableTo(Integer.class, long.class));
@@ -802,73 +820,132 @@ class ReflectionUtilsTests {
 
 		@Test
 		void tryToLoadClass() {
-			assertThat(ReflectionUtils.tryToLoadClass(Integer.class.getName())).isEqualTo(success(Integer.class));
-			assertThat(ReflectionUtils.tryToLoadClass(Void.class.getName())).isEqualTo(success(Void.class));
+			assertTryToLoadClass(getClass().getName(), getClass());
+			assertTryToLoadClass(Integer.class.getName(), Integer.class);
+			assertTryToLoadClass(Void.class.getName(), Void.class);
 		}
 
 		@Test
 		void tryToLoadClassTrimsClassName() {
-			assertThat(ReflectionUtils.tryToLoadClass("  " + Integer.class.getName() + "\t"))//
-					.isEqualTo(success(Integer.class));
+			assertTryToLoadClass("  " + Integer.class.getName() + "\t", Integer.class);
 		}
 
 		@Test
-		void tryToLoadClassForPrimitive() {
-			assertThat(ReflectionUtils.tryToLoadClass(int.class.getName())).isEqualTo(success(int.class));
-			assertThat(ReflectionUtils.tryToLoadClass(void.class.getName())).isEqualTo(success(void.class));
+		void tryToLoadClassForVoidPseudoPrimitiveType() {
+			assertTryToLoadClass("void", void.class);
 		}
 
 		@Test
-		void tryToLoadClassForPrimitiveArray() {
-			assertThat(ReflectionUtils.tryToLoadClass(int[].class.getName())).isEqualTo(success(int[].class));
+		void tryToLoadClassForPrimitiveType() {
+			assertTryToLoadClass("boolean", boolean.class);
+			assertTryToLoadClass("char", char.class);
+			assertTryToLoadClass("byte", byte.class);
+			assertTryToLoadClass("short", short.class);
+			assertTryToLoadClass("int", int.class);
+			assertTryToLoadClass("long", long.class);
+			assertTryToLoadClass("float", float.class);
+			assertTryToLoadClass("double", double.class);
 		}
 
 		@Test
-		void tryToLoadClassForPrimitiveArrayUsingSourceCodeSyntax() {
-			assertThat(ReflectionUtils.tryToLoadClass("int[]")).isEqualTo(success(int[].class));
+		void tryToLoadClassForBinaryPrimitiveArrayName() {
+			assertTryToLoadClass("[Z", boolean[].class);
+			assertTryToLoadClass("[C", char[].class);
+			assertTryToLoadClass("[B", byte[].class);
+			assertTryToLoadClass("[S", short[].class);
+			assertTryToLoadClass("[I", int[].class);
+			assertTryToLoadClass("[J", long[].class);
+			assertTryToLoadClass("[F", float[].class);
+			assertTryToLoadClass("[D", double[].class);
 		}
 
 		@Test
-		void tryToLoadClassForObjectArray() {
-			assertThat(ReflectionUtils.tryToLoadClass(String[].class.getName())).isEqualTo(success(String[].class));
+		void tryToLoadClassForCanonicalPrimitiveArrayName() {
+			assertTryToLoadClass("boolean[]", boolean[].class);
+			assertTryToLoadClass("char[]", char[].class);
+			assertTryToLoadClass("byte[]", byte[].class);
+			assertTryToLoadClass("short[]", short[].class);
+			assertTryToLoadClass("int[]", int[].class);
+			assertTryToLoadClass("long[]", long[].class);
+			assertTryToLoadClass("float[]", float[].class);
+			assertTryToLoadClass("double[]", double[].class);
 		}
 
 		@Test
-		void tryToLoadClassForObjectArrayUsingSourceCodeSyntax() {
-			assertThat(ReflectionUtils.tryToLoadClass("java.lang.String[]")).isEqualTo(success(String[].class));
+		void tryToLoadClassForBinaryObjectArrayName() {
+			assertTryToLoadClass(String[].class.getName(), String[].class);
 		}
 
 		@Test
-		void tryToLoadClassForTwoDimensionalPrimitiveArray() {
-			assertThat(ReflectionUtils.tryToLoadClass(int[][].class.getName())).isEqualTo(success(int[][].class));
+		void tryToLoadClassForCanonicalObjectArrayName() {
+			assertTryToLoadClass("java.lang.String[]", String[].class);
 		}
 
 		@Test
-		void tryToLoadClassForTwoDimensionaldimensionalPrimitiveArrayUsingSourceCodeSyntax() {
-			assertThat(ReflectionUtils.tryToLoadClass("int[][]")).isEqualTo(success(int[][].class));
+		void tryToLoadClassForBinaryTwoDimensionalPrimitiveArrayName() {
+			assertTryToLoadClass("[[Z", boolean[][].class);
+			assertTryToLoadClass("[[C", char[][].class);
+			assertTryToLoadClass("[[B", byte[][].class);
+			assertTryToLoadClass("[[S", short[][].class);
+			assertTryToLoadClass("[[I", int[][].class);
+			assertTryToLoadClass("[[J", long[][].class);
+			assertTryToLoadClass("[[F", float[][].class);
+			assertTryToLoadClass("[[D", double[][].class);
 		}
 
 		@Test
-		void tryToLoadClassForMultidimensionalPrimitiveArray() {
-			assertThat(ReflectionUtils.tryToLoadClass(int[][][][][].class.getName()))//
-					.isEqualTo(success(int[][][][][].class));
+		void tryToLoadClassForCanonicalTwoDimensionalPrimitiveArrayName() {
+			assertTryToLoadClass("boolean[][]", boolean[][].class);
+			assertTryToLoadClass("char[][]", char[][].class);
+			assertTryToLoadClass("byte[][]", byte[][].class);
+			assertTryToLoadClass("short[][]", short[][].class);
+			assertTryToLoadClass("int[][]", int[][].class);
+			assertTryToLoadClass("long[][]", long[][].class);
+			assertTryToLoadClass("float[][]", float[][].class);
+			assertTryToLoadClass("double[][]", double[][].class);
 		}
 
 		@Test
-		void tryToLoadClassForMultidimensionalPrimitiveArrayUsingSourceCodeSyntax() {
-			assertThat(ReflectionUtils.tryToLoadClass("int[][][][][]")).isEqualTo(success(int[][][][][].class));
+		void tryToLoadClassForBinaryMultidimensionalPrimitiveArrayName() {
+			assertTryToLoadClass("[[[[[Z", boolean[][][][][].class);
+			assertTryToLoadClass("[[[[[C", char[][][][][].class);
+			assertTryToLoadClass("[[[[[B", byte[][][][][].class);
+			assertTryToLoadClass("[[[[[S", short[][][][][].class);
+			assertTryToLoadClass("[[[[[I", int[][][][][].class);
+			assertTryToLoadClass("[[[[[J", long[][][][][].class);
+			assertTryToLoadClass("[[[[[F", float[][][][][].class);
+			assertTryToLoadClass("[[[[[D", double[][][][][].class);
 		}
 
 		@Test
-		void tryToLoadClassForMultidimensionalObjectArray() {
-			assertThat(ReflectionUtils.tryToLoadClass(String[][][][][].class.getName()))//
-					.isEqualTo(success(String[][][][][].class));
+		void tryToLoadClassForCanonicalMultidimensionalPrimitiveArrayName() {
+			assertTryToLoadClass("boolean[][][][][]", boolean[][][][][].class);
+			assertTryToLoadClass("char[][][][][]", char[][][][][].class);
+			assertTryToLoadClass("byte[][][][][]", byte[][][][][].class);
+			assertTryToLoadClass("short[][][][][]", short[][][][][].class);
+			assertTryToLoadClass("int[][][][][]", int[][][][][].class);
+			assertTryToLoadClass("long[][][][][]", long[][][][][].class);
+			assertTryToLoadClass("float[][][][][]", float[][][][][].class);
+			assertTryToLoadClass("double[][][][][]", double[][][][][].class);
 		}
 
 		@Test
-		void tryToLoadClassForMultidimensionalObjectArrayUsingSourceCodeSyntax() {
-			assertThat(ReflectionUtils.tryToLoadClass("java.lang.String[][][][][]"))//
-					.isEqualTo(success(String[][][][][].class));
+		void tryToLoadClassForBinaryMultidimensionalObjectArrayName() {
+			assertTryToLoadClass(String[][][][][].class.getName(), String[][][][][].class);
+		}
+
+		@Test
+		void tryToLoadClassForCanonicalMultidimensionalObjectArrayName() {
+			assertTryToLoadClass("java.lang.String[][][][][]", String[][][][][].class);
+		}
+
+		private static void assertTryToLoadClass(String name, Class<?> type) {
+			try {
+				assertThat(ReflectionUtils.tryToLoadClass(name).get()).as(name).isEqualTo(type);
+			}
+			catch (Exception ex) {
+				ExceptionUtils.throwAsUncheckedException(ex);
+			}
 		}
 
 	}
@@ -1596,7 +1673,6 @@ class ReflectionUtilsTests {
 
 			var methods = findMethods(child, method -> true, TOP_DOWN);
 			assertEquals(9, methods.size());
-			methods.forEach(System.err::println);
 			assertThat(methods.subList(0, 2)).containsOnly(ifcMethod1, ifcMethod2);
 			assertThat(methods.subList(2, 6)).containsOnly(parentMethod1, parentMethod2, parentMethod4, parentMethod5);
 			assertThat(methods.subList(6, 9)).containsOnly(childMethod1, childMethod4, childMethod5);

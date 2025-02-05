@@ -17,6 +17,8 @@ import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -75,8 +77,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	private final ReflectiveInterceptorCall<Method, Void> interceptorCall;
 
 	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration) {
-		super(uniqueId, testClass, testMethod, configuration);
+			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
+		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
 		this.interceptorCall = defaultInterceptorCall;
 	}
 

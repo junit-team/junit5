@@ -1,5 +1,14 @@
 # Contributing
 
+## Getting Started
+
+We welcome new contributors to the project!
+If you're interested, please check for [issues labeled with `up-for-grabs`
+that are not yet in progress](https://github.com/junit-team/junit5/issues?q=sort%3Aupdated-desc%20is%3Aissue%20is%3Aopen%20label%3Aup-for-grabs%20-label%3A%22status%3A%20in%20progress%22).
+Generally, before you work on an issue, post a comment and ask whether it can be started.
+Please wait for the core team to respond and assign the issue to you before making any code
+changes.
+
 ## JUnit Contributor License Agreement
 
 - You will only Submit Contributions where You have authored 100% of the content.

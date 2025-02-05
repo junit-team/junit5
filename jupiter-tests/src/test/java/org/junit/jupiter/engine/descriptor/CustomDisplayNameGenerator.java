@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.Method;
+import java.util.List;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
 
@@ -22,12 +23,13 @@ public class CustomDisplayNameGenerator implements DisplayNameGenerator {
 	}
 
 	@Override
-	public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+	public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 		return "nested-class-display-name";
 	}
 
 	@Override
-	public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+	public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+			Method testMethod) {
 		return "method-display-name";
 	}
 }

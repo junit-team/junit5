@@ -20,6 +20,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 
 import java.lang.reflect.Method;
 import java.util.EmptyStackException;
+import java.util.List;
 import java.util.Stack;
 
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -197,6 +198,33 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@Test
+	void indicativeSentencesRuntimeEnclosingType() {
+		check(IndicativeSentencesRuntimeEnclosingTypeScenarioOneTestCase.class, //
+			"CONTAINER: Scenario 1", //
+			"CONTAINER: Scenario 1 -> Level 1", //
+			"CONTAINER: Scenario 1 -> Level 1 -> Level 2", //
+			"TEST: Scenario 1 -> Level 1 -> Level 2 -> this is a test"//
+		);
+
+		check(IndicativeSentencesRuntimeEnclosingTypeScenarioTwoTestCase.class, //
+			"CONTAINER: Scenario 2", //
+			"CONTAINER: Scenario 2 -> Level 1", //
+			"CONTAINER: Scenario 2 -> Level 1 -> Level 2", //
+			"TEST: Scenario 2 -> Level 1 -> Level 2 -> this is a test"//
+		);
+	}
+
+	@Test
+	void indicativeSentencesOnSubClass() {
+		check(IndicativeSentencesOnSubClassScenarioOneTestCase.class, //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase", //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1", //
+			"CONTAINER: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1 -> Level 2", //
+			"TEST: IndicativeSentencesOnSubClassScenarioOneTestCase -> Level 1 -> Level 2 -> this is a test"//
+		);
+	}
+
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
 		var descriptors = discoverTests(request).getDescendants();
@@ -217,12 +245,13 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 			return "nn";
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return "nn";
 		}
 	}

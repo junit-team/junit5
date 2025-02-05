@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 
@@ -20,8 +20,10 @@ import org.apiguardian.api.API;
  * @since 1.8
  * @see #DEFAULT
  * @see #INCLUDE_ENCLOSING_CLASSES
+ * @deprecated because there is only a single non-deprecated search option left
  */
-@API(status = STABLE, since = "1.10")
+@Deprecated
+@API(status = DEPRECATED, since = "1.12")
 public enum SearchOption {
 
 	/**
@@ -37,7 +39,11 @@ public enum SearchOption {
 	 * Search the inheritance hierarchy as with the {@link #DEFAULT} search option
 	 * but also search the {@linkplain Class#getEnclosingClass() enclosing class}
 	 * hierarchy for <em>inner classes</em> (i.e., a non-static member classes).
+	 *
+	 * @deprecated because it is preferable to inspect the runtime enclosing
+	 * types of a class rather than where they are declared.
 	 */
+	@Deprecated @API(status = DEPRECATED, since = "1.12")
 	INCLUDE_ENCLOSING_CLASSES
 
 }

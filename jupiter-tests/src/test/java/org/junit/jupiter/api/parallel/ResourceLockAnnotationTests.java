@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
@@ -255,7 +256,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	private Set<ExclusiveResource> getMethodResources(Class<?> testClass) {
 		var descriptor = new TestMethodTestDescriptor( //
-			uniqueId, testClass, getDeclaredTestMethod(testClass), configuration //
+			uniqueId, testClass, getDeclaredTestMethod(testClass), List::of, configuration //
 		);
 		descriptor.setParent(getClassTestDescriptor(testClass));
 		return descriptor.getExclusiveResources();
@@ -271,7 +272,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private Set<ExclusiveResource> getNestedClassResources(Class<?> testClass) {
-		var descriptor = new NestedClassTestDescriptor(uniqueId, testClass, configuration);
+		var descriptor = new NestedClassTestDescriptor(uniqueId, testClass, List::of, configuration);
 		descriptor.setParent(getClassTestDescriptor(testClass.getEnclosingClass()));
 		return descriptor.getExclusiveResources();
 	}
@@ -360,7 +361,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			}
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b1"));
 			}
 		}
@@ -368,7 +370,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class MethodLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b2"));
 			}
 		}
@@ -376,7 +379,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class NestedClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c1"), new Lock("c2", ResourceAccessMode.READ));
 			}
 		}
@@ -416,12 +419,13 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class SecondClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("b2", ResourceAccessMode.READ));
 			}
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c2"));
 			}
 		}
@@ -429,7 +433,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class NestedClassLevelProvider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForNestedClass(Class<?> testClass) {
+			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				return Set.of(new Lock("c3"));
 			}
 		}
@@ -451,7 +455,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		static class Provider implements ResourceLocksProvider {
 
 			@Override
-			public Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+			public Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+					Method testMethod) {
 				return Set.of(new Lock("a1"));
 			}
 		}

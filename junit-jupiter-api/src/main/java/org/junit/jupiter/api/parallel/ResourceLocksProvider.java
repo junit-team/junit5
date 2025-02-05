@@ -14,24 +14,23 @@ import static java.util.Collections.emptySet;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.Nested;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
- * {@code @ResourceLocksProvider} is used to add shared resources
- * to a test class and / or its test methods dynamically at runtime.
+ * A {@code ResourceLocksProvider} is used to programmatically add shared resources
+ * to a test class or its test methods dynamically at runtime.
  *
  * <p>Each shared resource is represented by an instance of {@link Lock}.
  *
- * <p>Adding shared resources using this interface has the same semantics
- * as declaring them via {@code @ResourceLock(value, mode)} annotation
- * but for some cases may be a more flexible and less verbose alternative
- * since it allows to add resources programmatically.
+ * <p>Adding shared resources via this API has the same semantics as declaring
+ * them declaratively via {@link ResourceLock @ResourceLock(value, mode)}, but for
+ * some use cases the programmatic approach may be more flexible and less verbose.
  *
  * <p>Implementations must provide a no-args constructor.
  *
@@ -45,16 +44,16 @@ import org.junit.platform.commons.util.ToStringBuilder;
 public interface ResourceLocksProvider {
 
 	/**
-	 * Add shared resources to a test class.
+	 * Add shared resources for a test class.
 	 *
-	 * <p>Invoked in case a test class or its parent class
-	 * is annotated with {@code @ResourceLock(providers)}.
+	 * <p>Invoked in case a test class or its parent class is annotated with
+	 * {@code @ResourceLock(providers)}.
 	 *
-	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
-	 * has the same semantics as annotating a test class
-	 * with analogous {@code @ResourceLock(value, mode)}.
+	 * @apiNote Adding {@linkplain Lock a shared resource} via this method has
+	 * the same semantics as annotating a test class with an analogous
+	 * {@code @ResourceLock(value, mode)} declaration.
 	 *
-	 * @param testClass a test class to add shared resources
+	 * @param testClass a test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
 	 */
 	default Set<Lock> provideForClass(Class<?> testClass) {
@@ -62,67 +61,81 @@ public interface ResourceLocksProvider {
 	}
 
 	/**
-	 * Add shared resources to a {@linkplain Nested nested} test class.
+	 * Add shared resources for a
+	 * {@link org.junit.jupiter.api.Nested @Nested} test class.
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
-	 *     <li>an enclosing test class of any level or its parent class
-	 *     is annotated with {@code @ResourceLock(providers)}.</li>
-	 *     <li>a nested test class or its parent class
-	 * 	   is annotated with {@code @ResourceLock(providers)}.</li>
+	 *   <li>an enclosing test class of any level or its parent class is
+	 *   annotated with {@code @ResourceLock(providers = ...)}.</li>
+	 *   <li>a nested test class or its parent class is annotated with
+	 *   {@code @ResourceLock(providers = ...)}.</li>
 	 * </ul>
 	 *
-	 * <p>Invoked for a nested test class
-	 * annotated with {@code @ResourceLock(providers)}
-	 * and for its child classes.
+	 * @apiNote Adding {@linkplain Lock a shared resource} via this method has
+	 * the same semantics as annotating a nested test class with an analogous
+	 * {@code @ResourceLock(value, mode)} declaration.
 	 *
-	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
-	 * has the same semantics as annotating a nested test class
-	 * with analogous {@code @ResourceLock(value, mode)}.
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass.
 	 *
-	 * @param testClass a nested test class to add shared resources
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances for the test class, ordered from outermost to innermost,
+	 * excluding {@code testClass}; never {@code null}
+	 * @param testClass a nested test class for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
-	 * @see Nested
+	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
-	default Set<Lock> provideForNestedClass(Class<?> testClass) {
+	default Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 		return emptySet();
 	}
 
 	/**
-	 * Add shared resources to a test method.
+	 * Add shared resources for a test method.
 	 *
 	 * <p>Invoked in case:
 	 * <ul>
-	 *     <li>an enclosing test class of any level or its parent class
-	 *     is annotated with {@code @ResourceLock(providers)}.</li>
-	 *     <li>a test method
-	 *     is annotated with {@code @ResourceLock(providers)}.</li>
+	 *   <li>an enclosing test class of any level or its parent class is
+	 *   annotated with {@code @ResourceLock(providers)}.</li>
+	 *   <li>a test method is annotated with {@code @ResourceLock(providers)}.</li>
 	 * </ul>
 	 *
 	 * @apiNote Adding {@linkplain Lock a shared resource} with this method
 	 * has the same semantics as annotating a test method
 	 * with analogous {@code @ResourceLock(value, mode)}.
 	 *
-	 * @param testClass a test class
-	 * or {@linkplain Nested nested} test class containing the {@code testMethod}
-	 * @param testMethod a test method to add shared resources
+	 * @implNote The classes supplied as {@code enclosingInstanceTypes} may
+	 * differ from the classes returned from invocations of
+	 * {@link Class#getEnclosingClass()} &mdash; for example, when a nested test
+	 * class is inherited from a superclass. Similarly, the class instance
+	 * supplied as {@code testClass} may differ from the class returned by
+	 * {@code testMethod.getDeclaringClass()} &mdash; for example, when a test
+	 * method is inherited from a superclass.
+	 *
+	 * @param enclosingInstanceTypes the runtime types of the enclosing
+	 * instances for the test class, ordered from outermost to innermost,
+	 * excluding {@code testClass}; never {@code null}
+	 * @param testClass the test class or {@link org.junit.jupiter.api.Nested @Nested}
+	 * test class that contains the {@code testMethod}
+	 * @param testMethod a test method for which to add shared resources
 	 * @return a set of {@link Lock}; may be empty
+	 * @see org.junit.jupiter.api.Nested @Nested
 	 */
-	default Set<Lock> provideForMethod(Class<?> testClass, Method testMethod) {
+	default Set<Lock> provideForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass, Method testMethod) {
 		return emptySet();
 	}
 
 	/**
+	 * {@code Lock} represents a shared resource.
 	 *
-	 * <p>{@link Lock} represents a shared resource.
+	 * <p>Each resource is identified by a {@linkplain #getKey() key}. In addition,
+	 * the {@linkplain #getAccessMode() access mode} allows one to specify whether
+	 * a test class or test method requires {@link ResourceAccessMode#READ_WRITE
+	 * READ_WRITE} or {@link ResourceAccessMode#READ READ} access to the resource.
 	 *
-	 * <p>Each resource is identified by a {@link #key}.
-	 * In addition, the {@link #accessMode} allows to specify
-	 * whether a test class or test
-	 * method requires {@link ResourceAccessMode#READ_WRITE READ_WRITE}
-	 * or only {@link ResourceAccessMode#READ READ} access to the resource.
-	 *
-	 * @apiNote {@link Lock#key} and {@link Lock#accessMode} have the same
+	 * @apiNote {@link #getKey()} and {@link #getAccessMode()} have the same
 	 * semantics as {@link ResourceLock#value()} and {@link ResourceLock#mode()}
 	 * respectively.
 	 *
@@ -140,7 +153,7 @@ public interface ResourceLocksProvider {
 		private final ResourceAccessMode accessMode;
 
 		/**
-		 * Create a new {@code Lock} with {@code accessMode = READ_WRITE}.
+		 * Create a new {@code Lock} with {@link ResourceAccessMode#READ_WRITE}.
 		 *
 		 * @param key the identifier of the resource; never {@code null} or blank
 		 * @see ResourceLock#value()
@@ -153,7 +166,8 @@ public interface ResourceLocksProvider {
 		 * Create a new {@code Lock}.
 		 *
 		 * @param key the identifier of the resource; never {@code null} or blank
-		 * @param accessMode the lock mode to use to synchronize access to the resource; never {@code null}
+		 * @param accessMode the lock mode to use to synchronize access to the
+		 * resource; never {@code null}
 		 * @see ResourceLock#value()
 		 * @see ResourceLock#mode()
 		 */
@@ -163,21 +177,21 @@ public interface ResourceLocksProvider {
 		}
 
 		/**
-		 * Get the key of this lock.
+		 * Get the key for this lock.
 		 *
 		 * @see ResourceLock#value()
 		 */
 		public String getKey() {
-			return key;
+			return this.key;
 		}
 
 		/**
-		 * Get the access mode of this lock.
+		 * Get the access mode for this lock.
 		 *
 		 * @see ResourceLock#mode()
 		 */
 		public ResourceAccessMode getAccessMode() {
-			return accessMode;
+			return this.accessMode;
 		}
 
 		@Override
@@ -188,20 +202,20 @@ public interface ResourceLocksProvider {
 			if (o == null || getClass() != o.getClass()) {
 				return false;
 			}
-			Lock lock = (Lock) o;
-			return Objects.equals(key, lock.key) && accessMode == lock.accessMode;
+			Lock that = (Lock) o;
+			return this.key.equals(that.key) && this.accessMode == that.accessMode;
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(key, accessMode);
+			return Objects.hash(this.key, this.accessMode);
 		}
 
 		@Override
 		public String toString() {
 			return new ToStringBuilder(this) //
-					.append("key", key) //
-					.append("accessMode", accessMode) //
+					.append("key", this.key) //
+					.append("accessMode", this.accessMode) //
 					.toString();
 		}
 	}

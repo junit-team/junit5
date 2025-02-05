@@ -254,7 +254,7 @@ public final class EngineTestKit {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
 		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters());
+			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider());
 		testEngine.execute(request);
 	}
 
@@ -435,7 +435,7 @@ public final class EngineTestKit {
 		 * to avoid accidentally writing output files to the file system.
 		 *
 		 * @param outputDirectoryProvider the output directory provider to use;
-		 *                                never {@code null}
+		 * never {@code null}
 		 * @return this builder for method chaining
 		 * @since 1.12
 		 * @see OutputDirectoryProvider

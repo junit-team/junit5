@@ -21,6 +21,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.JRE;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.tests.process.OutputFiles;
 
@@ -32,10 +33,10 @@ import platform.tooling.support.ProcessStarters;
  */
 class MultiReleaseJarTests {
 
-	@GlobalResource
+	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
-	@GlobalResource
+	@ManagedResource
 	MavenRepoProxy mavenRepoProxy;
 
 	@Test
@@ -76,7 +77,7 @@ class MultiReleaseJarTests {
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--show-version", "--errors", "--batch-mode") //
 				.addArguments("test") //
-				.putEnvironment(MavenEnvVars.FOR_JDK24_AND_LATER) //
+				.putEnvironment(MavenEnvVars.forJre(JRE.currentJre())) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 

@@ -15,6 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -70,7 +71,7 @@ class DisplayNameUtilsTests {
 		@Nested
 		class ClassDisplayNameSupplierTests {
 
-			private JupiterConfiguration configuration = mock();
+			private final JupiterConfiguration configuration = mock();
 
 			@Test
 			void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
@@ -115,12 +116,12 @@ class DisplayNameUtilsTests {
 	@Nested
 	class NestedClassDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock();
+		private final JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
-			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(List::of,
 				StandardDisplayNameTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo(StandardDisplayNameTestCase.class.getSimpleName());
@@ -129,7 +130,7 @@ class DisplayNameUtilsTests {
 		@Test
 		void shouldGetDisplayNameFromDefaultDisplayNameGenerator() {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
-			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(List::of,
 				NestedTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
@@ -138,7 +139,7 @@ class DisplayNameUtilsTests {
 		@Test
 		void shouldFallbackOnDefaultDisplayNameGeneratorWhenNullIsGenerated() {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
-			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(
+			Supplier<String> displayName = DisplayNameUtils.createDisplayNameSupplierForNestedClass(List::of,
 				NullDisplayNameTestCase.NestedTestCase.class, configuration);
 
 			assertThat(displayName.get()).isEqualTo("nested-class-display-name");
@@ -148,14 +149,14 @@ class DisplayNameUtilsTests {
 	@Nested
 	class MethodDisplayNameTests {
 
-		private JupiterConfiguration configuration = mock();
+		private final JupiterConfiguration configuration = mock();
 
 		@Test
 		void shouldGetDisplayNameFromDisplayNameGenerationAnnotation() throws Exception {
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
-			String displayName = DisplayNameUtils.determineDisplayNameForMethod(StandardDisplayNameTestCase.class,
-				method, configuration);
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(List::of,
+				StandardDisplayNameTestCase.class, method, configuration);
 
 			assertThat(displayName).isEqualTo("test1()");
 		}
@@ -165,8 +166,8 @@ class DisplayNameUtilsTests {
 			Method method = MyTestCase.class.getDeclaredMethod("test1");
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
-			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NotDisplayNameTestCase.class, method,
-				configuration);
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(List::of, NotDisplayNameTestCase.class,
+				method, configuration);
 
 			assertThat(displayName).isEqualTo("method-display-name");
 		}
@@ -176,8 +177,8 @@ class DisplayNameUtilsTests {
 			Method method = NullDisplayNameTestCase.class.getDeclaredMethod("test");
 			when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
-			String displayName = DisplayNameUtils.determineDisplayNameForMethod(NullDisplayNameTestCase.class, method,
-				configuration);
+			String displayName = DisplayNameUtils.determineDisplayNameForMethod(List::of, NullDisplayNameTestCase.class,
+				method, configuration);
 
 			assertThat(displayName).isEqualTo("method-display-name");
 		}
@@ -238,12 +239,13 @@ class DisplayNameUtilsTests {
 		}
 
 		@Override
-		public String generateDisplayNameForNestedClass(Class<?> nestedClass) {
+		public String generateDisplayNameForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> nestedClass) {
 			return null;
 		}
 
 		@Override
-		public String generateDisplayNameForMethod(Class<?> testClass, Method testMethod) {
+		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
+				Method testMethod) {
 			return null;
 		}
 

@@ -21,7 +21,6 @@
 - [ ] Post about the new release:
     - [ ] [Mastodon](https://fosstodon.org/@junit)
     - [ ] [Bluesky](https://bsky.app/profile/junit.org)
-    - [ ] [Twitter/X](https://x.com/junitteam)
 
 ### Preview releases (milestones and release candidates)
 

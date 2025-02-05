@@ -5,9 +5,11 @@ on:
     branches:
       - main
       - 'releases/**'
+    tags-ignore:
+      - '**'
   pull_request:
     branches:
-      - '*'
+      - '**'
 
 permissions: read-all
 
@@ -23,7 +25,7 @@ jobs:
       with:
         fetch-depth: 1
     - name: Install GraalVM
-      uses: graalvm/setup-graalvm@4a200f28cd70d1940b5e33bd00830b7dc71a7e2b # v1
+      uses: graalvm/setup-graalvm@aafbedb8d382ed0ca6167d3a051415f20c859274 # v1
       with:
         distribution: graalvm-community
         version: 'latest'
@@ -39,7 +41,7 @@ jobs:
           jacocoRootReport \
           --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@1e68e06f1dbfde0e4cefc87efeba9e4643565303 # v5
+      uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3 # v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -91,7 +93,7 @@ jobs:
           publish -x check \
           prepareGitHubAttestation
     - name: Generate build provenance attestations
-      uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+      uses: actions/attest-build-provenance@520d128f165991a6c774bcb264f323e3d70747f4 # v2.2.0
       with:
         subject-path: documentation/build/attestation/*.jar
 

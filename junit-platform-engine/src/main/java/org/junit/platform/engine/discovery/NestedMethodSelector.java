@@ -29,15 +29,14 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 
 /**
- * A {@link DiscoverySelector} that selects a nested {@link Method}
- * or a combination of enclosing classes names, class name, method
- * name, and parameter types so that
- * {@link org.junit.platform.engine.TestEngine TestEngines} can discover
- * tests or containers based on methods.
+ * A {@link DiscoverySelector} that selects a nested {@link Method} or a
+ * combination of enclosing class names, class name, method name, and parameter
+ * types so that {@link org.junit.platform.engine.TestEngine TestEngines} can
+ * discover tests or containers based on methods.
  *
  * <p>If a Java {@link Method} is provided, the selector will return that
  * {@linkplain #getMethod() method} and its method name, class name, enclosing
- * classes names, and parameter types accordingly. If class names or method names
+ * class names, and parameter types accordingly. If class names or method names
  * are provided, this selector will only attempt to lazily load a class or method
  * if {@link #getEnclosingClasses()}, {@link #getNestedClass()},
  * {@link #getMethod()}, or {@link #getParameterTypes()} is invoked.

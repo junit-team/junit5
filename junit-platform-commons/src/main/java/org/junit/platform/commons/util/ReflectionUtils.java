@@ -129,21 +129,6 @@ public final class ReflectionUtils {
 		BOTTOM_UP
 	}
 
-	// Pattern: "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
-	private static final Pattern VM_INTERNAL_OBJECT_ARRAY_PATTERN = Pattern.compile("^(\\[+)L(.+);$");
-
-	/**
-	 * Pattern: "[x", "[[[[x", etc., where x is Z, B, C, D, F, I, J, S, etc.
-	 *
-	 * <p>The pattern intentionally captures the last bracket with the
-	 * capital letter so that the combination can be looked up via
-	 * {@link #classNameToTypeMap}. For example, the last matched group
-	 * will contain {@code "[I"} instead of {@code "I"}.
-	 *
-	 * @see Class#getName()
-	 */
-	private static final Pattern VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN = Pattern.compile("^(\\[+)(\\[[ZBCDFIJS])$");
-
 	// Pattern: "java.lang.String[]", "int[]", "int[][][][]", etc.
 	// ?> => non-capturing atomic group
 	// ++ => possessive quantifier
@@ -263,7 +248,6 @@ public final class ReflectionUtils {
 		primitivesToWrappers.put(long.class, Long.class);
 		primitivesToWrappers.put(float.class, Float.class);
 		primitivesToWrappers.put(double.class, Double.class);
-		primitivesToWrappers.put(void.class, Void.class);
 
 		primitiveToWrapperMap = Collections.unmodifiableMap(primitivesToWrappers);
 	}
@@ -382,6 +366,25 @@ public final class ReflectionUtils {
 	}
 
 	/**
+	 * {@return whether the supplied {@code object} is an instance of a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordObject(Object object) {
+		return object != null && isRecordClass(object.getClass());
+	}
+
+	/**
+	 * {@return whether the supplied {@code clazz} is a record class}
+	 * @since 1.12
+	 */
+	@API(status = INTERNAL, since = "1.12")
+	public static boolean isRecordClass(Class<?> clazz) {
+		Class<?> superclass = clazz.getSuperclass();
+		return superclass != null && "java.lang.Record".equals(superclass.getName());
+	}
+
+	/**
 	 * Determine if the return type of the supplied method is primitive {@code void}.
 	 *
 	 * @param method the method to test; never {@code null}
@@ -419,8 +422,7 @@ public final class ReflectionUtils {
 	 *
 	 * <p>In contrast to {@link Class#isAssignableFrom(Class)}, this method
 	 * returns {@code true} if the target type represents a primitive type whose
-	 * wrapper matches the supplied source type. In addition, this method
-	 * also supports
+	 * wrapper matches the supplied source type. In addition, this method also supports
 	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
 	 * widening conversions</a> for primitive target types.
 	 *
@@ -454,9 +456,8 @@ public final class ReflectionUtils {
 	 * type for the purpose of reflective method invocations.
 	 *
 	 * <p>In contrast to {@link Class#isInstance(Object)}, this method returns
-	 * {@code true} if the target type represents a primitive type whose
-	 * wrapper matches the supplied object's type. In addition, this method
-	 * also supports
+	 * {@code true} if the target type represents a primitive type whose wrapper
+	 * matches the supplied object's type. In addition, this method also supports
 	 * <a href="https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2">
 	 * widening conversions</a> for primitive types and their corresponding
 	 * wrapper types.
@@ -858,32 +859,8 @@ public final class ReflectionUtils {
 		}
 
 		return Try.call(() -> {
-			Matcher matcher;
-
-			// Primitive arrays such as "[I", "[[[[D", etc.
-			matcher = VM_INTERNAL_PRIMITIVE_ARRAY_PATTERN.matcher(trimmedName);
-			if (matcher.matches()) {
-				String brackets = matcher.group(1);
-				String componentTypeName = matcher.group(2);
-				// Calculate dimensions by counting brackets.
-				int dimensions = brackets.length();
-
-				return loadArrayType(classLoader, componentTypeName, dimensions);
-			}
-
-			// Object arrays such as "[Ljava.lang.String;", "[[[[Ljava.lang.String;", etc.
-			matcher = VM_INTERNAL_OBJECT_ARRAY_PATTERN.matcher(trimmedName);
-			if (matcher.matches()) {
-				String brackets = matcher.group(1);
-				String componentTypeName = matcher.group(2);
-				// Calculate dimensions by counting brackets.
-				int dimensions = brackets.length();
-
-				return loadArrayType(classLoader, componentTypeName, dimensions);
-			}
-
 			// Arrays such as "java.lang.String[]", "int[]", "int[][][][]", etc.
-			matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(trimmedName);
+			Matcher matcher = SOURCE_CODE_SYNTAX_ARRAY_PATTERN.matcher(trimmedName);
 			if (matcher.matches()) {
 				String componentTypeName = matcher.group(1);
 				String bracketPairs = matcher.group(2);
@@ -2011,7 +1988,7 @@ public final class ReflectionUtils {
 		return executable;
 	}
 
-	@API(status = INTERNAL, since = "1.11")
+	@API(status = INTERNAL, since = "1.12")
 	@SuppressWarnings("deprecation") // "AccessibleObject.isAccessible()" is deprecated in Java 9
 	public static Field makeAccessible(Field field) {
 		if ((!isPublic(field) || !isPublic(field.getDeclaringClass()) || isFinal(field)) && !field.isAccessible()) {

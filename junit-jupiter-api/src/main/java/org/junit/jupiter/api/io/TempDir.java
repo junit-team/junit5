@@ -28,44 +28,39 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 
 /**
- * {@code @TempDir} can be used to annotate a field in a test class or a
- * parameter in a lifecycle method or test method of type {@link Path} or
- * {@link File} that should be resolved into a temporary directory.
- *
- * <p>Please note that {@code @TempDir} is not supported on constructor
- * parameters. Please use field injection instead by annotating an instance
- * field with {@code @TempDir}.
+ * {@code @TempDir} can be used to annotate a field in a test class or a parameter
+ * in a test class constructor, lifecycle method, or test method of type
+ * {@link Path} or {@link File} that should be resolved into a temporary directory.
  *
  * <h2>Creation</h2>
  *
  * <p>The temporary directory is only created if a field in a test class or a
- * parameter in a lifecycle method or test method is annotated with
- * {@code @TempDir}.
- * An {@link ExtensionConfigurationException} or a
- * {@link ParameterResolutionException} will be thrown in one of the following
+ * parameter in a test class constructor, lifecycle method, or test method is
+ * annotated with {@code @TempDir}. An {@link ExtensionConfigurationException} or
+ * a {@link ParameterResolutionException} will be thrown in one of the following
  * cases:
  *
  * <ul>
- * <li>If the field type or parameter type is neither {@link Path} nor
-       {@link File}.</li>
+ * <li>If the field type or parameter type is neither {@code Path} nor {@code File}.</li>
  * <li>If a field is declared as {@code final}.</li>
  * <li>If the temporary directory cannot be created.</li>
  * <li>If the field type or parameter type is {@code File} and a custom
- *     {@linkplain TempDir#factory() factory} is used, which creates a temporary
+ *     {@link TempDir#factory() factory} is used, which creates a temporary
  *     directory that does not belong to the
  *     {@linkplain java.nio.file.FileSystems#getDefault() default file system}.
  * </li>
  * </ul>
  *
- * In addition, a {@code ParameterResolutionException} will be thrown for a
- * constructor parameter annotated with {@code @TempDir}.
- *
  * <h2>Scope</h2>
  *
- * <p>By default, a separate temporary directory is created for every
- * declaration of the {@code @TempDir} annotation. If you want to share a
- * temporary directory across all tests in a test class, you should declare the
- * annotation on a {@code static} field or on a parameter of a
+ * <p>By default, a separate temporary directory is created for every declaration
+ * of the {@code @TempDir} annotation. For better isolation when using
+ * {@link org.junit.jupiter.api.TestInstance.Lifecycle#PER_METHOD @TestInstance(Lifecycle.PER_METHOD)}
+ * semantics, you can annotate an instance field or a parameter in the test class
+ * constructor with {@code @TempDir} so that each test method uses a separate
+ * temporary directory. Alternatively, if you want to share a temporary directory
+ * across all tests in a test class, you should declare the annotation on a
+ * {@code static} field or on a parameter of a
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
  *
  * <h3>Old behavior</h3>
@@ -154,9 +149,10 @@ public @interface TempDir {
 	 * <h4>Supported Values</h4>
 	 * <ul>
 	 * <li>{@code per_context}: creates a single temporary directory for the
-	 * entire test class or method, depending on where it's first declared
+	 * entire test class or method, depending on where {@code @TempDir} is first
+	 * declared</li>
 	 * <li>{@code per_declaration}: creates separate temporary directories for
-	 * each declaration site of the {@code @TempDir} annotation.
+	 * each declaration site of the {@code @TempDir} annotation</li>
 	 * </ul>
 	 *
 	 * <p>If not specified, the default is {@code per_declaration}.
