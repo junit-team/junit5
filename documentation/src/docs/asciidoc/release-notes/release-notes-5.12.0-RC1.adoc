@@ -26,7 +26,8 @@ repository on GitHub.
 [[release-notes-5.12.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `TestDescriptor.orderChildren(UnaryOperator<List<TestDescriptor>> orderer)`
+  method to order children in place
 
 
 [[release-notes-5.12.0-RC1-junit-jupiter]]
