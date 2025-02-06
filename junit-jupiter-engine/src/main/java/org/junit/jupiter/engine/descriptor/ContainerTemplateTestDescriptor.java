@@ -126,7 +126,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 
 	@Override
 	public boolean mayRegisterTests() {
-		return !childrenPrototypes.isEmpty();
+		return !childrenPrototypes.isEmpty() || !childrenPrototypesByIndex.isEmpty();
 	}
 
 	// --- ClassBasedTestDescriptor ---------------------------------------------

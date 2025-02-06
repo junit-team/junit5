@@ -17,12 +17,13 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendContainerTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForStaticClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
-import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.RESOLVED;
@@ -210,6 +211,28 @@ class DiscoverySelectorResolverTests {
 		assertThat(containerTemplateSegment.getValue()).isEqualTo(ContainerTemplateTestCase.class.getName());
 
 		containerTemplateDescriptor.prune();
+		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
+	}
+
+	@Test
+	void uniqueIdResolutionOfContainerTemplateInvocation() {
+		var selector = selectUniqueId(
+			appendContainerTemplateInvocationSegment(uniqueIdForClass(ContainerTemplateTestCase.class), 1));
+
+		resolve(request().selectors(selector));
+
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+
+		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+
+		containerTemplateDescriptor.prune();
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
+
+		containerTemplateDescriptor.prune();
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
 		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
 		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
 	}
@@ -524,8 +547,8 @@ class DiscoverySelectorResolverTests {
 			resolve(request().selectors(selectors));
 
 			assertThat(uniqueIds()) //
-					.contains(uniqueIdForTopLevelClass("com.example.project.FirstTest")) //
-					.contains(uniqueIdForTopLevelClass("com.example.project.SecondTest"));
+					.contains(uniqueIdForStaticClass("com.example.project.FirstTest")) //
+					.contains(uniqueIdForStaticClass("com.example.project.SecondTest"));
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
