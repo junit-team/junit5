@@ -161,7 +161,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		};
 	}
 
-	enum MethodType {
+	private enum MethodType {
 
 		TEST(new IsTestMethod(), TestMethodTestDescriptor.SEGMENT_TYPE) {
 			@Override
@@ -192,7 +192,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			}
 		};
 
-		final Predicate<Method> methodPredicate;
+		private final Predicate<Method> methodPredicate;
 		private final String segmentType;
 		private final Set<String> dynamicDescendantSegmentTypes;
 
@@ -238,7 +238,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			return Optional.empty();
 		}
 
-		TestDescriptor createTestDescriptor(TestDescriptor parent, Class<?> testClass, Method method,
+		private TestDescriptor createTestDescriptor(TestDescriptor parent, Class<?> testClass, Method method,
 				JupiterConfiguration configuration) {
 			UniqueId uniqueId = createUniqueId(method, parent);
 			return createTestDescriptor(uniqueId, testClass, method, ((TestClassAware) parent)::getEnclosingTestClasses,
