@@ -29,6 +29,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -62,6 +63,8 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	private static final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+	private static final Predicate<Class<?>> isAnnotatedWithContainerTemplate = testClass -> isAnnotated(testClass,
+		ContainerTemplate.class);
 
 	private final Predicate<String> classNameFilter;
 	private final JupiterConfiguration configuration;
@@ -102,47 +105,18 @@ class ClassSelectorResolver implements SelectorResolver {
 		UniqueId uniqueId = selector.getUniqueId();
 		UniqueId.Segment lastSegment = uniqueId.getLastSegment();
 		if (ClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			String className = lastSegment.getValue();
-			return ReflectionSupport.tryToLoadClass(className).toOptional() //
-					.filter(isTestClassWithTests) //
-					.map(testClass -> toResolution(
-						context.addToParent(parent -> Optional.of(newClassTestDescriptor(parent, testClass))))).orElse(
-							unresolved());
+			return resolveStaticClassUniqueId(context, lastSegment, __ -> true, this::newClassTestDescriptor);
 		}
 		if (ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			String className = lastSegment.getValue();
-			return ReflectionSupport.tryToLoadClass(className).toOptional() //
-					.filter(isTestClassWithTests) //
-					.filter(testClass -> isAnnotated(testClass, ContainerTemplate.class)) //
-					.map(testClass -> toResolution(context.addToParent(
-						parent -> Optional.of(newStaticContainerTemplateTestDescriptor(parent, testClass))))) //
-					.orElse(unresolved());
+			return resolveStaticClassUniqueId(context, lastSegment, isAnnotatedWithContainerTemplate,
+				this::newStaticContainerTemplateTestDescriptor);
 		}
 		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			String simpleClassName = lastSegment.getValue();
-			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
-				if (parent instanceof TestClassAware) {
-					Class<?> parentTestClass = ((TestClassAware) parent).getTestClass();
-					return ReflectionSupport.findNestedClasses(parentTestClass, isNestedTestClass.and(
-						where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst() //
-							.flatMap(testClass -> Optional.of(newNestedClassTestDescriptor(parent, testClass)));
-				}
-				return Optional.empty();
-			}));
+			return resolveNestedClassUniqueId(context, uniqueId, __ -> true, this::newNestedClassTestDescriptor);
 		}
 		if (ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			String simpleClassName = lastSegment.getValue();
-			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
-				if (parent instanceof TestClassAware) {
-					Class<?> parentTestClass = ((TestClassAware) parent).getTestClass();
-					return ReflectionSupport.findNestedClasses(parentTestClass, isNestedTestClass.and(
-						where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst() //
-							.filter(testClass -> isAnnotated(testClass, ContainerTemplate.class)) //
-							.flatMap(
-								testClass -> Optional.of(newNestedContainerTemplateTestDescriptor(parent, testClass)));
-				}
-				return Optional.empty();
-			}));
+			return resolveNestedClassUniqueId(context, uniqueId, isAnnotatedWithContainerTemplate,
+				this::newNestedContainerTemplateTestDescriptor);
 		}
 		if (ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			return toInvocationResolution(
@@ -154,6 +128,34 @@ class ClassSelectorResolver implements SelectorResolver {
 		return unresolved();
 	}
 
+	private Resolution resolveStaticClassUniqueId(Context context, UniqueId.Segment lastSegment,
+			Predicate<? super Class<?>> condition,
+			BiFunction<TestDescriptor, Class<?>, ClassBasedTestDescriptor> factory) {
+
+		String className = lastSegment.getValue();
+		return ReflectionSupport.tryToLoadClass(className).toOptional() //
+				.filter(isTestClassWithTests) //
+				.filter(condition) //
+				.map(testClass -> toResolution(
+					context.addToParent(parent -> Optional.of(factory.apply(parent, testClass))))) //
+				.orElse(unresolved());
+	}
+
+	private Resolution resolveNestedClassUniqueId(Context context, UniqueId uniqueId,
+			Predicate<? super Class<?>> condition,
+			BiFunction<TestDescriptor, Class<?>, ClassBasedTestDescriptor> factory) {
+
+		String simpleClassName = uniqueId.getLastSegment().getValue();
+		return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
+			Class<?> parentTestClass = ((TestClassAware) parent).getTestClass();
+			return ReflectionSupport.findNestedClasses(parentTestClass,
+				isNestedTestClass.and(where(Class::getSimpleName, isEqual(simpleClassName)))).stream() //
+					.findFirst() //
+					.filter(condition) //
+					.map(testClass -> factory.apply(parent, testClass));
+		}));
+	}
+
 	private ContainerTemplateInvocationTestDescriptor newDummyContainerTemplateInvocationTestDescriptor(
 			TestDescriptor parent, UniqueId.Segment lastSegment, int index) {
 		return new ContainerTemplateInvocationTestDescriptor(parent.getUniqueId().append(lastSegment),
@@ -162,7 +164,7 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ClassBasedTestDescriptor newStaticClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		return isAnnotated(testClass, ContainerTemplate.class) //
+		return isAnnotatedWithContainerTemplate.test(testClass) //
 				? newStaticContainerTemplateTestDescriptor(parent, testClass) //
 				: newClassTestDescriptor(parent, testClass);
 	}
@@ -180,7 +182,7 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ClassBasedTestDescriptor newMemberClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		return isAnnotated(testClass, ContainerTemplate.class) //
+		return isAnnotatedWithContainerTemplate.test(testClass) //
 				? newNestedContainerTemplateTestDescriptor(parent, testClass) //
 				: newNestedClassTestDescriptor(parent, testClass);
 	}
