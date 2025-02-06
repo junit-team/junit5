@@ -112,8 +112,8 @@ class ClassSelectorResolver implements SelectorResolver {
 		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			String simpleClassName = lastSegment.getValue();
 			return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
-				if (parent instanceof ClassBasedTestDescriptor) {
-					Class<?> parentTestClass = ((ClassBasedTestDescriptor) parent).getTestClass();
+				if (parent instanceof TestClassAware) {
+					Class<?> parentTestClass = ((TestClassAware) parent).getTestClass();
 					return ReflectionSupport.findNestedClasses(parentTestClass, isNestedTestClass.and(
 						where(Class::getSimpleName, isEqual(simpleClassName)))).stream().findFirst() //
 							.flatMap(testClass -> Optional.of(newNestedClassTestDescriptor(parent, testClass)));

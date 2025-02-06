@@ -567,6 +567,60 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
+	@Test
+	void methodInContainerTemplateInvocationCanBeSelectedByUniqueId() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			TwoInvocationsTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
+
+		var results = executeTests(selectUniqueId(methodAId));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(methodAId))), //
+			event(test(uniqueId(methodAId)), started()), //
+			event(test(uniqueId(methodAId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void nestedMethodInContainerTemplateInvocationCanBeSelectedByUniqueId() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.SEGMENT_TYPE,
+			TwoInvocationsTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
+
+		var results = executeTests(selectUniqueId(nestedMethodBId));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(nestedClassId))), //
+			event(dynamicTestRegistered(uniqueId(nestedMethodBId))), //
+			event(container(uniqueId(nestedClassId)), started()), //
+			event(test(uniqueId(nestedMethodBId)), started()), //
+			event(test(uniqueId(nestedMethodBId)), finishedSuccessfully()), //
+			event(container(uniqueId(nestedClassId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
 	// -------------------------------------------------------------------
 
 	// TODO #871 Consider moving to EventConditions
