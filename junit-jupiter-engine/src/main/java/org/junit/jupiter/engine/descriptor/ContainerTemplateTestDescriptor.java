@@ -47,7 +47,8 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(status = INTERNAL, since = "5.13")
 public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor implements Filterable {
 
-	public static final String SEGMENT_TYPE = "container-template";
+	public static final String STATIC_CLASS_SEGMENT_TYPE = "container-template";
+	public static final String NESTED_CLASS_SEGMENT_TYPE = "nested-container-template";
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 	private final Map<Integer, List<TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
