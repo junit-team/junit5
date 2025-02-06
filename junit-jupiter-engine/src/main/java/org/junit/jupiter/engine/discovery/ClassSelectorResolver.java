@@ -140,6 +140,10 @@ class ClassSelectorResolver implements SelectorResolver {
 				&& isAnnotatedWithContainerTemplate.test(((ClassSelector) parentSelector).getJavaClass())) {
 			return resolveIterations(selector, context);
 		}
+		if (parentSelector instanceof NestedClassSelector
+				&& isAnnotatedWithContainerTemplate.test(((NestedClassSelector) parentSelector).getNestedClass())) {
+			return resolveIterations(selector, context);
+		}
 		return unresolved();
 	}
 

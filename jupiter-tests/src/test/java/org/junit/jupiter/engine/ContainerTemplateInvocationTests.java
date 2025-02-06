@@ -19,6 +19,7 @@ import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
@@ -679,6 +680,73 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
 				displayName("[2] B of TwoTimesTwoInvocationsWithMultipleMethodsTestCase")), //
+			event(container(uniqueId(outerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
+			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2Id)),
+				displayName("[2] B of NestedTestCase")), //
+			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2NestedMethodId))), //
+			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerContainerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void nestedContainerTemplateInvocationCanBeSelectedByIteration() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+			TwoTimesTwoInvocationsTestCase.class.getName());
+		var outerInvocation1Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#1");
+		var outerInvocation1NestedContainerTemplateId = outerInvocation1Id.append(
+			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation1InnerInvocation2NestedMethodId = outerInvocation1InnerInvocation2Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#2");
+		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
+			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
+			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
+			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+
+		var results = executeTests(selectIteration(selectNestedClass(List.of(TwoTimesTwoInvocationsTestCase.class),
+			TwoTimesTwoInvocationsTestCase.NestedTestCase.class), 1));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(outerContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation1Id)),
+				displayName("[1] A of TwoTimesTwoInvocationsTestCase")), //
+			event(container(uniqueId(outerInvocation1Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedContainerTemplateId))), //
+			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation2Id)),
+				displayName("[2] B of NestedTestCase")), //
+			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation2NestedMethodId))), //
+			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), started()), //
+			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), finishedSuccessfully()), //
+
+			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1Id)), finishedSuccessfully()), //
+
+			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
+				displayName("[2] B of TwoTimesTwoInvocationsTestCase")), //
 			event(container(uniqueId(outerInvocation2Id)), started()), //
 			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
 			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //

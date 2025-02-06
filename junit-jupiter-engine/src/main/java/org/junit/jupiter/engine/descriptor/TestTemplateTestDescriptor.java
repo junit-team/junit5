@@ -44,24 +44,27 @@ import org.junit.platform.engine.UniqueId;
 public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implements Filterable {
 
 	public static final String SEGMENT_TYPE = "test-template";
-	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, templateMethod, enclosingInstanceTypes, configuration);
+		this.dynamicDescendantFilter = new DynamicDescendantFilter();
 	}
 
 	private TestTemplateTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method templateMethod,
-			JupiterConfiguration configuration) {
+			JupiterConfiguration configuration, DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, displayName, testClass, templateMethod, configuration);
+		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}
 
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
 	protected TestTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		// TODO #871 Check that dynamic descendant filter is copied correctly
 		return new TestTemplateTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
-			this.configuration);
+			this.configuration, new DynamicDescendantFilter());
 	}
 
 	// --- Filterable ----------------------------------------------------------

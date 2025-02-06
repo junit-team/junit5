@@ -50,14 +50,20 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	public static final String STATIC_CLASS_SEGMENT_TYPE = "container-template";
 	public static final String NESTED_CLASS_SEGMENT_TYPE = "nested-container-template";
 
-	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
 	private final Map<Integer, Collection<? extends TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
 	private final ClassBasedTestDescriptor delegate;
+	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	public ContainerTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate) {
+		this(uniqueId, delegate, new DynamicDescendantFilter());
+	}
+
+	private ContainerTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate,
+			DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, delegate.getTestClass(), delegate.getDisplayName(), delegate.configuration);
 		this.delegate = delegate;
+		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -96,7 +102,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 
 	@Override
 	protected ContainerTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateTestDescriptor(newUniqueId, this.delegate);
+		return new ContainerTemplateTestDescriptor(newUniqueId, this.delegate, this.dynamicDescendantFilter.copy());
 	}
 
 	@Override

@@ -61,24 +61,27 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
-	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
+		this.dynamicDescendantFilter = new DynamicDescendantFilter();
 	}
 
 	private TestFactoryTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration) {
+			JupiterConfiguration configuration, DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
+		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}
 
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
 	protected TestFactoryTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		// TODO #871 Check that dynamic descendant filter is copied correctly
 		return new TestFactoryTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
-			this.configuration);
+			this.configuration, new DynamicDescendantFilter());
 	}
 
 	// --- Filterable ----------------------------------------------------------

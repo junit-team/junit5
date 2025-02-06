@@ -85,6 +85,17 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 		EXPLICIT, ALLOW_ALL
 	}
 
+	public DynamicDescendantFilter copy() {
+		return configure(new DynamicDescendantFilter());
+	}
+
+	protected DynamicDescendantFilter configure(DynamicDescendantFilter copy) {
+		copy.allowedUniqueIds.addAll(this.allowedUniqueIds);
+		copy.allowedIndices.addAll(this.allowedIndices);
+		copy.mode = this.mode;
+		return copy;
+	}
+
 	private class WithoutIndexFiltering extends DynamicDescendantFilter {
 
 		@Override
@@ -95,6 +106,11 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 		@Override
 		public DynamicDescendantFilter withoutIndexFiltering() {
 			return this;
+		}
+
+		@Override
+		public DynamicDescendantFilter copy() {
+			return configure(new WithoutIndexFiltering());
 		}
 	}
 }
