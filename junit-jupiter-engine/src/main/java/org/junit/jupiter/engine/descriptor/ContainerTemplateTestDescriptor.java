@@ -220,8 +220,6 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 			ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
 				invocationUniqueId, this, invocationContext, index, getSource().orElse(null), this.configuration);
 
-			// TODO #871 filter descendants
-
 			collectChildren(index, invocationUniqueId) //
 					.forEach(containerInvocationDescriptor::addChild);
 

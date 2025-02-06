@@ -627,7 +627,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	void nestedContainerTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
-			TwoTimesTwoInvocationsTestCase.class.getName());
+			TwoTimesTwoInvocationsWithMultipleMethodsTestCase.class.getName());
 		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#2");
 		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
@@ -635,7 +635,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
 			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
-			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
+			TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
 		var results = executeTests(selectUniqueId(outerInvocation2InnerInvocation2NestedMethodId));
 
@@ -644,7 +644,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(outerContainerTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
-				displayName("[2] B of TwoTimesTwoInvocationsTestCase")), //
+				displayName("[2] B of TwoTimesTwoInvocationsWithMultipleMethodsTestCase")), //
 			event(container(uniqueId(outerInvocation2Id)), started()), //
 			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
 			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
@@ -942,6 +942,36 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
 					ExtensionContext context) {
 				throw new RuntimeException("should not be called");
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class TwoTimesTwoInvocationsWithMultipleMethodsTestCase {
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		@ContainerTemplate
+		class NestedTestCase {
+			@Test
+			void a() {
+			}
+
+			@Test
+			void b() {
+			}
+		}
+
+		@Nested
+		@ContainerTemplate
+		class AnotherNestedTestCase {
+			@Test
+			void test() {
 			}
 		}
 	}
