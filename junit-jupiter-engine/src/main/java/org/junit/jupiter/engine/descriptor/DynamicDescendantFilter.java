@@ -40,6 +40,12 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 		}
 	}
 
+	public void allowIndex(int index) {
+		if (this.mode == Mode.EXPLICIT) {
+			this.allowedIndices.add(index);
+		}
+	}
+
 	public void allowIndex(Set<Integer> indices) {
 		if (this.mode == Mode.EXPLICIT) {
 			this.allowedIndices.addAll(indices);

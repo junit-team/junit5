@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -51,7 +51,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	public static final String NESTED_CLASS_SEGMENT_TYPE = "nested-container-template";
 
 	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
-	private final Map<Integer, List<TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
+	private final Map<Integer, Collection<? extends TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
 	private final ClassBasedTestDescriptor delegate;
 
@@ -88,7 +88,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		this.childrenPrototypesByIndex.forEach((index, oldChildren) -> {
 			List<TestDescriptor> newChildren = oldChildren.stream() //
 					.map(oldChild -> ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer)) //
-					.collect(Collectors.toCollection(ArrayList::new));
+					.collect(toList());
 			copy.childrenPrototypesByIndex.put(index, newChildren);
 		});
 		return copy;
@@ -113,9 +113,9 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		// Second iteration to avoid processing children that were pruned in the first iteration
 		this.children.forEach(child -> {
 			if (child instanceof ContainerTemplateInvocationTestDescriptor) {
-				child.accept(it -> this.dynamicDescendantFilter.allowUniqueIdPrefix(it.getUniqueId()));
-				this.childrenPrototypesByIndex.put(((ContainerTemplateInvocationTestDescriptor) child).getIndex(),
-					new ArrayList<>(child.getChildren()));
+				int index = ((ContainerTemplateInvocationTestDescriptor) child).getIndex();
+				this.dynamicDescendantFilter.allowIndex(index - 1);
+				this.childrenPrototypesByIndex.put(index, child.getChildren());
 			}
 			else {
 				this.childrenPrototypes.add(child);

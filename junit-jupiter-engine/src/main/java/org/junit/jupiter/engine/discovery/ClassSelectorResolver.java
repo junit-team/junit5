@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.discovery;
 import static java.util.Collections.emptyList;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor.getEnclosingTestClasses;
 import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
@@ -52,6 +53,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.NestedClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
@@ -119,13 +121,38 @@ class ClassSelectorResolver implements SelectorResolver {
 				this::newNestedContainerTemplateTestDescriptor);
 		}
 		if (ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return toInvocationResolution(
-				context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
+			Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor = context.addToParent(
+				() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 					int index = Integer.parseInt(lastSegment.getValue().substring(1));
-					return Optional.of(newDummyContainerTemplateInvocationTestDescriptor(parent, lastSegment, index));
-				}));
+					return Optional.of(newDummyContainerTemplateInvocationTestDescriptor(parent, index));
+				});
+			return toInvocationMatch(testDescriptor) //
+					.map(Resolution::match) //
+					.orElse(unresolved());
 		}
 		return unresolved();
+	}
+
+	@Override
+	public Resolution resolve(IterationSelector selector, Context context) {
+		DiscoverySelector parentSelector = selector.getParentSelector();
+		if (parentSelector instanceof ClassSelector
+				&& isAnnotatedWithContainerTemplate.test(((ClassSelector) parentSelector).getJavaClass())) {
+			return resolveIterations(selector, context);
+		}
+		return unresolved();
+	}
+
+	private Resolution resolveIterations(IterationSelector selector, Context context) {
+		DiscoverySelector parentSelector = selector.getParentSelector();
+		Set<Match> matches = selector.getIterationIndices().stream() //
+				.map(index -> context.addToParent(() -> parentSelector,
+					parent -> Optional.of(newDummyContainerTemplateInvocationTestDescriptor(parent, index + 1)))) //
+				.map(this::toInvocationMatch) //
+				.filter(Optional::isPresent) //
+				.map(Optional::get) //
+				.collect(toSet());
+		return matches.isEmpty() ? unresolved() : Resolution.matches(matches);
 	}
 
 	private Resolution resolveStaticClassUniqueId(Context context, UniqueId.Segment lastSegment,
@@ -157,10 +184,11 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ContainerTemplateInvocationTestDescriptor newDummyContainerTemplateInvocationTestDescriptor(
-			TestDescriptor parent, UniqueId.Segment lastSegment, int index) {
-		return new ContainerTemplateInvocationTestDescriptor(parent.getUniqueId().append(lastSegment),
-			(TestClassAware) parent, DummyContainerTemplateInvocationContext.INSTANCE, index,
-			parent.getSource().orElse(null), configuration);
+			TestDescriptor parent, int index) {
+		UniqueId uniqueId = parent.getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#" + index);
+		return new ContainerTemplateInvocationTestDescriptor(uniqueId, (TestClassAware) parent,
+			DummyContainerTemplateInvocationContext.INSTANCE, index, parent.getSource().orElse(null), configuration);
 	}
 
 	private ClassBasedTestDescriptor newStaticClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
@@ -206,13 +234,12 @@ class ClassSelectorResolver implements SelectorResolver {
 		return new ContainerTemplateTestDescriptor(uniqueId, delegate);
 	}
 
-	private Resolution toInvocationResolution(Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor) {
+	private Optional<Match> toInvocationMatch(Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor) {
 		return testDescriptor //
-				.map(it -> Resolution.match(Match.exact(it,
+				.map(it -> Match.exact(it,
 					expansionCallback(it,
 						() -> it.getParent().map(parent -> getTestClasses((ClassBasedTestDescriptor) parent)).orElse(
-							emptyList()))))) //
-				.orElse(unresolved());
+							emptyList()))));
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {

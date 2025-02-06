@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -530,6 +531,39 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
 		var results = executeTests(selectUniqueId(invocationId2));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(methodAId))), //
+			event(dynamicTestRegistered(uniqueId(nestedClassId))), //
+			event(dynamicTestRegistered(uniqueId(nestedMethodBId))), //
+			event(test(uniqueId(methodAId)), started()), //
+			event(test(uniqueId(methodAId)), finishedSuccessfully()), //
+			event(container(uniqueId(nestedClassId)), started()), //
+			event(test(uniqueId(nestedMethodBId)), started()), //
+			event(test(uniqueId(nestedMethodBId)), finishedSuccessfully()), //
+			event(container(uniqueId(nestedClassId)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void containerTemplateInvocationCanBeSelectedByIteration() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+			TwoInvocationsTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
+		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
+		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
+
+		var results = executeTests(selectIteration(selectClass(TwoInvocationsTestCase.class), 1));
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
