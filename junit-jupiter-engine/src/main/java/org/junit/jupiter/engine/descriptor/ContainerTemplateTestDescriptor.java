@@ -152,6 +152,13 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 
 	// --- Node ----------------------------------------------------------------
 
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) {
+		this.childrenPrototypes.clear();
+		this.childrenPrototypesByIndex.clear();
+		this.dynamicDescendantFilter.allowAll();
+	}
+
 	// TODO copied from TestTemplateTestDescriptor
 
 	@Override
@@ -165,13 +172,6 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 			executeForProvider(provider, invocationIndex, dynamicTestExecutor, extensionContext);
 		}
 		return context;
-	}
-
-	@Override
-	public void cleanUp(JupiterEngineExecutionContext context) {
-		this.childrenPrototypes.clear();
-		this.childrenPrototypesByIndex.clear();
-		this.dynamicDescendantFilter.allowAll();
 	}
 
 	private void executeForProvider(ContainerTemplateInvocationContextProvider provider, AtomicInteger invocationIndex,
@@ -238,6 +238,11 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 				.map(it -> it.copyIncludingDescendants(transformer));
 	}
 
+	private void execute(Node.DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
+		testDescriptor.setParent(this);
+		dynamicTestExecutor.execute(testDescriptor);
+	}
+
 	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {
 
 		private final UniqueId oldPrefix;
@@ -262,21 +267,5 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 			}
 			return newValue;
 		}
-	}
-
-	private static UniqueId changePrefix(UniqueId oldValue, UniqueId oldPrefix, UniqueId newPrefix) {
-		List<UniqueId.Segment> oldSegments = oldValue.getSegments();
-		Preconditions.condition(oldValue.hasPrefix(oldPrefix), () -> "Old value does not have the expected prefix");
-		List<UniqueId.Segment> suffix = oldSegments.subList(oldPrefix.getSegments().size(), oldSegments.size());
-		UniqueId newValue = newPrefix;
-		for (UniqueId.Segment newSegment : suffix) {
-			newValue = newValue.append(newSegment);
-		}
-		return newValue;
-	}
-
-	private void execute(Node.DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
-		testDescriptor.setParent(this);
-		dynamicTestExecutor.execute(testDescriptor);
 	}
 }
