@@ -51,6 +51,23 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		return index;
 	}
 
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
+		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, parent, this.invocationContext, this.index,
+			getSource().orElse(null), this.configuration);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
+
+	@Override
+	public Type getType() {
+		return Type.CONTAINER;
+	}
+
+	// --- TestClassAware ------------------------------------------------------
+
 	@Override
 	public Class<?> getTestClass() {
 		return parent.getTestClass();
@@ -61,16 +78,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		return parent.getEnclosingTestClasses();
 	}
 
-	@Override
-	public Type getType() {
-		return Type.CONTAINER;
-	}
-
-	@Override
-	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, parent, this.invocationContext, this.index,
-			getSource().orElse(null), this.configuration);
-	}
+	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {

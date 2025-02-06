@@ -129,12 +129,14 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		return !childrenPrototypes.isEmpty() || !childrenPrototypesByIndex.isEmpty();
 	}
 
-	// --- ClassBasedTestDescriptor ---------------------------------------------
+	// --- TestClassAware ------------------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
 		return delegate.getEnclosingTestClasses();
 	}
+
+	// --- ClassBasedTestDescriptor --------------------------------------------
 
 	@Override
 	public TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,

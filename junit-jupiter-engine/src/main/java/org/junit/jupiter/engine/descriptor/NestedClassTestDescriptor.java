@@ -77,7 +77,7 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		return allTags;
 	}
 
-	// --- ClassBasedTestDescriptor ---------------------------------------------
+	// --- TestClassAware ------------------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
@@ -95,6 +95,8 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 		return emptyList();
 	}
 
+	// --- ClassBasedTestDescriptor --------------------------------------------
+
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
@@ -106,6 +108,8 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 			extensionRegistryForOuterInstanceCreation, context);
 		return instantiateTestClass(Optional.of(outerInstances), registry, extensionContext);
 	}
+
+	// --- ResourceLockAware ---------------------------------------------------
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {

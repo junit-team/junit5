@@ -71,7 +71,7 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 		return new LinkedHashSet<>(this.tags);
 	}
 
-	// --- ClassBasedTestDescriptor --------------------------------------------
+	// --- TestClassAware ------------------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
@@ -86,12 +86,16 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 			() -> JupiterTestDescriptor.toExecutionMode(configuration.getDefaultClassesExecutionMode()));
 	}
 
+	// --- ClassBasedTestDescriptor --------------------------------------------
+
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
 			JupiterEngineExecutionContext context) {
 		return instantiateTestClass(Optional.empty(), registry, extensionContext);
 	}
+
+	// --- ResourceLockAware ---------------------------------------------------
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
