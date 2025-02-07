@@ -405,6 +405,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					LOGGER.trace(() -> "preVisitDirectory: " + dir);
 					if (isLink(dir)) {
+						delete(dir);
 						return SKIP_SUBTREE;
 					}
 					if (!dir.equals(rootDir)) {
@@ -433,16 +434,18 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
 					LOGGER.trace(() -> "visitFile: " + file);
-					return deleteAndContinue(file);
+					delete(file);
+					return CONTINUE;
 				}
 
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
 					LOGGER.trace(exc, () -> "postVisitDirectory: " + dir);
-					return deleteAndContinue(dir);
+					delete(dir);
+					return CONTINUE;
 				}
 
-				private FileVisitResult deleteAndContinue(Path path) {
+				private void delete(Path path) {
 					try {
 						fileOperations.delete(path);
 					}
@@ -456,7 +459,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
 						resetPermissionsAndTryToDeleteAgain(path, exception);
 					}
-					return CONTINUE;
 				}
 
 				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
