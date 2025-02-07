@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.CleanupMode.NEVER;
 import static org.junit.jupiter.api.io.CleanupMode.ON_SUCCESS;
@@ -21,6 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMetho
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterAll;
@@ -29,6 +31,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -450,6 +453,25 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+	}
+
+	@Nested
+	class WindowsTests {
+
+		@Test
+		@EnabledOnOs(WINDOWS)
+		void deletesWindowsJunctionsInTempDir(@TempDir Path dir) throws IOException, InterruptedException {
+			Path test = dir.resolve("test");
+			Files.createDirectory(test);
+			Path link = dir.resolve("link");
+			// This creates a Windows "junction" which you can't do with Java code
+			String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), test.toString() };
+			Runtime.getRuntime().exec(command).waitFor();
+			// The error might also occur without the source folder being deleted
+			// but it depends on the order that the TempDir cleanup does its work,
+			// so the following line forces the error to occur always
+			Files.delete(test);
+		}
 	}
 
 }
