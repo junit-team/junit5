@@ -407,9 +407,12 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				}
 
 				@Override
-				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+				public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
 					LOGGER.trace(exc, () -> "visitFileFailed: " + file);
 					if (exc instanceof NoSuchFileException) {
+						if (Files.exists(file)) {
+							fileOperations.delete(file);
+						}
 						return CONTINUE;
 					}
 					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
