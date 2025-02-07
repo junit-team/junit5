@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
@@ -32,6 +33,7 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -289,7 +291,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static class CloseablePath implements CloseableResource {
 
-		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(CloseablePath.class);
 
 		private final Path dir;
 		private final TempDirFactory factory;
@@ -327,15 +329,27 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			try {
 				if (this.cleanupMode == NEVER
 						|| (this.cleanupMode == ON_SUCCESS && selfOrChildFailed(this.extensionContext))) {
-					logger.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
+					LOGGER.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
 						this.dir, descriptionFor(this.annotatedElement), this.cleanupMode.name()));
 					return;
 				}
 
 				FileOperations fileOperations = this.extensionContext.getStore(NAMESPACE) //
 						.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
+				FileOperations loggingFileOperations = file -> {
+					LOGGER.trace(() -> "Attempting to delete " + file);
+					try {
+						fileOperations.delete(file);
+						LOGGER.trace(() -> "Successfully deleted " + file);
+					}
+					catch (IOException e) {
+						LOGGER.trace(e, () -> "Failed to delete " + file);
+						throw e;
+					}
+				};
 
-				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
+				LOGGER.trace(() -> "Cleaning up temp dir " + this.dir);
+				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(loggingFileOperations);
 				if (!failures.isEmpty()) {
 					throw createIOExceptionWithAttachedFailures(failures);
 				}
@@ -375,26 +389,41 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)
 				throws IOException {
 
-			if (this.dir == null || Files.notExists(this.dir)) {
+			Path rootDir = this.dir;
+			if (rootDir == null || Files.notExists(rootDir)) {
 				return Collections.emptySortedMap();
 			}
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
 			Set<Path> retriedPaths = new HashSet<>();
-			tryToResetPermissions(this.dir);
-			Files.walkFileTree(this.dir, new SimpleFileVisitor<Path>() {
+			Path rootRealPath = rootDir.toRealPath();
+
+			tryToResetPermissions(rootDir);
+			Files.walkFileTree(rootDir, new SimpleFileVisitor<Path>() {
 
 				@Override
-				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
-					if (!dir.equals(CloseablePath.this.dir)) {
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+					LOGGER.trace(() -> "preVisitDirectory: " + dir);
+					if (isLink(dir)) {
+						delete(dir);
+						return SKIP_SUBTREE;
+					}
+					if (!dir.equals(rootDir)) {
 						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
 				}
 
+				private boolean isLink(Path dir) throws IOException {
+					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
+					// such as "junctions" on Windows
+					return !dir.toRealPath().startsWith(rootRealPath);
+				}
+
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) {
-					if (exc instanceof NoSuchFileException) {
+					LOGGER.trace(exc, () -> "visitFileFailed: " + file);
+					if (exc instanceof NoSuchFileException && !Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
 						return CONTINUE;
 					}
 					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
@@ -404,15 +433,19 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
-					return deleteAndContinue(file);
+					LOGGER.trace(() -> "visitFile: " + file);
+					delete(file);
+					return CONTINUE;
 				}
 
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
-					return deleteAndContinue(dir);
+					LOGGER.trace(exc, () -> "postVisitDirectory: " + dir);
+					delete(dir);
+					return CONTINUE;
 				}
 
-				private FileVisitResult deleteAndContinue(Path path) {
+				private void delete(Path path) {
 					try {
 						fileOperations.delete(path);
 					}
@@ -426,7 +459,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
 						resetPermissionsAndTryToDeleteAgain(path, exception);
 					}
-					return CONTINUE;
 				}
 
 				private void resetPermissionsAndTryToDeleteAgain(Path path, IOException exception) {
