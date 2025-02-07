@@ -263,10 +263,10 @@ and can serve as a starting point for configuring your Maven build.
 [WARNING]
 .Use recent version of Maven Surefire/Failsafe to avoid interoperability issues
 ====
-To avoid interoperability issues, it is recommended to use a recent versions of Maven
-Surefire/Failsafe (3.0.0 or later) because it automatically aligns the used version of the
-JUnit Platform Launcher with the JUnit Platform version found on the test runtime
-classpath.
+To avoid interoperability issues, it is recommended to use a recent version of Maven
+Surefire/Failsafe (3.0.0 or later) because it automatically aligns the version of the
+JUnit Platform Launcher that is used with the JUnit Platform version found on the test
+runtime classpath.
 
 If you are using a version older than 3.0.0-M4, you can work around the missing alignment
 by adding a test dependency on the matching version of the JUnit Platform Launcher to your
