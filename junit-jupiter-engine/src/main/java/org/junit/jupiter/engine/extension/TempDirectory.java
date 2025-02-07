@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
+import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
@@ -347,6 +348,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					}
 				};
 
+				LOGGER.trace(() -> "Cleaning up temp dir " + this.dir);
 				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(loggingFileOperations);
 				if (!failures.isEmpty()) {
 					throw createIOExceptionWithAttachedFailures(failures);
@@ -397,12 +399,21 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			Files.walkFileTree(this.dir, new SimpleFileVisitor<Path>() {
 
 				@Override
-				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					LOGGER.trace(() -> "preVisitDirectory: " + dir);
+					if (isLink(dir)) {
+						return SKIP_SUBTREE;
+					}
 					if (!dir.equals(CloseablePath.this.dir)) {
 						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
+				}
+
+				private boolean isLink(Path dir) throws IOException {
+					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
+					// such as "junctions" on Windows
+					return !dir.toRealPath().equals(dir.toRealPath(LinkOption.NOFOLLOW_LINKS));
 				}
 
 				@Override
