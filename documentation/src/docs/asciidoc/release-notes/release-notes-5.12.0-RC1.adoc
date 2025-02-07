@@ -36,7 +36,7 @@ repository on GitHub.
 [[release-notes-5.12.0-RC1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Delete broken "junctions" on Windows during `@TempDir` cleanup
 
 [[release-notes-5.12.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
