@@ -389,14 +389,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private SortedMap<Path, IOException> deleteAllFilesAndDirectories(FileOperations fileOperations)
 				throws IOException {
 
-			if (this.dir == null || Files.notExists(this.dir)) {
+			Path rootDir = this.dir;
+			if (rootDir == null || Files.notExists(rootDir)) {
 				return Collections.emptySortedMap();
 			}
 
 			SortedMap<Path, IOException> failures = new TreeMap<>();
 			Set<Path> retriedPaths = new HashSet<>();
-			tryToResetPermissions(this.dir);
-			Files.walkFileTree(this.dir, new SimpleFileVisitor<Path>() {
+			Path rootRealPath = rootDir.toRealPath();
+
+			tryToResetPermissions(rootDir);
+			Files.walkFileTree(rootDir, new SimpleFileVisitor<Path>() {
 
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
@@ -404,7 +407,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					if (isLink(dir)) {
 						return SKIP_SUBTREE;
 					}
-					if (!dir.equals(CloseablePath.this.dir)) {
+					if (!dir.equals(rootDir)) {
 						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
@@ -413,7 +416,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				private boolean isLink(Path dir) throws IOException {
 					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
 					// such as "junctions" on Windows
-					return !dir.toRealPath().equals(dir.toRealPath(LinkOption.NOFOLLOW_LINKS));
+					return !dir.toRealPath().startsWith(rootRealPath);
 				}
 
 				@Override
