@@ -456,14 +456,13 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
+	@EnabledOnOs(WINDOWS)
 	class WindowsTests {
 
 		@Test
-		@EnabledOnOs(WINDOWS)
-		void deletesWindowsJunctionsInTempDir(@TempDir Path dir) throws IOException, InterruptedException {
-			Path test = dir.resolve("test");
-			Files.createDirectory(test);
-			Path link = dir.resolve("link");
+		void deletesBrokenJunctions(@TempDir Path dir) throws IOException, InterruptedException {
+			var test = Files.createDirectory(dir.resolve("test"));
+			var link = dir.resolve("link");
 			// This creates a Windows "junction" which you can't do with Java code
 			String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), test.toString() };
 			Runtime.getRuntime().exec(command).waitFor();
@@ -471,6 +470,30 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			// but it depends on the order that the TempDir cleanup does its work,
 			// so the following line forces the error to occur always
 			Files.delete(test);
+		}
+
+		@Test
+		void doesNotFollowJunctions(@TempDir Path tempDir) throws IOException {
+			var outsideDir = Files.createDirectory(tempDir.resolve("outside"));
+			JunctionTestCase.target = outsideDir;
+
+			executeTestsForClass(JunctionTestCase.class).testEvents() //
+					.assertStatistics(stats -> stats.started(1).succeeded(1));
+
+			assertThat(outsideDir).exists();
+		}
+
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		static class JunctionTestCase {
+			public static Path target;
+
+			@Test
+			void createJunctionToTarget(@TempDir Path dir) throws IOException, InterruptedException {
+				var link = dir.resolve("link");
+				// This creates a Windows "junction" which you can't do with Java code
+				String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), target.toString() };
+				Runtime.getRuntime().exec(command).waitFor();
+			}
 		}
 	}
 
