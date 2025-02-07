@@ -84,6 +84,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
  */
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TempDirectory.class);
+
 	// package-private for testing purposes
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	static final String FILE_OPERATIONS_KEY = "file.operations";
@@ -334,8 +336,19 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				FileOperations fileOperations = this.extensionContext.getStore(NAMESPACE) //
 						.getOrDefault(FILE_OPERATIONS_KEY, FileOperations.class, FileOperations.DEFAULT);
+				FileOperations loggingFileOperations = file -> {
+					LOGGER.trace(() -> "Attempting to delete " + file);
+					try {
+						fileOperations.delete(file);
+						LOGGER.trace(() -> "Successfully deleted " + file);
+					}
+					catch (IOException e) {
+						LOGGER.trace(e, () -> "Failed to delete " + file);
+						throw e;
+					}
+				};
 
-				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(fileOperations);
+				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(loggingFileOperations);
 				if (!failures.isEmpty()) {
 					throw createIOExceptionWithAttachedFailures(failures);
 				}
