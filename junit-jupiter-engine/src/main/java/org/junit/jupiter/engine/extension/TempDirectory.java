@@ -32,6 +32,7 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -407,7 +408,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) {
 					LOGGER.trace(exc, () -> "visitFileFailed: " + file);
-					if (exc instanceof NoSuchFileException && !Files.exists(file)) {
+					if (exc instanceof NoSuchFileException && !Files.exists(file, LinkOption.NOFOLLOW_LINKS)) {
 						return CONTINUE;
 					}
 					// IOException includes `AccessDeniedException` thrown by non-readable or non-executable flags
