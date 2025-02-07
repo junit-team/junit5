@@ -460,12 +460,9 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	class WindowsTests {
 
 		@Test
-		void deletesBrokenJunctions(@TempDir Path dir) throws IOException, InterruptedException {
+		void deletesBrokenJunctions(@TempDir Path dir) throws Exception {
 			var test = Files.createDirectory(dir.resolve("test"));
-			var link = dir.resolve("link");
-			// This creates a Windows "junction" which you can't do with Java code
-			String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), test.toString() };
-			Runtime.getRuntime().exec(command).waitFor();
+			createWindowsJunction(dir.resolve("link"), test);
 			// The error might also occur without the source folder being deleted
 			// but it depends on the order that the TempDir cleanup does its work,
 			// so the following line forces the error to occur always
@@ -475,6 +472,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void doesNotFollowJunctions(@TempDir Path tempDir) throws IOException {
 			var outsideDir = Files.createDirectory(tempDir.resolve("outside"));
+			Files.writeString(outsideDir.resolve("test.txt"), "test");
 			JunctionTestCase.target = outsideDir;
 
 			executeTestsForClass(JunctionTestCase.class).testEvents() //
@@ -488,12 +486,19 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			public static Path target;
 
 			@Test
-			void createJunctionToTarget(@TempDir Path dir) throws IOException, InterruptedException {
-				var link = dir.resolve("link");
-				// This creates a Windows "junction" which you can't do with Java code
-				String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), target.toString() };
-				Runtime.getRuntime().exec(command).waitFor();
+			void createJunctionToTarget(@TempDir Path dir) throws Exception {
+				var link = createWindowsJunction(dir.resolve("link"), target);
+				try (var files = Files.list(link)) {
+					files.forEach(it -> System.out.println("- " + it));
+				}
 			}
+		}
+
+		private static Path createWindowsJunction(Path link, Path target) throws Exception {
+			// This creates a Windows "junction" which you can't do with Java code
+			String[] command = { "cmd.exe", "/c", "mklink", "/j", link.toString(), target.toString() };
+			Runtime.getRuntime().exec(command).waitFor();
+			return link;
 		}
 	}
 
