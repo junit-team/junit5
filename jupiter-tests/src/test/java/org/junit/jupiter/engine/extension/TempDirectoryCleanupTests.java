@@ -472,13 +472,19 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		@Test
 		void doesNotFollowJunctions(@TempDir Path tempDir) throws IOException {
 			var outsideDir = Files.createDirectory(tempDir.resolve("outside"));
-			Files.writeString(outsideDir.resolve("test.txt"), "test");
-			JunctionTestCase.target = outsideDir;
+			var testFile = Files.writeString(outsideDir.resolve("test.txt"), "test");
 
-			executeTestsForClass(JunctionTestCase.class).testEvents() //
-					.assertStatistics(stats -> stats.started(1).succeeded(1));
+			JunctionTestCase.target = outsideDir;
+			try {
+				executeTestsForClass(JunctionTestCase.class).testEvents() //
+						.assertStatistics(stats -> stats.started(1).succeeded(1));
+			}
+			finally {
+				JunctionTestCase.target = null;
+			}
 
 			assertThat(outsideDir).exists();
+			assertThat(testFile).exists();
 		}
 
 		@SuppressWarnings("JUnitMalformedDeclaration")
