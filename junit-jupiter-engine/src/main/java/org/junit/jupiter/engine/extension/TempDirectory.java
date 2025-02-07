@@ -399,6 +399,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) {
+					LOGGER.trace(() -> "preVisitDirectory: " + dir);
 					if (!dir.equals(CloseablePath.this.dir)) {
 						tryToResetPermissions(dir);
 					}
@@ -407,6 +408,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				@Override
 				public FileVisitResult visitFileFailed(Path file, IOException exc) {
+					LOGGER.trace(exc, () -> "visitFileFailed: " + file);
 					if (exc instanceof NoSuchFileException) {
 						return CONTINUE;
 					}
@@ -417,11 +419,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 				@Override
 				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+					LOGGER.trace(() -> "visitFile: " + file);
 					return deleteAndContinue(file);
 				}
 
 				@Override
 				public FileVisitResult postVisitDirectory(Path dir, IOException exc) {
+					LOGGER.trace(exc, () -> "postVisitDirectory: " + dir);
 					return deleteAndContinue(dir);
 				}
 
