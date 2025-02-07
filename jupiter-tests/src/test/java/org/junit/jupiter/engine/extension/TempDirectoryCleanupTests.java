@@ -476,7 +476,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 			JunctionTestCase.target = outsideDir;
 			try {
-				executeTestsForClass(JunctionTestCase.class).testEvents() //
+				executeTestsForClass(JunctionTestCase.class).testEvents().debug() //
 						.assertStatistics(stats -> stats.started(1).succeeded(1));
 			}
 			finally {
