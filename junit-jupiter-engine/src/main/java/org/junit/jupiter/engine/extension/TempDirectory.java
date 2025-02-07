@@ -84,8 +84,6 @@ import org.junit.platform.commons.util.ToStringBuilder;
  */
 class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterResolver {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(TempDirectory.class);
-
 	// package-private for testing purposes
 	static final Namespace NAMESPACE = Namespace.create(TempDirectory.class);
 	static final String FILE_OPERATIONS_KEY = "file.operations";
@@ -291,7 +289,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static class CloseablePath implements CloseableResource {
 
-		private static final Logger logger = LoggerFactory.getLogger(CloseablePath.class);
+		private static final Logger LOGGER = LoggerFactory.getLogger(CloseablePath.class);
 
 		private final Path dir;
 		private final TempDirFactory factory;
@@ -329,7 +327,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			try {
 				if (this.cleanupMode == NEVER
 						|| (this.cleanupMode == ON_SUCCESS && selfOrChildFailed(this.extensionContext))) {
-					logger.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
+					LOGGER.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
 						this.dir, descriptionFor(this.annotatedElement), this.cleanupMode.name()));
 					return;
 				}
