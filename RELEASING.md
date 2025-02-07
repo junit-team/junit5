@@ -9,15 +9,15 @@
 - [ ] Commit with message "Release ${VERSION}"
 - [ ] Execute `./gradlew --no-build-cache --no-configuration-cache clean build publish closeSonatypeStagingRepository`
 - [ ] Tag current commit: `git tag -s -m ${VERSION} r${VERSION}`
+- [ ] Change `version`, `platformVersion`, and `vintageVersion` properties in `gradle.properties` on release branch to new development versions and commit with message "Back to snapshots for further development" or similar
 - [ ] Push release branch and tag to GitHub: `git push --set-upstream --follow-tags origin HEAD`
-- [ ] Trigger a [release build](https://github.com/junit-team/junit5/actions/workflows/release.yml): `gh workflow run --ref $(git rev-parse --abbrev-ref HEAD) -f releaseVersion=${VERSION} -f stagingRepoId=orgjunit-1234 release.yml`
+- [ ] Trigger a [release build](https://github.com/junit-team/junit5/actions/workflows/release.yml): `gh workflow run --ref r${VERSION} -f releaseVersion=${VERSION} -f stagingRepoId=orgjunit-1234 release.yml`
   - Select the release branch
   - Enter the version to be released
   - Enter the staging repository ID from the output of above Gradle build
 
 ## Post-release steps
 
-- [ ] Change `version`, `platformVersion`, and `vintageVersion` properties in `gradle.properties` on release branch to new development versions and commit with message "Back to snapshots for further development" or similar and push to GitHub
 - [ ] Post about the new release:
     - [ ] [Mastodon](https://fosstodon.org/@junit)
     - [ ] [Bluesky](https://bsky.app/profile/junit.org)
