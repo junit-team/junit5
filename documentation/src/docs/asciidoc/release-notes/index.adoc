@@ -21,8 +21,6 @@ include::{basedir}/release-notes-5.12.0-RC2.adoc[]
 
 include::{basedir}/release-notes-5.12.0-RC1.adoc[]
 
-include::{basedir}/release-notes-5.12.0-RC2.adoc[]
-
 include::{basedir}/release-notes-5.12.0-M1.adoc[]
 
 include::{basedir}/release-notes-5.11.4.adoc[]
