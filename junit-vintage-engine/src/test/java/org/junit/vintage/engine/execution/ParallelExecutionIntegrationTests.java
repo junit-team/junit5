@@ -11,6 +11,7 @@
 package org.junit.vintage.engine.execution;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
@@ -34,10 +35,14 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -124,6 +129,23 @@ class ParallelExecutionIntegrationTests {
 		assertThat(finishedMethodsTimestamps).hasSize(9);
 
 		assertThat(threadNames).hasSize(3);
+	}
+
+	@Test
+	void executesInParallelWhenNoScopeIsDefined(@TrackLogRecords LogRecordListener listener) {
+		JUnit4ParallelMethodsTestCase.AbstractBlockingTestCase.threadNames.clear();
+		JUnit4ParallelMethodsTestCase.AbstractBlockingTestCase.countDownLatch = new CountDownLatch(9);
+		execute(3, false, false, FirstMethodTestCase.class, SecondMethodTestCase.class, ThirdMethodTestCase.class);
+
+		// @formatter:off
+		assertTrue(listener.stream(Level.WARNING)
+				.map(LogRecord::getMessage)
+				.anyMatch(m -> m.startsWith(
+					"Parallel execution is enabled but no scope is defined. Falling back to sequential execution.")));
+		// @formatter:on
+
+		var threadNames = new HashSet<>(JUnit4ParallelMethodsTestCase.AbstractBlockingTestCase.threadNames);
+		assertThat(threadNames).hasSize(1);
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
