@@ -173,23 +173,35 @@ public class RunnerTestDescriptor extends VintageTestDescriptor {
 		if (runner instanceof ParentRunner) {
 			((ParentRunner<?>) runner).setScheduler(new RunnerScheduler() {
 
-				private final List<CompletableFuture<Void>> futures = new CopyOnWriteArrayList<>();
+				private final List<Future<?>> futures = new CopyOnWriteArrayList<>();
 
 				@Override
 				public void schedule(Runnable childStatement) {
-					futures.add(CompletableFuture.runAsync(childStatement, executorService));
+					futures.add(executorService.submit(childStatement));
 				}
 
 				@Override
 				public void finished() {
-					try {
-						CompletableFuture.allOf(futures.toArray(new CompletableFuture<?>[0])).get();
+					ThrowableCollector collector = new OpenTest4JAwareThrowableCollector();
+					AtomicBoolean wasInterrupted = new AtomicBoolean(false);
+					for (Future<?> future : futures) {
+						collector.execute(() -> {
+							// We're calling `Future.get()` individually to allow for work stealing
+							// in case `ExecutorService` is a `ForkJoinPool`
+							try {
+								future.get();
+							}
+							catch (ExecutionException e) {
+								throw e.getCause();
+							}
+							catch (InterruptedException e) {
+								wasInterrupted.set(true);
+							}
+						});
 					}
-					catch (ExecutionException e) {
-						throw ExceptionUtils.throwAsUncheckedException(e.getCause());
-					}
-					catch (InterruptedException e) {
-						logger.warn(e, () -> "Interrupted while waiting for runner to finish");
+					collector.assertEmpty();
+					if (wasInterrupted.get()) {
+						logger.warn(() -> "Interrupted while waiting for runner to finish");
 						Thread.currentThread().interrupt();
 					}
 				}
