@@ -123,7 +123,7 @@ class ParallelExecutionIntegrationTests {
 		assertThat(startedMethodsTimestamps).hasSize(9);
 		assertThat(finishedMethodsTimestamps).hasSize(9);
 
-		assertThat(threadNames).hasSizeGreaterThanOrEqualTo(2);
+		assertThat(threadNames).hasSize(3);
 	}
 
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
