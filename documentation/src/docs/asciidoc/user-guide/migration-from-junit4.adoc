@@ -48,14 +48,14 @@ concurrent test execution. It can be enabled and configured using the following
 Enable/disable parallel execution (defaults to `false`).
 
 `junit.vintage.execution.parallel.pool-size=<number>`::
-Specifies the size of the thread pool to be used for parallel execution. By default, the
-number of available processors is used.
+  Specifies the size of the thread pool to be used for parallel execution. By default, the
+  number of available processors is used.
 
 `junit.vintage.execution.parallel.classes=true|false`::
-Enable/disable parallel execution of test classes (defaults to `false`).
+  Enable/disable parallel execution of test classes (defaults to `false`).
 
 `junit.vintage.execution.parallel.methods=true|false`::
-Enable/disable parallel execution of test methods (defaults to `false`).
+  Enable/disable parallel execution of test methods (defaults to `false`).
 
 Example configuration in `junit-platform.properties`:
 
