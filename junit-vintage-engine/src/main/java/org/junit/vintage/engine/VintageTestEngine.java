@@ -10,6 +10,7 @@
 
 package org.junit.vintage.engine;
 
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
@@ -99,14 +100,14 @@ public final class VintageTestEngine implements TestEngine {
 
 		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
 		if (!parallelExecutionEnabled) {
-			executeSequentially(engineDescriptor, engineExecutionListener);
+			executeClassesAndMethodsSequentially(engineDescriptor, engineExecutionListener);
 			return;
 		}
 
 		if (!classes && !methods) {
 			logger.warn(() -> "Parallel execution is enabled but no scope is defined. "
 					+ "Falling back to sequential execution.");
-			executeSequentially(engineDescriptor, engineExecutionListener);
+			executeClassesAndMethodsSequentially(engineDescriptor, engineExecutionListener);
 			return;
 		}
 
@@ -129,6 +130,25 @@ public final class VintageTestEngine implements TestEngine {
 			return false;
 		}
 
+		return executeClassesInParallel(runnerTestDescriptors, runnerExecutor, executorService);
+	}
+
+	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
+			ExecutorService executorService) {
+		return engineDescriptor.getModifiableChildren().stream() //
+				.map(RunnerTestDescriptor.class::cast) //
+				.map(it -> methods ? parallelMethodExecutor(it, executorService) : it) //
+				.collect(toList());
+	}
+
+	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
+			ExecutorService executorService) {
+		runnerTestDescriptor.setExecutorService(executorService);
+		return runnerTestDescriptor;
+	}
+
+	private boolean executeClassesInParallel(List<RunnerTestDescriptor> runnerTestDescriptors,
+			RunnerExecutor runnerExecutor, ExecutorService executorService) {
 		List<CompletableFuture<Void>> futures = new ArrayList<>();
 		for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
 			CompletableFuture<Void> future = CompletableFuture.runAsync(
@@ -154,20 +174,6 @@ public final class VintageTestEngine implements TestEngine {
 		return wasInterrupted;
 	}
 
-	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
-			ExecutorService executorService) {
-		return engineDescriptor.getModifiableChildren().stream() //
-				.map(RunnerTestDescriptor.class::cast) //
-				.map(it -> methods ? parallelMethodExecutor(it, executorService) : it) //
-				.collect(toList());
-	}
-
-	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
-			ExecutorService executorService) {
-		runnerTestDescriptor.setExecutorService(executorService);
-		return runnerTestDescriptor;
-	}
-
 	private void shutdownExecutorService(ExecutorService executorService) {
 		try {
 			executorService.shutdown();
@@ -182,7 +188,14 @@ public final class VintageTestEngine implements TestEngine {
 		}
 	}
 
-	private void executeSequentially(VintageEngineDescriptor engineDescriptor,
+	private void executeClassesSequentially(List<RunnerTestDescriptor> runnerTestDescriptors,
+			RunnerExecutor runnerExecutor) {
+		for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
+			runnerExecutor.execute(runnerTestDescriptor);
+		}
+	}
+
+	private void executeClassesAndMethodsSequentially(VintageEngineDescriptor engineDescriptor,
 			EngineExecutionListener engineExecutionListener) {
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
