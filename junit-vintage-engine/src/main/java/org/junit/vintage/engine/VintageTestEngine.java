@@ -125,9 +125,7 @@ public final class VintageTestEngine implements TestEngine {
 			executorService);
 
 		if (!classes) {
-			for (RunnerTestDescriptor runnerTestDescriptor : runnerTestDescriptors) {
-				runnerExecutor.execute(runnerTestDescriptor);
-			}
+			executeClassesSequentially(runnerTestDescriptors, runnerExecutor);
 			return false;
 		}
 
