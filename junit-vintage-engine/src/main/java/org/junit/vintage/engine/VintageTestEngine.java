@@ -110,7 +110,8 @@ public final class VintageTestEngine implements TestEngine {
 			return;
 		}
 
-		if (executeInParallel(engineDescriptor, engineExecutionListener, request)) {
+		boolean wasInterrupted = executeInParallel(engineDescriptor, engineExecutionListener, request);
+		if (wasInterrupted) {
 			Thread.currentThread().interrupt();
 		}
 	}
