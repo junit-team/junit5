@@ -35,7 +35,7 @@ class AntStarterTests {
 	@Timeout(60)
 	void ant_starter(@TempDir Path workspace, @FilePrefix("ant") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.java() //
-				.workingDir(copyToWorkspace(Projects.ANT_STARTER, workspace)) //
+				.workingDir(copyToWorkspace(Projects.JUPITER_STARTER, workspace)) //
 				.addArguments("-cp", System.getProperty("antJars"), Main.class.getName()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();

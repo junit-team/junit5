@@ -17,7 +17,6 @@ import org.apache.commons.io.file.PathUtils;
 
 public class Projects {
 
-	public static final String ANT_STARTER = "ant-starter";
 	public static final String GRAALVM_STARTER = "graalvm-starter";
 	public static final String GRADLE_KOTLIN_EXTENSIONS = "gradle-kotlin-extensions";
 	public static final String GRADLE_MISSING_ENGINE = "gradle-missing-engine";
