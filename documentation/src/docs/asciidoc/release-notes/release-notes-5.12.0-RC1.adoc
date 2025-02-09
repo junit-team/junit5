@@ -1,7 +1,7 @@
 [[release-notes-5.12.0-RC1]]
 == 5.12.0-RC1
 
-*Date of Release:* ❓
+*Date of Release:* February 7, 2025
 
 *Scope:* Minor enhancements since JUnit 5.12 M1.
 
@@ -13,20 +13,11 @@ repository on GitHub.
 [[release-notes-5.12.0-RC1-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.12.0-RC1-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.12.0-RC1-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-5.12.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* New `TestDescriptor.orderChildren(UnaryOperator<List<TestDescriptor>> orderer)`
+  method to order children in place
 
 
 [[release-notes-5.12.0-RC1-junit-jupiter]]
@@ -35,12 +26,8 @@ repository on GitHub.
 [[release-notes-5.12.0-RC1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
-
-[[release-notes-5.12.0-RC1-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
+* Fix handling of "junctions" on Windows during `@TempDir` cleanup: junctions will no
+  longer be followed when deleting directories and broken junctions will be deleted.
 
 [[release-notes-5.12.0-RC1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
@@ -54,17 +41,4 @@ repository on GitHub.
 [[release-notes-5.12.0-RC1-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.12.0-RC1-junit-vintage-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.12.0-RC1-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.12.0-RC1-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
