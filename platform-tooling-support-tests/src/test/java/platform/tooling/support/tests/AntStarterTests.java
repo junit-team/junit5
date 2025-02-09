@@ -51,13 +51,13 @@ class AntStarterTests {
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
-			"\\[junitlauncher\\] Tests run: 5, Failures: 0, Aborted: 0, Skipped: 0, Time elapsed: .+ sec", //
+			"\\[junitlauncher\\] Tests run: 9, Failures: 0, Aborted: 0, Skipped: 0, Time elapsed: .+ sec", //
 			">>>>", //
 			"test.console.launcher:", //
 			">>>>", //
 			"     \\[java\\] Test run finished after [\\d]+ ms", //
 			">>>>", //
-			"     \\[java\\] \\[         5 tests successful      \\]", //
+			"     \\[java\\] \\[         9 tests successful      \\]", //
 			"     \\[java\\] \\[         0 tests failed          \\]", //
 			">> TAIL >>"), //
 			result.stdOutLines());

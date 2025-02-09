@@ -21,7 +21,7 @@ test-method: gradle_wrapper
     <java:heapSize max="514850816"/>
   </infrastructure>
   
-  <e:started id="1" name="JUnit Jupiter" time="2025-02-11T13:40:40.710Z">
+  <e:started id="1" name="JUnit Jupiter" time="2025-02-11T15:13:46.481Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]</junit:uniqueId>
       <junit:legacyReportingName>JUnit Jupiter</junit:legacyReportingName>
@@ -29,7 +29,7 @@ test-method: gradle_wrapper
     </metadata>
   </e:started>
   
-  <e:started id="2" name="CalculatorTests" parentId="1" time="2025-02-11T13:40:40.729Z">
+  <e:started id="2" name="CalculatorTests" parentId="1" time="2025-02-11T15:13:46.499Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]</junit:uniqueId>
       <junit:legacyReportingName>com.example.project.CalculatorTests</junit:legacyReportingName>
@@ -40,7 +40,7 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:started id="3" name="1 + 1 = 2" parentId="2" time="2025-02-11T13:40:40.745Z">
+  <e:started id="3" name="1 + 1 = 2" parentId="2" time="2025-02-11T15:13:46.517Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[method:addsTwoNumbers()]</junit:uniqueId>
       <junit:legacyReportingName>addsTwoNumbers()</junit:legacyReportingName>
@@ -51,11 +51,11 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:finished id="3" time="2025-02-11T13:40:40.755Z">
+  <e:finished id="3" time="2025-02-11T15:13:46.529Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:started id="4" name="add(int, int, int)" parentId="2" time="2025-02-11T13:40:40.758Z">
+  <e:started id="4" name="add(int, int, int)" parentId="2" time="2025-02-11T15:13:46.532Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[test-template:add(int, int, int)]</junit:uniqueId>
       <junit:legacyReportingName>add(int, int, int)</junit:legacyReportingName>
@@ -66,7 +66,7 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:started id="5" name="0 + 1 = 1" parentId="4" time="2025-02-11T13:40:40.784Z">
+  <e:started id="5" name="0 + 1 = 1" parentId="4" time="2025-02-11T15:13:46.558Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[test-template:add(int, int, int)]/[test-template-invocation:#1]</junit:uniqueId>
       <junit:legacyReportingName>add(int, int, int)[1]</junit:legacyReportingName>
@@ -77,11 +77,11 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:finished id="5" time="2025-02-11T13:40:40.794Z">
+  <e:finished id="5" time="2025-02-11T15:13:46.571Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:started id="6" name="1 + 2 = 3" parentId="4" time="2025-02-11T13:40:40.797Z">
+  <e:started id="6" name="1 + 2 = 3" parentId="4" time="2025-02-11T15:13:46.574Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[test-template:add(int, int, int)]/[test-template-invocation:#2]</junit:uniqueId>
       <junit:legacyReportingName>add(int, int, int)[2]</junit:legacyReportingName>
@@ -92,11 +92,11 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:finished id="6" time="2025-02-11T13:40:40.798Z">
+  <e:finished id="6" time="2025-02-11T15:13:46.576Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:started id="7" name="49 + 51 = 100" parentId="4" time="2025-02-11T13:40:40.799Z">
+  <e:started id="7" name="49 + 51 = 100" parentId="4" time="2025-02-11T15:13:46.577Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[test-template:add(int, int, int)]/[test-template-invocation:#3]</junit:uniqueId>
       <junit:legacyReportingName>add(int, int, int)[3]</junit:legacyReportingName>
@@ -107,11 +107,11 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:finished id="7" time="2025-02-11T13:40:40.800Z">
+  <e:finished id="7" time="2025-02-11T15:13:46.579Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:started id="8" name="1 + 100 = 101" parentId="4" time="2025-02-11T13:40:40.801Z">
+  <e:started id="8" name="1 + 100 = 101" parentId="4" time="2025-02-11T15:13:46.580Z">
     <metadata>
       <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[test-template:add(int, int, int)]/[test-template-invocation:#4]</junit:uniqueId>
       <junit:legacyReportingName>add(int, int, int)[4]</junit:legacyReportingName>
@@ -122,19 +122,154 @@ test-method: gradle_wrapper
     </sources>
   </e:started>
   
-  <e:finished id="8" time="2025-02-11T13:40:40.802Z">
+  <e:finished id="8" time="2025-02-11T15:13:46.582Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:finished id="4" time="2025-02-11T13:40:40.803Z">
+  <e:finished id="4" time="2025-02-11T15:13:46.582Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:finished id="2" time="2025-02-11T13:40:40.804Z">
+  <e:started id="9" name="NestedTests" parentId="2" time="2025-02-11T15:13:46.583Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]</junit:uniqueId>
+      <junit:legacyReportingName>com.example.project.CalculatorTests$NestedTests</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+    <sources>
+      <java:classSource className="com.example.project.CalculatorTests$NestedTests"/>
+    </sources>
+  </e:started>
+  
+  <e:started id="10" name="[1]" parentId="9" time="2025-02-11T15:13:46.586Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#1]</junit:uniqueId>
+      <junit:legacyReportingName>com.example.project.CalculatorTests$NestedTests[1]</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+    <sources>
+      <java:classSource className="com.example.project.CalculatorTests$NestedTests"/>
+    </sources>
+  </e:started>
+  
+  <e:started id="11" name="test(int)" parentId="10" time="2025-02-11T15:13:46.588Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#1]/[test-template:test(int)]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:started id="12" name="[1] 1" parentId="11" time="2025-02-11T15:13:46.593Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#1]/[test-template:test(int)]/[test-template-invocation:#1]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)[1]</junit:legacyReportingName>
+      <junit:type>TEST</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:finished id="12" time="2025-02-11T15:13:46.596Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
-  <e:finished id="1" time="2025-02-11T13:40:40.804Z">
+  <e:started id="13" name="[2] 2" parentId="11" time="2025-02-11T15:13:46.597Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#1]/[test-template:test(int)]/[test-template-invocation:#2]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)[2]</junit:legacyReportingName>
+      <junit:type>TEST</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:finished id="13" time="2025-02-11T15:13:46.599Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="11" time="2025-02-11T15:13:46.599Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="10" time="2025-02-11T15:13:46.600Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:started id="14" name="[2]" parentId="9" time="2025-02-11T15:13:46.600Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#2]</junit:uniqueId>
+      <junit:legacyReportingName>com.example.project.CalculatorTests$NestedTests[2]</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+    <sources>
+      <java:classSource className="com.example.project.CalculatorTests$NestedTests"/>
+    </sources>
+  </e:started>
+  
+  <e:started id="15" name="test(int)" parentId="14" time="2025-02-11T15:13:46.601Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#2]/[test-template:test(int)]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)</junit:legacyReportingName>
+      <junit:type>CONTAINER</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:started id="16" name="[1] 1" parentId="15" time="2025-02-11T15:13:46.604Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#2]/[test-template:test(int)]/[test-template-invocation:#1]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)[1]</junit:legacyReportingName>
+      <junit:type>TEST</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:finished id="16" time="2025-02-11T15:13:46.605Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:started id="17" name="[2] 2" parentId="15" time="2025-02-11T15:13:46.606Z">
+    <metadata>
+      <junit:uniqueId>[engine:junit-jupiter]/[class:com.example.project.CalculatorTests]/[nested-container-template:NestedTests]/[container-template-invocation:#2]/[test-template:test(int)]/[test-template-invocation:#2]</junit:uniqueId>
+      <junit:legacyReportingName>test(int)[2]</junit:legacyReportingName>
+      <junit:type>TEST</junit:type>
+    </metadata>
+    <sources>
+      <java:methodSource className="com.example.project.CalculatorTests$NestedTests" methodName="test" methodParameterTypes="int"/>
+    </sources>
+  </e:started>
+  
+  <e:finished id="17" time="2025-02-11T15:13:46.608Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="15" time="2025-02-11T15:13:46.608Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="14" time="2025-02-11T15:13:46.609Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="9" time="2025-02-11T15:13:46.610Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="2" time="2025-02-11T15:13:46.611Z">
+    <result status="SUCCESSFUL"/>
+  </e:finished>
+  
+  <e:finished id="1" time="2025-02-11T15:13:46.611Z">
     <result status="SUCCESSFUL"/>
   </e:finished>
   
