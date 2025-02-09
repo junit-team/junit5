@@ -52,9 +52,9 @@ public final class Constants {
 	 * <p>Set this property to {@code true} to enable parallel execution of test classes.
 	 * Defaults to {@code false}.
 	 *
-	 * @since 5.13
+	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "5.12")
 	public static final String PARALLEL_CLASS_EXECUTION = "junit.vintage.execution.parallel.classes";
 
 	/**
@@ -63,9 +63,9 @@ public final class Constants {
 	 * <p>Set this property to {@code true} to enable parallel execution of test methods.
 	 * Defaults to {@code false}.
 	 *
-	 * @since 5.13
+	 * @since 5.12
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
+	@API(status = EXPERIMENTAL, since = "5.12")
 	public static final String PARALLEL_METHOD_EXECUTION = "junit.vintage.execution.parallel.methods";
 
 	private Constants() {
