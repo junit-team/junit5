@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static java.util.function.Predicate.isEqual;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,7 +38,6 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -99,12 +99,12 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		var results = executeTests(DiscoverySelectors.parse(selectorIdentifier).orElseThrow());
 
-		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(uniqueId(containerTemplateId)), started()), //
 
-			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of TwoInvocationsTestCase")), //
+			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of TwoInvocationsTestCase"),
+				legacyReportingName("%s[1]".formatted(TwoInvocationsTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId1)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation1MethodAId))), //
 			event(dynamicTestRegistered(uniqueId(invocation1NestedClassId))), //
@@ -117,7 +117,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(invocation1NestedClassId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
 
-			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase"),
+				legacyReportingName("%s[2]".formatted(TwoInvocationsTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId2)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation2MethodAId))), //
 			event(dynamicTestRegistered(uniqueId(invocation2NestedClassId))), //
@@ -201,14 +202,18 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 			event(container(uniqueId(nestedContainerTemplateId)), started()), //
 
-			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of NestedTestCase")), //
+			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of NestedTestCase"),
+				legacyReportingName("%s[1]".formatted(
+					NestedContainerTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId1)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation1NestedMethodBId))), //
 			event(test(uniqueId(invocation1NestedMethodBId)), started()), //
 			event(test(uniqueId(invocation1NestedMethodBId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
 
-			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of NestedTestCase")), //
+			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of NestedTestCase"),
+				legacyReportingName("%s[2]".formatted(
+					NestedContainerTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId2)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation2NestedMethodBId))), //
 			event(test(uniqueId(invocation2NestedMethodBId)), started()), //
@@ -770,8 +775,15 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 	// TODO #871 Consider moving to EventConditions
 	private static Condition<Event> uniqueId(UniqueId uniqueId) {
-		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, Predicate.isEqual(uniqueId))),
+		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, isEqual(uniqueId))),
 			"descriptor with uniqueId '%s'", uniqueId);
+	}
+
+	// TODO #871 Consider moving to EventConditions
+	private static Condition<Event> legacyReportingName(String legacyReportingName) {
+		return new Condition<>(
+			byTestDescriptor(where(TestDescriptor::getLegacyReportingName, isEqual(legacyReportingName))),
+			"descriptor with legacy reporting name '%s'", legacyReportingName);
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

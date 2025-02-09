@@ -66,6 +66,11 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		return Type.CONTAINER;
 	}
 
+	@Override
+	public String getLegacyReportingName() {
+		return getTestClass().getName() + "[" + index + "]";
+	}
+
 	// --- TestClassAware ------------------------------------------------------
 
 	@Override
