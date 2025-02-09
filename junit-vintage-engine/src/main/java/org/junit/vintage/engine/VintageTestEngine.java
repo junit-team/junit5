@@ -156,17 +156,10 @@ public final class VintageTestEngine implements TestEngine {
 
 	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
 			ExecutorService executorService) {
-		List<RunnerTestDescriptor> runnerTestDescriptors = new ArrayList<>();
-		for (TestDescriptor descriptor : engineDescriptor.getModifiableChildren()) {
-			RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) descriptor;
-
-			if (methods) {
-				runnerTestDescriptors.add(parallelMethodExecutor(runnerTestDescriptor, executorService));
-				continue;
-			}
-			runnerTestDescriptors.add(runnerTestDescriptor);
-		}
-		return runnerTestDescriptors;
+		return engineDescriptor.getModifiableChildren().stream() //
+				.map(RunnerTestDescriptor.class::cast) //
+				.map(it -> methods ? parallelMethodExecutor(it, executorService) : it) //
+				.collect(toList());
 	}
 
 	private RunnerTestDescriptor parallelMethodExecutor(RunnerTestDescriptor runnerTestDescriptor,
