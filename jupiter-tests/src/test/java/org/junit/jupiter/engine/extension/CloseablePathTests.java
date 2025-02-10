@@ -448,7 +448,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 				assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage) //
 						.contains(("Deleting symbolic link from location inside of temp dir (%s) "
 								+ "to location outside of temp dir (%s) but not the target file/directory").formatted(
-									symbolicLink, directoryOutsideTempDir));
+									symbolicLink, directoryOutsideTempDir.toRealPath()));
 			}
 			finally {
 				Files.deleteIfExists(directoryOutsideTempDir);
