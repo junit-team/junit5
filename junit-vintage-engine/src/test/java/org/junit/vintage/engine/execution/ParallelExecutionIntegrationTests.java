@@ -148,6 +148,17 @@ class ParallelExecutionIntegrationTests {
 		assertThat(threadNames).hasSize(1);
 	}
 
+	@Test
+	void executesInParallelWhenInvalidPoolSizeIsDefined(@TrackLogRecords LogRecordListener listener) {
+		execute(-1, true, true, FirstMethodTestCase.class, SecondMethodTestCase.class, ThirdMethodTestCase.class);
+
+		// @formatter:off
+		assertTrue(listener.stream(Level.WARNING)
+				.map(LogRecord::getMessage)
+				.anyMatch(m -> m.startsWith("Invalid value for parallel pool size: -1")));
+		// @formatter:on
+	}
+
 	private List<Instant> getTimestampsFor(List<Event> events, Condition<Event> condition) {
 		// @formatter:off
 		return events.stream()

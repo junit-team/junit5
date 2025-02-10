@@ -12,7 +12,9 @@ package org.junit.vintage.engine.execution;
 
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.vintage.engine.Constants.PARALLEL_CLASS_EXECUTION;
 import static org.junit.vintage.engine.Constants.PARALLEL_EXECUTION_ENABLED;
+import static org.junit.vintage.engine.Constants.PARALLEL_METHOD_EXECUTION;
 import static org.junit.vintage.engine.Constants.PARALLEL_POOL_SIZE;
 
 import java.util.ArrayList;
@@ -32,7 +34,6 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.vintage.engine.Constants;
 import org.junit.vintage.engine.descriptor.RunnerTestDescriptor;
 import org.junit.vintage.engine.descriptor.VintageEngineDescriptor;
 
@@ -47,43 +48,46 @@ public class VintageExecutor {
 	private static final int DEFAULT_THREAD_POOL_SIZE = Runtime.getRuntime().availableProcessors();
 	private static final int SHUTDOWN_TIMEOUT_SECONDS = 30;
 
-	private boolean classes;
-	private boolean methods;
+	private final VintageEngineDescriptor engineDescriptor;
+	private final EngineExecutionListener engineExecutionListener;
+	private final ExecutionRequest request;
 
-	public void executeAllChildren(VintageEngineDescriptor engineDescriptor,
-			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
-		initializeParallelExecutionParameters(request);
+	private final boolean parallelExecutionEnabled;
+	private final boolean classes;
+	private final boolean methods;
 
-		boolean parallelExecutionEnabled = getParallelExecutionEnabled(request);
+	public VintageExecutor(VintageEngineDescriptor engineDescriptor, EngineExecutionListener engineExecutionListener,
+			ExecutionRequest request) {
+		this.engineDescriptor = engineDescriptor;
+		this.engineExecutionListener = engineExecutionListener;
+		this.request = request;
+		this.parallelExecutionEnabled = request.getConfigurationParameters().getBoolean(
+			PARALLEL_EXECUTION_ENABLED).orElse(false);
+		this.classes = request.getConfigurationParameters().getBoolean(PARALLEL_CLASS_EXECUTION).orElse(false);
+		this.methods = request.getConfigurationParameters().getBoolean(PARALLEL_METHOD_EXECUTION).orElse(false);
+	}
+
+	public void executeAllChildren() {
+
 		if (!parallelExecutionEnabled) {
-			executeClassesAndMethodsSequentially(engineDescriptor, engineExecutionListener);
+			executeClassesAndMethodsSequentially();
 			return;
 		}
 
 		if (!classes && !methods) {
 			logger.warn(() -> "Parallel execution is enabled but no scope is defined. "
 					+ "Falling back to sequential execution.");
-			executeClassesAndMethodsSequentially(engineDescriptor, engineExecutionListener);
+			executeClassesAndMethodsSequentially();
 			return;
 		}
 
-		boolean wasInterrupted = executeInParallel(engineDescriptor, engineExecutionListener, request);
+		boolean wasInterrupted = executeInParallel();
 		if (wasInterrupted) {
 			Thread.currentThread().interrupt();
 		}
 	}
 
-	private void initializeParallelExecutionParameters(ExecutionRequest request) {
-		classes = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_CLASS_EXECUTION).orElse(false);
-		methods = request.getConfigurationParameters().getBoolean(Constants.PARALLEL_METHOD_EXECUTION).orElse(false);
-	}
-
-	private boolean getParallelExecutionEnabled(ExecutionRequest request) {
-		return request.getConfigurationParameters().getBoolean(PARALLEL_EXECUTION_ENABLED).orElse(false);
-	}
-
-	private void executeClassesAndMethodsSequentially(VintageEngineDescriptor engineDescriptor,
-			EngineExecutionListener engineExecutionListener) {
+	private void executeClassesAndMethodsSequentially() {
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 		for (Iterator<TestDescriptor> iterator = engineDescriptor.getModifiableChildren().iterator(); iterator.hasNext();) {
 			runnerExecutor.execute((RunnerTestDescriptor) iterator.next());
@@ -91,13 +95,11 @@ public class VintageExecutor {
 		}
 	}
 
-	private boolean executeInParallel(VintageEngineDescriptor engineDescriptor,
-			EngineExecutionListener engineExecutionListener, ExecutionRequest request) {
-		ExecutorService executorService = Executors.newWorkStealingPool(getThreadPoolSize(request));
+	private boolean executeInParallel() {
+		ExecutorService executorService = Executors.newWorkStealingPool(getThreadPoolSize());
 		RunnerExecutor runnerExecutor = new RunnerExecutor(engineExecutionListener);
 
-		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(engineDescriptor,
-			executorService);
+		List<RunnerTestDescriptor> runnerTestDescriptors = collectRunnerTestDescriptors(executorService);
 
 		if (!classes) {
 			executeClassesSequentially(runnerTestDescriptors, runnerExecutor);
@@ -107,21 +109,24 @@ public class VintageExecutor {
 		return executeClassesInParallel(runnerTestDescriptors, runnerExecutor, executorService);
 	}
 
-	private int getThreadPoolSize(ExecutionRequest request) {
-		Optional<String> poolSize = request.getConfigurationParameters().get(PARALLEL_POOL_SIZE);
-		if (poolSize.isPresent()) {
+	private int getThreadPoolSize() {
+		Optional<String> optionalPoolSize = request.getConfigurationParameters().get(PARALLEL_POOL_SIZE);
+		if (optionalPoolSize.isPresent()) {
 			try {
-				return Integer.parseInt(poolSize.get());
+				int poolSize = Integer.parseInt(optionalPoolSize.get());
+				if (poolSize > 0) {
+					return poolSize;
+				}
+				logger.warn(() -> "Invalid value for parallel pool size: " + poolSize);
 			}
 			catch (NumberFormatException e) {
-				logger.warn(() -> "Invalid value for parallel pool size: " + poolSize.get());
+				logger.warn(() -> "Invalid value for parallel pool size: " + optionalPoolSize.get());
 			}
 		}
 		return DEFAULT_THREAD_POOL_SIZE;
 	}
 
-	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(VintageEngineDescriptor engineDescriptor,
-			ExecutorService executorService) {
+	private List<RunnerTestDescriptor> collectRunnerTestDescriptors(ExecutorService executorService) {
 		return engineDescriptor.getModifiableChildren().stream() //
 				.map(RunnerTestDescriptor.class::cast) //
 				.map(it -> methods ? parallelMethodExecutor(it, executorService) : it) //

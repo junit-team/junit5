@@ -67,7 +67,7 @@ public final class VintageTestEngine implements TestEngine {
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
 		VintageEngineDescriptor engineDescriptor = (VintageEngineDescriptor) request.getRootTestDescriptor();
 		engineExecutionListener.executionStarted(engineDescriptor);
-		new VintageExecutor().executeAllChildren(engineDescriptor, engineExecutionListener, request);
+		new VintageExecutor(engineDescriptor, engineExecutionListener, request).executeAllChildren();
 		engineExecutionListener.executionFinished(engineDescriptor, successful());
 	}
 }
