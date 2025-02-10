@@ -39,10 +39,10 @@ class MavenStarterTests {
 	MavenRepoProxy mavenRepoProxy;
 
 	@Test
-	void verifyMavenStarterProject(@TempDir Path workspace, @FilePrefix("maven") OutputFiles outputFiles)
+	void verifyJupiterStarterProject(@TempDir Path workspace, @FilePrefix("maven") OutputFiles outputFiles)
 			throws Exception {
 		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
-				.workingDir(copyToWorkspace(Projects.MAVEN_STARTER, workspace)) //
+				.workingDir(copyToWorkspace(Projects.JUPITER_STARTER, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("--update-snapshots", "--batch-mode", "verify") //

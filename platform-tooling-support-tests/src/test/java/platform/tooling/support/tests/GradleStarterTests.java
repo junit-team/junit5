@@ -35,7 +35,7 @@ class GradleStarterTests {
 	@Test
 	void gradle_wrapper(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 		var result = ProcessStarters.gradlew() //
-				.workingDir(copyToWorkspace(Projects.GRADLE_STARTER, workspace)) //
+				.workingDir(copyToWorkspace(Projects.JUPITER_STARTER, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //

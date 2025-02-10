@@ -49,7 +49,7 @@ class UnalignedClasspathTests {
 	void verifyErrorMessageForUnalignedClasspath(JRE jre, Path javaHome, @TempDir Path workspace,
 			@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 		var starter = ProcessStarters.maven(javaHome) //
-				.workingDir(copyToWorkspace(Projects.MAVEN_STARTER, workspace)) //
+				.workingDir(copyToWorkspace(Projects.JUPITER_STARTER, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //
 				.addArguments("-Djunit.platform.commons.version=1.11.4").addArguments("--update-snapshots",
