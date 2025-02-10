@@ -443,10 +443,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					return CONTINUE;
 				}
 
-				private boolean isLinkWithTargetOutsideTempDir(Path path) throws IOException {
+				private boolean isLinkWithTargetOutsideTempDir(Path path) {
 					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
 					// such as "junctions" on Windows
-					return !path.toRealPath().startsWith(rootRealPath);
+					try {
+						return !path.toRealPath().startsWith(rootRealPath);
+					}
+					catch (IOException e) {
+						LOGGER.trace(e,
+							() -> "Failed to determine real path for " + path + "; assuming it is not a link");
+						return false;
+					}
 				}
 
 				private void warnAboutLinkWithTargetOutsideTempDir(String linkType, Path file) throws IOException {
