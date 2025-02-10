@@ -490,7 +490,8 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 			assertThat(outsideDir).exists();
 			assertThat(testFile).exists();
-			assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage) //
+			assertThat(listener.stream(Level.WARNING)) //
+					.map(LogRecord::getMessage) //
 					.anyMatch(m -> m.matches(
 						"Deleting link from location inside of temp dir \\(.+\\) to location outside of temp dir \\(.+\\) but not the target file/directory"));
 		}

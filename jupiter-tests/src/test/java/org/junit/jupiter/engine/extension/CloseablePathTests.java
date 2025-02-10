@@ -445,7 +445,8 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 				verify(factory).close();
 				assertThat(rootDir).doesNotExist();
 				assertThat(directoryOutsideTempDir).isDirectory();
-				assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage) //
+				assertThat(listener.stream(Level.WARNING)) //
+						.map(LogRecord::getMessage) //
 						.contains(("Deleting symbolic link from location inside of temp dir (%s) "
 								+ "to location outside of temp dir (%s) but not the target file/directory").formatted(
 									symbolicLink, directoryOutsideTempDir.toRealPath()));
