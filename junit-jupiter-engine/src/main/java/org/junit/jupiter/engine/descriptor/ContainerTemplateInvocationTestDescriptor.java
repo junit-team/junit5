@@ -100,8 +100,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 				extension -> childRegistry.registerExtension(extension, this.invocationContext));
 			registry = childRegistry;
 		}
-		ExtensionContext extensionContext = new DynamicExtensionContext<>(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), registry);
+		ExtensionContext extensionContext = new ContainerTemplateInvocationExtensionContext(
+			context.getExtensionContext(), context.getExecutionListener(), this, context.getConfiguration(), registry);
 		return context.extend() //
 				.withExtensionContext(extensionContext).withExtensionRegistry(registry) //
 				.build();

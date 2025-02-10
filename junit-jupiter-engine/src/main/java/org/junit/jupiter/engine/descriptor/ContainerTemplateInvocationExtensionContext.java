@@ -14,7 +14,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -22,37 +22,41 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.support.hierarchical.Node;
 
-class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDescriptor> {
+/**
+ * @since 5.13
+ */
+final class ContainerTemplateInvocationExtensionContext
+		extends AbstractExtensionContext<ContainerTemplateInvocationTestDescriptor> {
 
-	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
+	ContainerTemplateInvocationExtensionContext(ExtensionContext parent,
+			EngineExecutionListener engineExecutionListener, ContainerTemplateInvocationTestDescriptor testDescriptor,
+			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
 		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
 	}
 
 	@Override
 	public Optional<AnnotatedElement> getElement() {
-		return Optional.empty();
+		return Optional.of(getTestDescriptor().getTestClass());
 	}
 
 	@Override
 	public Optional<Class<?>> getTestClass() {
-		return Optional.empty();
+		return Optional.of(getTestDescriptor().getTestClass());
 	}
 
 	@Override
-	public Optional<TestInstance.Lifecycle> getTestInstanceLifecycle() {
-		return Optional.empty();
+	public Optional<Lifecycle> getTestInstanceLifecycle() {
+		return getParent().flatMap(ExtensionContext::getTestInstanceLifecycle);
 	}
 
 	@Override
 	public Optional<Object> getTestInstance() {
-		return Optional.empty();
+		return getParent().flatMap(ExtensionContext::getTestInstance);
 	}
 
 	@Override
 	public Optional<TestInstances> getTestInstances() {
-		return Optional.empty();
+		return getParent().flatMap(ExtensionContext::getTestInstances);
 	}
 
 	@Override

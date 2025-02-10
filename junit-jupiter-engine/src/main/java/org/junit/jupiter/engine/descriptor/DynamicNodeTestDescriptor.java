@@ -45,7 +45,7 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
-		ExtensionContext extensionContext = new DynamicExtensionContext<>(context.getExtensionContext(),
+		ExtensionContext extensionContext = new DynamicExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), context.getExtensionRegistry());
 		// @formatter:off
 		return context.extend()

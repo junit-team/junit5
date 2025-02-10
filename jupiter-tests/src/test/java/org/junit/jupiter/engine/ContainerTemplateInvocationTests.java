@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine;
 
 import static java.util.function.Predicate.isEqual;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -48,6 +50,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
@@ -831,6 +834,23 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	static class TwoInvocationsWithExtensionTestCase {
+		@Test
+		void a() {
+		}
+
+		@Nested
+		class NestedTestCase {
+			@Test
+			@Tag("nested")
+			void b() {
+			}
+		}
+	}
+
 	static class TwoInvocationsContainerTemplateInvocationContextProvider
 			implements ContainerTemplateInvocationContextProvider {
 
@@ -928,6 +948,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			@Override
 			public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 					throws ParameterResolutionException {
+				var parentContext = extensionContext.getParent().orElseThrow();
+				assertAll( //
+					() -> assertEquals(SeparateExtensionContextTestCase.class, parentContext.getRequiredTestClass()), //
+					() -> assertEquals(SeparateExtensionContextTestCase.class,
+						parentContext.getElement().orElseThrow()), //
+					() -> assertEquals(TestInstance.Lifecycle.PER_METHOD,
+						parentContext.getTestInstanceLifecycle().orElseThrow()) //
+				);
 				return SomeResource.class.equals(parameterContext.getParameter().getType());
 			}
 
