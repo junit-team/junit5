@@ -24,6 +24,8 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.MethodOrderer;
@@ -32,9 +34,11 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -470,7 +474,8 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Test
-		void doesNotFollowJunctions(@TempDir Path tempDir) throws IOException {
+		void doesNotFollowJunctions(@TempDir Path tempDir, @TrackLogRecords LogRecordListener listener)
+				throws IOException {
 			var outsideDir = Files.createDirectory(tempDir.resolve("outside"));
 			var testFile = Files.writeString(outsideDir.resolve("test.txt"), "test");
 
@@ -485,6 +490,10 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 			assertThat(outsideDir).exists();
 			assertThat(testFile).exists();
+			assertThat(listener.stream(Level.WARNING)) //
+					.map(LogRecord::getMessage) //
+					.anyMatch(m -> m.matches(
+						"Deleting link from location inside of temp dir \\(.+\\) to location outside of temp dir \\(.+\\) but not the target file/directory"));
 		}
 
 		@SuppressWarnings("JUnitMalformedDeclaration")

@@ -43,6 +43,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.nio.file.FileSystem;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Level;
@@ -395,6 +396,65 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 					.noneMatch(m -> m.startsWith("Skipping cleanup of temp dir"));
 		}
 
+		@DisplayName("deletes symbolic links targeting directory inside temp dir")
+		@ParameterizedTest
+		@ElementTypeSource
+		@DisabledOnOs(WINDOWS)
+		void deletesSymbolicLinksTargetingDirInsideTempDir(Class<?> elementType,
+				@TrackLogRecords LogRecordListener listener) throws IOException {
+
+			reset(factory);
+
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementType, elementContext,
+				extensionContext);
+			var rootDir = closeablePath.get();
+			assertThat(rootDir).isDirectory();
+
+			var subDir = createDirectory(rootDir.resolve("subDir"));
+			Files.createFile(subDir.resolve("file"));
+			Files.createSymbolicLink(rootDir.resolve("symbolicLink"), subDir);
+
+			closeablePath.close();
+
+			verify(factory).close();
+			assertThat(rootDir).doesNotExist();
+			assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).isEmpty();
+
+		}
+
+		@DisplayName("deletes symbolic links targeting directory outside temp dir")
+		@ParameterizedTest
+		@ElementTypeSource
+		@DisabledOnOs(WINDOWS)
+		void deletesSymbolicLinksTargetingDirOutsideTempDir(Class<?> elementType,
+				@TrackLogRecords LogRecordListener listener) throws IOException {
+
+			reset(factory);
+
+			closeablePath = TempDirectory.createTempDir(factory, ON_SUCCESS, elementType, elementContext,
+				extensionContext);
+			var rootDir = closeablePath.get();
+			assertThat(rootDir).isDirectory();
+
+			var directoryOutsideTempDir = createTempDirectory("junit-");
+			try {
+				var symbolicLink = createSymbolicLink(rootDir.resolve("symbolicLink"), directoryOutsideTempDir);
+
+				closeablePath.close();
+
+				verify(factory).close();
+				assertThat(rootDir).doesNotExist();
+				assertThat(directoryOutsideTempDir).isDirectory();
+				assertThat(listener.stream(Level.WARNING)) //
+						.map(LogRecord::getMessage) //
+						.contains(("Deleting symbolic link from location inside of temp dir (%s) "
+								+ "to location outside of temp dir (%s) but not the target file/directory").formatted(
+									symbolicLink, directoryOutsideTempDir.toRealPath()));
+			}
+			finally {
+				Files.deleteIfExists(directoryOutsideTempDir);
+			}
+		}
 	}
 
 	static class TestCase {
