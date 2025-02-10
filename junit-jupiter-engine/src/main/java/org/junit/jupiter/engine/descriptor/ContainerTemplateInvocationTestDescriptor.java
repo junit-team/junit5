@@ -86,6 +86,11 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	// --- Node ----------------------------------------------------------------
 
 	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
+		return SkipResult.doNotSkip();
+	}
+
+	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = context.getExtensionRegistry();
 		List<Extension> additionalExtensions = this.invocationContext.getAdditionalExtensions();
