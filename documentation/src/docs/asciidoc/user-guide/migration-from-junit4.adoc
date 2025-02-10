@@ -45,7 +45,8 @@ concurrent test execution. It can be enabled and configured using the following
 <<running-tests-config-params, configuration parameters>>:
 
 `junit.vintage.execution.parallel.enabled=true|false`::
-Enable/disable parallel execution (defaults to `false`).
+  Enable/disable parallel execution (defaults to `false`). Requires opt-in for `classes`
+  or `methods` to be executed in parallel using the configuration parameters below.
 
 `junit.vintage.execution.parallel.classes=true|false`::
   Enable/disable parallel execution of test classes (defaults to `false`).
