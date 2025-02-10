@@ -60,9 +60,6 @@ concurrent test execution. It can be enabled and configured using the following
 
 Example configuration in `junit-platform.properties`:
 
-With these properties set, the `VintageTestEngine` will execute tests in parallel,
-potentially significantly reducing the overall test suite execution time.
-
 [source,properties]
 ----
 junit.vintage.execution.parallel.enabled=true
@@ -70,6 +67,9 @@ junit.vintage.execution.parallel.classes=true
 junit.vintage.execution.parallel.methods=true
 junit.vintage.execution.parallel.pool-size=4
 ----
+
+With these properties set, the `VintageTestEngine` will execute tests in parallel,
+potentially significantly reducing the overall test suite execution time.
 
 [[migrating-from-junit4-tips]]
 === Migration Tips
