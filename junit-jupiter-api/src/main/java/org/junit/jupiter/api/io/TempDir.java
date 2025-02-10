@@ -84,8 +84,11 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * &mdash; when the test method or class has finished execution &mdash; JUnit will
  * attempt to clean up the temporary directory by recursively deleting all files
  * and directories in the temporary directory and, finally, the temporary directory
- * itself. In case deletion of a file or directory fails, an {@link IOException}
- * will be thrown that will cause the test or test class to fail.
+ * itself. Symbolic and other types of links, such as junctions on Windows, are
+ * not followed. A warning is logged when deleting a link that targets a
+ * location outside the temporary directory. In case deletion of a file or
+ * directory fails, an {@link IOException} will be thrown that will cause the
+ * test or test class to fail.
  *
  * <p>The {@link #cleanup} attribute allows you to configure the {@link CleanupMode}.
  * If the cleanup mode is set to {@link CleanupMode#NEVER NEVER}, the temporary

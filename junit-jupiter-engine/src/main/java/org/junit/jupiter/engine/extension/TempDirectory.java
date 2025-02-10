@@ -404,7 +404,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				@Override
 				public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
 					LOGGER.trace(() -> "preVisitDirectory: " + dir);
-					if (isLink(dir)) {
+					if (isLinkWithTargetOutsideTempDir(dir)) {
+						warnAboutLinkWithTargetOutsideTempDir("link", dir);
 						delete(dir);
 						return SKIP_SUBTREE;
 					}
@@ -412,12 +413,6 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 						tryToResetPermissions(dir);
 					}
 					return CONTINUE;
-				}
-
-				private boolean isLink(Path dir) throws IOException {
-					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
-					// such as "junctions" on Windows
-					return !dir.toRealPath().startsWith(rootRealPath);
 				}
 
 				@Override
@@ -432,8 +427,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				}
 
 				@Override
-				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) {
+				public FileVisitResult visitFile(Path file, BasicFileAttributes attributes) throws IOException {
 					LOGGER.trace(() -> "visitFile: " + file);
+					if (Files.isSymbolicLink(file) && isLinkWithTargetOutsideTempDir(file)) {
+						warnAboutLinkWithTargetOutsideTempDir("symbolic link", file);
+					}
 					delete(file);
 					return CONTINUE;
 				}
@@ -443,6 +441,20 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					LOGGER.trace(exc, () -> "postVisitDirectory: " + dir);
 					delete(dir);
 					return CONTINUE;
+				}
+
+				private boolean isLinkWithTargetOutsideTempDir(Path path) throws IOException {
+					// While `Files.walkFileTree` does not follow symbolic links, it may follow other links
+					// such as "junctions" on Windows
+					return !path.toRealPath().startsWith(rootRealPath);
+				}
+
+				private void warnAboutLinkWithTargetOutsideTempDir(String linkType, Path file) throws IOException {
+					Path realPath = file.toRealPath();
+					LOGGER.warn(() -> String.format(
+						"Deleting %s from location inside of temp dir (%s) "
+								+ "to location outside of temp dir (%s) but not the target file/directory",
+						linkType, file, realPath));
 				}
 
 				private void delete(Path path) {
