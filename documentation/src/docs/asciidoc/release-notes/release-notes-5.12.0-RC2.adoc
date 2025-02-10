@@ -65,5 +65,5 @@ repository on GitHub.
 ==== New Features and Improvements
 
 * Support for executing test methods in parallel. Please refer to the
-<<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
-more information.
+  <<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
+  more information.
