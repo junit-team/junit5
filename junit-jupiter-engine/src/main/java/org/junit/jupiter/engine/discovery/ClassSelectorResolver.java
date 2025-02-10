@@ -191,7 +191,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			TestDescriptor parent, int index) {
 		UniqueId uniqueId = parent.getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#" + index);
-		return new ContainerTemplateInvocationTestDescriptor(uniqueId, (TestClassAware) parent,
+		return new ContainerTemplateInvocationTestDescriptor(uniqueId, (ContainerTemplateTestDescriptor) parent,
 			DummyContainerTemplateInvocationContext.INSTANCE, index, parent.getSource().orElse(null), configuration);
 	}
 

@@ -14,12 +14,15 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryFrom;
 
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
@@ -30,15 +33,16 @@ import org.junit.platform.engine.UniqueId;
  * @since 5.13
  */
 @API(status = INTERNAL, since = "5.13")
-public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescriptor implements TestClassAware {
+public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescriptor
+		implements TestClassAware, ResourceLockAware {
 
 	public static final String SEGMENT_TYPE = "container-template-invocation";
 
-	private final TestClassAware parent;
+	private final ContainerTemplateTestDescriptor parent;
 	private ContainerTemplateInvocationContext invocationContext;
 	private final int index;
 
-	public ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, TestClassAware parent,
+	public ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, ContainerTemplateTestDescriptor parent,
 			ContainerTemplateInvocationContext invocationContext, int index, TestSource source,
 			JupiterConfiguration configuration) {
 		super(uniqueId, invocationContext.getDisplayName(index), source, configuration);
@@ -81,6 +85,18 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
 		return parent.getEnclosingTestClasses();
+	}
+
+	// --- ResourceLockAware ---------------------------------------------------
+
+	@Override
+	public ExclusiveResourceCollector getExclusiveResourceCollector() {
+		return parent.getExclusiveResourceCollector();
+	}
+
+	@Override
+	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
+		return parent.getResourceLocksProviderEvaluator();
 	}
 
 	// --- Node ----------------------------------------------------------------

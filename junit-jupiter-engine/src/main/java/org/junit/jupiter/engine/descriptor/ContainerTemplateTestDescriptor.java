@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -39,6 +41,7 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.Node;
 
 /**
@@ -159,6 +162,22 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	}
 
 	// --- Node ----------------------------------------------------------------
+
+	@Override
+	public Set<ExclusiveResource> getExclusiveResources() {
+		Set<ExclusiveResource> result = this.determineExclusiveResources().collect(
+			Collectors.toCollection(HashSet::new));
+		Visitor visitor = testDescriptor -> {
+			if (testDescriptor instanceof ResourceLockAware) {
+				((ResourceLockAware) testDescriptor).determineExclusiveResources().forEach(result::add);
+			}
+		};
+		this.childrenPrototypes.forEach(child -> child.accept(visitor));
+		this.childrenPrototypesByIndex.values() //
+				.forEach(prototypes -> prototypes //
+						.forEach(child -> child.accept(visitor)));
+		return result;
+	}
 
 	@Override
 	public void cleanUp(JupiterEngineExecutionContext context) {

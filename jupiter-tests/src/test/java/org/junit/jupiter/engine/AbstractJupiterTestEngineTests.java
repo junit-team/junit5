@@ -46,9 +46,7 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(Consumer<LauncherDiscoveryRequestBuilder> configurer) {
-		var builder = request() //
-				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
-				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false));
+		var builder = defaultRequest();
 		configurer.accept(builder);
 		return executeTests(builder);
 	}
@@ -62,8 +60,13 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(
-			request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()).build());
+		return discoverTests(defaultRequest().selectors(selectors).build());
+	}
+
+	private static LauncherDiscoveryRequestBuilder defaultRequest() {
+		return request() //
+				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
+				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false));
 	}
 
 	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
