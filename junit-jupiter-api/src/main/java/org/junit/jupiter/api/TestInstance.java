@@ -88,6 +88,11 @@ public @interface TestInstance {
 		 * When using this mode, a new test instance will be created once per
 		 * test class.
 		 *
+		 * <p>For {@link Nested @Nested}</p> test classes declared inside an
+		 * enclosing {@link ContainerTemplate @ContainerTemplate} test class, an
+		 * instance of the {@code @Nested} class will be created for each
+		 * invocation of the {@code @ContainerTemplate} test class.
+		 *
 		 * @see #PER_METHOD
 		 */
 		PER_CLASS,
