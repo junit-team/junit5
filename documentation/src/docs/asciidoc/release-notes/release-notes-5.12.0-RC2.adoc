@@ -1,7 +1,7 @@
 [[release-notes-5.12.0-RC2]]
 == 5.12.0-RC2
 
-*Date of Release:* ❓
+*Date of Release:* February 14, 2025
 
 *Scope:* Minor enhancements since JUnit 5.12.0-RC1.
 
@@ -64,4 +64,6 @@ repository on GitHub.
 [[release-notes-5.12.0-RC2-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Support for executing test methods in parallel. Please refer to the
+  <<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
+  more information.
