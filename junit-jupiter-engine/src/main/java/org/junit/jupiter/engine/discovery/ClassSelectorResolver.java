@@ -240,10 +240,8 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	private Optional<Match> toInvocationMatch(Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor) {
 		return testDescriptor //
-				.map(it -> Match.exact(it,
-					expansionCallback(it,
-						() -> it.getParent().map(parent -> getTestClasses((ClassBasedTestDescriptor) parent)).orElse(
-							emptyList()))));
+				.map(it -> Match.exact(it, expansionCallback(it,
+					() -> it.getParent().map(parent -> getTestClasses((TestClassAware) parent)).orElse(emptyList()))));
 	}
 
 	private Resolution toResolution(Optional<? extends ClassBasedTestDescriptor> testDescriptor) {
@@ -256,7 +254,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		return expansionCallback(testDescriptor, () -> getTestClasses(testDescriptor));
 	}
 
-	private static List<Class<?>> getTestClasses(ClassBasedTestDescriptor testDescriptor) {
+	private static List<Class<?>> getTestClasses(TestClassAware testDescriptor) {
 		List<Class<?>> testClasses = new ArrayList<>(testDescriptor.getEnclosingTestClasses());
 		testClasses.add(testDescriptor.getTestClass());
 		return testClasses;
