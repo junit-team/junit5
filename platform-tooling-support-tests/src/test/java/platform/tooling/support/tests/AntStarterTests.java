@@ -19,7 +19,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 import de.skuzzle.test.snapshots.Snapshot;
-import de.skuzzle.test.snapshots.SnapshotTestOptions;
 import de.skuzzle.test.snapshots.junit5.EnableSnapshotTests;
 
 import org.apache.tools.ant.Main;
@@ -34,7 +33,6 @@ import platform.tooling.support.ProcessStarters;
  * @since 1.3
  */
 @EnableSnapshotTests
-@SnapshotTestOptions(alwaysPersistActualResult = true)
 class AntStarterTests {
 
 	@Test

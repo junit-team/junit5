@@ -19,7 +19,6 @@ import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpecte
 import java.nio.file.Path;
 
 import de.skuzzle.test.snapshots.Snapshot;
-import de.skuzzle.test.snapshots.SnapshotTestOptions;
 import de.skuzzle.test.snapshots.junit5.EnableSnapshotTests;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,6 @@ import platform.tooling.support.ProcessStarters;
  * @since 1.3
  */
 @EnableSnapshotTests
-@SnapshotTestOptions(alwaysPersistActualResult = true)
 class GradleStarterTests {
 
 	@Test
