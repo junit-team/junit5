@@ -521,6 +521,37 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
+	void specificDynamicTestInsideContainerTemplateClassCanBeSelectedByUniqueId() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+			CombinationWithTestFactoryTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var testFactoryId2 = invocationId2.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
+		var testFactory2DynamicTestId2 = testFactoryId2.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
+			"#2");
+
+		var results = executeTests(selectUniqueId(testFactory2DynamicTestId2));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)),
+				displayName("[2] B of CombinationWithTestFactoryTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactoryId2))), //
+			event(container(uniqueId(testFactoryId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testFactory2DynamicTestId2))), //
+			event(test(uniqueId(testFactory2DynamicTestId2)), started()), //
+			event(test(uniqueId(testFactory2DynamicTestId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testFactoryId2)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void failsIfProviderReturnsZeroInvocationContextWithoutOptIn() {
 		var results = executeTestsForClass(InvalidZeroInvocationTestCase.class);
 
