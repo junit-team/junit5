@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,9 +27,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 @ExtendWith(CalculatorContainerTemplateTests.Twice.class)
 class CalculatorContainerTemplateTests {
 
+	@Test
+	void regularTest() {
+		Calculator calculator = new Calculator();
+		assertEquals(2, calculator.add(1, 1), "1 + 1 should equal 2");
+	}
+
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
-	void test(int i) {
+	void parameterizedTest(int i) {
 		Calculator calculator = new Calculator();
 		assertEquals(i, calculator.add(i, 0));
 	}

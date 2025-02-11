@@ -57,7 +57,7 @@ class MavenStarterTests {
 		assertEquals(0, result.exitCode());
 		assertEquals("", result.stdErr());
 		assertTrue(result.stdOutLines().contains("[INFO] BUILD SUCCESS"));
-		assertTrue(result.stdOutLines().contains("[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0"));
+		assertTrue(result.stdOutLines().contains("[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0"));
 		assertThat(result.stdOut()).contains("Using Java version: 1.8");
 
 		var testResultsDir = workspace.resolve("target/surefire-reports");
