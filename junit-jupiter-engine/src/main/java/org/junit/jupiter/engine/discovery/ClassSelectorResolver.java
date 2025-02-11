@@ -233,6 +233,8 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	private ContainerTemplateTestDescriptor newContainerTemplateTestDescriptor(TestDescriptor parent,
 			String segmentType, ClassBasedTestDescriptor delegate) {
+
+		delegate.setParent(parent);
 		String segmentValue = delegate.getUniqueId().getLastSegment().getValue();
 		UniqueId uniqueId = parent.getUniqueId().append(segmentType, segmentValue);
 		return new ContainerTemplateTestDescriptor(uniqueId, delegate);
