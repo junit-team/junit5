@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -25,7 +26,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -165,11 +165,10 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		Set<ExclusiveResource> result = this.determineExclusiveResources().collect(
-			Collectors.toCollection(HashSet::new));
+		Set<ExclusiveResource> result = determineExclusiveResources().collect(toCollection(HashSet::new));
 		Visitor visitor = testDescriptor -> {
-			if (testDescriptor instanceof ResourceLockAware) {
-				((ResourceLockAware) testDescriptor).determineExclusiveResources().forEach(result::add);
+			if (testDescriptor instanceof Node) {
+				result.addAll(((Node<?>) testDescriptor).getExclusiveResources());
 			}
 		};
 		this.childrenPrototypes.forEach(child -> child.accept(visitor));

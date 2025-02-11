@@ -203,7 +203,9 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			new ExclusiveResource("b2", LockMode.READ), //
 			new ExclusiveResource("c1", LockMode.READ_WRITE), //
 			new ExclusiveResource("c2", LockMode.READ_WRITE), //
-			new ExclusiveResource("c3", LockMode.READ_WRITE) //
+			new ExclusiveResource("c3", LockMode.READ_WRITE), //
+			new ExclusiveResource("d1", LockMode.READ_WRITE), //
+			new ExclusiveResource("d2", LockMode.READ) //
 		);
 
 		assertThat(containerTemplateTestDescriptor.getExclusiveResources()) //
@@ -226,7 +228,9 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			new ExclusiveResource("b2", LockMode.READ), //
 			new ExclusiveResource("c1", LockMode.READ_WRITE), //
 			new ExclusiveResource("c2", LockMode.READ_WRITE), //
-			new ExclusiveResource("c3", LockMode.READ_WRITE) //
+			new ExclusiveResource("c3", LockMode.READ_WRITE), //
+			new ExclusiveResource("d1", LockMode.READ_WRITE), //
+			new ExclusiveResource("d2", LockMode.READ) //
 		);
 
 		assertThat(containerTemplateTestDescriptor.getExclusiveResources()) //
@@ -619,6 +623,16 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		class NestedClass {
 			@Test
 			@ResourceLock("c1")
+			void test() {
+			}
+		}
+
+		@Nested
+		@ContainerTemplate
+		@ResourceLock(value = "d1", target = ResourceLockTarget.CHILDREN)
+		class NestedContainerTemplate {
+			@Test
+			@ResourceLock(value = "d2", mode = ResourceAccessMode.READ)
 			void test() {
 			}
 		}
