@@ -11,22 +11,12 @@
 package com.example.project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class CalculatorTests {
 
@@ -53,34 +43,5 @@ class CalculatorTests {
 		Calculator calculator = new Calculator();
 		assertEquals(expectedResult, calculator.add(first, second),
 			() -> first + " + " + second + " should equal " + expectedResult);
-	}
-
-	@Nested
-	@ContainerTemplate
-	@ExtendWith(Twice.class)
-	class NestedTests {
-
-		@ParameterizedTest
-		@ValueSource(ints = { 1, 2 })
-		void test(int i) {
-			assertNotEquals(0, i);
-		}
-	}
-
-	static class Twice implements ContainerTemplateInvocationContextProvider {
-
-		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
-			return true;
-		}
-
-		@Override
-		public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-				ExtensionContext context) {
-			return Stream.of(new Ctx(), new Ctx());
-		}
-
-		static class Ctx implements ContainerTemplateInvocationContext {
-		}
 	}
 }

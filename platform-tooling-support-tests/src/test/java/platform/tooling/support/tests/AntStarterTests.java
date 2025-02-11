@@ -51,7 +51,9 @@ class AntStarterTests {
 		assertLinesMatch(List.of(">> HEAD >>", //
 			"test.junit.launcher:", //
 			">>>>", //
-			"\\[junitlauncher\\] Tests run: 9, Failures: 0, Aborted: 0, Skipped: 0, Time elapsed: .+ sec", //
+			"\\[junitlauncher\\] Tests run: 4, Failures: 0, Aborted: 0, Skipped: 0, Time elapsed: .+ sec", //
+			"\\[junitlauncher\\] Running com.example.project.CalculatorTests", //
+			"\\[junitlauncher\\] Tests run: 5, Failures: 0, Aborted: 0, Skipped: 0, Time elapsed: .+ sec", //
 			">>>>", //
 			"test.console.launcher:", //
 			">>>>", //
