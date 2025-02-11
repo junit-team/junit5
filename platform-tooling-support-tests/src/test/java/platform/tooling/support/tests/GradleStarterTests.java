@@ -18,6 +18,10 @@ import static platform.tooling.support.tests.XmlAssertions.verifyContainsExpecte
 
 import java.nio.file.Path;
 
+import de.skuzzle.test.snapshots.Snapshot;
+import de.skuzzle.test.snapshots.SnapshotTestOptions;
+import de.skuzzle.test.snapshots.junit5.EnableSnapshotTests;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.platform.tests.process.OutputFiles;
@@ -30,10 +34,14 @@ import platform.tooling.support.ProcessStarters;
 /**
  * @since 1.3
  */
+@EnableSnapshotTests
+@SnapshotTestOptions(alwaysPersistActualResult = true)
 class GradleStarterTests {
 
 	@Test
-	void gradle_wrapper(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
+	void gradle_wrapper(@TempDir Path workspace, @FilePrefix("gradle") OutputFiles outputFiles, Snapshot snapshot)
+			throws Exception {
+
 		var result = ProcessStarters.gradlew() //
 				.workingDir(copyToWorkspace(Projects.JUPITER_STARTER, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
@@ -47,6 +55,6 @@ class GradleStarterTests {
 		assertThat(result.stdOut()).contains("Using Java version: 1.8");
 
 		var testResultsDir = workspace.resolve("build/test-results/test");
-		verifyContainsExpectedStartedOpenTestReport(testResultsDir);
+		verifyContainsExpectedStartedOpenTestReport(testResultsDir, snapshot);
 	}
 }
