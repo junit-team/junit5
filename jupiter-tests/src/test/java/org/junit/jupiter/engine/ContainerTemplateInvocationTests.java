@@ -434,6 +434,37 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
+	void testTemplateInvocationInsideContainerTemplateClassCanBeSelectedByUniqueId() {
+		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
+		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+			CombinationWithTestTemplateTestCase.class.getName());
+		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var testTemplateId2 = invocationId2.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
+		var testTemplate2InvocationId2 = testTemplateId2.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+			"#2");
+
+		var results = executeTests(selectUniqueId(testTemplate2InvocationId2));
+
+		results.allEvents().assertEventsMatchExactly( //
+			event(engine(), started()), //
+			event(container(uniqueId(containerTemplateId)), started()), //
+
+			event(dynamicTestRegistered(uniqueId(invocationId2)),
+				displayName("[2] B of CombinationWithTestTemplateTestCase")), //
+			event(container(uniqueId(invocationId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplateId2))), //
+			event(container(uniqueId(testTemplateId2)), started()), //
+			event(dynamicTestRegistered(uniqueId(testTemplate2InvocationId2))), //
+			event(test(uniqueId(testTemplate2InvocationId2)), started()), //
+			event(test(uniqueId(testTemplate2InvocationId2)), finishedSuccessfully()), //
+			event(container(uniqueId(testTemplateId2)), finishedSuccessfully()), //
+			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
+
+			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
 	void supportsTestFactoryMethodsInsideContainerTemplateClasses() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
