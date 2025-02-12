@@ -34,8 +34,8 @@ on GitHub.
 ==== New Features and Improvements
 
 * All affected JAR files now include `native-image.properties` files that contain the
-`--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
-to newer versions of JUnit.
+  `--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
+  to newer versions of JUnit.
 
 
 [[release-notes-5.12.0-junit-platform]]
