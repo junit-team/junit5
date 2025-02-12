@@ -29,6 +29,5 @@ runs:
         -Pjunit.develocity.predictiveTestSelection.enabled=true \
         -Pjunit.develocity.predictiveTestSelection.selectRemainingTests=${{ github.event_name != 'pull_request' }} \
         "-Dscan.value.GitHub job=${{ github.job }}" \
-        --refresh-dependencies \
         javaToolchains \
         ${{ inputs.arguments }}
