@@ -1,7 +1,7 @@
-[[release-notes-5.12.0-M1]]
-== 5.12.0-M1
+[[release-notes-5.12.0]]
+== 5.12.0
 
-*Date of Release:* January 31, 2025
+*Date of Release:* February 21, 2025
 
 *Scope:*
 
@@ -20,32 +20,34 @@
 * Parallel execution support in JUnit Vintage engine
 * Numerous bug fixes and other enhancements
 
-For a complete list of all _closed_ issues and pull requests for this release, consult the
-link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1] milestone page in the
-JUnit repository on GitHub.
+For a complete list of all _closed_ issues and pull requests for this release, consult the link:{junit5-repo}+/milestone/75?closed=1+[5.12.0-M1],
+link:{junit5-repo}+/milestone/88?closed=1+[5.12.0-RC1],
+link:{junit5-repo}+/milestone/90?closed=1+[5.12.0-RC2], and
+link:{junit5-repo}+/milestone/89?closed=1+[5.12.0] milestone pages in the JUnit repository
+on GitHub.
 
 
-[[release-notes-5.12.0-M1-overall-improvements]]
+[[release-notes-5.12.0-overall-improvements]]
 === Overall Improvements
 
-[[release-notes-5.12.0-M1-overall-new-features-and-improvements]]
+[[release-notes-5.12.0-overall-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * All affected JAR files now include `native-image.properties` files that contain the
-  `--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
-  to newer versions of JUnit.
+`--initialize-at-build-time` option to avoid breakages in GraalVM projects when updating
+to newer versions of JUnit.
 
 
-[[release-notes-5.12.0-M1-junit-platform]]
+[[release-notes-5.12.0-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.12.0-M1-junit-platform-deprecations-and-breaking-changes]]
+[[release-notes-5.12.0-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
 * `SearchOption` and `AnnotationSupport.findAnnotation(Class, Class, SearchOption)` from
   `junit-platform-commons` have been deprecated.
 
-[[release-notes-5.12.0-M1-junit-platform-new-features-and-improvements]]
+[[release-notes-5.12.0-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * `ConsoleLauncher` now accepts multiple values for all `--select` options.
@@ -88,12 +90,14 @@ JUnit repository on GitHub.
   implementation for scanning the classpath for classes and resources.
 * New `AnnotationSupport.findAnnotation(Class, Class, List)` method to support searching
   for an annotation on an inner class and its runtime enclosing instance types.
+* New `TestDescriptor.orderChildren(UnaryOperator<List<TestDescriptor>> orderer)`
+  method to order children in place
 
 
-[[release-notes-5.12.0-M1-junit-jupiter]]
+[[release-notes-5.12.0-junit-jupiter]]
 === JUnit Jupiter
 
-[[release-notes-5.12.0-M1-junit-jupiter-bug-fixes]]
+[[release-notes-5.12.0-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
 * Provide _runtime_ enclosing types of `@Nested` test classes and contained test methods
@@ -103,8 +107,10 @@ JUnit repository on GitHub.
 * `@DisplayNameGeneration` annotations are now discovered on the _runtime_ enclosing types
   of `@Nested` test classes instead of the compile-time enclosing class in which the
   `@Nested` class was _declared_.
+* Fix handling of "junctions" on Windows during `@TempDir` cleanup: junctions will no
+  longer be followed when deleting directories and broken junctions will be deleted.
 
-[[release-notes-5.12.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
+[[release-notes-5.12.0-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
 * When injecting `TestInfo` into test class constructors, the `TestInfo` now contains data
@@ -119,7 +125,7 @@ JUnit repository on GitHub.
   entries for the test class, you can implement a `@BeforeAll` lifecycle method and inject
   `TestReporter` into that method.
 
-[[release-notes-5.12.0-M1-junit-jupiter-new-features-and-improvements]]
+[[release-notes-5.12.0-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
 * Kotlin contracts for Kotlin-specific assertion methods in `Assertions`.
@@ -165,14 +171,21 @@ JUnit repository on GitHub.
 * Auto-registered extensions can now be
   <<../user-guide/index.adoc#extensions-registration-automatic-filtering, filtered>> using
   include and exclude patterns that can be specified as configuration parameters.
+* `JRE`-based conditions such as `@EnabledOnJre` and `@DisabledForJreRange` now support
+  arbitrary Java versions. See the
+  <<../user-guide/index.adoc#writing-tests-conditional-execution-jre, User Guide>> for
+  details.
+* The `@TempDir` extension now warns during cleanup when deleting symlinks that target
+  locations outside the temporary directory to signal that the target file or directory is
+  _not_ deleted, only the link to it.
 
 
-[[release-notes-5.12.0-M1-junit-vintage]]
+[[release-notes-5.12.0-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.12.0-M1-junit-vintage-new-features-and-improvements]]
+[[release-notes-5.12.0-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* Support for executing top-level test classes in parallel. Please refer to the
+* Added support for executing test classes and/or methods in parallel. Please refer to the
   <<../user-guide/index.adoc#migrating-from-junit4-parallel-execution, User Guide>> for
   more information.
