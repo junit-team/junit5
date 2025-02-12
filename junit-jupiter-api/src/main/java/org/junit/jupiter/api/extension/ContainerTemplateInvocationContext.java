@@ -18,7 +18,16 @@ import java.util.List;
 import org.apiguardian.api.API;
 
 /**
+ * {@code ContainerTemplateInvocationContext} represents the <em>context</em> of
+ * a single invocation of a {@linkplain org.junit.jupiter.api.ContainerTemplate
+ * container template}.
+ *
+ * <p>Each context is provided by a
+ * {@link ContainerTemplateInvocationContextProvider}.
+ *
  * @since 5.13
+ * @see org.junit.jupiter.api.ContainerTemplate
+ * @see ContainerTemplateInvocationContextProvider
  */
 @API(status = EXPERIMENTAL, since = "5.13")
 public interface ContainerTemplateInvocationContext {
