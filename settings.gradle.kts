@@ -15,6 +15,12 @@ plugins {
 dependencyResolutionManagement {
 	repositories {
 		mavenCentral()
+		// TODO Remove --refresh-dependencies from CI builds when no longer consuming snapshots
+		maven(url = "https://oss.sonatype.org/content/repositories/snapshots") {
+			mavenContent {
+				snapshotsOnly()
+			}
+		}
 	}
 }
 

@@ -13,6 +13,7 @@ function calculate_checksums() {
         --no-build-cache \
         -Porg.gradle.java.installations.auto-download=false \
         -Dscan.tag.Reproducibility \
+        --refresh-dependencies \
         clean \
         assemble
 
