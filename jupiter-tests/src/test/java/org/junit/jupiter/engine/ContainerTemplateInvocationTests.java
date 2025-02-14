@@ -960,8 +960,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 
 		@Override
-		public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-				ExtensionContext context) {
+		public Stream<Ctx> provideContainerTemplateInvocationContexts(ExtensionContext context) {
 			var suffix = " of %s".formatted(context.getRequiredTestClass().getSimpleName());
 			return Stream.of(new Ctx("A" + suffix), new Ctx("B" + suffix));
 		}
@@ -993,8 +992,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-					ExtensionContext context) {
+			public Stream<Ctx> provideContainerTemplateInvocationContexts(ExtensionContext context) {
 				return Stream.of(new Data("A"), new Data("B")).map(Ctx::new);
 			}
 		}

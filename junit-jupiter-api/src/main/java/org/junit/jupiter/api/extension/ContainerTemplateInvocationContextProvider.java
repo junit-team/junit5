@@ -95,7 +95,8 @@ public interface ContainerTemplateInvocationContextProvider extends Extension {
 	 * @see #supportsContainerTemplate
 	 * @see ExtensionContext
 	 */
-	Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(ExtensionContext context);
+	Stream<? extends ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			ExtensionContext context);
 
 	/**
 	 * Signal that this provider may provide zero
