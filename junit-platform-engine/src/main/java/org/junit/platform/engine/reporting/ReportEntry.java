@@ -39,7 +39,7 @@ public final class ReportEntry {
 	/**
 	 * @deprecated Use {@link #from(String, String)} or {@link #from(Map)}
 	 */
-	@API(status = DEPRECATED, since = "5.8")
+	@API(status = DEPRECATED, since = "1.8")
 	@Deprecated
 	public ReportEntry() {
 	}

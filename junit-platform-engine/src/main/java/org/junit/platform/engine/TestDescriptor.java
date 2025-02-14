@@ -188,7 +188,7 @@ public interface TestDescriptor {
 	 * @param orderer a unary operator to order the children of this test
 	 * descriptor.
 	 */
-	@API(since = "5.12", status = EXPERIMENTAL)
+	@API(since = "1.12", status = EXPERIMENTAL)
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
 		Preconditions.notNull(orderer, "orderer must not be null");
 		Set<? extends TestDescriptor> originalChildren = getChildren();

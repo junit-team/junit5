@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Assertions for unit tests that wish to test
  * {@link Object#equals(Object)} and {@link Object#hashCode()}.
  *
- * @since 1.3
+ * @since 5.3
  */
 public class EqualsAndHashCodeAssertions {
 
