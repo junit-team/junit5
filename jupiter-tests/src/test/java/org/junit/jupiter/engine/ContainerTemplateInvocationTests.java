@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine;
 
-import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -28,7 +26,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNeste
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.TagFilter.excludeTags;
 import static org.junit.platform.launcher.TagFilter.includeTags;
-import static org.junit.platform.testkit.engine.Event.byTestDescriptor;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -36,8 +33,10 @@ import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.legacyReportingName;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.Collection;
@@ -46,7 +45,6 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -82,11 +80,9 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
-import org.junit.platform.testkit.engine.Event;
 
 /**
  * @since 5.13
@@ -892,19 +888,6 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	// -------------------------------------------------------------------
-
-	// TODO #871 Consider moving to EventConditions
-	private static Condition<Event> uniqueId(UniqueId uniqueId) {
-		return new Condition<>(byTestDescriptor(where(TestDescriptor::getUniqueId, isEqual(uniqueId))),
-			"descriptor with uniqueId '%s'", uniqueId);
-	}
-
-	// TODO #871 Consider moving to EventConditions
-	private static Condition<Event> legacyReportingName(String legacyReportingName) {
-		return new Condition<>(
-			byTestDescriptor(where(TestDescriptor::getLegacyReportingName, isEqual(legacyReportingName))),
-			"descriptor with legacy reporting name '%s'", legacyReportingName);
-	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ContainerTemplate
