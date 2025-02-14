@@ -122,9 +122,9 @@ public final class TestIdentifier implements Serializable {
 	 * behind the scenes.
 	 *
 	 * @return the unique ID for this identifier; never {@code null}
-	 * @since 5.8
+	 * @since 1.8
 	 */
-	@API(status = STABLE, since = "5.8")
+	@API(status = STABLE, since = "1.8")
 	public UniqueId getUniqueIdObject() {
 		return this.uniqueId;
 	}
@@ -150,9 +150,9 @@ public final class TestIdentifier implements Serializable {
 	 *
 	 * @return a container for the unique ID for this identifier's parent;
 	 * never {@code null} though potentially <em>empty</em>
-	 * @since 5.8
+	 * @since 1.8
 	 */
-	@API(status = STABLE, since = "5.8")
+	@API(status = STABLE, since = "1.8")
 	public Optional<UniqueId> getParentIdObject() {
 		return Optional.ofNullable(this.parentId);
 	}
@@ -291,7 +291,7 @@ public final class TestIdentifier implements Serializable {
 
 	/**
 	 * Represents the serialized output of {@code TestIdentifier}. The fields on this
-	 * class match the fields that {@code TestIdentifier} had prior to 5.8.
+	 * class match the fields that {@code TestIdentifier} had prior to 1.8.
 	 */
 	private static class SerializedForm implements Serializable {
 
