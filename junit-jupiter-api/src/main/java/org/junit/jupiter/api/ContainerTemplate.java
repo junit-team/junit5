@@ -39,7 +39,8 @@ import org.junit.platform.commons.annotation.Testable;
  * and extensions.
  *
  * <p>{@code @ContainerTemplate} may be combined with {@link Nested @Nested} and
- * a container template may contain nested container templates.
+ * a container template may contain regular nested test classes or nested
+ * container templates.
  *
  * <p>{@code @ContainerTemplate} may also be used as a meta-annotation in order
  * to create a custom <em>composed annotation</em> that inherits the semantics

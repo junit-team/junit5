@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine;
 
 import static java.util.function.Predicate.isEqual;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,18 +40,27 @@ import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
@@ -75,6 +85,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.Event;
 
 /**
@@ -836,6 +847,50 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(engine(), finishedSuccessfully()));
 	}
 
+	@Test
+	void executesLifecycleCallbackMethodsInNestedContainerTemplates() {
+		var results = executeTestsForClass(TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase.class);
+
+		results.containerEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
+		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+
+		var callSequence = results.allEvents().reportingEntryPublished() //
+				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
+				.map(ReportEntry::getKeyValuePairs) //
+				.map(Map::values) //
+				.flatMap(Collection::stream);
+		// @formatter:off
+		assertThat(callSequence).containsExactly(
+			"beforeAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"beforeAll: NestedTestCase",
+					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"beforeEach: test [NestedTestCase]",
+							"test",
+						"afterEach: test [NestedTestCase]",
+					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"beforeEach: test [NestedTestCase]",
+							"test",
+						"afterEach: test [NestedTestCase]",
+					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+				"afterAll: NestedTestCase",
+				"beforeAll: NestedTestCase",
+					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"beforeEach: test [NestedTestCase]",
+							"test",
+						"afterEach: test [NestedTestCase]",
+					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"beforeEach: test [NestedTestCase]",
+							"test",
+						"afterEach: test [NestedTestCase]",
+					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+				"afterAll: NestedTestCase",
+			"afterAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase"
+		);
+		// @formatter:on
+	}
+
 	// -------------------------------------------------------------------
 
 	// TODO #871 Consider moving to EventConditions
@@ -1177,6 +1232,45 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			@Test
 			void test() {
 			}
+		}
+	}
+
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase extends LifecycleCallbacks {
+		@Nested
+		@ContainerTemplate
+		class NestedTestCase extends LifecycleCallbacks {
+			@Test
+			@DisplayName("test")
+			void test(TestReporter testReporter) {
+				testReporter.publishEntry("test");
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class LifecycleCallbacks {
+		@BeforeAll
+		static void beforeAll(TestReporter testReporter, TestInfo testInfo) {
+			testReporter.publishEntry("beforeAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		}
+
+		@BeforeEach
+		void beforeEach(TestReporter testReporter, TestInfo testInfo) {
+			testReporter.publishEntry(
+				"beforeEach: " + testInfo.getDisplayName() + " [" + getClass().getSimpleName() + "]");
+		}
+
+		@AfterEach
+		void afterEach(TestReporter testReporter, TestInfo testInfo) {
+			testReporter.publishEntry(
+				"afterEach: " + testInfo.getDisplayName() + " [" + getClass().getSimpleName() + "]");
+		}
+
+		@AfterAll
+		static void afterAll(TestReporter testReporter, TestInfo testInfo) {
+			testReporter.publishEntry("afterAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 	}
 }
