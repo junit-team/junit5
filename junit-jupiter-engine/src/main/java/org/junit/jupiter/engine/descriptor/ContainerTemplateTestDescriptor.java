@@ -21,14 +21,13 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -185,88 +184,80 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		this.dynamicDescendantFilter.allowAll();
 	}
 
-	// TODO copied from TestTemplateTestDescriptor
-
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
-		ExtensionContext extensionContext = context.getExtensionContext();
-		List<ContainerTemplateInvocationContextProvider> providers = validateProviders(extensionContext,
-			context.getExtensionRegistry());
-		AtomicInteger invocationIndex = new AtomicInteger();
-		for (ContainerTemplateInvocationContextProvider provider : providers) {
-			executeForProvider(provider, invocationIndex, dynamicTestExecutor, extensionContext);
-		}
+
+		new ContainerTemplateExecutor().execute(context, dynamicTestExecutor);
 		return context;
 	}
 
-	private void executeForProvider(ContainerTemplateInvocationContextProvider provider, AtomicInteger invocationIndex,
-			DynamicTestExecutor dynamicTestExecutor, ExtensionContext extensionContext) {
+	class ContainerTemplateExecutor
+			extends TemplateExecutor<ContainerTemplateInvocationContextProvider, ContainerTemplateInvocationContext> {
 
-		int initialValue = invocationIndex.get();
-
-		try (Stream<ContainerTemplateInvocationContext> stream = invocationContexts(provider, extensionContext)) {
-			stream.forEach(invocationContext -> toTestDescriptor(invocationContext, invocationIndex.incrementAndGet()) //
-					.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
+		public ContainerTemplateExecutor() {
+			super(ContainerTemplateTestDescriptor.this, ContainerTemplateInvocationContextProvider.class);
 		}
 
-		Preconditions.condition(
-			invocationIndex.get() != initialValue
-					|| provider.mayReturnZeroContainerTemplateInvocationContexts(extensionContext),
-			String.format(
+		@Override
+		boolean supports(ContainerTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+			return provider.supportsContainerTemplate(extensionContext);
+		}
+
+		@Override
+		protected String getNoRegisteredProviderErrorMessage() {
+			return String.format("You must register at least one %s that supports @%s class [%s]",
+				ContainerTemplateInvocationContextProvider.class.getSimpleName(),
+				ContainerTemplate.class.getSimpleName(), getTestClass().getName());
+		}
+
+		@Override
+		Stream<? extends ContainerTemplateInvocationContext> provideContexts(
+				ContainerTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+			return provider.provideContainerTemplateInvocationContexts(extensionContext);
+		}
+
+		@Override
+		boolean mayReturnZeroContexts(ContainerTemplateInvocationContextProvider provider,
+				ExtensionContext extensionContext) {
+			return provider.mayReturnZeroContainerTemplateInvocationContexts(extensionContext);
+		}
+
+		@Override
+		protected String getZeroContextsProvidedErrorMessage(ContainerTemplateInvocationContextProvider provider) {
+			return String.format(
 				"Provider [%s] did not provide any invocation contexts, but was expected to do so. "
 						+ "You may override mayReturnZeroContainerTemplateInvocationContexts() to allow this.",
-				provider.getClass().getSimpleName()));
-	}
+				provider.getClass().getSimpleName());
+		}
 
-	private static Stream<ContainerTemplateInvocationContext> invocationContexts(
-			ContainerTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
-		return provider.provideContainerTemplateInvocationContexts(extensionContext);
-	}
+		@Override
+		UniqueId createInvocationUniqueId(UniqueId parentUniqueId, int index) {
+			return parentUniqueId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
+		}
 
-	private List<ContainerTemplateInvocationContextProvider> validateProviders(ExtensionContext extensionContext,
-			ExtensionRegistry extensionRegistry) {
-
-		// @formatter:off
-		List<ContainerTemplateInvocationContextProvider> providers = extensionRegistry.stream(ContainerTemplateInvocationContextProvider.class)
-				.filter(provider -> provider.supportsContainerTemplate(extensionContext))
-				.collect(toList());
-		// @formatter:on
-
-		return Preconditions.notEmpty(providers,
-			() -> String.format("You must register at least one %s that supports @ContainerTemplate class [%s]",
-				ContainerTemplateInvocationContextProvider.class.getSimpleName(), getTestClass().getName()));
-	}
-
-	private Optional<TestDescriptor> toTestDescriptor(ContainerTemplateInvocationContext invocationContext, int index) {
-		UniqueId invocationUniqueId = getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#" + index);
-		if (getDynamicDescendantFilter().test(invocationUniqueId, index - 1)) {
-
+		@Override
+		TestDescriptor createInvocationTestDescriptor(UniqueId uniqueId,
+				ContainerTemplateInvocationContext invocationContext, int index) {
 			ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
-				invocationUniqueId, this, invocationContext, index, getSource().orElse(null), this.configuration);
+				uniqueId, ContainerTemplateTestDescriptor.this, invocationContext, index, getSource().orElse(null),
+				ContainerTemplateTestDescriptor.this.configuration);
 
-			collectChildren(index, invocationUniqueId) //
+			collectChildren(index, uniqueId) //
 					.forEach(containerInvocationDescriptor::addChild);
 
-			return Optional.of(containerInvocationDescriptor);
+			return containerInvocationDescriptor;
 		}
-		return Optional.empty();
-	}
 
-	private Stream<? extends TestDescriptor> collectChildren(int index, UniqueId invocationUniqueId) {
-		if (this.childrenPrototypesByIndex.containsKey(index)) {
-			return this.childrenPrototypesByIndex.remove(index).stream();
+		private Stream<? extends TestDescriptor> collectChildren(int index, UniqueId invocationUniqueId) {
+			if (ContainerTemplateTestDescriptor.this.childrenPrototypesByIndex.containsKey(index)) {
+				return ContainerTemplateTestDescriptor.this.childrenPrototypesByIndex.remove(index).stream();
+			}
+			UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
+			return ContainerTemplateTestDescriptor.this.childrenPrototypes.stream() //
+					.map(JupiterTestDescriptor.class::cast) //
+					.map(it -> it.copyIncludingDescendants(transformer));
 		}
-		UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
-		return this.childrenPrototypes.stream() //
-				.map(JupiterTestDescriptor.class::cast) //
-				.map(it -> it.copyIncludingDescendants(transformer));
-	}
-
-	private void execute(Node.DynamicTestExecutor dynamicTestExecutor, TestDescriptor testDescriptor) {
-		testDescriptor.setParent(this);
-		dynamicTestExecutor.execute(testDescriptor);
 	}
 
 	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {
