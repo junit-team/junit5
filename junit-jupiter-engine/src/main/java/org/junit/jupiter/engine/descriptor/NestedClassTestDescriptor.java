@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -63,8 +64,9 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected NestedClassTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new NestedClassTestDescriptor(newUniqueId, getTestClass(), getDisplayName(), configuration);
+	protected NestedClassTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new NestedClassTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(), getDisplayName(),
+			configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

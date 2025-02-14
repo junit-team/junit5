@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -54,9 +55,9 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected TestTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new TestTemplateInvocationTestDescriptor(newUniqueId, getTestClass(), getTestMethod(),
-			this.invocationContext, this.index, this.configuration);
+	protected TestTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new TestTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(),
+			getTestMethod(), this.invocationContext, this.index, this.configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

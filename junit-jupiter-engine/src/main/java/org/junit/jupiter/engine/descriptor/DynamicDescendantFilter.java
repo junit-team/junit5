@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiPredicate;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.TestDescriptor;
@@ -85,12 +86,13 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 		EXPLICIT, ALLOW_ALL
 	}
 
-	public DynamicDescendantFilter copy() {
-		return configure(new DynamicDescendantFilter());
+	public DynamicDescendantFilter copy(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return configure(uniqueIdTransformer, new DynamicDescendantFilter());
 	}
 
-	protected DynamicDescendantFilter configure(DynamicDescendantFilter copy) {
-		copy.allowedUniqueIds.addAll(this.allowedUniqueIds);
+	protected DynamicDescendantFilter configure(UnaryOperator<UniqueId> uniqueIdTransformer,
+			DynamicDescendantFilter copy) {
+		this.allowedUniqueIds.stream().map(uniqueIdTransformer).forEach(copy.allowedUniqueIds::add);
 		copy.allowedIndices.addAll(this.allowedIndices);
 		copy.mode = this.mode;
 		return copy;
@@ -109,8 +111,8 @@ public class DynamicDescendantFilter implements BiPredicate<UniqueId, Integer> {
 		}
 
 		@Override
-		public DynamicDescendantFilter copy() {
-			return configure(new WithoutIndexFiltering());
+		public DynamicDescendantFilter copy(UnaryOperator<UniqueId> uniqueIdTransformer) {
+			return configure(uniqueIdTransformer, new WithoutIndexFiltering());
 		}
 	}
 }

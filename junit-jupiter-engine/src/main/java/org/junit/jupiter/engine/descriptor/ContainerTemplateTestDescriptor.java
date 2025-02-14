@@ -36,7 +36,6 @@ import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -103,8 +102,9 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	}
 
 	@Override
-	protected ContainerTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateTestDescriptor(newUniqueId, this.delegate, this.dynamicDescendantFilter.copy());
+	protected ContainerTemplateTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ContainerTemplateTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.delegate,
+			this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
 	@Override
@@ -260,29 +260,4 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		}
 	}
 
-	private static class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {
-
-		private final UniqueId oldPrefix;
-		private final UniqueId newPrefix;
-		private final int oldPrefixLength;
-
-		UniqueIdPrefixTransformer(UniqueId oldPrefix, UniqueId newPrefix) {
-			this.oldPrefix = oldPrefix;
-			this.newPrefix = newPrefix;
-			this.oldPrefixLength = oldPrefix.getSegments().size();
-		}
-
-		@Override
-		public UniqueId apply(UniqueId uniqueId) {
-			Preconditions.condition(uniqueId.hasPrefix(oldPrefix),
-				() -> String.format("Unique ID %s does not have the expected prefix %s", uniqueId, oldPrefix));
-			List<UniqueId.Segment> oldSegments = uniqueId.getSegments();
-			List<UniqueId.Segment> suffix = oldSegments.subList(oldPrefixLength, oldSegments.size());
-			UniqueId newValue = newPrefix;
-			for (UniqueId.Segment segment : suffix) {
-				newValue = newValue.append(segment);
-			}
-			return newValue;
-		}
-	}
 }

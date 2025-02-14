@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -78,10 +79,10 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected TestFactoryTestDescriptor withUniqueId(UniqueId newUniqueId) {
+	protected TestFactoryTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
 		// TODO #871 Check that dynamic descendant filter is copied correctly
-		return new TestFactoryTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
-			this.configuration, new DynamicDescendantFilter());
+		return new TestFactoryTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getDisplayName(), getTestClass(),
+			getTestMethod(), this.configuration, this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
 	// --- Filterable ----------------------------------------------------------

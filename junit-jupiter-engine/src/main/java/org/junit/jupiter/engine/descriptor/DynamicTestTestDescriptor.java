@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import java.util.function.UnaryOperator;
+
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -42,9 +44,9 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	}
 
 	@Override
-	protected DynamicTestTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new DynamicTestTestDescriptor(newUniqueId, this.index, this.dynamicTest, this.getSource().orElse(null),
-			this.configuration);
+	protected DynamicTestTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new DynamicTestTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.index, this.dynamicTest,
+			this.getSource().orElse(null), this.configuration);
 	}
 
 	@Override

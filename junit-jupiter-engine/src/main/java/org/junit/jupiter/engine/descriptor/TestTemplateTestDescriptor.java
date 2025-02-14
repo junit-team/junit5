@@ -16,6 +16,7 @@ import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExte
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -57,10 +58,10 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected TestTemplateTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		// TODO #871 Check that dynamic descendant filter is copied correctly
-		return new TestTemplateTestDescriptor(newUniqueId, getDisplayName(), getTestClass(), getTestMethod(),
-			this.configuration, new DynamicDescendantFilter());
+	protected TestTemplateTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new TestTemplateTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getDisplayName(),
+			getTestClass(), getTestMethod(), this.configuration,
+			this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
 	// --- Filterable ----------------------------------------------------------

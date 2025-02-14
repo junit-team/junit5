@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -59,8 +60,9 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected ClassTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ClassTestDescriptor(newUniqueId, getTestClass(), getDisplayName(), configuration);
+	protected ClassTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ClassTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(), getDisplayName(),
+			configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

@@ -16,6 +16,7 @@ import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.create
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -58,9 +59,9 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UniqueId newUniqueId) {
-		return new ContainerTemplateInvocationTestDescriptor(newUniqueId, parent, this.invocationContext, this.index,
-			getSource().orElse(null), this.configuration);
+	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ContainerTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), parent,
+			this.invocationContext, this.index, getSource().orElse(null), this.configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------

@@ -223,7 +223,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	 * {@return a deep copy (with copies of children) of this descriptor with the supplied unique ID}
 	 */
 	protected JupiterTestDescriptor copyIncludingDescendants(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		JupiterTestDescriptor result = withUniqueId(uniqueIdTransformer.apply(getUniqueId()));
+		JupiterTestDescriptor result = withUniqueId(uniqueIdTransformer);
 		getChildren().forEach(oldChild -> {
 			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
 			result.addChild(newChild);
@@ -234,7 +234,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	/**
 	 * {@return shallow copy (without children) of this descriptor with the supplied unique ID}
 	 */
-	protected abstract JupiterTestDescriptor withUniqueId(UniqueId newUniqueId);
+	protected abstract JupiterTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer);
 
 	/**
 	 * @since 5.5
