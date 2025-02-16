@@ -32,15 +32,19 @@ public class LauncherStoreFacade {
 			() -> new JUnitException("Request-level store must have a parent"));
 	}
 
-	public ExtensionContext.Store getRequestLevelStore(ExtensionContext.Namespace namespace) {
+	NamespacedHierarchicalStore<Namespace> getRequestLevelStore() {
+		return this.requestLevelStore;
+	}
+
+	ExtensionContext.Store getRequestLevelStore(ExtensionContext.Namespace namespace) {
 		return getStoreAdapter(this.requestLevelStore, namespace);
 	}
 
-	public ExtensionContext.Store getSessionLevelStore(ExtensionContext.Namespace namespace) {
+	ExtensionContext.Store getSessionLevelStore(ExtensionContext.Namespace namespace) {
 		return getStoreAdapter(this.sessionLevelStore, namespace);
 	}
 
-	private NamespaceAwareStore<Namespace> getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
+	NamespaceAwareStore<Namespace> getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
 			ExtensionContext.Namespace namespace) {
 		Preconditions.notNull(namespace, "Namespace must not be null");
 		return new NamespaceAwareStore<>(valuesStore, convert(namespace));
