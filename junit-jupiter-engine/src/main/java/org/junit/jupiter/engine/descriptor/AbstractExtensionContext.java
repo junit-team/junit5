@@ -66,9 +66,11 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
 	private final ExtensionRegistry extensionRegistry;
+	private final LauncherStoreFacade launcherStoreFacade;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
-			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
+			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry,
+			LauncherStoreFacade launcherStoreFacade) {
 
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		Preconditions.notNull(configuration, "JupiterConfiguration must not be null");
@@ -80,6 +82,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		this.configuration = configuration;
 		this.valuesStore = createStore(parent);
 		this.extensionRegistry = extensionRegistry;
+		this.launcherStoreFacade = launcherStoreFacade;
 
 		// @formatter:off
 		this.tags = testDescriptor.getTags().stream()
@@ -189,17 +192,17 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@Override
 	public Store getStore(Namespace namespace) {
 		Preconditions.notNull(namespace, "Namespace must not be null");
-		return new NamespaceAwareStore(this.valuesStore, namespace);
+		return new NamespaceAwareStore<>(this.valuesStore, namespace);
 	}
 
 	@Override
 	public Store getSessionLevelStore(Namespace namespace) {
-		return getStore(namespace);
+		return launcherStoreFacade.getSessionLevelStore(namespace);
 	}
 
 	@Override
 	public Store getRequestLevelStore(Namespace namespace) {
-		return getStore(namespace);
+		return launcherStoreFacade.getRequestLevelStore(namespace);
 	}
 
 	@Override

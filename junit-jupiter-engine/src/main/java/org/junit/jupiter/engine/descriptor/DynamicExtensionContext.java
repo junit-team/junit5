@@ -26,8 +26,8 @@ class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDe
 
 	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade) {
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 	}
 
 	@Override

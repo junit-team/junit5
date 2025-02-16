@@ -38,7 +38,7 @@ class ExtensionContextStoreTests {
 
 	private final NamespacedHierarchicalStore<Namespace> parentStore = new NamespacedHierarchicalStore<>(null);
 	private final NamespacedHierarchicalStore<Namespace> localStore = new NamespacedHierarchicalStore<>(parentStore);
-	private final Store store = new NamespaceAwareStore(localStore, Namespace.GLOBAL);
+	private final Store store = new NamespaceAwareStore<>(localStore, Namespace.GLOBAL);
 
 	@Test
 	void getOrDefaultWithNoValuePresent() {

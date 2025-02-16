@@ -300,7 +300,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				var store = new NamespaceAwareStore(this.store, namespace);
+				var store = new NamespaceAwareStore<>(this.store, namespace);
 				method //
 						.map(it -> new ParameterizedTestContext(it, it.getAnnotation(ParameterizedTest.class))) //
 						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
