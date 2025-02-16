@@ -65,8 +65,6 @@ import org.junit.platform.launcher.TestExecutionListener;
 @API(status = STABLE, since = "1.0")
 public class LauncherFactory {
 
-	private static final NamespacedHierarchicalStore<Namespace> SESSION_STORE = new NamespacedHierarchicalStore<>(null);
-
 	private LauncherFactory() {
 		/* no-op */
 	}
@@ -101,7 +99,7 @@ public class LauncherFactory {
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		return new DefaultLauncherSession(collectLauncherInterceptors(configurationParameters),
 			() -> createLauncherSessionListener(config),
-			launcherFactory -> createDefaultLauncher(config, configurationParameters));
+			sessionStore -> createDefaultLauncher(config, configurationParameters, sessionStore));
 	}
 
 	/**
@@ -130,15 +128,17 @@ public class LauncherFactory {
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
-		return new SessionPerRequestLauncher(() -> createDefaultLauncher(config, configurationParameters),
+		return new SessionPerRequestLauncher(
+			sessionStore -> createDefaultLauncher(config, configurationParameters, sessionStore),
 			() -> createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
 	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,
-			LauncherConfigurationParameters configurationParameters) {
+			LauncherConfigurationParameters configurationParameters,
+			NamespacedHierarchicalStore<Namespace> sessionStore) {
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
-		DefaultLauncher launcher = new DefaultLauncher(engines, filters, SESSION_STORE);
+		DefaultLauncher launcher = new DefaultLauncher(engines, filters, sessionStore);
 		registerLauncherDiscoveryListeners(config, launcher);
 		registerTestExecutionListeners(config, launcher, configurationParameters);
 

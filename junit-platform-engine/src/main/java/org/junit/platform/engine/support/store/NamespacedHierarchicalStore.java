@@ -461,6 +461,15 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	@FunctionalInterface
 	public interface CloseAction<N> {
 
+		@API(status = EXPERIMENTAL, since = "1.13")
+		static <N> CloseAction<N> closeAutoCloseables() {
+			return (__, ___, value) -> {
+				if (value instanceof AutoCloseable) {
+					((AutoCloseable) value).close();
+				}
+			};
+		}
+
 		/**
 		 * Close the supplied {@code value}.
 		 *

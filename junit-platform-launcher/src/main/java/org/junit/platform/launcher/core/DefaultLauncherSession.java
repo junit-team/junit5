@@ -10,6 +10,8 @@
 
 package org.junit.platform.launcher.core;
 
+import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
+
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -65,8 +67,7 @@ class DefaultLauncherSession implements LauncherSession {
 		}
 		this.launcher = new DelegatingLauncher(launcher);
 		listener.launcherSessionOpened(this);
-		// TODO [#4281] store should be session-level store
-		this.store = new NamespacedHierarchicalStore<>(null);
+		this.store = new NamespacedHierarchicalStore<>(null, closeAutoCloseables());
 	}
 
 	@Override
@@ -82,6 +83,7 @@ class DefaultLauncherSession implements LauncherSession {
 	public void close() {
 		if (launcher.delegate != ClosedLauncher.INSTANCE) {
 			launcher.delegate = ClosedLauncher.INSTANCE;
+			store.close();
 			listener.launcherSessionClosed(this);
 			interceptor.close();
 		}

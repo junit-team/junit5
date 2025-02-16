@@ -14,6 +14,7 @@ import static java.util.Collections.unmodifiableList;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -105,12 +106,19 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	}
 
 	@Override
-	public NamespacedHierarchicalStore<Namespace> getStore() {
-		return this.store;
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return this.outputDirectoryProvider;
 	}
 
 	@Override
-	public OutputDirectoryProvider getOutputDirectoryProvider() {
-		return this.outputDirectoryProvider;
+	public Optional<NamespacedHierarchicalStore<Namespace>> getStore() {
+		return Optional.ofNullable(this.store);
+	}
+
+	@Override
+	public LauncherDiscoveryRequest withStore(NamespacedHierarchicalStore<Namespace> requestStore) {
+		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
+			this.postDiscoveryFilters, requestStore, this.configurationParameters, this.discoveryListener,
+			this.outputDirectoryProvider);
 	}
 }

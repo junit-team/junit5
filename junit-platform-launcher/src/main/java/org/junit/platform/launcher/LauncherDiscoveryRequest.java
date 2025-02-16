@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -98,6 +99,6 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 		return LauncherDiscoveryListener.NOOP;
 	}
 
-	NamespacedHierarchicalStore<Namespace> getStore();
-
+	@API(status = INTERNAL, since = "1.13")
+	LauncherDiscoveryRequest withStore(NamespacedHierarchicalStore<Namespace> requestStore);
 }
