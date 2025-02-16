@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -766,6 +767,11 @@ public interface ExtensionContext {
 			newParts.addAll(this.parts);
 			Collections.addAll(newParts, parts);
 			return new Namespace(newParts);
+		}
+
+		@API(status = INTERNAL, since = "5.13")
+		public Object[] getParts() {
+			return parts.toArray();
 		}
 	}
 

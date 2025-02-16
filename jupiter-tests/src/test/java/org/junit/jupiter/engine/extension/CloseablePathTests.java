@@ -96,7 +96,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 	@BeforeEach
 	void setUpExtensionContext() {
-		var store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null), Namespace.GLOBAL);
+		var store = new NamespaceAwareStore<>(new NamespacedHierarchicalStore<>(null), Namespace.GLOBAL);
 		when(extensionContext.getStore(any())).thenReturn(store);
 	}
 

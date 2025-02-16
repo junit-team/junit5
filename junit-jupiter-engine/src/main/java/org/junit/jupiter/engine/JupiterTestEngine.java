@@ -19,6 +19,7 @@ import org.junit.jupiter.engine.config.CachingJupiterConfiguration;
 import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
+import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
 import org.junit.jupiter.engine.discovery.DiscoverySelectorResolver;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory;
@@ -82,8 +83,8 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	@Override
 	protected JupiterEngineExecutionContext createExecutionContext(ExecutionRequest request) {
-		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(),
-			getJupiterConfiguration(request));
+		return new JupiterEngineExecutionContext(request.getEngineExecutionListener(), getJupiterConfiguration(request),
+			new LauncherStoreFacade(request.getStore()));
 	}
 
 	/**

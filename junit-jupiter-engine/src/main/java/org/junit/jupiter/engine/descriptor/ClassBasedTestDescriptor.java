@@ -181,7 +181,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor imp
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		ClassExtensionContext extensionContext = new ClassExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, this.lifecycle, context.getConfiguration(), registry,
-			throwableCollector);
+			context.getLauncherStoreFacade(), throwableCollector);
 
 		// @formatter:off
 		return context.extend()

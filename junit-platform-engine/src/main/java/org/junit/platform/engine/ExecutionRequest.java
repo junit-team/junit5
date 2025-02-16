@@ -42,7 +42,9 @@ public class ExecutionRequest {
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
 	private final OutputDirectoryProvider outputDirectoryProvider;
-	private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
+	// TODO #2816 This should be the request-level store
+	private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(
+		new NamespacedHierarchicalStore<>(null));
 
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.11")

@@ -45,10 +45,11 @@ class DefaultLauncherSession implements LauncherSession {
 		}
 	};
 
+	private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null,
+		closeAutoCloseables());
 	private final LauncherInterceptor interceptor;
 	private final LauncherSessionListener listener;
 	private final DelegatingLauncher launcher;
-	private final NamespacedHierarchicalStore<Namespace> store;
 
 	DefaultLauncherSession(List<LauncherInterceptor> interceptors, //
 			Supplier<LauncherSessionListener> listenerSupplier, //
@@ -67,7 +68,6 @@ class DefaultLauncherSession implements LauncherSession {
 		}
 		this.launcher = new DelegatingLauncher(launcher);
 		listener.launcherSessionOpened(this);
-		this.store = new NamespacedHierarchicalStore<>(null, closeAutoCloseables());
 	}
 
 	@Override
