@@ -29,8 +29,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
-	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class })
-	void injectsParametersIntoContainerTemplateConstructor(Class<?> containerTemplateClass) {
+	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class, FieldInjectionTestCase.class })
+	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertEventsMatchExactly( //
@@ -100,6 +100,27 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Test
 		void test2() {
 			assertTrue(value < 0, "negative");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	static class FieldInjectionTestCase {
+
+		@Parameter
+		private int value;
+
+		@Test
+		void test1() {
+			assertTrue(value < 0, "negative");
+			value *= -1;
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value < 0, "negative");
+			value *= -1;
 		}
 	}
 
