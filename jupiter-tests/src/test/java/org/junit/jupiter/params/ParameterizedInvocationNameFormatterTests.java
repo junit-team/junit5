@@ -53,7 +53,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
  * @since 5.0
  */
 @SuppressWarnings("ALL")
-class ParameterizedTestNameFormatterTests {
+class ParameterizedInvocationNameFormatterTests {
 
 	private final Locale originalLocale = Locale.getDefault();
 
@@ -322,20 +322,22 @@ class ParameterizedTestNameFormatterTests {
 
 	// -------------------------------------------------------------------------
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName) {
 		return formatter(pattern, displayName, 512);
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, int argumentMaxLength) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, mock(), argumentMaxLength);
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName,
+			int argumentMaxLength) {
+		return new ParameterizedInvocationNameFormatter(pattern, displayName, mock(), argumentMaxLength);
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName, Method method) {
 		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
-		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
+		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, 512);
 	}
 
-	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {
+	private static String format(ParameterizedInvocationNameFormatter formatter, int invocationIndex,
+			Arguments arguments) {
 		return formatter.format(invocationIndex, EvaluatedArgumentSet.allOf(arguments));
 	}
 

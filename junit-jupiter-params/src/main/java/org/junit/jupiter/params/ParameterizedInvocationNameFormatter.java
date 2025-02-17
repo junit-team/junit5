@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,20 +36,49 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestNameFormatter {
+class ParameterizedInvocationNameFormatter {
+
+	static final String DEFAULT_DISPLAY_NAME = "{default_display_name}";
+	static final String DEFAULT_DISPLAY_NAME_PATTERN = "[" + INDEX_PLACEHOLDER + "] "
+			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	static final String DISPLAY_NAME_PATTERN_KEY = "junit.jupiter.params.displayname.default";
+	static final String ARGUMENT_MAX_LENGTH_KEY = "junit.jupiter.params.displayname.argument.maxlength";
+
+	static ParameterizedInvocationNameFormatter create(ExtensionContext extensionContext,
+			ParameterizedDeclarationContext<?> declarationContext) {
+
+		String name = declarationContext.getDisplayNamePattern();
+		String pattern = name.equals(DEFAULT_DISPLAY_NAME)
+				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
+						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
+				: name;
+		pattern = Preconditions.notBlank(pattern.trim(),
+			() -> String.format("Configuration error: @%s on %s [%s] must be declared with a non-empty name.",
+				declarationContext.getAnnotationName(),
+				declarationContext.getAnnotatedElement().getClass().getSimpleName().toLowerCase(Locale.ROOT),
+				declarationContext.getAnnotatedElement()));
+
+		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY, Integer::parseInt) //
+				.orElse(512);
+
+		return new ParameterizedInvocationNameFormatter(pattern, extensionContext.getDisplayName(), declarationContext,
+			argumentMaxLength);
+	}
 
 	private final PartialFormatter[] partialFormatters;
 
-	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	ParameterizedInvocationNameFormatter(String pattern, String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 		try {
-			this.partialFormatters = parse(pattern, displayName, methodContext, argumentMaxLength);
+			this.partialFormatters = parse(pattern, displayName, declarationContext, argumentMaxLength);
 		}
 		catch (Exception ex) {
 			String message = "The display name pattern defined for the parameterized test is invalid. "
@@ -78,11 +108,11 @@ class ParameterizedTestNameFormatter {
 		return result.toString();
 	}
 
-	private PartialFormatter[] parse(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	private PartialFormatter[] parse(String pattern, String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 
 		List<PartialFormatter> result = new ArrayList<>();
-		PartialFormatters formatters = createPartialFormatters(displayName, methodContext, argumentMaxLength);
+		PartialFormatters formatters = createPartialFormatters(displayName, declarationContext, argumentMaxLength);
 		String unparsedSegment = pattern;
 
 		while (isNotBlank(unparsedSegment)) {
@@ -127,11 +157,11 @@ class ParameterizedTestNameFormatter {
 				: (context, result) -> result.append(segment);
 	}
 
-	private PartialFormatters createPartialFormatters(String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	private PartialFormatters createPartialFormatters(String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 
 		PartialFormatter argumentsWithNamesFormatter = new CachingByArgumentsLengthPartialFormatter(
-			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, methodContext),
+			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, declarationContext),
 				argumentMaxLength));
 
 		PartialFormatters formatters = new PartialFormatters();
@@ -150,9 +180,9 @@ class ParameterizedTestNameFormatter {
 		return formatters;
 	}
 
-	private static String argumentsWithNamesPattern(int length, ParameterizedTestMethodContext methodContext) {
+	private static String argumentsWithNamesPattern(int length, ParameterizedDeclarationContext<?> declarationContext) {
 		return IntStream.range(0, length) //
-				.mapToObj(index -> methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
+				.mapToObj(index -> declarationContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
 						+ index + "}") //
 				.collect(joining(", "));
 	}

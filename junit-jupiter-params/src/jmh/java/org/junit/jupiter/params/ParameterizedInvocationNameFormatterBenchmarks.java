@@ -28,7 +28,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(1)
 @Warmup(iterations = 1, time = 2)
 @Measurement(iterations = 3, time = 2)
-public class ParameterizedTestNameFormatterBenchmarks {
+public class ParameterizedInvocationNameFormatterBenchmarks {
 
 	@Param({ "1", "2", "4", "10", "100", "1000" })
 	private int numberOfParameters;
@@ -45,7 +45,7 @@ public class ParameterizedTestNameFormatterBenchmarks {
 	@Benchmark
 	public void formatTestNames(Blackhole blackhole) throws Exception {
 		var method = TestCase.class.getDeclaredMethod("parameterizedTest", int.class);
-		var formatter = new ParameterizedTestNameFormatter(
+		var formatter = new ParameterizedInvocationNameFormatter(
 			ParameterizedTest.DISPLAY_NAME_PLACEHOLDER + " " + ParameterizedTest.DEFAULT_DISPLAY_NAME + " ({0})",
 			"displayName", new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class)),
 			512);

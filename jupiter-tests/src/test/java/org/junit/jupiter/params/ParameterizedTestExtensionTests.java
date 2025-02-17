@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.ParameterizedTestExtension.METHOD_CONTEXT_KEY;
-import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
+import static org.junit.jupiter.params.ParameterizedInvocationContextProvider.arguments;
+import static org.junit.jupiter.params.ParameterizedTestExtension.DECLARATION_CONTEXT_KEY;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
@@ -105,7 +105,7 @@ class ParameterizedTestExtensionTests {
 	void defaultDisplayNameWithEmptyStringInConfigurationIsIllegal() {
 		AtomicInteger invocations = new AtomicInteger();
 		Function<String, Optional<String>> configurationSupplier = key -> {
-			if (key.equals(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY)) {
+			if (key.equals(ParameterizedInvocationNameFormatter.DISPLAY_NAME_PATTERN_KEY)) {
 				invocations.incrementAndGet();
 				return Optional.of("");
 			}
@@ -298,7 +298,7 @@ class ParameterizedTestExtensionTests {
 				var store = new NamespaceAwareStore(this.store, namespace);
 				method //
 						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class))) //
-						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
+						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
 			}
 
