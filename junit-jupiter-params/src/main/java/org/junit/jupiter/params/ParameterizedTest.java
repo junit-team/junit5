@@ -227,20 +227,19 @@ public @interface ParameterizedTest {
 	 * @see #INDEX_PLACEHOLDER
 	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] "
-			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	String DEFAULT_DISPLAY_NAME = ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME_PATTERN;
 
 	/**
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>.
+	 * <p>Defaults to <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>.
 	 *
 	 * <p>If the default display name flag
-	 * (<code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>)
+	 * (<code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>)
 	 * is not overridden, JUnit will:
 	 * <ul>
-	 * <li>Look up the {@value ParameterizedTestExtension#DISPLAY_NAME_PATTERN_KEY}
+	 * <li>Look up the {@value ParameterizedInvocationNameFormatter#DISPLAY_NAME_PATTERN_KEY}
 	 * <em>configuration parameter</em> and use it if available. The configuration
 	 * parameter can be supplied via the {@code Launcher} API, build tools (e.g.,
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
@@ -266,12 +265,12 @@ public @interface ParameterizedTest {
 	 * of any implicit or explicit argument conversions.
 	 *
 	 * <p>Note that
-	 * <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code> is
+	 * <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code> is
 	 * a flag rather than a placeholder.
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default ParameterizedTestExtension.DEFAULT_DISPLAY_NAME;
+	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
 
 	/**
 	 * Configure whether all arguments of the parameterized test that implement {@link AutoCloseable}

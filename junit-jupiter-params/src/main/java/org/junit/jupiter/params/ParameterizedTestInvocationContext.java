@@ -24,39 +24,26 @@ import org.junit.jupiter.params.provider.Arguments;
 /**
  * @since 5.0
  */
-class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
+class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestMethodContext>
+		implements TestTemplateInvocationContext {
 
 	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
 
-	private final ParameterizedTestNameFormatter formatter;
-	private final ParameterizedTestMethodContext methodContext;
-	private final EvaluatedArgumentSet arguments;
-	private final int invocationIndex;
-
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
+	ParameterizedTestInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
-
-		this.formatter = formatter;
-		this.methodContext = methodContext;
-		this.arguments = EvaluatedArgumentSet.of(arguments, this::determineConsumedArgumentCount);
-		this.invocationIndex = invocationIndex;
-	}
-
-	@Override
-	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments);
+		super(formatter, methodContext, arguments, invocationIndex);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return Arrays.asList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.arguments, this.invocationIndex),
-			new ArgumentCountValidator(this.methodContext, this.arguments));
+		return Arrays.asList( //
+			new ParameterizedTestParameterResolver(this.declarationContext, this.arguments, this.invocationIndex), //
+			createArgumentCountValidator());
 	}
 
 	@Override
 	public void prepareInvocation(ExtensionContext context) {
-		if (this.methodContext.annotation.autoCloseArguments()) {
+		if (this.declarationContext.annotation.autoCloseArguments()) {
 			Store store = context.getStore(NAMESPACE);
 			AtomicInteger argumentIndex = new AtomicInteger();
 
@@ -66,12 +53,6 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 					.map(CloseableArgument::new) //
 					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
 		}
-	}
-
-	private int determineConsumedArgumentCount(int totalLength) {
-		return methodContext.hasAggregator() //
-				? totalLength //
-				: Math.min(totalLength, methodContext.getParameterCount());
 	}
 
 	private static class CloseableArgument implements Store.CloseableResource {

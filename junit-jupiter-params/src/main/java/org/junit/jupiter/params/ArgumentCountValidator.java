@@ -29,11 +29,11 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
 		ArgumentCountValidator.class);
 
-	private final ParameterizedTestMethodContext methodContext;
+	private final ParameterizedDeclarationContext<?> declarationContext;
 	private final EvaluatedArgumentSet arguments;
 
-	ArgumentCountValidator(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments) {
-		this.methodContext = methodContext;
+	ArgumentCountValidator(ParameterizedDeclarationContext<?> declarationContext, EvaluatedArgumentSet arguments) {
+		this.declarationContext = declarationContext;
 		this.arguments = arguments;
 	}
 
@@ -68,9 +68,9 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	}
 
 	private ArgumentCountValidationMode getArgumentCountValidationMode(ExtensionContext extensionContext) {
-		ParameterizedTest parameterizedTest = methodContext.annotation;
-		if (parameterizedTest.argumentCountValidation() != ArgumentCountValidationMode.DEFAULT) {
-			return parameterizedTest.argumentCountValidation();
+		ArgumentCountValidationMode mode = declarationContext.getArgumentCountValidationMode();
+		if (mode != ArgumentCountValidationMode.DEFAULT) {
+			return mode;
 		}
 		else {
 			return getArgumentCountValidationModeConfiguration(extensionContext);

@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInfo
 import org.junit.jupiter.params.provider.ValueSource
 
-class ParameterizedTestNameFormatterIntegrationTests {
+class ParameterizedInvocationNameFormatterIntegrationTests {
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest
     fun defaultDisplayName(

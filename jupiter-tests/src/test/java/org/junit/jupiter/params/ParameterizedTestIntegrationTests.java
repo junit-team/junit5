@@ -430,7 +430,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void truncatesArgumentsThatExceedMaxLength() {
 		var results = EngineTestKit.engine(new JupiterTestEngine()) //
-				.configurationParameter(ParameterizedTestExtension.ARGUMENT_MAX_LENGTH_KEY, "2") //
+				.configurationParameter(ParameterizedInvocationNameFormatter.ARGUMENT_MAX_LENGTH_KEY, "2") //
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //
@@ -441,7 +441,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void displayNamePatternFromConfiguration() {
 		var results = EngineTestKit.engine(new JupiterTestEngine()) //
-				.configurationParameter(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY, "{index}") //
+				.configurationParameter(ParameterizedInvocationNameFormatter.DISPLAY_NAME_PATTERN_KEY, "{index}") //
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //

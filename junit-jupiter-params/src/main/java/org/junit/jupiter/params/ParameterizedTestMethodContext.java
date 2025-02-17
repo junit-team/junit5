@@ -12,8 +12,10 @@ package org.junit.jupiter.params;
 
 import static org.junit.jupiter.params.ParameterizedTestMethodContext.ResolverType.AGGREGATOR;
 import static org.junit.jupiter.params.ParameterizedTestMethodContext.ResolverType.CONVERTER;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -31,7 +33,6 @@ import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -41,7 +42,7 @@ import org.junit.platform.commons.util.StringUtils;
  *
  * @since 5.3
  */
-class ParameterizedTestMethodContext {
+class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<ParameterizedTest> {
 
 	final Method method;
 	final ParameterizedTest annotation;
@@ -59,6 +60,31 @@ class ParameterizedTestMethodContext {
 		for (Parameter parameter : this.parameters) {
 			this.resolverTypes.add(isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
+	}
+
+	@Override
+	public ParameterizedTest getAnnotation() {
+		return annotation;
+	}
+
+	@Override
+	public AnnotatedElement getAnnotatedElement() {
+		return method;
+	}
+
+	@Override
+	public String getDisplayNamePattern() {
+		return annotation.name();
+	}
+
+	@Override
+	public boolean isAllowingZeroInvocations() {
+		return annotation.allowZeroInvocations();
+	}
+
+	@Override
+	public ArgumentCountValidationMode getArgumentCountValidationMode() {
+		return annotation.argumentCountValidation();
 	}
 
 	/**
@@ -106,7 +132,8 @@ class ParameterizedTestMethodContext {
 	 * Get the number of parameters of the {@link Method} represented by this
 	 * context.
 	 */
-	int getParameterCount() {
+	@Override
+	public int getParameterCount() {
 		return parameters.length;
 	}
 
@@ -116,7 +143,8 @@ class ParameterizedTestMethodContext {
 	 *
 	 * @return an {@code Optional} containing the name of the parameter
 	 */
-	Optional<String> getParameterName(int parameterIndex) {
+	@Override
+	public Optional<String> getParameterName(int parameterIndex) {
 		if (parameterIndex >= getParameterCount()) {
 			return Optional.empty();
 		}
@@ -137,7 +165,8 @@ class ParameterizedTestMethodContext {
 	 *
 	 * @return {@code true} if the method has an aggregator
 	 */
-	boolean hasAggregator() {
+	@Override
+	public boolean hasAggregator() {
 		return resolverTypes.contains(AGGREGATOR);
 	}
 
@@ -148,7 +177,8 @@ class ParameterizedTestMethodContext {
 	 *
 	 * @return {@code true} if the parameter is an aggregator
 	 */
-	boolean isAggregator(int parameterIndex) {
+	@Override
+	public boolean isAggregator(int parameterIndex) {
 		return resolverTypes.get(parameterIndex) == AGGREGATOR;
 	}
 
@@ -158,7 +188,8 @@ class ParameterizedTestMethodContext {
 	 *
 	 * @return the index of the first aggregator, or {@code -1} if not found
 	 */
-	int indexOfFirstAggregator() {
+	@Override
+	public int indexOfFirstAggregator() {
 		return resolverTypes.indexOf(AGGREGATOR);
 	}
 
@@ -174,7 +205,8 @@ class ParameterizedTestMethodContext {
 	private Resolver getResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		int index = parameterContext.getIndex();
 		if (resolvers[index] == null) {
-			resolvers[index] = resolverTypes.get(index).createResolver(parameterContext, extensionContext);
+			resolvers[index] = resolverTypes.get(index).createResolver(index, parameterContext.getParameter(),
+				extensionContext);
 		}
 		return resolvers[index];
 	}
@@ -183,38 +215,39 @@ class ParameterizedTestMethodContext {
 
 		CONVERTER {
 			@Override
-			Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			Resolver createResolver(int index, AnnotatedElement annotatedElement, ExtensionContext extensionContext) {
 				try { // @formatter:off
-					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), ConvertWith.class)
+					return findAnnotation(annotatedElement, ConvertWith.class)
 							.map(ConvertWith::value)
 							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
-							.map(converter -> AnnotationConsumerInitializer.initialize(parameterContext.getParameter(), converter))
+							.map(converter -> AnnotationConsumerInitializer.initialize(annotatedElement, converter))
 							.map(Converter::new)
 							.orElse(Converter.DEFAULT);
 				} // @formatter:on
 				catch (Exception ex) {
-					throw parameterResolutionException("Error creating ArgumentConverter", ex, parameterContext);
+					throw parameterResolutionException("Error creating ArgumentConverter", ex, index);
 				}
 			}
 		},
 
 		AGGREGATOR {
 			@Override
-			Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext) {
+			Resolver createResolver(int index, AnnotatedElement annotatedElement, ExtensionContext extensionContext) {
 				try { // @formatter:off
-					return AnnotationSupport.findAnnotation(parameterContext.getParameter(), AggregateWith.class)
+					return findAnnotation(annotatedElement, AggregateWith.class)
 							.map(AggregateWith::value)
 							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
 							.map(Aggregator::new)
 							.orElse(Aggregator.DEFAULT);
 				} // @formatter:on
 				catch (Exception ex) {
-					throw parameterResolutionException("Error creating ArgumentsAggregator", ex, parameterContext);
+					throw parameterResolutionException("Error creating ArgumentsAggregator", ex, index);
 				}
 			}
 		};
 
-		abstract Resolver createResolver(ParameterContext parameterContext, ExtensionContext extensionContext);
+		abstract Resolver createResolver(int index, AnnotatedElement annotatedElement,
+				ExtensionContext extensionContext);
 
 	}
 
@@ -241,7 +274,7 @@ class ParameterizedTestMethodContext {
 				return this.argumentConverter.convert(argument, parameterContext);
 			}
 			catch (Exception ex) {
-				throw parameterResolutionException("Error converting parameter", ex, parameterContext);
+				throw parameterResolutionException("Error converting parameter", ex, parameterContext.getIndex());
 			}
 		}
 
@@ -264,15 +297,16 @@ class ParameterizedTestMethodContext {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}
 			catch (Exception ex) {
-				throw parameterResolutionException("Error aggregating arguments for parameter", ex, parameterContext);
+				throw parameterResolutionException("Error aggregating arguments for parameter", ex,
+					parameterContext.getIndex());
 			}
 		}
 
 	}
 
 	private static ParameterResolutionException parameterResolutionException(String message, Exception cause,
-			ParameterContext parameterContext) {
-		String fullMessage = message + " at index " + parameterContext.getIndex();
+			int index) {
+		String fullMessage = message + " at index " + index;
 		if (StringUtils.isNotBlank(cause.getMessage())) {
 			fullMessage += ": " + cause.getMessage();
 		}
