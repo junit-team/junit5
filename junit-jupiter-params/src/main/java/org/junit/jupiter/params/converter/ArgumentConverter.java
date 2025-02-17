@@ -10,11 +10,13 @@
 
 package org.junit.jupiter.params.converter;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.support.FieldContext;
 
 /**
  * {@code ArgumentConverter} is an abstraction that allows an input object to
@@ -63,4 +65,8 @@ public interface ArgumentConverter {
 	 */
 	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
 
+	@API(status = EXPERIMENTAL, since = "5.13")
+	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+		throw new UnsupportedOperationException("convert(Object, FieldContext) is not supported by this converter");
+	}
 }

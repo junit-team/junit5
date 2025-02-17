@@ -24,12 +24,18 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.TypedArgumentConverter;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
-	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class, FieldInjectionTestCase.class })
+	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class, FieldInjectionTestCase.class,
+			RecordWithBuildInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
+			FieldInjectionWithRegisteredConversionTestCase.class })
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -121,6 +127,74 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		void test2() {
 			assertTrue(value < 0, "negative");
 			value *= -1;
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@CsvSource({ "-1", "1" })
+	record RecordWithBuildInConverterTestCase(int value) {
+
+		@Test
+		void test1() {
+			assertTrue(value < 0, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value < 0, "negative");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	record RecordWithRegisteredConversionTestCase(@ConvertWith(CustomIntegerToStringConverter.class) String value) {
+
+		@Test
+		void test1() {
+			assertTrue(value.startsWith("minus"), "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value.startsWith("minus"), "negative");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	static class FieldInjectionWithRegisteredConversionTestCase {
+
+		@Parameter
+		@ConvertWith(CustomIntegerToStringConverter.class)
+		private String value;
+
+		@Test
+		void test1() {
+			assertTrue(value.startsWith("minus"), "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value.startsWith("minus"), "negative");
+		}
+	}
+
+	private static class CustomIntegerToStringConverter extends TypedArgumentConverter<Integer, String> {
+
+		CustomIntegerToStringConverter() {
+			super(Integer.class, String.class);
+		}
+
+		@Override
+		protected String convert(Integer source) throws ArgumentConversionException {
+			return switch (source) {
+				case -1 -> "minus one";
+				case +1 -> "plus one";
+				default -> throw new IllegalArgumentException("Unsupported value: " + source);
+			};
 		}
 	}
 

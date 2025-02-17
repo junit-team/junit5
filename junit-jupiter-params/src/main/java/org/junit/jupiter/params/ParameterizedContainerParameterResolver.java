@@ -21,11 +21,13 @@ class ParameterizedContainerParameterResolver implements ParameterResolver {
 
 	private final ParameterizedContainerClassContext declarationContext;
 	private final EvaluatedArgumentSet arguments;
+	private final int invocationIndex;
 
 	ParameterizedContainerParameterResolver(ParameterizedContainerClassContext declarationContext,
-			EvaluatedArgumentSet arguments) {
+			EvaluatedArgumentSet arguments, int invocationIndex) {
 		this.declarationContext = declarationContext;
 		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ class ParameterizedContainerParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		// TODO #878 see ParameterizedTestParameterResolver
-		return this.arguments.getConsumedPayloads()[parameterContext.getIndex()];
+		return declarationContext.getResolverFacade() //
+				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(), invocationIndex);
 	}
 }
