@@ -11,22 +11,23 @@
 package org.junit.jupiter.params;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.util.Preconditions;
 
 class ParameterizedContainerFieldInjector implements TestInstancePostProcessor {
 
 	private final ParameterizedContainerClassContext classContext;
 	private final EvaluatedArgumentSet arguments;
+	private final int invocationIndex;
 
-	ParameterizedContainerFieldInjector(ParameterizedContainerClassContext classContext,
-			EvaluatedArgumentSet arguments) {
+	ParameterizedContainerFieldInjector(ParameterizedContainerClassContext classContext, EvaluatedArgumentSet arguments,
+			int invocationIndex) {
 		this.classContext = classContext;
 		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
@@ -35,21 +36,21 @@ class ParameterizedContainerFieldInjector implements TestInstancePostProcessor {
 	}
 
 	@Override
-	public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-		Map<Field, Integer> parameterFields = classContext.getParameterFields();
-		for (Map.Entry<Field, Integer> entry : parameterFields.entrySet()) {
-			Field field = entry.getKey();
-			int index = entry.getValue();
-			// TODO #878 test preconditions
-			Preconditions.condition(index >= 0 && index < arguments.getConsumedLength(),
-				() -> String.format("Index declared on %s must be in range [0, %d]", field,
-					arguments.getConsumedLength() - 1));
-			try {
-				field.set(testInstance, arguments.getConsumedPayloads()[index]);
-			}
-			catch (Exception e) {
-				throw new JUnitException("Failed to inject parameter value into field: " + field, e);
-			}
+	public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
+		this.classContext.getResolverFacade().getParameterDeclarations().stream() //
+				.filter(it -> it.annotatedElement instanceof Field) //
+				.forEach(it -> setField((Field) it.annotatedElement, testInstance, extensionContext, it.annotation));
+	}
+
+	private void setField(Field field, Object testInstance, ExtensionContext extensionContext, Parameter annotation) {
+		FieldContext fieldContext = new DefaultFieldContext(field, annotation);
+		Object argument = this.classContext.getResolverFacade() //
+				.resolve(fieldContext, extensionContext, this.arguments.getConsumedPayloads(), this.invocationIndex);
+		try {
+			field.set(testInstance, argument);
+		}
+		catch (Exception e) {
+			throw new JUnitException("Failed to inject parameter value into field: " + field, e);
 		}
 	}
 }

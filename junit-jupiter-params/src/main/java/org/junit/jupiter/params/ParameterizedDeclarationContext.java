@@ -35,12 +35,5 @@ interface ParameterizedDeclarationContext<A extends Annotation> {
 		return getAnnotation().annotationType().getSimpleName();
 	}
 
-	boolean hasAggregator();
-
-	int getParameterCount();
-
-	boolean isAggregator(int parameterIndex);
-
-	int indexOfFirstAggregator();
-
+	ResolverFacade getResolverFacade();
 }

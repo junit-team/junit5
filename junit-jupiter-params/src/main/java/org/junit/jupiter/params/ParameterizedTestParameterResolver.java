@@ -52,14 +52,14 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 
 		// Current parameter is an aggregator?
-		if (this.methodContext.isAggregator(parameterIndex)) {
+		if (this.methodContext.getResolverFacade().isAggregator(parameterIndex)) {
 			return true;
 		}
 
 		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
-		if (this.methodContext.hasAggregator()) {
-			return parameterIndex < this.methodContext.indexOfFirstAggregator();
+		if (this.methodContext.getResolverFacade().hasAggregator()) {
+			return parameterIndex < this.methodContext.getResolverFacade().indexOfFirstAggregator();
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
@@ -69,8 +69,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(),
-			this.invocationIndex);
+		return this.methodContext.getResolverFacade().resolve(parameterContext, extensionContext,
+			this.arguments.getConsumedPayloads(), this.invocationIndex);
 	}
 
 }

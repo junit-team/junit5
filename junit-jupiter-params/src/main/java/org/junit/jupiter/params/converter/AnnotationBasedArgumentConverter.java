@@ -17,6 +17,7 @@ import java.lang.annotation.Annotation;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -47,6 +48,11 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
 		return convert(source, context.getParameter().getType(), this.annotation);
+	}
+
+	@Override
+	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+		return convert(source, context.getField().getType(), this.annotation);
 	}
 
 	/**

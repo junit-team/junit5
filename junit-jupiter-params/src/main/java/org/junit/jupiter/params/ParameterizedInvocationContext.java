@@ -37,8 +37,8 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 	}
 
 	private int determineConsumedArgumentCount(int totalLength) {
-		return this.declarationContext.hasAggregator() //
+		return this.declarationContext.getResolverFacade().hasAggregator() //
 				? totalLength //
-				: Math.min(totalLength, this.declarationContext.getParameterCount());
+				: Math.min(totalLength, this.declarationContext.getResolverFacade().getParameterCount());
 	}
 }
