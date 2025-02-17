@@ -19,19 +19,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.ContainerTemplate;
-import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @since 5.13
- * @see Parameter
+ * @see ParameterizedContainer
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.FIELD })
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
-@ContainerTemplate
-@ExtendWith(ParameterizedContainerExtension.class)
-@SuppressWarnings("exports")
-public @interface ParameterizedContainer {
+public @interface Parameter {
+	int value() default 0;
 }

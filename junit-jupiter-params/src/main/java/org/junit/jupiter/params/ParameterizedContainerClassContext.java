@@ -10,19 +10,45 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.ReflectionSupport.findFields;
+
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 class ParameterizedContainerClassContext implements ParameterizedDeclarationContext<ParameterizedContainer> {
 
 	private final Class<?> clazz;
 	private final ParameterizedContainer annotation;
+	private final Map<Field, Integer> parameterFields;
 
 	ParameterizedContainerClassContext(Class<?> clazz, ParameterizedContainer annotation) {
 		this.clazz = clazz;
 		this.annotation = annotation;
+		// TODO #878 Test that composed annotations are supported
+		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
+		parameterFields = new HashMap<>(fields.size());
+		for (Field field : fields) {
+			// TODO #878 test precondition
+			Preconditions.condition(!ReflectionUtils.isFinal(field), () -> "Field must not be final: " + field);
+			ReflectionSupport.makeAccessible(field);
+			int index = AnnotationSupport.findAnnotation(field, Parameter.class).get().value();
+			parameterFields.put(field, index);
+		}
+	}
+
+	Map<Field, Integer> getParameterFields() {
+		return parameterFields;
 	}
 
 	@Override
@@ -66,7 +92,12 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 
 	@Override
 	public int getParameterCount() {
-		return ReflectionUtils.getDeclaredConstructor(this.clazz).getParameterCount();
+		return Math.max(ReflectionUtils.getDeclaredConstructor(this.clazz).getParameterCount(),
+			getMaxParameterIndexFromFields() + 1);
+	}
+
+	private int getMaxParameterIndexFromFields() {
+		return parameterFields.values().stream().mapToInt(Integer::intValue).max().orElse(-1);
 	}
 
 	@Override

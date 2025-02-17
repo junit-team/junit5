@@ -28,6 +28,7 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		return Arrays.asList(new ParameterizedContainerParameterResolver(this.declarationContext, this.arguments),
+			new ParameterizedContainerFieldInjector(this.declarationContext, this.arguments),
 			createArgumentCountValidator());
 	}
 }
