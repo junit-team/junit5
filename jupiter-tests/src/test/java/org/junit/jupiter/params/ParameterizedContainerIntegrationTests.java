@@ -28,13 +28,14 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
-	@Test
-	void injectsParametersIntoContainerTemplateConstructor() {
-		var results = executeTestsForClass(ConstructorInjectionTestCase.class);
+	@ParameterizedTest
+	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class })
+	void injectsParametersIntoContainerTemplateConstructor(Class<?> containerTemplateClass) {
+		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(ConstructorInjectionTestCase.class), started()), //
+			event(container(containerTemplateClass), started()), //
 
 			event(dynamicTestRegistered("#1"), displayName("[1] -1")), //
 			event(container("#1"), started()), //
@@ -56,7 +57,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			event(test("test2"), finishedWithFailure(message(it -> it.contains("negative")))), //
 			event(container("#2"), finishedSuccessfully()), //
 
-			event(container(ConstructorInjectionTestCase.class), finishedSuccessfully()), //
+			event(container(containerTemplateClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -85,4 +86,21 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			value *= -1;
 		}
 	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	record RecordTestCase(int value) {
+
+		@Test
+		void test1() {
+			assertTrue(value < 0, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value < 0, "negative");
+		}
+	}
+
 }
