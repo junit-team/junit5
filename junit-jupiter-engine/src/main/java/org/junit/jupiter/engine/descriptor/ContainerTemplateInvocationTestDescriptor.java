@@ -120,7 +120,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		ExtensionContext extensionContext = new ContainerTemplateInvocationExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this, context.getConfiguration(), registry);
 		return context.extend() //
-				.withExtensionContext(extensionContext).withExtensionRegistry(registry) //
+				.withExtensionContext(extensionContext) //
+				.withExtensionRegistry(registry) //
 				.build();
 	}
 
