@@ -18,6 +18,7 @@ import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStr
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -44,7 +45,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			MethodSource methodSource) {
 		Class<?> testClass = context.getRequiredTestClass();
-		Method testMethod = context.getRequiredTestMethod();
+		Optional<Method> testMethod = context.getTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);
 		String[] methodNames = methodSource.value();
 		// @formatter:off
@@ -57,13 +58,15 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		// @formatter:on
 	}
 
-	private static Method findFactoryMethod(Class<?> testClass, Method testMethod, String factoryMethodName) {
+	private static Method findFactoryMethod(Class<?> testClass, Optional<Method> testMethod, String factoryMethodName) {
 		String originalFactoryMethodName = factoryMethodName;
 
 		// If the user did not provide a factory method name, find a "default" local
 		// factory method with the same name as the parameterized test method.
 		if (StringUtils.isBlank(factoryMethodName)) {
-			factoryMethodName = testMethod.getName();
+			Preconditions.condition(testMethod.isPresent(),
+				"You must specify a method name when using @MethodSource with @ContainerTemplate");
+			factoryMethodName = testMethod.get().getName();
 			return findFactoryMethodBySimpleName(testClass, testMethod, factoryMethodName);
 		}
 
@@ -104,7 +107,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 	}
 
 	// package-private for testing
-	static Method findFactoryMethodByFullyQualifiedName(Class<?> testClass, Method testMethod,
+	static Method findFactoryMethodByFullyQualifiedName(Class<?> testClass, Optional<Method> testMethod,
 			String fullyQualifiedMethodName) {
 		String[] methodParts = ReflectionUtils.parseFullyQualifiedMethodName(fullyQualifiedMethodName);
 		String className = methodParts[0];
@@ -143,24 +146,25 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 	 * @throws PreconditionViolationException if the factory method was not found or
 	 * multiple competing factory methods with the same name were found
 	 */
-	private static Method findFactoryMethodBySimpleName(Class<?> clazz, Method testMethod, String factoryMethodName) {
+	private static Method findFactoryMethodBySimpleName(Class<?> clazz, Optional<Method> testMethod,
+			String factoryMethodName) {
 		Predicate<Method> isCandidate = candidate -> factoryMethodName.equals(candidate.getName())
-				&& !testMethod.equals(candidate);
+				&& !candidate.equals(testMethod.orElse(null));
 		List<Method> candidates = ReflectionUtils.findMethods(clazz, isCandidate);
 
 		List<Method> factoryMethods = candidates.stream().filter(isFactoryMethod).collect(toList());
 
-		Preconditions.condition(factoryMethods.size() > 0, () -> {
+		Preconditions.notEmpty(factoryMethods, () -> {
+			if (candidates.isEmpty()) {
+				// Report that we didn't find anything.
+				return format("Could not find factory method [%s] in class [%s]", factoryMethodName, clazz.getName());
+			}
 			// If we didn't find the factory method using the isFactoryMethod Predicate, perhaps
 			// the specified factory method has an invalid return type or is a test method.
 			// In that case, we report the invalid candidates that were found.
-			if (candidates.size() > 0) {
-				return format(
-					"Could not find valid factory method [%s] in class [%s] but found the following invalid candidates: %s",
-					factoryMethodName, clazz.getName(), candidates);
-			}
-			// Otherwise, report that we didn't find anything.
-			return format("Could not find factory method [%s] in class [%s]", factoryMethodName, clazz.getName());
+			return format(
+				"Could not find valid factory method [%s] in class [%s] but found the following invalid candidates: %s",
+				factoryMethodName, clazz.getName(), candidates);
 		});
 		Preconditions.condition(factoryMethods.size() == 1,
 			() -> format("%d factory methods named [%s] were found in class [%s]: %s", factoryMethods.size(),

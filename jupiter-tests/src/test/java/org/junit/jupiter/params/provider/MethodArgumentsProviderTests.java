@@ -250,8 +250,8 @@ class MethodArgumentsProviderTests {
 			var arguments = provideArguments(testClass, false, fullyQualifiedMethodName);
 			assertThat(arguments).containsExactly(array("string1"), array("string2"));
 
-			var factoryMethod = MethodArgumentsProvider.findFactoryMethodByFullyQualifiedName(testClass, testMethod,
-				fullyQualifiedMethodName);
+			var factoryMethod = MethodArgumentsProvider.findFactoryMethodByFullyQualifiedName(testClass,
+				Optional.of(testMethod), fullyQualifiedMethodName);
 			assertThat(factoryMethod).isNotNull();
 			assertThat(factoryMethod.getName()).isEqualTo("stringsProvider");
 			assertThat(factoryMethod.getParameterTypes()).isEmpty();
@@ -759,7 +759,6 @@ class MethodArgumentsProviderTests {
 		when(extensionContext.getExecutableInvoker()).thenReturn(
 			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
 
-		doCallRealMethod().when(extensionContext).getRequiredTestMethod();
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();
 
 		var testInstance = allowNonStaticMethod ? ReflectionUtils.newInstance(testClass) : null;
