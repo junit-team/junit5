@@ -14,11 +14,12 @@ import java.lang.reflect.Field;
 import java.util.Optional;
 
 import org.junit.jupiter.params.provider.ParameterDeclaration;
+import org.junit.jupiter.params.support.FieldContext;
 
 /**
  * @since 5.13
  */
-class FieldParameterDeclaration implements ParameterDeclaration {
+class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 
 	private final Field field;
 	private final Parameter annotation;
@@ -27,6 +28,8 @@ class FieldParameterDeclaration implements ParameterDeclaration {
 		this.field = field;
 		this.annotation = annotation;
 	}
+
+	// --- ParameterDeclaration ------------------------------------------------
 
 	@Override
 	public Field getAnnotatedElement() {
@@ -45,10 +48,19 @@ class FieldParameterDeclaration implements ParameterDeclaration {
 
 	@Override
 	public Optional<String> getName() {
-		return Optional.of(field.getName());
+		return Optional.of(this.field.getName());
 	}
 
-	Parameter getAnnotation() {
-		return annotation;
+	// --- FieldContext --------------------------------------------------------
+
+	@Override
+	public Field getField() {
+		return this.field;
 	}
+
+	@Override
+	public Parameter getParameterAnnotation() {
+		return this.annotation;
+	}
+
 }
