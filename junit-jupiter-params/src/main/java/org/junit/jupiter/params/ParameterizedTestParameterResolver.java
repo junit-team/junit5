@@ -23,14 +23,14 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  */
 class ParameterizedTestParameterResolver implements ParameterResolver {
 
-	private final ParameterizedTestMethodContext methodContext;
+	private final ParameterizedDeclarationContext<?> declarationContext;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 
-	ParameterizedTestParameterResolver(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments,
+	ParameterizedTestParameterResolver(ParameterizedDeclarationContext<?> declarationContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
 
-		this.methodContext = methodContext;
+		this.declarationContext = declarationContext;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
 	}
@@ -52,14 +52,14 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 		}
 
 		// Current parameter is an aggregator?
-		if (this.methodContext.getResolverFacade().isAggregator(parameterIndex)) {
+		if (this.declarationContext.getResolverFacade().isAggregator(parameterIndex)) {
 			return true;
 		}
 
 		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
-		if (this.methodContext.getResolverFacade().hasAggregator()) {
-			return parameterIndex < this.methodContext.getResolverFacade().indexOfFirstAggregator();
+		if (this.declarationContext.getResolverFacade().hasAggregator()) {
+			return parameterIndex < this.declarationContext.getResolverFacade().indexOfFirstAggregator();
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.
@@ -69,7 +69,8 @@ class ParameterizedTestParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.methodContext.getResolverFacade().resolve(parameterContext, extensionContext,
+		return this.declarationContext.getResolverFacade() //
+				.resolve(parameterContext, extensionContext,
 			this.arguments.getConsumedPayloads(), this.invocationIndex);
 	}
 
