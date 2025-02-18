@@ -111,7 +111,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * @see ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(FieldSources.class)

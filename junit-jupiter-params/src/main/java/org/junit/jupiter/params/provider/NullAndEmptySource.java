@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
  * @see NullSource
  * @see EmptySource
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.7")

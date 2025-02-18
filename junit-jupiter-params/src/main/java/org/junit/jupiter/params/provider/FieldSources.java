@@ -32,7 +32,7 @@ import org.apiguardian.api.API;
  * @see FieldSource
  * @see java.lang.annotation.Repeatable
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.11")
