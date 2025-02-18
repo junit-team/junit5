@@ -32,10 +32,6 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		return this.formatter.format(invocationIndex, this.arguments);
 	}
 
-	ArgumentCountValidator createArgumentCountValidator() {
-		return new ArgumentCountValidator(this.declarationContext, this.arguments);
-	}
-
 	private int determineConsumedArgumentCount(int totalLength) {
 		return this.declarationContext.getResolverFacade().hasAggregator() //
 				? totalLength //

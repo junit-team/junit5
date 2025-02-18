@@ -17,14 +17,14 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.JUnitException;
 
-class ParameterizedContainerFieldInjector implements TestInstancePostProcessor {
+class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcessor {
 
 	private final ParameterizedContainerClassContext classContext;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 
-	ParameterizedContainerFieldInjector(ParameterizedContainerClassContext classContext, EvaluatedArgumentSet arguments,
-			int invocationIndex) {
+	ContainerTemplateInstanceFieldInjector(ParameterizedContainerClassContext classContext,
+			EvaluatedArgumentSet arguments, int invocationIndex) {
 		this.classContext = classContext;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
