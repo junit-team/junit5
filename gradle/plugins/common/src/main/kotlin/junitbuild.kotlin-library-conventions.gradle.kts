@@ -27,6 +27,7 @@ afterEvaluate {
 	tasks {
 		withType<KotlinCompile>().configureEach {
 			compilerOptions.jvmTarget = JvmTarget.fromTarget(extension.mainJavaVersion.toString())
+			compilerOptions.javaParameters = true
 		}
 		named<KotlinCompile>("compileTestKotlin") {
 			compilerOptions.jvmTarget = JvmTarget.fromTarget(extension.testJavaVersion.toString())

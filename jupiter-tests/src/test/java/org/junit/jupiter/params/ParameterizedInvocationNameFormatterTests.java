@@ -26,6 +26,7 @@ import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -328,7 +329,9 @@ class ParameterizedInvocationNameFormatterTests {
 
 	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName,
 			int argumentMaxLength) {
-		return new ParameterizedInvocationNameFormatter(pattern, displayName, mock(), argumentMaxLength);
+		ParameterizedDeclarationContext<?> context = mock();
+		when(context.getResolverFacade()).thenReturn(mock());
+		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, argumentMaxLength);
 	}
 
 	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName, Method method) {

@@ -13,7 +13,6 @@ package org.junit.jupiter.params;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Optional;
 
 import org.junit.platform.commons.util.Preconditions;
 
@@ -91,27 +90,6 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Get the name of the {@link Parameter} with the supplied index, if
-	 * it is present and declared before the aggregators.
-	 *
-	 * @return an {@code Optional} containing the name of the parameter
-	 */
-	@Override
-	public Optional<String> getParameterName(int parameterIndex) {
-		if (parameterIndex >= getResolverFacade().getParameterCount()) {
-			return Optional.empty();
-		}
-		Parameter parameter = this.parameters[parameterIndex];
-		if (!parameter.isNamePresent()) {
-			return Optional.empty();
-		}
-		if (getResolverFacade().hasAggregator() && parameterIndex >= getResolverFacade().indexOfFirstAggregator()) {
-			return Optional.empty();
-		}
-		return Optional.of(parameter.getName());
 	}
 
 	@Override

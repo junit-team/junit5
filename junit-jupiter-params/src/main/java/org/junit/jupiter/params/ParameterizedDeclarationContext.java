@@ -12,7 +12,6 @@ package org.junit.jupiter.params;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 /**
  * @since 5.13
@@ -22,8 +21,6 @@ interface ParameterizedDeclarationContext<A extends Annotation> {
 	A getAnnotation();
 
 	AnnotatedElement getAnnotatedElement();
-
-	Optional<String> getParameterName(int parameterIndex);
 
 	String getDisplayNamePattern();
 

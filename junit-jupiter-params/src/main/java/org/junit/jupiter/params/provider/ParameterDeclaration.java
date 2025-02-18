@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 
@@ -27,5 +28,7 @@ public interface ParameterDeclaration {
 	Class<?> getType();
 
 	int getIndex();
+
+	Optional<String> getName();
 
 }

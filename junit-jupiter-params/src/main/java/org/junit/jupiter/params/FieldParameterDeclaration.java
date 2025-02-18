@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 import org.junit.jupiter.params.provider.ParameterDeclaration;
 
@@ -40,6 +41,11 @@ class FieldParameterDeclaration implements ParameterDeclaration {
 	@Override
 	public int getIndex() {
 		return this.annotation.value();
+	}
+
+	@Override
+	public Optional<String> getName() {
+		return Optional.of(field.getName());
 	}
 
 	Parameter getAnnotation() {

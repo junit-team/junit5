@@ -2307,7 +2307,8 @@ By default, the display name of a parameterized test invocation contains the inv
 index and the `String` representation of all arguments for that specific invocation. Each
 argument is preceded by its parameter name (unless the argument is only available via an
 `ArgumentsAccessor` or `ArgumentAggregator`), if the parameter name is present in the
-bytecode (for Java, test code must be compiled with the `-parameters` compiler flag).
+bytecode (for Java, test code must be compiled with the `-parameters` compiler flag; for
+Kotlin, with `-java-parameters`).
 
 However, you can customize invocation display names via the `name` attribute of the
 `@ParameterizedTest` annotation like in the following example.

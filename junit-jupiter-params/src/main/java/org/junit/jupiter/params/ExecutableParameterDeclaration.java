@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import java.util.Optional;
+
 import org.junit.jupiter.params.provider.ParameterDeclaration;
 
 /**
@@ -38,5 +40,10 @@ class ExecutableParameterDeclaration implements ParameterDeclaration {
 	@Override
 	public int getIndex() {
 		return this.index;
+	}
+
+	@Override
+	public Optional<String> getName() {
+		return this.parameter.isNamePresent() ? Optional.of(this.parameter.getName()) : Optional.empty();
 	}
 }
