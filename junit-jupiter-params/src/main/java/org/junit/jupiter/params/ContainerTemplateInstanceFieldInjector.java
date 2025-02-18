@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.Field;
-
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.junit.jupiter.params.support.FieldContext;
@@ -39,19 +37,18 @@ class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcesso
 	public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
 		this.classContext.getResolverFacade().getAllParameterDeclarations().stream() //
 				.filter(FieldParameterDeclaration.class::isInstance) //
-				.map(FieldParameterDeclaration.class::cast) //
-				.forEach(it -> setField(it.getAnnotatedElement(), testInstance, extensionContext, it.getAnnotation()));
+				.map(FieldContext.class::cast) //
+				.forEach(fieldContext -> setField(fieldContext, testInstance, extensionContext));
 	}
 
-	private void setField(Field field, Object testInstance, ExtensionContext extensionContext, Parameter annotation) {
-		FieldContext fieldContext = new DefaultFieldContext(field, annotation);
+	private void setField(FieldContext fieldContext, Object testInstance, ExtensionContext extensionContext) {
 		Object argument = this.classContext.getResolverFacade() //
 				.resolve(fieldContext, extensionContext, this.arguments.getConsumedPayloads(), this.invocationIndex);
 		try {
-			field.set(testInstance, argument);
+			fieldContext.getField().set(testInstance, argument);
 		}
 		catch (Exception e) {
-			throw new JUnitException("Failed to inject parameter value into field: " + field, e);
+			throw new JUnitException("Failed to inject parameter value into field: " + fieldContext.getField(), e);
 		}
 	}
 }

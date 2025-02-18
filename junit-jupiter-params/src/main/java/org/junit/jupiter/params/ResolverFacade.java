@@ -61,8 +61,6 @@ import org.junit.platform.commons.util.StringUtils;
 
 class ResolverFacade {
 
-	private DefaultParameterDeclarations regularParameterDeclarations;
-
 	static ResolverFacade create(Class<?> clazz) {
 		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
 		if (fields.isEmpty()) {
@@ -99,14 +97,13 @@ class ResolverFacade {
 		return new ResolverFacade(executable, declarations.size(), declarations);
 	}
 
-	private final AnnotatedElement sourceElement;
 	private final List<ParameterDeclaration> parameterDeclarations;
 	private final Resolver[] resolvers;
 	private final Map<Integer, ResolverType> resolverTypes;
+	private final DefaultParameterDeclarations regularParameterDeclarations;
 
 	private ResolverFacade(AnnotatedElement sourceElement, int numParameters,
 			Collection<? extends ParameterDeclaration> declarations) {
-		this.sourceElement = sourceElement;
 		// TODO #878 Split aggregators from regular parameters (converters)?
 		this.parameterDeclarations = new ArrayList<>(declarations);
 		this.parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
