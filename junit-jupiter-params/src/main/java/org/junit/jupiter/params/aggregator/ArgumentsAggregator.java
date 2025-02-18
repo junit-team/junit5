@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.support.FieldContext;
 
 /**
  * {@code ArgumentsAggregator} is an abstraction for the aggregation of arguments
@@ -63,5 +64,11 @@ public interface ArgumentsAggregator {
 	 */
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 			throws ArgumentsAggregationException;
+
+	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
+			throws ArgumentsAggregationException {
+		throw new UnsupportedOperationException(
+			"convert(ArgumentsAccessor, FieldContext) is not supported by this aggregator");
+	}
 
 }

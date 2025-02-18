@@ -35,6 +35,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.converter.ArgumentConverter;
@@ -223,7 +224,7 @@ class ResolverFacade {
 
 		Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex);
 
-		Object resolve(FieldContext parameterContext, Object[] arguments, int invocationIndex);
+		Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex);
 
 	}
 
@@ -262,7 +263,19 @@ class ResolverFacade {
 
 	static class Aggregator implements Resolver {
 
-		private static final Aggregator DEFAULT = new Aggregator((accessor, context) -> accessor);
+		private static final Aggregator DEFAULT = new Aggregator(new ArgumentsAggregator() {
+			@Override
+			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+					throws ArgumentsAggregationException {
+				return accessor;
+			}
+
+			@Override
+			public Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
+					throws ArgumentsAggregationException {
+				return accessor;
+			}
+		});
 
 		private final ArgumentsAggregator argumentsAggregator;
 
@@ -272,7 +285,7 @@ class ResolverFacade {
 
 		@Override
 		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
-			ArgumentsAccessor accessor = new DefaultArgumentsAccessor(parameterContext, invocationIndex, arguments);
+			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(parameterContext, invocationIndex, arguments);
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}
@@ -283,9 +296,15 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(FieldContext parameterContext, Object[] arguments, int invocationIndex) {
-			// TODO #878 Implement
-			throw new UnsupportedOperationException("Aggregators for fields are not yet supported");
+		public Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex) {
+			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(fieldContext, invocationIndex, arguments);
+			try {
+				return this.argumentsAggregator.aggregateArguments(accessor, fieldContext);
+			}
+			catch (Exception ex) {
+				throw parameterResolutionException("Error aggregating arguments for parameter", ex,
+					fieldContext.getParameterIndex());
+			}
 		}
 	}
 

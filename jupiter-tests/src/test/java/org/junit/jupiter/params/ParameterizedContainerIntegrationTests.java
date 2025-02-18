@@ -23,19 +23,27 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
+import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.FieldContext;
 
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
 	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class, FieldInjectionTestCase.class,
-			RecordWithBuildInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
-			FieldInjectionWithRegisteredConversionTestCase.class })
+			RecordWithBuiltInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
+			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
+			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
+			FieldInjectionWithCustomAggregatorTestCase.class })
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -133,7 +141,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
 	@CsvSource({ "-1", "1" })
-	record RecordWithBuildInConverterTestCase(int value) {
+	record RecordWithBuiltInConverterTestCase(int value) {
 
 		@Test
 		void test1() {
@@ -195,6 +203,99 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				case +1 -> "plus one";
 				default -> throw new IllegalArgumentException("Unsupported value: " + source);
 			};
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	record RecordWithBuiltInAggregatorTestCase(ArgumentsAccessor accessor) {
+
+		@Test
+		void test1() {
+			assertTrue(accessor.getInteger(0) < 0, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(accessor.getInteger(0) < 0, "negative");
+		}
+
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	static class FieldInjectionWithBuiltInAggregatorTestCase {
+
+		@Parameter
+		private ArgumentsAccessor accessor;
+
+		@Test
+		void test1() {
+			assertTrue(accessor.getInteger(0) < 0, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(accessor.getInteger(0) < 0, "negative");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	record RecordWithCustomAggregatorTestCase(@AggregateWith(TimesTwo.class) int value) {
+
+		@Test
+		void test1() {
+			assertTrue(value <= -2, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value <= -2, "negative");
+		}
+
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	static class FieldInjectionWithCustomAggregatorTestCase {
+
+		@Parameter
+		@AggregateWith(TimesTwo.class)
+		private int value;
+
+		@Test
+		void test1() {
+			assertTrue(value <= -2, "negative");
+		}
+
+		@Test
+		void test2() {
+			assertTrue(value <= -2, "negative");
+		}
+
+	}
+
+	private static class TimesTwo implements ArgumentsAggregator {
+
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
+				throws ArgumentsAggregationException {
+			return aggregateArguments(accessor);
+		}
+
+		@Override
+		public Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
+				throws ArgumentsAggregationException {
+			return aggregateArguments(accessor);
+		}
+
+		private int aggregateArguments(ArgumentsAccessor accessor) {
+			return accessor.getInteger(0) * 2;
 		}
 	}
 
