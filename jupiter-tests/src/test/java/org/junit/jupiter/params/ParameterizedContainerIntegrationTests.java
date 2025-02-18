@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -26,6 +27,7 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstring;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,7 @@ import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -163,6 +166,27 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		results.allEvents().failed() //
 				.assertEventsMatchExactly(finishedWithFailure(
 					message("You must specify a method name when using @MethodSource with @ContainerTemplate")));
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { FieldSourceConstructorInjectionTestCase.class, FieldSourceFieldInjectionTestCase.class })
+	void supportsFieldSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=foo", "[2] value=bar");
+	}
+
+	@Test
+	void doesNotSupportDerivingFieldName() {
+
+		var results = executeTestsForClass(FieldSourceWithoutFieldNameTestCase.class);
+
+		results.allEvents().failed() //
+				.assertEventsMatchExactly(finishedWithFailure(
+					message("You must specify a field name when using @FieldSource with @ContainerTemplate")));
 	}
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -517,12 +541,12 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@MethodSource("parameters")
 	static class MethodSourceFieldInjectionTestCase {
 
-		@Parameter
-		String value;
-
 		static Stream<String> parameters() {
 			return Stream.of("foo", "bar");
 		}
+
+		@Parameter
+		String value;
 
 		@Test
 		void test() {
@@ -533,6 +557,43 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@ParameterizedContainer
 	@MethodSource
 	record MethodSourceWithoutMethodNameTestCase(String value) {
+
+		@Test
+		void test() {
+			fail("should not be executed");
+		}
+	}
+
+	@ParameterizedContainer
+	@FieldSource("parameters")
+	record FieldSourceConstructorInjectionTestCase(String value) {
+
+		static final List<String> parameters = List.of("foo", "bar");
+
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	@ParameterizedContainer
+	@FieldSource("parameters")
+	static class FieldSourceFieldInjectionTestCase {
+
+		static final List<String> parameters = List.of("foo", "bar");
+
+		@Parameter
+		String value;
+
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	@ParameterizedContainer
+	@FieldSource
+	record FieldSourceWithoutFieldNameTestCase(String value) {
 
 		@Test
 		void test() {
