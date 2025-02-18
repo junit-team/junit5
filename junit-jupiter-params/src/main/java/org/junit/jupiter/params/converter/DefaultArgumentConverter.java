@@ -66,11 +66,15 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	@Override
 	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
 		Class<?> targetType = context.getField().getType();
-		return convert(source, targetType, context.getField());
+		return convert(source, targetType, context);
 	}
 
 	public final Object convert(Object source, Class<?> targetType, ParameterContext context) {
 		return convert(source, targetType, context.getDeclaringExecutable());
+	}
+
+	public final Object convert(Object source, Class<?> targetType, FieldContext context) {
+		return convert(source, targetType, context.getField());
 	}
 
 	private Object convert(Object source, Class<?> targetType, Member member) {
