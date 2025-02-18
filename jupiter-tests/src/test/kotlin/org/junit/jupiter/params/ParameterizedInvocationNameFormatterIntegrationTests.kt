@@ -21,9 +21,9 @@ class ParameterizedInvocationNameFormatterIntegrationTests {
         info: TestInfo
     ) {
         if (param.equals("foo")) {
-            assertEquals("[1] foo", info.displayName)
+            assertEquals("[1] param=foo", info.displayName)
         } else {
-            assertEquals("[2] bar", info.displayName)
+            assertEquals("[2] param=bar", info.displayName)
         }
     }
 

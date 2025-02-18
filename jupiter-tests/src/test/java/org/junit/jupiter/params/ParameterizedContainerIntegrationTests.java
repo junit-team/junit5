@@ -51,11 +51,13 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 		var results = executeTestsForClass(containerTemplateClass);
 
+		String parameterNamePrefix = containerTemplateClass.getSimpleName().contains("Aggregator") ? "" : "value=";
+
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(containerTemplateClass), started()), //
 
-			event(dynamicTestRegistered("#1"), displayName("[1] -1")), //
+			event(dynamicTestRegistered("#1"), displayName("[1] %s-1".formatted(parameterNamePrefix))), //
 			event(container("#1"), started()), //
 			event(dynamicTestRegistered("test1")), //
 			event(dynamicTestRegistered("test2")), //
@@ -65,7 +67,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			event(test("test2"), finishedSuccessfully()), //
 			event(container("#1"), finishedSuccessfully()), //
 
-			event(dynamicTestRegistered("#2"), displayName("[2] 1")), //
+			event(dynamicTestRegistered("#2"), displayName("[2] %s1".formatted(parameterNamePrefix))), //
 			event(container("#2"), started()), //
 			event(dynamicTestRegistered("test1")), //
 			event(dynamicTestRegistered("test2")), //
@@ -83,7 +85,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	void canInjectNullAndEmptyValues() {
 		var results = executeTestsForClass(NullAndEmptySourceTestCase.class);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 	}
 
 	// -------------------------------------------------------------------

@@ -61,6 +61,8 @@ import org.junit.platform.commons.util.StringUtils;
 
 class ResolverFacade {
 
+	private DefaultParameterDeclarations regularParameterDeclarations;
+
 	static ResolverFacade create(Class<?> clazz) {
 		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
 		if (fields.isEmpty()) {
@@ -113,17 +115,40 @@ class ResolverFacade {
 		for (ParameterDeclaration parameter : declarations) {
 			this.resolverTypes.put(parameter.getIndex(), isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
-	}
-
-	public List<ParameterDeclaration> getParameterDeclarations() {
-		return this.parameterDeclarations;
-	}
-
-	public ParameterDeclarations getNonAggregatorParameterDeclarations() {
 		NavigableMap<Integer, ParameterDeclaration> declarationsByIndex = parameterDeclarations.stream() //
 				.filter(parameter -> !isAggregator(parameter.getIndex())) //
 				.collect(toMap(ParameterDeclaration::getIndex, Function.identity(), (a, b) -> a, TreeMap::new));
-		return new DefaultParameterDeclarations(sourceElement, declarationsByIndex);
+		this.regularParameterDeclarations = new DefaultParameterDeclarations(sourceElement, declarationsByIndex);
+
+	}
+
+	public List<ParameterDeclaration> getAllParameterDeclarations() {
+		return this.parameterDeclarations;
+	}
+
+	public ParameterDeclarations getRegularParameterDeclarations() {
+		return this.regularParameterDeclarations;
+	}
+
+	/**
+	 * Get the name of the parameter with the supplied index, if it is present
+	 * and declared before the aggregators.
+	 *
+	 * @return an {@code Optional} containing the name of the parameter
+	 */
+	Optional<String> getParameterName(int parameterIndex) {
+		if (parameterIndex >= getParameterCount()) {
+			return Optional.empty();
+		}
+		Optional<String> parameterName = this.regularParameterDeclarations.get(parameterIndex) //
+				.flatMap(ParameterDeclaration::getName);
+		if (!parameterName.isPresent()) {
+			return Optional.empty();
+		}
+		if (hasAggregator() && parameterIndex >= indexOfFirstAggregator()) {
+			return Optional.empty();
+		}
+		return parameterName;
 	}
 
 	int getParameterCount() {

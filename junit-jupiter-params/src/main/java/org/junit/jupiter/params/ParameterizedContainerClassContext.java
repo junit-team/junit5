@@ -11,7 +11,6 @@
 package org.junit.jupiter.params;
 
 import java.lang.reflect.AnnotatedElement;
-import java.util.Optional;
 
 class ParameterizedContainerClassContext implements ParameterizedDeclarationContext<ParameterizedContainer> {
 
@@ -33,11 +32,6 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 	@Override
 	public AnnotatedElement getAnnotatedElement() {
 		return this.clazz;
-	}
-
-	@Override
-	public Optional<String> getParameterName(int parameterIndex) {
-		return Optional.empty();
 	}
 
 	@Override
