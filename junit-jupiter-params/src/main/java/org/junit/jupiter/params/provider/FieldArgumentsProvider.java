@@ -14,9 +14,11 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.BaseStream;
@@ -46,7 +48,10 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		Object testInstance = context.getTestInstance().orElse(null);
 		String[] fieldNames = fieldSource.value();
 		if (fieldNames.length == 0) {
-			fieldNames = new String[] { context.getRequiredTestMethod().getName() };
+			Optional<Method> testMethod = context.getTestMethod();
+			Preconditions.condition(testMethod.isPresent(),
+				"You must specify a field name when using @FieldSource with @ContainerTemplate");
+			fieldNames = new String[] { testMethod.get().getName() };
 		}
 		// @formatter:off
 		return stream(fieldNames)
