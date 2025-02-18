@@ -23,18 +23,17 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.junit.jupiter.params.support.FieldContext;
 
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
@@ -280,21 +279,12 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 	}
 
-	private static class TimesTwo implements ArgumentsAggregator {
+	private static class TimesTwo extends SimpleArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
-			return aggregateArguments(accessor);
-		}
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 
-		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
-				throws ArgumentsAggregationException {
-			return aggregateArguments(accessor);
-		}
-
-		private int aggregateArguments(ArgumentsAccessor accessor) {
 			return accessor.getInteger(0) * 2;
 		}
 	}

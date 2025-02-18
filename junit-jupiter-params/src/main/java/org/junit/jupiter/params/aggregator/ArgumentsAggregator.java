@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -44,6 +45,7 @@ import org.junit.jupiter.params.support.FieldContext;
  * @since 5.2
  * @see AggregateWith
  * @see ArgumentsAccessor
+ * @see SimpleArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @API(status = STABLE, since = "5.7")
@@ -65,6 +67,7 @@ public interface ArgumentsAggregator {
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 			throws ArgumentsAggregationException;
 
+	@API(status = EXPERIMENTAL, since = "5.13")
 	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {
 		throw new UnsupportedOperationException(

@@ -82,6 +82,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -92,7 +93,7 @@ import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSour
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -2450,12 +2451,18 @@ class ParameterizedTestIntegrationTests {
 			}
 		}
 
-		record ArgumentsAggregatorWithConstructorParameter(String value) implements ArgumentsAggregator {
+		static class ArgumentsAggregatorWithConstructorParameter extends SimpleArgumentsAggregator {
+
+			private final String value;
+
+			public ArgumentsAggregatorWithConstructorParameter(String value) {
+				this.value = value;
+			}
 
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-					throws ArgumentsAggregationException {
-				return value;
+			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+					AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
+				return this.value;
 			}
 		}
 	}
@@ -2509,11 +2516,11 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	private static class StringAggregator implements ArgumentsAggregator {
+	private static class StringAggregator extends SimpleArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 			return accessor.getString(0) + accessor.getString(1);
 		}
 	}
