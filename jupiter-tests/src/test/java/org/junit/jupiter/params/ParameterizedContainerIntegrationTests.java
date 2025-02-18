@@ -23,6 +23,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstring;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.stream.Stream;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
@@ -40,6 +42,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
@@ -106,7 +109,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@ParameterizedTest
 	@ValueSource(classes = { CsvFileSourceConstructorInjectionTestCase.class,
 			CsvFileSourceFieldInjectionTestCase.class })
-	void supportCsvFileSource(Class<?> containerTemplateClass) {
+	void supportsCsvFileSource(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -116,9 +119,36 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					"[4] name=qux, value=4");
 	}
 
+	@ParameterizedTest
+	@ValueSource(classes = { SingleEnumSourceConstructorInjectionTestCase.class,
+			SingleEnumSourceFieldInjectionTestCase.class })
+	void supportsSingleEnumSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=FOO");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { RepeatedEnumSourceConstructorInjectionTestCase.class,
+			RepeatedEnumSourceFieldInjectionTestCase.class })
+	void supportsRepeatedEnumSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=FOO", "[2] value=BAR");
+	}
+
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
-		return results.containerEvents().started().map(Event::getTestDescriptor).map(
-			TestDescriptor::getDisplayName).skip(2);
+		return results.containerEvents() //
+				.started() //
+				.filter(uniqueIdSubstring(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE)::matches).map(
+					Event::getTestDescriptor) //
+				.map(TestDescriptor::getDisplayName);
 	}
 
 	// -------------------------------------------------------------------
@@ -391,6 +421,60 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			assertNotNull(name);
 			assertTrue(value > 0 && value < 5);
 		}
+	}
+
+	@ParameterizedContainer
+	@EnumSource
+	record SingleEnumSourceConstructorInjectionTestCase(EnumOne value) {
+		@Test
+		void test() {
+			assertEquals(EnumOne.FOO, value);
+		}
+	}
+
+	@ParameterizedContainer
+	@EnumSource
+	static class SingleEnumSourceFieldInjectionTestCase {
+
+		@Parameter
+		EnumOne value;
+
+		@Test
+		void test() {
+			assertEquals(EnumOne.FOO, value);
+		}
+	}
+
+	@ParameterizedContainer
+	@EnumSource(EnumOne.class)
+	@EnumSource(EnumTwo.class)
+	record RepeatedEnumSourceConstructorInjectionTestCase(Object value) {
+		@Test
+		void test() {
+			assertTrue(value == EnumOne.FOO || value == EnumTwo.BAR);
+		}
+	}
+
+	@ParameterizedContainer
+	@EnumSource(EnumOne.class)
+	@EnumSource(EnumTwo.class)
+	static class RepeatedEnumSourceFieldInjectionTestCase {
+
+		@Parameter
+		Object value;
+
+		@Test
+		void test() {
+			assertTrue(value == EnumOne.FOO || value == EnumTwo.BAR);
+		}
+	}
+
+	private enum EnumOne {
+		FOO
+	}
+
+	private enum EnumTwo {
+		BAR
 	}
 
 }

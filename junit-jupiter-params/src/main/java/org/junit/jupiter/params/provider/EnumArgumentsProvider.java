@@ -13,12 +13,12 @@ package org.junit.jupiter.params.provider;
 import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 
-import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -29,7 +29,7 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			EnumSource enumSource) {
-		Set<? extends Enum<?>> constants = getEnumConstants(context, enumSource);
+		Set<? extends Enum<?>> constants = getEnumConstants(parameters, enumSource);
 		EnumSource.Mode mode = enumSource.mode();
 		String[] declaredConstantNames = enumSource.names();
 		if (declaredConstantNames.length > 0) {
@@ -42,8 +42,9 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 		return constants.stream().map(Arguments::of);
 	}
 
-	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ExtensionContext context, EnumSource enumSource) {
-		Class<E> enumClass = determineEnumClass(context, enumSource);
+	private <E extends Enum<E>> Set<? extends E> getEnumConstants(ParameterDeclarations parameters,
+			EnumSource enumSource) {
+		Class<E> enumClass = determineEnumClass(parameters, enumSource);
 		E[] constants = enumClass.getEnumConstants();
 		if (constants.length == 0) {
 			Preconditions.condition(enumSource.from().isEmpty() && enumSource.to().isEmpty(),
@@ -60,17 +61,18 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private <E extends Enum<E>> Class<E> determineEnumClass(ExtensionContext context, EnumSource enumSource) {
+	private <E extends Enum<E>> Class<E> determineEnumClass(ParameterDeclarations parameters, EnumSource enumSource) {
 		Class enumClass = enumSource.value();
 		if (enumClass.equals(NullEnum.class)) {
-			Method method = context.getRequiredTestMethod();
-			Class<?>[] parameterTypes = method.getParameterTypes();
-			Preconditions.condition(parameterTypes.length > 0,
-				() -> "Test method must declare at least one parameter: " + method.toGenericString());
-			Preconditions.condition(Enum.class.isAssignableFrom(parameterTypes[0]),
-				() -> "First parameter must reference an Enum type (alternatively, use the annotation's 'value' attribute to specify the type explicitly): "
-						+ method.toGenericString());
-			enumClass = parameterTypes[0];
+			enumClass = parameters.getFirst() //
+					.map(ParameterDeclaration::getType).map(parameterType -> {
+						Preconditions.condition(Enum.class.isAssignableFrom(parameterType),
+							() -> "First parameter must reference an Enum type (alternatively, use the annotation's 'value' attribute to specify the type explicitly): "
+									+ parameters.getSourceElementDescription());
+						return (Class<E>) parameterType;
+					}).orElseThrow(
+						() -> new PreconditionViolationException("There must be at least one declared parameter for "
+								+ parameters.getSourceElementDescription()));
 		}
 		return enumClass;
 	}
