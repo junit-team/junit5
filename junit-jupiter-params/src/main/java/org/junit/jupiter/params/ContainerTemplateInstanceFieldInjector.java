@@ -38,8 +38,9 @@ class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcesso
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
 		this.classContext.getResolverFacade().getParameterDeclarations().stream() //
-				.filter(it -> it.annotatedElement instanceof Field) //
-				.forEach(it -> setField((Field) it.annotatedElement, testInstance, extensionContext, it.annotation));
+				.filter(FieldParameterDeclaration.class::isInstance) //
+				.map(FieldParameterDeclaration.class::cast) //
+				.forEach(it -> setField(it.getAnnotatedElement(), testInstance, extensionContext, it.getAnnotation()));
 	}
 
 	private void setField(Field field, Object testInstance, ExtensionContext extensionContext, Parameter annotation) {
