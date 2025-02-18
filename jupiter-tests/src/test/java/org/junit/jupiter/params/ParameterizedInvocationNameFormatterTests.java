@@ -39,11 +39,11 @@ import java.util.Locale;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
@@ -379,9 +379,10 @@ class ParameterizedInvocationNameFormatterTests {
 		void processFruits(String fruit1, String fruit2) {
 		}
 
-		private static class CustomAggregator implements ArgumentsAggregator {
+		private static class CustomAggregator extends SimpleArgumentsAggregator {
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+					AnnotatedElementContext context, int parameterIndex) {
 				return accessor.get(0);
 			}
 		}

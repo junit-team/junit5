@@ -37,6 +37,7 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.parallel.ResourceLock;
@@ -278,27 +279,29 @@ public class AggregatorIntegrationTests {
 	@interface CsvToAddress {
 	}
 
-	static class PersonAggregator implements ArgumentsAggregator {
+	static class PersonAggregator extends SimpleArgumentsAggregator {
 
 		@Override
-		public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+		protected Person aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) {
 			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
 
 			// @formatter:off
 			return new Person(
-				arguments.getString(startIndex + 0),
-				arguments.getString(startIndex + 1),
-				arguments.get(startIndex + 2, LocalDate.class),
-				arguments.get(startIndex + 3, Gender.class)
+				accessor.getString(startIndex + 0),
+				accessor.getString(startIndex + 1),
+				accessor.get(startIndex + 2, LocalDate.class),
+				accessor.get(startIndex + 3, Gender.class)
 			);
 			// @formatter:on
 		}
 	}
 
-	static class AddressAggregator implements ArgumentsAggregator {
+	static class AddressAggregator extends SimpleArgumentsAggregator {
 
 		@Override
-		public Address aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+		public Address aggregateArguments(ArgumentsAccessor arguments, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) {
 			int startIndex = context.findAnnotation(StartIndex.class).map(StartIndex::value).orElse(0);
 
 			// @formatter:off
@@ -314,10 +317,11 @@ public class AggregatorIntegrationTests {
 	/**
 	 * Maps from String to length of String.
 	 */
-	static class MapAggregator implements ArgumentsAggregator {
+	static class MapAggregator extends SimpleArgumentsAggregator {
 
 		@Override
-		public Map<String, Integer> aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+		protected Map<String, Integer> aggregateArguments(ArgumentsAccessor arguments, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) {
 			// @formatter:off
 			return IntStream.range(0, arguments.size())
 					.mapToObj(arguments::getString)
@@ -326,19 +330,19 @@ public class AggregatorIntegrationTests {
 		}
 	}
 
-	static class NullAggregator implements ArgumentsAggregator {
+	static class NullAggregator extends SimpleArgumentsAggregator {
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
-			Preconditions.condition(!context.getParameter().getType().isPrimitive(),
-				() -> "only supports reference types");
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) {
+			Preconditions.condition(!targetType.isPrimitive(), () -> "only supports reference types");
 			return null;
 		}
 	}
 
-	static class ErroneousAggregator implements ArgumentsAggregator {
+	static class ErroneousAggregator extends SimpleArgumentsAggregator {
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 			throw new ArgumentsAggregationException("something went horribly wrong");
 		}
 	}
@@ -392,7 +396,7 @@ public class AggregatorIntegrationTests {
 		}
 	}
 
-	static class InstanceCountingAggregator implements ArgumentsAggregator {
+	static class InstanceCountingAggregator extends SimpleArgumentsAggregator {
 		static int instanceCount;
 
 		InstanceCountingAggregator() {
@@ -400,8 +404,8 @@ public class AggregatorIntegrationTests {
 		}
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 			return "enigma";
 		}
 	}

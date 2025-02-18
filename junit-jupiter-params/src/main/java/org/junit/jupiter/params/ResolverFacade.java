@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -38,6 +39,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
 import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
@@ -263,16 +265,10 @@ class ResolverFacade {
 
 	static class Aggregator implements Resolver {
 
-		private static final Aggregator DEFAULT = new Aggregator(new ArgumentsAggregator() {
+		private static final Aggregator DEFAULT = new Aggregator(new SimpleArgumentsAggregator() {
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-					throws ArgumentsAggregationException {
-				return accessor;
-			}
-
-			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
-					throws ArgumentsAggregationException {
+			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+					AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 				return accessor;
 			}
 		});
