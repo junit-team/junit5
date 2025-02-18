@@ -29,6 +29,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -42,13 +44,17 @@ import org.junit.platform.launcher.TestPlan;
 public class EngineExecutionOrchestrator {
 
 	private final ListenerRegistry<TestExecutionListener> listenerRegistry;
+	private final NamespacedHierarchicalStore<Namespace> requestStore;
 
+	// TODO[Question]: Is it okay to have a null value for requestStore?
 	public EngineExecutionOrchestrator() {
-		this(ListenerRegistry.forTestExecutionListeners());
+		this(ListenerRegistry.forTestExecutionListeners(), null);
 	}
 
-	EngineExecutionOrchestrator(ListenerRegistry<TestExecutionListener> listenerRegistry) {
+	EngineExecutionOrchestrator(ListenerRegistry<TestExecutionListener> listenerRegistry,
+			NamespacedHierarchicalStore<Namespace> requestStore) {
 		this.listenerRegistry = listenerRegistry;
+		this.requestStore = requestStore;
 	}
 
 	void execute(InternalTestPlan internalTestPlan, TestExecutionListener... listeners) {
@@ -199,7 +205,7 @@ public class EngineExecutionOrchestrator {
 			engineDescriptor);
 		try {
 			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
-				outputDirectoryProvider));
+				outputDirectoryProvider, requestStore));
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {

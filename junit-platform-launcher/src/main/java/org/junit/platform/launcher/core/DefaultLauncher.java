@@ -45,10 +45,10 @@ class DefaultLauncher implements Launcher {
 
 	private final AtomicLong storeCounter = new AtomicLong(0);
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
-	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
-		listenerRegistry.testExecutionListeners);
+	private final EngineExecutionOrchestrator executionOrchestrator;
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
 	private final NamespacedHierarchicalStore<Namespace> sessionStore;
+	private final NamespacedHierarchicalStore<Namespace> requestStore;
 
 	/**
 	 * Construct a new {@code DefaultLauncher} with the supplied test engines.
@@ -69,6 +69,9 @@ class DefaultLauncher implements Launcher {
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
 			unmodifiableCollection(postDiscoveryFilters), listenerRegistry.launcherDiscoveryListeners);
 		this.sessionStore = sessionStore;
+		this.requestStore = createRequestStore();
+		this.executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry.testExecutionListeners,
+			requestStore);
 	}
 
 	@Override
