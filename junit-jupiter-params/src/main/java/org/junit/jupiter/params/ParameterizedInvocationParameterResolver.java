@@ -1,0 +1,78 @@
+/*
+ * Copyright 2015-2025 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.params;
+
+import java.lang.reflect.Executable;
+
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+
+/**
+ * @since 5.13
+ */
+abstract class ParameterizedInvocationParameterResolver implements ParameterResolver {
+
+	protected final ParameterizedDeclarationContext<?> declarationContext;
+	private final EvaluatedArgumentSet arguments;
+	private final int invocationIndex;
+
+	ParameterizedInvocationParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
+			EvaluatedArgumentSet arguments, int invocationIndex) {
+
+		this.declarationContext = declarationContext;
+		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
+	}
+
+	@Override
+	public final ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
+	public final boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
+
+		if (!isSupportedOnConstructorOrMethod(declaringExecutable, extensionContext)) {
+			return false;
+		}
+
+		int parameterIndex = parameterContext.getIndex();
+
+		// Current parameter is an aggregator?
+		if (this.declarationContext.getResolverFacade().isAggregator(parameterIndex)) {
+			return true;
+		}
+
+		// Ensure that the current parameter is declared before aggregators.
+		// Otherwise, a different ParameterResolver should handle it.
+		if (this.declarationContext.getResolverFacade().hasAggregator()) {
+			return parameterIndex < this.declarationContext.getResolverFacade().indexOfFirstAggregator();
+		}
+
+		// Else fallback to behavior for parameterized test methods without aggregators.
+		return parameterIndex < this.arguments.getConsumedLength();
+	}
+
+	@Override
+	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException {
+		return this.declarationContext.getResolverFacade() //
+				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(),
+					this.invocationIndex);
+	}
+
+	protected abstract boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
+			ExtensionContext extensionContext);
+
+}

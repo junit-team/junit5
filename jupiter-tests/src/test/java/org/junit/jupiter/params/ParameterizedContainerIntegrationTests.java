@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -23,6 +24,7 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -82,19 +84,23 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	static class ConstructorInjectionTestCase {
 
 		private int value;
+		private final TestInfo testInfo;
 
-		public ConstructorInjectionTestCase(int value) {
+		public ConstructorInjectionTestCase(int value, TestInfo testInfo) {
 			this.value = value;
+			this.testInfo = testInfo;
 		}
 
 		@Test
 		void test1() {
+			assertEquals("test1()", testInfo.getDisplayName());
 			assertTrue(value < 0, "negative");
 			value *= -1;
 		}
 
 		@Test
 		void test2() {
+			assertEquals("test2()", testInfo.getDisplayName());
 			assertTrue(value < 0, "negative");
 			value *= -1;
 		}
@@ -103,15 +109,17 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
 	@ValueSource(ints = { -1, 1 })
-	record RecordTestCase(int value) {
+	record RecordTestCase(int value, TestInfo testInfo) {
 
 		@Test
 		void test1() {
+			assertEquals("test1()", testInfo.getDisplayName());
 			assertTrue(value < 0, "negative");
 		}
 
 		@Test
 		void test2() {
+			assertEquals("test2()", testInfo.getDisplayName());
 			assertTrue(value < 0, "negative");
 		}
 	}

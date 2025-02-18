@@ -14,64 +14,24 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestParameterResolver implements ParameterResolver {
+class ParameterizedTestParameterResolver extends ParameterizedInvocationParameterResolver {
 
-	private final ParameterizedDeclarationContext<?> declarationContext;
-	private final EvaluatedArgumentSet arguments;
-	private final int invocationIndex;
+	ParameterizedTestParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
+			EvaluatedArgumentSet arguments, int invocationIndex) {
+		super(declarationContext, arguments, invocationIndex);
 
-	ParameterizedTestParameterResolver(ParameterizedDeclarationContext<?> declarationContext, EvaluatedArgumentSet arguments,
-			int invocationIndex) {
-
-		this.declarationContext = declarationContext;
-		this.arguments = arguments;
-		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
-	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
-		return ExtensionContextScope.TEST_METHOD;
-	}
-
-	@Override
-	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
-		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		int parameterIndex = parameterContext.getIndex();
-
+	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
+			ExtensionContext extensionContext) {
 		// Not a @ParameterizedTest method?
-		if (!declaringExecutable.equals(testMethod)) {
-			return false;
-		}
-
-		// Current parameter is an aggregator?
-		if (this.declarationContext.getResolverFacade().isAggregator(parameterIndex)) {
-			return true;
-		}
-
-		// Ensure that the current parameter is declared before aggregators.
-		// Otherwise, a different ParameterResolver should handle it.
-		if (this.declarationContext.getResolverFacade().hasAggregator()) {
-			return parameterIndex < this.declarationContext.getResolverFacade().indexOfFirstAggregator();
-		}
-
-		// Else fallback to behavior for parameterized test methods without aggregators.
-		return parameterIndex < this.arguments.getConsumedLength();
-	}
-
-	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-		return this.declarationContext.getResolverFacade() //
-				.resolve(parameterContext, extensionContext,
-			this.arguments.getConsumedPayloads(), this.invocationIndex);
+		Method testMethod = extensionContext.getTestMethod().orElse(null);
+		return declaringExecutable.equals(testMethod);
 	}
 
 }
