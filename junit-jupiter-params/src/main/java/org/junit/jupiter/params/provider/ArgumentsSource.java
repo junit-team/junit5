@@ -33,7 +33,7 @@ import org.apiguardian.api.API;
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(ArgumentsSources.class)
