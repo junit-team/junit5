@@ -40,7 +40,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
-	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class, FieldInjectionTestCase.class,
+	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class,
+			ParameterizedContainerDataClassTestCase.class, FieldInjectionTestCase.class,
 			RecordWithBuiltInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
 			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
 			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
