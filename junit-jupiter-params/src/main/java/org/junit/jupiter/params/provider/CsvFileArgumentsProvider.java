@@ -58,7 +58,8 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	}
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource csvFileSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			CsvFileSource csvFileSource) {
 		this.charset = getCharsetFrom(csvFileSource);
 		this.numLinesToSkip = csvFileSource.numLinesToSkip();
 		this.csvParser = createParserFor(csvFileSource);

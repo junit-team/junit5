@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.AGGREGATOR;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.CONVERTER;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -25,10 +26,14 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
+import java.util.Optional;
 import java.util.TreeMap;
+import java.util.function.Function;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -44,6 +49,8 @@ import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
+import org.junit.jupiter.params.provider.ParameterDeclaration;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.JUnitException;
@@ -77,25 +84,30 @@ class ResolverFacade {
 			declarations.put(index, new FieldParameterDeclaration(field, annotation));
 			maxIndex = Math.max(maxIndex, index);
 		}
-		return new ResolverFacade(maxIndex + 1, declarations.values());
+		return new ResolverFacade(clazz, maxIndex + 1, declarations.values());
 	}
 
 	static ResolverFacade create(Executable executable) {
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		List<ParameterDeclaration> declarations = new ArrayList<>(parameters.length);
 		for (int index = 0; index < parameters.length; index++) {
+			// TODO #878 Consider index of first aggregator here?
 			declarations.add(new ExecutableParameterDeclaration(parameters[index], index));
 		}
-		return new ResolverFacade(declarations.size(), declarations);
+		return new ResolverFacade(executable, declarations.size(), declarations);
 	}
 
+	private final AnnotatedElement sourceElement;
 	private final List<ParameterDeclaration> parameterDeclarations;
 	private final Resolver[] resolvers;
 	private final Map<Integer, ResolverType> resolverTypes;
 
-	private ResolverFacade(int numParameters, Collection<? extends ParameterDeclaration> declarations) {
+	private ResolverFacade(AnnotatedElement sourceElement, int numParameters,
+			Collection<? extends ParameterDeclaration> declarations) {
+		this.sourceElement = sourceElement;
+		// TODO #878 Split aggregators from regular parameters (converters)?
 		this.parameterDeclarations = new ArrayList<>(declarations);
-		parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
+		this.parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
 		this.resolvers = new Resolver[numParameters];
 		this.resolverTypes = new HashMap<>(numParameters);
 		for (ParameterDeclaration parameter : declarations) {
@@ -103,19 +115,15 @@ class ResolverFacade {
 		}
 	}
 
-	/**
-	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
-	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
-	 *
-	 * @return {@code true} if the parameter is an aggregator
-	 */
-	private boolean isAggregator(ParameterDeclaration parameter) {
-		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
-	}
-
 	public List<ParameterDeclaration> getParameterDeclarations() {
 		return this.parameterDeclarations;
+	}
+
+	public ParameterDeclarations getNonAggregatorParameterDeclarations() {
+		NavigableMap<Integer, ParameterDeclaration> declarationsByIndex = parameterDeclarations.stream() //
+				.filter(parameter -> !isAggregator(parameter.getIndex())) //
+				.collect(toMap(ParameterDeclaration::getIndex, Function.identity(), (a, b) -> a, TreeMap::new));
+		return new DefaultParameterDeclarations(sourceElement, declarationsByIndex);
 	}
 
 	int getParameterCount() {
@@ -142,6 +150,17 @@ class ResolverFacade {
 	 */
 	boolean isAggregator(int parameterIndex) {
 		return this.resolverTypes.get(parameterIndex) == AGGREGATOR;
+	}
+
+	/**
+	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+	 *
+	 * @return {@code true} if the parameter is an aggregator
+	 */
+	private boolean isAggregator(ParameterDeclaration parameter) {
+		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
+				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
 	}
 
 	/**
@@ -326,6 +345,44 @@ class ResolverFacade {
 			fullMessage += ": " + cause.getMessage();
 		}
 		return new ParameterResolutionException(fullMessage, cause);
+	}
+
+	private static class DefaultParameterDeclarations implements ParameterDeclarations {
+
+		private final AnnotatedElement sourceElement;
+		private final NavigableMap<Integer, ParameterDeclaration> declarationsByIndex;
+
+		DefaultParameterDeclarations(AnnotatedElement sourceElement,
+				NavigableMap<Integer, ParameterDeclaration> declarationsByIndex) {
+			this.sourceElement = sourceElement;
+			this.declarationsByIndex = declarationsByIndex;
+		}
+
+		@Override
+		public AnnotatedElement getSourceElement() {
+			return sourceElement;
+		}
+
+		@Override
+		public Optional<ParameterDeclaration> getFirst() {
+			return declarationsByIndex.isEmpty() ? Optional.empty()
+					: Optional.of(declarationsByIndex.firstEntry().getValue());
+		}
+
+		@Override
+		public int getCount() {
+			return declarationsByIndex.isEmpty() ? 0 : declarationsByIndex.lastKey() + 1;
+		}
+
+		@Override
+		public List<ParameterDeclaration> getAll() {
+			return Collections.unmodifiableList(new ArrayList<>(declarationsByIndex.values()));
+		}
+
+		@Override
+		public Optional<ParameterDeclaration> get(int index) {
+			return Optional.ofNullable(declarationsByIndex.get(index));
+		}
 	}
 
 }

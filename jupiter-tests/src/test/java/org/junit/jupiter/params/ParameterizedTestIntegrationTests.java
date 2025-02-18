@@ -108,6 +108,7 @@ import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
@@ -524,7 +525,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches(
-							"@NullSource cannot provide a null argument to method .+: the method does not declare any formal parameters.")))));
+							"@NullSource cannot provide a null argument to method .+: no formal parameters declared.")))));
 		}
 
 		@Test
@@ -664,7 +665,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches(
-							"@EmptySource cannot provide an empty argument to method .+: the method does not declare any formal parameters.")))));
+							"@EmptySource cannot provide an empty argument to method .+: no formal parameters declared.")))));
 		}
 
 		@ParameterizedTest(name = "{1}")
@@ -2154,7 +2155,8 @@ class ParameterizedTestIntegrationTests {
 		private static class EvaluationReportingArgumentsProvider implements ArgumentsProvider {
 
 			@Override
-			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) {
 				return Stream.of(() -> {
 					context.publishReportEntry("evaluated", "true");
 					return List.of("foo", "unused").toArray();
@@ -2438,7 +2440,8 @@ class ParameterizedTestIntegrationTests {
 		record ArgumentsProviderWithConstructorParameter(String value) implements ArgumentsProvider {
 
 			@Override
-			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) {
 				return Stream.of(arguments(value));
 			}
 		}
@@ -2495,7 +2498,8 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(arguments("foo"), arguments("bar"));
 		}
 	}
@@ -2503,7 +2507,8 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoUnusedStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 		}
 	}
@@ -2536,7 +2541,8 @@ class ParameterizedTestIntegrationTests {
 	private static class AutoCloseableArgumentProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(arguments(new AutoCloseableArgument(), Named.of("unused", new AutoCloseableArgument())));
 		}
 	}

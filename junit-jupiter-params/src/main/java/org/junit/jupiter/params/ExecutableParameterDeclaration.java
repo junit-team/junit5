@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import org.junit.jupiter.params.provider.ParameterDeclaration;
+
 /**
  * @since 5.13
  */

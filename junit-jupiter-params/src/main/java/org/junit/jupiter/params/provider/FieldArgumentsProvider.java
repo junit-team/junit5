@@ -40,7 +40,8 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSource> {
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, FieldSource fieldSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			FieldSource fieldSource) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Object testInstance = context.getTestInstance().orElse(null);
 		String[] fieldNames = fieldSource.value();

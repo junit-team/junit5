@@ -71,6 +71,7 @@ import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @Execution(SAME_THREAD)
@@ -360,7 +361,8 @@ class ParameterizedTestDemo {
 	public class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of("apple", "banana").map(Arguments::of);
 		}
 	}
@@ -383,7 +385,8 @@ class ParameterizedTestDemo {
 		}
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(Arguments.of(testInfo.getDisplayName()));
 		}
 	}

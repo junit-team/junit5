@@ -41,7 +41,8 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		method -> isConvertibleToStream(method.getReturnType()) && !isTestMethod(method);
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, MethodSource methodSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			MethodSource methodSource) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Method testMethod = context.getRequiredTestMethod();
 		Object testInstance = context.getTestInstance().orElse(null);

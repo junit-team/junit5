@@ -50,8 +50,8 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	}
 
 	@Override
-	public final Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		return annotations.stream().flatMap(annotation -> provideArguments(context, annotation));
+	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
+		return annotations.stream().flatMap(annotation -> provideArguments(parameters, context, annotation));
 	}
 
 	/**
@@ -61,7 +61,18 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 * @param context the current extension context; never {@code null}
 	 * @param annotation the annotation to process; never {@code null}
 	 * @return a stream of arguments; never {@code null}
+	 * @deprecated Please implement
+	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext, Annotation)}
+	 * instead.
 	 */
-	protected abstract Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation);
+	@Deprecated
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
+		throw new UnsupportedOperationException(
+			"Please implement provideArguments(ParameterDeclarations, ExtensionContext, Annotation) instead.");
+	}
 
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			A annotation) {
+		return provideArguments(context, annotation);
+	}
 }

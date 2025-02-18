@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -29,16 +30,12 @@ class ParameterizedInvocationContextProvider<T> {
 	protected Stream<T> provideInvocationContexts(ExtensionContext extensionContext,
 			ParameterizedDeclarationContext<?> declarationContext,
 			ParameterizedInvocationContextFactory<T> parameterizedInvocationContextFactory) {
+
+		List<ArgumentsSource> argumentsSources = collectArgumentSources(declarationContext);
+		ParameterDeclarations parameters = declarationContext.getResolverFacade().getNonAggregatorParameterDeclarations();
 		ParameterizedInvocationNameFormatter formatter = ParameterizedInvocationNameFormatter.create(extensionContext,
 			declarationContext);
 		AtomicLong invocationCount = new AtomicLong(0);
-
-		List<ArgumentsSource> argumentsSources = findRepeatableAnnotations(declarationContext.getAnnotatedElement(),
-			ArgumentsSource.class);
-
-		Preconditions.notEmpty(argumentsSources,
-			() -> String.format("Configuration error: You must configure at least one arguments source for this @%s",
-				declarationContext.getAnnotationName()));
 
 		// @formatter:off
 		return argumentsSources
@@ -46,7 +43,7 @@ class ParameterizedInvocationContextProvider<T> {
 				.map(ArgumentsSource::value)
 				.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsProvider.class, clazz, extensionContext))
 				.map(provider -> AnnotationConsumerInitializer.initialize(declarationContext.getAnnotatedElement(), provider))
-				.flatMap(provider -> arguments(provider, extensionContext))
+				.flatMap(provider -> arguments(provider, parameters, extensionContext))
 				.map(arguments -> {
 					invocationCount.incrementAndGet();
 					return parameterizedInvocationContextFactory.create(formatter, arguments, invocationCount.intValue());
@@ -57,9 +54,21 @@ class ParameterizedInvocationContextProvider<T> {
 		// @formatter:on
 	}
 
-	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ExtensionContext context) {
+	private static List<ArgumentsSource> collectArgumentSources(ParameterizedDeclarationContext<?> declarationContext) {
+		List<ArgumentsSource> argumentsSources = findRepeatableAnnotations(declarationContext.getAnnotatedElement(),
+			ArgumentsSource.class);
+
+		Preconditions.notEmpty(argumentsSources,
+			() -> String.format("Configuration error: You must configure at least one arguments source for this @%s",
+				declarationContext.getAnnotationName()));
+
+		return argumentsSources;
+	}
+
+	protected static Stream<? extends Arguments> arguments(ArgumentsProvider provider, ParameterDeclarations parameters,
+			ExtensionContext context) {
 		try {
-			return provider.provideArguments(context);
+			return provider.provideArguments(parameters, context);
 		}
 		catch (Exception e) {
 			throw ExceptionUtils.throwAsUncheckedException(e);

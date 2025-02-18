@@ -32,6 +32,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class EnumArgumentsProviderTests {
 
+	private ParameterDeclarations parameters = mock();
 	private ExtensionContext extensionContext = mock();
 
 	@Test
@@ -218,7 +219,7 @@ class EnumArgumentsProviderTests {
 
 		var provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(extensionContext).map(Arguments::get);
+		return provider.provideArguments(parameters, extensionContext).map(Arguments::get);
 	}
 
 }

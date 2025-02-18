@@ -12,7 +12,6 @@ package org.junit.jupiter.params.provider;
 
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import java.lang.reflect.Method;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -27,11 +26,10 @@ class NullArgumentsProvider implements ArgumentsProvider {
 	private static final Arguments nullArguments = arguments(new Object[] { null });
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		Method testMethod = context.getRequiredTestMethod();
-		Preconditions.condition(testMethod.getParameterCount() > 0, () -> String.format(
-			"@NullSource cannot provide a null argument to method [%s]: the method does not declare any formal parameters.",
-			testMethod.toGenericString()));
+	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
+		Preconditions.condition(parameters.getCount() > 0,
+			() -> String.format("@NullSource cannot provide a null argument to %s: no formal parameters declared.",
+				parameters.getSourceElementDescription()));
 
 		return Stream.of(nullArguments);
 	}
