@@ -19,11 +19,11 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 
 class ParameterizedContainerParameterResolver implements ParameterResolver {
 
-	private final ParameterizedContainerClassContext declarationContext;
+	private final ParameterizedDeclarationContext<?> declarationContext;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 
-	ParameterizedContainerParameterResolver(ParameterizedContainerClassContext declarationContext,
+	ParameterizedContainerParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
 		this.declarationContext = declarationContext;
 		this.arguments = arguments;
@@ -41,7 +41,7 @@ class ParameterizedContainerParameterResolver implements ParameterResolver {
 		if (parameterContext.getDeclaringExecutable() instanceof Constructor) {
 			Class<?> declaringClass = ((Constructor<?>) parameterContext.getDeclaringExecutable()).getDeclaringClass();
 			// TODO #878 see ParameterizedTestParameterResolver
-			return declaringClass.equals(declarationContext.getAnnotatedElement());
+			return declaringClass.equals(this.declarationContext.getAnnotatedElement());
 		}
 		return false;
 	}
@@ -49,7 +49,8 @@ class ParameterizedContainerParameterResolver implements ParameterResolver {
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return declarationContext.getResolverFacade() //
-				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(), invocationIndex);
+		return this.declarationContext.getResolverFacade() //
+				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(), this.invocationIndex);
 	}
+
 }
