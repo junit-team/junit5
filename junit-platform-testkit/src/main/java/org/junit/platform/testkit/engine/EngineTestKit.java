@@ -253,8 +253,9 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
+		// RequestStore parameter is currently set to null because it is not used.
 		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider());
+			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), null);
 		testEngine.execute(request);
 	}
 
