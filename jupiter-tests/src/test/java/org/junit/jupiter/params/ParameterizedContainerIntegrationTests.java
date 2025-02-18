@@ -10,7 +10,9 @@
 
 package org.junit.jupiter.params;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -23,6 +25,8 @@ import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -34,11 +38,16 @@ import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.Event;
 
+@SuppressWarnings("ALL")
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
@@ -49,6 +58,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
 			FieldInjectionWithCustomAggregatorTestCase.class })
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
+
 		var results = executeTestsForClass(containerTemplateClass);
 
 		String parameterNamePrefix = containerTemplateClass.getSimpleName().contains("Aggregator") ? "" : "value=";
@@ -81,11 +91,34 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			event(engine(), finishedSuccessfully()));
 	}
 
-	@Test
-	void canInjectNullAndEmptyValues() {
-		var results = executeTestsForClass(NullAndEmptySourceTestCase.class);
+	@ParameterizedTest
+	@ValueSource(classes = { NullAndEmptySourceConstructorInjectionTestCase.class,
+			NullAndEmptySourceConstructorFieldInjectionTestCase.class })
+	void supportsNullAndEmptySource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=null", "[2] value=");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { CsvFileSourceConstructorInjectionTestCase.class,
+			CsvFileSourceFieldInjectionTestCase.class })
+	void supportCsvFileSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] name=foo, value=1", "[2] name=bar, value=2", "[3] name=baz, value=3",
+					"[4] name=qux, value=4");
+	}
+
+	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
+		return results.containerEvents().started().map(Event::getTestDescriptor).map(
+			TestDescriptor::getDisplayName).skip(2);
 	}
 
 	// -------------------------------------------------------------------
@@ -312,10 +345,51 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
 	@NullAndEmptySource
-	record NullAndEmptySourceTestCase(String value) {
+	record NullAndEmptySourceConstructorInjectionTestCase(String value) {
 		@Test
 		void test() {
 			assertTrue(StringUtils.isBlank(value));
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@NullAndEmptySource
+	static class NullAndEmptySourceConstructorFieldInjectionTestCase {
+
+		@Parameter
+		String value;
+
+		@Test
+		void test() {
+			assertTrue(StringUtils.isBlank(value));
+		}
+	}
+
+	@ParameterizedContainer
+	@CsvFileSource(resources = "two-column.csv")
+	record CsvFileSourceConstructorInjectionTestCase(String name, int value) {
+		@Test
+		void test() {
+			assertNotNull(name);
+			assertTrue(value > 0 && value < 5);
+		}
+	}
+
+	@ParameterizedContainer
+	@CsvFileSource(resources = "two-column.csv")
+	static class CsvFileSourceFieldInjectionTestCase {
+
+		@Parameter(0)
+		String name;
+
+		@Parameter(1)
+		int value;
+
+		@Test
+		void test() {
+			assertNotNull(name);
+			assertTrue(value > 0 && value < 5);
 		}
 	}
 
