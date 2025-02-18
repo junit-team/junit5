@@ -8,14 +8,19 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.params;
+package org.junit.jupiter.params.provider;
+
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.AnnotatedElement;
+
+import org.apiguardian.api.API;
 
 /**
  * @since 5.13
  */
-interface ParameterDeclaration {
+@API(status = EXPERIMENTAL, since = "5.13")
+public interface ParameterDeclaration {
 
 	AnnotatedElement getAnnotatedElement();
 

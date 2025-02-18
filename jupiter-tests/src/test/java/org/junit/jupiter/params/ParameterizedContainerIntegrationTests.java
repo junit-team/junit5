@@ -35,7 +35,9 @@ import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.util.StringUtils;
 
 public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
 
@@ -75,6 +77,13 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 			event(container(containerTemplateClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void canInjectNullAndEmptyValues() {
+		var results = executeTestsForClass(NullAndEmptySourceTestCase.class);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
 	}
 
 	// -------------------------------------------------------------------
@@ -295,6 +304,16 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 
 			return accessor.getInteger(0) * 2;
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@NullAndEmptySource
+	record NullAndEmptySourceTestCase(String value) {
+		@Test
+		void test() {
+			assertTrue(StringUtils.isBlank(value));
 		}
 	}
 

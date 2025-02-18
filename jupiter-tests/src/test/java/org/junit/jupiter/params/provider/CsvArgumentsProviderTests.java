@@ -18,6 +18,7 @@ import static org.mockito.Mockito.mock;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -382,7 +383,7 @@ class CsvArgumentsProviderTests {
 	private Stream<Object[]> provideArguments(CsvSource annotation) {
 		var provider = new CsvArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(mock()).map(Arguments::get);
+		return provider.provideArguments(mock(), mock(ExtensionContext.class)).map(Arguments::get);
 	}
 
 	@SuppressWarnings("unchecked")

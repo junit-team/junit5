@@ -42,6 +42,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -122,11 +123,15 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void argumentsRethrowsOriginalExceptionFromProviderAsUncheckedException() {
-		ArgumentsProvider failingProvider = (context) -> {
-			throw new FileNotFoundException("a message");
+		ArgumentsProvider failingProvider = new ArgumentsProvider() {
+			@Override
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) throws Exception {
+				throw new FileNotFoundException("a message");
+			}
 		};
 
-		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null));
+		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null, null));
 		assertEquals("a message", exception.getMessage());
 	}
 
@@ -360,7 +365,8 @@ class ParameterizedTestExtensionTests {
 	static class ZeroArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.empty();
 		}
 	}
@@ -376,7 +382,8 @@ class ParameterizedTestExtensionTests {
 	static class ArgumentsProviderWithCloseHandler implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			var argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}
@@ -393,7 +400,8 @@ class ParameterizedTestExtensionTests {
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}
@@ -431,7 +439,8 @@ class ParameterizedTestExtensionTests {
 		}
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}

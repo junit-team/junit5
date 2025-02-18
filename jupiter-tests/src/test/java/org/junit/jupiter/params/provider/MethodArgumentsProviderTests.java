@@ -770,7 +770,7 @@ class MethodArgumentsProviderTests {
 
 		var provider = new MethodArgumentsProvider();
 		provider.accept(methodSource);
-		return provider.provideArguments(extensionContext).map(Arguments::get);
+		return provider.provideArguments(mock(), extensionContext).map(Arguments::get);
 	}
 
 	// -------------------------------------------------------------------------

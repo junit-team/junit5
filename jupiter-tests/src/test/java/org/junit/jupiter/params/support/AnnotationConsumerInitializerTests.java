@@ -34,6 +34,7 @@ import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.provider.AnnotationBasedArgumentsProvider;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 
 @DisplayName("AnnotationConsumerInitializer")
@@ -58,7 +59,7 @@ class AnnotationConsumerInitializerTests {
 		var method = SubjectClass.class.getDeclaredMethod("foo");
 		var initialisedAnnotationConsumer = initialize(method, instance);
 
-		initialisedAnnotationConsumer.provideArguments(mock()).findAny();
+		initialisedAnnotationConsumer.provideArguments(mock(), mock(ExtensionContext.class)).findAny();
 
 		assertThat(initialisedAnnotationConsumer.annotations) //
 				.hasSize(1) //
@@ -116,7 +117,8 @@ class AnnotationConsumerInitializerTests {
 		List<CsvSource> annotations = new ArrayList<>();
 
 		@Override
-		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
+		protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context, CsvSource annotation) {
 			annotations.add(annotation);
 			return Stream.empty();
 		}

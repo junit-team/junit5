@@ -30,7 +30,8 @@ class AnnotationBasedArgumentsProviderTests {
 
 	private final AnnotationBasedArgumentsProvider<CsvSource> annotationBasedArgumentsProvider = new AnnotationBasedArgumentsProvider<>() {
 		@Override
-		protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource annotation) {
+		protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context, CsvSource annotation) {
 			return Stream.of(Arguments.of(annotation));
 		}
 	};
@@ -46,18 +47,20 @@ class AnnotationBasedArgumentsProviderTests {
 	@DisplayName("should invoke the provideArguments template method with the accepted annotation")
 	void shouldInvokeTemplateMethodWithTheAnnotationProvidedToAccept() {
 		var spiedProvider = spy(annotationBasedArgumentsProvider);
+		var parameters = mock(ParameterDeclarations.class);
 		var extensionContext = mock(ExtensionContext.class);
 		var annotation = csvSource("0", "1", "2");
 
 		annotationBasedArgumentsProvider.accept(annotation);
-		annotationBasedArgumentsProvider.provideArguments(extensionContext);
+		annotationBasedArgumentsProvider.provideArguments(parameters, extensionContext);
 
-		verify(spiedProvider, atMostOnce()).provideArguments(eq(extensionContext), eq(annotation));
+		verify(spiedProvider, atMostOnce()).provideArguments(eq(parameters), eq(extensionContext), eq(annotation));
 	}
 
 	@Test
 	@DisplayName("should invoke the provideArguments template method for every accepted annotation")
 	void shouldInvokeTemplateMethodForEachAnnotationProvided() {
+		var parameters = mock(ParameterDeclarations.class);
 		var extensionContext = mock(ExtensionContext.class);
 		var foo = csvSource("foo");
 		var bar = csvSource("bar");
@@ -65,7 +68,7 @@ class AnnotationBasedArgumentsProviderTests {
 		annotationBasedArgumentsProvider.accept(foo);
 		annotationBasedArgumentsProvider.accept(bar);
 
-		var arguments = annotationBasedArgumentsProvider.provideArguments(extensionContext).toList();
+		var arguments = annotationBasedArgumentsProvider.provideArguments(parameters, extensionContext).toList();
 
 		assertThat(arguments).hasSize(2);
 		assertThat(arguments.getFirst().get()[0]).isEqualTo(foo);

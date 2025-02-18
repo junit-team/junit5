@@ -478,6 +478,7 @@ class FieldArgumentsProviderTests {
 
 		when(fieldSource.value()).thenReturn(fieldNames);
 
+		var parameters = mock(ParameterDeclarations.class);
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
@@ -495,7 +496,7 @@ class FieldArgumentsProviderTests {
 
 		var provider = new FieldArgumentsProvider();
 		provider.accept(fieldSource);
-		return provider.provideArguments(extensionContext).map(Arguments::get);
+		return provider.provideArguments(parameters, extensionContext).map(Arguments::get);
 	}
 
 	// -------------------------------------------------------------------------

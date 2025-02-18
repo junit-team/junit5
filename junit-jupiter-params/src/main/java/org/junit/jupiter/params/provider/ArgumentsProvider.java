@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.stream.Stream;
@@ -44,7 +46,25 @@ public interface ArgumentsProvider {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 * @return a stream of arguments; never {@code null}
+	 * @deprecated Please implement
+	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext)} instead.
 	 */
-	Stream<? extends Arguments> provideArguments(ExtensionContext context) throws Exception;
+	@Deprecated
+	@API(status = DEPRECATED, since = "5.13")
+	default Stream<? extends Arguments> provideArguments(@SuppressWarnings("unused") ExtensionContext context)
+			throws Exception {
+		throw new UnsupportedOperationException(
+			"Please implement provideArguments(ParameterDeclarations, ExtensionContext) instead.");
+	}
+
+	/**
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	default Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context)
+			throws Exception {
+		// TODO #878 Log a warning?
+		return provideArguments(context);
+	}
 
 }

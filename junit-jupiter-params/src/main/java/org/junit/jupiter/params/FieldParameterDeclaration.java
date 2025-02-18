@@ -12,6 +12,8 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Field;
 
+import org.junit.jupiter.params.provider.ParameterDeclaration;
+
 /**
  * @since 5.13
  */
