@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Comparator.comparing;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.AGGREGATOR;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.CONVERTER;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -45,6 +46,7 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.jupiter.params.support.FieldContext;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -60,18 +62,19 @@ class ResolverFacade {
 		Map<Integer, ParameterDeclaration> declarations = new TreeMap<>();
 		int maxIndex = -1;
 		for (Field field : fields) {
-			// TODO #878 test preconditions
+			// TODO #878 Test all preconditions
 			Preconditions.condition(!ReflectionUtils.isFinal(field), () -> "Field must not be final: " + field);
 			ReflectionSupport.makeAccessible(field);
 			// TODO #878 Test that composed annotations are supported
-			Parameter annotation = findAnnotation(field, Parameter.class).get();
+			Parameter annotation = findAnnotation(field, Parameter.class) //
+					.orElseThrow(() -> new JUnitException("No @Parameter annotation found"));
 			int index = annotation.value();
 			Preconditions.condition(index >= 0,
 				() -> String.format("Index must be greater than or equal to zero in %s on %s", annotation, field));
 			Preconditions.condition(!declarations.containsKey(index),
 				() -> String.format("Duplicate index %d declared on %s and %s", index,
-					declarations.get(index).annotatedElement, field));
-			declarations.put(index, ParameterDeclaration.create(field, annotation));
+					declarations.get(index).getAnnotatedElement(), field));
+			declarations.put(index, new FieldParameterDeclaration(field, annotation));
 			maxIndex = Math.max(maxIndex, index);
 		}
 		return new ResolverFacade(maxIndex + 1, declarations.values());
@@ -81,7 +84,7 @@ class ResolverFacade {
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		List<ParameterDeclaration> declarations = new ArrayList<>(parameters.length);
 		for (int index = 0; index < parameters.length; index++) {
-			declarations.add(ParameterDeclaration.create(parameters[index], index));
+			declarations.add(new ExecutableParameterDeclaration(parameters[index], index));
 		}
 		return new ResolverFacade(declarations.size(), declarations);
 	}
@@ -90,13 +93,25 @@ class ResolverFacade {
 	private final Resolver[] resolvers;
 	private final Map<Integer, ResolverType> resolverTypes;
 
-	private ResolverFacade(int numParameters, Collection<ParameterDeclaration> declarations) {
+	private ResolverFacade(int numParameters, Collection<? extends ParameterDeclaration> declarations) {
 		this.parameterDeclarations = new ArrayList<>(declarations);
+		parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
 		this.resolvers = new Resolver[numParameters];
 		this.resolverTypes = new HashMap<>(numParameters);
 		for (ParameterDeclaration parameter : declarations) {
-			this.resolverTypes.put(parameter.index, parameter.isAggregator() ? AGGREGATOR : CONVERTER);
+			this.resolverTypes.put(parameter.getIndex(), isAggregator(parameter) ? AGGREGATOR : CONVERTER);
 		}
+	}
+
+	/**
+	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+	 *
+	 * @return {@code true} if the parameter is an aggregator
+	 */
+	private boolean isAggregator(ParameterDeclaration parameter) {
+		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
+				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
 	}
 
 	public List<ParameterDeclaration> getParameterDeclarations() {
@@ -313,38 +328,4 @@ class ResolverFacade {
 		return new ParameterResolutionException(fullMessage, cause);
 	}
 
-	static class ParameterDeclaration {
-
-		static ParameterDeclaration create(Field field, Parameter annotation) {
-			return new ParameterDeclaration(field, field.getType(), annotation.value(), annotation);
-		}
-
-		static ParameterDeclaration create(java.lang.reflect.Parameter parameter, int index) {
-			return new ParameterDeclaration(parameter, parameter.getType(), index, null);
-		}
-
-		final AnnotatedElement annotatedElement;
-		final Class<?> type;
-		final int index;
-		final Parameter annotation;
-
-		private ParameterDeclaration(AnnotatedElement annotatedElement, Class<?> type, int index,
-				Parameter annotation) {
-			this.annotatedElement = annotatedElement;
-			this.type = type;
-			this.index = index;
-			this.annotation = annotation;
-		}
-
-		/**
-		 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
-		 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
-		 *
-		 * @return {@code true} if the parameter is an aggregator
-		 */
-		private boolean isAggregator() {
-			return ArgumentsAccessor.class.isAssignableFrom(this.type)
-					|| isAnnotated(this.annotatedElement, AggregateWith.class);
-		}
-	}
 }
