@@ -11,46 +11,29 @@
 package org.junit.jupiter.params;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
-import org.junit.jupiter.api.extension.ParameterResolver;
 
-class ParameterizedContainerParameterResolver implements ParameterResolver {
-
-	private final ParameterizedDeclarationContext<?> declarationContext;
-	private final EvaluatedArgumentSet arguments;
-	private final int invocationIndex;
+/**
+ * @since 5.13
+ */
+class ParameterizedContainerParameterResolver extends ParameterizedInvocationParameterResolver {
 
 	ParameterizedContainerParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
-		this.declarationContext = declarationContext;
-		this.arguments = arguments;
-		this.invocationIndex = invocationIndex;
+		super(declarationContext, arguments, invocationIndex);
 	}
 
 	@Override
-	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
-		return ExtensionContextScope.TEST_METHOD;
-	}
-
-	@Override
-	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-		if (parameterContext.getDeclaringExecutable() instanceof Constructor) {
-			Class<?> declaringClass = ((Constructor<?>) parameterContext.getDeclaringExecutable()).getDeclaringClass();
+	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
+			ExtensionContext extensionContext) {
+		if (declaringExecutable instanceof Constructor) {
+			Class<?> declaringClass = ((Constructor<?>) declaringExecutable).getDeclaringClass();
 			// TODO #878 see ParameterizedTestParameterResolver
 			return declaringClass.equals(this.declarationContext.getAnnotatedElement());
 		}
 		return false;
-	}
-
-	@Override
-	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-			throws ParameterResolutionException {
-		return this.declarationContext.getResolverFacade() //
-				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(), this.invocationIndex);
 	}
 
 }
