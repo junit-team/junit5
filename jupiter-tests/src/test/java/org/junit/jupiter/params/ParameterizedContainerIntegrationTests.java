@@ -43,6 +43,7 @@ import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
@@ -141,6 +142,27 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly("[1] value=FOO", "[2] value=BAR");
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { MethodSourceConstructorInjectionTestCase.class, MethodSourceFieldInjectionTestCase.class })
+	void supportsMethodSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=foo", "[2] value=bar");
+	}
+
+	@Test
+	void doesNotSupportDerivingMethodName() {
+
+		var results = executeTestsForClass(MethodSourceWithoutMethodNameTestCase.class);
+
+		results.allEvents().failed() //
+				.assertEventsMatchExactly(finishedWithFailure(
+					message("You must specify a method name when using @MethodSource with @ContainerTemplate")));
 	}
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -475,6 +497,47 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 	private enum EnumTwo {
 		BAR
+	}
+
+	@ParameterizedContainer
+	@MethodSource("parameters")
+	record MethodSourceConstructorInjectionTestCase(String value) {
+
+		static Stream<String> parameters() {
+			return Stream.of("foo", "bar");
+		}
+
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	@ParameterizedContainer
+	@MethodSource("parameters")
+	static class MethodSourceFieldInjectionTestCase {
+
+		@Parameter
+		String value;
+
+		static Stream<String> parameters() {
+			return Stream.of("foo", "bar");
+		}
+
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	@ParameterizedContainer
+	@MethodSource
+	record MethodSourceWithoutMethodNameTestCase(String value) {
+
+		@Test
+		void test() {
+			fail("should not be executed");
+		}
 	}
 
 }
