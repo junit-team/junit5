@@ -33,6 +33,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -42,12 +43,16 @@ import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -187,6 +192,18 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		results.allEvents().failed() //
 				.assertEventsMatchExactly(finishedWithFailure(
 					message("You must specify a field name when using @FieldSource with @ContainerTemplate")));
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { ArgumentsSourceConstructorInjectionTestCase.class,
+			ArgumentsSourceFieldInjectionTestCase.class })
+	void supportsArgumentsSource(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("[1] value=foo", "[2] value=bar");
 	}
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -598,6 +615,37 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Test
 		void test() {
 			fail("should not be executed");
+		}
+	}
+
+	@ParameterizedContainer
+	@ArgumentsSource(CustomArgumentsProvider.class)
+	record ArgumentsSourceConstructorInjectionTestCase(String value) {
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	@ParameterizedContainer
+	@ArgumentsSource(CustomArgumentsProvider.class)
+	static class ArgumentsSourceFieldInjectionTestCase {
+
+		@Parameter
+		String value;
+
+		@Test
+		void test() {
+			assertTrue(value == "foo" || value == "bar");
+		}
+	}
+
+	static class CustomArgumentsProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context)
+				throws Exception {
+			return Stream.of("foo", "bar").map(Arguments::of);
 		}
 	}
 
