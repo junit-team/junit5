@@ -134,18 +134,11 @@ class ResolverFacade {
 	 * @return an {@code Optional} containing the name of the parameter
 	 */
 	Optional<String> getParameterName(int parameterIndex) {
-		if (parameterIndex >= getParameterCount()) {
+		if (parameterIndex >= getParameterCount() || (hasAggregator() && parameterIndex >= indexOfFirstAggregator())) {
 			return Optional.empty();
 		}
-		Optional<String> parameterName = this.regularParameterDeclarations.get(parameterIndex) //
+		return this.regularParameterDeclarations.get(parameterIndex) //
 				.flatMap(ParameterDeclaration::getName);
-		if (!parameterName.isPresent()) {
-			return Optional.empty();
-		}
-		if (hasAggregator() && parameterIndex >= indexOfFirstAggregator()) {
-			return Optional.empty();
-		}
-		return parameterName;
 	}
 
 	int getParameterCount() {
