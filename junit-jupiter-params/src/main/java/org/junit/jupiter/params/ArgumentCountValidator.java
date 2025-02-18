@@ -23,6 +23,7 @@ import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 
 class ArgumentCountValidator implements InvocationInterceptor {
+
 	private static final Logger logger = LoggerFactory.getLogger(ArgumentCountValidator.class);
 
 	static final String ARGUMENT_COUNT_VALIDATION_KEY = "junit.jupiter.params.argumentCountValidation";

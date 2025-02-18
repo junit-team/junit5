@@ -28,9 +28,10 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		// TODO #878 Register either parameter resolvers or field injectors?
-		return Arrays.asList(
-			new ParameterizedContainerParameterResolver(this.declarationContext, this.arguments, this.invocationIndex),
-			new ParameterizedContainerFieldInjector(this.declarationContext, this.arguments, this.invocationIndex),
-			createArgumentCountValidator());
+		return Arrays.asList( //
+			new ContainerTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
+				this.invocationIndex), //
+			new ContainerTemplateInstanceFieldInjector(this.declarationContext, this.arguments, this.invocationIndex) //
+		);
 	}
 }

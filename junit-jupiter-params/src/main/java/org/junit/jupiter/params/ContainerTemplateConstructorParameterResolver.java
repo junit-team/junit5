@@ -10,28 +10,30 @@
 
 package org.junit.jupiter.params;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
- * @since 5.0
+ * @since 5.13
  */
-class ParameterizedTestParameterResolver extends ParameterizedInvocationParameterResolver {
+class ContainerTemplateConstructorParameterResolver extends ParameterizedInvocationParameterResolver {
 
-	ParameterizedTestParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
+	ContainerTemplateConstructorParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
 		super(declarationContext, arguments, invocationIndex);
-
 	}
 
 	@Override
 	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
 			ExtensionContext extensionContext) {
-		// Not a @ParameterizedTest method?
-		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		return declaringExecutable.equals(testMethod);
+		if (declaringExecutable instanceof Constructor) {
+			Class<?> declaringClass = ((Constructor<?>) declaringExecutable).getDeclaringClass();
+			// TODO #878 see ParameterizedTestParameterResolver
+			return declaringClass.equals(this.declarationContext.getAnnotatedElement());
+		}
+		return false;
 	}
 
 }

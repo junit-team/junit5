@@ -37,8 +37,9 @@ class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		return Arrays.asList( //
-			new ParameterizedTestParameterResolver(this.declarationContext, this.arguments, this.invocationIndex), //
-			createArgumentCountValidator());
+			new TestTemplateMethodParameterResolver(this.declarationContext, this.arguments, this.invocationIndex), //
+			new ArgumentCountValidator(this.declarationContext, this.arguments) //
+		);
 	}
 
 	@Override
