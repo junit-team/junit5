@@ -18,6 +18,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -76,15 +77,20 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	@Override
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = super.populateNewExtensionRegistry(context);
-		invocationContext.getAdditionalExtensions().forEach(
+		this.invocationContext.getAdditionalExtensions().forEach(
 			extension -> registry.registerExtension(extension, invocationContext));
 		return registry;
 	}
 
 	@Override
+	protected void prepareExtensionContext(ExtensionContext extensionContext) {
+		this.invocationContext.prepareInvocation(extensionContext);
+	}
+
+	@Override
 	public void after(JupiterEngineExecutionContext context) {
 		// forget invocationContext so it can be garbage collected
-		invocationContext = null;
+		this.invocationContext = null;
 	}
 
 }

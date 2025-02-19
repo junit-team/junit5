@@ -119,6 +119,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		}
 		ExtensionContext extensionContext = new ContainerTemplateInvocationExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this, context.getConfiguration(), registry);
+		this.invocationContext.prepareInvocation(extensionContext);
 		return context.extend() //
 				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(registry) //
@@ -134,8 +135,9 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	}
 
 	@Override
-	public void cleanUp(JupiterEngineExecutionContext context) {
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		// forget invocationContext so it can be garbage collected
 		this.invocationContext = null;
+		super.cleanUp(context);
 	}
 }

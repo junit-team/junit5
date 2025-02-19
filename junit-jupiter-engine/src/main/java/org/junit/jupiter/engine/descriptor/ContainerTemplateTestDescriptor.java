@@ -178,10 +178,11 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	}
 
 	@Override
-	public void cleanUp(JupiterEngineExecutionContext context) {
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		this.childrenPrototypes.clear();
 		this.childrenPrototypesByIndex.clear();
 		this.dynamicDescendantFilter.allowAll();
+		super.cleanUp(context);
 	}
 
 	@Override

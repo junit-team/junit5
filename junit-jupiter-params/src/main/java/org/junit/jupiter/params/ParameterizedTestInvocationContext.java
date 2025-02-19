@@ -12,8 +12,12 @@ package org.junit.jupiter.params;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -21,6 +25,8 @@ import org.junit.jupiter.params.provider.Arguments;
  * @since 5.0
  */
 class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
+
+	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
 
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
@@ -48,10 +54,39 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 			new ArgumentCountValidator(this.methodContext, this.arguments));
 	}
 
+	@Override
+	public void prepareInvocation(ExtensionContext context) {
+		if (this.methodContext.annotation.autoCloseArguments()) {
+			Store store = context.getStore(NAMESPACE);
+			AtomicInteger argumentIndex = new AtomicInteger();
+
+			Arrays.stream(this.arguments.getAllPayloads()) //
+					.filter(AutoCloseable.class::isInstance) //
+					.map(AutoCloseable.class::cast) //
+					.map(CloseableArgument::new) //
+					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
+		}
+	}
+
 	private int determineConsumedArgumentCount(int totalLength) {
 		return methodContext.hasAggregator() //
 				? totalLength //
 				: Math.min(totalLength, methodContext.getParameterCount());
+	}
+
+	private static class CloseableArgument implements Store.CloseableResource {
+
+		private final AutoCloseable autoCloseable;
+
+		CloseableArgument(AutoCloseable autoCloseable) {
+			this.autoCloseable = autoCloseable;
+		}
+
+		@Override
+		public void close() throws Throwable {
+			this.autoCloseable.close();
+		}
+
 	}
 
 }

@@ -67,4 +67,16 @@ public interface ContainerTemplateInvocationContext {
 		return emptyList();
 	}
 
+	/**
+	 * Prepare the imminent invocation of the container template.
+	 *
+	 * <p>This may be used, for example, to store entries in the
+	 * {@link ExtensionContext.Store Store} to benefit from its cleanup support
+	 * or for retrieval by other extensions.
+	 *
+	 * @param context The invocation-level extension context.
+	 */
+	default void prepareInvocation(ExtensionContext context) {
+	}
+
 }

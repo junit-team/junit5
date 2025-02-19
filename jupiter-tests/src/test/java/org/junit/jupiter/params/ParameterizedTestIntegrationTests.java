@@ -1314,6 +1314,15 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void closeAutoCloseableArgumentsAfterTestDespiteEarlyFailure() {
+		var results = execute(FailureInBeforeEachTestCase.class, "test", AutoCloseableArgument.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("beforeEach"))));
+
+		assertEquals(2, AutoCloseableArgument.closeCounter);
+	}
+
+	@Test
 	void executesTwoIterationsBasedOnIterationAndUniqueIdSelector() {
 		var methodId = uniqueIdForTestTemplateMethod(TestCase.class, "testWithThreeIterations(int)");
 		var results = execute(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
@@ -2545,6 +2554,21 @@ class ParameterizedTestIntegrationTests {
 
 		static Book factory(String title) {
 			return new Book(title);
+		}
+	}
+
+	static class FailureInBeforeEachTestCase {
+
+		@BeforeEach
+		void beforeEach() {
+			fail("beforeEach");
+		}
+
+		@ParameterizedTest
+		@ArgumentsSource(AutoCloseableArgumentProvider.class)
+		void test(AutoCloseableArgument autoCloseable) {
+			assertNotNull(autoCloseable);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
 		}
 	}
 
