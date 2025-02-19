@@ -35,7 +35,11 @@ repository on GitHub.
 [[release-notes-5.13.0-M1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* If `@ParameterizedTest(autoCloseArguments = true)`, all arguments returned by the used
+  `ArgumentsProvider` implementations are now closed even if the test method declares
+  fewer parameters.
+* `AutoCloseable` arguments returned by an `ArgumentsProvider` are now closed even if they
+  are wrapped with `Named`.
 
 [[release-notes-5.13.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
