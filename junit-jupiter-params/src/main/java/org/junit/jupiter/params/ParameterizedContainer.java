@@ -11,7 +11,6 @@
 package org.junit.jupiter.params;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -22,6 +21,7 @@ import java.lang.annotation.Target;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
  * @since 5.13
@@ -95,5 +95,25 @@ public @interface ParameterizedContainer {
 	 * @see java.lang.AutoCloseable
 	 */
 	boolean autoCloseArguments() default true;
+
+	/**
+	 * Configure how the number of arguments provided by an
+	 * {@link ArgumentsSource} are validated.
+	 *
+	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.
+	 *
+	 * <p>When an {@link ArgumentsSource} provides more arguments than declared
+	 * by the parameterized container class constructor or {@link Parameter}
+	 * annotated fields, there might be a bug in the method or the
+	 * {@link ArgumentsSource}. By default, the additional arguments are
+	 * ignored. {@code argumentCountValidation} allows you to control how
+	 * additional arguments are handled. The default can be configured via the
+	 * {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
+	 * configuration parameter (see the User Guide for details on configuration
+	 * parameters).
+	 *
+	 * @see ArgumentCountValidationMode
+	 */
+	ArgumentCountValidationMode argumentCountValidation() default ArgumentCountValidationMode.DEFAULT;
 
 }

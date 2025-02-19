@@ -316,16 +316,19 @@ public @interface ParameterizedTest {
 	boolean allowZeroInvocations() default false;
 
 	/**
-	 * Configure how the number of arguments provided by an {@link ArgumentsSource} are validated.
+	 * Configure how the number of arguments provided by an
+	 * {@link ArgumentsSource} are validated.
 	 *
 	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.
 	 *
-	 * <p>When an {@link ArgumentsSource} provides more arguments than declared by the test method,
-	 * there might be a bug in the test method or the {@link ArgumentsSource}.
-	 * By default, the additional arguments are ignored.
-	 * {@code argumentCountValidation} allows you to control how additional arguments are handled.
-	 * The default can be configured via the {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
-	 * configuration parameter (see the User Guide for details on configuration parameters).
+	 * <p>When an {@link ArgumentsSource} provides more arguments than declared
+	 * by the parameterized test method, there might be a bug in the method or
+	 * the {@link ArgumentsSource}. By default, the additional arguments are
+	 * ignored. {@code argumentCountValidation} allows you to control how
+	 * additional arguments are handled. The default can be configured via the
+	 * {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
+	 * configuration parameter (see the User Guide for details on configuration
+	 * parameters).
 	 *
 	 * @since 5.12
 	 * @see ArgumentCountValidationMode

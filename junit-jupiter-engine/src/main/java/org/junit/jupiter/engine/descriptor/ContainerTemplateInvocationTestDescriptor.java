@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryFrom;
+import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
  * @since 5.13
@@ -103,11 +105,6 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	// --- Node ----------------------------------------------------------------
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
-		return SkipResult.doNotSkip();
-	}
-
-	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = context.getExtensionRegistry();
 		List<Extension> additionalExtensions = this.invocationContext.getAdditionalExtensions();
@@ -119,11 +116,19 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		}
 		ExtensionContext extensionContext = new ContainerTemplateInvocationExtensionContext(
 			context.getExtensionContext(), context.getExecutionListener(), this, context.getConfiguration(), registry);
-		this.invocationContext.prepareInvocation(extensionContext);
+		ThrowableCollector throwableCollector = createThrowableCollector();
+		throwableCollector.execute(() -> this.invocationContext.prepareInvocation(extensionContext));
 		return context.extend() //
-				.withExtensionContext(extensionContext) //
 				.withExtensionRegistry(registry) //
+				.withExtensionContext(extensionContext) //
+				.withThrowableCollector(throwableCollector) //
 				.build();
+	}
+
+	@Override
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
+		context.getThrowableCollector().assertEmpty();
+		return SkipResult.doNotSkip();
 	}
 
 	@Override
