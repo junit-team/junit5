@@ -18,50 +18,63 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.platform.commons.JUnitException;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 
+/**
+ * @since 5.13
+ */
 class ParameterizedContainerExtension extends ParameterizedInvocationContextProvider<ContainerTemplateInvocationContext>
 		implements ContainerTemplateInvocationContextProvider {
 
+	static final String DECLARATION_CONTEXT_KEY = "context";
+
 	@Override
-	public boolean supportsContainerTemplate(ExtensionContext extensionContext) {
-		if (!extensionContext.getTestClass().isPresent()) {
+	public boolean supportsContainerTemplate(ExtensionContext context) {
+		if (!context.getTestClass().isPresent()) {
 			return false;
 		}
 
-		Class<?> testClass = extensionContext.getRequiredTestClass();
+		Class<?> testClass = context.getRequiredTestClass();
 		Optional<ParameterizedContainer> annotation = findAnnotation(testClass, ParameterizedContainer.class);
-		return annotation.isPresent();
+		if (!annotation.isPresent()) {
+			return false;
+		}
+
+		ParameterizedContainerClassContext classContext = new ParameterizedContainerClassContext(testClass,
+			annotation.get());
+
+		// TODO #878 Validate signature of test class constructor
+		//		Preconditions.condition(classContext.hasPotentiallyValidSignature(),
+		//				() -> String.format(
+		//						"@ParameterizedTest method [%s] declares formal parameters in an invalid order: "
+		//								+ "argument aggregators must be declared after any indexed arguments "
+		//								+ "and before any arguments resolved by another ParameterResolver.",
+		//						templateMethod.toGenericString()));
+
+		getStore(context).put(DECLARATION_CONTEXT_KEY, classContext);
+
+		return true;
 	}
 
 	@Override
 	public Stream<? extends ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
 			ExtensionContext extensionContext) {
 
-		ParameterizedContainerClassContext declarationContext = getDeclarationContext(extensionContext);
-
-		return provideInvocationContexts(extensionContext, declarationContext, //
-			(formatter, arguments, invocationIndex) -> createInvocationContext(formatter, declarationContext, arguments,
-				invocationIndex));
+		return provideInvocationContexts(extensionContext, getDeclarationContext(extensionContext));
 	}
 
 	@Override
-	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
-		return getDeclarationContext(context).isAllowingZeroInvocations();
+	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext extensionContext) {
+		return getDeclarationContext(extensionContext).isAllowingZeroInvocations();
 	}
 
-	private static ParameterizedContainerClassContext getDeclarationContext(ExtensionContext extensionContext) {
-		// TODO #878 Cache in Store
-
-		Class<?> testClass = extensionContext.getRequiredTestClass();
-		ParameterizedContainer annotation = findAnnotation(testClass, ParameterizedContainer.class).orElseThrow(
-			() -> new JUnitException("No @ParameterizedContainer annotation found"));
-		return new ParameterizedContainerClassContext(testClass, annotation);
+	private ParameterizedContainerClassContext getDeclarationContext(ExtensionContext extensionContext) {
+		return getStore(extensionContext)//
+				.get(DECLARATION_CONTEXT_KEY, ParameterizedContainerClassContext.class);
 	}
 
-	private ContainerTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
-			ParameterizedContainerClassContext classContext, Arguments arguments, int invocationIndex) {
-		return new ParameterizedContainerInvocationContext(formatter, classContext, arguments, invocationIndex);
+	private ExtensionContext.Store getStore(ExtensionContext context) {
+		return context.getStore(Namespace.create(ParameterizedTestExtension.class, context.getRequiredTestClass()));
 	}
+
 }

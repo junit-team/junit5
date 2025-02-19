@@ -28,8 +28,7 @@ import org.junit.platform.commons.util.Preconditions;
 class ParameterizedInvocationContextProvider<T> {
 
 	protected Stream<T> provideInvocationContexts(ExtensionContext extensionContext,
-			ParameterizedDeclarationContext<?> declarationContext,
-			ParameterizedInvocationContextFactory<T> parameterizedInvocationContextFactory) {
+			ParameterizedDeclarationContext<T> declarationContext) {
 
 		List<ArgumentsSource> argumentsSources = collectArgumentSources(declarationContext);
 		ParameterDeclarations parameters = declarationContext.getResolverFacade().getRegularParameterDeclarations();
@@ -46,7 +45,7 @@ class ParameterizedInvocationContextProvider<T> {
 				.flatMap(provider -> arguments(provider, parameters, extensionContext))
 				.map(arguments -> {
 					invocationCount.incrementAndGet();
-					return parameterizedInvocationContextFactory.create(formatter, arguments, invocationCount.intValue());
+					return declarationContext.createInvocationContext(formatter, arguments, invocationCount.intValue());
 				})
 				.onClose(() ->
 						Preconditions.condition(invocationCount.get() > 0 || declarationContext.isAllowingZeroInvocations(),
@@ -73,10 +72,6 @@ class ParameterizedInvocationContextProvider<T> {
 		catch (Exception e) {
 			throw ExceptionUtils.throwAsUncheckedException(e);
 		}
-	}
-
-	interface ParameterizedInvocationContextFactory<T> {
-		T create(ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex);
 	}
 
 }
