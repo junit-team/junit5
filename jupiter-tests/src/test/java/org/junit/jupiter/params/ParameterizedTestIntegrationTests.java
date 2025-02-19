@@ -14,7 +14,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -127,8 +126,9 @@ class ParameterizedTestIntegrationTests {
 	private final Locale originalLocale = Locale.getDefault(Locale.Category.FORMAT);
 
 	@AfterEach
-	void restoreLocale() {
+	void reset() {
 		Locale.setDefault(Locale.Category.FORMAT, originalLocale);
+		AutoCloseableArgument.closeCounter = 0;
 	}
 
 	@ParameterizedTest
@@ -1310,7 +1310,7 @@ class ParameterizedTestIntegrationTests {
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), finishedSuccessfully()));
 
-		assertTrue(AutoCloseableArgument.isClosed);
+		assertEquals(2, AutoCloseableArgument.closeCounter);
 	}
 
 	@Test
@@ -1441,7 +1441,7 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@ArgumentsSource(AutoCloseableArgumentProvider.class)
 		void testWithAutoCloseableArgument(AutoCloseableArgument autoCloseable) {
-			assertFalse(AutoCloseableArgument.isClosed);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
 		}
 
 		@ParameterizedTest
@@ -2521,17 +2521,17 @@ class ParameterizedTestIntegrationTests {
 
 		@Override
 		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-			return Stream.of(arguments(new AutoCloseableArgument()));
+			return Stream.of(arguments(new AutoCloseableArgument(), Named.of("unused", new AutoCloseableArgument())));
 		}
 	}
 
 	static class AutoCloseableArgument implements AutoCloseable {
 
-		static boolean isClosed = false;
+		static int closeCounter = 0;
 
 		@Override
 		public void close() {
-			isClosed = true;
+			closeCounter++;
 		}
 	}
 

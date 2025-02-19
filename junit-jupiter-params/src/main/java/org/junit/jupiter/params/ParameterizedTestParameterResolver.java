@@ -95,7 +95,7 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 		Store store = context.getStore(NAMESPACE);
 		AtomicInteger argumentIndex = new AtomicInteger();
 
-		Arrays.stream(this.arguments.getConsumedPayloads()) //
+		Arrays.stream(this.arguments.getAllPayloads()) //
 				.filter(AutoCloseable.class::isInstance) //
 				.map(AutoCloseable.class::cast) //
 				.map(CloseableArgument::new) //
