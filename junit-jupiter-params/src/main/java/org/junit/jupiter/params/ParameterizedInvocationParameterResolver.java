@@ -47,17 +47,18 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 			return false;
 		}
 
-		int parameterIndex = parameterContext.getIndex();
+		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
+		int parameterIndex = resolverFacade.toLogicalIndex(parameterContext);
 
 		// Current parameter is an aggregator?
-		if (this.declarationContext.getResolverFacade().isAggregator(parameterIndex)) {
+		if (resolverFacade.isAggregator(parameterIndex)) {
 			return true;
 		}
 
 		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
-		if (this.declarationContext.getResolverFacade().hasAggregator()) {
-			return parameterIndex < this.declarationContext.getResolverFacade().indexOfFirstAggregator();
+		if (resolverFacade.hasAggregator()) {
+			return parameterIndex < resolverFacade.indexOfFirstAggregator();
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.

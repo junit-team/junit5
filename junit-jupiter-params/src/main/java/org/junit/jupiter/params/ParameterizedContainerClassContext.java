@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.AnnotatedElement;
-
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -34,7 +32,7 @@ class ParameterizedContainerClassContext
 	}
 
 	@Override
-	public AnnotatedElement getAnnotatedElement() {
+	public Class<?> getAnnotatedElement() {
 		return this.clazz;
 	}
 
