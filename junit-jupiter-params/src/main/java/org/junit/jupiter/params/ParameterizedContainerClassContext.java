@@ -12,7 +12,11 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.AnnotatedElement;
 
-class ParameterizedContainerClassContext implements ParameterizedDeclarationContext<ParameterizedContainer> {
+import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.params.provider.Arguments;
+
+class ParameterizedContainerClassContext
+		implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
 
 	private final Class<?> clazz;
 	private final ParameterizedContainer annotation;
@@ -57,5 +61,11 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 	@Override
 	public ResolverFacade getResolverFacade() {
 		return this.resolverFacade;
+	}
+
+	@Override
+	public ContainerTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
+			Arguments arguments, int invocationIndex) {
+		return new ParameterizedContainerInvocationContext(this, formatter, arguments, invocationIndex);
 	}
 }

@@ -13,6 +13,8 @@ package org.junit.jupiter.params;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
+import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -21,7 +23,7 @@ import org.junit.platform.commons.util.Preconditions;
  *
  * @since 5.3
  */
-class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<ParameterizedTest> {
+class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<TestTemplateInvocationContext> {
 
 	private final Method method;
 	private final ParameterizedTest annotation;
@@ -96,6 +98,12 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 	@Override
 	public ResolverFacade getResolverFacade() {
 		return this.resolverFacade;
+	}
+
+	@Override
+	public TestTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
+			Arguments arguments, int invocationIndex) {
+		return new ParameterizedTestInvocationContext(this, formatter, arguments, invocationIndex);
 	}
 
 }

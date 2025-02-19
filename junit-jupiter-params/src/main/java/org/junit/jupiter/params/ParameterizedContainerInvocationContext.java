@@ -21,9 +21,9 @@ import org.junit.jupiter.params.provider.Arguments;
 class ParameterizedContainerInvocationContext extends ParameterizedInvocationContext<ParameterizedContainerClassContext>
 		implements ContainerTemplateInvocationContext {
 
-	ParameterizedContainerInvocationContext(ParameterizedInvocationNameFormatter formatter,
-			ParameterizedContainerClassContext classContext, Arguments arguments, int invocationIndex) {
-		super(formatter, classContext, arguments, invocationIndex);
+	ParameterizedContainerInvocationContext(ParameterizedContainerClassContext classContext,
+			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
+		super(classContext, formatter, arguments, invocationIndex);
 	}
 
 	@Override

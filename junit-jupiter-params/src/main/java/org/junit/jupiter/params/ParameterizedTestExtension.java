@@ -20,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -62,17 +61,12 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 	public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(
 			ExtensionContext extensionContext) {
 
-		ParameterizedTestMethodContext declarationContext = getDeclarationContext(extensionContext);
-
-		return provideInvocationContexts(extensionContext, declarationContext, //
-			(formatter, arguments, invocationIndex) -> createInvocationContext(formatter, declarationContext, arguments,
-				invocationIndex));
+		return provideInvocationContexts(extensionContext, getDeclarationContext(extensionContext));
 	}
 
 	@Override
 	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext extensionContext) {
-		ParameterizedTestMethodContext methodContext = getDeclarationContext(extensionContext);
-		return methodContext.getAnnotation().allowZeroInvocations();
+		return getDeclarationContext(extensionContext).isAllowingZeroInvocations();
 	}
 
 	private ParameterizedTestMethodContext getDeclarationContext(ExtensionContext extensionContext) {
@@ -82,12 +76,6 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
 		return context.getStore(Namespace.create(ParameterizedTestExtension.class, context.getRequiredTestMethod()));
-	}
-
-	private TestTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
-
-		return new ParameterizedTestInvocationContext(formatter, methodContext, arguments, invocationIndex);
 	}
 
 }

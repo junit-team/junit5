@@ -21,16 +21,16 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 
 	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
 
-	private final ParameterizedInvocationNameFormatter formatter;
 	protected final T declarationContext;
+	private final ParameterizedInvocationNameFormatter formatter;
 	protected final EvaluatedArgumentSet arguments;
 	protected final int invocationIndex;
 
-	ParameterizedInvocationContext(ParameterizedInvocationNameFormatter formatter, T declarationContext,
+	ParameterizedInvocationContext(T declarationContext, ParameterizedInvocationNameFormatter formatter,
 			Arguments arguments, int invocationIndex) {
 
-		this.formatter = formatter;
 		this.declarationContext = declarationContext;
+		this.formatter = formatter;
 		this.arguments = EvaluatedArgumentSet.of(arguments, this::determineConsumedArgumentCount);
 		this.invocationIndex = invocationIndex;
 	}

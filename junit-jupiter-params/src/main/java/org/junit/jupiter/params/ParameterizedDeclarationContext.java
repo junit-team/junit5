@@ -13,12 +13,14 @@ package org.junit.jupiter.params;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 
+import org.junit.jupiter.params.provider.Arguments;
+
 /**
  * @since 5.13
  */
-interface ParameterizedDeclarationContext<A extends Annotation> {
+interface ParameterizedDeclarationContext<C> {
 
-	A getAnnotation();
+	Annotation getAnnotation();
 
 	AnnotatedElement getAnnotatedElement();
 
@@ -35,4 +37,7 @@ interface ParameterizedDeclarationContext<A extends Annotation> {
 	}
 
 	ResolverFacade getResolverFacade();
+
+	C createInvocationContext(ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex);
+
 }

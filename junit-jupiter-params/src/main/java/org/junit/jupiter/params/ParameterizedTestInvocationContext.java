@@ -25,9 +25,9 @@ import org.junit.jupiter.params.provider.Arguments;
 class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestMethodContext>
 		implements TestTemplateInvocationContext {
 
-	ParameterizedTestInvocationContext(ParameterizedInvocationNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
-		super(formatter, methodContext, arguments, invocationIndex);
+	ParameterizedTestInvocationContext(ParameterizedTestMethodContext methodContext,
+			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
+		super(methodContext, formatter, arguments, invocationIndex);
 	}
 
 	@Override
