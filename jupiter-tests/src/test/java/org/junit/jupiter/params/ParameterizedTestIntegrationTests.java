@@ -1129,7 +1129,7 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
@@ -1138,7 +1138,7 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
@@ -1147,7 +1147,7 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
 				"testWithStrictArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
 		}
 
@@ -1156,7 +1156,7 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithCsvSourceContainingDifferentNumbersOfArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
 						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]"))))) //
 					.haveExactly(1,
 						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
