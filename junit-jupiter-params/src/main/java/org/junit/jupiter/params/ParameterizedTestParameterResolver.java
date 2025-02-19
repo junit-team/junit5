@@ -12,24 +12,16 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
-import org.junit.platform.commons.support.AnnotationSupport;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestParameterResolver implements ParameterResolver, AfterTestExecutionCallback {
-
-	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestParameterResolver.class);
+class ParameterizedTestParameterResolver implements ParameterResolver {
 
 	private final ParameterizedTestMethodContext methodContext;
 	private final EvaluatedArgumentSet arguments;
@@ -79,42 +71,6 @@ class ParameterizedTestParameterResolver implements ParameterResolver, AfterTest
 			throws ParameterResolutionException {
 		return this.methodContext.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(),
 			this.invocationIndex);
-	}
-
-	/**
-	 * @since 5.8
-	 */
-	@Override
-	public void afterTestExecution(ExtensionContext context) {
-		ParameterizedTest parameterizedTest = AnnotationSupport.findAnnotation(context.getRequiredTestMethod(),
-			ParameterizedTest.class).get();
-		if (!parameterizedTest.autoCloseArguments()) {
-			return;
-		}
-
-		Store store = context.getStore(NAMESPACE);
-		AtomicInteger argumentIndex = new AtomicInteger();
-
-		Arrays.stream(this.arguments.getAllPayloads()) //
-				.filter(AutoCloseable.class::isInstance) //
-				.map(AutoCloseable.class::cast) //
-				.map(CloseableArgument::new) //
-				.forEach(closeable -> store.put("closeableArgument#" + argumentIndex.incrementAndGet(), closeable));
-	}
-
-	private static class CloseableArgument implements Store.CloseableResource {
-
-		private final AutoCloseable autoCloseable;
-
-		CloseableArgument(AutoCloseable autoCloseable) {
-			this.autoCloseable = autoCloseable;
-		}
-
-		@Override
-		public void close() throws Throwable {
-			this.autoCloseable.close();
-		}
-
 	}
 
 }

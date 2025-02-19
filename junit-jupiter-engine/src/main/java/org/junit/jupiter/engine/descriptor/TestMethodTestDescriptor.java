@@ -117,6 +117,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), registry, throwableCollector);
+		throwableCollector.execute(() -> prepareExtensionContext(extensionContext));
 		// @formatter:off
 		JupiterEngineExecutionContext newContext = context.extend()
 				.withExtensionRegistry(registry)
@@ -129,6 +130,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			extensionContext.setTestInstances(testInstances);
 		});
 		return newContext;
+	}
+
+	protected void prepareExtensionContext(ExtensionContext extensionContext) {
+		// nothing to do by default
 	}
 
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {

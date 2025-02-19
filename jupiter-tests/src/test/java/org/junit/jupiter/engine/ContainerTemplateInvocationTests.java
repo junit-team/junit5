@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
@@ -65,6 +66,7 @@ import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvide
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -887,6 +889,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		// @formatter:on
 	}
 
+	@Test
+	void templateWithPreparations() {
+		var results = executeTestsForClass(ContainerTemplateWithPreparationsTestCase.class);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertTrue(CustomCloseableResource.closed, "resource in store was closed");
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -1040,7 +1050,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 			@Override
 			public void beforeAll(ExtensionContext context) throws Exception {
-				context.getStore(ExtensionContext.Namespace.GLOBAL).put("someResource", new SomeResource());
+				context.getStore(Namespace.GLOBAL).put("someResource", new SomeResource());
 			}
 
 			@Override
@@ -1060,7 +1070,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			@Override
 			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 					throws ParameterResolutionException {
-				return extensionContext.getStore(ExtensionContext.Namespace.GLOBAL).get("someResource");
+				return extensionContext.getStore(Namespace.GLOBAL).get("someResource");
 			}
 		}
 
@@ -1254,4 +1264,81 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			testReporter.publishEntry("afterAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ContainerTemplate
+	@ExtendWith({ PreparingContainerTemplateInvocationContextProvider.class, CompanionExtension.class })
+	static class ContainerTemplateWithPreparationsTestCase {
+
+		@Test
+		void test(CustomCloseableResource resource) {
+			assertNotNull(resource);
+			assertFalse(CustomCloseableResource.closed, "should not be closed yet");
+		}
+
+	}
+
+	private static class PreparingContainerTemplateInvocationContextProvider
+			implements ContainerTemplateInvocationContextProvider {
+
+		static final Namespace NAMESPACE = Namespace.create(PreparingContainerTemplateInvocationContextProvider.class);
+
+		@Override
+		public boolean supportsContainerTemplate(ExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Stream<? extends ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+				ExtensionContext context) {
+			var invocationContext = new PreparingContainerTemplateInvocationContext();
+			return Stream.of(invocationContext, invocationContext);
+		}
+
+	}
+
+	private static class PreparingContainerTemplateInvocationContext implements ContainerTemplateInvocationContext {
+
+		@Override
+		public void prepareInvocation(ExtensionContext context) {
+			CustomCloseableResource.closed = false;
+			context.getStore(PreparingContainerTemplateInvocationContextProvider.NAMESPACE) //
+					.put("resource", new CustomCloseableResource());
+		}
+
+	}
+
+	private static class CompanionExtension implements ParameterResolver {
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return ExtensionContextScope.TEST_METHOD;
+		}
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return CustomCloseableResource.class.equals(parameterContext.getParameter().getType());
+		}
+
+		@Override
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return extensionContext.getStore(PreparingContainerTemplateInvocationContextProvider.NAMESPACE).get(
+				"resource");
+		}
+
+	}
+
+	private static class CustomCloseableResource implements CloseableResource {
+
+		static boolean closed;
+
+		@Override
+		public void close() {
+			closed = true;
+		}
+
+	}
+
 }
