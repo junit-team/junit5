@@ -12,7 +12,7 @@ package org.junit.platform.console.options;
 
 import org.junit.jupiter.api.Test;
 
-public class StdStreamTest {
+public class StdStreamTestCase {
 
 	@Test
 	void printTest() {

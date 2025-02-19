@@ -51,10 +51,10 @@ class TestConsoleOutputOptionsMixin {
 		@Option(names = "-details-theme", hidden = true)
 		private final Theme theme2 = DEFAULT_THEME;
 
-		@Option(names = "--redirect-stdout", paramLabel = "FILE", description = "Redirect tests stdout to a file.")
+		@Option(names = "--redirect-stdout", paramLabel = "FILE", description = "Redirect test output to stdout to a file.")
 		private Path stdout;
 
-		@Option(names = "--redirect-stderr", paramLabel = "FILE", description = "Redirect tests stderr to a file.")
+		@Option(names = "--redirect-stderr", paramLabel = "FILE", description = "Redirect test output to stderr to a file.")
 		private Path stderr;
 
 		private void applyTo(TestConsoleOutputOptions result) {
