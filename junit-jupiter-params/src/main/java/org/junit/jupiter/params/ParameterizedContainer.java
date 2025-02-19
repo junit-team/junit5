@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -77,5 +78,22 @@ public @interface ParameterizedContainer {
 	 * @see java.text.MessageFormat
 	 */
 	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
+
+	/**
+	 * Configure whether all arguments of the parameterized container that
+	 * implement {@link AutoCloseable} will be closed after their corresponding
+	 * invocation.
+	 *
+	 * <p>Defaults to {@code true}.
+	 *
+	 * <p><strong>WARNING</strong>: if an argument that implements
+	 * {@code AutoCloseable} is reused for multiple invocations of the same
+	 * parameterized container, you must set {@code autoCloseArguments} to
+	 * {@code false} to ensure that the argument is not closed between
+	 * invocations.
+	 *
+	 * @see java.lang.AutoCloseable
+	 */
+	boolean autoCloseArguments() default true;
 
 }

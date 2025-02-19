@@ -49,6 +49,11 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 	}
 
 	@Override
+	public boolean isAutoClosingArguments() {
+		return this.annotation.autoCloseArguments();
+	}
+
+	@Override
 	public boolean isAllowingZeroInvocations() {
 		return this.annotation.allowZeroInvocations();
 	}

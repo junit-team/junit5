@@ -24,6 +24,8 @@ interface ParameterizedDeclarationContext<A extends Annotation> {
 
 	String getDisplayNamePattern();
 
+	boolean isAutoClosingArguments();
+
 	boolean isAllowingZeroInvocations();
 
 	ArgumentCountValidationMode getArgumentCountValidationMode();

@@ -1316,6 +1316,15 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
+	void doNotCloseAutoCloseableArgumentsAfterTestWhenDisabled() {
+		var results = execute("testWithAutoCloseableArgumentButDisabledCleanup", AutoCloseableArgument.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedSuccessfully()));
+
+		assertEquals(0, AutoCloseableArgument.closeCounter);
+	}
+
+	@Test
 	void closeAutoCloseableArgumentsAfterTestDespiteEarlyFailure() {
 		var results = execute(FailureInBeforeEachTestCase.class, "test", AutoCloseableArgument.class);
 		results.allEvents().assertThatEvents() //
@@ -1452,6 +1461,12 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@ArgumentsSource(AutoCloseableArgumentProvider.class)
 		void testWithAutoCloseableArgument(AutoCloseableArgument autoCloseable) {
+			assertEquals(0, AutoCloseableArgument.closeCounter);
+		}
+
+		@ParameterizedTest(autoCloseArguments = false)
+		@ArgumentsSource(AutoCloseableArgumentProvider.class)
+		void testWithAutoCloseableArgumentButDisabledCleanup(AutoCloseableArgument autoCloseable) {
 			assertEquals(0, AutoCloseableArgument.closeCounter);
 		}
 
