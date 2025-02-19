@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -41,7 +40,7 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 	}
 
 	@Override
-	public AnnotatedElement getAnnotatedElement() {
+	public Method getAnnotatedElement() {
 		return this.method;
 	}
 

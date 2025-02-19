@@ -34,14 +34,16 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessf
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.EventConditions.uniqueIdSubstring;
+import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -68,6 +70,7 @@ import org.junit.jupiter.params.provider.ParameterDeclarations;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 
@@ -303,14 +306,34 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					"Configuration error: You must configure at least one arguments source for this @ParameterizedContainer"))));
 	}
 
+	@ParameterizedTest
+	@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
+	void supportsNestedParameterizedContainers(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
+		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly( //
+					"[1] number=1", "[1] text=foo", "[2] text=bar", //
+					"[2] number=2", "[1] text=foo", "[2] text=bar" //
+				);
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
 		return results.containerEvents() //
 				.started() //
-				.filter(uniqueIdSubstring(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE)::matches).map(
-					Event::getTestDescriptor) //
+				.filter(uniqueId(lastSegmentType(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE))::matches) //
+				.map(Event::getTestDescriptor) //
 				.map(TestDescriptor::getDisplayName);
+	}
+
+	private static Condition<UniqueId> lastSegmentType(String segmentType) {
+		return new Condition<>(it -> segmentType.equals(it.getLastSegment().getType()), "last segment type is '%s'",
+			segmentType);
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
@@ -858,6 +881,54 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Test
 		void test() {
 			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = { 1, 2 })
+	static class NestedFieldInjectionTestCase {
+
+		@Parameter
+		int number;
+
+		@Nested
+		@ParameterizedContainer
+		@ValueSource(strings = { "foo", "bar" })
+		class InnerTestCase {
+
+			@Parameter
+			String text;
+
+			@ParameterizedTest
+			@ValueSource(booleans = { true, false })
+			void test(boolean flag) {
+				assertTrue(number >= 0);
+				assertTrue(List.of("foo", "bar").contains(text));
+			}
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = { 1, 2 })
+	record NestedConstructorInjectionTestCase(int number) {
+
+		@Nested
+		@ParameterizedContainer
+		@ValueSource(strings = { "foo", "bar" })
+		class InnerTestCase {
+
+			final String text;
+
+			InnerTestCase(String text) {
+				this.text = text;
+			}
+
+			@ParameterizedTest
+			@ValueSource(booleans = { true, false })
+			void test(boolean flag) {
+				assertTrue(number >= 0);
+				assertTrue(List.of("foo", "bar").contains(text));
+			}
 		}
 	}
 

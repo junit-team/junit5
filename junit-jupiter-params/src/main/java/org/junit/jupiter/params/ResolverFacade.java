@@ -18,8 +18,10 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.support.ReflectionSupport.findFields;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.reflect.AnnotatedElement;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -84,28 +86,39 @@ class ResolverFacade {
 			declarations.put(index, new FieldParameterDeclaration(field, annotation));
 			maxIndex = Math.max(maxIndex, index);
 		}
-		return new ResolverFacade(clazz, maxIndex + 1, declarations.values());
+		return new ResolverFacade(clazz, maxIndex + 1, declarations.values(), 0);
 	}
 
-	static ResolverFacade create(Executable executable) {
+	static ResolverFacade create(Constructor<?> constructor) {
+		// Inner classes get the outer instance as first parameter
+		return create(constructor, isInnerClass(constructor.getDeclaringClass()) ? 1 : 0);
+	}
+
+	static ResolverFacade create(Method method) {
+		return create(method, 0);
+	}
+
+	private static ResolverFacade create(Executable executable, int indexOffset) {
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		List<ParameterDeclaration> declarations = new ArrayList<>(parameters.length);
-		for (int index = 0; index < parameters.length; index++) {
+		for (int index = indexOffset; index < parameters.length; index++) {
 			// TODO #878 Consider index of first aggregator here?
-			declarations.add(new ExecutableParameterDeclaration(parameters[index], index));
+			declarations.add(new ExecutableParameterDeclaration(parameters[index], index - indexOffset));
 		}
-		return new ResolverFacade(executable, declarations.size(), declarations);
+		return new ResolverFacade(executable, declarations.size(), declarations, indexOffset);
 	}
 
 	private final List<ParameterDeclaration> parameterDeclarations;
+	private final int parameterIndexOffset;
 	private final Resolver[] resolvers;
 	private final Map<Integer, ResolverType> resolverTypes;
 	private final DefaultParameterDeclarations regularParameterDeclarations;
 
 	private ResolverFacade(AnnotatedElement sourceElement, int numParameters,
-			Collection<? extends ParameterDeclaration> declarations) {
+			Collection<? extends ParameterDeclaration> declarations, int parameterIndexOffset) {
 		// TODO #878 Split aggregators from regular parameters (converters)?
 		this.parameterDeclarations = new ArrayList<>(declarations);
+		this.parameterIndexOffset = parameterIndexOffset;
 		this.parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
 		this.resolvers = new Resolver[numParameters];
 		this.resolverTypes = new HashMap<>(numParameters);
@@ -119,12 +132,18 @@ class ResolverFacade {
 
 	}
 
-	public List<ParameterDeclaration> getAllParameterDeclarations() {
+	List<ParameterDeclaration> getAllParameterDeclarations() {
 		return this.parameterDeclarations;
 	}
 
-	public ParameterDeclarations getRegularParameterDeclarations() {
+	ParameterDeclarations getRegularParameterDeclarations() {
 		return this.regularParameterDeclarations;
+	}
+
+	int toLogicalIndex(ParameterContext parameterContext) {
+		int index = parameterContext.getIndex() - this.parameterIndexOffset;
+		Preconditions.condition(index >= 0, () -> "Parameter index must be greater than or equal to zero");
+		return index;
 	}
 
 	/**
@@ -198,8 +217,9 @@ class ResolverFacade {
 	 */
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, Object[] arguments,
 			int invocationIndex) {
-		return getResolver(extensionContext, parameterContext.getIndex(), parameterContext.getParameter()) //
-				.resolve(parameterContext, extractPayloads(arguments), invocationIndex);
+		int parameterIndex = toLogicalIndex(parameterContext);
+		return getResolver(extensionContext, parameterIndex, parameterContext.getParameter()) //
+				.resolve(parameterContext, parameterIndex, extractPayloads(arguments), invocationIndex);
 	}
 
 	/**
@@ -273,7 +293,7 @@ class ResolverFacade {
 
 	interface Resolver {
 
-		Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex);
+		Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments, int invocationIndex);
 
 		Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex);
 
@@ -290,8 +310,9 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
-			Object argument = arguments[parameterContext.getIndex()];
+		public Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments,
+				int invocationIndex) {
+			Object argument = arguments[parameterIndex];
 			try {
 				return this.argumentConverter.convert(argument, parameterContext);
 			}
@@ -329,7 +350,8 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, Object[] arguments, int invocationIndex) {
+		public Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments,
+				int invocationIndex) {
 			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(parameterContext, invocationIndex, arguments);
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
