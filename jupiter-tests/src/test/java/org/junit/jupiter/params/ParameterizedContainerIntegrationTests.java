@@ -12,9 +12,15 @@ package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -30,6 +36,7 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -204,6 +211,16 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly("[1] value=foo", "[2] value=bar");
+	}
+
+	@Test
+	void supportsCustomNamePatterns() {
+
+		var results = executeTestsForClass(CustomNamePatternTestCase.class);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
+		assertThat(invocationDisplayNames(results)) //
+				.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number=2, name=bar");
 	}
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -646,6 +663,25 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context)
 				throws Exception {
 			return Stream.of("foo", "bar").map(Arguments::of);
+		}
+	}
+
+	@ParameterizedContainer(name = INDEX_PLACEHOLDER + " | " //
+			+ DISPLAY_NAME_PLACEHOLDER + " | " //
+			+ ARGUMENTS_PLACEHOLDER + " | " //
+			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER)
+	@MethodSource("arguments")
+	@DisplayName("TesT")
+	record CustomNamePatternTestCase(int number, String name) {
+
+		static Stream<Arguments> arguments() {
+			return Stream.of(argumentSet("set", 1, "foo"), Arguments.of(2, "bar"));
+		}
+
+		@Test
+		void test() {
+			assertTrue(number > 0);
+			assertFalse(name.isBlank());
 		}
 	}
 

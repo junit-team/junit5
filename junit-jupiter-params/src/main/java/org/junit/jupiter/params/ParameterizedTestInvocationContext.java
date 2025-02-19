@@ -44,7 +44,7 @@ class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<
 
 	@Override
 	public void prepareInvocation(ExtensionContext context) {
-		if (this.declarationContext.annotation.autoCloseArguments()) {
+		if (this.declarationContext.getAnnotation().autoCloseArguments()) {
 			Store store = context.getStore(NAMESPACE);
 			AtomicInteger argumentIndex = new AtomicInteger();
 

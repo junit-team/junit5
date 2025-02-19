@@ -36,8 +36,7 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 
 	@Override
 	public String getDisplayNamePattern() {
-		// TODO #878 Read from annotation
-		return ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
+		return this.annotation.name();
 	}
 
 	@Override

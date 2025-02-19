@@ -12,7 +12,6 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 import org.junit.platform.commons.util.Preconditions;
 
@@ -24,42 +23,39 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<ParameterizedTest> {
 
-	final Method method;
-	final ParameterizedTest annotation;
-
-	private final Parameter[] parameters;
+	private final Method method;
+	private final ParameterizedTest annotation;
 	private final ResolverFacade resolverFacade;
 
 	ParameterizedTestMethodContext(Method method, ParameterizedTest annotation) {
 		this.method = Preconditions.notNull(method, "method must not be null");
 		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
-		this.parameters = method.getParameters();
 		this.resolverFacade = ResolverFacade.create(method);
 	}
 
 	@Override
 	public ParameterizedTest getAnnotation() {
-		return annotation;
+		return this.annotation;
 	}
 
 	@Override
 	public AnnotatedElement getAnnotatedElement() {
-		return method;
+		return this.method;
 	}
 
 	@Override
 	public String getDisplayNamePattern() {
-		return annotation.name();
+		return this.annotation.name();
 	}
 
 	@Override
 	public boolean isAllowingZeroInvocations() {
-		return annotation.allowZeroInvocations();
+		return this.annotation.allowZeroInvocations();
 	}
 
 	@Override
 	public ArgumentCountValidationMode getArgumentCountValidationMode() {
-		return annotation.argumentCountValidation();
+		return this.annotation.argumentCountValidation();
 	}
 
 	/**

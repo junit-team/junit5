@@ -72,7 +72,7 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 	@Override
 	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext extensionContext) {
 		ParameterizedTestMethodContext methodContext = getDeclarationContext(extensionContext);
-		return methodContext.annotation.allowZeroInvocations();
+		return methodContext.getAnnotation().allowZeroInvocations();
 	}
 
 	private ParameterizedTestMethodContext getDeclarationContext(ExtensionContext extensionContext) {
