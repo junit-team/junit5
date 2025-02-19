@@ -30,7 +30,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqu
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
-import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -452,27 +451,26 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void failsWhenArgumentsRequiredButNoneProvided() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatRequiresArguments", String.class);
-		result.containerEvents().assertThatEvents().haveExactly(1, event(finishedWithFailure(message(
-			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+	void failsWhenInvocationIsRequiredButNoArgumentSetsAreProvided() {
+		var results = execute(ZeroInvocationsTestCase.class, "testThatRequiresInvocations", String.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(
+					"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
 	}
 
 	@Test
-	void doesNotFailWhenArgumentsAreNotRequiredAndNoneProvided() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatDoesNotRequireArguments", String.class);
-		result.allEvents().assertEventsMatchExactly( //
-			event(engine(), started()), event(container(ZeroArgumentsTestCase.class), started()),
-			event(container("testThatDoesNotRequireArguments"), started()),
-			event(container("testThatDoesNotRequireArguments"), finishedSuccessfully()),
-			event(container(ZeroArgumentsTestCase.class), finishedSuccessfully()),
-			event(engine(), finishedSuccessfully()));
+	void doesNotFailWhenInvocationIsNotRequiredAndNoArgumentSetsAreProvided() {
+		var results = execute(ZeroInvocationsTestCase.class, "testThatDoesNotRequireInvocations", String.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(3).succeeded(3));
 	}
 
 	@Test
 	void failsWhenNoArgumentsSourceIsDeclared() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatHasNoArgumentsSource", String.class);
-		result.containerEvents().assertThatEvents() //
+		var results = execute(ZeroInvocationsTestCase.class, "testThatHasNoArgumentsSource", String.class);
+
+		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, //
 					event(displayName("testThatHasNoArgumentsSource(String)"), finishedWithFailure(message(
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedTest"))));
@@ -2485,17 +2483,17 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	static class ZeroArgumentsTestCase {
+	static class ZeroInvocationsTestCase {
 
 		@ParameterizedTest
 		@MethodSource("zeroArgumentsProvider")
-		void testThatRequiresArguments(String argument) {
+		void testThatRequiresInvocations(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
 		}
 
 		@ParameterizedTest(allowZeroInvocations = true)
 		@MethodSource("zeroArgumentsProvider")
-		void testThatDoesNotRequireArguments(String argument) {
+		void testThatDoesNotRequireInvocations(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
 		}
 

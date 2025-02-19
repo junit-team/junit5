@@ -278,6 +278,31 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					"Configuration error: the @ParameterizedContainer has 1 parameter(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
 	}
 
+	@Test
+	void failsWhenInvocationIsRequiredButNoArgumentSetsAreProvided() {
+		var results = executeTestsForClass(ForbiddenZeroInvocationsTestCase.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(
+					"Configuration error: You must configure at least one set of arguments for this @ParameterizedContainer"))));
+	}
+
+	@Test
+	void doesNotFailWhenInvocationIsNotRequiredAndNoArgumentSetsAreProvided() {
+		var results = executeTestsForClass(AllowedZeroInvocationsTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
+	@Test
+	void failsWhenNoArgumentsSourceIsDeclared() {
+		var results = executeTestsForClass(NoArgumentSourceTestCase.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(
+					"Configuration error: You must configure at least one arguments source for this @ParameterizedContainer"))));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -803,6 +828,36 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Test
 		void test() {
 			assertEquals("foo", value);
+		}
+	}
+
+	@ParameterizedContainer
+	@MethodSource("org.junit.jupiter.params.ParameterizedContainerIntegrationTests#zeroArguments")
+	record ForbiddenZeroInvocationsTestCase(String value) {
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer(allowZeroInvocations = true)
+	@MethodSource("org.junit.jupiter.params.ParameterizedContainerIntegrationTests#zeroArguments")
+	record AllowedZeroInvocationsTestCase(String value) {
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	static Stream<Arguments> zeroArguments() {
+		return Stream.empty();
+	}
+
+	@ParameterizedContainer
+	record NoArgumentSourceTestCase(String value) {
+		@Test
+		void test() {
+			fail("should not be called");
 		}
 	}
 

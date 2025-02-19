@@ -46,8 +46,7 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 
 	@Override
 	public boolean isAllowingZeroInvocations() {
-		// TODO #878 Read from annotation
-		return false;
+		return this.annotation.allowZeroInvocations();
 	}
 
 	@Override

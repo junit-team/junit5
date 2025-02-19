@@ -48,7 +48,6 @@ class ParameterizedContainerExtension extends ParameterizedInvocationContextProv
 
 	@Override
 	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
-		// TODO #878 Test this
 		return getDeclarationContext(context).isAllowingZeroInvocations();
 	}
 
