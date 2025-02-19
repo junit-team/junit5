@@ -1180,6 +1180,17 @@ class ParameterizedTestIntegrationTests {
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
 		}
 
+		@Test
+		void evaluatesArgumentsAtMostOnce() {
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
+				"testWithEvaluationReportingArgumentsProvider", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
+			results.allEvents().reportingEntryPublished().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.reportEntry(Map.of("evaluated", "true"))));
+		}
+
 		private EngineExecutionResults execute(ArgumentCountValidationMode configurationValue, Class<?> javaClass,
 				String methodName, Class<?>... methodParameterTypes) {
 			return EngineTestKit.engine(new JupiterTestEngine()) //
@@ -2122,6 +2133,23 @@ class ParameterizedTestIntegrationTests {
 		@CsvSource({ "foo, unused1", "bar" })
 		void testWithCsvSourceContainingDifferentNumbersOfArguments(String argument) {
 			fail(argument);
+		}
+
+		@ParameterizedTest
+		@ArgumentsSource(EvaluationReportingArgumentsProvider.class)
+		void testWithEvaluationReportingArgumentsProvider(String argument) {
+			fail(argument);
+		}
+
+		private static class EvaluationReportingArgumentsProvider implements ArgumentsProvider {
+
+			@Override
+			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+				return Stream.of(() -> {
+					context.publishReportEntry("evaluated", "true");
+					return List.of("foo", "unused").toArray();
+				});
+			}
 		}
 	}
 

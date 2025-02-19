@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -35,8 +36,6 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.Arguments.ArgumentSet;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -59,9 +58,9 @@ class ParameterizedTestNameFormatter {
 		}
 	}
 
-	String format(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
+	String format(int invocationIndex, EvaluatedArgumentSet arguments) {
 		try {
-			return formatSafely(invocationIndex, arguments, consumedArguments);
+			return formatSafely(invocationIndex, arguments);
 		}
 		catch (Exception ex) {
 			String message = "Failed to format display name for parameterized test. "
@@ -70,9 +69,9 @@ class ParameterizedTestNameFormatter {
 		}
 	}
 
-	private String formatSafely(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
-		ArgumentsContext context = new ArgumentsContext(invocationIndex, arguments,
-			extractNamedArguments(consumedArguments));
+	private String formatSafely(int invocationIndex, EvaluatedArgumentSet arguments) {
+		ArgumentsContext context = new ArgumentsContext(invocationIndex, arguments.getConsumedNames(),
+			arguments.getName());
 		StringBuffer result = new StringBuffer(); // used instead of StringBuilder so MessageFormat can append directly
 		for (PartialFormatter partialFormatter : this.partialFormatters) {
 			partialFormatter.append(context, result);
@@ -150,7 +149,7 @@ class ParameterizedTestNameFormatter {
 		formatters.put(ARGUMENTS_PLACEHOLDER, new CachingByArgumentsLengthPartialFormatter(
 			length -> new MessageFormatPartialFormatter(argumentsPattern(length), argumentMaxLength)));
 		formatters.put(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER, (context, result) -> {
-			PartialFormatter formatterToUse = context.arguments instanceof ArgumentSet //
+			PartialFormatter formatterToUse = context.argumentSetName.isPresent() //
 					? PartialFormatter.ARGUMENT_SET_NAME //
 					: argumentsWithNamesFormatter;
 			formatterToUse.append(context, result);
@@ -186,13 +185,13 @@ class ParameterizedTestNameFormatter {
 	private static class ArgumentsContext {
 
 		private final int invocationIndex;
-		private final Arguments arguments;
 		private final Object[] consumedArguments;
+		private final Optional<String> argumentSetName;
 
-		ArgumentsContext(int invocationIndex, Arguments arguments, Object[] consumedArguments) {
+		ArgumentsContext(int invocationIndex, Object[] consumedArguments, Optional<String> argumentSetName) {
 			this.invocationIndex = invocationIndex;
-			this.arguments = arguments;
 			this.consumedArguments = consumedArguments;
+			this.argumentSetName = argumentSetName;
 		}
 	}
 
@@ -202,13 +201,14 @@ class ParameterizedTestNameFormatter {
 		PartialFormatter INDEX = (context, result) -> result.append(context.invocationIndex);
 
 		PartialFormatter ARGUMENT_SET_NAME = (context, result) -> {
-			if (!(context.arguments instanceof ArgumentSet)) {
-				throw new ExtensionConfigurationException(
-					String.format("When the display name pattern for a @ParameterizedTest contains %s, "
-							+ "the arguments must be supplied as an ArgumentSet.",
-						ARGUMENT_SET_NAME_PLACEHOLDER));
+			if (context.argumentSetName.isPresent()) {
+				result.append(context.argumentSetName.get());
+				return;
 			}
-			result.append(((ArgumentSet) context.arguments).getName());
+			throw new ExtensionConfigurationException(
+				String.format("When the display name pattern for a @ParameterizedTest contains %s, "
+						+ "the arguments must be supplied as an ArgumentSet.",
+					ARGUMENT_SET_NAME_PLACEHOLDER));
 		};
 
 		void append(ArgumentsContext context, StringBuffer result);

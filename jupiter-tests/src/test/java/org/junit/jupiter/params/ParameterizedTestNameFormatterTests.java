@@ -336,7 +336,7 @@ class ParameterizedTestNameFormatterTests {
 	}
 
 	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {
-		return formatter.format(invocationIndex, arguments, arguments.get());
+		return formatter.format(invocationIndex, EvaluatedArgumentSet.allOf(arguments));
 	}
 
 	private static class ToStringReturnsNull {
