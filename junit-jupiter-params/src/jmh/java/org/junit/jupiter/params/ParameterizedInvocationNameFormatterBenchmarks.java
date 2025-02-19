@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -46,9 +49,8 @@ public class ParameterizedInvocationNameFormatterBenchmarks {
 	public void formatTestNames(Blackhole blackhole) throws Exception {
 		var method = TestCase.class.getDeclaredMethod("parameterizedTest", int.class);
 		var formatter = new ParameterizedInvocationNameFormatter(
-			ParameterizedTest.DISPLAY_NAME_PLACEHOLDER + " " + ParameterizedTest.DEFAULT_DISPLAY_NAME + " ({0})",
-			"displayName", new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class)),
-			512);
+			DISPLAY_NAME_PLACEHOLDER + " " + DEFAULT_DISPLAY_NAME + " ({0})", "displayName",
+			new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class)), 512);
 		for (int i = 0; i < argumentsList.size(); i++) {
 			Arguments arguments = argumentsList.get(i);
 			blackhole.consume(formatter.format(i, EvaluatedArgumentSet.allOf(arguments)));

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -136,98 +137,107 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 public @interface ParameterizedTest {
 
 	/**
-	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName
-	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
+	 * See {@link ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}
+	 * instead.
 	 */
-	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
+	String DISPLAY_NAME_PLACEHOLDER = ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 
 	/**
-	 * Placeholder for the current invocation index of a {@code @ParameterizedTest}
-	 * method (1-based): <code>{index}</code>
+	 * See {@link ParameterizedInvocationConstants#INDEX_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
-	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#INDEX_PLACEHOLDER} instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String INDEX_PLACEHOLDER = "{index}";
 
 	/**
-	 * Placeholder for the complete, comma-separated arguments list of the
-	 * current invocation of a {@code @ParameterizedTest} method:
-	 * <code>{arguments}</code>
+	 * See {@link ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
 	/**
-	 * Placeholder for the complete, comma-separated named arguments list
-	 * of the current invocation of a {@code @ParameterizedTest} method:
-	 * <code>{argumentsWithNames}</code>
-	 *
-	 * <p>Argument names will be retrieved via the {@link java.lang.reflect.Parameter#getName()}
-	 * API if the byte code contains parameter names &mdash; for example, if
-	 * the code was compiled with the {@code -parameters} command line argument
-	 * for {@code javac}.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}.
 	 *
 	 * @since 5.6
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
-	 * Placeholder for the name of the argument set for the current invocation
-	 * of a {@code @ParameterizedTest} method: <code>{argumentSetName}</code>.
-	 *
-	 * <p>This placeholder can be used when the current set of arguments was created via
-	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
-	 * argumentSet()}.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}.
 	 *
 	 * @since 5.11
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}
+	 * instead.
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}";
 
 	/**
-	 * Placeholder for either {@link #ARGUMENT_SET_NAME_PLACEHOLDER} or
-	 * {@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}, depending on whether the
-	 * current set of arguments was created via
-	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
-	 * argumentSet()}: <code>{argumentSetNameOrArgumentsWithNames}</code>.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}.
 	 *
 	 * @since 5.11
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_PLACEHOLDER
-	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
-	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME
 	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * instead.
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}";
 
 	/**
-	 * Default display name pattern for the current invocation of a
-	 * {@code @ParameterizedTest} method: {@value}
-	 *
-	 * <p>Note that the default pattern does <em>not</em> include the
-	 * {@linkplain #DISPLAY_NAME_PLACEHOLDER display name} of the
-	 * {@code @ParameterizedTest} method.
+	 * See
+	 * {@link ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}.
 	 *
 	 * @since 5.3
 	 * @see #name
-	 * @see #DISPLAY_NAME_PLACEHOLDER
-	 * @see #INDEX_PLACEHOLDER
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#INDEX_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME} instead.
 	 */
-	String DEFAULT_DISPLAY_NAME = ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME_PATTERN;
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
+	String DEFAULT_DISPLAY_NAME = ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
 
 	/**
 	 * The display name to be used for individual invocations of the
@@ -245,17 +255,17 @@ public @interface ParameterizedTest {
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
 	 * the class path). Consult the User Guide for further information.</li>
-	 * <li>Otherwise, <code>{@value #DEFAULT_DISPLAY_NAME}</code> will be used.</li>
+	 * <li>Otherwise, <code>{@value ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}</code> will be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li><code>{@value #DISPLAY_NAME_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #INDEX_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENTS_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#INDEX_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
 	 * <li><code>"{0}"</code>, <code>"{1}"</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
