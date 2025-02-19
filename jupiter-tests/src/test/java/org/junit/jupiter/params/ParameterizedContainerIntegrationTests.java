@@ -16,12 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -245,6 +248,38 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		assertThat(AutoCloseableArgument.closeCounter).isEqualTo(0);
 	}
 
+	@Test
+	void failsOnStrictArgumentCountValidationMode() {
+		var results = executeTestsForClass(StrictArgumentCountValidationModeTestCase.class);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(String.format(
+					"Configuration error: the @ParameterizedContainer has 1 parameter(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { NoneArgumentCountValidationModeTestCase.class,
+			DefaultArgumentCountValidationModeTestCase.class })
+	void doesNotFailOnNoneOrDefaultArgumentCountValidationMode(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void failsOnStrictArgumentCountValidationModeSetViaConfigurationParameter() {
+		var results = executeTests(request -> request //
+				.selectors(selectClass(DefaultArgumentCountValidationModeTestCase.class)).configurationParameter(
+					ArgumentCountValidator.ARGUMENT_COUNT_VALIDATION_KEY, STRICT.name()));
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(String.format(
+					"Configuration error: the @ParameterizedContainer has 1 parameter(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
+	}
+
+	// -------------------------------------------------------------------
+
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
 		return results.containerEvents() //
 				.started() //
@@ -252,8 +287,6 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					Event::getTestDescriptor) //
 				.map(TestDescriptor::getDisplayName);
 	}
-
-	// -------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
@@ -743,6 +776,33 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Override
 		public void close() {
 			closeCounter++;
+		}
+	}
+
+	@ParameterizedContainer(argumentCountValidation = STRICT)
+	@CsvSource("foo, unused")
+	record StrictArgumentCountValidationModeTestCase(String value) {
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer(argumentCountValidation = NONE)
+	@CsvSource("foo, unused")
+	record NoneArgumentCountValidationModeTestCase(String value) {
+		@Test
+		void test() {
+			assertEquals("foo", value);
+		}
+	}
+
+	@ParameterizedContainer
+	@CsvSource("foo, unused")
+	record DefaultArgumentCountValidationModeTestCase(String value) {
+		@Test
+		void test() {
+			assertEquals("foo", value);
 		}
 	}
 

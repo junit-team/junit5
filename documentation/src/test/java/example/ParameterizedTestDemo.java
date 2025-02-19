@@ -44,6 +44,7 @@ import example.util.StringUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInfo;
@@ -632,7 +633,7 @@ class ParameterizedTestDemo {
 	}
 	// end::repeatable_annotations[]
 
-	@extensions.ExpectToFail
+	@Disabled("Fails prior to invoking the test method")
 	// tag::argument_count_validation[]
 	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
 	@CsvSource({ "42, -666" })

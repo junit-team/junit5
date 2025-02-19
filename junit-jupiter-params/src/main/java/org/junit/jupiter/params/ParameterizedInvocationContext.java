@@ -41,15 +41,20 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 
 	public void prepareInvocation(ExtensionContext context) {
 		if (this.declarationContext.isAutoClosingArguments()) {
-			ExtensionContext.Store store = context.getStore(NAMESPACE);
-			AtomicInteger argumentIndex = new AtomicInteger();
-
-			Arrays.stream(this.arguments.getAllPayloads()) //
-					.filter(AutoCloseable.class::isInstance) //
-					.map(AutoCloseable.class::cast) //
-					.map(CloseableArgument::new) //
-					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
+			registerAutoCloseableArgumentsInStoreForClosing(context);
 		}
+		new ArgumentCountValidator(this.declarationContext, this.arguments).validate(context);
+	}
+
+	private void registerAutoCloseableArgumentsInStoreForClosing(ExtensionContext context) {
+		ExtensionContext.Store store = context.getStore(NAMESPACE);
+		AtomicInteger argumentIndex = new AtomicInteger();
+
+		Arrays.stream(this.arguments.getAllPayloads()) //
+				.filter(AutoCloseable.class::isInstance) //
+				.map(AutoCloseable.class::cast) //
+				.map(CloseableArgument::new) //
+				.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
 	}
 
 	private int determineConsumedArgumentCount(int totalLength) {

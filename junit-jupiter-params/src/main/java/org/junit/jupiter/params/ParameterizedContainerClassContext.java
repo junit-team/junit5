@@ -52,8 +52,7 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 
 	@Override
 	public ArgumentCountValidationMode getArgumentCountValidationMode() {
-		// TODO #878 Read from annotation
-		return ArgumentCountValidationMode.DEFAULT;
+		return this.annotation.argumentCountValidation();
 	}
 
 	@Override
