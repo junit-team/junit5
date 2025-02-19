@@ -10,7 +10,6 @@
 
 package org.junit.platform.console;
 
-import static java.nio.file.Files.deleteIfExists;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
@@ -22,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -100,33 +100,30 @@ class ConsoleLauncherIntegrationTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "--redirect-stdout", "--redirect-stderr" })
-	void executeWithRedirectedStdStream(String redirectedStream) throws IOException {
-
-		Path outputFile = Path.of("foo.txt");
+	void executeWithRedirectedStdStream(String redirectedStream, @TempDir Path tempDir) throws IOException {
+		Path outputFile = tempDir.resolve("output.txt");
 		var line = String.format(
-			"execute -e junit-jupiter --select-method org.junit.platform.console.options.StdStreamTest#printTest "
+			"execute -e junit-jupiter --select-method org.junit.platform.console.options.StdStreamTestCase#printTest "
 					+ "%s %s",
 			redirectedStream, outputFile);
 		var args = line.split(" ");
 		new ConsoleLauncherWrapper().execute(args);
 
 		assertTrue(Files.exists(outputFile), "File does not exist.");
-		assertEquals(Files.size(outputFile), 20, "Invalid file size.");
-		deleteIfExists(outputFile);
+		assertEquals(20, Files.size(outputFile), "Invalid file size.");
 	}
 
 	@Test
-	void executeWithRedirectedStdStreamsToSameFile() throws IOException {
-		Path outputFile = Path.of("foo.txt");
+	void executeWithRedirectedStdStreamsToSameFile(@TempDir Path tempDir) throws IOException {
+		Path outputFile = tempDir.resolve("output.txt");
 		var line = String.format(
-			"execute -e junit-jupiter --select-method org.junit.platform.console.options.StdStreamTest#printTest "
+			"execute -e junit-jupiter --select-method org.junit.platform.console.options.StdStreamTestCase#printTest "
 					+ "--redirect-stdout %s --redirect-stderr %s",
 			outputFile, outputFile);
 		var args = line.split(" ");
 		new ConsoleLauncherWrapper().execute(args);
 
 		assertTrue(Files.exists(outputFile), "File does not exist.");
-		assertEquals(Files.size(outputFile), 40, "Invalid file size.");
-		deleteIfExists(outputFile);
+		assertEquals(40, Files.size(outputFile), "Invalid file size.");
 	}
 }
