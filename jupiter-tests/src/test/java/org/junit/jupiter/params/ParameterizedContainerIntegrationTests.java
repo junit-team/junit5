@@ -21,6 +21,7 @@ import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
 import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -221,6 +223,26 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number=2, name=bar");
+	}
+
+	@Test
+	void closesAutoCloseableArguments() {
+		AutoCloseableArgument.closeCounter = 0;
+
+		var results = executeTestsForClass(AutoCloseableArgumentTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		assertThat(AutoCloseableArgument.closeCounter).isEqualTo(2);
+	}
+
+	@Test
+	void doesNotCloseAutoCloseableArgumentsWhenDisabled() {
+		AutoCloseableArgument.closeCounter = 0;
+
+		var results = executeTestsForClass(AutoCloseableArgumentWithDisabledCleanupTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		assertThat(AutoCloseableArgument.closeCounter).isEqualTo(0);
 	}
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -682,6 +704,45 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		void test() {
 			assertTrue(number > 0);
 			assertFalse(name.isBlank());
+		}
+	}
+
+	@ParameterizedContainer
+	@ArgumentsSource(AutoCloseableArgumentProvider.class)
+	record AutoCloseableArgumentTestCase(AutoCloseableArgument argument) {
+		@Test
+		void test() {
+			assertNotNull(argument);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
+		}
+	}
+
+	@ParameterizedContainer(autoCloseArguments = false)
+	@ArgumentsSource(AutoCloseableArgumentProvider.class)
+	record AutoCloseableArgumentWithDisabledCleanupTestCase(AutoCloseableArgument argument) {
+		@Test
+		void test() {
+			assertNotNull(argument);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
+		}
+	}
+
+	private static class AutoCloseableArgumentProvider implements ArgumentsProvider {
+
+		@Override
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
+			return Stream.of(arguments(new AutoCloseableArgument(), Named.of("unused", new AutoCloseableArgument())));
+		}
+	}
+
+	static class AutoCloseableArgument implements AutoCloseable {
+
+		static int closeCounter = 0;
+
+		@Override
+		public void close() {
+			closeCounter++;
 		}
 	}
 

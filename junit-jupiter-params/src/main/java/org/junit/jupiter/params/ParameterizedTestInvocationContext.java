@@ -12,12 +12,9 @@ package org.junit.jupiter.params;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -27,11 +24,14 @@ import org.junit.jupiter.params.provider.Arguments;
 class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestMethodContext>
 		implements TestTemplateInvocationContext {
 
-	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
-
 	ParameterizedTestInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
 		super(formatter, methodContext, arguments, invocationIndex);
+	}
+
+	@Override
+	public String getDisplayName(int invocationIndex) {
+		return super.getDisplayName(invocationIndex);
 	}
 
 	@Override
@@ -44,31 +44,7 @@ class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<
 
 	@Override
 	public void prepareInvocation(ExtensionContext context) {
-		if (this.declarationContext.getAnnotation().autoCloseArguments()) {
-			Store store = context.getStore(NAMESPACE);
-			AtomicInteger argumentIndex = new AtomicInteger();
-
-			Arrays.stream(this.arguments.getAllPayloads()) //
-					.filter(AutoCloseable.class::isInstance) //
-					.map(AutoCloseable.class::cast) //
-					.map(CloseableArgument::new) //
-					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
-		}
-	}
-
-	private static class CloseableArgument implements Store.CloseableResource {
-
-		private final AutoCloseable autoCloseable;
-
-		CloseableArgument(AutoCloseable autoCloseable) {
-			this.autoCloseable = autoCloseable;
-		}
-
-		@Override
-		public void close() throws Throwable {
-			this.autoCloseable.close();
-		}
-
+		super.prepareInvocation(context);
 	}
 
 }

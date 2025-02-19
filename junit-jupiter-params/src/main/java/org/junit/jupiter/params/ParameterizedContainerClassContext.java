@@ -40,6 +40,11 @@ class ParameterizedContainerClassContext implements ParameterizedDeclarationCont
 	}
 
 	@Override
+	public boolean isAutoClosingArguments() {
+		return this.annotation.autoCloseArguments();
+	}
+
+	@Override
 	public boolean isAllowingZeroInvocations() {
 		// TODO #878 Read from annotation
 		return false;

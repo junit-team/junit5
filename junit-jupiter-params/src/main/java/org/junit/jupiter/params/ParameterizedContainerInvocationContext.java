@@ -15,6 +15,7 @@ import java.util.List;
 
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 
 class ParameterizedContainerInvocationContext extends ParameterizedInvocationContext<ParameterizedContainerClassContext>
@@ -26,6 +27,11 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 	}
 
 	@Override
+	public String getDisplayName(int invocationIndex) {
+		return super.getDisplayName(invocationIndex);
+	}
+
+	@Override
 	public List<Extension> getAdditionalExtensions() {
 		// TODO #878 Register either parameter resolvers or field injectors?
 		return Arrays.asList( //
@@ -34,4 +40,10 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 			new ContainerTemplateInstanceFieldInjector(this.declarationContext, this.arguments, this.invocationIndex) //
 		);
 	}
+
+	@Override
+	public void prepareInvocation(ExtensionContext context) {
+		super.prepareInvocation(context);
+	}
+
 }

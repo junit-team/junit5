@@ -283,17 +283,17 @@ public @interface ParameterizedTest {
 	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
 
 	/**
-	 * Configure whether all arguments of the parameterized test that implement {@link AutoCloseable}
-	 * will be closed after {@link org.junit.jupiter.api.AfterEach @AfterEach} methods
-	 * and {@link org.junit.jupiter.api.extension.AfterEachCallback AfterEachCallback}
-	 * extensions have been called for the current parameterized test invocation.
+	 * Configure whether all arguments of the parameterized test that implement
+	 * {@link AutoCloseable} will be closed after their corresponding
+	 * invocation.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *
-	 * <p><strong>WARNING</strong>: if an argument that implements {@code AutoCloseable}
-	 * is reused for multiple invocations of the same parameterized test method,
-	 * you must set {@code autoCloseArguments} to {@code false} to ensure that
-	 * the argument is not closed between invocations.
+	 * <p><strong>WARNING</strong>: if an argument that implements
+	 * {@code AutoCloseable} is reused for multiple invocations of the same
+	 * parameterized test method, you must set {@code autoCloseArguments} to
+	 * {@code false} to ensure that the argument is not closed between
+	 * invocations.
 	 *
 	 * @since 5.8
 	 * @see java.lang.AutoCloseable

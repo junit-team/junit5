@@ -10,9 +10,16 @@
 
 package org.junit.jupiter.params;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.params.provider.Arguments;
 
 class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?>> {
+
+	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
 
 	private final ParameterizedInvocationNameFormatter formatter;
 	protected final T declarationContext;
@@ -32,9 +39,37 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		return this.formatter.format(invocationIndex, this.arguments);
 	}
 
+	public void prepareInvocation(ExtensionContext context) {
+		if (this.declarationContext.isAutoClosingArguments()) {
+			ExtensionContext.Store store = context.getStore(NAMESPACE);
+			AtomicInteger argumentIndex = new AtomicInteger();
+
+			Arrays.stream(this.arguments.getAllPayloads()) //
+					.filter(AutoCloseable.class::isInstance) //
+					.map(AutoCloseable.class::cast) //
+					.map(CloseableArgument::new) //
+					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
+		}
+	}
+
 	private int determineConsumedArgumentCount(int totalLength) {
 		return this.declarationContext.getResolverFacade().hasAggregator() //
 				? totalLength //
 				: Math.min(totalLength, this.declarationContext.getResolverFacade().getParameterCount());
+	}
+
+	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {
+
+		private final AutoCloseable autoCloseable;
+
+		CloseableArgument(AutoCloseable autoCloseable) {
+			this.autoCloseable = autoCloseable;
+		}
+
+		@Override
+		public void close() throws Throwable {
+			this.autoCloseable.close();
+		}
+
 	}
 }
