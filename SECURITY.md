@@ -11,8 +11,8 @@ You'll find more information about the key here: [KEYS](./KEYS)
 
 | Version | Supported          |
 |---------| ------------------ |
-| 5.11.x  | :white_check_mark: |
-| < 5.11  | :x:                |
+| 5.12.x  | :white_check_mark: |
+| < 5.12  | :x:                |
 
 ## Reporting a Vulnerability
 
