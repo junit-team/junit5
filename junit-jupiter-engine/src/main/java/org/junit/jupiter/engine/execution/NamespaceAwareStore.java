@@ -16,7 +16,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.util.Preconditions;
@@ -27,12 +26,12 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreExcept
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public class NamespaceAwareStore implements Store {
+public class NamespaceAwareStore<N> implements Store {
 
-	private final NamespacedHierarchicalStore<Namespace> valuesStore;
-	private final Namespace namespace;
+	private final NamespacedHierarchicalStore<N> valuesStore;
+	private final N namespace;
 
-	public NamespaceAwareStore(NamespacedHierarchicalStore<Namespace> valuesStore, Namespace namespace) {
+	public NamespaceAwareStore(NamespacedHierarchicalStore<N> valuesStore, N namespace) {
 		this.valuesStore = valuesStore;
 		this.namespace = namespace;
 	}
