@@ -12,8 +12,8 @@ This repository is the home of _JUnit 5_.
 
 ## Latest Releases
 
-- General Availability (GA): [JUnit 5.11.4](https://github.com/junit-team/junit5/releases/tag/r5.11.4) (December 16, 2024)
-- Preview (Milestone/Release Candidate): [JUnit 5.12.0-RC2](https://github.com/junit-team/junit5/releases/tag/r5.12.0-RC2) (February 12, 2025)
+- General Availability (GA): [JUnit 5.12.0](https://github.com/junit-team/junit5/releases/tag/r5.12.0) (February 21, 2025)
+- Preview (Milestone/Release Candidate): N/A
 
 ## Documentation
 
