@@ -20,7 +20,7 @@ import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * @since 1.12
+ * @since 5.12
  */
 class DefaultTestReporter implements TestReporter {
 

@@ -26,9 +26,9 @@ import org.apiguardian.api.API;
  * itself. <strong>Any usage by external parties is not supported.</strong>
  * Use at your own risk!
  *
- * @since 5.11
+ * @since 1.11
  */
-@API(status = API.Status.INTERNAL, since = "5.11")
+@API(status = API.Status.INTERNAL, since = "1.11")
 public class ServiceLoaderUtils {
 
 	private ServiceLoaderUtils() {

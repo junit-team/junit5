@@ -19,6 +19,7 @@ import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOr
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -83,10 +84,25 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	}
 
 	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration) {
+		this(uniqueId, displayName, testClass, testMethod, configuration, defaultInterceptorCall);
+	}
+
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration, ReflectiveInterceptorCall<Method, Void> interceptorCall) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
 		this.interceptorCall = interceptorCall;
 	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestMethodTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new TestMethodTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getDisplayName(), getTestClass(),
+			getTestMethod(), this.configuration, interceptorCall);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Type getType() {
@@ -102,6 +118,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 		MethodExtensionContext extensionContext = new MethodExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), registry,
 			context.getLauncherStoreFacade(), throwableCollector);
+		throwableCollector.execute(() -> prepareExtensionContext(extensionContext));
+
 		// @formatter:off
 		JupiterEngineExecutionContext newContext = context.extend()
 				.withExtensionRegistry(registry)
@@ -114,6 +132,10 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 			extensionContext.setTestInstances(testInstances);
 		});
 		return newContext;
+	}
+
+	protected void prepareExtensionContext(ExtensionContext extensionContext) {
+		// nothing to do by default
 	}
 
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {

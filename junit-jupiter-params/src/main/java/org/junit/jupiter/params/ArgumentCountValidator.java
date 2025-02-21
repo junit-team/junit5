@@ -18,7 +18,6 @@ import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -31,9 +30,9 @@ class ArgumentCountValidator implements InvocationInterceptor {
 		ArgumentCountValidator.class);
 
 	private final ParameterizedTestMethodContext methodContext;
-	private final Arguments arguments;
+	private final EvaluatedArgumentSet arguments;
 
-	ArgumentCountValidator(ParameterizedTestMethodContext methodContext, Arguments arguments) {
+	ArgumentCountValidator(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments) {
 		this.methodContext = methodContext;
 		this.arguments = arguments;
 	}
@@ -41,7 +40,7 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	@Override
 	public void interceptTestTemplateMethod(InvocationInterceptor.Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-		validateArgumentCount(extensionContext, arguments);
+		validateArgumentCount(extensionContext);
 		invocation.proceed();
 	}
 
@@ -49,7 +48,7 @@ class ArgumentCountValidator implements InvocationInterceptor {
 		return context.getRoot().getStore(NAMESPACE);
 	}
 
-	private void validateArgumentCount(ExtensionContext extensionContext, Arguments arguments) {
+	private void validateArgumentCount(ExtensionContext extensionContext) {
 		ArgumentCountValidationMode argumentCountValidationMode = getArgumentCountValidationMode(extensionContext);
 		switch (argumentCountValidationMode) {
 			case DEFAULT:
@@ -57,10 +56,10 @@ class ArgumentCountValidator implements InvocationInterceptor {
 				return;
 			case STRICT:
 				int testParamCount = extensionContext.getRequiredTestMethod().getParameterCount();
-				int argumentsCount = arguments.get().length;
+				int argumentsCount = arguments.getTotalLength();
 				Preconditions.condition(testParamCount == argumentsCount, () -> String.format(
 					"Configuration error: the @ParameterizedTest has %s argument(s) but there were %s argument(s) provided.%nNote: the provided arguments are %s",
-					testParamCount, argumentsCount, Arrays.toString(arguments.get())));
+					testParamCount, argumentsCount, Arrays.toString(arguments.getAllPayloads())));
 				break;
 			default:
 				throw new ExtensionConfigurationException(

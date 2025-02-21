@@ -12,33 +12,33 @@ package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.emptyList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
 
 import org.apiguardian.api.API;
 
 /**
- * {@code TestTemplateInvocationContext} represents the <em>context</em> of a
- * single invocation of a {@linkplain org.junit.jupiter.api.TestTemplate test
- * template}.
+ * {@code ContainerTemplateInvocationContext} represents the <em>context</em> of
+ * a single invocation of a {@linkplain org.junit.jupiter.api.ContainerTemplate
+ * container template}.
  *
- * <p>Each context is provided by a {@link TestTemplateInvocationContextProvider}.
+ * <p>Each context is provided by a
+ * {@link ContainerTemplateInvocationContextProvider}.
  *
- * @since 5.0
- * @see org.junit.jupiter.api.TestTemplate
- * @see TestTemplateInvocationContextProvider
+ * @since 5.13
+ * @see org.junit.jupiter.api.ContainerTemplate
+ * @see ContainerTemplateInvocationContextProvider
  */
-@API(status = STABLE, since = "5.0")
-public interface TestTemplateInvocationContext {
+@API(status = EXPERIMENTAL, since = "5.13")
+public interface ContainerTemplateInvocationContext {
 
 	/**
 	 * Get the display name for this invocation.
 	 *
 	 * <p>The supplied {@code invocationIndex} is incremented by the framework
-	 * with each test invocation. Thus, in the case of multiple active
-	 * {@linkplain TestTemplateInvocationContextProvider providers}, only the
-	 * first active provider receives indices starting with {@code 1}.
+	 * with each container invocation. Thus, in the case of multiple active
+	 * {@linkplain ContainerTemplateInvocationContextProvider providers}, only
+	 * the first active provider receives indices starting with {@code 1}.
 	 *
 	 * <p>The default implementation returns the supplied {@code invocationIndex}
 	 * wrapped in brackets &mdash; for example, {@code [1]}, {@code [42]}, etc.
@@ -54,8 +54,8 @@ public interface TestTemplateInvocationContext {
 	 * Get the additional {@linkplain Extension extensions} for this invocation.
 	 *
 	 * <p>The extensions provided by this method will only be used for this
-	 * invocation of the test template. Thus, it does not make sense to return
-	 * an extension that acts solely on the container level (e.g.
+	 * invocation of the container template. Thus, it does not make sense to
+	 * return an extension that acts solely on the container level (e.g.
 	 * {@link BeforeAllCallback}).
 	 *
 	 * <p>The default implementation returns an empty list.
@@ -68,16 +68,14 @@ public interface TestTemplateInvocationContext {
 	}
 
 	/**
-	 * Prepare the imminent invocation of the test template.
+	 * Prepare the imminent invocation of the container template.
 	 *
 	 * <p>This may be used, for example, to store entries in the
 	 * {@link ExtensionContext.Store Store} to benefit from its cleanup support
 	 * or for retrieval by other extensions.
 	 *
 	 * @param context The invocation-level extension context.
-	 * @since 5.13
 	 */
-	@API(status = EXPERIMENTAL, since = "5.13")
 	default void prepareInvocation(ExtensionContext context) {
 	}
 

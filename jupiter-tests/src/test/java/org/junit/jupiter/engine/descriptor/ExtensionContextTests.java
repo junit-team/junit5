@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Named.named;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.hierarchicalOutputDirectoryProvider;
 import static org.mockito.ArgumentMatchers.eq;
@@ -119,8 +120,8 @@ public class ExtensionContextTests {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
 
-		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, configuration,
-			extensionRegistry, launcherStoreFacade, null);
+		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 
 		// @formatter:off
 		assertAll("outerContext",
@@ -139,15 +140,15 @@ public class ExtensionContextTests {
 		// @formatter:on
 
 		var nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null, nestedClassDescriptor,
-			configuration, extensionRegistry, launcherStoreFacade, null);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		assertThat(nestedExtensionContext.getParent()).containsSame(outerExtensionContext);
 	}
 
 	@Test
 	void ExtensionContext_With_ExtensionRegistry_getExtensions() {
 		var classTestDescriptor = nestedClassDescriptor();
-		try (var ctx = new ClassExtensionContext(null, null, classTestDescriptor, configuration, extensionRegistry,
-			launcherStoreFacade, null)) {
+		try (var ctx = new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD, configuration,
+			extensionRegistry, launcherStoreFacade, null)) {
 
 			Extension ext = mock();
 			when(extensionRegistry.getExtensions(Extension.class)).thenReturn(List.of(ext));
@@ -164,14 +165,14 @@ public class ExtensionContextTests {
 		var methodTestDescriptor = methodDescriptor();
 		outerClassDescriptor.addChild(methodTestDescriptor);
 
-		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, configuration,
-			extensionRegistry, launcherStoreFacade, null);
+		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 
 		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
 		assertThat(outerExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		var nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null, nestedClassDescriptor,
-			configuration, extensionRegistry, launcherStoreFacade, null);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
@@ -196,7 +197,7 @@ public class ExtensionContextTests {
 		var engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
 		var classExtensionContext = new ClassExtensionContext(engineExtensionContext, null, classTestDescriptor,
-			configuration, extensionRegistry, launcherStoreFacade, null);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		var methodExtensionContext = new MethodExtensionContext(classExtensionContext, null, methodTestDescriptor,
 			configuration, extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
 		methodExtensionContext.setTestInstances(DefaultTestInstances.of(testInstance));
@@ -224,7 +225,7 @@ public class ExtensionContextTests {
 		var classTestDescriptor = outerClassDescriptor(null);
 		var engineExecutionListener = spy(EngineExecutionListener.class);
 		ExtensionContext extensionContext = new ClassExtensionContext(null, engineExecutionListener,
-			classTestDescriptor, configuration, extensionRegistry, launcherStoreFacade, null);
+			classTestDescriptor, PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 
 		var map1 = Collections.singletonMap("key", "value");
 		var map2 = Collections.singletonMap("other key", "other value");
@@ -349,7 +350,7 @@ public class ExtensionContextTests {
 			EngineExecutionListener engineExecutionListener, ClassTestDescriptor classTestDescriptor) {
 		when(configuration.getOutputDirectoryProvider()) //
 				.thenReturn(hierarchicalOutputDirectoryProvider(tempDir));
-		return new ClassExtensionContext(null, engineExecutionListener, classTestDescriptor, configuration,
+		return new ClassExtensionContext(null, engineExecutionListener, classTestDescriptor, PER_METHOD, configuration,
 			extensionRegistry, launcherStoreFacade, null);
 	}
 
@@ -358,8 +359,8 @@ public class ExtensionContextTests {
 	void usingStore() {
 		var methodTestDescriptor = methodDescriptor();
 		var classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configuration,
-			extensionRegistry, launcherStoreFacade, null);
+		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 		var childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
 		childContext.setTestInstances(DefaultTestInstances.of(new OuterClass()));
@@ -420,8 +421,8 @@ public class ExtensionContextTests {
 			named("class", (JupiterConfiguration configuration) -> {
 				var classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 				var classTestDescriptor = new ClassTestDescriptor(classUniqueId, testClass, configuration);
-				return new ClassExtensionContext(null, null, classTestDescriptor, configuration, extensionRegistry,
-					launcherStoreFacade, null);
+				return new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD, configuration,
+					extensionRegistry, launcherStoreFacade, null);
 			}), //
 			named("method", (JupiterConfiguration configuration) -> {
 				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").orElseThrow();

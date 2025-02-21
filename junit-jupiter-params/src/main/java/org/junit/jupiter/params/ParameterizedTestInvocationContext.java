@@ -12,8 +12,12 @@ package org.junit.jupiter.params;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -22,10 +26,11 @@ import org.junit.jupiter.params.provider.Arguments;
  */
 class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
 
+	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
+
 	private final ParameterizedTestNameFormatter formatter;
 	private final ParameterizedTestMethodContext methodContext;
-	private final Arguments arguments;
-	private final Object[] consumedArguments;
+	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 
 	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
@@ -33,29 +38,55 @@ class ParameterizedTestInvocationContext implements TestTemplateInvocationContex
 
 		this.formatter = formatter;
 		this.methodContext = methodContext;
-		this.arguments = arguments;
-		this.consumedArguments = consumedArguments(methodContext, arguments.get());
+		this.arguments = EvaluatedArgumentSet.of(arguments, this::determineConsumedArgumentCount);
 		this.invocationIndex = invocationIndex;
 	}
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments, this.consumedArguments);
+		return this.formatter.format(invocationIndex, this.arguments);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		return Arrays.asList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.consumedArguments, this.invocationIndex),
+			new ParameterizedTestParameterResolver(this.methodContext, this.arguments, this.invocationIndex),
 			new ArgumentCountValidator(this.methodContext, this.arguments));
 	}
 
-	private static Object[] consumedArguments(ParameterizedTestMethodContext methodContext, Object[] arguments) {
-		if (methodContext.hasAggregator()) {
-			return arguments;
+	@Override
+	public void prepareInvocation(ExtensionContext context) {
+		if (this.methodContext.annotation.autoCloseArguments()) {
+			Store store = context.getStore(NAMESPACE);
+			AtomicInteger argumentIndex = new AtomicInteger();
+
+			Arrays.stream(this.arguments.getAllPayloads()) //
+					.filter(AutoCloseable.class::isInstance) //
+					.map(AutoCloseable.class::cast) //
+					.map(CloseableArgument::new) //
+					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
 		}
-		int parameterCount = methodContext.getParameterCount();
-		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
+	}
+
+	private int determineConsumedArgumentCount(int totalLength) {
+		return methodContext.hasAggregator() //
+				? totalLength //
+				: Math.min(totalLength, methodContext.getParameterCount());
+	}
+
+	private static class CloseableArgument implements Store.CloseableResource {
+
+		private final AutoCloseable autoCloseable;
+
+		CloseableArgument(AutoCloseable autoCloseable) {
+			this.autoCloseable = autoCloseable;
+		}
+
+		@Override
+		public void close() throws Throwable {
+			this.autoCloseable.close();
+		}
+
 	}
 
 }

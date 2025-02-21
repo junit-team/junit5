@@ -14,6 +14,9 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -57,6 +60,8 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -406,6 +411,14 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 				event(test("test-template-invocation:#1"), started()), //
 				event(test("test-template-invocation:#1"), finishedSuccessfully()), //
 				event(container("templateWithCloseableStream"), finishedSuccessfully())));
+	}
+
+	@Test
+	void templateWithPreparations() {
+		var results = executeTestsForClass(TestTemplateWithPreparationsTestCase.class);
+
+		assertTrue(CustomCloseableResource.closed, "resource in store was closed");
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	private TestDescriptor findTestDescriptor(EngineExecutionResults executionResults, Condition<Event> condition) {
@@ -850,6 +863,76 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 	private static TestTemplateInvocationContext emptyTestTemplateInvocationContext() {
 		return new TestTemplateInvocationContext() {
 		};
+	}
+
+	static class TestTemplateWithPreparationsTestCase {
+
+		@TestTemplate
+		@ExtendWith({ PreparingTestTemplateInvocationContextProvider.class, CompanionExtension.class })
+		void test(CustomCloseableResource resource) {
+			assertNotNull(resource);
+			assertFalse(CustomCloseableResource.closed, "should not be closed yet");
+		}
+
+	}
+
+	private static class PreparingTestTemplateInvocationContextProvider
+			implements TestTemplateInvocationContextProvider {
+
+		static final Namespace NAMESPACE = Namespace.create(PreparingTestTemplateInvocationContextProvider.class);
+
+		@Override
+		public boolean supportsTestTemplate(ExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Stream<TestTemplateInvocationContext> provideTestTemplateInvocationContexts(ExtensionContext context) {
+			return Stream.of(new PreparingTestTemplateInvocationContext());
+		}
+
+	}
+
+	private static class PreparingTestTemplateInvocationContext implements TestTemplateInvocationContext {
+
+		@Override
+		public void prepareInvocation(ExtensionContext context) {
+			context.getStore(PreparingTestTemplateInvocationContextProvider.NAMESPACE) //
+					.put("resource", new CustomCloseableResource());
+		}
+
+	}
+
+	private static class CompanionExtension implements ParameterResolver {
+
+		@Override
+		public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+			return ExtensionContextScope.TEST_METHOD;
+		}
+
+		@Override
+		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return CustomCloseableResource.class.equals(parameterContext.getParameter().getType());
+		}
+
+		@Override
+		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+				throws ParameterResolutionException {
+			return extensionContext.getStore(PreparingTestTemplateInvocationContextProvider.NAMESPACE).get("resource");
+		}
+
+	}
+
+	private static class CustomCloseableResource implements CloseableResource {
+
+		static boolean closed;
+
+		@Override
+		public void close() {
+			closed = true;
+		}
+
 	}
 
 }
