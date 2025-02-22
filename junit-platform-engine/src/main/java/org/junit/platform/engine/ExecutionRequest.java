@@ -19,6 +19,8 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * Provides a single {@link TestEngine} access to the information necessary to
@@ -40,22 +42,25 @@ public class ExecutionRequest {
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
 	private final OutputDirectoryProvider outputDirectoryProvider;
+	private final NamespacedHierarchicalStore<Namespace> requestStore;
 
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.11")
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
 			ConfigurationParameters configurationParameters) {
-		this(rootTestDescriptor, engineExecutionListener, configurationParameters, null);
+		this(rootTestDescriptor, engineExecutionListener, configurationParameters, null, null);
 	}
 
 	private ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
-			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
+			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider,
+			NamespacedHierarchicalStore<Namespace> requestStore) {
 		this.rootTestDescriptor = Preconditions.notNull(rootTestDescriptor, "rootTestDescriptor must not be null");
 		this.engineExecutionListener = Preconditions.notNull(engineExecutionListener,
 			"engineExecutionListener must not be null");
 		this.configurationParameters = Preconditions.notNull(configurationParameters,
 			"configurationParameters must not be null");
 		this.outputDirectoryProvider = outputDirectoryProvider;
+		this.requestStore = requestStore;
 	}
 
 	/**
@@ -88,16 +93,19 @@ public class ExecutionRequest {
 	 * engine may use to influence test execution; never {@code null}
 	 * @param outputDirectoryProvider {@link OutputDirectoryProvider} for
 	 * writing reports and other output files; never {@code null}
+	 * @param requestStore {@link NamespacedHierarchicalStore} for storing
+	 * request-scoped data; never {@code null}
 	 * @return a new {@code ExecutionRequest}; never {@code null}
 	 * @since 1.12
 	 */
 	@API(status = INTERNAL, since = "1.12")
 	public static ExecutionRequest create(TestDescriptor rootTestDescriptor,
 			EngineExecutionListener engineExecutionListener, ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, NamespacedHierarchicalStore<Namespace> requestStore) {
 
 		return new ExecutionRequest(rootTestDescriptor, engineExecutionListener, configurationParameters,
-			Preconditions.notNull(outputDirectoryProvider, "outputDirectoryProvider must not be null"));
+			Preconditions.notNull(outputDirectoryProvider, "outputDirectoryProvider must not be null"),
+			Preconditions.notNull(requestStore, "requestStore must not be null"));
 	}
 
 	/**
@@ -140,6 +148,10 @@ public class ExecutionRequest {
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return Preconditions.notNull(outputDirectoryProvider,
 			"No OutputDirectoryProvider was configured for this request");
+	}
+
+	public NamespacedHierarchicalStore<Namespace> getStore() {
+		return this.requestStore;
 	}
 
 }

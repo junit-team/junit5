@@ -11,13 +11,17 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableCollection;
+import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -37,10 +41,14 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncher implements Launcher {
 
+	private static final Namespace NAMESPACE = Namespace.create(DefaultLauncher.class);
+
+	private final AtomicLong storeCounter = new AtomicLong(0);
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
-	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
-		listenerRegistry.testExecutionListeners);
+	private final EngineExecutionOrchestrator executionOrchestrator;
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
+	private final NamespacedHierarchicalStore<Namespace> sessionStore;
+	private final NamespacedHierarchicalStore<Namespace> requestStore;
 
 	/**
 	 * Construct a new {@code DefaultLauncher} with the supplied test engines.
@@ -50,7 +58,8 @@ class DefaultLauncher implements Launcher {
 	 * @param postDiscoveryFilters the additional post discovery filters for
 	 * discovery requests; never {@code null}
 	 */
-	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters) {
+	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
+			NamespacedHierarchicalStore<Namespace> sessionStore) {
 		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
 			() -> "Cannot create Launcher without at least one TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
@@ -59,6 +68,10 @@ class DefaultLauncher implements Launcher {
 			"PostDiscoveryFilter array must not contain null elements");
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
 			unmodifiableCollection(postDiscoveryFilters), listenerRegistry.launcherDiscoveryListeners);
+		this.sessionStore = sessionStore;
+		this.requestStore = createRequestStore();
+		this.executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry.testExecutionListeners,
+			requestStore);
 	}
 
 	@Override
@@ -96,11 +109,19 @@ class DefaultLauncher implements Launcher {
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,
 			EngineDiscoveryOrchestrator.Phase phase) {
-		return discoveryOrchestrator.discover(discoveryRequest, phase);
+		return discoveryOrchestrator.discover(discoveryRequest.withStore(createRequestStore()), phase);
 	}
 
 	private void execute(InternalTestPlan internalTestPlan, TestExecutionListener[] listeners) {
 		executionOrchestrator.execute(internalTestPlan, listeners);
+	}
+
+	private NamespacedHierarchicalStore<Namespace> createRequestStore() {
+		NamespacedHierarchicalStore<Namespace> requestStore = new NamespacedHierarchicalStore<>(sessionStore,
+			closeAutoCloseables());
+		// Ensure store is closed when the session is closed
+		sessionStore.put(NAMESPACE, "request-store-" + storeCounter.incrementAndGet(), requestStore);
+		return requestStore;
 	}
 
 }
