@@ -7,13 +7,15 @@
 	</Appenders>
 	<Loggers>
 		<Logger name="org.junit" level="warn" />
-		<Logger name="org.junit.platform.commons.util.ClasspathScanner" level="error" />
+		<Logger name="org.junit.platform.commons.support.scanning.DefaultClasspathScanner" level="error" />
 		<Logger name="org.junit.platform.engine.support.descriptor.DemoClassTestDescriptor" level="error" />
-		<Logger name="org.junit.platform.launcher.core.EngineIdValidator" level="fatal" />
-		<Logger name="org.junit.platform.launcher.core.InternalTestPlan" level="error" />
+		<Logger name="org.junit.platform.launcher.core.CompositeEngineExecutionListener" level="error" />
 		<Logger name="org.junit.platform.launcher.core.CompositeTestExecutionListener" level="error" />
+		<Logger name="org.junit.platform.launcher.core.EngineIdValidator" level="fatal" />
+		<Logger name="org.junit.platform.launcher.core.EngineFilterer" level="error" />
+		<Logger name="org.junit.platform.launcher.core.InternalTestPlan" level="error" />
+		<Logger name="org.junit.platform.launcher.core.LauncherConfigurationParameters" level="error" />
 		<Logger name="org.junit.platform.launcher.listeners.discovery.LoggingLauncherDiscoveryListener" level="off" />
-		<Logger name="org.junit.ApiReportGenerator" level="error" />
 		<Logger name="org.junit.vintage.engine" level="error" />
 		<Logger name="org.junit.jupiter.engine" level="error" />
 		<Root level="error">

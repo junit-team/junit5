@@ -1,8 +1,6 @@
-
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import junitbuild.extensions.capitalized
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.gradle.jvm.toolchain.internal.NoToolchainAvailableException
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
 
@@ -216,7 +214,7 @@ class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEna
 					project.javaToolchains.launcherFor {
 						languageVersion = JavaLanguageVersion.of(version)
 					}.get()
-				} catch (e: NoToolchainAvailableException) {
+				} catch (e: Exception) {
 					null
 				}
 			})
