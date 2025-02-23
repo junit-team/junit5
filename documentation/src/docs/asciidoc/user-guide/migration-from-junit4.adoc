@@ -45,8 +45,8 @@ concurrent test execution. It can be enabled and configured using the following
 <<running-tests-config-params, configuration parameters>>:
 
 `junit.vintage.execution.parallel.enabled=true|false`::
-  Enable/disable parallel execution (defaults to `false`). Requires opt-in for `classes`
-  or `methods` to be executed in parallel using the configuration parameters below.
+  Enable/disable parallel execution (defaults to `false`).
+Requires opt-in for `classes` or `methods` to be executed in parallel using the configuration parameters below.
 
 `junit.vintage.execution.parallel.classes=true|false`::
   Enable/disable parallel execution of test classes (defaults to `false`).
@@ -55,21 +55,76 @@ concurrent test execution. It can be enabled and configured using the following
   Enable/disable parallel execution of test methods (defaults to `false`).
 
 `junit.vintage.execution.parallel.pool-size=<number>`::
-  Specifies the size of the thread pool to be used for parallel execution. By default, the
-  number of available processors is used.
+  Specifies the size of the thread pool to be used for parallel execution.
+By default, the  number of available processors is used.
 
-Example configuration in `junit-platform.properties`:
+
+Let's assume we have two test classes `FooTest` and `BarTest` with each class containing three unit tests.
+Now, let's enable the parallel execution of test classes:
+
+[source,properties]
+----
+junit.vintage.execution.parallel.enabled=true
+junit.vintage.execution.parallel.classes=true
+----
+
+With this setup, the `VintageTestEngine` will use two different threads,
+one for each test class:
+
+[source,plaintext]
+----
+ForkJoinPool-1-worker-1 - BarTest::test1
+ForkJoinPool-1-worker-2 - FooTest::test1
+ForkJoinPool-1-worker-1 - BarTest::test2
+ForkJoinPool-1-worker-2 - FooTest::test2
+ForkJoinPool-1-worker-1 - BarTest::test3
+ForkJoinPool-1-worker-2 - FooTest::test3
+----
+
+On the other hand, we can enable the parallel test execution at a `method` level,
+rather than the `class` level:
+
+[source,properties]
+----
+junit.vintage.execution.parallel.enabled=true
+junit.vintage.execution.parallel.methods=true
+----
+
+Therefore, the test methods from within a class will be executed in parallel,
+while different test classes will be executed sequentially:
+
+[source,plaintext]
+----
+ForkJoinPool-1-worker-1 - BarTest::test1
+ForkJoinPool-1-worker-2 - BarTest::test2
+ForkJoinPool-1-worker-3 - BarTest::test3
+
+ForkJoinPool-1-worker-3 - FooTest::test1
+ForkJoinPool-1-worker-2 - FooTest::test2
+ForkJoinPool-1-worker-1 - FooTest::test3
+----
+
+Finally, we can also enable the parallelization at both `class` and `method` level:
 
 [source,properties]
 ----
 junit.vintage.execution.parallel.enabled=true
 junit.vintage.execution.parallel.classes=true
 junit.vintage.execution.parallel.methods=true
-junit.vintage.execution.parallel.pool-size=4
 ----
 
-With these properties set, the `VintageTestEngine` will execute tests in parallel,
-potentially significantly reducing the overall test suite execution time.
+With these properties set, the `VintageTestEngine` will execute all the tests classes
+and methods in parallel, potentially significantly reducing the overall test suite execution time:
+
+[source,plaintext]
+----
+ForkJoinPool-1-worker-6 - FooTest::test2
+ForkJoinPool-1-worker-7 - BarTest::test3
+ForkJoinPool-1-worker-3 - FooTest::test1
+ForkJoinPool-1-worker-8 - FooTest::test3
+ForkJoinPool-1-worker-5 - BarTest::test2
+ForkJoinPool-1-worker-4 - BarTest::test1
+----
 
 [[migrating-from-junit4-tips]]
 === Migration Tips
