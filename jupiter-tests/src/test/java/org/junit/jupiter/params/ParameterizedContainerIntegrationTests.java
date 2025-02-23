@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
@@ -951,13 +950,21 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Parameter
 		ArgumentsAccessor accessor2;
 
+		@Parameter(0)
+		String text;
+
+		@Parameter(1)
+		int number;
+
 		@Test
 		void test() {
 			assertEquals(2, accessor1.size());
 			assertEquals(2, accessor2.size());
 			assertEquals(accessor1.getInvocationIndex(), accessor2.getInvocationIndex());
-			assertSame(accessor1.getString(0), accessor2.getString(0));
-			assertEquals(accessor1.getInteger(1), accessor2.getInteger(1));
+			assertEquals(text, accessor1.getString(0));
+			assertEquals(text, accessor2.getString(0));
+			assertEquals(number, accessor1.getInteger(1));
+			assertEquals(number, accessor2.getInteger(1));
 		}
 	}
 
