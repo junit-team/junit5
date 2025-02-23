@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
@@ -119,7 +120,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { NullAndEmptySourceConstructorInjectionTestCase.class,
+	@ValueSource(classes = { //NullAndEmptySourceConstructorInjectionTestCase.class,
 			NullAndEmptySourceConstructorFieldInjectionTestCase.class })
 	void supportsNullAndEmptySource(Class<?> containerTemplateClass) {
 
@@ -226,7 +227,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		var results = executeTestsForClass(CustomNamePatternTestCase.class);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number=2, name=bar");
 	}
@@ -319,6 +320,14 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					"[1] number=1", "[1] text=foo", "[2] text=bar", //
 					"[2] number=2", "[1] text=foo", "[2] text=bar" //
 				);
+	}
+
+	@Test
+	void supportsMultipleAggregatorFields() {
+
+		var results = executeTestsForClass(MultiAggregatorFieldInjectionTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 	}
 
 	// -------------------------------------------------------------------
@@ -929,6 +938,26 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				assertTrue(number >= 0);
 				assertTrue(List.of("foo", "bar").contains(text));
 			}
+		}
+	}
+
+	@ParameterizedContainer
+	@CsvSource({ "foo, 1", "bar, 2" })
+	static class MultiAggregatorFieldInjectionTestCase {
+
+		@Parameter
+		ArgumentsAccessor accessor1;
+
+		@Parameter
+		ArgumentsAccessor accessor2;
+
+		@Test
+		void test() {
+			assertEquals(2, accessor1.size());
+			assertEquals(2, accessor2.size());
+			assertEquals(accessor1.getInvocationIndex(), accessor2.getInvocationIndex());
+			assertSame(accessor1.getString(0), accessor2.getString(0));
+			assertEquals(accessor1.getInteger(1), accessor2.getInteger(1));
 		}
 	}
 

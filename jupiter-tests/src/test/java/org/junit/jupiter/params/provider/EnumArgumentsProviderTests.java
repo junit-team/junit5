@@ -16,7 +16,6 @@ import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumW
 import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.BAZ;
 import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.FOO;
 import static org.junit.jupiter.params.provider.EnumArgumentsProviderTests.EnumWithFourConstants.QUX;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -104,9 +103,8 @@ class EnumArgumentsProviderTests {
 	}
 
 	@Test
-	void methodsWithoutParametersAreDetected() throws Exception {
-		doCallRealMethod().when(parameters).getSourceElementDescription();
-		when(parameters.getSourceElement()).thenReturn(TestCase.class.getDeclaredMethod("methodWithoutParameters"));
+	void methodsWithoutParametersAreDetected() {
+		when(parameters.getSourceElementDescription()).thenReturn("method");
 
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class).findAny());

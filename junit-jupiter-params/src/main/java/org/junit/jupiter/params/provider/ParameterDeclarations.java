@@ -13,8 +13,6 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.AnnotatedElement;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,17 +34,6 @@ public interface ParameterDeclarations {
 
 	int getCount();
 
-	default String getSourceElementDescription() {
-		AnnotatedElement sourceElement = getSourceElement();
-		if (sourceElement instanceof Method) {
-			return String.format("method [%s]", ((Method) sourceElement).toGenericString());
-		}
-		if (sourceElement instanceof Constructor) {
-			return String.format("constructor [%s]", ((Constructor<?>) sourceElement).toGenericString());
-		}
-		if (sourceElement instanceof Class) {
-			return String.format("class [%s]", ((Class<?>) sourceElement).getName());
-		}
-		return sourceElement.toString();
-	}
+	String getSourceElementDescription();
+
 }

@@ -23,7 +23,7 @@ class ParameterizedContainerClassContext
 	ParameterizedContainerClassContext(Class<?> clazz, ParameterizedContainer annotation) {
 		this.clazz = clazz;
 		this.annotation = annotation;
-		this.resolverFacade = ResolverFacade.create(clazz);
+		this.resolverFacade = ResolverFacade.create(clazz, annotation);
 	}
 
 	@Override

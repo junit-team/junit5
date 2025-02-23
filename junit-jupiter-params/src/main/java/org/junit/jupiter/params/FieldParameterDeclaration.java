@@ -23,10 +23,16 @@ class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 
 	private final Field field;
 	private final Parameter annotation;
+	private final int index;
 
 	FieldParameterDeclaration(Field field, Parameter annotation) {
+		this(field, annotation, annotation.value());
+	}
+
+	FieldParameterDeclaration(Field field, Parameter annotation, int index) {
 		this.field = field;
 		this.annotation = annotation;
+		this.index = index;
 	}
 
 	// --- ParameterDeclaration ------------------------------------------------
@@ -43,7 +49,7 @@ class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 
 	@Override
 	public int getIndex() {
-		return this.annotation.value();
+		return index;
 	}
 
 	@Override
@@ -63,4 +69,8 @@ class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 		return this.annotation;
 	}
 
+	@Override
+	public int getParameterIndex() {
+		return getIndex();
+	}
 }

@@ -26,12 +26,12 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 
 	private final Method method;
 	private final ParameterizedTest annotation;
-	private final ResolverFacade resolverFacade;
+	final ResolverFacade resolverFacade;
 
 	ParameterizedTestMethodContext(Method method, ParameterizedTest annotation) {
 		this.method = Preconditions.notNull(method, "method must not be null");
 		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
-		this.resolverFacade = ResolverFacade.create(method);
+		this.resolverFacade = ResolverFacade.create(method, annotation);
 	}
 
 	@Override
@@ -62,36 +62,6 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 	@Override
 	public ArgumentCountValidationMode getArgumentCountValidationMode() {
 		return this.annotation.argumentCountValidation();
-	}
-
-	/**
-	 * Determine if the {@link Method} represented by this context has a
-	 * <em>potentially</em> valid signature (i.e., formal parameter
-	 * declarations) with regard to aggregators.
-	 *
-	 * <p>This method takes a best-effort approach at enforcing the following
-	 * policy for parameterized test methods that accept aggregators as arguments.
-	 *
-	 * <ol>
-	 * <li>zero or more <em>indexed arguments</em> come first.</li>
-	 * <li>zero or more <em>aggregators</em> come next.</li>
-	 * <li>zero or more arguments supplied by other {@code ParameterResolver}
-	 * implementations come last.</li>
-	 * </ol>
-	 *
-	 * @return {@code true} if the method has a potentially valid signature
-	 */
-	boolean hasPotentiallyValidSignature() {
-		int indexOfPreviousAggregator = -1;
-		for (int i = 0; i < getResolverFacade().getParameterCount(); i++) {
-			if (getResolverFacade().isAggregator(i)) {
-				if ((indexOfPreviousAggregator != -1) && (i != indexOfPreviousAggregator + 1)) {
-					return false;
-				}
-				indexOfPreviousAggregator = i;
-			}
-		}
-		return true;
 	}
 
 	@Override

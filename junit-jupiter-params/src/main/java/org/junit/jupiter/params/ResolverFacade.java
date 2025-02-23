@@ -10,8 +10,7 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toMap;
+import static java.util.Collections.unmodifiableList;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.AGGREGATOR;
 import static org.junit.jupiter.params.ResolverFacade.ResolverType.CONVERTER;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -20,6 +19,7 @@ import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_U
 import static org.junit.platform.commons.support.ReflectionSupport.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
@@ -27,15 +27,15 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -63,77 +63,113 @@ import org.junit.platform.commons.util.StringUtils;
 
 class ResolverFacade {
 
-	static ResolverFacade create(Class<?> clazz) {
+	static ResolverFacade create(Class<?> clazz, ParameterizedContainer containerAnnotation) {
 		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
 		if (fields.isEmpty()) {
-			return create(ReflectionUtils.getDeclaredConstructor(clazz));
+			return create(ReflectionUtils.getDeclaredConstructor(clazz), containerAnnotation);
 		}
-		Map<Integer, ParameterDeclaration> declarations = new TreeMap<>();
-		int maxIndex = -1;
+		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
+		Set<ParameterDeclaration> aggregatorParameters = new LinkedHashSet<>();
 		for (Field field : fields) {
 			// TODO #878 Test all preconditions
 			Preconditions.condition(!ReflectionUtils.isFinal(field), () -> "Field must not be final: " + field);
 			ReflectionSupport.makeAccessible(field);
+
 			// TODO #878 Test that composed annotations are supported
 			Parameter annotation = findAnnotation(field, Parameter.class) //
 					.orElseThrow(() -> new JUnitException("No @Parameter annotation found"));
 			int index = annotation.value();
-			Preconditions.condition(index >= 0,
-				() -> String.format("Index must be greater than or equal to zero in %s on %s", annotation, field));
-			Preconditions.condition(!declarations.containsKey(index),
-				() -> String.format("Duplicate index %d declared on %s and %s", index,
-					declarations.get(index).getAnnotatedElement(), field));
-			declarations.put(index, new FieldParameterDeclaration(field, annotation));
-			maxIndex = Math.max(maxIndex, index);
+
+			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation);
+			if (isAggregator(declaration)) {
+				Preconditions.condition(index == -1,
+					() -> String.format("Index must not be declared in %s on aggregator field %s", annotation, field));
+				aggregatorParameters.add(declaration);
+			}
+			else {
+				if (fields.size() == 1 && index == -1) {
+					index = 0;
+					declaration = new FieldParameterDeclaration(field, annotation, 0);
+				}
+				else {
+					Preconditions.condition(index >= 0,
+						() -> String.format("Index must be greater than or equal to zero in %s on %s", annotation,
+							field));
+					Preconditions.condition(!regularParameters.containsKey(index),
+						() -> String.format("Duplicate index %d declared on %s and %s", annotation.value(),
+							regularParameters.get(annotation.value()).getAnnotatedElement(), field));
+				}
+				regularParameters.put(index, declaration);
+			}
 		}
-		return new ResolverFacade(clazz, maxIndex + 1, declarations.values(), 0);
+		return new ResolverFacade(clazz, regularParameters, aggregatorParameters, 0);
 	}
 
-	static ResolverFacade create(Constructor<?> constructor) {
+	static ResolverFacade create(Constructor<?> constructor, ParameterizedContainer annotation) {
 		// Inner classes get the outer instance as first parameter
-		return create(constructor, isInnerClass(constructor.getDeclaringClass()) ? 1 : 0);
+		return create(constructor, annotation, isInnerClass(constructor.getDeclaringClass()) ? 1 : 0);
 	}
 
-	static ResolverFacade create(Method method) {
-		return create(method, 0);
+	static ResolverFacade create(Method method, ParameterizedTest annotation) {
+		return create(method, annotation, 0);
 	}
 
-	private static ResolverFacade create(Executable executable, int indexOffset) {
+	/**
+	 * Create a new {@link ResolverFacade} for the supplied {@link Executable}.
+	 *
+	 * <p>This method takes a best-effort approach at enforcing the following
+	 * policy for parameterized container constructors and parameterized test
+	 * methods that accept aggregators as arguments.
+	 * <ol>
+	 * <li>zero or more <em>indexed arguments</em> come first.</li>
+	 * <li>zero or more <em>aggregators</em> come next.</li>
+	 * <li>zero or more arguments supplied by other {@code ParameterResolver}
+	 * implementations come last.</li>
+	 * </ol>
+	 */
+	private static ResolverFacade create(Executable executable, Annotation annotation, int indexOffset) {
+		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
+		NavigableMap<Integer, ParameterDeclaration> aggregatorParameters = new TreeMap<>();
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
-		List<ParameterDeclaration> declarations = new ArrayList<>(parameters.length);
 		for (int index = indexOffset; index < parameters.length; index++) {
-			// TODO #878 Consider index of first aggregator here?
-			declarations.add(new ExecutableParameterDeclaration(parameters[index], index - indexOffset));
+			ParameterDeclaration declaration = new ExecutableParameterDeclaration(parameters[index],
+				index - indexOffset);
+			if (isAggregator(declaration)) {
+				Preconditions.condition(
+					aggregatorParameters.isEmpty() || aggregatorParameters.lastKey() == declaration.getIndex() - 1,
+					() -> String.format(
+						"@%s %s declares formal parameters in an invalid order: "
+								+ "argument aggregators must be declared after any indexed arguments "
+								+ "and before any arguments resolved by another ParameterResolver.",
+						annotation.annotationType().getSimpleName(),
+						DefaultParameterDeclarations.describe(executable)));
+				aggregatorParameters.put(declaration.getIndex(), declaration);
+			}
+			else if (aggregatorParameters.isEmpty()) {
+				regularParameters.put(declaration.getIndex(), declaration);
+			}
 		}
-		return new ResolverFacade(executable, declarations.size(), declarations, indexOffset);
+		return new ResolverFacade(executable, regularParameters, new LinkedHashSet<>(aggregatorParameters.values()),
+			indexOffset);
 	}
 
-	private final List<ParameterDeclaration> parameterDeclarations;
 	private final int parameterIndexOffset;
-	private final Resolver[] resolvers;
-	private final Map<Integer, ResolverType> resolverTypes;
+	private final Map<ParameterDeclaration, Resolver> resolvers;
 	private final DefaultParameterDeclarations regularParameterDeclarations;
+	private final Set<ParameterDeclaration> aggregatorParameters;
 
-	private ResolverFacade(AnnotatedElement sourceElement, int numParameters,
-			Collection<? extends ParameterDeclaration> declarations, int parameterIndexOffset) {
-		// TODO #878 Split aggregators from regular parameters (converters)?
-		this.parameterDeclarations = new ArrayList<>(declarations);
+	private ResolverFacade(AnnotatedElement sourceElement,
+			NavigableMap<Integer, ParameterDeclaration> regularParameters,
+			Set<ParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
+		this.aggregatorParameters = aggregatorParameters;
 		this.parameterIndexOffset = parameterIndexOffset;
-		this.parameterDeclarations.sort(comparing(ParameterDeclaration::getIndex));
-		this.resolvers = new Resolver[numParameters];
-		this.resolverTypes = new HashMap<>(numParameters);
-		for (ParameterDeclaration parameter : declarations) {
-			this.resolverTypes.put(parameter.getIndex(), isAggregator(parameter) ? AGGREGATOR : CONVERTER);
-		}
-		NavigableMap<Integer, ParameterDeclaration> declarationsByIndex = parameterDeclarations.stream() //
-				.filter(parameter -> !isAggregator(parameter.getIndex())) //
-				.collect(toMap(ParameterDeclaration::getIndex, Function.identity(), (a, b) -> a, TreeMap::new));
-		this.regularParameterDeclarations = new DefaultParameterDeclarations(sourceElement, declarationsByIndex);
-
+		this.resolvers = new HashMap<>(regularParameters.size() + aggregatorParameters.size());
+		this.regularParameterDeclarations = new DefaultParameterDeclarations(sourceElement, regularParameters);
 	}
 
-	List<ParameterDeclaration> getAllParameterDeclarations() {
-		return this.parameterDeclarations;
+	Stream<ParameterDeclaration> getAllParameterDeclarations() {
+		return Stream.concat(this.regularParameterDeclarations.declarationsByIndex.values().stream(),
+			aggregatorParameters.stream());
 	}
 
 	ParameterDeclarations getRegularParameterDeclarations() {
@@ -153,15 +189,12 @@ class ResolverFacade {
 	 * @return an {@code Optional} containing the name of the parameter
 	 */
 	Optional<String> getParameterName(int parameterIndex) {
-		if (parameterIndex >= getParameterCount() || (hasAggregator() && parameterIndex >= indexOfFirstAggregator())) {
-			return Optional.empty();
-		}
 		return this.regularParameterDeclarations.get(parameterIndex) //
 				.flatMap(ParameterDeclaration::getName);
 	}
 
 	int getParameterCount() {
-		return this.resolvers.length;
+		return this.regularParameterDeclarations.getCount();
 	}
 
 	/**
@@ -172,7 +205,7 @@ class ResolverFacade {
 	 * @return {@code true} if the method has an aggregator
 	 */
 	boolean hasAggregator() {
-		return this.resolverTypes.containsValue(AGGREGATOR);
+		return !this.aggregatorParameters.isEmpty();
 	}
 
 	/**
@@ -183,7 +216,8 @@ class ResolverFacade {
 	 * @return {@code true} if the parameter is an aggregator
 	 */
 	boolean isAggregator(int parameterIndex) {
-		return this.resolverTypes.get(parameterIndex) == AGGREGATOR;
+		return this.aggregatorParameters.stream() //
+				.anyMatch(it -> it.getIndex() == parameterIndex);
 	}
 
 	/**
@@ -192,23 +226,9 @@ class ResolverFacade {
 	 *
 	 * @return {@code true} if the parameter is an aggregator
 	 */
-	private boolean isAggregator(ParameterDeclaration parameter) {
+	private static boolean isAggregator(ParameterDeclaration parameter) {
 		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
 				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
-	}
-
-	/**
-	 * Find the index of the first {@linkplain #isAggregator aggregator}
-	 * {@link Parameter} in the {@link Method} represented by this context.
-	 *
-	 * @return the index of the first aggregator, or {@code -1} if not found
-	 */
-	int indexOfFirstAggregator() {
-		return this.resolverTypes.entrySet().stream() //
-				.filter(e -> e.getValue() == AGGREGATOR) //
-				.mapToInt(Map.Entry::getKey) //
-				.min() //
-				.orElse(-1);
 	}
 
 	/**
@@ -218,7 +238,12 @@ class ResolverFacade {
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, Object[] arguments,
 			int invocationIndex) {
 		int parameterIndex = toLogicalIndex(parameterContext);
-		return getResolver(extensionContext, parameterIndex, parameterContext.getParameter()) //
+		ParameterDeclaration parameterDeclaration = this.regularParameterDeclarations.get(parameterIndex) //
+				.orElseGet(
+					() -> this.aggregatorParameters.stream().filter(it -> it.getIndex() == parameterIndex).findFirst() //
+							.orElseThrow(() -> new ParameterResolutionException(
+								"Parameter index out of bounds: " + parameterIndex)));
+		return getResolver(extensionContext, parameterDeclaration, parameterContext.getParameter()) //
 				.resolve(parameterContext, parameterIndex, extractPayloads(arguments), invocationIndex);
 	}
 
@@ -226,18 +251,19 @@ class ResolverFacade {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
-	Object resolve(FieldContext fieldContext, ExtensionContext extensionContext, Object[] arguments,
-			int invocationIndex) {
-		return getResolver(extensionContext, fieldContext.getParameterIndex(), fieldContext.getField()) //
-				.resolve(fieldContext, extractPayloads(arguments), invocationIndex);
+	Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
+			Object[] arguments, int invocationIndex) {
+		return getResolver(extensionContext, parameterDeclaration, parameterDeclaration.getField()) //
+				.resolve(parameterDeclaration, extractPayloads(arguments), invocationIndex);
 	}
 
-	private Resolver getResolver(ExtensionContext extensionContext, int index, AnnotatedElement annotatedElement) {
-		if (this.resolvers[index] == null) {
-			this.resolvers[index] = this.resolverTypes.get(index).createResolver(index, annotatedElement,
-				extensionContext);
-		}
-		return this.resolvers[index];
+	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration parameterDeclaration,
+			AnnotatedElement annotatedElement) {
+		return this.resolvers.computeIfAbsent(parameterDeclaration, __ -> {
+			ResolverType resolverType = this.aggregatorParameters.contains(parameterDeclaration) ? AGGREGATOR
+					: CONVERTER;
+			return resolverType.createResolver(parameterDeclaration.getIndex(), annotatedElement, extensionContext);
+		});
 	}
 
 	private Object[] extractPayloads(Object[] arguments) {
@@ -397,28 +423,47 @@ class ResolverFacade {
 
 		@Override
 		public AnnotatedElement getSourceElement() {
-			return sourceElement;
+			return this.sourceElement;
 		}
 
 		@Override
 		public Optional<ParameterDeclaration> getFirst() {
-			return declarationsByIndex.isEmpty() ? Optional.empty()
-					: Optional.of(declarationsByIndex.firstEntry().getValue());
+			return this.declarationsByIndex.isEmpty() //
+					? Optional.empty() //
+					: Optional.of(this.declarationsByIndex.firstEntry().getValue());
 		}
 
 		@Override
 		public int getCount() {
-			return declarationsByIndex.isEmpty() ? 0 : declarationsByIndex.lastKey() + 1;
+			return this.declarationsByIndex.isEmpty() ? 0 : this.declarationsByIndex.lastKey() + 1;
 		}
 
 		@Override
 		public List<ParameterDeclaration> getAll() {
-			return Collections.unmodifiableList(new ArrayList<>(declarationsByIndex.values()));
+			return unmodifiableList(new ArrayList<>(this.declarationsByIndex.values()));
 		}
 
 		@Override
 		public Optional<ParameterDeclaration> get(int index) {
-			return Optional.ofNullable(declarationsByIndex.get(index));
+			return Optional.ofNullable(this.declarationsByIndex.get(index));
+		}
+
+		@Override
+		public String getSourceElementDescription() {
+			return describe(this.sourceElement);
+		}
+
+		static String describe(AnnotatedElement sourceElement) {
+			if (sourceElement instanceof Method) {
+				return String.format("method [%s]", ((Method) sourceElement).toGenericString());
+			}
+			if (sourceElement instanceof Constructor) {
+				return String.format("constructor [%s]", ((Constructor<?>) sourceElement).toGenericString());
+			}
+			if (sourceElement instanceof Class) {
+				return String.format("class [%s]", ((Class<?>) sourceElement).getName());
+			}
+			return sourceElement.toString();
 		}
 	}
 

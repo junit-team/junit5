@@ -42,12 +42,12 @@ class ArgumentCountValidator {
 			case NONE:
 				return;
 			case STRICT:
-				int testParamCount = this.declarationContext.getResolverFacade().getParameterCount();
-				int argumentsCount = arguments.getTotalLength();
-				Preconditions.condition(testParamCount == argumentsCount, () -> String.format(
+				int consumedLength = this.arguments.getConsumedLength();
+				int totalLength = this.arguments.getTotalLength();
+				Preconditions.condition(consumedLength == totalLength, () -> String.format(
 					"Configuration error: the @%s has %s parameter(s) but there were %s argument(s) provided.%nNote: the provided arguments are %s",
-					this.declarationContext.getAnnotationName(), testParamCount, argumentsCount,
-					Arrays.toString(arguments.getAllPayloads())));
+					this.declarationContext.getAnnotationName(), consumedLength, totalLength,
+					Arrays.toString(this.arguments.getAllPayloads())));
 				break;
 			default:
 				throw new ExtensionConfigurationException(
