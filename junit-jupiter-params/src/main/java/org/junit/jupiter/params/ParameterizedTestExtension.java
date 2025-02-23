@@ -20,7 +20,6 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
-import org.junit.platform.commons.util.Preconditions;
 
 /**
  * @since 5.0
@@ -44,13 +43,6 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 
 		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(templateMethod,
 			annotation.get());
-
-		Preconditions.condition(methodContext.hasPotentiallyValidSignature(),
-			() -> String.format(
-				"@ParameterizedTest method [%s] declares formal parameters in an invalid order: "
-						+ "argument aggregators must be declared after any indexed arguments "
-						+ "and before any arguments resolved by another ParameterResolver.",
-				templateMethod.toGenericString()));
 
 		getStore(context).put(DECLARATION_CONTEXT_KEY, methodContext);
 

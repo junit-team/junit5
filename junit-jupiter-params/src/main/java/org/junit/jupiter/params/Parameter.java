@@ -29,5 +29,5 @@ import org.apiguardian.api.API;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
 public @interface Parameter {
-	int value() default 0;
+	int value() default -1;
 }

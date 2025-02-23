@@ -58,7 +58,7 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 		// Ensure that the current parameter is declared before aggregators.
 		// Otherwise, a different ParameterResolver should handle it.
 		if (resolverFacade.hasAggregator()) {
-			return parameterIndex < resolverFacade.indexOfFirstAggregator();
+			return parameterIndex < resolverFacade.getParameterCount();
 		}
 
 		// Else fallback to behavior for parameterized test methods without aggregators.

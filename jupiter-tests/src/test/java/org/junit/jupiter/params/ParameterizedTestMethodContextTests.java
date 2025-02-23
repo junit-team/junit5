@@ -10,14 +10,15 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.CsvToPerson;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.Person;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -31,13 +32,14 @@ class ParameterizedTestMethodContextTests {
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
 			"mixedMode" })
 	void validSignatures(String methodName) {
-		assertTrue(createMethodContext(ValidTestCase.class, methodName).hasPotentiallyValidSignature());
+		assertDoesNotThrow(() -> createMethodContext(ValidTestCase.class, methodName));
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "twoAggregatorsWithPrimitiveInTheMiddle", "twoAggregatorsWithTestInfoInTheMiddle" })
 	void invalidSignatures(String methodName) {
-		assertFalse(createMethodContext(InvalidTestCase.class, methodName).hasPotentiallyValidSignature());
+		assertThrows(PreconditionViolationException.class,
+			() -> createMethodContext(InvalidTestCase.class, methodName));
 	}
 
 	private ParameterizedTestMethodContext createMethodContext(Class<?> testClass, String methodName) {

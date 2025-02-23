@@ -12,7 +12,6 @@ package org.junit.jupiter.params;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
-import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.JUnitException;
 
 class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcessor {
@@ -36,21 +35,24 @@ class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcesso
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
 		if (extensionContext.getRequiredTestClass().equals(classContext.getAnnotatedElement())) {
-			this.classContext.getResolverFacade().getAllParameterDeclarations().stream() //
+			this.classContext.getResolverFacade().getAllParameterDeclarations() //
 					.filter(FieldParameterDeclaration.class::isInstance) //
-					.map(FieldContext.class::cast) //
+					.map(FieldParameterDeclaration.class::cast) //
 					.forEach(fieldContext -> setField(fieldContext, testInstance, extensionContext));
 		}
 	}
 
-	private void setField(FieldContext fieldContext, Object testInstance, ExtensionContext extensionContext) {
+	private void setField(FieldParameterDeclaration parameterDeclaration, Object testInstance,
+			ExtensionContext extensionContext) {
 		Object argument = this.classContext.getResolverFacade() //
-				.resolve(fieldContext, extensionContext, this.arguments.getConsumedPayloads(), this.invocationIndex);
+				.resolve(parameterDeclaration, extensionContext, this.arguments.getConsumedPayloads(),
+					this.invocationIndex);
 		try {
-			fieldContext.getField().set(testInstance, argument);
+			parameterDeclaration.getField().set(testInstance, argument);
 		}
 		catch (Exception e) {
-			throw new JUnitException("Failed to inject parameter value into field: " + fieldContext.getField(), e);
+			throw new JUnitException("Failed to inject parameter value into field: " + parameterDeclaration.getField(),
+				e);
 		}
 	}
 }
