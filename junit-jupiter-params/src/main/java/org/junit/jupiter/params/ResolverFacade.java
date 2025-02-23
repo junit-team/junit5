@@ -95,6 +95,8 @@ class ResolverFacade {
 					Preconditions.condition(index >= 0,
 						() -> String.format("Index must be greater than or equal to zero in %s on %s", annotation,
 							field));
+					// TODO #878 Test with duplicate `@Parameter(index)` annotations
+					// TODO #878 Test with `@Parameter(0)`, and `@Parameter(2)`, but w/o `@Parameter(1)` annotations
 					Preconditions.condition(!regularParameters.containsKey(index),
 						() -> String.format("Duplicate index %d declared on %s and %s", annotation.value(),
 							regularParameters.get(annotation.value()).getAnnotatedElement(), field));
@@ -176,10 +178,13 @@ class ResolverFacade {
 		return this.regularParameterDeclarations;
 	}
 
-	int toLogicalIndex(ParameterContext parameterContext) {
-		int index = parameterContext.getIndex() - this.parameterIndexOffset;
-		Preconditions.condition(index >= 0, () -> "Parameter index must be greater than or equal to zero");
-		return index;
+	boolean isSupportedParameter(ParameterContext parameterContext, EvaluatedArgumentSet arguments) {
+		int index = toLogicalIndex(parameterContext);
+		if (this.regularParameterDeclarations.get(index).isPresent()) {
+			return index < arguments.getConsumedLength();
+		}
+		return !this.aggregatorParameters.isEmpty()
+				&& this.aggregatorParameters.stream().anyMatch(it -> it.getIndex() == index);
 	}
 
 	/**
@@ -193,42 +198,18 @@ class ResolverFacade {
 				.flatMap(ParameterDeclaration::getName);
 	}
 
-	int getParameterCount() {
-		return this.regularParameterDeclarations.getCount();
-	}
-
 	/**
-	 * Determine if the {@link Method} represented by this context declares at
-	 * least one {@link Parameter} that is an
-	 * {@linkplain #isAggregator aggregator}.
+	 * Determine the number of arguments that are considered consumed by the
+	 * parameter declarations in this resolver.
 	 *
-	 * @return {@code true} if the method has an aggregator
+	 * <p>If an aggregator is present, all arguments are considered consumed.
+	 * Otherwise, the consumed argument count is the minimum of the total length
+	 * and the number of regular parameter declarations.
 	 */
-	boolean hasAggregator() {
-		return !this.aggregatorParameters.isEmpty();
-	}
-
-	/**
-	 * Determine if the {@link Parameter} with the supplied index is an
-	 * aggregator (i.e., of type {@link ArgumentsAccessor} or annotated with
-	 * {@link AggregateWith}).
-	 *
-	 * @return {@code true} if the parameter is an aggregator
-	 */
-	boolean isAggregator(int parameterIndex) {
-		return this.aggregatorParameters.stream() //
-				.anyMatch(it -> it.getIndex() == parameterIndex);
-	}
-
-	/**
-	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
-	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
-	 *
-	 * @return {@code true} if the parameter is an aggregator
-	 */
-	private static boolean isAggregator(ParameterDeclaration parameter) {
-		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
+	int determineConsumedArgumentCount(int totalLength) {
+		return this.aggregatorParameters.isEmpty() //
+				? Math.min(totalLength, this.regularParameterDeclarations.getCount()) //
+				: totalLength;
 	}
 
 	/**
@@ -266,6 +247,12 @@ class ResolverFacade {
 		});
 	}
 
+	private int toLogicalIndex(ParameterContext parameterContext) {
+		int index = parameterContext.getIndex() - this.parameterIndexOffset;
+		Preconditions.condition(index >= 0, () -> "Parameter index must be greater than or equal to zero");
+		return index;
+	}
+
 	private Object[] extractPayloads(Object[] arguments) {
 		return Arrays.stream(arguments) //
 				.map(argument -> {
@@ -275,6 +262,17 @@ class ResolverFacade {
 					return argument;
 				}) //
 				.toArray();
+	}
+
+	/**
+	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+	 *
+	 * @return {@code true} if the parameter is an aggregator
+	 */
+	private static boolean isAggregator(ParameterDeclaration parameter) {
+		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
+				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
 	}
 
 	enum ResolverType {

@@ -20,18 +20,18 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 class TestTemplateMethodParameterResolver extends ParameterizedInvocationParameterResolver {
 
-	TestTemplateMethodParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
-		super(declarationContext, arguments, invocationIndex);
+	private final Method testTemplateMethod;
 
+	TestTemplateMethodParameterResolver(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments,
+			int invocationIndex) {
+		super(methodContext.getResolverFacade(), arguments, invocationIndex);
+		this.testTemplateMethod = methodContext.getAnnotatedElement();
 	}
 
 	@Override
 	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
 			ExtensionContext extensionContext) {
-		// Not a @ParameterizedTest method?
-		Method testMethod = extensionContext.getTestMethod().orElse(null);
-		return declaringExecutable.equals(testMethod);
+		return this.testTemplateMethod.equals(declaringExecutable);
 	}
 
 }

@@ -22,14 +22,14 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  */
 abstract class ParameterizedInvocationParameterResolver implements ParameterResolver {
 
-	protected final ParameterizedDeclarationContext<?> declarationContext;
+	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 
-	ParameterizedInvocationParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
+	ParameterizedInvocationParameterResolver(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
+			int invocationIndex) {
 
-		this.declarationContext = declarationContext;
+		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
 	}
@@ -41,36 +41,18 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 
 	@Override
 	public final boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
 
-		if (!isSupportedOnConstructorOrMethod(declaringExecutable, extensionContext)) {
-			return false;
-		}
+		return isSupportedOnConstructorOrMethod(parameterContext.getDeclaringExecutable(), extensionContext) //
+				&& this.resolverFacade.isSupportedParameter(parameterContext, this.arguments);
 
-		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
-		int parameterIndex = resolverFacade.toLogicalIndex(parameterContext);
-
-		// Current parameter is an aggregator?
-		if (resolverFacade.isAggregator(parameterIndex)) {
-			return true;
-		}
-
-		// Ensure that the current parameter is declared before aggregators.
-		// Otherwise, a different ParameterResolver should handle it.
-		if (resolverFacade.hasAggregator()) {
-			return parameterIndex < resolverFacade.getParameterCount();
-		}
-
-		// Else fallback to behavior for parameterized test methods without aggregators.
-		return parameterIndex < this.arguments.getConsumedLength();
 	}
 
 	@Override
 	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.declarationContext.getResolverFacade() //
-				.resolve(parameterContext, extensionContext, this.arguments.getConsumedPayloads(),
-					this.invocationIndex);
+
+		Object[] consumedPayloads = this.arguments.getConsumedPayloads();
+		return this.resolverFacade.resolve(parameterContext, extensionContext, consumedPayloads, this.invocationIndex);
 	}
 
 	protected abstract boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,

@@ -31,7 +31,8 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 
 		this.declarationContext = declarationContext;
 		this.formatter = formatter;
-		this.arguments = EvaluatedArgumentSet.of(arguments, this::determineConsumedArgumentCount);
+		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
+		this.arguments = EvaluatedArgumentSet.of(arguments, resolverFacade::determineConsumedArgumentCount);
 		this.invocationIndex = invocationIndex;
 	}
 
@@ -55,12 +56,6 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 				.map(AutoCloseable.class::cast) //
 				.map(CloseableArgument::new) //
 				.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
-	}
-
-	private int determineConsumedArgumentCount(int totalLength) {
-		return this.declarationContext.getResolverFacade().hasAggregator() //
-				? totalLength //
-				: Math.min(totalLength, this.declarationContext.getResolverFacade().getParameterCount());
 	}
 
 	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {

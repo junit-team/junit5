@@ -20,20 +20,19 @@ import org.junit.jupiter.api.extension.ExtensionContext;
  */
 class ContainerTemplateConstructorParameterResolver extends ParameterizedInvocationParameterResolver {
 
-	ContainerTemplateConstructorParameterResolver(ParameterizedDeclarationContext<?> declarationContext,
+	private final Class<?> containerTemplateClass;
+
+	ContainerTemplateConstructorParameterResolver(ParameterizedContainerClassContext classContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
-		super(declarationContext, arguments, invocationIndex);
+		super(classContext.getResolverFacade(), arguments, invocationIndex);
+		this.containerTemplateClass = classContext.getAnnotatedElement();
 	}
 
 	@Override
 	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
 			ExtensionContext extensionContext) {
-		if (declaringExecutable instanceof Constructor) {
-			Class<?> declaringClass = ((Constructor<?>) declaringExecutable).getDeclaringClass();
-			// TODO #878 see ParameterizedTestParameterResolver
-			return declaringClass.equals(this.declarationContext.getAnnotatedElement());
-		}
-		return false;
+		return declaringExecutable instanceof Constructor //
+				&& this.containerTemplateClass.equals(declaringExecutable.getDeclaringClass());
 	}
 
 }
