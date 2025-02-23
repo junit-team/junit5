@@ -941,30 +941,28 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@ParameterizedContainer
-	@CsvSource({ "foo, 1", "bar, 2" })
+	@CsvSource({ "1, foo", "2, bar" })
 	static class MultiAggregatorFieldInjectionTestCase {
 
 		@Parameter
-		ArgumentsAccessor accessor1;
+		ArgumentsAccessor accessor;
 
 		@Parameter
-		ArgumentsAccessor accessor2;
+		@AggregateWith(TimesTwo.class)
+		int numberTimesTwo;
 
 		@Parameter(0)
-		String text;
+		int number;
 
 		@Parameter(1)
-		int number;
+		String text;
 
 		@Test
 		void test() {
-			assertEquals(2, accessor1.size());
-			assertEquals(2, accessor2.size());
-			assertEquals(accessor1.getInvocationIndex(), accessor2.getInvocationIndex());
-			assertEquals(text, accessor1.getString(0));
-			assertEquals(text, accessor2.getString(0));
-			assertEquals(number, accessor1.getInteger(1));
-			assertEquals(number, accessor2.getInteger(1));
+			assertEquals(2, accessor.size());
+			assertEquals(number, accessor.getInteger(0));
+			assertEquals(number * 2, numberTimesTwo);
+			assertEquals(text, accessor.getString(1));
 		}
 	}
 
