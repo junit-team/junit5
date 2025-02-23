@@ -11,8 +11,6 @@
 package org.junit.jupiter.params;
 
 import static java.util.Collections.unmodifiableList;
-import static org.junit.jupiter.params.ResolverFacade.ResolverType.AGGREGATOR;
-import static org.junit.jupiter.params.ResolverFacade.ResolverType.CONVERTER;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
@@ -240,11 +238,10 @@ class ResolverFacade {
 
 	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration parameterDeclaration,
 			AnnotatedElement annotatedElement) {
-		return this.resolvers.computeIfAbsent(parameterDeclaration, __ -> {
-			ResolverType resolverType = this.aggregatorParameters.contains(parameterDeclaration) ? AGGREGATOR
-					: CONVERTER;
-			return resolverType.createResolver(parameterDeclaration.getIndex(), annotatedElement, extensionContext);
-		});
+		return this.resolvers.computeIfAbsent(parameterDeclaration,
+			__ -> this.aggregatorParameters.contains(parameterDeclaration) //
+					? createAggregator(parameterDeclaration.getIndex(), annotatedElement, extensionContext) //
+					: createConverter(parameterDeclaration.getIndex(), annotatedElement, extensionContext));
 	}
 
 	private int toLogicalIndex(ParameterContext parameterContext) {
@@ -275,47 +272,45 @@ class ResolverFacade {
 				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
 	}
 
-	enum ResolverType {
-
-		CONVERTER {
-			@Override
-			Resolver createResolver(int index, AnnotatedElement annotatedElement, ExtensionContext extensionContext) {
-				try { // @formatter:off
-					return findAnnotation(annotatedElement, ConvertWith.class)
-							.map(ConvertWith::value)
-							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
-							.map(converter -> AnnotationConsumerInitializer.initialize(annotatedElement, converter))
-							.map(Converter::new)
-							.orElse(Converter.DEFAULT);
-				} // @formatter:on
-				catch (Exception ex) {
-					throw parameterResolutionException("Error creating ArgumentConverter", ex, index);
-				}
-			}
-		},
-
-		AGGREGATOR {
-			@Override
-			Resolver createResolver(int index, AnnotatedElement annotatedElement, ExtensionContext extensionContext) {
-				try { // @formatter:off
-					return findAnnotation(annotatedElement, AggregateWith.class)
-							.map(AggregateWith::value)
-							.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
-							.map(Aggregator::new)
-							.orElse(Aggregator.DEFAULT);
-				} // @formatter:on
-				catch (Exception ex) {
-					throw parameterResolutionException("Error creating ArgumentsAggregator", ex, index);
-				}
-			}
-		};
-
-		abstract Resolver createResolver(int index, AnnotatedElement annotatedElement,
-				ExtensionContext extensionContext);
-
+	private static Converter createConverter(int index, AnnotatedElement annotatedElement,
+			ExtensionContext extensionContext) {
+		try { // @formatter:off
+			return findAnnotation(annotatedElement, ConvertWith.class)
+					.map(ConvertWith::value)
+					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
+					.map(converter -> AnnotationConsumerInitializer.initialize(annotatedElement, converter))
+					.map(Converter::new)
+					.orElse(Converter.DEFAULT);
+		} // @formatter:on
+		catch (Exception ex) {
+			throw parameterResolutionException("Error creating ArgumentConverter", ex, index);
+		}
 	}
 
-	interface Resolver {
+	private static Aggregator createAggregator(int index, AnnotatedElement annotatedElement,
+			ExtensionContext extensionContext) {
+		try { // @formatter:off
+			return findAnnotation(annotatedElement, AggregateWith.class)
+					.map(AggregateWith::value)
+					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
+					.map(Aggregator::new)
+					.orElse(Aggregator.DEFAULT);
+		} // @formatter:on
+		catch (Exception ex) {
+			throw parameterResolutionException("Error creating ArgumentsAggregator", ex, index);
+		}
+	}
+
+	private static ParameterResolutionException parameterResolutionException(String message, Exception cause,
+			int index) {
+		String fullMessage = message + " at index " + index;
+		if (StringUtils.isNotBlank(cause.getMessage())) {
+			fullMessage += ": " + cause.getMessage();
+		}
+		return new ParameterResolutionException(fullMessage, cause);
+	}
+
+	private interface Resolver {
 
 		Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments, int invocationIndex);
 
@@ -323,7 +318,7 @@ class ResolverFacade {
 
 	}
 
-	static class Converter implements Resolver {
+	private static class Converter implements Resolver {
 
 		private static final Converter DEFAULT = new Converter(DefaultArgumentConverter.INSTANCE);
 
@@ -357,7 +352,7 @@ class ResolverFacade {
 		}
 	}
 
-	static class Aggregator implements Resolver {
+	private static class Aggregator implements Resolver {
 
 		private static final Aggregator DEFAULT = new Aggregator(new SimpleArgumentsAggregator() {
 			@Override
@@ -397,15 +392,6 @@ class ResolverFacade {
 					fieldContext.getParameterIndex());
 			}
 		}
-	}
-
-	private static ParameterResolutionException parameterResolutionException(String message, Exception cause,
-			int index) {
-		String fullMessage = message + " at index " + index;
-		if (StringUtils.isNotBlank(cause.getMessage())) {
-			fullMessage += ": " + cause.getMessage();
-		}
-		return new ParameterResolutionException(fullMessage, cause);
 	}
 
 	private static class DefaultParameterDeclarations implements ParameterDeclarations {
