@@ -26,7 +26,7 @@ class ParameterizedTestMethodContext implements ParameterizedDeclarationContext<
 
 	private final Method method;
 	private final ParameterizedTest annotation;
-	final ResolverFacade resolverFacade;
+	private final ResolverFacade resolverFacade;
 
 	ParameterizedTestMethodContext(Method method, ParameterizedTest annotation) {
 		this.method = Preconditions.notNull(method, "method must not be null");
