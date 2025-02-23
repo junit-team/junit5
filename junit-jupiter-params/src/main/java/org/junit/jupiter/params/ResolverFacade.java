@@ -24,7 +24,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,7 +34,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -214,7 +212,7 @@ class ResolverFacade {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
-	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, Object[] arguments,
+	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
 		int parameterIndex = toLogicalIndex(parameterContext);
 		ParameterDeclaration parameterDeclaration = this.regularParameterDeclarations.get(parameterIndex) //
@@ -223,7 +221,7 @@ class ResolverFacade {
 							.orElseThrow(() -> new ParameterResolutionException(
 								"Parameter index out of bounds: " + parameterIndex)));
 		return getResolver(extensionContext, parameterDeclaration, parameterContext.getParameter()) //
-				.resolve(parameterContext, parameterIndex, extractPayloads(arguments), invocationIndex);
+				.resolve(parameterContext, parameterIndex, arguments, invocationIndex);
 	}
 
 	/**
@@ -231,9 +229,9 @@ class ResolverFacade {
 	 * arguments.
 	 */
 	Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
-			Object[] arguments, int invocationIndex) {
+			EvaluatedArgumentSet arguments, int invocationIndex) {
 		return getResolver(extensionContext, parameterDeclaration, parameterDeclaration.getField()) //
-				.resolve(parameterDeclaration, extractPayloads(arguments), invocationIndex);
+				.resolve(parameterDeclaration, arguments, invocationIndex);
 	}
 
 	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration parameterDeclaration,
@@ -248,17 +246,6 @@ class ResolverFacade {
 		int index = parameterContext.getIndex() - this.parameterIndexOffset;
 		Preconditions.condition(index >= 0, () -> "Parameter index must be greater than or equal to zero");
 		return index;
-	}
-
-	private Object[] extractPayloads(Object[] arguments) {
-		return Arrays.stream(arguments) //
-				.map(argument -> {
-					if (argument instanceof Named) {
-						return ((Named<?>) argument).getPayload();
-					}
-					return argument;
-				}) //
-				.toArray();
 	}
 
 	/**
@@ -312,9 +299,10 @@ class ResolverFacade {
 
 	private interface Resolver {
 
-		Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments, int invocationIndex);
+		Object resolve(ParameterContext parameterContext, int parameterIndex, EvaluatedArgumentSet arguments,
+				int invocationIndex);
 
-		Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex);
+		Object resolve(FieldContext fieldContext, EvaluatedArgumentSet arguments, int invocationIndex);
 
 	}
 
@@ -329,9 +317,9 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments,
+		public Object resolve(ParameterContext parameterContext, int parameterIndex, EvaluatedArgumentSet arguments,
 				int invocationIndex) {
-			Object argument = arguments[parameterIndex];
+			Object argument = arguments.getConsumedPayload(parameterIndex);
 			try {
 				return this.argumentConverter.convert(argument, parameterContext);
 			}
@@ -341,8 +329,8 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex) {
-			Object argument = arguments[fieldContext.getParameterIndex()];
+		public Object resolve(FieldContext fieldContext, EvaluatedArgumentSet arguments, int invocationIndex) {
+			Object argument = arguments.getConsumedPayload(fieldContext.getParameterIndex());
 			try {
 				return this.argumentConverter.convert(argument, fieldContext);
 			}
@@ -369,9 +357,10 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(ParameterContext parameterContext, int parameterIndex, Object[] arguments,
+		public Object resolve(ParameterContext parameterContext, int parameterIndex, EvaluatedArgumentSet arguments,
 				int invocationIndex) {
-			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(parameterContext, invocationIndex, arguments);
+			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(parameterContext, invocationIndex,
+				arguments.getConsumedPayloads());
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}
@@ -382,8 +371,9 @@ class ResolverFacade {
 		}
 
 		@Override
-		public Object resolve(FieldContext fieldContext, Object[] arguments, int invocationIndex) {
-			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(fieldContext, invocationIndex, arguments);
+		public Object resolve(FieldContext fieldContext, EvaluatedArgumentSet arguments, int invocationIndex) {
+			ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(fieldContext, invocationIndex,
+				arguments.getConsumedPayloads());
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, fieldContext);
 			}

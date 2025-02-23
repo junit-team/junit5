@@ -45,8 +45,7 @@ class ContainerTemplateInstanceFieldInjector implements TestInstancePostProcesso
 	private void setField(FieldParameterDeclaration parameterDeclaration, Object testInstance,
 			ExtensionContext extensionContext) {
 		Object argument = this.classContext.getResolverFacade() //
-				.resolve(parameterDeclaration, extensionContext, this.arguments.getConsumedPayloads(),
-					this.invocationIndex);
+				.resolve(parameterDeclaration, extensionContext, this.arguments, this.invocationIndex);
 		try {
 			parameterDeclaration.getField().set(testInstance, argument);
 		}

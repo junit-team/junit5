@@ -51,8 +51,7 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		Object[] consumedPayloads = this.arguments.getConsumedPayloads();
-		return this.resolverFacade.resolve(parameterContext, extensionContext, consumedPayloads, this.invocationIndex);
+		return this.resolverFacade.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex);
 	}
 
 	protected abstract boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
