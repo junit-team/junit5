@@ -10,9 +10,11 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Collections.emptyList;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.support.ReflectionSupport.findFields;
+import static org.junit.platform.commons.util.ReflectionUtils.isRecordClass;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -37,7 +39,7 @@ class ParameterizedContainerClassContext
 		this.annotation = annotation;
 		this.testInstanceLifecycle = testInstanceLifecycle;
 
-		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
+		List<Field> fields = findParameterAnnotatedFields(clazz);
 		if (fields.isEmpty()) {
 			this.resolverFacade = ResolverFacade.create(ReflectionUtils.getDeclaredConstructor(clazz), annotation);
 			this.injectionType = InjectionType.CONSTRUCTOR;
@@ -46,6 +48,13 @@ class ParameterizedContainerClassContext
 			this.resolverFacade = ResolverFacade.create(clazz, fields);
 			this.injectionType = InjectionType.FIELDS;
 		}
+	}
+
+	private static List<Field> findParameterAnnotatedFields(Class<?> clazz) {
+		if (isRecordClass(clazz)) {
+			return emptyList();
+		}
+		return findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
 	}
 
 	@Override

@@ -85,11 +85,11 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 	@ParameterizedTest
 	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class,
-			ParameterizedContainerDataClassTestCase.class, FieldInjectionTestCase.class,
-			RecordWithBuiltInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
-			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
-			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
-			FieldInjectionWithCustomAggregatorTestCase.class })
+			RecordWithParameterAnnotationOnComponentTestCase.class, ParameterizedContainerDataClassTestCase.class,
+			FieldInjectionTestCase.class, RecordWithBuiltInConverterTestCase.class,
+			RecordWithRegisteredConversionTestCase.class, FieldInjectionWithRegisteredConversionTestCase.class,
+			RecordWithBuiltInAggregatorTestCase.class, FieldInjectionWithBuiltInAggregatorTestCase.class,
+			RecordWithCustomAggregatorTestCase.class, FieldInjectionWithCustomAggregatorTestCase.class })
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
@@ -433,6 +433,21 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Test
 		void test2() {
 			assertEquals("test2()", testInfo.getDisplayName());
+			assertTrue(value < 0, "negative");
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	record RecordWithParameterAnnotationOnComponentTestCase(@Parameter int value) {
+
+		@Test
+		void test1() {
+			assertTrue(value < 0, "negative");
+		}
+
+		@Test
+		void test2() {
 			assertTrue(value < 0, "negative");
 		}
 	}
@@ -1086,8 +1101,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		private void publishReportEntry(TestReporter reporter) {
 			assertNotNull(value);
 			reporter.publishEntry(Map.of( //
-					"instanceHashCode", Integer.toHexString(hashCode()), //
-					"value", value //
+				"instanceHashCode", Integer.toHexString(hashCode()), //
+				"value", value //
 			));
 		}
 	}
