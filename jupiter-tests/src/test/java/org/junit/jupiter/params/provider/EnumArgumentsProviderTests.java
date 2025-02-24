@@ -82,7 +82,7 @@ class EnumArgumentsProviderTests {
 	@Test
 	void providesEnumConstantsBasedOnTestMethod() {
 		ParameterDeclaration firstParameterDeclaration = mock();
-		when(firstParameterDeclaration.getType()).thenAnswer(__ -> EnumWithFourConstants.class);
+		when(firstParameterDeclaration.getParameterType()).thenAnswer(__ -> EnumWithFourConstants.class);
 		when(parameters.getFirst()).thenReturn(Optional.of(firstParameterDeclaration));
 
 		var arguments = provideArguments(NullEnum.class);
@@ -94,7 +94,7 @@ class EnumArgumentsProviderTests {
 	@Test
 	void incorrectParameterTypeIsDetected() {
 		ParameterDeclaration firstParameterDeclaration = mock();
-		when(firstParameterDeclaration.getType()).thenAnswer(__ -> Object.class);
+		when(firstParameterDeclaration.getParameterType()).thenAnswer(__ -> Object.class);
 		when(parameters.getFirst()).thenReturn(Optional.of(firstParameterDeclaration));
 
 		var exception = assertThrows(PreconditionViolationException.class,

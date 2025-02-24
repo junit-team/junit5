@@ -25,10 +25,10 @@ public interface ParameterDeclaration {
 
 	AnnotatedElement getAnnotatedElement();
 
-	Class<?> getType();
+	Class<?> getParameterType();
 
-	int getIndex();
+	int getParameterIndex();
 
-	Optional<String> getName();
+	Optional<String> getParameterName();
 
 }

@@ -17,6 +17,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.support.FieldContext;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * {@code ArgumentConverter} is an abstraction that allows an input object to
@@ -67,6 +68,9 @@ public interface ArgumentConverter {
 
 	@API(status = EXPERIMENTAL, since = "5.13")
 	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
-		throw new UnsupportedOperationException("convert(Object, FieldContext) is not supported by this converter");
+		throw new JUnitException(
+			String.format("ArgumentConverter does not override the convert(Object, FieldContext) method. "
+					+ "Please report this issue to the maintainers of %s.",
+				getClass().getName()));
 	}
 }

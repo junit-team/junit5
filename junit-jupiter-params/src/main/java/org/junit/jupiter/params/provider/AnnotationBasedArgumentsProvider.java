@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -67,8 +68,10 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 */
 	@Deprecated
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
-		throw new UnsupportedOperationException(
-			"Please implement provideArguments(ParameterDeclarations, ExtensionContext, Annotation) instead.");
+		throw new JUnitException(String.format(
+			"AnnotationBasedArgumentsProvider does not override the provideArguments(ParameterDeclarations, ExtensionContext, Annotation) method. "
+					+ "Please report this issue to the maintainers of %s.",
+			getClass().getName()));
 	}
 
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,

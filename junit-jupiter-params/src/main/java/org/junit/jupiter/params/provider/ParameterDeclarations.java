@@ -24,15 +24,13 @@ import org.apiguardian.api.API;
 @API(status = EXPERIMENTAL, since = "5.13")
 public interface ParameterDeclarations {
 
-	AnnotatedElement getSourceElement();
-
 	List<ParameterDeclaration> getAll();
 
 	Optional<ParameterDeclaration> getFirst();
 
-	Optional<ParameterDeclaration> get(int index);
+	Optional<ParameterDeclaration> get(int parameterIndex);
 
-	int getCount();
+	AnnotatedElement getSourceElement();
 
 	String getSourceElementDescription();
 

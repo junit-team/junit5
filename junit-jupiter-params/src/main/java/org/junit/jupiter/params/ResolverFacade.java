@@ -69,7 +69,7 @@ class ResolverFacade {
 				() -> String.format("@Parameters field [%s] must not be declared as final.", field));
 			ReflectionSupport.makeAccessible(field);
 
-			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation);
+			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation.value());
 			if (isAggregator(declaration)) {
 				Preconditions.condition(index == -1,
 					() -> String.format(
@@ -80,7 +80,7 @@ class ResolverFacade {
 			else {
 				if (fields.size() == 1 && index == -1) {
 					index = 0;
-					declaration = new FieldParameterDeclaration(field, annotation, 0);
+					declaration = new FieldParameterDeclaration(field, 0);
 				}
 				else {
 					Preconditions.condition(index >= 0,
@@ -132,17 +132,18 @@ class ResolverFacade {
 				index - indexOffset);
 			if (isAggregator(declaration)) {
 				Preconditions.condition(
-					aggregatorParameters.isEmpty() || aggregatorParameters.lastKey() == declaration.getIndex() - 1,
+					aggregatorParameters.isEmpty()
+							|| aggregatorParameters.lastKey() == declaration.getParameterIndex() - 1,
 					() -> String.format(
 						"@%s %s declares formal parameters in an invalid order: "
 								+ "argument aggregators must be declared after any indexed arguments "
 								+ "and before any arguments resolved by another ParameterResolver.",
 						annotation.annotationType().getSimpleName(),
 						DefaultParameterDeclarations.describe(executable)));
-				aggregatorParameters.put(declaration.getIndex(), declaration);
+				aggregatorParameters.put(declaration.getParameterIndex(), declaration);
 			}
 			else if (aggregatorParameters.isEmpty()) {
-				regularParameters.put(declaration.getIndex(), declaration);
+				regularParameters.put(declaration.getParameterIndex(), declaration);
 			}
 		}
 		return new ResolverFacade(executable, regularParameters, new LinkedHashSet<>(aggregatorParameters.values()),
@@ -173,7 +174,7 @@ class ResolverFacade {
 			return index < arguments.getConsumedLength();
 		}
 		return !this.aggregatorParameters.isEmpty()
-				&& this.aggregatorParameters.stream().anyMatch(it -> it.getIndex() == index);
+				&& this.aggregatorParameters.stream().anyMatch(it -> it.getParameterIndex() == index);
 	}
 
 	/**
@@ -184,7 +185,7 @@ class ResolverFacade {
 	 */
 	Optional<String> getParameterName(int parameterIndex) {
 		return this.regularParameterDeclarations.get(parameterIndex) //
-				.flatMap(ParameterDeclaration::getName);
+				.flatMap(ParameterDeclaration::getParameterName);
 	}
 
 	/**
@@ -196,8 +197,9 @@ class ResolverFacade {
 	 * length and the number of regular parameter declarations.
 	 */
 	int determineConsumedArgumentLength(int totalLength) {
+		NavigableMap<Integer, ParameterDeclaration> declarationsByIndex = this.regularParameterDeclarations.declarationsByIndex;
 		return this.aggregatorParameters.isEmpty() //
-				? Math.min(totalLength, this.regularParameterDeclarations.getCount()) //
+				? Math.min(totalLength, declarationsByIndex.isEmpty() ? 0 : declarationsByIndex.lastKey() + 1) //
 				: totalLength;
 	}
 
@@ -224,12 +226,12 @@ class ResolverFacade {
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
 		int parameterIndex = toLogicalIndex(parameterContext);
-		ParameterDeclaration parameterDeclaration = this.regularParameterDeclarations.get(parameterIndex) //
-				.orElseGet(
-					() -> this.aggregatorParameters.stream().filter(it -> it.getIndex() == parameterIndex).findFirst() //
-							.orElseThrow(() -> new ParameterResolutionException(
-								"Parameter index out of bounds: " + parameterIndex)));
-		return getResolver(extensionContext, parameterDeclaration, parameterContext.getParameter()) //
+		ParameterDeclaration declaration = this.regularParameterDeclarations.get(parameterIndex) //
+				.orElseGet(() -> this.aggregatorParameters.stream().filter(
+					it -> it.getParameterIndex() == parameterIndex).findFirst() //
+						.orElseThrow(() -> new ParameterResolutionException(
+							"Parameter index out of bounds: " + parameterIndex)));
+		return getResolver(extensionContext, declaration, parameterContext.getParameter()) //
 				.resolve(parameterContext, parameterIndex, arguments, invocationIndex);
 	}
 
@@ -267,12 +269,11 @@ class ResolverFacade {
 				.resolve(parameterDeclaration, arguments, invocationIndex);
 	}
 
-	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration parameterDeclaration,
+	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration declaration,
 			AnnotatedElement annotatedElement) {
-		return this.resolvers.computeIfAbsent(parameterDeclaration,
-			__ -> this.aggregatorParameters.contains(parameterDeclaration) //
-					? createAggregator(parameterDeclaration.getIndex(), annotatedElement, extensionContext) //
-					: createConverter(parameterDeclaration.getIndex(), annotatedElement, extensionContext));
+		return this.resolvers.computeIfAbsent(declaration, __ -> this.aggregatorParameters.contains(declaration) //
+				? createAggregator(declaration.getParameterIndex(), annotatedElement, extensionContext) //
+				: createConverter(declaration.getParameterIndex(), annotatedElement, extensionContext));
 	}
 
 	private int toLogicalIndex(ParameterContext parameterContext) {
@@ -287,9 +288,9 @@ class ResolverFacade {
 	 *
 	 * @return {@code true} if the parameter is an aggregator
 	 */
-	private static boolean isAggregator(ParameterDeclaration parameter) {
-		return ArgumentsAccessor.class.isAssignableFrom(parameter.getType())
-				|| isAnnotated(parameter.getAnnotatedElement(), AggregateWith.class);
+	private static boolean isAggregator(ParameterDeclaration declaration) {
+		return ArgumentsAccessor.class.isAssignableFrom(declaration.getParameterType())
+				|| isAnnotated(declaration.getAnnotatedElement(), AggregateWith.class);
 	}
 
 	private static Converter createConverter(int index, AnnotatedElement annotatedElement,
@@ -441,18 +442,13 @@ class ResolverFacade {
 		}
 
 		@Override
-		public int getCount() {
-			return this.declarationsByIndex.isEmpty() ? 0 : this.declarationsByIndex.lastKey() + 1;
-		}
-
-		@Override
 		public List<ParameterDeclaration> getAll() {
 			return unmodifiableList(new ArrayList<>(this.declarationsByIndex.values()));
 		}
 
 		@Override
-		public Optional<ParameterDeclaration> get(int index) {
-			return Optional.ofNullable(this.declarationsByIndex.get(index));
+		public Optional<ParameterDeclaration> get(int parameterIndex) {
+			return Optional.ofNullable(this.declarationsByIndex.get(parameterIndex));
 		}
 
 		@Override

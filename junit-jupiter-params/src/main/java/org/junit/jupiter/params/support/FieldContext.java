@@ -16,7 +16,6 @@ import java.lang.reflect.Field;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
-import org.junit.jupiter.params.Parameter;
 
 /**
  * @since 5.13
@@ -26,14 +25,6 @@ public interface FieldContext extends AnnotatedElementContext {
 
 	Field getField();
 
-	default int getParameterIndex() {
-		return getParameterAnnotation().value();
-	}
+	int getParameterIndex();
 
-	Parameter getParameterAnnotation();
-
-	@Override
-	default Field getAnnotatedElement() {
-		return getField();
-	}
 }

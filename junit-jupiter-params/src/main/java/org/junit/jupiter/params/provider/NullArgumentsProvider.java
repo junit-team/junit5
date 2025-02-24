@@ -27,7 +27,7 @@ class NullArgumentsProvider implements ArgumentsProvider {
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
-		Preconditions.condition(parameters.getCount() > 0,
+		Preconditions.condition(parameters.getFirst().isPresent(),
 			() -> String.format("@NullSource cannot provide a null argument to %s: no formal parameters declared.",
 				parameters.getSourceElementDescription()));
 

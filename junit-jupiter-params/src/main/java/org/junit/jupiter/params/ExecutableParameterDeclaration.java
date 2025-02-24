@@ -33,17 +33,17 @@ class ExecutableParameterDeclaration implements ParameterDeclaration {
 	}
 
 	@Override
-	public Class<?> getType() {
+	public Class<?> getParameterType() {
 		return this.parameter.getType();
 	}
 
 	@Override
-	public int getIndex() {
+	public int getParameterIndex() {
 		return this.index;
 	}
 
 	@Override
-	public Optional<String> getName() {
+	public Optional<String> getParameterName() {
 		return this.parameter.isNamePresent() ? Optional.of(this.parameter.getName()) : Optional.empty();
 	}
 }

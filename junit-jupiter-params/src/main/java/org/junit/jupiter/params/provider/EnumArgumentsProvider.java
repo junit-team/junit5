@@ -65,7 +65,7 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 		Class enumClass = enumSource.value();
 		if (enumClass.equals(NullEnum.class)) {
 			enumClass = parameters.getFirst() //
-					.map(ParameterDeclaration::getType).map(parameterType -> {
+					.map(ParameterDeclaration::getParameterType).map(parameterType -> {
 						Preconditions.condition(Enum.class.isAssignableFrom(parameterType),
 							() -> "First parameter must reference an Enum type (alternatively, use the annotation's 'value' attribute to specify the type explicitly): "
 									+ parameters.getSourceElementDescription());

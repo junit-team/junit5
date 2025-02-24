@@ -22,42 +22,12 @@ import org.junit.jupiter.params.support.FieldContext;
 class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 
 	private final Field field;
-	private final Parameter annotation;
 	private final int index;
 
-	FieldParameterDeclaration(Field field, Parameter annotation) {
-		this(field, annotation, annotation.value());
-	}
-
-	FieldParameterDeclaration(Field field, Parameter annotation, int index) {
+	FieldParameterDeclaration(Field field, int index) {
 		this.field = field;
-		this.annotation = annotation;
 		this.index = index;
 	}
-
-	// --- ParameterDeclaration ------------------------------------------------
-
-	@Override
-	public Field getAnnotatedElement() {
-		return this.field;
-	}
-
-	@Override
-	public Class<?> getType() {
-		return this.field.getType();
-	}
-
-	@Override
-	public int getIndex() {
-		return index;
-	}
-
-	@Override
-	public Optional<String> getName() {
-		return Optional.of(this.field.getName());
-	}
-
-	// --- FieldContext --------------------------------------------------------
 
 	@Override
 	public Field getField() {
@@ -65,12 +35,23 @@ class FieldParameterDeclaration implements ParameterDeclaration, FieldContext {
 	}
 
 	@Override
-	public Parameter getParameterAnnotation() {
-		return this.annotation;
+	public Field getAnnotatedElement() {
+		return this.field;
+	}
+
+	@Override
+	public Class<?> getParameterType() {
+		return this.field.getType();
 	}
 
 	@Override
 	public int getParameterIndex() {
-		return getIndex();
+		return index;
 	}
+
+	@Override
+	public Optional<String> getParameterName() {
+		return Optional.of(this.field.getName());
+	}
+
 }

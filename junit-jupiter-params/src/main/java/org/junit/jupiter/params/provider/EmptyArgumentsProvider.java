@@ -46,7 +46,7 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 			() -> String.format("@EmptySource cannot provide an empty argument to %s: no formal parameters declared.",
 				parameters.getSourceElementDescription()));
 
-		Class<?> parameterType = firstParameter.get().getType();
+		Class<?> parameterType = firstParameter.get().getParameterType();
 
 		if (String.class.equals(parameterType)) {
 			return Stream.of(arguments(""));
