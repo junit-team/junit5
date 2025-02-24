@@ -402,6 +402,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 							containerTemplateClass.getName()))));
 	}
 
+	@Test
+	void aggregatorFieldsMustNotDeclareIndex() {
+
+		var containerTemplateClass = InvalidAggregatorFieldWithIndexTestCase.class;
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					"Index must not be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
+						ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -1175,6 +1188,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Parameter
 		final int i = -1;
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	static class InvalidAggregatorFieldWithIndexTestCase {
+
+		@Parameter(0)
+		ArgumentsAccessor accessor;
 
 		@Test
 		void test() {

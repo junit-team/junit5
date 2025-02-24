@@ -72,9 +72,10 @@ class ResolverFacade {
 
 			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation);
 			if (isAggregator(declaration)) {
-				// TODO #878 Test all preconditions
 				Preconditions.condition(index == -1,
-					() -> String.format("Index must not be declared in %s on aggregator field %s.", annotation, field));
+					() -> String.format(
+						"Index must not be declared in @Parameter(%s) annotation on aggregator field [%s].",
+						annotation.value(), field));
 				aggregatorParameters.add(declaration);
 			}
 			else {
@@ -83,14 +84,17 @@ class ResolverFacade {
 					declaration = new FieldParameterDeclaration(field, annotation, 0);
 				}
 				else {
+					// TODO #878 Test all preconditions
 					Preconditions.condition(index >= 0,
-						() -> String.format("Index must be greater than or equal to zero in %s on %s", annotation,
+						() -> String.format(
+							"Index must be greater than or equal to zero in %s annotation on field [%s].", annotation,
 							field));
 					// TODO #878 Test with duplicate `@Parameter(index)` annotations
 					// TODO #878 Test with `@Parameter(0)`, and `@Parameter(2)`, but w/o `@Parameter(1)` annotations
 					Preconditions.condition(!regularParameters.containsKey(index),
-						() -> String.format("Duplicate index %d declared on %s and %s", annotation.value(),
-							regularParameters.get(annotation.value()).getAnnotatedElement(), field));
+						() -> String.format("Duplicate index %d declared on field [%s] and field [%s].",
+							annotation.value(), regularParameters.get(annotation.value()).getAnnotatedElement(),
+							field));
 				}
 				regularParameters.put(index, declaration);
 			}
