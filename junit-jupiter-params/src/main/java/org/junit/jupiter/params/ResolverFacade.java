@@ -87,12 +87,13 @@ class ResolverFacade {
 					// TODO #878 Test all preconditions
 					Preconditions.condition(index >= 0,
 						() -> String.format(
-							"Index must be greater than or equal to zero in %s annotation on field [%s].", annotation,
-							field));
+							"Index must be greater than or equal to zero in @Parameter(%s) annotation on field [%s].",
+							annotation.value(), field));
 					// TODO #878 Test with duplicate `@Parameter(index)` annotations
 					// TODO #878 Test with `@Parameter(0)`, and `@Parameter(2)`, but w/o `@Parameter(1)` annotations
 					Preconditions.condition(!regularParameters.containsKey(index),
-						() -> String.format("Duplicate index %d declared on field [%s] and field [%s].",
+						() -> String.format(
+							"Duplicate index declared in @Parameter(%s) annotation on fields [%s] and [%s].",
 							annotation.value(), regularParameters.get(annotation.value()).getAnnotatedElement(),
 							field));
 				}

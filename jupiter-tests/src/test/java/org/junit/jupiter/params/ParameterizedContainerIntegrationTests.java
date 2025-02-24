@@ -415,6 +415,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 						ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
 	}
 
+	@Test
+	void declaredIndexMustNotBeNegative() {
+
+		var containerTemplateClass = InvalidParameterIndexTestCase.class;
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					"Index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
+						containerTemplateClass.getName()))));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -1201,6 +1214,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Parameter(0)
 		ArgumentsAccessor accessor;
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	static class InvalidParameterIndexTestCase {
+
+		@Parameter(-42)
+		int i;
 
 		@Test
 		void test() {
