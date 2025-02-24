@@ -331,6 +331,7 @@ class ParameterizedInvocationNameFormatterTests {
 			int argumentMaxLength) {
 		ParameterizedDeclarationContext<?> context = mock();
 		when(context.getResolverFacade()).thenReturn(mock());
+		when(context.getAnnotationName()).thenReturn(ParameterizedTest.class.getSimpleName());
 		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, argumentMaxLength);
 	}
 

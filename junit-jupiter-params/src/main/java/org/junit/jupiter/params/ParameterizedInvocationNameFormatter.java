@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -60,11 +59,10 @@ class ParameterizedInvocationNameFormatter {
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
 						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
 				: name;
-		pattern = Preconditions.notBlank(pattern.trim(),
-			() -> String.format("Configuration error: @%s on %s [%s] must be declared with a non-empty name.",
-				declarationContext.getAnnotationName(),
-				declarationContext.getAnnotatedElement().getClass().getSimpleName().toLowerCase(Locale.ROOT),
-				declarationContext.getAnnotatedElement()));
+		pattern = Preconditions.notBlank(pattern.trim(), () -> String.format(
+			"Configuration error: @%s on %s must be declared with a non-empty name.",
+			declarationContext.getAnnotationName(),
+			declarationContext.getResolverFacade().getRegularParameterDeclarations().getSourceElementDescription()));
 
 		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY, Integer::parseInt) //
 				.orElse(512);
@@ -164,16 +162,19 @@ class ParameterizedInvocationNameFormatter {
 			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, declarationContext),
 				argumentMaxLength));
 
+		PartialFormatter argumentSetNameFormatter = new ArgumentSetNameFormatter(
+			declarationContext.getAnnotationName());
+
 		PartialFormatters formatters = new PartialFormatters();
 		formatters.put(INDEX_PLACEHOLDER, PartialFormatter.INDEX);
 		formatters.put(DISPLAY_NAME_PLACEHOLDER, (context, result) -> result.append(displayName));
-		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, PartialFormatter.ARGUMENT_SET_NAME);
+		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, argumentSetNameFormatter);
 		formatters.put(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesFormatter);
 		formatters.put(ARGUMENTS_PLACEHOLDER, new CachingByArgumentsLengthPartialFormatter(
 			length -> new MessageFormatPartialFormatter(argumentsPattern(length), argumentMaxLength)));
 		formatters.put(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER, (context, result) -> {
 			PartialFormatter formatterToUse = context.argumentSetName.isPresent() //
-					? PartialFormatter.ARGUMENT_SET_NAME //
+					? argumentSetNameFormatter //
 					: argumentsWithNamesFormatter;
 			formatterToUse.append(context, result);
 		});
@@ -224,18 +225,28 @@ class ParameterizedInvocationNameFormatter {
 
 		PartialFormatter INDEX = (context, result) -> result.append(context.invocationIndex);
 
-		PartialFormatter ARGUMENT_SET_NAME = (context, result) -> {
+		void append(ArgumentsContext context, StringBuffer result);
+
+	}
+
+	private static class ArgumentSetNameFormatter implements PartialFormatter {
+
+		private final String annotationName;
+
+		ArgumentSetNameFormatter(String annotationName) {
+			this.annotationName = annotationName;
+		}
+
+		@Override
+		public void append(ArgumentsContext context, StringBuffer result) {
 			if (context.argumentSetName.isPresent()) {
 				result.append(context.argumentSetName.get());
 				return;
 			}
-			throw new ExtensionConfigurationException(
-				String.format("When the display name pattern for a @ParameterizedTest contains %s, "
-						+ "the arguments must be supplied as an ArgumentSet.",
-					ARGUMENT_SET_NAME_PLACEHOLDER));
-		};
-
-		void append(ArgumentsContext context, StringBuffer result);
+			throw new ExtensionConfigurationException(String.format(
+				"When the display name pattern for a @%s contains %s, the arguments must be supplied as an ArgumentSet.",
+				this.annotationName, ARGUMENT_SET_NAME_PLACEHOLDER));
+		}
 	}
 
 	private static class MessageFormatPartialFormatter implements PartialFormatter {
