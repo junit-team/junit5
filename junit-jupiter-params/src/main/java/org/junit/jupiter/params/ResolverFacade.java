@@ -88,7 +88,6 @@ class ResolverFacade {
 						() -> String.format(
 							"Index must be greater than or equal to zero in @Parameter(%s) annotation on field [%s].",
 							annotation.value(), field));
-					// TODO #878 Test with `@Parameter(0)`, and `@Parameter(2)`, but w/o `@Parameter(1)` annotations
 					Preconditions.condition(!regularParameters.containsKey(index),
 						() -> String.format(
 							"Duplicate index declared in @Parameter(%s) annotation on fields [%s] and [%s].",
@@ -103,6 +102,7 @@ class ResolverFacade {
 
 	static ResolverFacade create(Constructor<?> constructor, ParameterizedContainer annotation) {
 		// Inner classes get the outer instance as first parameter
+		// TODO #878 constructor.getParameters()[0].isSynthetic()
 		return create(constructor, annotation, isInnerClass(constructor.getDeclaringClass()) ? 1 : 0);
 	}
 
@@ -188,17 +188,33 @@ class ResolverFacade {
 	}
 
 	/**
+	 * Determine the length of the arguments array that is considered consumed
+	 * by the parameter declarations in this resolver.
+	 *
+	 * <p>If an aggregator is present, all arguments are considered consumed.
+	 * Otherwise, the consumed argument length is the minimum of the total
+	 * length and the number of regular parameter declarations.
+	 */
+	int determineConsumedArgumentLength(int totalLength) {
+		return this.aggregatorParameters.isEmpty() //
+				? Math.min(totalLength, this.regularParameterDeclarations.getCount()) //
+				: totalLength;
+	}
+
+	/**
 	 * Determine the number of arguments that are considered consumed by the
 	 * parameter declarations in this resolver.
 	 *
 	 * <p>If an aggregator is present, all arguments are considered consumed.
-	 * Otherwise, the consumed argument count is the minimum of the total length
-	 * and the number of regular parameter declarations.
+	 * Otherwise, the consumed argument count, is the number of indexes that
+	 * correspond to regular parameter declarations.
 	 */
-	int determineConsumedArgumentCount(int totalLength) {
-		return this.aggregatorParameters.isEmpty() //
-				? Math.min(totalLength, this.regularParameterDeclarations.getCount()) //
-				: totalLength;
+	int determineConsumedArgumentCount(EvaluatedArgumentSet arguments) {
+		if (this.aggregatorParameters.isEmpty()) {
+			return this.regularParameterDeclarations.declarationsByIndex.subMap(0,
+				arguments.getConsumedLength()).size();
+		}
+		return arguments.getTotalLength();
 	}
 
 	/**

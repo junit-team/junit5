@@ -32,7 +32,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		this.declarationContext = declarationContext;
 		this.formatter = formatter;
 		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
-		this.arguments = EvaluatedArgumentSet.of(arguments, resolverFacade::determineConsumedArgumentCount);
+		this.arguments = EvaluatedArgumentSet.of(arguments, resolverFacade::determineConsumedArgumentLength);
 		this.invocationIndex = invocationIndex;
 	}
 

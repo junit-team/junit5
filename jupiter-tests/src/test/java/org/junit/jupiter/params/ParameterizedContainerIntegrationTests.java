@@ -268,7 +268,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(String.format(
-					"Configuration error: the @ParameterizedContainer has 1 parameter(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
+					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
 	}
 
 	@ParameterizedTest
@@ -289,7 +289,16 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(String.format(
-					"Configuration error: the @ParameterizedContainer has 1 parameter(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused]")))));
+					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
+	}
+
+	@Test
+	void failsOnStrictArgumentCountValidationModeSetViaConfigurationParameterForSkippedParameters() {
+		var results = executeTestsForClass(InvalidUnusedParameterIndexOnStrictModeTestCase.class);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(finishedWithFailure(message(String.format(
+					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [unused, foo]")))));
 	}
 
 	@Test
@@ -439,6 +448,17 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				.haveExactly(1, finishedWithFailure(message(
 					"Duplicate index declared in @Parameter(0) annotation on fields [int %s.i] and [long %s.l].".formatted(
 						containerTemplateClass.getName(), containerTemplateClass.getName()))));
+	}
+
+	@Test
+	void supportsPartialUsageOfParameters() {
+
+		var results = executeTestsForClass(UnusedParameterIndexesTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+
+		assertThat(allReportEntries(results)) //
+				.containsExactly(Map.of("second", "foo", "fourth", "bar"), Map.of("second", "baz", "fourth", "qux"));
 	}
 
 	// -------------------------------------------------------------------
@@ -1259,6 +1279,38 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer
+	@CsvSource({ "unused1, foo, unused2, bar, unused3", "unused4, baz, unused5, qux, unused6" })
+	static class UnusedParameterIndexesTestCase {
+
+		@Parameter(1)
+		String second;
+
+		@Parameter(3)
+		String fourth;
+
+		@Test
+		void test(TestReporter reporter) {
+			reporter.publishEntry(Map.of( //
+				"second", second, //
+				"fourth", fourth //
+			));
+		}
+	}
+
+	@ParameterizedContainer(argumentCountValidation = STRICT)
+	@CsvSource("unused, foo")
+	static class InvalidUnusedParameterIndexOnStrictModeTestCase {
+
+		@Parameter(1)
+		String second;
+
+		@Test
+		void test(TestReporter reporter) {
 			fail("should not be called");
 		}
 	}

@@ -42,11 +42,14 @@ class ArgumentCountValidator {
 			case NONE:
 				return;
 			case STRICT:
-				int consumedLength = this.arguments.getConsumedLength();
-				int totalLength = this.arguments.getTotalLength();
-				Preconditions.condition(consumedLength == totalLength, () -> String.format(
-					"Configuration error: the @%s has %s parameter(s) but there were %s argument(s) provided.%nNote: the provided arguments are %s",
-					this.declarationContext.getAnnotationName(), consumedLength, totalLength,
+				int consumedCount = this.declarationContext.getResolverFacade().determineConsumedArgumentCount(
+					this.arguments);
+				int totalCount = this.arguments.getTotalLength();
+				Preconditions.condition(consumedCount == totalCount, () -> String.format(
+					"Configuration error: @%s consumes %s %s but there %s %s %s provided.%nNote: the provided arguments were %s",
+					this.declarationContext.getAnnotationName(), consumedCount,
+					pluralize(consumedCount, "parameter", "parameters"), pluralize(totalCount, "was", "were"),
+					totalCount, pluralize(totalCount, "argument", "arguments"),
 					Arrays.toString(this.arguments.getAllPayloads())));
 				break;
 			default:
@@ -94,6 +97,10 @@ class ArgumentCountValidator {
 				return fallback;
 			}
 		}, ArgumentCountValidationMode.class);
+	}
+
+	private static String pluralize(int count, String singular, String plural) {
+		return count == 1 ? singular : plural;
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {
