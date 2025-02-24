@@ -327,6 +327,17 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				);
 	}
 
+	@ParameterizedTest
+	@ValueSource(classes = { ConstructorInjectionWithRegularNestedTestCase.class,
+			FieldInjectionWithRegularNestedTestCase.class })
+	void supportsRegularNestedTestClassesInsideParameterizedContainer(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.containerEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+	}
+
 	@Test
 	void supportsMultipleAggregatorFields() {
 
@@ -972,6 +983,49 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			void test(boolean flag) {
 				assertTrue(number >= 0);
 				assertTrue(List.of("foo", "bar").contains(text));
+			}
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = { 1, 2 })
+	record ConstructorInjectionWithRegularNestedTestCase(int number) {
+
+		@Nested
+		@TestInstance(PER_CLASS)
+		class InnerTestCase {
+
+			InnerTestCase(TestInfo testInfo) {
+				assertThat(testInfo.getTestClass()).contains(InnerTestCase.class);
+				assertThat(testInfo.getTestMethod()).isEmpty();
+			}
+
+			@Test
+			void test() {
+				assertTrue(number >= 0);
+			}
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = { 1, 2 })
+	static class FieldInjectionWithRegularNestedTestCase {
+
+		@Parameter
+		int number;
+
+		@Nested
+		@TestInstance(PER_CLASS)
+		class InnerTestCase {
+
+			InnerTestCase(TestInfo testInfo) {
+				assertThat(testInfo.getTestClass()).contains(InnerTestCase.class);
+				assertThat(testInfo.getTestMethod()).isEmpty();
+			}
+
+			@Test
+			void test() {
+				assertTrue(number >= 0);
 			}
 		}
 	}
