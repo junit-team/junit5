@@ -14,7 +14,6 @@ import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ModifierSupport.isNotFinal;
-import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -101,9 +100,10 @@ class ResolverFacade {
 	}
 
 	static ResolverFacade create(Constructor<?> constructor, ParameterizedContainer annotation) {
+		java.lang.reflect.Parameter[] parameters = constructor.getParameters();
 		// Inner classes get the outer instance as first parameter
-		// TODO #878 constructor.getParameters()[0].isSynthetic()
-		return create(constructor, annotation, isInnerClass(constructor.getDeclaringClass()) ? 1 : 0);
+		int implicitParameters = parameters.length > 0 && parameters[0].isImplicit() ? 1 : 0;
+		return create(constructor, annotation, implicitParameters);
 	}
 
 	static ResolverFacade create(Method method, ParameterizedTest annotation) {
