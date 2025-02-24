@@ -43,15 +43,22 @@ class ParameterizedContainerExtension extends ParameterizedInvocationContextProv
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
+		// This method always returns `false` because it is not intended to be used as a parameter resolver.
+		// Instead, it is used to provide a better error message when `TestInstance.Lifecycle.PER_CLASS` is
+		// attempted to be combined with constructor injection of parameters.
+
 		if (isDeclaredOnTestClassConstructor(parameterContext, extensionContext)) {
 			validateAndStoreClassContext(extensionContext);
 		}
+
 		return false;
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
+
+		// Should never be called (see comment above).
 
 		throw new JUnitException("Unexpected call to resolveParameter");
 	}
