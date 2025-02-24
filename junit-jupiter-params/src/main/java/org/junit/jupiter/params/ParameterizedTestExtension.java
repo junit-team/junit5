@@ -12,7 +12,6 @@ package org.junit.jupiter.params;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
-import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -31,18 +30,13 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
-		if (!context.getTestMethod().isPresent()) {
-			return false;
-		}
-
-		Method templateMethod = context.getRequiredTestMethod();
-		Optional<ParameterizedTest> annotation = findAnnotation(templateMethod, ParameterizedTest.class);
+		Optional<ParameterizedTest> annotation = findAnnotation(context.getTestMethod(), ParameterizedTest.class);
 		if (!annotation.isPresent()) {
 			return false;
 		}
 
-		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(templateMethod,
-			annotation.get());
+		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(
+			context.getRequiredTestMethod(), annotation.get());
 
 		getStore(context).put(DECLARATION_CONTEXT_KEY, methodContext);
 
