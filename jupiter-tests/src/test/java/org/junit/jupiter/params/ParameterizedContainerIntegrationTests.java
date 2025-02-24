@@ -39,6 +39,10 @@ import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -406,8 +410,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
-	@ValueSource(ints = { -1, 1 })
+	@ParameterizedContainerWithNegativeAndPositiveValue
 	static class ConstructorInjectionTestCase {
 
 		private int value;
@@ -434,8 +437,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
-	@ValueSource(ints = { -1, 1 })
+	@ParameterizedContainerWithNegativeAndPositiveValue
 	record RecordTestCase(int value, TestInfo testInfo) {
 
 		@Test
@@ -594,7 +596,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
 	@ValueSource(ints = { -1, 1 })
-	record RecordWithCustomAggregatorTestCase(@AggregateWith(TimesTwo.class) int value) {
+	record RecordWithCustomAggregatorTestCase(@AggregateWith(TimesTwoAggregator.class) int value) {
 
 		@Test
 		void test1() {
@@ -613,8 +615,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@ValueSource(ints = { -1, 1 })
 	static class FieldInjectionWithCustomAggregatorTestCase {
 
-		@Parameter
-		@AggregateWith(TimesTwo.class)
+		@TimesTwo
 		private int value;
 
 		@Test
@@ -629,7 +630,14 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 	}
 
-	private static class TimesTwo extends SimpleArgumentsAggregator {
+	@Target(ElementType.TYPE)
+	@Retention(RetentionPolicy.RUNTIME)
+	@ParameterizedContainer
+	@ValueSource(ints = { -1, 1 })
+	@interface ParameterizedContainerWithNegativeAndPositiveValue {
+	}
+
+	private static class TimesTwoAggregator extends SimpleArgumentsAggregator {
 
 		@Override
 		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
@@ -1066,8 +1074,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		@Parameter
 		ArgumentsAccessor accessor;
 
-		@Parameter
-		@AggregateWith(TimesTwo.class)
+		@TimesTwo
 		int numberTimesTwo;
 
 		@Parameter(0)
@@ -1084,6 +1091,13 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			assertEquals(text, accessor.getString(1));
 		}
 
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	@Parameter
+	@AggregateWith(TimesTwoAggregator.class)
+	@interface TimesTwo {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

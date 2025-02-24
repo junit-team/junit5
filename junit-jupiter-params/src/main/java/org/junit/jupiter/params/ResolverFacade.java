@@ -66,7 +66,6 @@ class ResolverFacade {
 			Preconditions.condition(!ReflectionUtils.isFinal(field), () -> "Field must not be final: " + field);
 			ReflectionSupport.makeAccessible(field);
 
-			// TODO #878 Test that composed annotations are supported
 			Parameter annotation = findAnnotation(field, Parameter.class) //
 					.orElseThrow(() -> new JUnitException("No @Parameter annotation found"));
 			int index = annotation.value();
