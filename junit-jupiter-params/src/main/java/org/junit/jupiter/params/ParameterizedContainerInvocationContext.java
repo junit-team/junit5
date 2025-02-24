@@ -10,13 +10,19 @@
 
 package org.junit.jupiter.params;
 
-import java.util.Arrays;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
+
 import java.util.List;
 
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.ParameterizedContainerClassContext.InjectionType;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 
 class ParameterizedContainerInvocationContext extends ParameterizedInvocationContext<ParameterizedContainerClassContext>
 		implements ContainerTemplateInvocationContext {
@@ -33,12 +39,34 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		// TODO #878 Register either parameter resolvers or field injectors?
-		return Arrays.asList( //
-			new ContainerTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
-				this.invocationIndex), //
-			new ContainerTemplateInstanceFieldInjector(this.declarationContext, this.arguments, this.invocationIndex) //
-		);
+		InjectionType injectionType = this.declarationContext.getInjectionType();
+		switch (injectionType) {
+			case CONSTRUCTOR:
+				return singletonList(createExtensionForConstructorInjection());
+			case FIELDS:
+				return singletonList(createExtensionForFieldInjection());
+		}
+		throw new JUnitException("Unsupported injection type: " + injectionType);
+	}
+
+	private ContainerTemplateConstructorParameterResolver createExtensionForConstructorInjection() {
+		Preconditions.condition(this.declarationContext.getTestInstanceLifecycle() == PER_METHOD,
+			"Constructor injection is only supported for lifecycle PER_METHOD");
+		return new ContainerTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
+			this.invocationIndex);
+	}
+
+	private Extension createExtensionForFieldInjection() {
+		TestInstance.Lifecycle lifecycle = this.declarationContext.getTestInstanceLifecycle();
+		switch (lifecycle) {
+			case PER_CLASS:
+				return new ContainerTemplateInstanceFieldInjectingBeforeEachCallback(this.declarationContext,
+					this.arguments, this.invocationIndex);
+			case PER_METHOD:
+				return new ContainerTemplateInstanceFieldInjectingPostProcessor(this.declarationContext, this.arguments,
+					this.invocationIndex);
+		}
+		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
 	}
 
 	@Override

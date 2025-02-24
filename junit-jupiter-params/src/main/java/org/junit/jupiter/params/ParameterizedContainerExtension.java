@@ -10,50 +10,55 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.params.ParameterizedContainerClassContext.InjectionType.CONSTRUCTOR;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.PreconditionViolationException;
 
 /**
  * @since 5.13
  */
 class ParameterizedContainerExtension extends ParameterizedInvocationContextProvider<ContainerTemplateInvocationContext>
-		implements ContainerTemplateInvocationContextProvider {
+		implements ContainerTemplateInvocationContextProvider, ParameterResolver {
 
-	static final String DECLARATION_CONTEXT_KEY = "context";
+	private static final String DECLARATION_CONTEXT_KEY = "context";
 
 	@Override
-	public boolean supportsContainerTemplate(ExtensionContext context) {
-		if (!context.getTestClass().isPresent()) {
-			return false;
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException {
+
+		if (isDeclaredOnTestClassConstructor(parameterContext, extensionContext)) {
+			validateAndStoreClassContext(extensionContext);
 		}
+		return false;
+	}
 
-		Class<?> testClass = context.getRequiredTestClass();
-		Optional<ParameterizedContainer> annotation = findAnnotation(testClass, ParameterizedContainer.class);
-		if (!annotation.isPresent()) {
-			return false;
-		}
+	@Override
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException {
 
-		ParameterizedContainerClassContext classContext = new ParameterizedContainerClassContext(testClass,
-			annotation.get());
+		throw new JUnitException("Unexpected call to resolveParameter");
+	}
 
-		// TODO #878 Validate signature of test class constructor
-		//		Preconditions.condition(classContext.hasPotentiallyValidSignature(),
-		//				() -> String.format(
-		//						"@ParameterizedTest method [%s] declares formal parameters in an invalid order: "
-		//								+ "argument aggregators must be declared after any indexed arguments "
-		//								+ "and before any arguments resolved by another ParameterResolver.",
-		//						templateMethod.toGenericString()));
-
-		getStore(context).put(DECLARATION_CONTEXT_KEY, classContext);
-
-		return true;
+	@Override
+	public boolean supportsContainerTemplate(ExtensionContext extensionContext) {
+		return validateAndStoreClassContext(extensionContext);
 	}
 
 	@Override
@@ -68,13 +73,58 @@ class ParameterizedContainerExtension extends ParameterizedInvocationContextProv
 		return getDeclarationContext(extensionContext).isAllowingZeroInvocations();
 	}
 
+	private static boolean isDeclaredOnTestClassConstructor(ParameterContext parameterContext,
+			ExtensionContext extensionContext) {
+
+		Executable declaringExecutable = parameterContext.getDeclaringExecutable();
+		return declaringExecutable instanceof Constructor //
+				&& declaringExecutable.getDeclaringClass().equals(extensionContext.getTestClass().orElse(null));
+	}
+
+	private boolean validateAndStoreClassContext(ExtensionContext extensionContext) {
+
+		Store store = getStore(extensionContext);
+		if (store.get(DECLARATION_CONTEXT_KEY) != null) {
+			return true;
+		}
+
+		Optional<ParameterizedContainer> annotation = findAnnotation(extensionContext.getTestClass(),
+			ParameterizedContainer.class);
+		if (!annotation.isPresent()) {
+			return false;
+		}
+
+		store.put(DECLARATION_CONTEXT_KEY,
+			createClassContext(extensionContext, extensionContext.getRequiredTestClass(), annotation.get()));
+
+		return true;
+	}
+
+	private static ParameterizedContainerClassContext createClassContext(ExtensionContext extensionContext,
+			Class<?> testClass, ParameterizedContainer annotation) {
+
+		TestInstance.Lifecycle lifecycle = extensionContext.getTestInstanceLifecycle() //
+				.orElseThrow(() -> new PreconditionViolationException("TestInstance.Lifecycle not present"));
+
+		ParameterizedContainerClassContext classContext = new ParameterizedContainerClassContext(testClass, annotation,
+			lifecycle);
+
+		if (lifecycle == PER_CLASS && classContext.getInjectionType() == CONSTRUCTOR) {
+			throw new PreconditionViolationException(
+				"Constructor injection is not supported for @ParameterizedContainer classes with @TestInstance(Lifecycle.PER_CLASS)");
+		}
+
+		return classContext;
+	}
+
 	private ParameterizedContainerClassContext getDeclarationContext(ExtensionContext extensionContext) {
 		return getStore(extensionContext)//
 				.get(DECLARATION_CONTEXT_KEY, ParameterizedContainerClassContext.class);
 	}
 
-	private ExtensionContext.Store getStore(ExtensionContext context) {
-		return context.getStore(Namespace.create(ParameterizedTestExtension.class, context.getRequiredTestClass()));
+	private Store getStore(ExtensionContext context) {
+		return context.getStore(
+			Namespace.create(ParameterizedContainerExtension.class, context.getRequiredTestClass()));
 	}
 
 }

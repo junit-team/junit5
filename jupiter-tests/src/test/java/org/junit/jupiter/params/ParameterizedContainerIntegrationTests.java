@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
 import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
@@ -38,6 +39,7 @@ import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
@@ -46,9 +48,12 @@ import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
@@ -71,6 +76,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 
@@ -327,6 +333,36 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		var results = executeTestsForClass(MultiAggregatorFieldInjectionTestCase.class);
 
 		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+	}
+
+	@Test
+	void supportsFieldInjectionForTestInstanceLifecyclePerClass() {
+
+		var results = executeTestsForClass(FieldInjectionWithPerClassTestInstanceLifecycleTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
+
+		var reportEntries = results.allEvents().reportingEntryPublished() //
+				.map(e -> e.getRequiredPayload(ReportEntry.class)) //
+				.map(ReportEntry::getKeyValuePairs) //
+				.toList();
+
+		assertThat(reportEntries.stream().map(it -> it.get("value"))) //
+				.containsExactly("foo", "foo", "bar", "bar");
+		assertThat(reportEntries.stream().map(it -> it.get("instanceHashCode")).distinct()) //
+				.hasSize(1);
+	}
+
+	@Test
+	void doesNotSupportConstructorInjectionForTestInstanceLifecyclePerClass() {
+
+		var results = executeTests(request -> request //
+				.selectors(selectClass(ConstructorInjectionTestCase.class)) //
+				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, PER_CLASS.name()));
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(it -> it.contains(
+					"Constructor injection is not supported for @ParameterizedContainer classes with @TestInstance(Lifecycle.PER_CLASS)"))));
 	}
 
 	// -------------------------------------------------------------------
@@ -963,6 +999,34 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			assertEquals(number, accessor.getInteger(0));
 			assertEquals(number * 2, numberTimesTwo);
 			assertEquals(text, accessor.getString(1));
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ParameterizedContainer
+	@ValueSource(strings = { "foo", "bar" })
+	@TestInstance(PER_CLASS)
+	static class FieldInjectionWithPerClassTestInstanceLifecycleTestCase {
+
+		@Parameter
+		private String value;
+
+		@Test
+		void test1(TestReporter reporter) {
+			publishReportEntry(reporter);
+		}
+
+		@Test
+		void test2(TestReporter reporter) {
+			publishReportEntry(reporter);
+		}
+
+		private void publishReportEntry(TestReporter reporter) {
+			assertNotNull(value);
+			reporter.publishEntry(Map.of( //
+				"instanceHashCode", Integer.toHexString(hashCode()), //
+				"value", value //
+			));
 		}
 	}
 

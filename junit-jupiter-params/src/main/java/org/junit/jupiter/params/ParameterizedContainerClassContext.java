@@ -10,20 +10,42 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.ReflectionSupport.findFields;
+
+import java.lang.reflect.Field;
+import java.util.List;
+
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 class ParameterizedContainerClassContext
 		implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
 
 	private final Class<?> clazz;
 	private final ParameterizedContainer annotation;
+	private final TestInstance.Lifecycle testInstanceLifecycle;
 	private final ResolverFacade resolverFacade;
+	private final InjectionType injectionType;
 
-	ParameterizedContainerClassContext(Class<?> clazz, ParameterizedContainer annotation) {
+	ParameterizedContainerClassContext(Class<?> clazz, ParameterizedContainer annotation,
+			TestInstance.Lifecycle testInstanceLifecycle) {
 		this.clazz = clazz;
 		this.annotation = annotation;
-		this.resolverFacade = ResolverFacade.create(clazz, annotation);
+		this.testInstanceLifecycle = testInstanceLifecycle;
+
+		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
+		if (fields.isEmpty()) {
+			this.resolverFacade = ResolverFacade.create(ReflectionUtils.getDeclaredConstructor(clazz), annotation);
+			this.injectionType = InjectionType.CONSTRUCTOR;
+		}
+		else {
+			this.resolverFacade = ResolverFacade.create(clazz, fields);
+			this.injectionType = InjectionType.FIELDS;
+		}
 	}
 
 	@Override
@@ -65,5 +87,17 @@ class ParameterizedContainerClassContext
 	public ContainerTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			Arguments arguments, int invocationIndex) {
 		return new ParameterizedContainerInvocationContext(this, formatter, arguments, invocationIndex);
+	}
+
+	TestInstance.Lifecycle getTestInstanceLifecycle() {
+		return testInstanceLifecycle;
+	}
+
+	InjectionType getInjectionType() {
+		return injectionType;
+	}
+
+	enum InjectionType {
+		CONSTRUCTOR, FIELDS
 	}
 }

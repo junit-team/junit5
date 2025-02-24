@@ -13,8 +13,6 @@ package org.junit.jupiter.params;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
-import static org.junit.platform.commons.support.ReflectionSupport.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
@@ -59,11 +57,8 @@ import org.junit.platform.commons.util.StringUtils;
 
 class ResolverFacade {
 
-	static ResolverFacade create(Class<?> clazz, ParameterizedContainer containerAnnotation) {
-		List<Field> fields = findFields(clazz, it -> isAnnotated(it, Parameter.class), BOTTOM_UP);
-		if (fields.isEmpty()) {
-			return create(ReflectionUtils.getDeclaredConstructor(clazz), containerAnnotation);
-		}
+	static ResolverFacade create(Class<?> clazz, List<Field> fields) {
+		Preconditions.notEmpty(fields, "Fields must not be empty");
 		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
 		Set<ParameterDeclaration> aggregatorParameters = new LinkedHashSet<>();
 		for (Field field : fields) {
@@ -165,11 +160,6 @@ class ResolverFacade {
 		this.regularParameterDeclarations = new DefaultParameterDeclarations(sourceElement, regularParameters);
 	}
 
-	Stream<ParameterDeclaration> getAllParameterDeclarations() {
-		return Stream.concat(this.regularParameterDeclarations.declarationsByIndex.values().stream(),
-			aggregatorParameters.stream());
-	}
-
 	ParameterDeclarations getRegularParameterDeclarations() {
 		return this.regularParameterDeclarations;
 	}
@@ -224,11 +214,35 @@ class ResolverFacade {
 				.resolve(parameterContext, parameterIndex, arguments, invocationIndex);
 	}
 
-	/**
-	 * Resolve the parameter for the supplied context using the supplied
-	 * arguments.
-	 */
-	Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
+	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
+			int invocationIndex) {
+		if (this.regularParameterDeclarations.sourceElement.equals(extensionContext.getTestClass().orElse(null))) {
+			getAllParameterDeclarations() //
+					.filter(FieldParameterDeclaration.class::isInstance) //
+					.map(FieldParameterDeclaration.class::cast) //
+					.forEach(declaration -> setField(testInstance, declaration, extensionContext, arguments,
+						invocationIndex));
+		}
+	}
+
+	private Stream<ParameterDeclaration> getAllParameterDeclarations() {
+		return Stream.concat(this.regularParameterDeclarations.declarationsByIndex.values().stream(),
+			aggregatorParameters.stream());
+	}
+
+	private void setField(Object testInstance, FieldParameterDeclaration parameterDeclaration,
+			ExtensionContext extensionContext, EvaluatedArgumentSet arguments, int invocationIndex) {
+		Object argument = resolve(parameterDeclaration, extensionContext, arguments, invocationIndex);
+		try {
+			parameterDeclaration.getField().set(testInstance, argument);
+		}
+		catch (Exception e) {
+			throw new JUnitException("Failed to inject parameter value into field: " + parameterDeclaration.getField(),
+				e);
+		}
+	}
+
+	private Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
 		return getResolver(extensionContext, parameterDeclaration, parameterDeclaration.getField()) //
 				.resolve(parameterDeclaration, arguments, invocationIndex);
