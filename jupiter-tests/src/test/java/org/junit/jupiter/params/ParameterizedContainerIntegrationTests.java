@@ -428,6 +428,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 						containerTemplateClass.getName()))));
 	}
 
+	@Test
+	void declaredIndexMustBeUnique() {
+
+		var containerTemplateClass = InvalidDuplicateParameterDeclarationTestCase.class;
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					"Duplicate index declared in @Parameter(0) annotation on fields [int %s.i] and [long %s.l].".formatted(
+						containerTemplateClass.getName(), containerTemplateClass.getName()))));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -1227,6 +1240,22 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Parameter(-42)
 		int i;
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	static class InvalidDuplicateParameterDeclarationTestCase {
+
+		@Parameter(0)
+		int i;
+
+		@Parameter(0)
+		long l;
 
 		@Test
 		void test() {
