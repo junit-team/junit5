@@ -59,11 +59,11 @@ class DefaultLauncherSession implements LauncherSession {
 		Launcher launcher;
 		if (interceptor == NOOP_INTERCEPTOR) {
 			this.listener = listenerSupplier.get();
-			launcher = launcherFactory.apply(getStore());
+			launcher = launcherFactory.apply(this.store);
 		}
 		else {
 			this.listener = interceptor.intercept(listenerSupplier::get);
-			launcher = new InterceptingLauncher(interceptor.intercept(() -> launcherFactory.apply(getStore())),
+			launcher = new InterceptingLauncher(interceptor.intercept(() -> launcherFactory.apply(this.store)),
 				interceptor);
 		}
 		this.launcher = new DelegatingLauncher(launcher);

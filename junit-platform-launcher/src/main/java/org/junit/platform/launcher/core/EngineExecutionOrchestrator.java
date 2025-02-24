@@ -44,25 +44,23 @@ import org.junit.platform.launcher.TestPlan;
 public class EngineExecutionOrchestrator {
 
 	private final ListenerRegistry<TestExecutionListener> listenerRegistry;
-	private final NamespacedHierarchicalStore<Namespace> requestStore;
 
-	// TODO[Question]: Is it okay to have a null value for requestStore?
 	public EngineExecutionOrchestrator() {
-		this(ListenerRegistry.forTestExecutionListeners(), null);
+		this(ListenerRegistry.forTestExecutionListeners());
 	}
 
-	EngineExecutionOrchestrator(ListenerRegistry<TestExecutionListener> listenerRegistry,
-			NamespacedHierarchicalStore<Namespace> requestStore) {
+	EngineExecutionOrchestrator(ListenerRegistry<TestExecutionListener> listenerRegistry) {
 		this.listenerRegistry = listenerRegistry;
-		this.requestStore = requestStore;
 	}
 
-	void execute(InternalTestPlan internalTestPlan, TestExecutionListener... listeners) {
+	void execute(InternalTestPlan internalTestPlan, NamespacedHierarchicalStore<Namespace> requestLevelStore,
+			TestExecutionListener... listeners) {
 		ConfigurationParameters configurationParameters = internalTestPlan.getConfigurationParameters();
 		ListenerRegistry<TestExecutionListener> testExecutionListenerListeners = buildListenerRegistryForExecution(
 			listeners);
 		withInterceptedStreams(configurationParameters, testExecutionListenerListeners,
-			testExecutionListener -> execute(internalTestPlan, EngineExecutionListener.NOOP, testExecutionListener));
+			testExecutionListener -> execute(internalTestPlan, EngineExecutionListener.NOOP, testExecutionListener,
+				requestLevelStore));
 	}
 
 	/**
@@ -74,17 +72,18 @@ public class EngineExecutionOrchestrator {
 	 */
 	@API(status = INTERNAL, since = "1.9", consumers = { "org.junit.platform.suite.engine" })
 	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener,
-			TestExecutionListener testExecutionListener) {
+			TestExecutionListener testExecutionListener, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
 		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 		Preconditions.notNull(testExecutionListener, "testExecutionListener must not be null");
+		Preconditions.notNull(requestLevelStore, "requestLevelStore must not be null");
 
 		InternalTestPlan internalTestPlan = InternalTestPlan.from(discoveryResult);
-		execute(internalTestPlan, engineExecutionListener, testExecutionListener);
+		execute(internalTestPlan, engineExecutionListener, testExecutionListener, requestLevelStore);
 	}
 
 	private void execute(InternalTestPlan internalTestPlan, EngineExecutionListener parentEngineExecutionListener,
-			TestExecutionListener testExecutionListener) {
+			TestExecutionListener testExecutionListener, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		internalTestPlan.markStarted();
 
 		// Do not directly pass the internal test plan to test execution listeners.
@@ -98,7 +97,8 @@ public class EngineExecutionOrchestrator {
 		}
 		else {
 			execute(discoveryResult,
-				buildEngineExecutionListener(parentEngineExecutionListener, testExecutionListener, testPlan));
+				buildEngineExecutionListener(parentEngineExecutionListener, testExecutionListener, testPlan),
+				requestLevelStore);
 		}
 		testExecutionListener.testPlanExecutionFinished(testPlan);
 	}
@@ -158,7 +158,8 @@ public class EngineExecutionOrchestrator {
 	 * EngineExecutionListener listener} of execution events.
 	 */
 	@API(status = INTERNAL, since = "1.7", consumers = { "org.junit.platform.testkit" })
-	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener) {
+	public void execute(LauncherDiscoveryResult discoveryResult, EngineExecutionListener engineExecutionListener,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		Preconditions.notNull(discoveryResult, "discoveryResult must not be null");
 		Preconditions.notNull(engineExecutionListener, "engineExecutionListener must not be null");
 
@@ -174,7 +175,7 @@ public class EngineExecutionOrchestrator {
 			}
 			else {
 				execute(engineDescriptor, listener, configurationParameters, testEngine,
-					discoveryResult.getOutputDirectoryProvider());
+					discoveryResult.getOutputDirectoryProvider(), requestLevelStore);
 			}
 		}
 	}
@@ -199,13 +200,13 @@ public class EngineExecutionOrchestrator {
 
 	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
 			ConfigurationParameters configurationParameters, TestEngine testEngine,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
 			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
-				outputDirectoryProvider, requestStore));
+				outputDirectoryProvider, requestLevelStore));
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
