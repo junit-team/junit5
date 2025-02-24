@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -353,14 +354,9 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 
-		var reportEntries = results.allEvents().reportingEntryPublished() //
-				.map(e -> e.getRequiredPayload(ReportEntry.class)) //
-				.map(ReportEntry::getKeyValuePairs) //
-				.toList();
-
-		assertThat(reportEntries.stream().map(it -> it.get("value"))) //
+		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
 				.containsExactly("foo", "foo", "bar", "bar");
-		assertThat(reportEntries.stream().map(it -> it.get("instanceHashCode")).distinct()) //
+		assertThat(allReportEntries(results).map(it -> it.get("instanceHashCode")).distinct()) //
 				.hasSize(1);
 	}
 
@@ -376,6 +372,18 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					"Constructor injection is not supported for @ParameterizedContainer classes with @TestInstance(Lifecycle.PER_CLASS)"))));
 	}
 
+	@Test
+	void supportsInjectionOfInheritedFields() {
+
+		var results = executeTestsForClass(InheritedHiddenParameterFieldCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+
+		assertThat(allReportEntries(results)) //
+				.extracting(it -> tuple(it.get("super.value"), it.get("this.value"))) //
+				.containsExactly(tuple("foo", "1"), tuple("bar", "2"));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -384,6 +392,12 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				.filter(uniqueId(lastSegmentType(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE))::matches) //
 				.map(Event::getTestDescriptor) //
 				.map(TestDescriptor::getDisplayName);
+	}
+
+	private static Stream<Map<String, String>> allReportEntries(EngineExecutionResults results) {
+		return results.allEvents().reportingEntryPublished() //
+				.map(e -> e.getRequiredPayload(ReportEntry.class)) //
+				.map(ReportEntry::getKeyValuePairs);
 	}
 
 	private static Condition<UniqueId> lastSegmentType(String segmentType) {
@@ -1103,6 +1117,26 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			reporter.publishEntry(Map.of( //
 				"instanceHashCode", Integer.toHexString(hashCode()), //
 				"value", value //
+			));
+		}
+	}
+
+	abstract static class BaseTestCase {
+		@Parameter(0)
+		String value;
+	}
+
+	@ParameterizedContainer
+	@CsvSource({ "foo, 1", "bar, 2" })
+	static class InheritedHiddenParameterFieldCase extends BaseTestCase {
+		@Parameter(1)
+		String value;
+
+		@Test
+		void test(TestReporter reporter) {
+			reporter.publishEntry(Map.of( //
+				"super.value", super.value, //
+				"this.value", this.value //
 			));
 		}
 	}
