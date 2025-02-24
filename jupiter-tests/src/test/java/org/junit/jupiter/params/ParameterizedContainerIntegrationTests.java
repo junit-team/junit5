@@ -1054,13 +1054,21 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			assertEquals(number * 2, numberTimesTwo);
 			assertEquals(text, accessor.getString(1));
 		}
+
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ParameterizedContainer
-	@ValueSource(strings = { "foo", "bar" })
+	@MethodSource("methodSource")
+	@FieldSource("fieldSource")
 	@TestInstance(PER_CLASS)
 	static class FieldInjectionWithPerClassTestInstanceLifecycleTestCase {
+
+		List<String> methodSource() {
+			return List.of("foo");
+		}
+
+		final List<String> fieldSource = List.of("bar");
 
 		@Parameter
 		private String value;
@@ -1078,10 +1086,9 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		private void publishReportEntry(TestReporter reporter) {
 			assertNotNull(value);
 			reporter.publishEntry(Map.of( //
-				"instanceHashCode", Integer.toHexString(hashCode()), //
-				"value", value //
+					"instanceHashCode", Integer.toHexString(hashCode()), //
+					"value", value //
 			));
 		}
 	}
-
 }
