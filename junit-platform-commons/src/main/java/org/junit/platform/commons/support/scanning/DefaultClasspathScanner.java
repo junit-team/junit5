@@ -243,9 +243,10 @@ public class DefaultClasspathScanner implements ClasspathScanner {
 
 	/**
 	 * The fully qualified resource name is a {@code /}-separated path.
-	 * <p>
-	 * The path is relative to the classpath root in which the resource is located.
-
+	 *
+	 * <p>The path is relative to the classpath root in which the resource is
+	 * located.
+	 *
 	 * @return the resource name; never {@code null}
 	 */
 	private String determineFullyQualifiedResourceName(Path baseDir, String basePackageName, Path resourceFile) {
