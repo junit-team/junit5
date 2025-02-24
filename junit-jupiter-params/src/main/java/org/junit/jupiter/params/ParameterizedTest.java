@@ -47,18 +47,18 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * <p>A {@code @ParameterizedTest} method may declare additional parameters at
  * the end of the method's parameter list to be resolved by other
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
- * (e.g., {@code TestInfo}, {@code TestReporter}, etc). Specifically, a
+ * (e.g., {@code TestInfo}, {@code TestReporter}, etc.). Specifically, a
  * parameterized test method must declare formal parameters according to the
  * following rules.
  *
  * <ol>
- * <li>Zero or more <em>indexed arguments</em> must be declared first.</li>
+ * <li>Zero or more <em>indexed parameters</em> must be declared first.</li>
  * <li>Zero or more <em>aggregators</em> must be declared next.</li>
- * <li>Zero or more arguments supplied by other {@code ParameterResolver}
+ * <li>Zero or more parameters supplied by other {@code ParameterResolver}
  * implementations must be declared last.</li>
  * </ol>
  *
- * <p>In this context, an <em>indexed argument</em> is an argument for a given
+ * <p>In this context, an <em>indexed parameter</em> is an argument for a given
  * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
  * is passed as an argument to the parameterized method at the same index in the
  * method's formal parameter list. An <em>aggregator</em> is any parameter of type
@@ -114,6 +114,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * implementation.
  *
  * @since 5.0
+ * @see ParameterizedContainer
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @see org.junit.jupiter.params.provider.ArgumentsSource

@@ -32,10 +32,12 @@ import org.apiguardian.api.API;
  * {@code @ValueSource} declaration.
  *
  * <p>The supplied literal values will be provided as arguments to the
- * annotated {@code @ParameterizedTest} method.
+ * annotated {@code @ParameterizedContainer} class or {@code @ParameterizedTest}
+ * method.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedContainer
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })

@@ -16,15 +16,30 @@ import java.lang.reflect.Field;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedContainer;
 
 /**
+ * {@code FieldContext} encapsulates the <em>context</em> in which an
+ * {@link Parameter @Parameter}-annotated {@link Field} is declared in a
+ * {@link ParameterizedContainer @ParameterizedContainer}.
+ *
  * @since 5.13
  */
 @API(status = EXPERIMENTAL, since = "5.13")
 public interface FieldContext extends AnnotatedElementContext {
 
+	/**
+	 * {@return the field for this context; never {@code null}}
+	 */
 	Field getField();
 
+	/**
+	 * {@return the index of the parameter}
+	 *
+	 * <p>This method returns {@code -1} for aggregator fields and a value
+	 * greater than or equal to zero for regular <em>indexed</em> parameters.
+	 */
 	int getParameterIndex();
 
 }

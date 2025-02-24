@@ -12,7 +12,7 @@ package org.junit.jupiter.params;
 
 import java.util.Optional;
 
-import org.junit.jupiter.params.provider.ParameterDeclaration;
+import org.junit.jupiter.params.support.ParameterDeclaration;
 
 /**
  * @since 5.13

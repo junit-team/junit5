@@ -8,7 +8,7 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.jupiter.params.provider;
+package org.junit.jupiter.params.support;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
@@ -18,17 +18,39 @@ import java.util.Optional;
 import org.apiguardian.api.API;
 
 /**
+ * {@code ParameterDeclaration} encapsulates the <em>declaration</em> of an
+ * indexed {@code @ParameterizedContainer} class or {@code @ParameterizedTest}
+ * method parameter.
+ *
  * @since 5.13
+ * @see ParameterDeclarations
  */
 @API(status = EXPERIMENTAL, since = "5.13")
 public interface ParameterDeclaration {
 
+	/**
+	 * {@return the {@link AnnotatedElement} that declares the parameter; never
+	 * {@code null}}
+	 *
+	 * <p>This is either a {@link java.lang.reflect.Parameter} or a
+	 * {@link java.lang.reflect.Field}.
+	 */
 	AnnotatedElement getAnnotatedElement();
 
+	/**
+	 * {@return the type of the parameter; never {@code null}}
+	 */
 	Class<?> getParameterType();
 
+	/**
+	 * {@return the index of the parameter}
+	 */
 	int getParameterIndex();
 
+	/**
+	 * {@return the name of the parameter, if available; never {@code null} but
+	 * potentially empty}
+	 */
 	Optional<String> getParameterName();
 
 }

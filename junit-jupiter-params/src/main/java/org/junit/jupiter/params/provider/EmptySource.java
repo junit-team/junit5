@@ -22,12 +22,13 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @EmptySource} is an {@link ArgumentsSource} which provides a single
- * <em>empty</em> argument to the annotated {@code @ParameterizedTest} method.
+ * <em>empty</em> argument to the annotated {@code @ParameterizedContainer}
+ * class or {@code @ParameterizedTest} method.
  *
  * <h2>Supported Parameter Types</h2>
  *
  * <p>This argument source will only provide an empty argument for the following
- * method parameter types.
+ * parameter types.
  *
  * <ul>
  * <li>{@link java.lang.String}</li>
@@ -45,6 +46,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.4
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedContainer
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see NullSource
  * @see NullAndEmptySource

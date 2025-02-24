@@ -24,8 +24,116 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
+ * {@code @ParameterizedContainer} is used to signal that the annotated class is
+ * a <em>parameterized container</em> class.
+ *
+ * <h2>Arguments Providers and Sources</h2>
+ *
+ * <p>{@code @ParameterizedContainer} classes must specify at least one
+ * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
+ * via {@link org.junit.jupiter.params.provider.ArgumentsSource @ArgumentsSource}
+ * or a corresponding composed annotation (e.g., {@code @ValueSource},
+ * {@code @CsvSource}, etc.). The provider is responsible for providing a
+ * {@link java.util.stream.Stream Stream} of
+ * {@link org.junit.jupiter.params.provider.Arguments Arguments} that will be
+ * used to invoke the parameterized container class.
+ *
+ * <h2>Field or Constructor Injection</h2>
+ *
+ * <p>The provided arguments can either be injected into fields annotated with
+ * {@link Parameter @Parameter} or passed to the unique constructor of the
+ * parameterized container class. If a {@code @Parameter} annotated field is
+ * declared in the parameterized container class or one of its superclasses,
+ * field injection will be used. Otherwise, constructor injection will be used.
+ *
+ * <h3>Constructor Injection</h3>
+ *
+ * <p>A {@code @ParameterizedContainer} constructor may declare additional
+ * parameters at the end of its parameter list to be resolved by other
+ * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
+ * (e.g., {@code TestInfo}, {@code TestReporter}, etc.). Specifically, such a
+ * constructor must declare formal parameters according to the following rules.
+ *
+ * <ol>
+ * <li>Zero or more <em>indexed parameters</em> must be declared first.</li>
+ * <li>Zero or more <em>aggregators</em> must be declared next.</li>
+ * <li>Zero or more parameters supplied by other {@code ParameterResolver}
+ * implementations must be declared last.</li>
+ * </ol>
+ *
+ * <p>In this context, an <em>indexed parameter</em> is an argument for a given
+ * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
+ * is passed as an argument to the parameterized container at the same index in
+ * the constructor's formal parameter list. An <em>aggregator</em> is any
+ * parameter of type
+ * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
+ * or any parameter annotated with
+ * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
+ *
+ * <h3>Field injection</h3>
+ *
+ * <p>Fields annotated with {@code @Parameter} must be declared according to the
+ * following rules.
+ *
+ * <ol>
+ * <li>Zero or more <em>indexed parameters</em> may be declared; each must have
+ * a unique index specified in its {@code @Parameter(index)} annotation. The
+ * annotation attribute may be omitted if there is only one indexed parameter.
+ * </li>
+ * <li>Zero or more <em>aggregators</em> may be declared; each must be declared
+ * without specifying an index in its {@code @Parameter} annotation.</li>
+ * <li>Zero or more other fields may be declared as usual as long as they're not
+ * annotated with {@code @Parameter}.</li>
+ * </ol>
+ *
+ * <p>In this context, an <em>indexed parameter</em> is an argument for a given
+ * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
+ * is injected into a field annotated with {@code @Parameter(index)}. An
+ * <em>aggregator</em> is any field of type
+ * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
+ * or any field annotated with
+ * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
+ *
+ * <h2>Argument Conversion</h2>
+ *
+ * <p>{@code @Parameter}-annotated fields or constructor parameters may be
+ * annotated with
+ * {@link org.junit.jupiter.params.converter.ConvertWith @ConvertWith}
+ * or a corresponding composed annotation to specify an <em>explicit</em>
+ * {@link org.junit.jupiter.params.converter.ArgumentConverter ArgumentConverter}.
+ * Otherwise, JUnit Jupiter will attempt to perform an <em>implicit</em>
+ * conversion to the target type automatically (see the User Guide for further
+ * details).
+ *
+ * <h2>Composed Annotations</h2>
+ *
+ * <p>{@code @ParameterizedContainer} may also be used as a meta-annotation in
+ * order to create a custom <em>composed annotation</em> that inherits the
+ * semantics of {@code @ParameterizedContainer}.
+ *
+ * <h2>Inheritance</h2>
+ *
+ * <p>The {@code @ParameterizedContainer} annotation is <em>not</em> inherited
+ * from superclasses but may be (re-)declared on a concrete parameterized
+ * container class. {@code Parameter}-annotated fields from superclasses are
+ * detected and used for field injection as if they were declared on the
+ * concrete parameterized container class.
+ *
  * @since 5.13
  * @see Parameter
+ * @see ParameterizedTest
+ * @see org.junit.jupiter.params.provider.Arguments
+ * @see org.junit.jupiter.params.provider.ArgumentsProvider
+ * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.provider.CsvFileSource
+ * @see org.junit.jupiter.params.provider.CsvSource
+ * @see org.junit.jupiter.params.provider.EnumSource
+ * @see org.junit.jupiter.params.provider.MethodSource
+ * @see org.junit.jupiter.params.provider.ValueSource
+ * @see org.junit.jupiter.params.aggregator.ArgumentsAccessor
+ * @see org.junit.jupiter.params.aggregator.AggregateWith
+ * @see org.junit.jupiter.params.converter.ArgumentConverter
+ * @see org.junit.jupiter.params.converter.ConvertWith
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
@@ -115,7 +223,7 @@ public @interface ParameterizedContainer {
 	 *
 	 * <p>When an {@link ArgumentsSource} provides more arguments than declared
 	 * by the parameterized container class constructor or {@link Parameter}
-	 * annotated fields, there might be a bug in the method or the
+	 * annotated fields, there might be a bug in the container class or the
 	 * {@link ArgumentsSource}. By default, the additional arguments are
 	 * ignored. {@code argumentCountValidation} allows you to control how
 	 * additional arguments are handled. The default can be configured via the

@@ -68,6 +68,20 @@ public interface ArgumentsAggregator {
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 			throws ArgumentsAggregationException;
 
+	/**
+	 * Aggregate the arguments contained in the supplied {@code accessor} into a
+	 * single object.
+	 *
+	 * @param accessor an {@link ArgumentsAccessor} containing the arguments to be
+	 * aggregated; never {@code null}
+	 * @param context the field context where the aggregated result is to be
+	 * injected; never {@code null}
+	 * @return the aggregated result; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentsAggregationException if an error occurs during the
+	 * aggregation
+	 * @since 5.13
+	 */
 	@API(status = EXPERIMENTAL, since = "5.13")
 	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {

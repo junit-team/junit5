@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.EnumSource.Mode;
+import org.junit.jupiter.params.support.ParameterDeclaration;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -81,7 +83,7 @@ class EnumArgumentsProviderTests {
 
 	@Test
 	void providesEnumConstantsBasedOnTestMethod() {
-		ParameterDeclaration firstParameterDeclaration = mock();
+		org.junit.jupiter.params.support.ParameterDeclaration firstParameterDeclaration = mock();
 		when(firstParameterDeclaration.getParameterType()).thenAnswer(__ -> EnumWithFourConstants.class);
 		when(parameters.getFirst()).thenReturn(Optional.of(firstParameterDeclaration));
 

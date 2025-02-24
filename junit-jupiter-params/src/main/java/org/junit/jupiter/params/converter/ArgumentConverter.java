@@ -58,7 +58,7 @@ public interface ArgumentConverter {
 	 *
 	 * @param source the source object to convert; may be {@code null}
 	 * @param context the parameter context where the converted object will be
-	 * used; never {@code null}
+	 * supplied; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ArgumentConversionException if an error occurs during the
@@ -66,6 +66,19 @@ public interface ArgumentConverter {
 	 */
 	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
 
+	/**
+	 * Convert the supplied {@code source} object according to the supplied
+	 * {@code context}.
+	 *
+	 * @param source the source object to convert; may be {@code null}
+	 * @param context the field context where the converted object will be
+	 * injected; never {@code null}
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentConversionException if an error occurs during the
+	 * conversion
+	 * @since 5.13
+	 */
 	@API(status = EXPERIMENTAL, since = "5.13")
 	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
 		throw new JUnitException(

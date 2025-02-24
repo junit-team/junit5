@@ -16,8 +16,9 @@ import static org.apiguardian.api.API.Status.MAINTAINED;
 import org.apiguardian.api.API;
 
 /**
- * Constants for the use with the {@link ParameterizedContainer} and
- * {@link ParameterizedTest} annotations.
+ * Constants for the use with the
+ * {@link ParameterizedContainer @ParameterizedContainer} and
+ * {@link ParameterizedTest @ParameterizedTest} annotations.
  *
  * @since 5.13
  */

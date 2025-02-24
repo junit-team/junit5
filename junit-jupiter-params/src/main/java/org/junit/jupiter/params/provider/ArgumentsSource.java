@@ -24,7 +24,7 @@ import org.apiguardian.api.API;
 /**
  * {@code @ArgumentsSource} is a {@linkplain Repeatable repeatable} annotation
  * that is used to register {@linkplain ArgumentsProvider arguments providers}
- * for the annotated test method.
+ * for the annotated container class or test method.
  *
  * <p>{@code @ArgumentsSource} may also be used as a meta-annotation in order to
  * create a custom <em>composed annotation</em> that inherits the semantics
@@ -32,6 +32,8 @@ import org.apiguardian.api.API;
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
+ * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

@@ -19,12 +19,14 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 
 /**
- * An {@code ArgumentsProvider} is responsible for {@linkplain #provideArguments
- * providing} a stream of arguments to be passed to a {@code @ParameterizedTest}
- * method.
+ * An {@code ArgumentsProvider} is responsible for
+ * {@linkplain #provideArguments(ParameterDeclarations, ExtensionContext) providing}
+ * a stream of arguments to be passed to a {@code @ParameterizedContainer} class
+ * or {@code @ParameterizedTest} method.
  *
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.
@@ -33,6 +35,7 @@ import org.junit.platform.commons.JUnitException;
  * constructor to use {@linkplain ParameterResolver parameter resolution}.
  *
  * @since 5.0
+ * @see org.junit.jupiter.params.ParameterizedContainer
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
@@ -59,6 +62,14 @@ public interface ArgumentsProvider {
 	}
 
 	/**
+	 * Provide a {@link Stream} of {@link Arguments} to be passed to a
+	 * {@code @ParameterizedContainer} class or {@code @ParameterizedTest}
+	 * method.
+	 *
+	 * @param parameters the parameter declarations for the parameterized
+	 * container or test; never {@code null}
+	 * @param context the current extension context; never {@code null}
+	 * @return a stream of arguments; never {@code null}
 	 * @since 5.13
 	 */
 	@API(status = EXPERIMENTAL, since = "5.13")
