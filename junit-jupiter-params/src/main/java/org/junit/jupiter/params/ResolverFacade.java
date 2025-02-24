@@ -13,6 +13,7 @@ package org.junit.jupiter.params;
 import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.commons.support.ModifierSupport.isNotFinal;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
@@ -52,7 +53,6 @@ import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 
 class ResolverFacade {
@@ -62,18 +62,19 @@ class ResolverFacade {
 		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
 		Set<ParameterDeclaration> aggregatorParameters = new LinkedHashSet<>();
 		for (Field field : fields) {
-			// TODO #878 Test all preconditions
-			Preconditions.condition(!ReflectionUtils.isFinal(field), () -> "Field must not be final: " + field);
-			ReflectionSupport.makeAccessible(field);
-
 			Parameter annotation = findAnnotation(field, Parameter.class) //
-					.orElseThrow(() -> new JUnitException("No @Parameter annotation found"));
+					.orElseThrow(() -> new JUnitException("No @Parameter annotation present"));
 			int index = annotation.value();
+
+			Preconditions.condition(isNotFinal(field),
+				() -> String.format("@Parameters field [%s] must not be declared as final.", field));
+			ReflectionSupport.makeAccessible(field);
 
 			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation);
 			if (isAggregator(declaration)) {
+				// TODO #878 Test all preconditions
 				Preconditions.condition(index == -1,
-					() -> String.format("Index must not be declared in %s on aggregator field %s", annotation, field));
+					() -> String.format("Index must not be declared in %s on aggregator field %s.", annotation, field));
 				aggregatorParameters.add(declaration);
 			}
 			else {

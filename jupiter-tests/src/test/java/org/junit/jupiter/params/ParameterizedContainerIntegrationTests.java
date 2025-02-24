@@ -388,6 +388,20 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				.containsExactly(tuple("foo", "1"), tuple("bar", "2"));
 	}
 
+	@Test
+	void doesNotSupportInjectionForFinalFields() {
+
+		var containerTemplateClass = InvalidFinalFieldTestCase.class;
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1,
+					finishedWithFailure(
+						message("@Parameters field [final int %s.i] must not be declared as final.".formatted(
+							containerTemplateClass.getName()))));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -1152,6 +1166,19 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				"super.value", super.value, //
 				"this.value", this.value //
 			));
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	static class InvalidFinalFieldTestCase {
+
+		@Parameter
+		final int i = -1;
+
+		@Test
+		void test() {
+			fail("should not be called");
 		}
 	}
 }
