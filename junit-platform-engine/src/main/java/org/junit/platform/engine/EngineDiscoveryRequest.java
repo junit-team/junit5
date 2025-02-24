@@ -11,17 +11,13 @@
 package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
-import org.junit.platform.engine.support.store.Namespace;
-import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * {@code EngineDiscoveryRequest} provides a {@link TestEngine} access to the
@@ -99,6 +95,4 @@ public interface EngineDiscoveryRequest {
 			"OutputDirectoryProvider not available; probably due to unaligned versions of the junit-platform-engine and junit-platform-launcher jars on the classpath/module path.");
 	}
 
-	@API(status = INTERNAL, since = "1.13")
-	Optional<NamespacedHierarchicalStore<Namespace>> getStore();
 }

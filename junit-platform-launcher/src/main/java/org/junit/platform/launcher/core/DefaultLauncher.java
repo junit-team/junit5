@@ -16,7 +16,6 @@ import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestEngine;
@@ -41,14 +40,10 @@ import org.junit.platform.launcher.TestPlan;
  */
 class DefaultLauncher implements Launcher {
 
-	private static final Namespace NAMESPACE = Namespace.create(DefaultLauncher.class);
-
-	private final AtomicLong storeCounter = new AtomicLong(0);
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
 	private final EngineExecutionOrchestrator executionOrchestrator;
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
-	private final NamespacedHierarchicalStore<Namespace> sessionStore;
-	private final NamespacedHierarchicalStore<Namespace> requestStore;
+	private final NamespacedHierarchicalStore<Namespace> sessionLevelStore;
 
 	/**
 	 * Construct a new {@code DefaultLauncher} with the supplied test engines.
@@ -59,7 +54,7 @@ class DefaultLauncher implements Launcher {
 	 * discovery requests; never {@code null}
 	 */
 	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
-			NamespacedHierarchicalStore<Namespace> sessionStore) {
+			NamespacedHierarchicalStore<Namespace> sessionLevelStore) {
 		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
 			() -> "Cannot create Launcher without at least one TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
@@ -68,10 +63,8 @@ class DefaultLauncher implements Launcher {
 			"PostDiscoveryFilter array must not contain null elements");
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
 			unmodifiableCollection(postDiscoveryFilters), listenerRegistry.launcherDiscoveryListeners);
-		this.sessionStore = sessionStore;
-		this.requestStore = createRequestStore();
-		this.executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry.testExecutionListeners,
-			requestStore);
+		this.sessionLevelStore = sessionLevelStore;
+		this.executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry.testExecutionListeners);
 	}
 
 	@Override
@@ -109,19 +102,17 @@ class DefaultLauncher implements Launcher {
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,
 			EngineDiscoveryOrchestrator.Phase phase) {
-		return discoveryOrchestrator.discover(discoveryRequest.withStore(createRequestStore()), phase);
+		return discoveryOrchestrator.discover(discoveryRequest, phase);
 	}
 
 	private void execute(InternalTestPlan internalTestPlan, TestExecutionListener[] listeners) {
-		executionOrchestrator.execute(internalTestPlan, listeners);
+		try (NamespacedHierarchicalStore<Namespace> requestLevelStore = createRequestLevelStore()) {
+			executionOrchestrator.execute(internalTestPlan, requestLevelStore, listeners);
+		}
 	}
 
-	private NamespacedHierarchicalStore<Namespace> createRequestStore() {
-		NamespacedHierarchicalStore<Namespace> requestStore = new NamespacedHierarchicalStore<>(sessionStore,
-			closeAutoCloseables());
-		// Ensure store is closed when the session is closed
-		sessionStore.put(NAMESPACE, "request-store-" + storeCounter.incrementAndGet(), requestStore);
-		return requestStore;
+	private NamespacedHierarchicalStore<Namespace> createRequestLevelStore() {
+		return new NamespacedHierarchicalStore<>(sessionLevelStore, closeAutoCloseables());
 	}
 
 }

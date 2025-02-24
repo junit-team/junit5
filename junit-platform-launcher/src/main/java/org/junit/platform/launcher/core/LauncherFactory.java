@@ -99,7 +99,7 @@ public class LauncherFactory {
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		return new DefaultLauncherSession(collectLauncherInterceptors(configurationParameters),
 			() -> createLauncherSessionListener(config),
-			sessionStore -> createDefaultLauncher(config, configurationParameters, sessionStore));
+			sessionLevelStore -> createDefaultLauncher(config, configurationParameters, sessionLevelStore));
 	}
 
 	/**
@@ -129,16 +129,16 @@ public class LauncherFactory {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		return new SessionPerRequestLauncher(
-			sessionStore -> createDefaultLauncher(config, configurationParameters, sessionStore),
+			sessionLevelStore -> createDefaultLauncher(config, configurationParameters, sessionLevelStore),
 			() -> createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
 	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,
 			LauncherConfigurationParameters configurationParameters,
-			NamespacedHierarchicalStore<Namespace> sessionStore) {
+			NamespacedHierarchicalStore<Namespace> sessionLevelStore) {
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
-		DefaultLauncher launcher = new DefaultLauncher(engines, filters, sessionStore);
+		DefaultLauncher launcher = new DefaultLauncher(engines, filters, sessionLevelStore);
 		registerLauncherDiscoveryListeners(config, launcher);
 		registerTestExecutionListeners(config, launcher, configurationParameters);
 

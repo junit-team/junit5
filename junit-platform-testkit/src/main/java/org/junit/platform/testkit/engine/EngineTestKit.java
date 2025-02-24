@@ -16,11 +16,13 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -38,6 +40,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
@@ -253,10 +257,11 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		// RequestStore parameter is currently set to null because it is not used.
-		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), null);
-		testEngine.execute(request);
+		withRequestLevelStore(store -> {
+			ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
+				discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), store);
+			testEngine.execute(request);
+		});
 	}
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
@@ -265,7 +270,18 @@ public final class EngineTestKit {
 			emptySet()).discover(discoveryRequest, EXECUTION);
 		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
-		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
+		withRequestLevelStore(store -> new EngineExecutionOrchestrator().execute(discoveryResult, listener, store));
+	}
+
+	private static void withRequestLevelStore(Consumer<NamespacedHierarchicalStore<Namespace>> action) {
+		try (NamespacedHierarchicalStore<Namespace> sessionLevelStore = newStore(null);
+				NamespacedHierarchicalStore<Namespace> requestLevelStore = newStore(sessionLevelStore)) {
+			action.accept(requestLevelStore);
+		}
+	}
+
+	private static NamespacedHierarchicalStore<Namespace> newStore(NamespacedHierarchicalStore<Namespace> parentStore) {
+		return new NamespacedHierarchicalStore<>(parentStore, closeAutoCloseables());
 	}
 
 	@SuppressWarnings("unchecked")

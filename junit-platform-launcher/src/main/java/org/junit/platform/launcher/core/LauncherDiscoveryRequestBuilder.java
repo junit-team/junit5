@@ -335,8 +335,7 @@ public final class LauncherDiscoveryRequestBuilder {
 		LauncherDiscoveryListener discoveryListener = getLauncherDiscoveryListener(launcherConfigurationParameters);
 		OutputDirectoryProvider outputDirectoryProvider = getOutputDirectoryProvider(launcherConfigurationParameters);
 		return new DefaultDiscoveryRequest(this.selectors, this.engineFilters, this.discoveryFilters,
-			this.postDiscoveryFilters, null, launcherConfigurationParameters, discoveryListener,
-			outputDirectoryProvider);
+			this.postDiscoveryFilters, launcherConfigurationParameters, discoveryListener, outputDirectoryProvider);
 	}
 
 	private OutputDirectoryProvider getOutputDirectoryProvider(

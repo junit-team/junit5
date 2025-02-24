@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.List;
@@ -20,8 +19,6 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
-import org.junit.platform.engine.support.store.Namespace;
-import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * {@code LauncherDiscoveryRequest} extends the {@link EngineDiscoveryRequest} API
@@ -99,6 +96,4 @@ public interface LauncherDiscoveryRequest extends EngineDiscoveryRequest {
 		return LauncherDiscoveryListener.NOOP;
 	}
 
-	@API(status = INTERNAL, since = "1.13")
-	LauncherDiscoveryRequest withStore(NamespacedHierarchicalStore<Namespace> requestStore);
 }
