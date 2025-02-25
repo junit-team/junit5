@@ -42,7 +42,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <p>The provided arguments can either be injected into fields annotated with
  * {@link Parameter @Parameter} or passed to the unique constructor of the
- * parameterized container class. If a {@code @Parameter} annotated field is
+ * parameterized container class. If a {@code @Parameter}-annotated field is
  * declared in the parameterized container class or one of its superclasses,
  * field injection will be used. Otherwise, constructor injection will be used.
  *
@@ -78,10 +78,11 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * <ol>
  * <li>Zero or more <em>indexed parameters</em> may be declared; each must have
  * a unique index specified in its {@code @Parameter(index)} annotation. The
- * annotation attribute may be omitted if there is only one indexed parameter.
- * </li>
- * <li>Zero or more <em>aggregators</em> may be declared; each must be declared
- * without specifying an index in its {@code @Parameter} annotation.</li>
+ * index may be omitted if there is only one indexed parameter. If there are at
+ * least two indexed parameter declarations, there must be declarations for all
+ * indexes from 0 to the largest declared index.</li>
+ * <li>Zero or more <em>aggregators</em> may be declared; each without
+ * specifying an index in its {@code @Parameter} annotation.</li>
  * <li>Zero or more other fields may be declared as usual as long as they're not
  * annotated with {@code @Parameter}.</li>
  * </ol>
@@ -89,7 +90,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * <p>In this context, an <em>indexed parameter</em> is an argument for a given
  * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
  * is injected into a field annotated with {@code @Parameter(index)}. An
- * <em>aggregator</em> is any field of type
+ * <em>aggregator</em> is any {@code @Parameter}-annotated field of type
  * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
  * or any field annotated with
  * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
