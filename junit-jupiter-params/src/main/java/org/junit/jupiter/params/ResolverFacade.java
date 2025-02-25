@@ -233,7 +233,7 @@ class ResolverFacade {
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
-		if (this.indexedParameterDeclarations.sourceElement.equals(extensionContext.getTestClass().orElse(null))) {
+		if (this.indexedParameterDeclarations.sourceElement.equals(testInstance.getClass())) {
 			getAllParameterDeclarations() //
 					.filter(FieldParameterDeclaration.class::isInstance) //
 					.map(FieldParameterDeclaration.class::cast) //

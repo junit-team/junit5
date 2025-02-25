@@ -1055,7 +1055,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			@ParameterizedTest
 			@ValueSource(booleans = { true, false })
 			void test(boolean flag) {
-				assertTrue(number >= 0);
+				assertTrue(number > 0);
 				assertTrue(List.of("foo", "bar").contains(text));
 			}
 		}
@@ -1079,7 +1079,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 			@ParameterizedTest
 			@ValueSource(booleans = { true, false })
 			void test(boolean flag) {
-				assertTrue(number >= 0);
+				assertTrue(number > 0);
 				assertTrue(List.of("foo", "bar").contains(text));
 			}
 		}
