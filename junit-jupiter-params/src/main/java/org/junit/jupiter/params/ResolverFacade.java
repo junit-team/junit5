@@ -10,10 +10,14 @@
 
 package org.junit.jupiter.params;
 
+import static java.lang.System.lineSeparator;
 import static java.util.Collections.unmodifiableList;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.support.ModifierSupport.isNotFinal;
+import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -45,12 +49,13 @@ import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
-import org.junit.jupiter.params.support.ParameterDeclaration;
-import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.jupiter.params.support.AnnotationConsumerInitializer;
 import org.junit.jupiter.params.support.FieldContext;
+import org.junit.jupiter.params.support.ParameterDeclaration;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
@@ -58,45 +63,36 @@ class ResolverFacade {
 
 	static ResolverFacade create(Class<?> clazz, List<Field> fields) {
 		Preconditions.notEmpty(fields, "Fields must not be empty");
-		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
-		Set<ParameterDeclaration> aggregatorParameters = new LinkedHashSet<>();
+
+		NavigableMap<Integer, List<FieldParameterDeclaration>> allIndexedParameters = new TreeMap<>();
+		Set<FieldParameterDeclaration> aggregatorParameters = new LinkedHashSet<>();
+
 		for (Field field : fields) {
 			Parameter annotation = findAnnotation(field, Parameter.class) //
 					.orElseThrow(() -> new JUnitException("No @Parameter annotation present"));
 			int index = annotation.value();
 
-			Preconditions.condition(isNotFinal(field),
-				() -> String.format("@Parameters field [%s] must not be declared as final.", field));
-			ReflectionSupport.makeAccessible(field);
-
 			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation.value());
 			if (isAggregator(declaration)) {
-				Preconditions.condition(index == -1,
-					() -> String.format(
-						"Index must not be declared in @Parameter(%s) annotation on aggregator field [%s].",
-						annotation.value(), field));
 				aggregatorParameters.add(declaration);
 			}
 			else {
-				if (fields.size() == 1 && index == -1) {
+				if (fields.size() == 1 && index == Parameter.UNSET_INDEX) {
 					index = 0;
 					declaration = new FieldParameterDeclaration(field, 0);
 				}
-				else {
-					Preconditions.condition(index >= 0,
-						() -> String.format(
-							"Index must be greater than or equal to zero in @Parameter(%s) annotation on field [%s].",
-							annotation.value(), field));
-					Preconditions.condition(!regularParameters.containsKey(index),
-						() -> String.format(
-							"Duplicate index declared in @Parameter(%s) annotation on fields [%s] and [%s].",
-							annotation.value(), regularParameters.get(annotation.value()).getAnnotatedElement(),
-							field));
-				}
-				regularParameters.put(index, declaration);
+				allIndexedParameters.computeIfAbsent(index, __ -> new ArrayList<>()) //
+						.add(declaration);
 			}
 		}
-		return new ResolverFacade(clazz, regularParameters, aggregatorParameters, 0);
+
+		NavigableMap<Integer, FieldParameterDeclaration> uniqueIndexedParameters = validateFieldDeclarations(
+			allIndexedParameters, aggregatorParameters);
+
+		Stream.concat(uniqueIndexedParameters.values().stream(), aggregatorParameters.stream()) //
+				.forEach(declaration -> makeAccessible(declaration.getField()));
+
+		return new ResolverFacade(clazz, uniqueIndexedParameters, aggregatorParameters, 0);
 	}
 
 	static ResolverFacade create(Constructor<?> constructor, ParameterizedContainer annotation) {
@@ -124,7 +120,7 @@ class ResolverFacade {
 	 * </ol>
 	 */
 	private static ResolverFacade create(Executable executable, Annotation annotation, int indexOffset) {
-		NavigableMap<Integer, ParameterDeclaration> regularParameters = new TreeMap<>();
+		NavigableMap<Integer, ParameterDeclaration> indexedParameters = new TreeMap<>();
 		NavigableMap<Integer, ParameterDeclaration> aggregatorParameters = new TreeMap<>();
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		for (int index = indexOffset; index < parameters.length; index++) {
@@ -143,34 +139,34 @@ class ResolverFacade {
 				aggregatorParameters.put(declaration.getParameterIndex(), declaration);
 			}
 			else if (aggregatorParameters.isEmpty()) {
-				regularParameters.put(declaration.getParameterIndex(), declaration);
+				indexedParameters.put(declaration.getParameterIndex(), declaration);
 			}
 		}
-		return new ResolverFacade(executable, regularParameters, new LinkedHashSet<>(aggregatorParameters.values()),
+		return new ResolverFacade(executable, indexedParameters, new LinkedHashSet<>(aggregatorParameters.values()),
 			indexOffset);
 	}
 
 	private final int parameterIndexOffset;
 	private final Map<ParameterDeclaration, Resolver> resolvers;
-	private final DefaultParameterDeclarations regularParameterDeclarations;
-	private final Set<ParameterDeclaration> aggregatorParameters;
+	private final DefaultParameterDeclarations indexedParameterDeclarations;
+	private final Set<? extends ParameterDeclaration> aggregatorParameters;
 
 	private ResolverFacade(AnnotatedElement sourceElement,
-			NavigableMap<Integer, ParameterDeclaration> regularParameters,
-			Set<ParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
+			NavigableMap<Integer, ? extends ParameterDeclaration> indexedParameters,
+			Set<? extends ParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
 		this.aggregatorParameters = aggregatorParameters;
 		this.parameterIndexOffset = parameterIndexOffset;
-		this.resolvers = new HashMap<>(regularParameters.size() + aggregatorParameters.size());
-		this.regularParameterDeclarations = new DefaultParameterDeclarations(sourceElement, regularParameters);
+		this.resolvers = new HashMap<>(indexedParameters.size() + aggregatorParameters.size());
+		this.indexedParameterDeclarations = new DefaultParameterDeclarations(sourceElement, indexedParameters);
 	}
 
-	ParameterDeclarations getRegularParameterDeclarations() {
-		return this.regularParameterDeclarations;
+	ParameterDeclarations getIndexedParameterDeclarations() {
+		return this.indexedParameterDeclarations;
 	}
 
 	boolean isSupportedParameter(ParameterContext parameterContext, EvaluatedArgumentSet arguments) {
 		int index = toLogicalIndex(parameterContext);
-		if (this.regularParameterDeclarations.get(index).isPresent()) {
+		if (this.indexedParameterDeclarations.get(index).isPresent()) {
 			return index < arguments.getConsumedLength();
 		}
 		return !this.aggregatorParameters.isEmpty()
@@ -184,7 +180,7 @@ class ResolverFacade {
 	 * @return an {@code Optional} containing the name of the parameter
 	 */
 	Optional<String> getParameterName(int parameterIndex) {
-		return this.regularParameterDeclarations.get(parameterIndex) //
+		return this.indexedParameterDeclarations.get(parameterIndex) //
 				.flatMap(ParameterDeclaration::getParameterName);
 	}
 
@@ -194,10 +190,10 @@ class ResolverFacade {
 	 *
 	 * <p>If an aggregator is present, all arguments are considered consumed.
 	 * Otherwise, the consumed argument length is the minimum of the total
-	 * length and the number of regular parameter declarations.
+	 * length and the number of indexed parameter declarations.
 	 */
 	int determineConsumedArgumentLength(int totalLength) {
-		NavigableMap<Integer, ParameterDeclaration> declarationsByIndex = this.regularParameterDeclarations.declarationsByIndex;
+		NavigableMap<Integer, ? extends ParameterDeclaration> declarationsByIndex = this.indexedParameterDeclarations.declarationsByIndex;
 		return this.aggregatorParameters.isEmpty() //
 				? Math.min(totalLength, declarationsByIndex.isEmpty() ? 0 : declarationsByIndex.lastKey() + 1) //
 				: totalLength;
@@ -209,11 +205,11 @@ class ResolverFacade {
 	 *
 	 * <p>If an aggregator is present, all arguments are considered consumed.
 	 * Otherwise, the consumed argument count, is the number of indexes that
-	 * correspond to regular parameter declarations.
+	 * correspond to indexed parameter declarations.
 	 */
 	int determineConsumedArgumentCount(EvaluatedArgumentSet arguments) {
 		if (this.aggregatorParameters.isEmpty()) {
-			return this.regularParameterDeclarations.declarationsByIndex.subMap(0,
+			return this.indexedParameterDeclarations.declarationsByIndex.subMap(0,
 				arguments.getConsumedLength()).size();
 		}
 		return arguments.getTotalLength();
@@ -226,7 +222,7 @@ class ResolverFacade {
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
 		int parameterIndex = toLogicalIndex(parameterContext);
-		ParameterDeclaration declaration = this.regularParameterDeclarations.get(parameterIndex) //
+		ParameterDeclaration declaration = this.indexedParameterDeclarations.get(parameterIndex) //
 				.orElseGet(() -> this.aggregatorParameters.stream().filter(
 					it -> it.getParameterIndex() == parameterIndex).findFirst() //
 						.orElseThrow(() -> new ParameterResolutionException(
@@ -237,7 +233,7 @@ class ResolverFacade {
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
-		if (this.regularParameterDeclarations.sourceElement.equals(extensionContext.getTestClass().orElse(null))) {
+		if (this.indexedParameterDeclarations.sourceElement.equals(extensionContext.getTestClass().orElse(null))) {
 			getAllParameterDeclarations() //
 					.filter(FieldParameterDeclaration.class::isInstance) //
 					.map(FieldParameterDeclaration.class::cast) //
@@ -247,7 +243,7 @@ class ResolverFacade {
 	}
 
 	private Stream<ParameterDeclaration> getAllParameterDeclarations() {
-		return Stream.concat(this.regularParameterDeclarations.declarationsByIndex.values().stream(),
+		return Stream.concat(this.indexedParameterDeclarations.declarationsByIndex.values().stream(),
 			aggregatorParameters.stream());
 	}
 
@@ -280,6 +276,74 @@ class ResolverFacade {
 		int index = parameterContext.getIndex() - this.parameterIndexOffset;
 		Preconditions.condition(index >= 0, () -> "Parameter index must be greater than or equal to zero");
 		return index;
+	}
+
+	private static NavigableMap<Integer, FieldParameterDeclaration> validateFieldDeclarations(
+			NavigableMap<Integer, List<FieldParameterDeclaration>> indexedParameters,
+			Set<FieldParameterDeclaration> aggregatorParameters) {
+
+		List<String> errors = new ArrayList<>();
+		validateIndexedParameters(indexedParameters, errors);
+		validateAggregatorParameters(aggregatorParameters, errors);
+
+		if (errors.isEmpty()) {
+			return indexedParameters.entrySet().stream() //
+					.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new));
+		}
+		else if (errors.size() == 1) {
+			throw new PreconditionViolationException("Configuration error: " + errors.get(0) + ".");
+		}
+		else {
+			throw new PreconditionViolationException(String.format("%d configuration errors:%n%s", errors.size(),
+				errors.stream().collect(joining(lineSeparator() + "- ", "- ", ""))));
+		}
+	}
+
+	private static void validateIndexedParameters(
+			NavigableMap<Integer, List<FieldParameterDeclaration>> indexedParameters, List<String> errors) {
+
+		if (indexedParameters.isEmpty()) {
+			return;
+		}
+
+		indexedParameters.forEach(
+			(index, declarations) -> validateIndexedParameterDeclarations(index, declarations, errors));
+
+		for (int index = 0; index <= indexedParameters.lastKey(); index++) {
+			if (!indexedParameters.containsKey(index)) {
+				errors.add(String.format("no field annotated with @Parameter(%d) declared", index));
+			}
+		}
+	}
+
+	private static void validateIndexedParameterDeclarations(int index, List<FieldParameterDeclaration> declarations,
+			List<String> errors) {
+		List<Field> fields = declarations.stream().map(FieldParameterDeclaration::getField).collect(toList());
+		if (index < 0) {
+			declarations.stream() //
+					.map(declaration -> String.format(
+						"index must be greater than or equal to zero in @Parameter(%d) annotation on field [%s]", index,
+						declaration.getField())) //
+					.forEach(errors::add);
+		}
+		else if (declarations.size() > 1) {
+			errors.add(
+				String.format("duplicate index declared in @Parameter(%d) annotation on fields %s", index, fields));
+		}
+		fields.stream() //
+				.filter(ModifierSupport::isFinal) //
+				.map(field -> String.format("@Parameter field [%s] must not be declared as final", field)) //
+				.forEach(errors::add);
+	}
+
+	private static void validateAggregatorParameters(Set<FieldParameterDeclaration> aggregatorParameters,
+			List<String> errors) {
+		aggregatorParameters.stream() //
+				.filter(declaration -> declaration.getParameterIndex() != Parameter.UNSET_INDEX) //
+				.map(declaration -> String.format(
+					"no index may be declared in @Parameter(%d) annotation on aggregator field [%s]",
+					declaration.getParameterIndex(), declaration.getField())) //
+				.forEach(errors::add);
 	}
 
 	/**
@@ -421,10 +485,10 @@ class ResolverFacade {
 	private static class DefaultParameterDeclarations implements ParameterDeclarations {
 
 		private final AnnotatedElement sourceElement;
-		private final NavigableMap<Integer, ParameterDeclaration> declarationsByIndex;
+		private final NavigableMap<Integer, ? extends ParameterDeclaration> declarationsByIndex;
 
 		DefaultParameterDeclarations(AnnotatedElement sourceElement,
-				NavigableMap<Integer, ParameterDeclaration> declarationsByIndex) {
+				NavigableMap<Integer, ? extends ParameterDeclaration> declarationsByIndex) {
 			this.sourceElement = sourceElement;
 			this.declarationsByIndex = declarationsByIndex;
 		}

@@ -62,7 +62,7 @@ class ParameterizedInvocationNameFormatter {
 		pattern = Preconditions.notBlank(pattern.trim(), () -> String.format(
 			"Configuration error: @%s on %s must be declared with a non-empty name.",
 			declarationContext.getAnnotationName(),
-			declarationContext.getResolverFacade().getRegularParameterDeclarations().getSourceElementDescription()));
+			declarationContext.getResolverFacade().getIndexedParameterDeclarations().getSourceElementDescription()));
 
 		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY, Integer::parseInt) //
 				.orElse(512);

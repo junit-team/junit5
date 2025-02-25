@@ -31,7 +31,7 @@ class ParameterizedInvocationContextProvider<T> {
 			ParameterizedDeclarationContext<T> declarationContext) {
 
 		List<ArgumentsSource> argumentsSources = collectArgumentSources(declarationContext);
-		ParameterDeclarations parameters = declarationContext.getResolverFacade().getRegularParameterDeclarations();
+		ParameterDeclarations parameters = declarationContext.getResolverFacade().getIndexedParameterDeclarations();
 		ParameterizedInvocationNameFormatter formatter = ParameterizedInvocationNameFormatter.create(extensionContext,
 			declarationContext);
 		AtomicLong invocationCount = new AtomicLong(0);

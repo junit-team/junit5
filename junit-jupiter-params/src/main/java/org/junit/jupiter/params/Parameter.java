@@ -19,6 +19,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
 /**
  * {@code @Parameter} is used to signal that a field in a
@@ -31,8 +33,8 @@ import org.apiguardian.api.API;
  *
  * @since 5.13
  * @see ParameterizedContainer
- * @see org.junit.jupiter.params.aggregator.ArgumentsAccessor
- * @see org.junit.jupiter.params.aggregator.AggregateWith
+ * @see ArgumentsAccessor
+ * @see AggregateWith
  * @see org.junit.jupiter.params.converter.ArgumentConverter
  * @see org.junit.jupiter.params.converter.ConvertWith
  */
@@ -43,18 +45,21 @@ import org.apiguardian.api.API;
 public @interface Parameter {
 
 	/**
+	 * Constant that indicates that the index of the parameter is unset.
+	 */
+	int UNSET_INDEX = -1;
+
+	/**
 	 * {@return the index of the parameter in the list of parameters}
 	 *
-	 * <p>Must be {@code -1} (the default) for <em>aggregators</em>,
-	 * that is any field of type
-	 * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
-	 * or any field annotated with
-	 * {@link org.junit.jupiter.params.aggregator.AggregateWith @AggregateWith}.
+	 * <p>Must be {@value #UNSET_INDEX} (the default) for <em>aggregators</em>,
+	 * that is any field of type {@link ArgumentsAccessor} or any field
+	 * annotated with {@link AggregateWith @AggregateWith}.
 	 *
 	 * <p>May be omitted if there's a single <em>indexed parameter</em>.
 	 * Otherwise, must be unique among all <em>indexed parameters</em> of the
 	 * parameterized container class and its superclasses.
 	 */
-	int value() default -1;
+	int value() default UNSET_INDEX;
 
 }

@@ -25,6 +25,8 @@ import org.junit.jupiter.params.ParameterizedContainer;
  * {@link ParameterizedContainer @ParameterizedContainer}.
  *
  * @since 5.13
+ * @see ParameterizedContainer
+ * @see Parameter
  */
 @API(status = EXPERIMENTAL, since = "5.13")
 public interface FieldContext extends AnnotatedElementContext {
@@ -37,8 +39,11 @@ public interface FieldContext extends AnnotatedElementContext {
 	/**
 	 * {@return the index of the parameter}
 	 *
-	 * <p>This method returns {@code -1} for aggregator fields and a value
-	 * greater than or equal to zero for regular <em>indexed</em> parameters.
+	 * <p>This method returns {@value Parameter#UNSET_INDEX} for aggregator
+	 * fields and a value greater than or equal to zero for <em>indexed</em>
+	 * parameters.
+	 *
+	 * @see Parameter#value()
 	 */
 	int getParameterIndex();
 

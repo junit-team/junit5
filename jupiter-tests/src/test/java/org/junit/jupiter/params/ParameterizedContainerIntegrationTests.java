@@ -267,8 +267,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		var results = executeTestsForClass(StrictArgumentCountValidationModeTestCase.class);
 
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(String.format(
-					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
+				.haveExactly(1, event(finishedWithFailure(message(
+					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
 	}
 
 	@ParameterizedTest
@@ -288,17 +288,17 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 					ArgumentCountValidator.ARGUMENT_COUNT_VALIDATION_KEY, STRICT.name()));
 
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(String.format(
-					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
+				.haveExactly(1, event(finishedWithFailure(message(
+					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
 	}
 
 	@Test
-	void failsOnStrictArgumentCountValidationModeSetViaConfigurationParameterForSkippedParameters() {
-		var results = executeTestsForClass(InvalidUnusedParameterIndexOnStrictModeTestCase.class);
+	void failsForSkippedParameters() {
+		var results = executeTestsForClass(InvalidUnusedParameterIndexesTestCase.class);
 
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(String.format(
-					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [unused, foo]")))));
+				.haveExactly(1, event(finishedWithFailure(message(
+					"2 configuration errors:%n- no field annotated with @Parameter(0) declared%n- no field annotated with @Parameter(2) declared".formatted()))));
 	}
 
 	@Test
@@ -405,10 +405,9 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertThatEvents() //
-				.haveExactly(1,
-					finishedWithFailure(
-						message("@Parameters field [final int %s.i] must not be declared as final.".formatted(
-							containerTemplateClass.getName()))));
+				.haveExactly(1, finishedWithFailure(message(
+					"Configuration error: @Parameter field [final int %s.i] must not be declared as final.".formatted(
+						containerTemplateClass.getName()))));
 	}
 
 	@Test
@@ -420,7 +419,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure(message(
-					"Index must not be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
+					"Configuration error: no index may be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
 						ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
 	}
 
@@ -433,7 +432,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure(message(
-					"Index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
+					"Configuration error: index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
 						containerTemplateClass.getName()))));
 	}
 
@@ -446,19 +445,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure(message(
-					"Duplicate index declared in @Parameter(0) annotation on fields [int %s.i] and [long %s.l].".formatted(
+					"Configuration error: duplicate index declared in @Parameter(0) annotation on fields [int %s.i, long %s.l].".formatted(
 						containerTemplateClass.getName(), containerTemplateClass.getName()))));
-	}
-
-	@Test
-	void supportsPartialUsageOfParameters() {
-
-		var results = executeTestsForClass(UnusedParameterIndexesTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-
-		assertThat(allReportEntries(results)) //
-				.containsExactly(Map.of("second", "foo", "fourth", "bar"), Map.of("second", "baz", "fourth", "qux"));
 	}
 
 	// -------------------------------------------------------------------
@@ -1284,8 +1272,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@ParameterizedContainer
-	@CsvSource({ "unused1, foo, unused2, bar, unused3", "unused4, baz, unused5, qux, unused6" })
-	static class UnusedParameterIndexesTestCase {
+	@CsvSource({ "unused1, foo, unused2, bar", "unused4, baz, unused5, qux" })
+	static class InvalidUnusedParameterIndexesTestCase {
 
 		@Parameter(1)
 		String second;
@@ -1299,19 +1287,6 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				"second", second, //
 				"fourth", fourth //
 			));
-		}
-	}
-
-	@ParameterizedContainer(argumentCountValidation = STRICT)
-	@CsvSource("unused, foo")
-	static class InvalidUnusedParameterIndexOnStrictModeTestCase {
-
-		@Parameter(1)
-		String second;
-
-		@Test
-		void test(TestReporter reporter) {
-			fail("should not be called");
 		}
 	}
 }
