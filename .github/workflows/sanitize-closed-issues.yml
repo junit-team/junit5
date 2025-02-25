@@ -28,7 +28,7 @@ jobs:
                 labels: newLabels,
               });
             }
-            if (issue.data.state_reason === "not_planned") {
+            if (issue.data.state_reason === "not_planned" || issue.data.state_reason === "duplicate") {
               if (issue.data.milestone) {
                 await github.rest.issues.update({
                   issue_number: issue.data.number,
@@ -39,18 +39,28 @@ jobs:
               }
               const statusLabels = newLabels.filter(l => l.startsWith("status: "));
               if (statusLabels.length === 0) {
-                await github.rest.issues.createComment({
-                  issue_number: issue.data.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: "Please assign a status label to this issue.",
-                });
-                await github.rest.issues.update({
-                  issue_number: issue.data.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  state: "open",
-                });
+                if (issue.data.state_reason === "not_planned") {
+                  await github.rest.issues.createComment({
+                    issue_number: issue.data.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    body: "Please assign a status label to this issue.",
+                  });
+                  await github.rest.issues.update({
+                    issue_number: issue.data.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    state: "open",
+                  });
+                } else {
+                  newLabels.push("status: duplicate");
+                  await github.rest.issues.update({
+                    issue_number: issue.data.number,
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    labels: newLabels,
+                  });
+                }
               }
             } else {
               if (!(newLabels.includes("type: task") || newLabels.includes("type: question")) && !issue.data.milestone) {
