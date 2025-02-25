@@ -152,8 +152,8 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var engineIdentifier = getOnlyElement(testPlan.getRoots());
 		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
-		verify(discoveryListener).launcherDiscoveryStarted(any());
-		verify(discoveryListener).launcherDiscoveryFinished(any());
+		verify(discoveryListener).launcherDiscoveryStarted(request);
+		verify(discoveryListener).launcherDiscoveryFinished(request);
 		assertDiscoveryFailed(engine, discoveryListener);
 
 		var listener = mock(TestExecutionListener.class);
