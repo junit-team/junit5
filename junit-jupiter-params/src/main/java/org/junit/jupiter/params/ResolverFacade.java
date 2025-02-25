@@ -26,7 +26,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,7 @@ import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -156,7 +156,7 @@ class ResolverFacade {
 			Set<? extends ParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
 		this.aggregatorParameters = aggregatorParameters;
 		this.parameterIndexOffset = parameterIndexOffset;
-		this.resolvers = new HashMap<>(indexedParameters.size() + aggregatorParameters.size());
+		this.resolvers = new ConcurrentHashMap<>(indexedParameters.size() + aggregatorParameters.size());
 		this.indexedParameterDeclarations = new DefaultParameterDeclarations(sourceElement, indexedParameters);
 	}
 
