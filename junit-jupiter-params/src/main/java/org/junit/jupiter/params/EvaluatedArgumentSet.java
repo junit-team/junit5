@@ -17,6 +17,7 @@ import java.util.function.IntUnaryOperator;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.Arguments.ArgumentSet;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -87,8 +88,8 @@ class EvaluatedArgumentSet {
 	}
 
 	private static Optional<String> determineName(Arguments arguments) {
-		if (arguments instanceof Arguments.ArgumentSet) {
-			return Optional.of(((Arguments.ArgumentSet) arguments).getName());
+		if (arguments instanceof ArgumentSet) {
+			return Optional.of(((ArgumentSet) arguments).getName());
 		}
 		return Optional.empty();
 	}
@@ -98,4 +99,5 @@ class EvaluatedArgumentSet {
 				.map(argument -> argument instanceof Named ? mapper.apply((Named<?>) argument) : argument) //
 				.toArray();
 	}
+
 }

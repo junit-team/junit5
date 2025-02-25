@@ -86,8 +86,8 @@ public class MediaType {
 
 	/**
 	 * Parse the given media type value.
-	 * <p>
-	 * Must be valid according to
+	 *
+	 * <p>Must be valid according to
 	 * <a href="https://tools.ietf.org/html/rfc2045">RFC 2045</a>.
 	 *
 	 * @param value the media type value to parse; never {@code null}
@@ -142,8 +142,9 @@ public class MediaType {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		MediaType that = (MediaType) o;
 		return Objects.equals(this.value, that.value);
 	}
@@ -152,4 +153,5 @@ public class MediaType {
 	public int hashCode() {
 		return Objects.hashCode(value);
 	}
+
 }

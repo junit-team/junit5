@@ -371,8 +371,8 @@ public interface ExtensionContext {
 	/**
 	 * Publish a file with the supplied name written by the supplied action and
 	 * attach it to the current test or container.
-	 * <p>
-	 * The file will be resolved in the report output directory prior to
+	 *
+	 * <p>The file will be resolved in the report output directory prior to
 	 * invoking the supplied action.
 	 *
 	 * @param name the name of the file to be attached; never {@code null} or
@@ -389,8 +389,8 @@ public interface ExtensionContext {
 	/**
 	 * Publish a directory with the supplied name written by the supplied action
 	 * and attach it to the current test or container.
-	 * <p>
-	 * The directory will be resolved and created in the report output directory
+	 *
+	 * <p>The directory will be resolved and created in the report output directory
 	 * prior to invoking the supplied action.
 	 *
 	 * @param name the name of the directory to be attached; never {@code null}

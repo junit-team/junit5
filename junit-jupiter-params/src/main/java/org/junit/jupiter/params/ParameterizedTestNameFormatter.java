@@ -34,7 +34,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.StringUtils;
@@ -77,12 +76,6 @@ class ParameterizedTestNameFormatter {
 			partialFormatter.append(context, result);
 		}
 		return result.toString();
-	}
-
-	private Object[] extractNamedArguments(Object[] arguments) {
-		return Arrays.stream(arguments) //
-				.map(argument -> argument instanceof Named ? ((Named<?>) argument).getName() : argument) //
-				.toArray();
 	}
 
 	private PartialFormatter[] parse(String pattern, String displayName, ParameterizedTestMethodContext methodContext,

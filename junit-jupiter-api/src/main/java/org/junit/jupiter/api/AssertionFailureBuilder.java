@@ -21,8 +21,8 @@ import org.opentest4j.AssertionFailedError;
 
 /**
  * Builder for {@link AssertionFailedError AssertionFailedErrors}.
- * <p>
- * Using this builder ensures consistency in how failure message are formatted
+ *
+ * <p>Using this builder ensures consistency in how failure message are formatted
  * within JUnit Jupiter and for custom user-defined assertions.
  *
  * @since 5.9
@@ -51,8 +51,8 @@ public class AssertionFailureBuilder {
 
 	/**
 	 * Set the user-defined message of the assertion.
-	 * <p>
-	 * The {@code message} may be passed as a {@link Supplier} or plain
+	 *
+	 * <p>The {@code message} may be passed as a {@link Supplier} or plain
 	 * {@link String}. If any other type is passed, it is converted to
 	 * {@code String} as per {@link StringUtils#nullSafeToString(Object)}.
 	 *
@@ -202,4 +202,5 @@ public class AssertionFailureBuilder {
 		return (obj == null ? "null"
 				: obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
 	}
+
 }
