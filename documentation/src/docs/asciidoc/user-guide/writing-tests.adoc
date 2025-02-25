@@ -2634,6 +2634,9 @@ Each invocation of a container template class behaves like the execution of a re
 class with full support for the same lifecycle callbacks and extensions. Please refer to
 <<extensions-container-templates>> for usage examples.
 
+NOTE: <<writing-tests-parameterized-tests, Parameterized Containers>> are built-in
+specializations of container templates.
+
 [[writing-tests-test-templates]]
 === Test Templates
 
@@ -2645,8 +2648,9 @@ invocation of a test template method behaves like the execution of a regular `@T
 method with full support for the same lifecycle callbacks and extensions. Please refer to
 <<extensions-test-templates>> for usage examples.
 
-NOTE: <<writing-tests-repeated-tests>> and <<writing-tests-parameterized-tests>> are
-built-in specializations of test templates.
+NOTE: <<writing-tests-repeated-tests>> and
+<<writing-tests-parameterized-tests, Parameterized Tests>> are built-in specializations of
+test templates.
 
 [[writing-tests-dynamic-tests]]
 === Dynamic Tests
