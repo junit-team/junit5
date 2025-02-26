@@ -270,6 +270,27 @@ A year is a leap year [OK]
 ```
 ======
 
+======
+With `IndicativeSentences`, you can also specify custom sentence fragments via the
+`@SentenceFragment` annotation as demonstrated in the following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide_custom_sentence_fragments]
+----
+
+Running the above test class results in the following display names.
+
+```
+A year is a leap year ✔
+├─ A year is a leap year, if it is divisible by 4 but not by 100 ✔
+└─ A year is a leap year, if it is one of the following years ✔
+   ├─ 2016 ✔
+   ├─ 2020 ✔
+   └─ 2048 ✔
+```
+======
+
 
 [[writing-tests-display-name-generator-default]]
 ==== Setting the Default Display Name Generator

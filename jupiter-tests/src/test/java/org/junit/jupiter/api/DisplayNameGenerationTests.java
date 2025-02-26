@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Stack;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences.SentenceFragment;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -172,6 +173,18 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			"TEST: A stack >> when new >> throws EmptyStackException when peeked", //
 			"CONTAINER: A stack >> when new >> after pushing an element to an empty stack", //
 			"TEST: A stack >> when new >> after pushing an element to an empty stack >> is no longer empty" //
+		);
+	}
+
+	@Test
+	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSentenceFragments() {
+		check(IndicativeGeneratorWithCustomSentenceFragmentsTestCase.class, //
+			"CONTAINER: A stack", //
+			"TEST: A stack, is instantiated with its constructor", //
+			"CONTAINER: A stack, when new", //
+			"TEST: A stack, when new, throws EmptyStackException when peeked", //
+			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
+			"TEST: A stack, when new, after pushing an element to an empty stack, is no longer empty" //
 		);
 	}
 
@@ -496,6 +509,56 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 				@Test
 				void is_no_longer_empty() {
+					assertFalse(stack.isEmpty());
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@SentenceFragment("A stack")
+	@IndicativeSentencesGeneration
+	static class IndicativeGeneratorWithCustomSentenceFragmentsTestCase {
+
+		Stack<Object> stack;
+
+		@Test
+		@SentenceFragment("is instantiated with its constructor")
+		void instantiateViaConstructor() {
+			new Stack<>();
+		}
+
+		@Nested
+		@SentenceFragment("when new")
+		class NewStackTestCase {
+
+			@BeforeEach
+			void createNewStack() {
+				stack = new Stack<>();
+			}
+
+			@Test
+			@SentenceFragment("throws EmptyStackException when peeked")
+			void throwsExceptionWhenPeeked() {
+				assertThrows(EmptyStackException.class, () -> stack.peek());
+			}
+
+			@Nested
+			@SentenceFragment("after pushing an element to an empty stack")
+			class ElementPushedOntoStackTestCase {
+
+				String anElement = "an element";
+
+				@BeforeEach
+				void pushElementOntoStack() {
+					stack.push(anElement);
+				}
+
+				@Test
+				@SentenceFragment("is no longer empty")
+				void nonEmptyStack() {
 					assertFalse(stack.isEmpty());
 				}
 			}

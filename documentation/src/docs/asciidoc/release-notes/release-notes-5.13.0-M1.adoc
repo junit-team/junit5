@@ -63,6 +63,11 @@ repository on GitHub.
   for `@ParameterizedTest` may be used to provide arguments via constructor or field
   injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
+* New `@SentenceFragment` annotation which allows one to supply custom text for individual
+  sentence fragments when using the `IndicativeSentences` `DisplayNameGenerator`. See the
+  updated documentation in the
+  <<../user-guide/index.adoc#writing-tests-display-name-generator, User Guide>> for an
+  example.
 * New `TestTemplateInvocationContext.prepareInvocation(ExtensionContext)` callback method
   allows preparing the `ExtensionContext` before the test template method is invoked. This
   may be used, for example, to store entries in its `Store` to benefit from its cleanup
