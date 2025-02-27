@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeBeforeCallbacks;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
@@ -21,6 +23,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -132,11 +136,24 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	}
 
 	@Override
+	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
+		invokeBeforeCallbacks(BeforeContainerTemplateInvocationCallback.class, context,
+			BeforeContainerTemplateInvocationCallback::beforeContainerTemplateInvocation);
+		return context;
+	}
+
+	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		Visitor visitor = context.getExecutionListener()::dynamicTestRegistered;
 		getChildren().forEach(child -> child.accept(visitor));
 		return context;
+	}
+
+	@Override
+	public void after(JupiterEngineExecutionContext context) throws Exception {
+		invokeAfterCallbacks(AfterContainerTemplateInvocationCallback.class, context,
+			AfterContainerTemplateInvocationCallback::afterContainerTemplateInvocation);
 	}
 
 	@Override
