@@ -636,10 +636,14 @@ test execution lifecycle. Consult the following sections for examples and the Ja
 each of these interfaces in the `{extension-api-package}` package for further details.
 
 * `{BeforeAllCallback}`
-** `{BeforeEachCallback}`
-*** `{BeforeTestExecutionCallback}`
-*** `{AfterTestExecutionCallback}`
-** `{AfterEachCallback}`
+** `{BeforeContainerTemplateInvocationCallback}` (only applicable for
+   <<writing-tests-container-templates, container templates>>)
+*** `{BeforeEachCallback}`
+**** `{BeforeTestExecutionCallback}`
+**** `{AfterTestExecutionCallback}`
+*** `{AfterEachCallback}`
+** `{AfterContainerTemplateInvocationCallback}` (only applicable for
+   <<writing-tests-container-templates, container templates>>)
 * `{AfterAllCallback}`
 
 .Implementing Multiple Extension APIs
@@ -1010,81 +1014,48 @@ image::extensions_lifecycle.png[caption='',title='{figure-caption}']
 The following table further explains the sixteen steps in the
 <<extensions-execution-order-diagram>> diagram.
 
-[cols="5,15,80"]
-|===
-| Step | Interface/Annotation | Description
+. *interface* `*org.junit.jupiter.api.extension.BeforeAllCallback*` +
+extension code executed before all tests of the container are executed
+. *annotation* `*org.junit.jupiter.api.BeforeAll*` +
+user code executed before all tests of the container are executed
+. *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
+#handleBeforeAllMethodExecutionException*` +
+extension code for handling exceptions thrown from `@BeforeAll` methods
+. *interface* `*org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback*` +
+extension code executed before each container template invocation is executed (only applicable if the test class is a <<writing-tests-container-templates, container template>>)
+. *interface* `*org.junit.jupiter.api.extension.BeforeEachCallback*` +
+extension code executed before each test is executed
+. *annotation* `*org.junit.jupiter.api.BeforeEach*` +
+user code executed before each test is executed
+. *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
+#handleBeforeEachMethodExecutionException*` +
+extension code for handling exceptions thrown from `@BeforeEach` methods
+. *interface* `*org.junit.jupiter.api.extension.BeforeTestExecutionCallback*` +
+extension code executed immediately before a test is executed
+. *annotation* `*org.junit.jupiter.api.Test*` +
+user code of the actual test method
+. *interface* `*org.junit.jupiter.api.extension.TestExecutionExceptionHandler*` +
+extension code for handling exceptions thrown during a test
+. *interface* `*org.junit.jupiter.api.extension.AfterTestExecutionCallback*` +
+extension code executed immediately after test execution and its corresponding exception handlers
+. *annotation* `*org.junit.jupiter.api.AfterEach*` +
+user code executed after each test is executed
+. *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
+#handleAfterEachMethodExecutionException*` +
+extension code for handling exceptions thrown from `@AfterEach` methods
+. *interface* `*org.junit.jupiter.api.extension.AfterEachCallback*` +
+extension code executed after each test is executed
+. *interface* `*org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback*` +
+extension code executed after each container template invocation is executed (only applicable if the test class is a <<writing-tests-container-templates, container template>>)
+. *annotation* `*org.junit.jupiter.api.AfterAll*` +
+user code executed after all tests of the container are executed
+. *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
+#handleAfterAllMethodExecutionException*` +
+extension code for handling exceptions thrown from `@AfterAll` methods
+. *interface* `*org.junit.jupiter.api.extension.AfterAllCallback*` +
+extension code executed after all tests of the container are executed
 
-| 1
-| interface `org.junit.jupiter.api.extension.BeforeAllCallback`
-| extension code executed before all tests of the container are executed
-
-| 2
-| annotation `org.junit.jupiter.api.BeforeAll`
-| user code executed before all tests of the container are executed
-
-| 3
-| interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
-#handleBeforeAllMethodExecutionException`
-| extension code for handling exceptions thrown from `@BeforeAll` methods
-
-| 4
-| interface `org.junit.jupiter.api.extension.BeforeEachCallback`
-| extension code executed before each test is executed
-
-| 5
-| annotation `org.junit.jupiter.api.BeforeEach`
-| user code executed before each test is executed
-
-| 6
-| interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
-#handleBeforeEachMethodExecutionException`
-| extension code for handling exceptions thrown from `@BeforeEach` methods
-
-| 7
-| interface `org.junit.jupiter.api.extension.BeforeTestExecutionCallback`
-| extension code executed immediately before a test is executed
-
-| 8
-| annotation `org.junit.jupiter.api.Test`
-| user code of the actual test method
-
-| 9
-| interface `org.junit.jupiter.api.extension.TestExecutionExceptionHandler`
-| extension code for handling exceptions thrown during a test
-
-| 10
-| interface `org.junit.jupiter.api.extension.AfterTestExecutionCallback`
-| extension code executed immediately after test execution and its corresponding exception handlers
-
-| 11
-| annotation `org.junit.jupiter.api.AfterEach`
-| user code executed after each test is executed
-
-| 12
-| interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
-#handleAfterEachMethodExecutionException`
-| extension code for handling exceptions thrown from `@AfterEach` methods
-
-| 13
-| interface `org.junit.jupiter.api.extension.AfterEachCallback`
-| extension code executed after each test is executed
-
-| 14
-| annotation `org.junit.jupiter.api.AfterAll`
-| user code executed after all tests of the container are executed
-
-| 15
-| interface `org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
-#handleAfterAllMethodExecutionException`
-| extension code for handling exceptions thrown from `@AfterAll` methods
-
-| 16
-| interface `org.junit.jupiter.api.extension.AfterAllCallback`
-| extension code executed after all tests of the container are executed
-
-|===
-
-In the simplest case only the actual test method will be executed (step 8); all other
+In the simplest case only the actual test method will be executed (step 9); all other
 steps are optional depending on the presence of user code or extension support for the
 corresponding lifecycle callback. For further details on the various lifecycle callbacks
 please consult the respective Javadoc for each annotation and extension.
@@ -1097,6 +1068,7 @@ by implementing <<extensions-intercepting-invocations, `InvocationInterceptor`>>
 
 JUnit Jupiter always guarantees _wrapping_ behavior for multiple registered extensions
 that implement lifecycle callbacks such as `BeforeAllCallback`, `AfterAllCallback`,
+`BeforeContainerTemplateInvocationCallback`, `AfterContainerTemplateInvocationCallback`,
 `BeforeEachCallback`, `AfterEachCallback`, `BeforeTestExecutionCallback`, and
 `AfterTestExecutionCallback`.
 
