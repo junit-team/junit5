@@ -12,6 +12,8 @@ package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeBeforeCallbacks;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromConstructorParameters;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.registerExtensionsFromExecutableParameters;
@@ -23,7 +25,6 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBefor
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.jupiter.engine.descriptor.TestInstanceLifecycleUtils.getTestInstanceLifecycle;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
-import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -406,16 +407,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void invokeBeforeAllCallbacks(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		for (BeforeAllCallback callback : registry.getExtensions(BeforeAllCallback.class)) {
-			throwableCollector.execute(() -> callback.beforeAll(extensionContext));
-			if (throwableCollector.isNotEmpty()) {
-				break;
-			}
-		}
+		invokeBeforeCallbacks(BeforeAllCallback.class, context, BeforeAllCallback::beforeAll);
 	}
 
 	private void invokeBeforeAllMethods(JupiterEngineExecutionContext context) {
@@ -472,20 +464,12 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void invokeAfterAllCallbacks(JupiterEngineExecutionContext context) {
-		ExtensionRegistry registry = context.getExtensionRegistry();
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		forEachInReverseOrder(registry.getExtensions(AfterAllCallback.class), //
-			extension -> throwableCollector.execute(() -> extension.afterAll(extensionContext)));
+		invokeAfterCallbacks(AfterAllCallback.class, context, AfterAllCallback::afterAll);
 	}
 
 	private void invokeTestInstancePreDestroyCallbacks(JupiterEngineExecutionContext context) {
-		ExtensionContext extensionContext = context.getExtensionContext();
-		ThrowableCollector throwableCollector = context.getThrowableCollector();
-
-		forEachInReverseOrder(context.getExtensionRegistry().getExtensions(TestInstancePreDestroyCallback.class), //
-			extension -> throwableCollector.execute(() -> extension.preDestroyTestInstance(extensionContext)));
+		invokeAfterCallbacks(TestInstancePreDestroyCallback.class, context,
+			TestInstancePreDestroyCallback::preDestroyTestInstance);
 	}
 
 	private boolean isPerClassLifecycle(JupiterEngineExecutionContext context) {

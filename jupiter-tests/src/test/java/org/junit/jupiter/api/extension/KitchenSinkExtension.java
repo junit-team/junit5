@@ -35,11 +35,13 @@ public class KitchenSinkExtension implements
 
 	// Lifecycle Callbacks
 	BeforeAllCallback,
-		BeforeEachCallback,
-			BeforeTestExecutionCallback,
-				TestExecutionExceptionHandler,
-			AfterTestExecutionCallback,
-		AfterEachCallback,
+		BeforeContainerTemplateInvocationCallback,
+			BeforeEachCallback,
+				BeforeTestExecutionCallback,
+					TestExecutionExceptionHandler,
+				AfterTestExecutionCallback,
+			AfterEachCallback,
+		AfterContainerTemplateInvocationCallback,
 	AfterAllCallback,
 
 	// Lifecycle methods exception handling
@@ -81,6 +83,10 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
+	public void beforeContainerTemplateInvocation(ExtensionContext context) {
+	}
+
+	@Override
 	public void beforeEach(ExtensionContext context) {
 	}
 
@@ -98,6 +104,10 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public void afterEach(ExtensionContext context) {
+	}
+
+	@Override
+	public void afterContainerTemplateInvocation(ExtensionContext context) {
 	}
 
 	@Override

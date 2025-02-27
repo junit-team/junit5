@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks;
+import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeBeforeCallbacks;
 import static org.junit.jupiter.engine.extension.MutableExtensionRegistry.createRegistryFrom;
 import static org.junit.jupiter.engine.support.JupiterThrowableCollectorFactory.createThrowableCollector;
 
@@ -21,6 +23,8 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -132,11 +136,38 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	}
 
 	@Override
+	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
+		invokeBeforeCallbacks(BeforeContainerTemplateInvocationCallback.class, context,
+			BeforeContainerTemplateInvocationCallback::beforeContainerTemplateInvocation);
+		context.getThrowableCollector().assertEmpty();
+		return context;
+	}
+
+	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 		Visitor visitor = context.getExecutionListener()::dynamicTestRegistered;
 		getChildren().forEach(child -> child.accept(visitor));
 		return context;
+	}
+
+	@Override
+	public void after(JupiterEngineExecutionContext context) throws Exception {
+
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Throwable previousThrowable = throwableCollector.getThrowable();
+
+		invokeAfterCallbacks(AfterContainerTemplateInvocationCallback.class, context,
+			AfterContainerTemplateInvocationCallback::afterContainerTemplateInvocation);
+
+		// If the previous Throwable was not null when this method was called,
+		// that means an exception was already thrown either before or during
+		// the execution of this Node. If an exception was already thrown, any
+		// later exceptions were added as suppressed exceptions to that original
+		// exception unless a more severe exception occurred in the meantime.
+		if (previousThrowable != throwableCollector.getThrowable()) {
+			throwableCollector.assertEmpty();
+		}
 	}
 
 	@Override
