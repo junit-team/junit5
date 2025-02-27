@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -39,10 +40,12 @@ import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -89,6 +92,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 5.13
@@ -856,13 +862,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		results.containerEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
 		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 
-		var callSequence = results.allEvents().reportingEntryPublished() //
-				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
-				.map(ReportEntry::getKeyValuePairs) //
-				.map(Map::values) //
-				.flatMap(Collection::stream);
 		// @formatter:off
-		assertThat(callSequence).containsExactly(
+		assertThat(allReportEntryValues(results)).containsExactly(
 			"beforeAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 				"beforeContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 					"beforeAll: NestedTestCase",
@@ -932,25 +933,41 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		results.containerEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
 
-		var callSequence = results.allEvents().reportingEntryPublished() //
-				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
-				.map(ReportEntry::getKeyValuePairs) //
-				.map(Map::values) //
-				.flatMap(Collection::stream);
 		// @formatter:off
-		assertThat(callSequence).containsExactly(
+		assertThat(allReportEntryValues(results)).containsExactly(
 				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-					"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-						"test",
-					"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"test",
+				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
 				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
 				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-					"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-						"test",
-					"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"test",
+				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
 				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase"
 		);
 		// @formatter:on
+	}
+
+	@Test
+	void propagatesExceptionsFromCallbacks() {
+
+		var results = executeTestsForClass(CallbackExceptionBehaviorTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).failed(2).succeeded(2));
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(2, finishedWithFailure( //
+					message("2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
+					suppressed(0,
+						message("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
+					suppressed(1,
+						message("1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
+
+		assertThat(allReportEntryValues(results).distinct()) //
+				.containsExactly("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase");
 	}
 
 	@Test
@@ -962,6 +979,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	// -------------------------------------------------------------------
+
+	private static Stream<String> allReportEntryValues(EngineExecutionResults results) {
+		return results.allEvents().reportingEntryPublished() //
+				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
+				.map(ReportEntry::getKeyValuePairs) //
+				.map(Map::values) //
+				.flatMap(Collection::stream);
+	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ContainerTemplate
@@ -1428,9 +1453,27 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ");
 
 		@Test
-		@DisplayName("test")
 		void test(TestReporter testReporter) {
 			testReporter.publishEntry("test");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class CallbackExceptionBehaviorTestCase {
+
+		@RegisterExtension
+		@Order(1)
+		static Extension first = new ContainerTemplateInvocationCallbacks("1st -> ", TestAbortedException::new);
+
+		@RegisterExtension
+		@Order(2)
+		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ", AssertionFailedError::new);
+
+		@Test
+		void test() {
+			fail("should not be called");
 		}
 	}
 
@@ -1438,6 +1481,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			implements BeforeContainerTemplateInvocationCallback, AfterContainerTemplateInvocationCallback {
 
 		private final String prefix;
+		private final Function<String, Throwable> exceptionFactory;
 
 		@SuppressWarnings("unused")
 		ContainerTemplateInvocationCallbacks() {
@@ -1445,19 +1489,35 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 
 		ContainerTemplateInvocationCallbacks(String prefix) {
+			this(prefix, __ -> null);
+		}
+
+		ContainerTemplateInvocationCallbacks(String prefix, Function<String, Throwable> exceptionFactory) {
 			this.prefix = prefix;
+			this.exceptionFactory = exceptionFactory;
 		}
 
 		@Override
 		public void beforeContainerTemplateInvocation(ExtensionContext context) {
-			context.publishReportEntry(
-				prefix + "beforeContainerTemplateInvocation: " + context.getRequiredTestClass().getSimpleName());
+			handle("beforeContainerTemplateInvocation", context);
 		}
 
 		@Override
 		public void afterContainerTemplateInvocation(ExtensionContext context) {
-			context.publishReportEntry(
-				prefix + "afterContainerTemplateInvocation: " + context.getRequiredTestClass().getSimpleName());
+			handle("afterContainerTemplateInvocation", context);
+		}
+
+		private void handle(String methodName, ExtensionContext context) {
+			var message = format(methodName, context);
+			context.publishReportEntry(message);
+			var throwable = exceptionFactory.apply(message);
+			if (throwable != null) {
+				throw throwAsUncheckedException(throwable);
+			}
+		}
+
+		private String format(String methodName, ExtensionContext context) {
+			return "%s%s: %s".formatted(prefix, methodName, context.getRequiredTestClass().getSimpleName());
 		}
 	}
 
