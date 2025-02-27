@@ -15,22 +15,25 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 
 class ContainerTemplateInstanceFieldInjectingBeforeEachCallback implements BeforeEachCallback {
 
-	private final ParameterizedContainerClassContext classContext;
+	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
+	private final ResolutionCache resolutionCache;
 
-	ContainerTemplateInstanceFieldInjectingBeforeEachCallback(ParameterizedContainerClassContext classContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
-		this.classContext = classContext;
+	ContainerTemplateInstanceFieldInjectingBeforeEachCallback(ResolverFacade resolverFacade,
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
+		this.resolutionCache = resolutionCache;
 	}
 
 	@Override
 	public void beforeEach(ExtensionContext extensionContext) throws Exception {
 		extensionContext.getTestInstance() //
-				.ifPresent(testInstance -> this.classContext.getResolverFacade() //
-						.resolveAndInjectFields(testInstance, extensionContext, this.arguments, this.invocationIndex));
+				.ifPresent(testInstance -> this.resolverFacade //
+						.resolveAndInjectFields(testInstance, extensionContext, this.arguments, this.invocationIndex,
+							this.resolutionCache));
 	}
 
 }

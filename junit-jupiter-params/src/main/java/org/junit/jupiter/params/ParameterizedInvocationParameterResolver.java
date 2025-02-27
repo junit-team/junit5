@@ -25,13 +25,15 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
+	private final ResolutionCache resolutionCache;
 
 	ParameterizedInvocationParameterResolver(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
-			int invocationIndex) {
+			int invocationIndex, ResolutionCache resolutionCache) {
 
 		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
+		this.resolutionCache = resolutionCache;
 	}
 
 	@Override
@@ -51,7 +53,8 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
-		return this.resolverFacade.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex);
+		return this.resolverFacade.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,
+			this.resolutionCache);
 	}
 
 	protected abstract boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,

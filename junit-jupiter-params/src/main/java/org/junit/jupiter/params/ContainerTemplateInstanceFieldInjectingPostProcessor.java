@@ -15,15 +15,17 @@ import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 class ContainerTemplateInstanceFieldInjectingPostProcessor implements TestInstancePostProcessor {
 
-	private final ParameterizedContainerClassContext classContext;
+	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
+	private final ResolutionCache resolutionCache;
 
-	ContainerTemplateInstanceFieldInjectingPostProcessor(ParameterizedContainerClassContext classContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
-		this.classContext = classContext;
+	ContainerTemplateInstanceFieldInjectingPostProcessor(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
+			int invocationIndex, ResolutionCache resolutionCache) {
+		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;
 		this.invocationIndex = invocationIndex;
+		this.resolutionCache = resolutionCache;
 	}
 
 	@Override
@@ -33,8 +35,7 @@ class ContainerTemplateInstanceFieldInjectingPostProcessor implements TestInstan
 
 	@Override
 	public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) {
-		this.classContext.getResolverFacade() //
-				.resolveAndInjectFields(testInstance, extensionContext, this.arguments, this.invocationIndex);
+		this.resolverFacade.resolveAndInjectFields(testInstance, extensionContext, this.arguments, this.invocationIndex,
+			this.resolutionCache);
 	}
-
 }

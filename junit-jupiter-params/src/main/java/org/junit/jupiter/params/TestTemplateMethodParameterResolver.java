@@ -24,7 +24,7 @@ class TestTemplateMethodParameterResolver extends ParameterizedInvocationParamet
 
 	TestTemplateMethodParameterResolver(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
-		super(methodContext.getResolverFacade(), arguments, invocationIndex);
+		super(methodContext.getResolverFacade(), arguments, invocationIndex, ResolutionCache.DISABLED);
 		this.testTemplateMethod = methodContext.getAnnotatedElement();
 	}
 

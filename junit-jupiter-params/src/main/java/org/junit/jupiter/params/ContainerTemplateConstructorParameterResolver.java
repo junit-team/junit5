@@ -23,8 +23,8 @@ class ContainerTemplateConstructorParameterResolver extends ParameterizedInvocat
 	private final Class<?> containerTemplateClass;
 
 	ContainerTemplateConstructorParameterResolver(ParameterizedContainerClassContext classContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
-		super(classContext.getResolverFacade(), arguments, invocationIndex);
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+		super(classContext.getResolverFacade(), arguments, invocationIndex, resolutionCache);
 		this.containerTemplateClass = classContext.getAnnotatedElement();
 	}
 

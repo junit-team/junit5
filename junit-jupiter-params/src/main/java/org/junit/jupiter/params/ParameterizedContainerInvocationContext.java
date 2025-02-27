@@ -27,6 +27,8 @@ import org.junit.platform.commons.util.Preconditions;
 class ParameterizedContainerInvocationContext extends ParameterizedInvocationContext<ParameterizedContainerClassContext>
 		implements ContainerTemplateInvocationContext {
 
+	private final ResolutionCache resolutionCache = ResolutionCache.enabled();
+
 	ParameterizedContainerInvocationContext(ParameterizedContainerClassContext classContext,
 			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
 		super(classContext, formatter, arguments, invocationIndex);
@@ -53,18 +55,19 @@ class ParameterizedContainerInvocationContext extends ParameterizedInvocationCon
 		Preconditions.condition(this.declarationContext.getTestInstanceLifecycle() == PER_METHOD,
 			"Constructor injection is only supported for lifecycle PER_METHOD");
 		return new ContainerTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
-			this.invocationIndex);
+			this.invocationIndex, this.resolutionCache);
 	}
 
 	private Extension createExtensionForFieldInjection() {
+		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
 		TestInstance.Lifecycle lifecycle = this.declarationContext.getTestInstanceLifecycle();
 		switch (lifecycle) {
 			case PER_CLASS:
-				return new ContainerTemplateInstanceFieldInjectingBeforeEachCallback(this.declarationContext,
-					this.arguments, this.invocationIndex);
+				return new ContainerTemplateInstanceFieldInjectingBeforeEachCallback(resolverFacade, this.arguments,
+					this.invocationIndex, this.resolutionCache);
 			case PER_METHOD:
-				return new ContainerTemplateInstanceFieldInjectingPostProcessor(this.declarationContext, this.arguments,
-					this.invocationIndex);
+				return new ContainerTemplateInstanceFieldInjectingPostProcessor(resolverFacade, this.arguments,
+					this.invocationIndex, this.resolutionCache);
 		}
 		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
 	}

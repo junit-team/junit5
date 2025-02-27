@@ -220,25 +220,28 @@ class ResolverFacade {
 	 * arguments.
 	 */
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
-			int invocationIndex) {
+			int invocationIndex, ResolutionCache resolutionCache) {
+
 		int parameterIndex = toLogicalIndex(parameterContext);
 		ParameterDeclaration declaration = this.indexedParameterDeclarations.get(parameterIndex) //
 				.orElseGet(() -> this.aggregatorParameters.stream().filter(
 					it -> it.getParameterIndex() == parameterIndex).findFirst() //
 						.orElseThrow(() -> new ParameterResolutionException(
 							"Parameter index out of bounds: " + parameterIndex)));
-		return getResolver(extensionContext, declaration, parameterContext.getParameter()) //
-				.resolve(parameterContext, parameterIndex, arguments, invocationIndex);
+		return resolutionCache.resolve(declaration,
+			() -> getResolver(extensionContext, declaration, parameterContext.getParameter()) //
+					.resolve(parameterContext, parameterIndex, arguments, invocationIndex));
 	}
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
-			int invocationIndex) {
+			int invocationIndex, ResolutionCache resolutionCache) {
+
 		if (this.indexedParameterDeclarations.sourceElement.equals(testInstance.getClass())) {
 			getAllParameterDeclarations() //
 					.filter(FieldParameterDeclaration.class::isInstance) //
 					.map(FieldParameterDeclaration.class::cast) //
 					.forEach(declaration -> setField(testInstance, declaration, extensionContext, arguments,
-						invocationIndex));
+						invocationIndex, resolutionCache));
 		}
 	}
 
@@ -247,15 +250,16 @@ class ResolverFacade {
 			aggregatorParameters.stream());
 	}
 
-	private void setField(Object testInstance, FieldParameterDeclaration parameterDeclaration,
-			ExtensionContext extensionContext, EvaluatedArgumentSet arguments, int invocationIndex) {
-		Object argument = resolve(parameterDeclaration, extensionContext, arguments, invocationIndex);
+	private void setField(Object testInstance, FieldParameterDeclaration declaration, ExtensionContext extensionContext,
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+
+		Object argument = resolutionCache.resolve(declaration,
+			() -> resolve(declaration, extensionContext, arguments, invocationIndex));
 		try {
-			parameterDeclaration.getField().set(testInstance, argument);
+			declaration.getField().set(testInstance, argument);
 		}
 		catch (Exception e) {
-			throw new JUnitException("Failed to inject parameter value into field: " + parameterDeclaration.getField(),
-				e);
+			throw new JUnitException("Failed to inject parameter value into field: " + declaration.getField(), e);
 		}
 	}
 

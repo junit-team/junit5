@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
@@ -48,6 +49,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
@@ -66,6 +69,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
@@ -447,6 +451,16 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				.haveExactly(1, finishedWithFailure(message(
 					"Configuration error: duplicate index declared in @Parameter(0) annotation on fields [int %s.i, long %s.l].".formatted(
 						containerTemplateClass.getName(), containerTemplateClass.getName()))));
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { ArgumentConversionPerInvocationConstructorInjectionTestCase.class,
+			ArgumentConversionPerInvocationFieldInjectionTestCase.class })
+	void argumentConverterIsOnlyCalledOncePerInvocation(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 	}
 
 	// -------------------------------------------------------------------
@@ -1287,6 +1301,84 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				"second", second, //
 				"fourth", fourth //
 			));
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	record ArgumentConversionPerInvocationConstructorInjectionTestCase(
+			@ConvertWith(Wrapper.Converter.class) Wrapper wrapper) {
+
+		static Wrapper instance;
+
+		@BeforeAll
+		@AfterAll
+		static void clearWrapper() {
+			instance = null;
+		}
+
+		@Test
+		void test1() {
+			setOrCheckWrapper();
+		}
+
+		@Test
+		void test2() {
+			setOrCheckWrapper();
+		}
+
+		private void setOrCheckWrapper() {
+			if (instance == null) {
+				instance = wrapper;
+			}
+			else {
+				assertSame(instance, wrapper);
+			}
+		}
+	}
+
+	@ParameterizedContainer
+	@ValueSource(ints = 1)
+	static class ArgumentConversionPerInvocationFieldInjectionTestCase {
+
+		static Wrapper instance;
+
+		@BeforeAll
+		@AfterAll
+		static void clearWrapper() {
+			instance = null;
+		}
+
+		@Parameter
+		@ConvertWith(Wrapper.Converter.class)
+		Wrapper wrapper;
+
+		@Test
+		void test1() {
+			setOrCheckWrapper();
+		}
+
+		@Test
+		void test2() {
+			setOrCheckWrapper();
+		}
+
+		private void setOrCheckWrapper() {
+			if (instance == null) {
+				instance = wrapper;
+			}
+			else {
+				assertSame(instance, wrapper);
+			}
+		}
+	}
+
+	record Wrapper(int value) {
+		static class Converter extends SimpleArgumentConverter {
+			@Override
+			protected Object convert(Object source, Class<?> targetType) {
+				return new Wrapper((Integer) source);
+			}
 		}
 	}
 }
