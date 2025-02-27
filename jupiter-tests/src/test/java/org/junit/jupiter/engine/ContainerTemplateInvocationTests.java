@@ -958,15 +958,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(2, finishedWithFailure( //
-						message("2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
-						suppressed(0, message("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
-						suppressed(1, message("1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
+					message("2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
+					suppressed(0,
+						message("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
+					suppressed(1,
+						message("1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
 
 		assertThat(allReportEntryValues(results).distinct()) //
-				.containsExactly(
-						"1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
-						"2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
-						"1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase");
+				.containsExactly("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase");
 	}
 
 	@Test
