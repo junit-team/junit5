@@ -15,8 +15,6 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.jupiter.api.DisplayNameGenerator.getDisplayNameGenerator;
-import static org.junit.jupiter.api.DisplayNameGenerator.parameterTypesAsString;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
 
