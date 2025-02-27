@@ -63,10 +63,10 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 		TestInstance.Lifecycle lifecycle = this.declarationContext.getTestInstanceLifecycle();
 		switch (lifecycle) {
 			case PER_CLASS:
-				return new ContainerTemplateInstanceFieldInjectingBeforeEachCallback(resolverFacade, this.arguments,
+				return new BeforeContainerTemplateInvocationFieldInjector(resolverFacade, this.arguments,
 					this.invocationIndex, this.resolutionCache);
 			case PER_METHOD:
-				return new ContainerTemplateInstanceFieldInjectingPostProcessor(resolverFacade, this.arguments,
+				return new InstancePostProcessingContainerTemplateFieldInjector(resolverFacade, this.arguments,
 					this.invocationIndex, this.resolutionCache);
 		}
 		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
