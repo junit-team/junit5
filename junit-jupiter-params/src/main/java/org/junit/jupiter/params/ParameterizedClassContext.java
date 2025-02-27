@@ -11,17 +11,28 @@
 package org.junit.jupiter.params;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.reverse;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
+import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findFields;
 import static org.junit.platform.commons.util.ReflectionUtils.isRecordClass;
+import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.HierarchyTraversalMode;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 class ParameterizedClassContext implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
@@ -31,6 +42,8 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 	private final TestInstance.Lifecycle testInstanceLifecycle;
 	private final ResolverFacade resolverFacade;
 	private final InjectionType injectionType;
+	private final List<Method> beforeMethods;
+	private final List<Method> afterMethods;
 
 	ParameterizedClassContext(Class<?> clazz, ParameterizedClass annotation,
 			TestInstance.Lifecycle testInstanceLifecycle) {
@@ -47,6 +60,19 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 			this.resolverFacade = ResolverFacade.create(clazz, fields);
 			this.injectionType = InjectionType.FIELDS;
 		}
+
+		this.beforeMethods = findMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle,
+			BeforeArgumentSet.class, TOP_DOWN);
+
+		// Make a local copy since findAnnotatedMethods() returns an immutable list.
+		this.afterMethods = new ArrayList<>(
+			findMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, AfterArgumentSet.class, BOTTOM_UP));
+
+		// Since the bottom-up ordering of afterMethods will later be reversed when the
+		// AfterArgumentSetMethodInvoker extensions are executed within
+		// ContainerTemplateInvocationTestDescriptor, we have to reverse them to put them
+		// in top-down order before we register them as extensions.
+		reverse(afterMethods);
 	}
 
 	private static List<Field> findParameterAnnotatedFields(Class<?> clazz) {
@@ -103,6 +129,48 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 
 	InjectionType getInjectionType() {
 		return injectionType;
+	}
+
+	List<Method> getBeforeMethods() {
+		return beforeMethods;
+	}
+
+	List<Method> getAfterMethods() {
+		return afterMethods;
+	}
+
+	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass,
+			TestInstance.Lifecycle testInstanceLifecycle, Class<? extends Annotation> annotationType,
+			HierarchyTraversalMode traversalMode) {
+
+		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
+		if (testInstanceLifecycle != PER_CLASS) {
+			methods.forEach(method -> assertStatic(annotationType, method));
+		}
+		return methods;
+	}
+
+	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+
+		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
+		methods.forEach(method -> assertVoid(annotationType, method));
+		return methods;
+	}
+
+	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
+		if (ModifierSupport.isNotStatic(method)) {
+			throw new JUnitException(String.format(
+				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
+	}
+
+	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
+		if (!returnsPrimitiveVoid(method)) {
+			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
 	}
 
 	enum InjectionType {

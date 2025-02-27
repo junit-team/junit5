@@ -10,12 +10,15 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -41,12 +44,22 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
+		return Stream.concat(Stream.of(createParameterInjector()), createLifecycleMethodInvokers()) //
+				.collect(toList());
+	}
+
+	@Override
+	public void prepareInvocation(ExtensionContext context) {
+		super.prepareInvocation(context);
+	}
+
+	private Extension createParameterInjector() {
 		InjectionType injectionType = this.declarationContext.getInjectionType();
 		switch (injectionType) {
 			case CONSTRUCTOR:
-				return singletonList(createExtensionForConstructorInjection());
+				return createExtensionForConstructorInjection();
 			case FIELDS:
-				return singletonList(createExtensionForFieldInjection());
+				return createExtensionForFieldInjection();
 		}
 		throw new JUnitException("Unsupported injection type: " + injectionType);
 	}
@@ -72,9 +85,20 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
 	}
 
-	@Override
-	public void prepareInvocation(ExtensionContext context) {
-		super.prepareInvocation(context);
+	private Stream<Extension> createLifecycleMethodInvokers() {
+		return Stream.concat(createBeforeArgumentSetMethodInvoker(), createAfterArgumentSetMethodInvoker());
+	}
+
+	private Stream<BeforeContainerTemplateInvocationCallback> createBeforeArgumentSetMethodInvoker() {
+		Class<?> containerTemplateClass = this.declarationContext.getAnnotatedElement();
+		return this.declarationContext.getBeforeMethods().stream() //
+				.map(method -> new BeforeArgumentSetMethodInvoker(containerTemplateClass, method));
+	}
+
+	private Stream<AfterContainerTemplateInvocationCallback> createAfterArgumentSetMethodInvoker() {
+		Class<?> containerTemplateClass = this.declarationContext.getAnnotatedElement();
+		return this.declarationContext.getAfterMethods().stream() //
+				.map(method -> new AfterArgumentSetMethodInvoker(containerTemplateClass, method));
 	}
 
 }

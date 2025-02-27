@@ -10,47 +10,20 @@
 
 package org.junit.jupiter.params;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
-import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
-import static org.junit.jupiter.params.provider.Arguments.argumentSet;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.testkit.engine.EventConditions.container;
-import static org.junit.platform.testkit.engine.EventConditions.displayName;
-import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
-import static org.junit.platform.testkit.engine.EventConditions.engine;
-import static org.junit.platform.testkit.engine.EventConditions.event;
-import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.EventConditions.started;
-import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
@@ -88,6 +61,37 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 @SuppressWarnings("JUnitMalformedDeclaration")
 public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngineTests {
@@ -332,7 +336,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@ParameterizedTest
 	@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
-	void supportsNestedParameterizedClasss(Class<?> containerTemplateClass) {
+	void supportsNestedParameterizedClass(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -343,6 +347,68 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 					"[1] number=1", "[1] text=foo", "[2] text=bar", //
 					"[2] number=2", "[1] text=foo", "[2] text=bar" //
 				);
+		assertThat(allReportEntries(results)).map(it -> it.get("value")).containsExactly(
+		// @formatter:off
+			"beforeAll: %s".formatted(containerTemplateClass.getSimpleName()),
+				"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeAll: InnerTestCase",
+						"beforeArgumentSet: InnerTestCase",
+							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [1] flag=true [InnerTestCase]",
+									"test(1, foo, true)",
+								"afterEach: [1] flag=true [InnerTestCase]",
+							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [2] flag=false [InnerTestCase]",
+									"test(1, foo, false)",
+								"afterEach: [2] flag=false [InnerTestCase]",
+							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+						"afterArgumentSet: InnerTestCase",
+						"beforeArgumentSet: InnerTestCase",
+							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [1] flag=true [InnerTestCase]",
+									"test(1, bar, true)",
+								"afterEach: [1] flag=true [InnerTestCase]",
+							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [2] flag=false [InnerTestCase]",
+									"test(1, bar, false)",
+								"afterEach: [2] flag=false [InnerTestCase]",
+							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+						"afterArgumentSet: InnerTestCase",
+					"afterAll: InnerTestCase",
+				"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+				"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeAll: InnerTestCase",
+						"beforeArgumentSet: InnerTestCase",
+							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [1] flag=true [InnerTestCase]",
+									"test(2, foo, true)",
+								"afterEach: [1] flag=true [InnerTestCase]",
+							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [2] flag=false [InnerTestCase]",
+									"test(2, foo, false)",
+								"afterEach: [2] flag=false [InnerTestCase]",
+							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+						"afterArgumentSet: InnerTestCase",
+						"beforeArgumentSet: InnerTestCase",
+							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [1] flag=true [InnerTestCase]",
+									"test(2, bar, true)",
+								"afterEach: [1] flag=true [InnerTestCase]",
+							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+								"beforeEach: [2] flag=false [InnerTestCase]",
+									"test(2, bar, false)",
+								"afterEach: [2] flag=false [InnerTestCase]",
+							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+						"afterArgumentSet: InnerTestCase",
+					"afterAll: InnerTestCase",
+				"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+			"afterAll: %s".formatted(containerTemplateClass.getSimpleName())
+			// @formatter:on
+		);
 	}
 
 	@ParameterizedTest
@@ -371,10 +437,32 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		results.allEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 
-		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
+		Supplier<Stream<Map<String, String>>> valueTrackingReportEntries = () -> allReportEntries(results) //
+				.filter(it -> it.containsKey("instanceHashCode"));
+		Supplier<Stream<Map<String, String>>> lifecycleReportEntries = () -> allReportEntries(results) //
+				.filter(it -> !it.containsKey("instanceHashCode"));
+
+		assertThat(valueTrackingReportEntries.get().map(it -> it.get("value"))) //
 				.containsExactly("foo", "foo", "bar", "bar");
-		assertThat(allReportEntries(results).map(it -> it.get("instanceHashCode")).distinct()) //
+		assertThat(valueTrackingReportEntries.get().map(it -> it.get("instanceHashCode")).distinct()) //
 				.hasSize(1);
+		assertThat(lifecycleReportEntries.get().map(it -> it.get("value"))) //
+				.containsExactly(
+				//@formatter:off
+						"beforeArgumentSet1",
+						"beforeArgumentSet2",
+							"test1",
+							"test2",
+						"afterArgumentSet1",
+						"afterArgumentSet2",
+						"beforeArgumentSet1",
+						"beforeArgumentSet2",
+							"test1",
+							"test2",
+						"afterArgumentSet1",
+						"afterArgumentSet2"
+						//@formatter:on
+				);
 	}
 
 	@Test
@@ -461,6 +549,52 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
+	}
+
+	@ParameterizedTest
+	@CsvSource(textBlock = """
+			NonStaticBeforeLifecycleMethodTestCase, @BeforeArgumentSet, beforeArgumentSet
+			NonStaticAfterLifecycleMethodTestCase,  @AfterArgumentSet,  afterArgumentSet
+			""")
+	void lifecycleMethodsNeedToBeStaticByDefault(String simpleClassName, String annotationName,
+			String lifecycleMethodName) throws ClassNotFoundException {
+
+		var className = getClass().getName() + "$" + simpleClassName;
+
+		var results = executeTestsForClass(Class.forName(className));
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
+							.formatted(annotationName, className, lifecycleMethodName))));
+	}
+
+	@Test
+	void lifecycleMethodsFromSuperclassAreWrappedAroundLifecycleMethodsFromTestClass() {
+
+		var results = executeTestsForClass(LifecycleMethodsFromSuperclassTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+
+		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
+				.containsExactly("zzz_before", "aaa_before", "test", "aaa_after", "zzz_after");
+	}
+
+	@Test
+	void exceptionsInLifecycleMethodsArePropagated() {
+
+		var results = executeTestsForClass(LifecycleMethodsErrorHandlingTestCase.class);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(3).failed(1).succeeded(2));
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure( //
+					message("zzz_before"), //
+					suppressed(0, message("aaa_after")), //
+					suppressed(1, message("zzz_after"))));
+
+		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
+				.containsExactly("zzz_before", "aaa_after", "zzz_after");
 	}
 
 	// -------------------------------------------------------------------
@@ -1053,7 +1187,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
-	static class NestedFieldInjectionTestCase {
+	static class NestedFieldInjectionTestCase extends LifecycleCallbacks {
 
 		@Parameter
 		int number;
@@ -1061,14 +1195,15 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@Nested
 		@ParameterizedClass
 		@ValueSource(strings = { "foo", "bar" })
-		class InnerTestCase {
+		class InnerTestCase extends LifecycleCallbacks {
 
 			@Parameter
 			String text;
 
 			@ParameterizedTest
 			@ValueSource(booleans = { true, false })
-			void test(boolean flag) {
+			void test(boolean flag, TestReporter reporter) {
+				reporter.publishEntry("test(" + number + ", " + text + ", " + flag + ")");
 				assertTrue(number > 0);
 				assertTrue(List.of("foo", "bar").contains(text));
 			}
@@ -1077,12 +1212,18 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
-	record NestedConstructorInjectionTestCase(int number) {
+	static class NestedConstructorInjectionTestCase extends LifecycleCallbacks {
+
+		final int number;
+
+		NestedConstructorInjectionTestCase(int number) {
+			this.number = number;
+		}
 
 		@Nested
 		@ParameterizedClass
 		@ValueSource(strings = { "foo", "bar" })
-		class InnerTestCase {
+		class InnerTestCase extends LifecycleCallbacks {
 
 			final String text;
 
@@ -1092,10 +1233,46 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			@ParameterizedTest
 			@ValueSource(booleans = { true, false })
-			void test(boolean flag) {
+			void test(boolean flag, TestReporter reporter) {
+				reporter.publishEntry("test(" + number + ", " + text + ", " + flag + ")");
 				assertTrue(number > 0);
 				assertTrue(List.of("foo", "bar").contains(text));
 			}
+		}
+	}
+
+	static class LifecycleCallbacks {
+
+		@BeforeAll
+		static void beforeAll(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry("beforeAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		}
+
+		@BeforeArgumentSet
+		static void beforeArgumentSet(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry("beforeArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		}
+
+		@BeforeEach
+		void beforeEach(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry(
+				"beforeEach: " + testInfo.getDisplayName() + " [" + this.getClass().getSimpleName() + "]");
+		}
+
+		@AfterEach
+		void afterEach(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry(
+				"afterEach: " + testInfo.getDisplayName() + " [" + this.getClass().getSimpleName() + "]");
+		}
+
+		@AfterArgumentSet
+		static void afterArgumentSet(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry("afterArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		}
+
+		@AfterAll
+		static void afterAll(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry("afterAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 	}
 
@@ -1188,21 +1365,42 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		final List<String> fieldSource = List.of("bar");
 
+		@BeforeArgumentSet
+		void beforeArgumentSet1(TestReporter reporter) {
+			reporter.publishEntry("beforeArgumentSet1");
+		}
+
+		@BeforeArgumentSet
+		void beforeArgumentSet2(TestReporter reporter) {
+			reporter.publishEntry("beforeArgumentSet2");
+		}
+
+		@AfterArgumentSet
+		void afterArgumentSet1(TestReporter reporter) {
+			reporter.publishEntry("afterArgumentSet1");
+		}
+
+		@AfterArgumentSet
+		void afterArgumentSet2(TestReporter reporter) {
+			reporter.publishEntry("afterArgumentSet2");
+		}
+
 		@Parameter
 		private String value;
 
 		@Test
-		void test1(TestReporter reporter) {
-			publishReportEntry(reporter);
+		void test1(TestReporter reporter, TestInfo testInfo) {
+			publishReportEntry(reporter, testInfo);
 		}
 
 		@Test
-		void test2(TestReporter reporter) {
-			publishReportEntry(reporter);
+		void test2(TestReporter reporter, TestInfo testInfo) {
+			publishReportEntry(reporter, testInfo);
 		}
 
-		private void publishReportEntry(TestReporter reporter) {
+		private void publishReportEntry(TestReporter reporter, TestInfo testInfo) {
 			assertNotNull(value);
+			reporter.publishEntry(testInfo.getTestMethod().orElseThrow().getName());
 			reporter.publishEntry(Map.of( //
 				"instanceHashCode", Integer.toHexString(hashCode()), //
 				"value", value //
@@ -1381,4 +1579,104 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			}
 		}
 	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record NonStaticBeforeLifecycleMethodTestCase() {
+
+		@BeforeArgumentSet
+		void beforeArgumentSet() {
+			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record NonStaticAfterLifecycleMethodTestCase() {
+
+		@AfterArgumentSet
+		void afterArgumentSet() {
+			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	static abstract class AbstractBaseLifecycleTestCase {
+
+		@BeforeArgumentSet
+		static void zzz_before(TestReporter reporter) {
+			reporter.publishEntry("zzz_before");
+		}
+
+		@AfterArgumentSet
+		static void zzz_after(TestReporter reporter) {
+			reporter.publishEntry("zzz_after");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	static class LifecycleMethodsFromSuperclassTestCase extends AbstractBaseLifecycleTestCase {
+
+		@BeforeArgumentSet
+		static void aaa_before(TestReporter reporter) {
+			reporter.publishEntry("aaa_before");
+		}
+
+		@AfterArgumentSet
+		static void aaa_after(TestReporter reporter) {
+			reporter.publishEntry("aaa_after");
+		}
+
+		@Test
+		void test(TestReporter reporter) {
+			reporter.publishEntry("test");
+		}
+	}
+
+	static abstract class AbstractBaseLifecycleWithErrorsTestCase {
+
+		@BeforeArgumentSet
+		static void zzz_before(TestReporter reporter) {
+			reporter.publishEntry("zzz_before");
+			fail("zzz_before");
+		}
+
+		@AfterArgumentSet
+		static void zzz_after(TestReporter reporter) {
+			reporter.publishEntry("zzz_after");
+			fail("zzz_after");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	static class LifecycleMethodsErrorHandlingTestCase extends AbstractBaseLifecycleWithErrorsTestCase {
+
+		@BeforeArgumentSet
+		static void aaa_before(TestReporter reporter) {
+			fail("should not be called");
+		}
+
+		@AfterArgumentSet
+		static void aaa_after(TestReporter reporter) {
+			reporter.publishEntry("aaa_after");
+			fail("aaa_after");
+		}
+
+		@Test
+		void test(TestReporter reporter) {
+			reporter.publishEntry("test");
+		}
+	}
+
 }
