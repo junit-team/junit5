@@ -139,6 +139,7 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
 		invokeBeforeCallbacks(BeforeContainerTemplateInvocationCallback.class, context,
 			BeforeContainerTemplateInvocationCallback::beforeContainerTemplateInvocation);
+		context.getThrowableCollector().assertEmpty();
 		return context;
 	}
 
@@ -152,8 +153,21 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	@Override
 	public void after(JupiterEngineExecutionContext context) throws Exception {
+
+		ThrowableCollector throwableCollector = context.getThrowableCollector();
+		Throwable previousThrowable = throwableCollector.getThrowable();
+
 		invokeAfterCallbacks(AfterContainerTemplateInvocationCallback.class, context,
 			AfterContainerTemplateInvocationCallback::afterContainerTemplateInvocation);
+
+		// If the previous Throwable was not null when this method was called,
+		// that means an exception was already thrown either before or during
+		// the execution of this Node. If an exception was already thrown, any
+		// later exceptions were added as suppressed exceptions to that original
+		// exception unless a more severe exception occurred in the meantime.
+		if (previousThrowable != throwableCollector.getThrowable()) {
+			throwableCollector.assertEmpty();
+		}
 	}
 
 	@Override
