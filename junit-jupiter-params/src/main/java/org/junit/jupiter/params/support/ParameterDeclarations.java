@@ -21,12 +21,12 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
 /**
  * {@code ParameterDeclarations} encapsulates the combined <em>declarations</em>
- * of all <em>indexed</em> {@code @ParameterizedContainer} class or
- * {@code @ParameterizedTest} method parameters.
+ * of all <em>indexed</em> {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest} parameters.
  *
- * <p>For {@code @ParameterizedTest} methods, the parameter declarations are
- * derived from the signature of the method. For {@code @ParameterizedContainer}
- * classes, the parameter declarations may be derived from the constructor or
+ * <p>For a {@code @ParameterizedTest}, the parameter declarations are derived
+ * from the method signature. For a {@code @ParameterizedClass}, they may be
+ * derived from the constructor or
  * {@link java.lang.reflect.Parameter @Parameter}-annotated fields.
  *
  * <p>Aggregators, that is parameters of type
@@ -37,7 +37,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
  *
  * @since 5.13
  * @see ParameterDeclaration
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @API(status = EXPERIMENTAL, since = "5.13")
@@ -65,14 +65,17 @@ public interface ParameterDeclarations {
 	 * {@return the source element of all parameter declarations}
 	 *
 	 * <p>For {@code @ParameterizedTest}, this always corresponds to the
-	 * parameterized test method. For {@code @ParameterizedContainer}, this
-	 * corresponds to the test class constructor, if constructor injection is
-	 * used, or the test class itself, if field injection is used.
+	 * parameterized test method. For {@code @ParameterizedClass}, this
+	 * corresponds to the parameterized test class constructor, if constructor
+	 * injection is used; or the test class itself, if field injection is used.
 	 */
 	AnnotatedElement getSourceElement();
 
 	/**
 	 * {@return a human-readable description of the source element}
+	 *
+	 * <p>This may, for example, be used in error messages.
+	 *
 	 * @see #getSourceElement()
 	 */
 	String getSourceElementDescription();

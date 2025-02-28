@@ -17,7 +17,7 @@ import org.apiguardian.api.API;
 
 /**
  * Constants for the use with the
- * {@link ParameterizedContainer @ParameterizedContainer} and
+ * {@link ParameterizedClass @ParameterizedClass} and
  * {@link ParameterizedTest @ParameterizedTest} annotations.
  *
  * @since 5.13
@@ -30,7 +30,7 @@ public class ParameterizedInvocationConstants {
 	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
 	 *
 	 * @since 5.3
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 */
 	public static final String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
@@ -40,7 +40,7 @@ public class ParameterizedInvocationConstants {
 	 * method (1-based): <code>{index}</code>
 	 *
 	 * @since 5.3
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 * @see #DEFAULT_DISPLAY_NAME
 	 */
@@ -52,7 +52,7 @@ public class ParameterizedInvocationConstants {
 	 * <code>{arguments}</code>
 	 *
 	 * @since 5.3
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 */
 	public static final String ARGUMENTS_PLACEHOLDER = "{arguments}";
@@ -68,7 +68,7 @@ public class ParameterizedInvocationConstants {
 	 * for {@code javac}.
 	 *
 	 * @since 5.6
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
@@ -83,7 +83,7 @@ public class ParameterizedInvocationConstants {
 	 * argumentSet()}.
 	 *
 	 * @since 5.11
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
@@ -99,7 +99,7 @@ public class ParameterizedInvocationConstants {
 	 * argumentSet()}: <code>{argumentSetNameOrArgumentsWithNames}</code>.
 	 *
 	 * @since 5.11
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 * @see #ARGUMENT_SET_NAME_PLACEHOLDER
 	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
@@ -118,7 +118,7 @@ public class ParameterizedInvocationConstants {
 	 * {@code @ParameterizedTest} method.
 	 *
 	 * @since 5.3
-	 * @see ParameterizedContainer#name()
+	 * @see ParameterizedClass#name()
 	 * @see ParameterizedTest#name()
 	 * @see #DISPLAY_NAME_PLACEHOLDER
 	 * @see #INDEX_PLACEHOLDER

@@ -22,11 +22,11 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Unit tests for {@link ParameterizedTestMethodContext}.
+ * Unit tests for {@link ParameterizedTestContext}.
  *
  * @since 5.2
  */
-class ParameterizedTestMethodContextTests {
+class ParameterizedTestContextTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
@@ -42,9 +42,9 @@ class ParameterizedTestMethodContextTests {
 			() -> createMethodContext(InvalidTestCase.class, methodName));
 	}
 
-	private ParameterizedTestMethodContext createMethodContext(Class<?> testClass, String methodName) {
+	private ParameterizedTestContext createMethodContext(Class<?> testClass, String methodName) {
 		var method = ReflectionUtils.findMethods(testClass, m -> m.getName().equals(methodName)).getFirst();
-		return new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class));
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

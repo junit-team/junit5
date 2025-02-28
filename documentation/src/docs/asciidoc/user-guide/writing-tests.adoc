@@ -43,7 +43,7 @@ in the `junit-jupiter-api` module.
 | `@AfterEach`             | Denotes that the annotated method should be executed _after_ *each* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, or `@TestFactory` method in the current class; analogous to JUnit 4's `@After`. Such methods are inherited unless they are overridden.
 | `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
 | `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
-| `@ParameterizedContainer`| Denotes that the annotated class is a <<writing-tests-parameterized-tests, parameterized container>>.
+| `@ParameterizedClass`    | Denotes that the annotated class is a <<writing-tests-parameterized-tests, parameterized class>>.
 | `@ContainerTemplate`     | Denotes that the annotated class is a <<writing-tests-container-templates, template for a set of test cases>> designed to be executed multiple times depending on the number of invocation contexts returned by the registered <<extensions-container-templates, providers>>.
 | `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not inherited.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are inherited at the class level but not at the method level.
@@ -1058,15 +1058,15 @@ classes, and this restriction no longer applies.
 ==== Interoperability
 
 `@Nested` may be combined with
-<<writing-tests-parameterized-tests, `@ParameterizedContainer`>> in which case the nested
-test class is parameterized.
+<<writing-tests-parameterized-tests, `@ParameterizedClass`>> in which case the nested test
+class is parameterized.
 
-The following example illustrates how to combine `@Nested` with `@ParameterizedContainer`
-and `@ParameterizedTest`.
+The following example illustrates how to combine `@Nested` with `@ParameterizedClass` and
+`@ParameterizedTest`.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedContainerDemo.java[tags=nested]
+include::{testDir}/example/ParameterizedClassDemo.java[tags=nested]
 ----
 
 Executing the above test class yields the following output:
@@ -1446,15 +1446,15 @@ When using the `ConsoleLauncher` with the unicode theme enabled, execution of
 
 
 [[writing-tests-parameterized-tests]]
-=== Parameterized Tests and Containers
+=== Parameterized Classes and Tests
 
 _Parameterized tests_ make it possible to run a test method multiple times with different
 arguments. They are declared just like regular `@Test` methods but use the
 `{ParameterizedTest}` annotation instead.
 
-_Parameterized containers_ make it possible to run _all_ tests in test class, including
+_Parameterized classes_ make it possible to run _all_ tests in test class, including
 <<writing-tests-nested>>, multiple times with different arguments. They are declared just
-like regular test classes but annotated with the `{ParameterizedContainer}` annotation.
+like regular test classes but annotated with the `{ParameterizedClass}` annotation.
 
 Regardless of whether you are parameterizing a test method or a test class, you must
 declare at least one _source_ that that will provide the arguments for each invocation and
@@ -1480,11 +1480,11 @@ palindromes(String) ✔
 ....
 
 The same `@ValueSource` annotation can be used to specify the source of arguments for a
-`@ParameterizedContainer`.
+`@ParameterizedClass`.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedContainerDemo.java[tags=first_example]
+include::{testDir}/example/ParameterizedClassDemo.java[tags=first_example]
 ----
 
 When executing the above parameterized test method, each invocation will be reported
@@ -1514,7 +1514,7 @@ In order to use parameterized tests you need to add a dependency on the
 ==== Consuming Arguments
 
 [[writing-tests-parameterized-tests-consuming-arguments-methods]]
-===== Parameterized Test Methods
+===== Parameterized Tests
 
 Parameterized test methods _consume_ arguments directly from the configured source (see
 <<writing-tests-parameterized-tests-sources>>) following a one-to-one correlation between
@@ -1537,11 +1537,11 @@ _aggregator_ is any parameter of type `{ArgumentsAccessor}` or any parameter ann
 with `{AggregateWith}`.
 
 [[writing-tests-parameterized-tests-consuming-arguments-classes]]
-===== Parameterized Container Classes
+===== Parameterized Classes
 
-Parameterized container classes _consume_ arguments directly from the configured source
-(see <<writing-tests-parameterized-tests-sources>>); either via their unique constructor
-or via field injection. If a `{Parameter}`-annotated field is declared in the parameterized
+Parameterized classes _consume_ arguments directly from the configured source (see
+<<writing-tests-parameterized-tests-sources>>); either via their unique constructor or via
+field injection. If a `{Parameter}`-annotated field is declared in the parameterized
 container class or one of its superclasses, field injection will be used. Otherwise,
 constructor injection will be used.
 
@@ -1555,11 +1555,11 @@ test class.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedContainerDemo.java[tags=constructor_injection]
+include::{testDir}/example/ParameterizedClassDemo.java[tags=constructor_injection]
 ----
 
 If your programming language level you are using supports _records_ -- for example, Java
-16 or higher -- you may use them to implement parameterized containers that avoid the
+16 or higher -- you may use them to implement parameterized classes that avoid the
 boilerplate code of declaring a test class constructor.
 
 [source,java,indent=0]
@@ -1587,11 +1587,11 @@ with `@Parameter(index)`. An _aggregator_ is any `@Parameter`-annotated field of
 {ArgumentsAccessor} or any field annotated with {AggregateWith}.
 
 The following example demonstrates how to use field injection to consume multiple
-arguments in a parameterized container class.
+arguments in a parameterized class.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/ParameterizedContainerDemo.java[tags=field_injection]
+include::{testDir}/example/ParameterizedClassDemo.java[tags=field_injection]
 ----
 
 If field injection is used, no constructor parameters will be resolved with arguments from
@@ -1602,15 +1602,15 @@ may resolve constructor parameters as usual, though.
 .AutoCloseable arguments
 ====
 Arguments that implement `java.lang.AutoCloseable` (or `java.io.Closeable` which extends
-`java.lang.AutoCloseable`) will be automatically closed after the parameterized container
-or test invocation.
+`java.lang.AutoCloseable`) will be automatically closed after the parameterized class or
+test invocation.
 
 To prevent this from happening, set the `autoCloseArguments` attribute in
 `@ParameterizedTest` to `false`. Specifically, if an argument that implements
-`AutoCloseable` is reused for multiple invocations of the same parameterized container
-class or test method, you must specify the `autoCloseArguments = false` on the
-`{ParameterizedContainer}` or `{ParameterizedTest}` annotation to ensure that the argument
-is not closed between invocations.
+`AutoCloseable` is reused for multiple invocations of the same parameterized class or test
+method, you must specify the `autoCloseArguments = false` on the `{ParameterizedClass}` or
+`{ParameterizedTest}` annotation to ensure that the argument is not closed between
+invocations.
 ====
 
 [[writing-tests-parameterized-tests-sources]]
@@ -1621,9 +1621,9 @@ following subsections provides a brief overview and an example for each of them.
 refer to the Javadoc in the `{params-provider-package}` package for additional
 information.
 
-TIP: All source annotations in this section are applicable to `{ParameterizedContainer}`
-classes and `{ParameterizedTest}` methods. For the sake of brevity, the examples in this
-section will only show how to use them with `{ParameterizedTest}` methods.
+TIP: All source annotations in this section are applicable to both `{ParameterizedClass}`
+and `{ParameterizedTest}`. For the sake of brevity, the examples in this section will only
+show how to use them with `{ParameterizedTest}` methods.
 
 [[writing-tests-parameterized-tests-sources-ValueSource]]
 ===== @ValueSource
@@ -1661,22 +1661,21 @@ supplied _bad input_, it can be useful to have `null` and _empty_ values supplie
 parameterized tests. The following annotations serve as sources of `null` and empty values
 for parameterized tests that accept a single argument.
 
-* `{NullSource}`: provides a single `null` argument to the annotated
-  `@ParameterizedContainer` class or `@ParameterizedTest` method.
+* `{NullSource}`: provides a single `null` argument to the annotated `@ParameterizedClass`
+   or `@ParameterizedTest`.
    - `@NullSource` cannot be used for a parameter that has a primitive type.
 * `{EmptySource}`: provides a single _empty_ argument to the annotated
-`@ParameterizedContainer` class or `@ParameterizedTest` method for parameters of the
-  following types: `java.lang.String`, `java.util.Collection` (and concrete subtypes with
-  a `public` no-arg constructor), `java.util.List`, `java.util.Set`,
-  `java.util.SortedSet`, `java.util.NavigableSet`, `java.util.Map` (and concrete subtypes
-  with a `public` no-arg constructor), `java.util.SortedMap`, `java.util.NavigableMap`,
-  primitive arrays (e.g., `int[]`, `char[][]`, etc.), object arrays (e.g., `String[]`,
-  `Integer[][]`, etc.).
+  `@ParameterizedClass` or `@ParameterizedTest` for parameters of the following types:
+  `java.lang.String`, `java.util.Collection` (and concrete subtypes with a `public` no-arg
+  constructor), `java.util.List`, `java.util.Set`, `java.util.SortedSet`,
+  `java.util.NavigableSet`, `java.util.Map` (and concrete subtypes with a `public` no-arg
+  constructor), `java.util.SortedMap`, `java.util.NavigableMap`, primitive arrays (e.g.,
+  `int[]`, `char[][]`, etc.), object arrays (e.g., `String[]`, `Integer[][]`, etc.).
 * `{NullAndEmptySource}`: a _composed annotation_ that combines the functionality of
   `@NullSource` and `@EmptySource`.
 
 If you need to supply multiple varying types of _blank_ strings to a parameterized
-container or test, you can achieve that using
+class or test, you can achieve that using
 <<writing-tests-parameterized-tests-sources-ValueSource>> -- for example,
 `@ValueSource(strings = {"{nbsp}", "{nbsp}{nbsp}{nbsp}", "\t", "\n"})`.
 
@@ -1781,14 +1780,14 @@ must always be `static`.
 
 Each factory method must generate a _stream_ of _arguments_, and each set of arguments
 within the stream will be provided as the physical arguments for individual invocations
-of the annotated `@ParameterizedContainer` class or `@ParameterizedTest` method. Generally
-speaking this translates to a `Stream` of `Arguments` (i.e., `Stream<Arguments>`);
-however, the actual concrete return type can take on many forms. In this context, a
-"stream" is anything that JUnit can reliably convert into a `Stream`, such as `Stream`,
-`DoubleStream`, `LongStream`, `IntStream`, `Collection`, `Iterator`, `Iterable`, an array
-of objects, or an array of primitives. The "arguments" within the stream can be supplied
-as an instance of `Arguments`, an array of objects (e.g., `Object[]`), or a single value
-if the parameterized container class or test method accepts a single argument.
+of the annotated `@ParameterizedClass` or `@ParameterizedTest`. Generally speaking this
+translates to a `Stream` of `Arguments` (i.e., `Stream<Arguments>`); however, the actual
+concrete return type can take on many forms. In this context, a "stream" is anything that
+JUnit can reliably convert into a `Stream`, such as `Stream`, `DoubleStream`,
+`LongStream`, `IntStream`, `Collection`, `Iterator`, `Iterable`, an array of objects, or
+an array of primitives. The "arguments" within the stream can be supplied as an instance
+of `Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
+parameterized class or test method accepts a single argument.
 
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated in the following example.
@@ -1798,11 +1797,10 @@ parameter type as demonstrated in the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=simple_MethodSource_example]
 ----
 
-For `@ParameterizedContainer` classes, providing a factory method name via `@MethodSource`
-is mandatory. For `@ParameterizedTest` methods, if you do not explicitly provide a factory
-method name, JUnit Jupiter will search for a _factory_ method with the same name as the
-current `@ParameterizedTest` method by convention. This is demonstrated in the following
-example.
+For a `@ParameterizedClass`, providing a factory method name via `@MethodSource` is
+mandatory. For a `@ParameterizedTest`, if you do not explicitly provide a factory method
+name, JUnit Jupiter will search for a _factory_ method with the same name as the current
+`@ParameterizedTest` method by convention. This is demonstrated in the following example.
 
 [source,java,indent=0]
 ----
@@ -1817,12 +1815,12 @@ supported as demonstrated by the following example.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=primitive_MethodSource_example]
 ----
 
-If a parameterized container class or test method declares multiple parameters, you need
-to return a collection, stream, or array of `Arguments` instances or object arrays as
-shown below (see the Javadoc for `{MethodSource}` for further details on supported return
-types). Note that `arguments(Object...)` is a static factory method defined in the
-`Arguments` interface. In addition, `Arguments.of(Object...)` may be used as an
-alternative to `arguments(Object...)`.
+If a parameterized class or test method declares multiple parameters, you need to return a
+collection, stream, or array of `Arguments` instances or object arrays as shown below (see
+the Javadoc for `{MethodSource}` for further details on supported return types). Note that
+`arguments(Object...)` is a static factory method defined in the `Arguments` interface. In
+addition, `Arguments.of(Object...)` may be used as an alternative to
+`arguments(Object...)`.
 
 [source,java,indent=0]
 ----
@@ -1865,7 +1863,7 @@ Fields within the test class must be `static` unless the test class is annotated
 
 Each field must be able to supply a _stream_ of arguments, and each set of "arguments"
 within the "stream" will be provided as the physical arguments for individual invocations
-of the annotated `@ParameterizedContainer` class or `@ParameterizedTest` method.
+of the annotated `@ParameterizedClass` or `@ParameterizedTest`.
 
 In this context, a "stream" is anything that JUnit can reliably convert to a `Stream`;
 however, the actual concrete field type can take on many forms. Generally speaking this
@@ -1873,8 +1871,8 @@ translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
 `DoubleStream`, `LongStream`, or `IntStream`), a `Supplier` of an `Iterator`, an array of
 objects, or an array of primitives. Each set of "arguments" within the "stream" can be
 supplied as an instance of `Arguments`, an array of objects (for example, `Object[]`,
-`String[]`, etc.), or a single value if the parameterized container class or test method
-accepts a single argument.
+`String[]`, etc.), or a single value if the parameterized class or test method accepts a
+single argument.
 
 [WARNING]
 ====
@@ -1889,15 +1887,15 @@ these types, you can wrap it in a `Supplier` — for example, `Supplier<IntStrea
 Please note that a one-dimensional array of objects supplied as a set of "arguments" will
 be handled differently than other types of arguments. Specifically, all the elements of a
 one-dimensional array of objects will be passed as individual physical arguments to the
-`@ParameterizedContainer` class or `@ParameterizedTest` method. See the Javadoc for
-`{FieldSource}` for further details.
+`@ParameterizedClass` or `@ParameterizedTest`. See the Javadoc for `{FieldSource}` for
+further details.
 
-For `@ParameterizedContainer` classes, providing a field name via `@FieldSource` is
-mandatory. For `@ParameterizedTest` methods, if you do not explicitly provide a field
-name, JUnit Jupiter will search in the test class for a field that has the same name as
-the current `@ParameterizedTest` method by convention. This is demonstrated in the
-following example. This parameterized test method will be invoked twice: with the values
-`"apple"` and `"banana"`.
+For a `@ParameterizedClass`, providing a field name via `@FieldSource` is mandatory. For a
+`@ParameterizedTest`, if you do not explicitly provide a field name, JUnit Jupiter will
+search in the test class for a field that has the same name as the current
+`@ParameterizedTest` method by convention. This is demonstrated in the following example.
+This parameterized test method will be invoked twice: with the values `"apple"` and
+`"banana"`.
 
 [source,java,indent=0]
 ----
@@ -1945,10 +1943,10 @@ Similarly, `named(String, Object)` is a static factory method defined in the
 `org.junit.jupiter.api.Named` interface.
 ====
 
-If a parameterized container class or test method declares multiple parameters, the
-corresponding `@FieldSource` field must be able to provide a collection, stream supplier,
-or array of `Arguments` instances or object arrays as shown below (see the Javadoc for
-`{FieldSource}` for further details on supported types).
+If a parameterized class or test method declares multiple parameters, the corresponding
+`@FieldSource` field must be able to provide a collection, stream supplier, or array of
+`Arguments` instances or object arrays as shown below (see the Javadoc for `{FieldSource}`
+for further details on supported types).
 
 [source,java,indent=0]
 ----
@@ -1974,7 +1972,7 @@ include::{testDir}/example/ExternalFieldSourceDemo.java[tags=external_field_Fiel
 
 `@CsvSource` allows you to express argument lists as comma-separated values (i.e., CSV
 `String` literals). Each string provided via the `value` attribute in `@CsvSource`
-represents a CSV record and results in one invocation of the parameterized container or
+represents a CSV record and results in one invocation of the parameterized class or
 test. The first record may optionally be used to supply CSV headers (see the Javadoc for
 the `useHeadersInDisplayName` attribute for details and an example).
 
@@ -2019,9 +2017,8 @@ by default. This behavior can be changed by setting the
 If the programming language you are using supports _text blocks_ -- for example, Java SE
 15 or higher -- you can alternatively use the `textBlock` attribute of `@CsvSource`. Each
 record within a text block represents a CSV record and results in one invocation of the
-parameterized container or test. The first record may optionally be used to supply CSV
-headers by setting the `useHeadersInDisplayName` attribute to `true` as in the example
-below.
+parameterized class or test. The first record may optionally be used to supply CSV headers
+by setting the `useHeadersInDisplayName` attribute to `true` as in the example below.
 
 Using a text block, the previous example can be implemented as follows.
 
@@ -2093,7 +2090,7 @@ your text block.
 
 `@CsvFileSource` lets you use comma-separated value (CSV) files from the classpath or the
 local file system. Each record from a CSV file results in one invocation of the
-parameterized container or test. The first record may optionally be used to supply CSV
+parameterized class or test. The first record may optionally be used to supply CSV
 headers. You can instruct JUnit to ignore the headers via the `numLinesToSkip` attribute.
 If you would like for the headers to be used in the display names, you can set the
 `useHeadersInDisplayName` attribute to `true`. The examples below demonstrate the use of
@@ -2222,8 +2219,8 @@ give it a try and provide feedback to the JUnit team so they can improve and eve
 
 By default, when an arguments source provides more arguments than the test method needs,
 those additional arguments are ignored and the test executes as usual.
-This can lead to bugs where arguments are never passed to the parameterized container
-class or test method.
+This can lead to bugs where arguments are never passed to the parameterized class or
+method.
 
 To prevent this, you can set argument count validation to 'strict'.
 Then, any additional arguments will cause an error instead.
@@ -2232,7 +2229,7 @@ To change this behavior for all tests, set the
 `junit.jupiter.params.argumentCountValidation`
 <<running-tests-config-params, configuration parameter>> to `strict`.
 To change this behavior for a single container or test,
-use the `argumentCountValidation` attribute of the `@ParameterizedContainer` or
+use the `argumentCountValidation` attribute of the `@ParameterizedClass` or
 `@ParameterizedTest` annotation:
 
 [source,java,indent=0]
@@ -2248,8 +2245,8 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=argument_count_valida
 
 JUnit Jupiter supports
 https://docs.oracle.com/javase/specs/jls/se8/html/jls-5.html#jls-5.1.2[Widening Primitive
-Conversion] for arguments supplied to a `@ParameterizedContainer` or `@ParameterizedTest`.
-For example, a parameterized container class or test method annotated with
+Conversion] for arguments supplied to a `@ParameterizedClass` or `@ParameterizedTest`.
+For example, a parameterized class or test method annotated with
 `@ValueSource(ints = { 1, 2, 3 })` can be declared to accept not only an argument of type
 `int` but also an argument of type `long`, `float`, or `double`.
 
@@ -2260,7 +2257,7 @@ To support use cases like `@CsvSource`, JUnit Jupiter provides a number of built
 implicit type converters. The conversion process depends on the declared type of each
 method parameter.
 
-For example, if a `@ParameterizedContainer` or `@ParameterizedTest` declares a parameter
+For example, if a `@ParameterizedClass` or `@ParameterizedTest` declares a parameter
 of type `TimeUnit` and the actual type supplied by the declared source is a `String`, the
 string will be automatically converted into the corresponding `TimeUnit` enum constant.
 
@@ -2393,10 +2390,10 @@ If you wish to implement a custom `ArgumentConverter` that also consumes an anno
 [[writing-tests-parameterized-tests-argument-aggregation]]
 ==== Argument Aggregation
 
-By default, each _argument_ provided to a `@ParameterizedContainer` class or
-`@ParameterizedTest` method corresponds to a single method parameter. Consequently,
-argument sources which are expected to supply a large number of arguments can lead to
-large constructor or method signatures, respectively.
+By default, each _argument_ provided to a `@ParameterizedClass` or `@ParameterizedTest`
+corresponds to a single method parameter. Consequently, argument sources which are
+expected to supply a large number of arguments can lead to large constructor or method
+signatures, respectively.
 
 In such cases, an `{ArgumentsAccessor}` can be used instead of multiple parameters. Using
 this API, you can access the provided arguments through a single argument passed to your
@@ -2417,16 +2414,16 @@ _An instance of `ArgumentsAccessor` is automatically injected into any parameter
 [[writing-tests-parameterized-tests-argument-aggregation-custom]]
 ===== Custom Aggregators
 
-Apart from direct access to the arguments of a `@ParameterizedContainer` or
+Apart from direct access to the arguments of a `@ParameterizedClass` or
 `@ParameterizedTest` using an `ArgumentsAccessor`, JUnit Jupiter also supports the usage
 of custom, reusable _aggregators_.
 
 To use a custom aggregator, implement the `{ArgumentsAggregator}` interface and register
-it via the `@AggregateWith` annotation on a compatible parameter in the
-`@ParameterizedContainer` class or `@ParameterizedTest` method. The result of the
-aggregation will then be provided as an argument for the corresponding parameter when the
-parameterized test is invoked. Note that an implementation of `ArgumentsAggregator` must
-be declared as either a top-level class or as a `static` nested class.
+it via the `@AggregateWith` annotation on a compatible parameter of the
+`@ParameterizedClass` or `@ParameterizedTest`. The result of the aggregation will then be
+provided as an argument for the corresponding parameter when the parameterized test is
+invoked. Note that an implementation of `ArgumentsAggregator` must be declared as either a
+top-level class or as a `static` nested class.
 
 [source,java,indent=0]
 ----
@@ -2439,10 +2436,10 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_e
 ----
 
 If you find yourself repeatedly declaring `@AggregateWith(MyTypeAggregator.class)` for
-multiple parameterized container classes or test methods across your codebase, you may
-wish to create a custom _composed annotation_ such as `@CsvToMyType` that is
-meta-annotated with `@AggregateWith(MyTypeAggregator.class)`. The following example
-demonstrates this in action with a custom `@CsvToPerson` annotation.
+multiple parameterized classes or methods across your codebase, you may wish to create a
+custom _composed annotation_ such as `@CsvToMyType` that is meta-annotated with
+`@AggregateWith(MyTypeAggregator.class)`. The following example demonstrates this in
+action with a custom `@CsvToPerson` annotation.
 
 [source,java,indent=0]
 ----
@@ -2458,7 +2455,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ArgumentsAggregator_w
 [[writing-tests-parameterized-tests-display-names]]
 ==== Customizing Display Names
 
-By default, the display name of a parameterized container or test invocation contains the
+By default, the display name of a parameterized class or test invocation contains the
 invocation index and the `String` representation of all arguments for that specific
 invocation. Each argument is preceded by its parameter name (unless the argument is only
 available via an `ArgumentsAccessor` or `ArgumentAggregator`), if the parameter name is
@@ -2466,7 +2463,7 @@ present in the bytecode (for Java, test code must be compiled with the `-paramet
 compiler flag; for Kotlin, with `-java-parameters`).
 
 However, you can customize invocation display names via the `name` attribute of the
-`@ParameterizedContainer` or `@ParameterizedTest` annotation as in the following example.
+`@ParameterizedClass` or `@ParameterizedTest` annotation as in the following example.
 
 ======
 [source,java,indent=0]
@@ -2568,7 +2565,7 @@ Note that `argumentSet(String, Object...)` is a static factory method defined in
 `org.junit.jupiter.params.provider.Arguments` interface.
 ====
 
-If you'd like to set a default name pattern for all parameterized containers and tests in
+If you'd like to set a default name pattern for all parameterized classes and tests in
 your project, you can declare the `junit.jupiter.params.displayname.default` configuration
 parameter in the `junit-platform.properties` file as demonstrated in the following example (see
 <<running-tests-config-params>> for other options).
@@ -2578,10 +2575,10 @@ parameter in the `junit-platform.properties` file as demonstrated in the followi
 junit.jupiter.params.displayname.default = {index}
 ----
 
-The display name for a parameterized container or test is determined according to the
+The display name for a parameterized class or test is determined according to the
 following precedence rules:
 
-1. `name` attribute in `@ParameterizedContainer` or `@ParameterizedTest`, if present
+1. `name` attribute in `@ParameterizedClass` or `@ParameterizedTest`, if present
 2. value of the `junit.jupiter.params.displayname.default` configuration parameter, if present
 3. `DEFAULT_DISPLAY_NAME` constant defined in
    `org.junit.jupiter.params.ParameterizedInvocationConstants`
@@ -2590,7 +2587,7 @@ following precedence rules:
 ==== Lifecycle and Interoperability
 
 [[writing-tests-parameterized-tests-lifecycle-interop-methods]]
-===== Parameterized Test Methods
+===== Parameterized Tests
 
 Each invocation of a parameterized test has the same lifecycle as a regular `@Test`
 method. For example, `@BeforeEach` methods will be executed before each invocation.
@@ -2610,15 +2607,15 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=ParameterResolver_exa
 ----
 
 [[writing-tests-parameterized-tests-lifecycle-interop-classes]]
-===== Parameterized Container Classes
+===== Parameterized Classes
 
-Each invocation of a parameterized container has the same lifecycle as a regular test
-class. For example, `@BeforeAll` methods will be executed _once_ before all invocations
-and `@BeforeEach` methods will be executed before each _test method_ invocation. Similar
-to <<writing-tests-dynamic-tests>>, invocations will appear one by one in the test tree of
-an IDE.
+Each invocation of a parameterized class has the same lifecycle as a regular test class.
+For example, `@BeforeAll` methods will be executed _once_ before all invocations and
+`@BeforeEach` methods will be executed before each _test method_ invocation. Similar to
+<<writing-tests-dynamic-tests>>, invocations will appear one by one in the test tree of an
+IDE.
 
-You may use `ParameterResolver` extensions with `@ParameterizedContainer` constructors.
+You may use `ParameterResolver` extensions with `@ParameterizedClass` constructors.
 However, if constructor injection is used, constructor parameters that are resolved by
 argument sources need to come first in the parameter list. Values from argument sources
 are not resolved for lifecycle methods (e.g. `@BeforeEach`).
@@ -2634,8 +2631,8 @@ Each invocation of a container template class behaves like the execution of a re
 class with full support for the same lifecycle callbacks and extensions. Please refer to
 <<extensions-container-templates>> for usage examples.
 
-NOTE: <<writing-tests-parameterized-tests, Parameterized Containers>> are built-in
-specializations of container templates.
+NOTE: <<writing-tests-parameterized-tests, Parameterized Classes>> are a built-in
+specialization of container templates.
 
 [[writing-tests-test-templates]]
 === Test Templates

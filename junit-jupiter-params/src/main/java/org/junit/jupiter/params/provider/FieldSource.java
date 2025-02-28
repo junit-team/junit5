@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedContainer;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 
 /**
@@ -33,8 +33,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
  * arguments for individual invocations of the annotated
- * {@link ParameterizedContainer @ParameterizedContainer} class or
- * {@link ParameterizedTest @ParameterizedTest} method.
+ * {@link ParameterizedClass @ParameterizedClass} or
+ * {@link ParameterizedTest @ParameterizedTest}.
  *
  * <p>In this context, a "stream" is anything that JUnit can reliably convert to
  * a {@link java.util.stream.Stream Stream}; however, the actual concrete field
@@ -49,7 +49,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * primitives. Each set of "arguments" within the "stream" can be supplied as an
  * instance of {@link Arguments}, an array of objects (for example, {@code Object[]},
  * {@code String[]}, etc.), or a single <em>value</em> if the parameterized
- * container or test accepts a single argument.
+ * class or test accepts a single argument.
  *
  * <p>In contrast to the supported return types for {@link MethodSource @MethodSource}
  * factory methods, the value of a {@code @FieldSource} field cannot be an instance of
@@ -106,15 +106,15 @@ import org.junit.jupiter.params.ParameterizedTest;
  * test instance lifecycle mode is used; whereas, fields in external classes must
  * always be {@code static}.
  *
- * <p>This behavior and the above examples also apply to parameters of
- * {@link ParameterizedContainer @ParameterizedContainer} classes, regardless
- * whether field or constructor injection is used.
+ * <p>This behavior and the above examples also apply to parameters of a
+ * {@link ParameterizedClass @ParameterizedClass}, regardless whether field or
+ * constructor injection is used.
  *
  * @since 5.11
  * @see MethodSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedContainer
+ * @see ParameterizedClass
  * @see ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
@@ -140,8 +140,8 @@ public @interface FieldSource {
 	 * <p>If no field names are declared, a field within the test class that has
 	 * the same name as the test method will be used as the field by default in
 	 * case this annotation is applied to a {@code @ParameterizedTest} method.
-	 * For {@code @ParameterizedContainer} classes, at least one field name must
-	 * be declared explicitly.
+	 * For a {@code @ParameterizedClass}, at least one field name must be
+	 * declared explicitly.
 	 *
 	 * <p>For further information, see the {@linkplain FieldSource class-level Javadoc}.
 	 */

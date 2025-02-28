@@ -24,31 +24,31 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
- * {@code @ParameterizedContainer} is used to signal that the annotated class is
- * a <em>parameterized container</em> class.
+ * {@code @ParameterizedClass} is used to signal that the annotated class is
+ * a <em>parameterized test class</em>.
  *
  * <h2>Arguments Providers and Sources</h2>
  *
- * <p>{@code @ParameterizedContainer} classes must specify at least one
+ * <p>A {@code @ParameterizedClass} must specify at least one
  * {@link org.junit.jupiter.params.provider.ArgumentsProvider ArgumentsProvider}
  * via {@link org.junit.jupiter.params.provider.ArgumentsSource @ArgumentsSource}
  * or a corresponding composed annotation (e.g., {@code @ValueSource},
  * {@code @CsvSource}, etc.). The provider is responsible for providing a
  * {@link java.util.stream.Stream Stream} of
  * {@link org.junit.jupiter.params.provider.Arguments Arguments} that will be
- * used to invoke the parameterized container class.
+ * used to invoke the parameterized class.
  *
  * <h2>Field or Constructor Injection</h2>
  *
  * <p>The provided arguments can either be injected into fields annotated with
  * {@link Parameter @Parameter} or passed to the unique constructor of the
- * parameterized container class. If a {@code @Parameter}-annotated field is
- * declared in the parameterized container class or one of its superclasses,
- * field injection will be used. Otherwise, constructor injection will be used.
+ * parameterized class. If a {@code @Parameter}-annotated field is declared in
+ * the parameterized class or one of its superclasses, field injection will be
+ * used. Otherwise, constructor injection will be used.
  *
  * <h3>Constructor Injection</h3>
  *
- * <p>A {@code @ParameterizedContainer} constructor may declare additional
+ * <p>A {@code @ParameterizedClass} constructor may declare additional
  * parameters at the end of its parameter list to be resolved by other
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
  * (e.g., {@code TestInfo}, {@code TestReporter}, etc.). Specifically, such a
@@ -63,7 +63,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <p>In this context, an <em>indexed parameter</em> is an argument for a given
  * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
- * is passed as an argument to the parameterized container at the same index in
+ * is passed as an argument to the parameterized class at the same index in
  * the constructor's formal parameter list. An <em>aggregator</em> is any
  * parameter of type
  * {@link org.junit.jupiter.params.aggregator.ArgumentsAccessor ArgumentsAccessor}
@@ -108,17 +108,17 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <h2>Composed Annotations</h2>
  *
- * <p>{@code @ParameterizedContainer} may also be used as a meta-annotation in
+ * <p>{@code @ParameterizedClass} may also be used as a meta-annotation in
  * order to create a custom <em>composed annotation</em> that inherits the
- * semantics of {@code @ParameterizedContainer}.
+ * semantics of {@code @ParameterizedClass}.
  *
  * <h2>Inheritance</h2>
  *
- * <p>The {@code @ParameterizedContainer} annotation is <em>not</em> inherited
+ * <p>The {@code @ParameterizedClass} annotation is <em>not</em> inherited
  * from superclasses but may be (re-)declared on a concrete parameterized
- * container class. {@code Parameter}-annotated fields from superclasses are
- * detected and used for field injection as if they were declared on the
- * concrete parameterized container class.
+ * class. {@code Parameter}-annotated fields from superclasses are detected and
+ * used for field injection as if they were declared on the concrete
+ * parameterized class.
  *
  * @since 5.13
  * @see Parameter
@@ -141,13 +141,13 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
 @ContainerTemplate
-@ExtendWith(ParameterizedContainerExtension.class)
+@ExtendWith(ParameterizedClassExtension.class)
 @SuppressWarnings("exports")
-public @interface ParameterizedContainer {
+public @interface ParameterizedClass {
 
 	/**
 	 * The display name to be used for individual invocations of the
-	 * parameterized container; never blank or consisting solely of whitespace.
+	 * parameterized class; never blank or consisting solely of whitespace.
 	 *
 	 * <p>Defaults to <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>.
 	 *
@@ -189,15 +189,15 @@ public @interface ParameterizedContainer {
 	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
 
 	/**
-	 * Configure whether all arguments of the parameterized container that
-	 * implement {@link AutoCloseable} will be closed after their corresponding
+	 * Configure whether all arguments of the parameterized class that implement
+	 * {@link AutoCloseable} will be closed after their corresponding
 	 * invocation.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *
 	 * <p><strong>WARNING</strong>: if an argument that implements
 	 * {@code AutoCloseable} is reused for multiple invocations of the same
-	 * parameterized container, you must set {@code autoCloseArguments} to
+	 * parameterized class, you must set {@code autoCloseArguments} to
 	 * {@code false} to ensure that the argument is not closed between
 	 * invocations.
 	 *
@@ -207,7 +207,7 @@ public @interface ParameterizedContainer {
 
 	/**
 	 * Configure whether zero invocations are allowed for this
-	 * parameterized container.
+	 * parameterized class.
 	 *
 	 * <p>Set this attribute to {@code true} if the absence of invocations is
 	 * expected in some cases and should not cause a test failure.
@@ -223,8 +223,8 @@ public @interface ParameterizedContainer {
 	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.
 	 *
 	 * <p>When an {@link ArgumentsSource} provides more arguments than declared
-	 * by the parameterized container class constructor or {@link Parameter}
-	 * annotated fields, there might be a bug in the container class or the
+	 * by the parameterized class constructor or {@link Parameter}-annotated
+	 * fields, there might be a bug in the parameterized class or the
 	 * {@link ArgumentsSource}. By default, the additional arguments are
 	 * ignored. {@code argumentCountValidation} allows you to control how
 	 * additional arguments are handled. The default can be configured via the

@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedInvocationConstants;
 
 /**
@@ -29,7 +30,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
- * {@code @ParameterizedContainer} class or {@code @ParameterizedTest} method.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
  *
  * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
  * via either {@link #delimiter} or {@link #delimiterString}.
@@ -63,7 +64,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * @since 5.0
  * @see CsvFileSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
@@ -165,10 +166,10 @@ public @interface CsvSource {
 	 * for columns.
 	 *
 	 * <p>When set to {@code true}, the header names will be used in the
-	 * generated display name for each {@code @ParameterizedContainer} class or
-	 * {@code @ParameterizedTest} method invocation. When using this feature,
-	 * you must ensure that the display name pattern for
-	 * {@code @ParameterizedContainer} or {@code @ParameterizedTest} includes
+	 * generated display name for each {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} invocation. When using this feature, you must
+	 * ensure that the display name pattern for {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} includes
 	 * {@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead of
 	 * {@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
 	 * as demonstrated in the example below.

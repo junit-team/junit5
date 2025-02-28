@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedContainer;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 
 /**
@@ -31,10 +31,10 @@ import org.junit.jupiter.params.ParameterizedTest;
  * by <em>fully qualified method name</em>.
  *
  * <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
- * and each set of "arguments" within the "stream" will be provided as the physical
- * arguments for individual invocations of the annotated
- * {@code @ParameterizedContainer} class or
- * {@link ParameterizedTest @ParameterizedTest} method. Generally speaking this
+ * and each set of "arguments" within the "stream" will be provided as the
+ * physical arguments for individual invocations of the annotated
+ * {@code ParameterizedClass @ParameterizedClass} or
+ * {@link ParameterizedTest @ParameterizedTest}. Generally speaking this
  * translates to a {@link java.util.stream.Stream Stream} of {@link Arguments}
  * (i.e., {@code Stream<Arguments>}); however, the actual concrete return type
  * can take on many forms. In this context, a "stream" is anything that JUnit
@@ -94,9 +94,9 @@ import org.junit.jupiter.params.ParameterizedTest;
  * test instance lifecycle mode is used; whereas, factory methods in external
  * classes must always be {@code static}.
  *
- * <p>This behavior and the above examples also apply to parameters of
- * {@link ParameterizedContainer @ParameterizedContainer} classes, regardless
- * whether field or constructor injection is used.
+ * <p>This behavior and the above examples also apply to parameters of a
+ * {@link ParameterizedClass @ParameterizedClass}, regardless whether field or
+ * constructor injection is used.
  *
  * <p>Factory methods can declare parameters, which will be provided by registered
  * implementations of {@link org.junit.jupiter.api.extension.ParameterResolver}.
@@ -105,7 +105,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * @see FieldSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedContainer
+ * @see ParameterizedClass
  * @see ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
@@ -139,8 +139,8 @@ public @interface MethodSource {
 	 * <p>If no factory method names are declared, a method within the test class
 	 * that has the same name as the test method will be used as the factory
 	 * method by default in case this annotation is applied to a
-	 * {@code @ParameterizedTest} method. For {@code @ParameterizedContainer}
-	 * classes, at least one method name must be declared explicitly.
+	 * {@code @ParameterizedTest} method. For a {@code @ParameterizedClass}, at
+	 * least one method name must be declared explicitly.
 	 *
 	 * <p>For further information, see the {@linkplain MethodSource class-level Javadoc}.
 	 */

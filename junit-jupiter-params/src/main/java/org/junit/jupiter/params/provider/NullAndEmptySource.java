@@ -25,13 +25,12 @@ import org.apiguardian.api.API;
  * the functionality of {@link NullSource @NullSource} and
  * {@link EmptySource @EmptySource}.
  *
- * <p>Annotating a {@code @ParameterizedContainer} class or
- * {@code @ParameterizedTest} method with {@code @NullAndEmptySource} is
- * equivalent to annotating the method with both {@code @NullSource} and
- * {@code @EmptySource}.
+ * <p>Annotating a {@code @ParameterizedClass} or {@code @ParameterizedTest}
+ * with {@code @NullAndEmptySource} is equivalent to annotating the method with
+ * both {@code @NullSource} and {@code @EmptySource}.
  *
  * @since 5.4
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see NullSource
  * @see EmptySource

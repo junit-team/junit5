@@ -22,8 +22,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @EmptySource} is an {@link ArgumentsSource} which provides a single
- * <em>empty</em> argument to the annotated {@code @ParameterizedContainer}
- * class or {@code @ParameterizedTest} method.
+ * <em>empty</em> argument to the annotated {@code @ParameterizedClass}
+ * or {@code @ParameterizedTest}.
  *
  * <h2>Supported Parameter Types</h2>
  *
@@ -46,7 +46,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.4
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see NullSource
  * @see NullAndEmptySource

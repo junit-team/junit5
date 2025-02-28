@@ -24,16 +24,15 @@ import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-class ParameterizedContainerClassContext
-		implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
+class ParameterizedClassContext implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
 
 	private final Class<?> clazz;
-	private final ParameterizedContainer annotation;
+	private final ParameterizedClass annotation;
 	private final TestInstance.Lifecycle testInstanceLifecycle;
 	private final ResolverFacade resolverFacade;
 	private final InjectionType injectionType;
 
-	ParameterizedContainerClassContext(Class<?> clazz, ParameterizedContainer annotation,
+	ParameterizedClassContext(Class<?> clazz, ParameterizedClass annotation,
 			TestInstance.Lifecycle testInstanceLifecycle) {
 		this.clazz = clazz;
 		this.annotation = annotation;
@@ -58,7 +57,7 @@ class ParameterizedContainerClassContext
 	}
 
 	@Override
-	public ParameterizedContainer getAnnotation() {
+	public ParameterizedClass getAnnotation() {
 		return this.annotation;
 	}
 
@@ -95,7 +94,7 @@ class ParameterizedContainerClassContext
 	@Override
 	public ContainerTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			Arguments arguments, int invocationIndex) {
-		return new ParameterizedContainerInvocationContext(this, formatter, arguments, invocationIndex);
+		return new ParameterizedClassInvocationContext(this, formatter, arguments, invocationIndex);
 	}
 
 	TestInstance.Lifecycle getTestInstanceLifecycle() {

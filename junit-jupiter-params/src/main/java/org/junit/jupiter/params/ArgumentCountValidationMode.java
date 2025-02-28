@@ -15,17 +15,17 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 
 /**
  * Enumeration of argument count validation modes for
- * {@link ParameterizedContainer @ParameterizedContainer} and
+ * {@link ParameterizedClass @ParameterizedClass} and
  * {@link ParameterizedTest @ParameterizedTest}.
  *
  * <p>When an {@link ArgumentsSource} provides more arguments than declared by
- * the parameterized container or method, there might be a bug in the
- * class/method or the {@link ArgumentsSource}. By default, the additional
- * arguments are ignored. {@link ArgumentCountValidationMode} allows you to
- * control how additional arguments are handled.
+ * the parameterized class or method, there might be a bug in the class/method
+ * or the {@link ArgumentsSource}. By default, the additional arguments are
+ * ignored. {@link ArgumentCountValidationMode} allows you to control how
+ * additional arguments are handled.
  *
  * @since 5.12
- * @see ParameterizedContainer#argumentCountValidation()
+ * @see ParameterizedClass#argumentCountValidation()
  * @see ParameterizedTest#argumentCountValidation()
  */
 @API(status = API.Status.EXPERIMENTAL, since = "5.12")
@@ -45,8 +45,7 @@ public enum ArgumentCountValidationMode {
 	 * Use the "none" argument count validation mode.
 	 *
 	 * <p>When there are more arguments provided than declared by the
-	 * parameterized container or method, these additional arguments are
-	 * ignored.
+	 * parameterized class or method, these additional arguments are ignored.
 	 */
 	NONE,
 
@@ -54,7 +53,7 @@ public enum ArgumentCountValidationMode {
 	 * Use the strict argument count validation mode.
 	 *
 	 * <p>When there are more arguments provided than declared by the
-	 * parameterized container or method, this raises an error.
+	 * parameterized class or method, this raises an error.
 	 */
 	STRICT,
 }

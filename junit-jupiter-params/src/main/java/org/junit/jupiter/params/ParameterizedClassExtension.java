@@ -11,7 +11,7 @@
 package org.junit.jupiter.params;
 
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.params.ParameterizedContainerClassContext.InjectionType.CONSTRUCTOR;
+import static org.junit.jupiter.params.ParameterizedClassContext.InjectionType.CONSTRUCTOR;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.Constructor;
@@ -34,7 +34,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 /**
  * @since 5.13
  */
-class ParameterizedContainerExtension extends ParameterizedInvocationContextProvider<ContainerTemplateInvocationContext>
+class ParameterizedClassExtension extends ParameterizedInvocationContextProvider<ContainerTemplateInvocationContext>
 		implements ContainerTemplateInvocationContextProvider, ParameterResolver {
 
 	private static final String DECLARATION_CONTEXT_KEY = "context";
@@ -95,8 +95,8 @@ class ParameterizedContainerExtension extends ParameterizedInvocationContextProv
 			return true;
 		}
 
-		Optional<ParameterizedContainer> annotation = findAnnotation(extensionContext.getTestClass(),
-			ParameterizedContainer.class);
+		Optional<ParameterizedClass> annotation = findAnnotation(extensionContext.getTestClass(),
+			ParameterizedClass.class);
 		if (!annotation.isPresent()) {
 			return false;
 		}
@@ -107,31 +107,29 @@ class ParameterizedContainerExtension extends ParameterizedInvocationContextProv
 		return true;
 	}
 
-	private static ParameterizedContainerClassContext createClassContext(ExtensionContext extensionContext,
-			Class<?> testClass, ParameterizedContainer annotation) {
+	private static ParameterizedClassContext createClassContext(ExtensionContext extensionContext, Class<?> testClass,
+			ParameterizedClass annotation) {
 
 		TestInstance.Lifecycle lifecycle = extensionContext.getTestInstanceLifecycle() //
 				.orElseThrow(() -> new PreconditionViolationException("TestInstance.Lifecycle not present"));
 
-		ParameterizedContainerClassContext classContext = new ParameterizedContainerClassContext(testClass, annotation,
-			lifecycle);
+		ParameterizedClassContext classContext = new ParameterizedClassContext(testClass, annotation, lifecycle);
 
 		if (lifecycle == PER_CLASS && classContext.getInjectionType() == CONSTRUCTOR) {
 			throw new PreconditionViolationException(
-				"Constructor injection is not supported for @ParameterizedContainer classes with @TestInstance(Lifecycle.PER_CLASS)");
+				"Constructor injection is not supported for @ParameterizedClass classes with @TestInstance(Lifecycle.PER_CLASS)");
 		}
 
 		return classContext;
 	}
 
-	private ParameterizedContainerClassContext getDeclarationContext(ExtensionContext extensionContext) {
+	private ParameterizedClassContext getDeclarationContext(ExtensionContext extensionContext) {
 		return getStore(extensionContext)//
-				.get(DECLARATION_CONTEXT_KEY, ParameterizedContainerClassContext.class);
+				.get(DECLARATION_CONTEXT_KEY, ParameterizedClassContext.class);
 	}
 
 	private Store getStore(ExtensionContext context) {
-		return context.getStore(
-			Namespace.create(ParameterizedContainerExtension.class, context.getRequiredTestClass()));
+		return context.getStore(Namespace.create(ParameterizedClassExtension.class, context.getRequiredTestClass()));
 	}
 
 }

@@ -19,17 +19,17 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.ParameterizedContainerClassContext.InjectionType;
+import org.junit.jupiter.params.ParameterizedClassContext.InjectionType;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
-class ParameterizedContainerInvocationContext extends ParameterizedInvocationContext<ParameterizedContainerClassContext>
+class ParameterizedClassInvocationContext extends ParameterizedInvocationContext<ParameterizedClassContext>
 		implements ContainerTemplateInvocationContext {
 
 	private final ResolutionCache resolutionCache = ResolutionCache.enabled();
 
-	ParameterizedContainerInvocationContext(ParameterizedContainerClassContext classContext,
+	ParameterizedClassInvocationContext(ParameterizedClassContext classContext,
 			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
 		super(classContext, formatter, arguments, invocationIndex);
 	}

@@ -18,11 +18,11 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 /**
  * @since 5.0
  */
-class TestTemplateMethodParameterResolver extends ParameterizedInvocationParameterResolver {
+class ParameterizedTestMethodParameterResolver extends ParameterizedInvocationParameterResolver {
 
 	private final Method testTemplateMethod;
 
-	TestTemplateMethodParameterResolver(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments,
+	ParameterizedTestMethodParameterResolver(ParameterizedTestContext methodContext, EvaluatedArgumentSet arguments,
 			int invocationIndex) {
 		super(methodContext.getResolverFacade(), arguments, invocationIndex, ResolutionCache.DISABLED);
 		this.testTemplateMethod = methodContext.getAnnotatedElement();

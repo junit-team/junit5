@@ -25,13 +25,13 @@ import org.apiguardian.api.API;
  * {@link ArgumentsAggregator}.
  *
  * <p>This annotation may be applied to parameters of a
- * {@link org.junit.jupiter.params.ParameterizedContainer @ParameterizedContainer}
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass}
  * constructor or its
  * {@link org.junit.jupiter.params.Parameter @Parameter}-annotated fields, or to
  * parameters of a
  * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method
  * in order for an aggregated value to be resolved for the annotated parameter
- * when the parameterized container or method is invoked.
+ * when the parameterized class or method is invoked.
  *
  * <p>{@code @AggregateWith} may also be used as a meta-annotation in order to
  * create a custom <em>composed annotation</em> that inherits the semantics

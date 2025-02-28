@@ -22,10 +22,10 @@ import org.junit.jupiter.params.provider.Arguments;
 /**
  * @since 5.0
  */
-class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestMethodContext>
+class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestContext>
 		implements TestTemplateInvocationContext {
 
-	ParameterizedTestInvocationContext(ParameterizedTestMethodContext methodContext,
+	ParameterizedTestInvocationContext(ParameterizedTestContext methodContext,
 			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
 		super(methodContext, formatter, arguments, invocationIndex);
 	}
@@ -38,7 +38,7 @@ class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		return singletonList( //
-			new TestTemplateMethodParameterResolver(this.declarationContext, this.arguments, this.invocationIndex) //
+			new ParameterizedTestMethodParameterResolver(this.declarationContext, this.arguments, this.invocationIndex) //
 		);
 	}
 

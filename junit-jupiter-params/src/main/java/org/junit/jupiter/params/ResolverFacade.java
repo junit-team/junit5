@@ -95,7 +95,7 @@ class ResolverFacade {
 		return new ResolverFacade(clazz, uniqueIndexedParameters, aggregatorParameters, 0);
 	}
 
-	static ResolverFacade create(Constructor<?> constructor, ParameterizedContainer annotation) {
+	static ResolverFacade create(Constructor<?> constructor, ParameterizedClass annotation) {
 		java.lang.reflect.Parameter[] parameters = constructor.getParameters();
 		// Inner classes get the outer instance as first parameter
 		int implicitParameters = parameters.length > 0 && parameters[0].isImplicit() ? 1 : 0;
@@ -110,7 +110,7 @@ class ResolverFacade {
 	 * Create a new {@link ResolverFacade} for the supplied {@link Executable}.
 	 *
 	 * <p>This method takes a best-effort approach at enforcing the following
-	 * policy for parameterized container constructors and parameterized test
+	 * policy for parameterized class constructors and parameterized test
 	 * methods that accept aggregators as arguments.
 	 * <ol>
 	 * <li>zero or more <em>indexed arguments</em> come first.</li>

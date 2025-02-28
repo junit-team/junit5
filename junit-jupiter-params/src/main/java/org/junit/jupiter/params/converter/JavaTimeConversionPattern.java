@@ -24,13 +24,13 @@ import org.apiguardian.api.API;
 /**
  * {@code @JavaTimeConversionPattern} is an annotation that allows a date/time
  * conversion pattern to be specified on a parameter of a
- * {@link org.junit.jupiter.params.ParameterizedContainer @ParameterizedContainer}
- * class or
- * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest} method.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass}
+ * or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * @since 5.0
  * @see ConvertWith
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
  */

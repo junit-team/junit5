@@ -23,16 +23,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedContainer;
+import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
-public class ParameterizedContainerDemo {
+public class ParameterizedClassDemo {
 
 	@Nested
 	// tag::first_example[]
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(strings = { "racecar", "radar", "able was I ere I saw elba" })
 	class PalindromeTests {
 
@@ -56,7 +56,7 @@ public class ParameterizedContainerDemo {
 	class ConstructorInjection {
 		@Nested
 		// tag::constructor_injection[]
-		@ParameterizedContainer
+		@ParameterizedClass
 		@CsvSource({ "apple, 23", "banana, 42" })
 		class FruitTests {
 
@@ -86,7 +86,7 @@ public class ParameterizedContainerDemo {
 	class FieldInjection {
 		@Nested
 		// tag::field_injection[]
-		@ParameterizedContainer
+		@ParameterizedClass
 		@CsvSource({ "apple, 23", "banana, 42" })
 		class FruitTests {
 
@@ -113,7 +113,7 @@ public class ParameterizedContainerDemo {
 	@Nested
 	// tag::nested[]
 	@Execution(SAME_THREAD)
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(strings = { "apple", "banana" })
 	class FruitTests {
 
@@ -121,7 +121,7 @@ public class ParameterizedContainerDemo {
 		String fruit;
 
 		@Nested
-		@ParameterizedContainer
+		@ParameterizedClass
 		@ValueSource(ints = { 23, 42 })
 		class QuantityTests {
 

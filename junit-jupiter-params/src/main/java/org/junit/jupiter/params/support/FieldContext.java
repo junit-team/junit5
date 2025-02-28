@@ -17,15 +17,15 @@ import java.lang.reflect.Field;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.params.Parameter;
-import org.junit.jupiter.params.ParameterizedContainer;
+import org.junit.jupiter.params.ParameterizedClass;
 
 /**
  * {@code FieldContext} encapsulates the <em>context</em> in which an
  * {@link Parameter @Parameter}-annotated {@link Field} is declared in a
- * {@link ParameterizedContainer @ParameterizedContainer}.
+ * {@link ParameterizedClass @ParameterizedClass}.
  *
  * @since 5.13
- * @see ParameterizedContainer
+ * @see ParameterizedClass
  * @see Parameter
  */
 @API(status = EXPERIMENTAL, since = "5.13")

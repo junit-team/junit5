@@ -35,8 +35,8 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 			return false;
 		}
 
-		ParameterizedTestMethodContext methodContext = new ParameterizedTestMethodContext(
-			context.getRequiredTestMethod(), annotation.get());
+		ParameterizedTestContext methodContext = new ParameterizedTestContext(context.getRequiredTestMethod(),
+			annotation.get());
 
 		getStore(context).put(DECLARATION_CONTEXT_KEY, methodContext);
 
@@ -55,9 +55,9 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 		return getDeclarationContext(extensionContext).isAllowingZeroInvocations();
 	}
 
-	private ParameterizedTestMethodContext getDeclarationContext(ExtensionContext extensionContext) {
+	private ParameterizedTestContext getDeclarationContext(ExtensionContext extensionContext) {
 		return getStore(extensionContext)//
-				.get(DECLARATION_CONTEXT_KEY, ParameterizedTestMethodContext.class);
+				.get(DECLARATION_CONTEXT_KEY, ParameterizedTestContext.class);
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {

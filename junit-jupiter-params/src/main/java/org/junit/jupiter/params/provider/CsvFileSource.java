@@ -28,8 +28,8 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * files from one or more classpath {@link #resources} or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
- * arguments to the annotated {@code @ParameterizedContainer} class or
- * {@code @ParameterizedTest} method. Note that the first record may optionally
+ * arguments to the annotated {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest}. Note that the first record may optionally
  * be used to supply CSV headers (see {@link #useHeadersInDisplayName}).
  *
  * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
@@ -60,7 +60,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * @since 5.0
  * @see CsvSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
@@ -106,10 +106,10 @@ public @interface CsvFileSource {
 	 * for columns.
 	 *
 	 * <p>When set to {@code true}, the header names will be used in the
-	 * generated display name for each {@code @ParameterizedContainer} class or
-	 * {@code @ParameterizedTest} method invocation. When using this feature,
-	 * you must ensure that the display name pattern for
-	 * {@code @ParameterizedContainer} or {@code @ParameterizedTest} includes
+	 * generated display name for each {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} invocation. When using this feature, you must
+	 * ensure that the display name pattern for {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} includes
 	 * {@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead of
 	 * {@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
 	 * as demonstrated in the example below.

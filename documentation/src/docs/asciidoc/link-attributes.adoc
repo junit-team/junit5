@@ -197,7 +197,7 @@ endif::[]
 :NullAndEmptySource:                         {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullAndEmptySource.html[@NullAndEmptySource]
 :NullSource:                                 {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/provider/NullSource.html[@NullSource]
 :Parameter:                                  {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/Parameter.html[@Parameter]
-:ParameterizedContainer:                     {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedContainer.html[@ParameterizedContainer]
+:ParameterizedClass:                         {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedClass.html[@ParameterizedClass]
 :ParameterizedTest:                          {javadoc-root}/org.junit.jupiter.params/org/junit/jupiter/params/ParameterizedTest.html[@ParameterizedTest]
 :ValueArgumentsProvider:                     {junit5-repo}/blob/main/junit-jupiter-params/src/main/java/org/junit/jupiter/params/provider/ValueArgumentsProvider.java[ValueArgumentsProvider]
 // Jupiter Engine

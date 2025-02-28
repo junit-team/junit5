@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInfo
 import org.junit.jupiter.params.provider.ValueSource
 
-@ParameterizedContainer
+@ParameterizedClass
 @ValueSource(ints = [-1, 1])
-data class ParameterizedContainerDataClassTestCase(
+data class ParameterizedDataClassTestCase(
     val value: Int,
     val testInfo: TestInfo
 ) {

@@ -25,7 +25,7 @@ import org.apiguardian.api.API;
  * {@link ArgumentConverter}.
  *
  * <p>This annotation may be applied to parameters of a
- * {@link org.junit.jupiter.params.ParameterizedContainer @ParameterizedContainer}
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass}
  * constructor or its
  * {@link org.junit.jupiter.params.Parameter @Parameter}-annotated fields, or to
  * parameters of a

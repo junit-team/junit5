@@ -114,7 +114,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * implementation.
  *
  * @since 5.0
- * @see ParameterizedContainer
+ * @see ParameterizedClass
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @see org.junit.jupiter.params.provider.ArgumentsSource

@@ -22,8 +22,8 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @NullSource} is an {@link ArgumentsSource} which provides a single
- * {@code null} argument to the annotated {@code @ParameterizedContainer} class
- * or {@code @ParameterizedTest} method.
+ * {@code null} argument to the annotated {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest}.
  *
  * <p>Note that {@code @NullSource} cannot be used for an argument that has
  * a primitive type, unless the argument is converted to a corresponding wrapper
@@ -31,7 +31,7 @@ import org.apiguardian.api.API;
  *
  * @since 5.4
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see EmptySource
  * @see NullAndEmptySource

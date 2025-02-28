@@ -25,8 +25,8 @@ import org.junit.platform.commons.JUnitException;
 /**
  * An {@code ArgumentsProvider} is responsible for
  * {@linkplain #provideArguments(ParameterDeclarations, ExtensionContext) providing}
- * a stream of arguments to be passed to a {@code @ParameterizedContainer} class
- * or {@code @ParameterizedTest} method.
+ * a stream of arguments to be passed to a {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest}.
  *
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.
@@ -35,7 +35,7 @@ import org.junit.platform.commons.JUnitException;
  * constructor to use {@linkplain ParameterResolver parameter resolution}.
  *
  * @since 5.0
- * @see org.junit.jupiter.params.ParameterizedContainer
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
@@ -63,11 +63,10 @@ public interface ArgumentsProvider {
 
 	/**
 	 * Provide a {@link Stream} of {@link Arguments} to be passed to a
-	 * {@code @ParameterizedContainer} class or {@code @ParameterizedTest}
-	 * method.
+	 * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
 	 *
 	 * @param parameters the parameter declarations for the parameterized
-	 * container or test; never {@code null}
+	 * class or test; never {@code null}
 	 * @param context the current extension context; never {@code null}
 	 * @return a stream of arguments; never {@code null}
 	 * @since 5.13

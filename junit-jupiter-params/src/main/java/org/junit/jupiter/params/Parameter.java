@@ -24,15 +24,15 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
 /**
  * {@code @Parameter} is used to signal that a field in a
- * <em>parameterized container</em> class constitutes a <em>parameter</em> and
- * marks it for field injection.
+ * {@code @ParameterizedClass} constitutes a <em>parameter</em> and marks it for
+ * field injection.
  *
  * <p>{@code @Parameter} may also be used as a meta-annotation in order to
  * create a custom <em>composed annotation</em> that inherits the semantics of
  * {@code @Parameter}.
  *
  * @since 5.13
- * @see ParameterizedContainer
+ * @see ParameterizedClass
  * @see ArgumentsAccessor
  * @see AggregateWith
  * @see org.junit.jupiter.params.converter.ArgumentConverter
@@ -58,7 +58,7 @@ public @interface Parameter {
 	 *
 	 * <p>May be omitted if there's a single <em>indexed parameter</em>.
 	 * Otherwise, must be unique among all <em>indexed parameters</em> of the
-	 * parameterized container class and its superclasses.
+	 * parameterized class and its superclasses.
 	 */
 	int value() default UNSET_INDEX;
 

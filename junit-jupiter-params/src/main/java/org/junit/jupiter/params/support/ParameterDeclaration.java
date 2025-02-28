@@ -19,8 +19,7 @@ import org.apiguardian.api.API;
 
 /**
  * {@code ParameterDeclaration} encapsulates the <em>declaration</em> of an
- * indexed {@code @ParameterizedContainer} class or {@code @ParameterizedTest}
- * method parameter.
+ * indexed {@code @ParameterizedClass} or {@code @ParameterizedTest} parameter.
  *
  * @since 5.13
  * @see ParameterDeclarations

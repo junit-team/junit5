@@ -89,12 +89,12 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 
-@SuppressWarnings("ALL")
-public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestEngineTests {
+@SuppressWarnings("JUnitMalformedDeclaration")
+public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
 	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class,
-			RecordWithParameterAnnotationOnComponentTestCase.class, ParameterizedContainerDataClassTestCase.class,
+			RecordWithParameterAnnotationOnComponentTestCase.class, ParameterizedDataClassTestCase.class,
 			FieldInjectionTestCase.class, RecordWithBuiltInConverterTestCase.class,
 			RecordWithRegisteredConversionTestCase.class, FieldInjectionWithRegisteredConversionTestCase.class,
 			RecordWithBuiltInAggregatorTestCase.class, FieldInjectionWithBuiltInAggregatorTestCase.class,
@@ -272,7 +272,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
+					"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
 	}
 
 	@ParameterizedTest
@@ -293,7 +293,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: @ParameterizedContainer consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
+					"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
 	}
 
 	@Test
@@ -311,7 +311,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one set of arguments for this @ParameterizedContainer"))));
+					"Configuration error: You must configure at least one set of arguments for this @ParameterizedClass"))));
 	}
 
 	@Test
@@ -327,12 +327,12 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one arguments source for this @ParameterizedContainer"))));
+					"Configuration error: You must configure at least one arguments source for this @ParameterizedClass"))));
 	}
 
 	@ParameterizedTest
 	@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
-	void supportsNestedParameterizedContainers(Class<?> containerTemplateClass) {
+	void supportsNestedParameterizedClasss(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -348,7 +348,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	@ParameterizedTest
 	@ValueSource(classes = { ConstructorInjectionWithRegularNestedTestCase.class,
 			FieldInjectionWithRegularNestedTestCase.class })
-	void supportsRegularNestedTestClassesInsideParameterizedContainer(Class<?> containerTemplateClass) {
+	void supportsRegularNestedTestClassesInsideParameterizedClass(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -386,13 +386,13 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure(message(it -> it.contains(
-					"Constructor injection is not supported for @ParameterizedContainer classes with @TestInstance(Lifecycle.PER_CLASS)"))));
+					"Constructor injection is not supported for @ParameterizedClass classes with @TestInstance(Lifecycle.PER_CLASS)"))));
 	}
 
 	@Test
 	void supportsInjectionOfInheritedFields() {
 
-		var results = executeTestsForClass(InheritedHiddenParameterFieldCase.class);
+		var results = executeTestsForClass(InheritedHiddenParameterFieldTestCase.class);
 
 		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 
@@ -479,13 +479,13 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 				.map(ReportEntry::getKeyValuePairs);
 	}
 
-	private static Condition<UniqueId> lastSegmentType(String segmentType) {
+	private static Condition<UniqueId> lastSegmentType(@SuppressWarnings("SameParameterValue") String segmentType) {
 		return new Condition<>(it -> segmentType.equals(it.getLastSegment().getType()), "last segment type is '%s'",
 			segmentType);
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainerWithNegativeAndPositiveValue
+	@ParameterizedClassWithNegativeAndPositiveValue
 	static class ConstructorInjectionTestCase {
 
 		private int value;
@@ -512,7 +512,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainerWithNegativeAndPositiveValue
+	@ParameterizedClassWithNegativeAndPositiveValue
 	record RecordTestCase(int value, TestInfo testInfo) {
 
 		@Test
@@ -528,7 +528,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	record RecordWithParameterAnnotationOnComponentTestCase(@Parameter int value) {
 
@@ -544,7 +544,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	static class FieldInjectionTestCase {
 
@@ -565,7 +565,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvSource({ "-1", "1" })
 	record RecordWithBuiltInConverterTestCase(int value) {
 
@@ -581,7 +581,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	record RecordWithRegisteredConversionTestCase(@ConvertWith(CustomIntegerToStringConverter.class) String value) {
 
@@ -597,7 +597,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	static class FieldInjectionWithRegisteredConversionTestCase {
 
@@ -633,7 +633,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	record RecordWithBuiltInAggregatorTestCase(ArgumentsAccessor accessor) {
 
@@ -650,7 +650,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	static class FieldInjectionWithBuiltInAggregatorTestCase {
 
@@ -669,7 +669,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	record RecordWithCustomAggregatorTestCase(@AggregateWith(TimesTwoAggregator.class) int value) {
 
@@ -686,7 +686,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
 	static class FieldInjectionWithCustomAggregatorTestCase {
 
@@ -707,9 +707,9 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 	@Target(ElementType.TYPE)
 	@Retention(RetentionPolicy.RUNTIME)
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { -1, 1 })
-	@interface ParameterizedContainerWithNegativeAndPositiveValue {
+	@interface ParameterizedClassWithNegativeAndPositiveValue {
 	}
 
 	private static class TimesTwoAggregator extends SimpleArgumentsAggregator {
@@ -723,7 +723,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@NullAndEmptySource
 	record NullAndEmptySourceConstructorInjectionTestCase(String value) {
 		@Test
@@ -733,7 +733,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@NullAndEmptySource
 	static class NullAndEmptySourceConstructorFieldInjectionTestCase {
 
@@ -746,7 +746,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvFileSource(resources = "two-column.csv")
 	record CsvFileSourceConstructorInjectionTestCase(String name, int value) {
 		@Test
@@ -756,7 +756,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvFileSource(resources = "two-column.csv")
 	static class CsvFileSourceFieldInjectionTestCase {
 
@@ -773,7 +773,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@EnumSource
 	record SingleEnumSourceConstructorInjectionTestCase(EnumOne value) {
 		@Test
@@ -782,7 +782,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@EnumSource
 	static class SingleEnumSourceFieldInjectionTestCase {
 
@@ -795,7 +795,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@EnumSource(EnumOne.class)
 	@EnumSource(EnumTwo.class)
 	record RepeatedEnumSourceConstructorInjectionTestCase(Object value) {
@@ -805,7 +805,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@EnumSource(EnumOne.class)
 	@EnumSource(EnumTwo.class)
 	static class RepeatedEnumSourceFieldInjectionTestCase {
@@ -827,7 +827,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		BAR
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@MethodSource("parameters")
 	record MethodSourceConstructorInjectionTestCase(String value) {
 
@@ -837,11 +837,11 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@MethodSource("parameters")
 	static class MethodSourceFieldInjectionTestCase {
 
@@ -854,11 +854,11 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@MethodSource
 	record MethodSourceWithoutMethodNameTestCase(String value) {
 
@@ -868,7 +868,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@FieldSource("parameters")
 	record FieldSourceConstructorInjectionTestCase(String value) {
 
@@ -876,11 +876,11 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@FieldSource("parameters")
 	static class FieldSourceFieldInjectionTestCase {
 
@@ -891,11 +891,11 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@FieldSource
 	record FieldSourceWithoutFieldNameTestCase(String value) {
 
@@ -905,16 +905,16 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ArgumentsSource(CustomArgumentsProvider.class)
 	record ArgumentsSourceConstructorInjectionTestCase(String value) {
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ArgumentsSource(CustomArgumentsProvider.class)
 	static class ArgumentsSourceFieldInjectionTestCase {
 
@@ -923,7 +923,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 
 		@Test
 		void test() {
-			assertTrue(value == "foo" || value == "bar");
+			assertTrue(value.equals("foo") || value.equals("bar"));
 		}
 	}
 
@@ -936,7 +936,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer(name = INDEX_PLACEHOLDER + " | " //
+	@ParameterizedClass(name = INDEX_PLACEHOLDER + " | " //
 			+ DISPLAY_NAME_PLACEHOLDER + " | " //
 			+ ARGUMENTS_PLACEHOLDER + " | " //
 			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER)
@@ -955,7 +955,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ArgumentsSource(AutoCloseableArgumentProvider.class)
 	record AutoCloseableArgumentTestCase(AutoCloseableArgument argument) {
 		@Test
@@ -965,7 +965,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer(autoCloseArguments = false)
+	@ParameterizedClass(autoCloseArguments = false)
 	@ArgumentsSource(AutoCloseableArgumentProvider.class)
 	record AutoCloseableArgumentWithDisabledCleanupTestCase(AutoCloseableArgument argument) {
 		@Test
@@ -994,7 +994,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer(argumentCountValidation = STRICT)
+	@ParameterizedClass(argumentCountValidation = STRICT)
 	@CsvSource("foo, unused")
 	record StrictArgumentCountValidationModeTestCase(String value) {
 		@Test
@@ -1003,7 +1003,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer(argumentCountValidation = NONE)
+	@ParameterizedClass(argumentCountValidation = NONE)
 	@CsvSource("foo, unused")
 	record NoneArgumentCountValidationModeTestCase(String value) {
 		@Test
@@ -1012,7 +1012,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvSource("foo, unused")
 	record DefaultArgumentCountValidationModeTestCase(String value) {
 		@Test
@@ -1021,8 +1021,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
-	@MethodSource("org.junit.jupiter.params.ParameterizedContainerIntegrationTests#zeroArguments")
+	@ParameterizedClass
+	@MethodSource("org.junit.jupiter.params.ParameterizedClassIntegrationTests#zeroArguments")
 	record ForbiddenZeroInvocationsTestCase(String value) {
 		@Test
 		void test() {
@@ -1030,8 +1030,8 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer(allowZeroInvocations = true)
-	@MethodSource("org.junit.jupiter.params.ParameterizedContainerIntegrationTests#zeroArguments")
+	@ParameterizedClass(allowZeroInvocations = true)
+	@MethodSource("org.junit.jupiter.params.ParameterizedClassIntegrationTests#zeroArguments")
 	record AllowedZeroInvocationsTestCase(String value) {
 		@Test
 		void test() {
@@ -1043,7 +1043,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		return Stream.empty();
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	record NoArgumentSourceTestCase(String value) {
 		@Test
 		void test() {
@@ -1051,7 +1051,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
 	static class NestedFieldInjectionTestCase {
 
@@ -1059,7 +1059,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		int number;
 
 		@Nested
-		@ParameterizedContainer
+		@ParameterizedClass
 		@ValueSource(strings = { "foo", "bar" })
 		class InnerTestCase {
 
@@ -1075,12 +1075,12 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
 	record NestedConstructorInjectionTestCase(int number) {
 
 		@Nested
-		@ParameterizedContainer
+		@ParameterizedClass
 		@ValueSource(strings = { "foo", "bar" })
 		class InnerTestCase {
 
@@ -1099,7 +1099,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
 	record ConstructorInjectionWithRegularNestedTestCase(int number) {
 
@@ -1119,7 +1119,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = { 1, 2 })
 	static class FieldInjectionWithRegularNestedTestCase {
 
@@ -1142,7 +1142,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvSource({ "1, foo", "2, bar" })
 	static class MultiAggregatorFieldInjectionTestCase {
 
@@ -1176,7 +1176,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ParameterizedContainer
+	@ParameterizedClass
 	@MethodSource("methodSource")
 	@FieldSource("fieldSource")
 	@TestInstance(PER_CLASS)
@@ -1215,9 +1215,9 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		String value;
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvSource({ "foo, 1", "bar, 2" })
-	static class InheritedHiddenParameterFieldCase extends BaseTestCase {
+	static class InheritedHiddenParameterFieldTestCase extends BaseTestCase {
 		@Parameter(1)
 		String value;
 
@@ -1230,7 +1230,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	static class InvalidFinalFieldTestCase {
 
@@ -1243,7 +1243,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	static class InvalidAggregatorFieldWithIndexTestCase {
 
@@ -1256,7 +1256,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	static class InvalidParameterIndexTestCase {
 
@@ -1269,7 +1269,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	static class InvalidDuplicateParameterDeclarationTestCase {
 
@@ -1285,7 +1285,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@CsvSource({ "unused1, foo, unused2, bar", "unused4, baz, unused5, qux" })
 	static class InvalidUnusedParameterIndexesTestCase {
 
@@ -1304,7 +1304,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	record ArgumentConversionPerInvocationConstructorInjectionTestCase(
 			@ConvertWith(Wrapper.Converter.class) Wrapper wrapper) {
@@ -1337,7 +1337,7 @@ public class ParameterizedContainerIntegrationTests extends AbstractJupiterTestE
 		}
 	}
 
-	@ParameterizedContainer
+	@ParameterizedClass
 	@ValueSource(ints = 1)
 	static class ArgumentConversionPerInvocationFieldInjectionTestCase {
 
