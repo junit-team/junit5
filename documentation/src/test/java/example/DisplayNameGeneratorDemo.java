@@ -15,6 +15,7 @@ package example;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences.SentenceFragment;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
@@ -51,6 +52,25 @@ class DisplayNameGeneratorDemo {
 		@ParameterizedTest(name = "Year {0} is a leap year.")
 		@ValueSource(ints = { 2016, 2020, 2048 })
 		void if_it_is_one_of_the_following_years(int year) {
+		}
+
+	}
+
+	@Nested
+	@IndicativeSentencesGeneration
+	@DisplayName("A year is a leap year")
+	class LeapYearTests {
+
+		@Nested
+		@SentenceFragment("(nested)")
+		class NestedTests {
+
+			@ParameterizedTest(name = "{0}")
+			@ValueSource(ints = { 2016, 2020, 2048 })
+			@SentenceFragment("if it is one of the following years")
+			void validLeapYear(int year) {
+			}
+
 		}
 
 	}
