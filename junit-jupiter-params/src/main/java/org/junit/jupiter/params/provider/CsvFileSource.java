@@ -20,6 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.ParameterizedInvocationConstants;
 
 /**
  * {@code @CsvFileSource} is a {@linkplain Repeatable repeatable}
@@ -27,9 +28,9 @@ import org.apiguardian.api.API;
  * files from one or more classpath {@link #resources} or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
- * arguments to the annotated {@code @ParameterizedTest} method. Note that the
- * first record may optionally be used to supply CSV headers (see
- * {@link #useHeadersInDisplayName}).
+ * arguments to the annotated {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest}. Note that the first record may optionally
+ * be used to supply CSV headers (see {@link #useHeadersInDisplayName}).
  *
  * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
  * and will be ignored.
@@ -59,9 +60,10 @@ import org.apiguardian.api.API;
  * @since 5.0
  * @see CsvSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(CsvFileSources.class)
@@ -104,15 +106,15 @@ public @interface CsvFileSource {
 	 * for columns.
 	 *
 	 * <p>When set to {@code true}, the header names will be used in the
-	 * generated display name for each {@code @ParameterizedTest} method
-	 * invocation. When using this feature, you must ensure that the display name
-	 * pattern for {@code @ParameterizedTest} includes
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_PLACEHOLDER} instead of
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * generated display name for each {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} invocation. When using this feature, you must
+	 * ensure that the display name pattern for {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} includes
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead of
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
 	 * as demonstrated in the example below.
 	 *
 	 * <p>Defaults to {@code false}.
-	 *
 	 *
 	 * <h4>Example</h4>
 	 * <pre class="code">

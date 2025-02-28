@@ -20,6 +20,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.ParameterizedInvocationConstants;
 
 /**
  * {@code @CsvSource} is a {@linkplain Repeatable repeatable}
@@ -28,7 +30,7 @@ import org.apiguardian.api.API;
  * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
- * {@code @ParameterizedTest} method.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
  *
  * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
  * via either {@link #delimiter} or {@link #delimiterString}.
@@ -62,9 +64,10 @@ import org.apiguardian.api.API;
  * @since 5.0
  * @see CsvFileSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(CsvSources.class)
 @Documented
@@ -163,11 +166,12 @@ public @interface CsvSource {
 	 * for columns.
 	 *
 	 * <p>When set to {@code true}, the header names will be used in the
-	 * generated display name for each {@code @ParameterizedTest} method
-	 * invocation. When using this feature, you must ensure that the display name
-	 * pattern for {@code @ParameterizedTest} includes
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_PLACEHOLDER} instead of
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * generated display name for each {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} invocation. When using this feature, you must
+	 * ensure that the display name pattern for {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} includes
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead of
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
 	 * as demonstrated in the example below.
 	 *
 	 * <p>Defaults to {@code false}.

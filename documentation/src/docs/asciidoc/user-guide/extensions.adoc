@@ -804,6 +804,9 @@ implementing different kinds of tests that rely on repetitive invocation of _all
 methods in a test class albeit in different contexts — for example, with different
 parameters, by preparing the test class instance differently, or multiple times without
 modifying the context.
+Please refer to the implementations of
+<<writing-tests-parameterized-tests, Parameterized Classes>> which uses this extension
+point to provide its functionality.
 
 [[extensions-test-templates]]
 === Providing Invocation Contexts for Test Templates
@@ -839,8 +842,8 @@ implementing different kinds of tests that rely on repetitive invocation of a te
 method albeit in different contexts — for example, with different parameters, by preparing
 the test class instance differently, or multiple times without modifying the context.
 Please refer to the implementations of <<writing-tests-repeated-tests>> or
-<<writing-tests-parameterized-tests>> which use this extension point to provide their
-functionality.
+<<writing-tests-parameterized-tests, Parameterized Tests>> which use this extension point
+to provide their functionality.
 
 [[extensions-keeping-state]]
 === Keeping State in Extensions

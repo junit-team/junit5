@@ -10,6 +10,9 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -28,7 +31,7 @@ import org.openjdk.jmh.infra.Blackhole;
 @Fork(1)
 @Warmup(iterations = 1, time = 2)
 @Measurement(iterations = 3, time = 2)
-public class ParameterizedTestNameFormatterBenchmarks {
+public class ParameterizedInvocationNameFormatterBenchmarks {
 
 	@Param({ "1", "2", "4", "10", "100", "1000" })
 	private int numberOfParameters;
@@ -45,10 +48,9 @@ public class ParameterizedTestNameFormatterBenchmarks {
 	@Benchmark
 	public void formatTestNames(Blackhole blackhole) throws Exception {
 		var method = TestCase.class.getDeclaredMethod("parameterizedTest", int.class);
-		var formatter = new ParameterizedTestNameFormatter(
-			ParameterizedTest.DISPLAY_NAME_PLACEHOLDER + " " + ParameterizedTest.DEFAULT_DISPLAY_NAME + " ({0})",
-			"displayName", new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class)),
-			512);
+		var formatter = new ParameterizedInvocationNameFormatter(
+			DISPLAY_NAME_PLACEHOLDER + " " + DEFAULT_DISPLAY_NAME + " ({0})", "displayName",
+			new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class)), 512);
 		for (int i = 0; i < argumentsList.size(); i++) {
 			Arguments arguments = argumentsList.get(i);
 			blackhole.consume(formatter.format(i, EvaluatedArgumentSet.allOf(arguments)));

@@ -10,56 +10,47 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Optional;
 
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.InvocationInterceptor;
-import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
+import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 
-class ArgumentCountValidator implements InvocationInterceptor {
+class ArgumentCountValidator {
+
 	private static final Logger logger = LoggerFactory.getLogger(ArgumentCountValidator.class);
 
 	static final String ARGUMENT_COUNT_VALIDATION_KEY = "junit.jupiter.params.argumentCountValidation";
-	private static final ExtensionContext.Namespace NAMESPACE = ExtensionContext.Namespace.create(
-		ArgumentCountValidator.class);
+	private static final Namespace NAMESPACE = Namespace.create(ArgumentCountValidator.class);
 
-	private final ParameterizedTestMethodContext methodContext;
+	private final ParameterizedDeclarationContext<?> declarationContext;
 	private final EvaluatedArgumentSet arguments;
 
-	ArgumentCountValidator(ParameterizedTestMethodContext methodContext, EvaluatedArgumentSet arguments) {
-		this.methodContext = methodContext;
+	ArgumentCountValidator(ParameterizedDeclarationContext<?> declarationContext, EvaluatedArgumentSet arguments) {
+		this.declarationContext = declarationContext;
 		this.arguments = arguments;
 	}
 
-	@Override
-	public void interceptTestTemplateMethod(InvocationInterceptor.Invocation<Void> invocation,
-			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
-		validateArgumentCount(extensionContext);
-		invocation.proceed();
-	}
-
-	private ExtensionContext.Store getStore(ExtensionContext context) {
-		return context.getRoot().getStore(NAMESPACE);
-	}
-
-	private void validateArgumentCount(ExtensionContext extensionContext) {
+	void validate(ExtensionContext extensionContext) {
 		ArgumentCountValidationMode argumentCountValidationMode = getArgumentCountValidationMode(extensionContext);
 		switch (argumentCountValidationMode) {
 			case DEFAULT:
 			case NONE:
 				return;
 			case STRICT:
-				int testParamCount = extensionContext.getRequiredTestMethod().getParameterCount();
-				int argumentsCount = arguments.getTotalLength();
-				Preconditions.condition(testParamCount == argumentsCount, () -> String.format(
-					"Configuration error: the @ParameterizedTest has %s argument(s) but there were %s argument(s) provided.%nNote: the provided arguments are %s",
-					testParamCount, argumentsCount, Arrays.toString(arguments.getAllPayloads())));
+				int consumedCount = this.declarationContext.getResolverFacade().determineConsumedArgumentCount(
+					this.arguments);
+				int totalCount = this.arguments.getTotalLength();
+				Preconditions.condition(consumedCount == totalCount, () -> String.format(
+					"Configuration error: @%s consumes %s %s but there %s %s %s provided.%nNote: the provided arguments were %s",
+					this.declarationContext.getAnnotationName(), consumedCount,
+					pluralize(consumedCount, "parameter", "parameters"), pluralize(totalCount, "was", "were"),
+					totalCount, pluralize(totalCount, "argument", "arguments"),
+					Arrays.toString(this.arguments.getAllPayloads())));
 				break;
 			default:
 				throw new ExtensionConfigurationException(
@@ -68,9 +59,9 @@ class ArgumentCountValidator implements InvocationInterceptor {
 	}
 
 	private ArgumentCountValidationMode getArgumentCountValidationMode(ExtensionContext extensionContext) {
-		ParameterizedTest parameterizedTest = methodContext.annotation;
-		if (parameterizedTest.argumentCountValidation() != ArgumentCountValidationMode.DEFAULT) {
-			return parameterizedTest.argumentCountValidation();
+		ArgumentCountValidationMode mode = declarationContext.getArgumentCountValidationMode();
+		if (mode != ArgumentCountValidationMode.DEFAULT) {
+			return mode;
 		}
 		else {
 			return getArgumentCountValidationModeConfiguration(extensionContext);
@@ -106,5 +97,13 @@ class ArgumentCountValidator implements InvocationInterceptor {
 				return fallback;
 			}
 		}, ArgumentCountValidationMode.class);
+	}
+
+	private static String pluralize(int count, String singular, String plural) {
+		return count == 1 ? singular : plural;
+	}
+
+	private ExtensionContext.Store getStore(ExtensionContext context) {
+		return context.getRoot().getStore(NAMESPACE);
 	}
 }

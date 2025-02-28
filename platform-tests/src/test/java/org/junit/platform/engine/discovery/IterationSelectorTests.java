@@ -19,12 +19,12 @@ import java.lang.reflect.Array;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoverySelector;
@@ -61,14 +61,14 @@ class IterationSelectorTests {
 		return parent;
 	}
 
-	private static class VarargsAggregator implements ArgumentsAggregator {
+	private static class VarargsAggregator extends SimpleArgumentsAggregator {
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
-			Class<?> parameterType = context.getParameter().getType();
-			Preconditions.condition(parameterType.isArray(), () -> "must be an array type, but was " + parameterType);
-			Class<?> componentType = parameterType.getComponentType();
-			IntStream indices = IntStream.range(context.getIndex(), accessor.size());
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
+
+			Preconditions.condition(targetType.isArray(), () -> "must be an array type, but was " + targetType);
+			Class<?> componentType = targetType.getComponentType();
+			IntStream indices = IntStream.range(parameterIndex, accessor.size());
 			if (componentType == int.class) {
 				return indices.map(accessor::getInteger).toArray();
 			}

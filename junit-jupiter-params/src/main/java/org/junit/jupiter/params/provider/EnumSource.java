@@ -34,20 +34,21 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link ArgumentsSource} for constants of an {@link Enum}.
  *
  * <p>The enum constants will be provided as arguments to the annotated
- * {@code @ParameterizedTest} method.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
  *
  * <p>The enum type can be specified explicitly using the {@link #value}
  * attribute. Otherwise, the declared type of the first parameter of the
- * {@code @ParameterizedTest} method is used.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest} is used.
  *
  * <p>The set of enum constants can be restricted via the {@link #names},
  * {@link #from}, {@link #to} and {@link #mode} attributes.
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Repeatable(EnumSources.class)

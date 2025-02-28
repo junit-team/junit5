@@ -15,8 +15,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.ParameterizedTestExtension.METHOD_CONTEXT_KEY;
-import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
+import static org.junit.jupiter.params.ParameterizedInvocationContextProvider.arguments;
+import static org.junit.jupiter.params.ParameterizedTestExtension.DECLARATION_CONTEXT_KEY;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
@@ -42,6 +42,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -105,7 +106,7 @@ class ParameterizedTestExtensionTests {
 	void defaultDisplayNameWithEmptyStringInConfigurationIsIllegal() {
 		AtomicInteger invocations = new AtomicInteger();
 		Function<String, Optional<String>> configurationSupplier = key -> {
-			if (key.equals(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY)) {
+			if (key.equals(ParameterizedInvocationNameFormatter.DISPLAY_NAME_PATTERN_KEY)) {
 				invocations.incrementAndGet();
 				return Optional.of("");
 			}
@@ -122,11 +123,15 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void argumentsRethrowsOriginalExceptionFromProviderAsUncheckedException() {
-		ArgumentsProvider failingProvider = (context) -> {
-			throw new FileNotFoundException("a message");
+		ArgumentsProvider failingProvider = new ArgumentsProvider() {
+			@Override
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) throws Exception {
+				throw new FileNotFoundException("a message");
+			}
 		};
 
-		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null));
+		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null, null));
 		assertEquals("a message", exception.getMessage());
 	}
 
@@ -297,8 +302,8 @@ class ParameterizedTestExtensionTests {
 			public Store getStore(Namespace namespace) {
 				var store = new NamespaceAwareStore(this.store, namespace);
 				method //
-						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class))) //
-						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
+						.map(it -> new ParameterizedTestContext(it, it.getAnnotation(ParameterizedTest.class))) //
+						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
 			}
 
@@ -360,7 +365,8 @@ class ParameterizedTestExtensionTests {
 	static class ZeroArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.empty();
 		}
 	}
@@ -376,7 +382,8 @@ class ParameterizedTestExtensionTests {
 	static class ArgumentsProviderWithCloseHandler implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			var argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}
@@ -393,7 +400,8 @@ class ParameterizedTestExtensionTests {
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}
@@ -431,7 +439,8 @@ class ParameterizedTestExtensionTests {
 		}
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}

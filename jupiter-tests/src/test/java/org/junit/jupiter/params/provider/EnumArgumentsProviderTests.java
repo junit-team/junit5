@@ -20,11 +20,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.EnumSource.Mode;
+import org.junit.jupiter.params.support.ParameterDeclaration;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -32,7 +35,8 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class EnumArgumentsProviderTests {
 
-	private ExtensionContext extensionContext = mock();
+	final ParameterDeclarations parameters = mock();
+	final ExtensionContext extensionContext = mock();
 
 	@Test
 	void providesAllEnumConstants() {
@@ -78,9 +82,10 @@ class EnumArgumentsProviderTests {
 	}
 
 	@Test
-	void providesEnumConstantsBasedOnTestMethod() throws Exception {
-		when(extensionContext.getRequiredTestMethod()).thenReturn(
-			TestCase.class.getDeclaredMethod("methodWithCorrectParameter", EnumWithFourConstants.class));
+	void providesEnumConstantsBasedOnTestMethod() {
+		org.junit.jupiter.params.support.ParameterDeclaration firstParameterDeclaration = mock();
+		when(firstParameterDeclaration.getParameterType()).thenAnswer(__ -> EnumWithFourConstants.class);
+		when(parameters.getFirst()).thenReturn(Optional.of(firstParameterDeclaration));
 
 		var arguments = provideArguments(NullEnum.class);
 
@@ -89,9 +94,10 @@ class EnumArgumentsProviderTests {
 	}
 
 	@Test
-	void incorrectParameterTypeIsDetected() throws Exception {
-		when(extensionContext.getRequiredTestMethod()).thenReturn(
-			TestCase.class.getDeclaredMethod("methodWithIncorrectParameter", Object.class));
+	void incorrectParameterTypeIsDetected() {
+		ParameterDeclaration firstParameterDeclaration = mock();
+		when(firstParameterDeclaration.getParameterType()).thenAnswer(__ -> Object.class);
+		when(parameters.getFirst()).thenReturn(Optional.of(firstParameterDeclaration));
 
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class).findAny());
@@ -99,13 +105,12 @@ class EnumArgumentsProviderTests {
 	}
 
 	@Test
-	void methodsWithoutParametersAreDetected() throws Exception {
-		when(extensionContext.getRequiredTestMethod()).thenReturn(
-			TestCase.class.getDeclaredMethod("methodWithoutParameters"));
+	void methodsWithoutParametersAreDetected() {
+		when(parameters.getSourceElementDescription()).thenReturn("method");
 
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> provideArguments(NullEnum.class).findAny());
-		assertThat(exception).hasMessageStartingWith("Test method must declare at least one parameter");
+		assertThat(exception).hasMessageStartingWith("There must be at least one declared parameter for method");
 	}
 
 	@Test
@@ -179,12 +184,6 @@ class EnumArgumentsProviderTests {
 	}
 
 	static class TestCase {
-		void methodWithCorrectParameter(EnumWithFourConstants parameter) {
-		}
-
-		void methodWithIncorrectParameter(Object parameter) {
-		}
-
 		void methodWithoutParameters() {
 		}
 	}
@@ -218,7 +217,7 @@ class EnumArgumentsProviderTests {
 
 		var provider = new EnumArgumentsProvider();
 		provider.accept(annotation);
-		return provider.provideArguments(extensionContext).map(Arguments::get);
+		return provider.provideArguments(parameters, extensionContext).map(Arguments::get);
 	}
 
 }

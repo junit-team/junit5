@@ -34,6 +34,7 @@ import java.util.stream.Stream;
 import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
@@ -58,7 +59,8 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	}
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvFileSource csvFileSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			CsvFileSource csvFileSource) {
 		this.charset = getCharsetFrom(csvFileSource);
 		this.numLinesToSkip = csvFileSource.numLinesToSkip();
 		this.csvParser = createParserFor(csvFileSource);
@@ -90,7 +92,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 			this.csvParser.beginParsing(inputStream, this.charset);
 		}
 		catch (Throwable throwable) {
-			handleCsvException(throwable, csvFileSource);
+			throw handleCsvException(throwable, csvFileSource);
 		}
 		return this.csvParser;
 	}
@@ -104,7 +106,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 						csvParser.stopParsing();
 					}
 					catch (Throwable throwable) {
-						handleCsvException(throwable, csvFileSource);
+						throw handleCsvException(throwable, csvFileSource);
 					}
 				});
 	}
@@ -154,14 +156,14 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 				}
 			}
 			catch (Throwable throwable) {
-				handleCsvException(throwable, this.csvFileSource);
+				throw handleCsvException(throwable, this.csvFileSource);
 			}
 		}
 
 	}
 
 	@FunctionalInterface
-	private interface Source {
+	interface Source {
 
 		InputStream open(ExtensionContext context);
 
@@ -178,7 +180,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		}
 
 		default Source file(String path) {
-			return context -> openFile(path);
+			return __ -> openFile(path);
 		}
 
 	}
@@ -190,6 +192,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		@Override
 		public InputStream openClasspathResource(Class<?> baseClass, String path) {
 			Preconditions.notBlank(path, () -> "Classpath resource [" + path + "] must not be null or blank");
+			//noinspection resource (closed elsewhere)
 			InputStream inputStream = baseClass.getResourceAsStream(path);
 			return Preconditions.notNull(inputStream, () -> "Classpath resource [" + path + "] does not exist");
 		}

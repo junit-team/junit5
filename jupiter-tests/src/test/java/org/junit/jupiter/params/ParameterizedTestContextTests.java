@@ -10,39 +10,41 @@
 
 package org.junit.jupiter.params;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.CsvToPerson;
 import org.junit.jupiter.params.aggregator.AggregatorIntegrationTests.Person;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
- * Unit tests for {@link ParameterizedTestMethodContext}.
+ * Unit tests for {@link ParameterizedTestContext}.
  *
  * @since 5.2
  */
-class ParameterizedTestMethodContextTests {
+class ParameterizedTestContextTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { "onePrimitive", "twoPrimitives", "twoAggregators", "twoAggregatorsWithTestInfoAtTheEnd",
 			"mixedMode" })
 	void validSignatures(String methodName) {
-		assertTrue(createMethodContext(ValidTestCase.class, methodName).hasPotentiallyValidSignature());
+		assertDoesNotThrow(() -> createMethodContext(ValidTestCase.class, methodName));
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "twoAggregatorsWithPrimitiveInTheMiddle", "twoAggregatorsWithTestInfoInTheMiddle" })
 	void invalidSignatures(String methodName) {
-		assertFalse(createMethodContext(InvalidTestCase.class, methodName).hasPotentiallyValidSignature());
+		assertThrows(PreconditionViolationException.class,
+			() -> createMethodContext(InvalidTestCase.class, methodName));
 	}
 
-	private ParameterizedTestMethodContext createMethodContext(Class<?> testClass, String methodName) {
+	private ParameterizedTestContext createMethodContext(Class<?> testClass, String methodName) {
 		var method = ReflectionUtils.findMethods(testClass, m -> m.getName().equals(methodName)).getFirst();
-		return new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class));
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")

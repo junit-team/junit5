@@ -11,12 +11,12 @@
 package org.junit.jupiter.params;
 
 import static java.util.stream.Collectors.joining;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.platform.commons.util.StringUtils.isNotBlank;
 
 import java.text.FieldPosition;
@@ -35,20 +35,48 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestNameFormatter {
+class ParameterizedInvocationNameFormatter {
+
+	static final String DEFAULT_DISPLAY_NAME = "{default_display_name}";
+	static final String DEFAULT_DISPLAY_NAME_PATTERN = "[" + INDEX_PLACEHOLDER + "] "
+			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	static final String DISPLAY_NAME_PATTERN_KEY = "junit.jupiter.params.displayname.default";
+	static final String ARGUMENT_MAX_LENGTH_KEY = "junit.jupiter.params.displayname.argument.maxlength";
+
+	static ParameterizedInvocationNameFormatter create(ExtensionContext extensionContext,
+			ParameterizedDeclarationContext<?> declarationContext) {
+
+		String name = declarationContext.getDisplayNamePattern();
+		String pattern = name.equals(DEFAULT_DISPLAY_NAME)
+				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
+						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
+				: name;
+		pattern = Preconditions.notBlank(pattern.trim(), () -> String.format(
+			"Configuration error: @%s on %s must be declared with a non-empty name.",
+			declarationContext.getAnnotationName(),
+			declarationContext.getResolverFacade().getIndexedParameterDeclarations().getSourceElementDescription()));
+
+		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY, Integer::parseInt) //
+				.orElse(512);
+
+		return new ParameterizedInvocationNameFormatter(pattern, extensionContext.getDisplayName(), declarationContext,
+			argumentMaxLength);
+	}
 
 	private final PartialFormatter[] partialFormatters;
 
-	ParameterizedTestNameFormatter(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	ParameterizedInvocationNameFormatter(String pattern, String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 		try {
-			this.partialFormatters = parse(pattern, displayName, methodContext, argumentMaxLength);
+			this.partialFormatters = parse(pattern, displayName, declarationContext, argumentMaxLength);
 		}
 		catch (Exception ex) {
 			String message = "The display name pattern defined for the parameterized test is invalid. "
@@ -78,11 +106,11 @@ class ParameterizedTestNameFormatter {
 		return result.toString();
 	}
 
-	private PartialFormatter[] parse(String pattern, String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	private PartialFormatter[] parse(String pattern, String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 
 		List<PartialFormatter> result = new ArrayList<>();
-		PartialFormatters formatters = createPartialFormatters(displayName, methodContext, argumentMaxLength);
+		PartialFormatters formatters = createPartialFormatters(displayName, declarationContext, argumentMaxLength);
 		String unparsedSegment = pattern;
 
 		while (isNotBlank(unparsedSegment)) {
@@ -127,32 +155,36 @@ class ParameterizedTestNameFormatter {
 				: (context, result) -> result.append(segment);
 	}
 
-	private PartialFormatters createPartialFormatters(String displayName, ParameterizedTestMethodContext methodContext,
-			int argumentMaxLength) {
+	private PartialFormatters createPartialFormatters(String displayName,
+			ParameterizedDeclarationContext<?> declarationContext, int argumentMaxLength) {
 
 		PartialFormatter argumentsWithNamesFormatter = new CachingByArgumentsLengthPartialFormatter(
-			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, methodContext),
+			length -> new MessageFormatPartialFormatter(argumentsWithNamesPattern(length, declarationContext),
 				argumentMaxLength));
+
+		PartialFormatter argumentSetNameFormatter = new ArgumentSetNameFormatter(
+			declarationContext.getAnnotationName());
 
 		PartialFormatters formatters = new PartialFormatters();
 		formatters.put(INDEX_PLACEHOLDER, PartialFormatter.INDEX);
 		formatters.put(DISPLAY_NAME_PLACEHOLDER, (context, result) -> result.append(displayName));
-		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, PartialFormatter.ARGUMENT_SET_NAME);
+		formatters.put(ARGUMENT_SET_NAME_PLACEHOLDER, argumentSetNameFormatter);
 		formatters.put(ARGUMENTS_WITH_NAMES_PLACEHOLDER, argumentsWithNamesFormatter);
 		formatters.put(ARGUMENTS_PLACEHOLDER, new CachingByArgumentsLengthPartialFormatter(
 			length -> new MessageFormatPartialFormatter(argumentsPattern(length), argumentMaxLength)));
 		formatters.put(ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER, (context, result) -> {
 			PartialFormatter formatterToUse = context.argumentSetName.isPresent() //
-					? PartialFormatter.ARGUMENT_SET_NAME //
+					? argumentSetNameFormatter //
 					: argumentsWithNamesFormatter;
 			formatterToUse.append(context, result);
 		});
 		return formatters;
 	}
 
-	private static String argumentsWithNamesPattern(int length, ParameterizedTestMethodContext methodContext) {
+	private static String argumentsWithNamesPattern(int length, ParameterizedDeclarationContext<?> declarationContext) {
+		ResolverFacade resolverFacade = declarationContext.getResolverFacade();
 		return IntStream.range(0, length) //
-				.mapToObj(index -> methodContext.getParameterName(index).map(name -> name + "=").orElse("") + "{"
+				.mapToObj(index -> resolverFacade.getParameterName(index).map(name -> name + "=").orElse("") + "{"
 						+ index + "}") //
 				.collect(joining(", "));
 	}
@@ -193,18 +225,28 @@ class ParameterizedTestNameFormatter {
 
 		PartialFormatter INDEX = (context, result) -> result.append(context.invocationIndex);
 
-		PartialFormatter ARGUMENT_SET_NAME = (context, result) -> {
+		void append(ArgumentsContext context, StringBuffer result);
+
+	}
+
+	private static class ArgumentSetNameFormatter implements PartialFormatter {
+
+		private final String annotationName;
+
+		ArgumentSetNameFormatter(String annotationName) {
+			this.annotationName = annotationName;
+		}
+
+		@Override
+		public void append(ArgumentsContext context, StringBuffer result) {
 			if (context.argumentSetName.isPresent()) {
 				result.append(context.argumentSetName.get());
 				return;
 			}
-			throw new ExtensionConfigurationException(
-				String.format("When the display name pattern for a @ParameterizedTest contains %s, "
-						+ "the arguments must be supplied as an ArgumentSet.",
-					ARGUMENT_SET_NAME_PLACEHOLDER));
-		};
-
-		void append(ArgumentsContext context, StringBuffer result);
+			throw new ExtensionConfigurationException(String.format(
+				"When the display name pattern for a @%s contains %s, the arguments must be supplied as an ArgumentSet.",
+				this.annotationName, ARGUMENT_SET_NAME_PLACEHOLDER));
+		}
 	}
 
 	private static class MessageFormatPartialFormatter implements PartialFormatter {

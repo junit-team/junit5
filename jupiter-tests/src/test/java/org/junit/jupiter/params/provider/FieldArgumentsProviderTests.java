@@ -34,6 +34,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -478,6 +479,7 @@ class FieldArgumentsProviderTests {
 
 		when(fieldSource.value()).thenReturn(fieldNames);
 
+		var parameters = mock(ParameterDeclarations.class);
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
@@ -495,7 +497,7 @@ class FieldArgumentsProviderTests {
 
 		var provider = new FieldArgumentsProvider();
 		provider.accept(fieldSource);
-		return provider.provideArguments(extensionContext).map(Arguments::get);
+		return provider.provideArguments(parameters, extensionContext).map(Arguments::get);
 	}
 
 	// -------------------------------------------------------------------------

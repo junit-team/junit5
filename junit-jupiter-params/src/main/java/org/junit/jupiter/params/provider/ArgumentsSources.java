@@ -31,7 +31,7 @@ import org.apiguardian.api.API;
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.7")

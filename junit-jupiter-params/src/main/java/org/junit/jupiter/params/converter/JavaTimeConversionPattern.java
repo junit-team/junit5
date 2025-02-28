@@ -20,14 +20,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @JavaTimeConversionPattern} is an annotation that allows a date/time
  * conversion pattern to be specified on a parameter of a
- * {@link ParameterizedTest @ParameterizedTest} method.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass}
+ * or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * @since 5.0
+ * @see ConvertWith
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
  */

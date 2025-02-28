@@ -14,15 +14,18 @@ import static java.lang.String.format;
 import static java.util.Arrays.stream;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.BaseStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -40,12 +43,16 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSource> {
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, FieldSource fieldSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			FieldSource fieldSource) {
 		Class<?> testClass = context.getRequiredTestClass();
 		Object testInstance = context.getTestInstance().orElse(null);
 		String[] fieldNames = fieldSource.value();
 		if (fieldNames.length == 0) {
-			fieldNames = new String[] { context.getRequiredTestMethod().getName() };
+			Optional<Method> testMethod = context.getTestMethod();
+			Preconditions.condition(testMethod.isPresent(),
+				"You must specify a field name when using @FieldSource with @ContainerTemplate");
+			fieldNames = new String[] { testMethod.get().getName() };
 		}
 		// @formatter:off
 		return stream(fieldNames)

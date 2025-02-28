@@ -10,83 +10,41 @@
 
 package org.junit.jupiter.params;
 
-import java.util.Arrays;
+import static java.util.Collections.singletonList;
+
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
+class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestContext>
+		implements TestTemplateInvocationContext {
 
-	private static final Namespace NAMESPACE = Namespace.create(ParameterizedTestInvocationContext.class);
-
-	private final ParameterizedTestNameFormatter formatter;
-	private final ParameterizedTestMethodContext methodContext;
-	private final EvaluatedArgumentSet arguments;
-	private final int invocationIndex;
-
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
-
-		this.formatter = formatter;
-		this.methodContext = methodContext;
-		this.arguments = EvaluatedArgumentSet.of(arguments, this::determineConsumedArgumentCount);
-		this.invocationIndex = invocationIndex;
+	ParameterizedTestInvocationContext(ParameterizedTestContext methodContext,
+			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
+		super(methodContext, formatter, arguments, invocationIndex);
 	}
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments);
+		return super.getDisplayName(invocationIndex);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return Arrays.asList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.arguments, this.invocationIndex),
-			new ArgumentCountValidator(this.methodContext, this.arguments));
+		return singletonList( //
+			new ParameterizedTestMethodParameterResolver(this.declarationContext, this.arguments, this.invocationIndex) //
+		);
 	}
 
 	@Override
 	public void prepareInvocation(ExtensionContext context) {
-		if (this.methodContext.annotation.autoCloseArguments()) {
-			Store store = context.getStore(NAMESPACE);
-			AtomicInteger argumentIndex = new AtomicInteger();
-
-			Arrays.stream(this.arguments.getAllPayloads()) //
-					.filter(AutoCloseable.class::isInstance) //
-					.map(AutoCloseable.class::cast) //
-					.map(CloseableArgument::new) //
-					.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
-		}
-	}
-
-	private int determineConsumedArgumentCount(int totalLength) {
-		return methodContext.hasAggregator() //
-				? totalLength //
-				: Math.min(totalLength, methodContext.getParameterCount());
-	}
-
-	private static class CloseableArgument implements Store.CloseableResource {
-
-		private final AutoCloseable autoCloseable;
-
-		CloseableArgument(AutoCloseable autoCloseable) {
-			this.autoCloseable = autoCloseable;
-		}
-
-		@Override
-		public void close() throws Throwable {
-			this.autoCloseable.close();
-		}
-
+		super.prepareInvocation(context);
 	}
 
 }
