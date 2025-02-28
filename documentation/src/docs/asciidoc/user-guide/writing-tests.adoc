@@ -1454,11 +1454,18 @@ arguments. They are declared just like regular `@Test` methods but use the
 
 _Parameterized classes_ make it possible to run _all_ tests in test class, including
 <<writing-tests-nested>>, multiple times with different arguments. They are declared just
-like regular test classes but annotated with the `{ParameterizedClass}` annotation.
+like regular test classes and may contain any supported test method type (including
+`@ParameterizedTest`) but annotated with the `{ParameterizedClass}` annotation.
+
+WARNING: _Parameterized classes_ are currently an _experimental_ feature. You're invited
+to give it a try and provide feedback to the JUnit team so they can improve and eventually
+<<api-evolution, promote>> this feature.
 
 Regardless of whether you are parameterizing a test method or a test class, you must
-declare at least one _source_ that that will provide the arguments for each invocation and
-then _consume_ the arguments in the parameterized method or container, respectively.
+declare at least one <<writing-tests-parameterized-tests-sources, source>> that will
+provide the arguments for each invocation and then
+<<writing-tests-parameterized-tests-consuming-arguments, consume>> the arguments in the
+parameterized method or class, respectively.
 
 The following example demonstrates a parameterized test that uses the `@ValueSource`
 annotation to specify a `String` array as the source of arguments.
@@ -1487,7 +1494,7 @@ The same `@ValueSource` annotation can be used to specify the source of argument
 include::{testDir}/example/ParameterizedClassDemo.java[tags=first_example]
 ----
 
-When executing the above parameterized test method, each invocation will be reported
+When executing the above parameterized test class, each invocation will be reported
 separately. For instance, the `ConsoleLauncher` will print output similar to the
 following.
 
@@ -1507,7 +1514,7 @@ PalindromeTests ✔
 [[writing-tests-parameterized-tests-setup]]
 ==== Required Setup
 
-In order to use parameterized tests you need to add a dependency on the
+In order to use parameterized classes or tests you need to add a dependency on the
 `junit-jupiter-params` artifact. Please refer to <<dependency-metadata>> for details.
 
 [[writing-tests-parameterized-tests-consuming-arguments]]
@@ -1541,15 +1548,20 @@ with `{AggregateWith}`.
 
 Parameterized classes _consume_ arguments directly from the configured source (see
 <<writing-tests-parameterized-tests-sources>>); either via their unique constructor or via
-field injection. If a `{Parameter}`-annotated field is declared in the parameterized
-container class or one of its superclasses, field injection will be used. Otherwise,
-constructor injection will be used.
+field injection. If a `{Parameter}`-annotated field is declared in the parameterized class
+or one of its superclasses, field injection will be used. Otherwise, constructor injection
+will be used.
 
 [[writing-tests-parameterized-tests-consuming-arguments-constructor-injection]]
 ====== Constructor Injection
 
+WARNING: Constructor injection can only be used with the (default) `PER_METHOD`
+<<writing-tests-test-instance-lifecycle, test instance lifecycle>> mode. Please use
+<<writing-tests-parameterized-tests-consuming-arguments-field-injection, field injection>>
+with the `PER_CLASS` mode instead.
+
 For constructor injection, the same rules apply as defined for
-<<writing-tests-parameterized-tests-consuming-arguments-methods, parameterized test methods>>
+<<writing-tests-parameterized-tests-consuming-arguments-methods, parameterized tests>>
 above. In the following example, two arguments are injected into the constructor of the
 test class.
 
@@ -2228,7 +2240,7 @@ Then, any additional arguments will cause an error instead.
 To change this behavior for all tests, set the
 `junit.jupiter.params.argumentCountValidation`
 <<running-tests-config-params, configuration parameter>> to `strict`.
-To change this behavior for a single container or test,
+To change this behavior for a single parameterized class or test method,
 use the `argumentCountValidation` attribute of the `@ParameterizedClass` or
 `@ParameterizedTest` annotation:
 
