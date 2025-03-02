@@ -80,4 +80,5 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 			A annotation) {
 		return provideArguments(context, annotation);
 	}
+
 }

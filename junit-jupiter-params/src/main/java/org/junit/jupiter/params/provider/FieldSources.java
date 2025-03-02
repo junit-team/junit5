@@ -43,4 +43,5 @@ public @interface FieldSources {
 	 * annotations.
 	 */
 	FieldSource[] value();
+
 }
