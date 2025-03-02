@@ -152,10 +152,10 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkDisplayNameGeneratedForIndicativeGeneratorTestCase() {
+	void checkDisplayNameGeneratedForIndicativeGenerator() {
 		check(IndicativeGeneratorTestCase.class, //
 			"CONTAINER: A stack", //
-			"TEST: A stack, is instantiated with new constructor", //
+			"TEST: A stack, is instantiated with its constructor", //
 			"CONTAINER: A stack, when new", //
 			"TEST: A stack, when new, throws EmptyStackException when peeked", //
 			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
@@ -164,10 +164,10 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparatorTestCase() {
+	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparator() {
 		check(IndicativeGeneratorWithCustomSeparatorTestCase.class, //
 			"CONTAINER: A stack", //
-			"TEST: A stack >> is instantiated with new constructor", //
+			"TEST: A stack >> is instantiated with its constructor", //
 			"CONTAINER: A stack >> when new", //
 			"TEST: A stack >> when new >> throws EmptyStackException when peeked", //
 			"CONTAINER: A stack >> when new >> after pushing an element to an empty stack", //
@@ -266,7 +266,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		return descriptor.getType() + ": " + descriptor.getDisplayName();
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	static class NoNameGenerator implements DisplayNameGenerator {
 
@@ -345,7 +345,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleInheritedFromSuperClassTestCase extends UnderscoreStyleTestCase {
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -412,7 +412,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -422,7 +422,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_instantiated_with_new_constructor() {
+		void is_instantiated_with_its_constructor() {
 			new Stack<>();
 		}
 
@@ -457,7 +457,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -467,7 +467,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_instantiated_with_new_constructor() {
+		void is_instantiated_with_its_constructor() {
 			new Stack<>();
 		}
 
@@ -501,6 +501,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ContainerTemplate
@@ -552,4 +554,5 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
 }
