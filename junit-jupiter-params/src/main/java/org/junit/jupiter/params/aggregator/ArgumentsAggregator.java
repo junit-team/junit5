@@ -10,11 +10,14 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.support.FieldContext;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * {@code ArgumentsAggregator} is an abstraction for the aggregation of arguments
@@ -43,6 +46,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * @since 5.2
  * @see AggregateWith
  * @see ArgumentsAccessor
+ * @see SimpleArgumentsAggregator
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @API(status = STABLE, since = "5.7")
@@ -63,5 +67,28 @@ public interface ArgumentsAggregator {
 	 */
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 			throws ArgumentsAggregationException;
+
+	/**
+	 * Aggregate the arguments contained in the supplied {@code accessor} into a
+	 * single object.
+	 *
+	 * @param accessor an {@link ArgumentsAccessor} containing the arguments to be
+	 * aggregated; never {@code null}
+	 * @param context the field context where the aggregated result is to be
+	 * injected; never {@code null}
+	 * @return the aggregated result; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentsAggregationException if an error occurs during the
+	 * aggregation
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
+			throws ArgumentsAggregationException {
+		throw new JUnitException(
+			String.format("ArgumentsAggregator does not override the convert(ArgumentsAccessor, FieldContext) method. "
+					+ "Please report this issue to the maintainers of %s.",
+				getClass().getName()));
+	}
 
 }

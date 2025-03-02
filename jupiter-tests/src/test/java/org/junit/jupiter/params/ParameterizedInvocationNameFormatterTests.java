@@ -16,16 +16,17 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.ARGUMENT_SET_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.DEFAULT_DISPLAY_NAME;
-import static org.junit.jupiter.params.ParameterizedTest.DISPLAY_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedTest.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -39,11 +40,11 @@ import java.util.Locale;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.commons.JUnitException;
@@ -53,7 +54,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
  * @since 5.0
  */
 @SuppressWarnings("ALL")
-class ParameterizedTestNameFormatterTests {
+class ParameterizedInvocationNameFormatterTests {
 
 	private final Locale originalLocale = Locale.getDefault();
 
@@ -322,20 +323,25 @@ class ParameterizedTestNameFormatterTests {
 
 	// -------------------------------------------------------------------------
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName) {
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName) {
 		return formatter(pattern, displayName, 512);
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, int argumentMaxLength) {
-		return new ParameterizedTestNameFormatter(pattern, displayName, mock(), argumentMaxLength);
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName,
+			int argumentMaxLength) {
+		ParameterizedDeclarationContext<?> context = mock();
+		when(context.getResolverFacade()).thenReturn(mock());
+		when(context.getAnnotationName()).thenReturn(ParameterizedTest.class.getSimpleName());
+		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, argumentMaxLength);
 	}
 
-	private static ParameterizedTestNameFormatter formatter(String pattern, String displayName, Method method) {
-		var context = new ParameterizedTestMethodContext(method, method.getAnnotation(ParameterizedTest.class));
-		return new ParameterizedTestNameFormatter(pattern, displayName, context, 512);
+	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName, Method method) {
+		var context = new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, 512);
 	}
 
-	private static String format(ParameterizedTestNameFormatter formatter, int invocationIndex, Arguments arguments) {
+	private static String format(ParameterizedInvocationNameFormatter formatter, int invocationIndex,
+			Arguments arguments) {
 		return formatter.format(invocationIndex, EvaluatedArgumentSet.allOf(arguments));
 	}
 
@@ -377,9 +383,10 @@ class ParameterizedTestNameFormatterTests {
 		void processFruits(String fruit1, String fruit2) {
 		}
 
-		private static class CustomAggregator implements ArgumentsAggregator {
+		private static class CustomAggregator extends SimpleArgumentsAggregator {
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context) {
+			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+					AnnotatedElementContext context, int parameterIndex) {
 				return accessor.get(0);
 			}
 		}

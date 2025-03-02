@@ -26,38 +26,27 @@ import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
-import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Arrays;
-import java.util.Set;
 import java.util.function.BiPredicate;
-import java.util.jar.JarFile;
-import java.util.stream.Stream;
 
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.importer.Location;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.junit.LocationProvider;
 import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
 
-import platform.tooling.support.Helper;
-import platform.tooling.support.MavenRepo;
-
-@AnalyzeClasses(locations = ArchUnitTests.AllJars.class)
+@AnalyzeClasses(packages = { "org.junit.platform", "org.junit.jupiter", "org.junit.vintage" })
 class ArchUnitTests {
 
 	@SuppressWarnings("unused")
@@ -133,28 +122,6 @@ class ArchUnitTests {
 	private static ArchCondition<? super JavaClass> haveContainerAnnotationWithSameTargetTypes() {
 		return ArchCondition.from(new RepeatableAnnotationPredicate<>(Target.class,
 			(expectedTarget, actualTarget) -> Arrays.equals(expectedTarget.value(), actualTarget.value())));
-	}
-
-	static class AllJars implements LocationProvider {
-
-		@Override
-		public Set<Location> get(Class<?> testClass) {
-			return loadJarFiles().map(Location::of).collect(toSet());
-		}
-
-		private static Stream<JarFile> loadJarFiles() {
-			return Helper.loadModuleDirectoryNames().stream().map(AllJars::createJarFile);
-		}
-
-		private static JarFile createJarFile(String module) {
-			var path = MavenRepo.jar(module);
-			try {
-				return new JarFile(path.toFile());
-			}
-			catch (IOException e) {
-				throw new UncheckedIOException("Creating JarFile for '" + path + "' failed.", e);
-			}
-		}
 	}
 
 	private static class RepeatableAnnotationPredicate<T extends Annotation> extends DescribedPredicate<JavaClass> {

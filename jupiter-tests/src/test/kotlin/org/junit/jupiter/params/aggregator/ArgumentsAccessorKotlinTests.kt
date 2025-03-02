@@ -56,7 +56,7 @@ class ArgumentsAccessorKotlinTests {
     fun defaultArgumentsAccessor(
         invocationIndex: Int,
         vararg arguments: Any
-    ): DefaultArgumentsAccessor = DefaultArgumentsAccessor(parameterContext(), invocationIndex, *arguments)
+    ): DefaultArgumentsAccessor = DefaultArgumentsAccessor.create(parameterContext(), invocationIndex, *arguments)
 
     fun parameterContext(): ParameterContext {
         val declaringExecutable: Method = ReflectionUtils.findMethod(DefaultArgumentsAccessorTests::class.java, "foo").get()

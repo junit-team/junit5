@@ -44,18 +44,19 @@ import example.util.StringUtils;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ArgumentCountValidationMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.JavaTimeConversionPattern;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
@@ -72,6 +73,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 @Execution(SAME_THREAD)
 class ParameterizedTestDemo {
@@ -360,7 +362,8 @@ class ParameterizedTestDemo {
 	public class MyArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of("apple", "banana").map(Arguments::of);
 		}
 	}
@@ -383,7 +386,8 @@ class ParameterizedTestDemo {
 		}
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(Arguments.of(testInfo.getDisplayName()));
 		}
 	}
@@ -536,9 +540,10 @@ class ParameterizedTestDemo {
 	// end::ArgumentsAggregator_example[]
 	static
 	// tag::ArgumentsAggregator_example_PersonAggregator[]
-	public class PersonAggregator implements ArgumentsAggregator {
+	public class PersonAggregator extends SimpleArgumentsAggregator {
 		@Override
-		public Person aggregateArguments(ArgumentsAccessor arguments, ParameterContext context) {
+		protected Person aggregateArguments(ArgumentsAccessor arguments, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) {
 			return new Person(
 								arguments.getString(0),
 								arguments.getString(1),
@@ -628,7 +633,7 @@ class ParameterizedTestDemo {
 	}
 	// end::repeatable_annotations[]
 
-	@extensions.ExpectToFail
+	@Disabled("Fails prior to invoking the test method")
 	// tag::argument_count_validation[]
 	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
 	@CsvSource({ "42, -666" })

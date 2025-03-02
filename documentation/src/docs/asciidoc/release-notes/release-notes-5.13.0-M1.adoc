@@ -55,7 +55,14 @@ repository on GitHub.
   allow declaring a top-level or `@Nested` test class as a template to be invoked multiple
   times. This may be used, for example, to inject different parameters to be used by all
   tests in the container template class or to set up each invocation of the container
-  template differently.
+  template differently. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-container-templates, User Guide>> for details.
+* Introduce `@ParameterizedClass` concept that builds on `@ContainerTemplate` and allows
+  declaring a top-level or `@Nested` test class as a parameterized test class to be
+  invoked multiple times with different arguments. The same `@...Source` annotations as
+  for `@ParameterizedTest` may be used to provide arguments via constructor or field
+  injection. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
 * New `TestTemplateInvocationContext.prepareInvocation(ExtensionContext)` callback method
   allows preparing the `ExtensionContext` before the test template method is invoked. This
   may be used, for example, to store entries in its `Store` to benefit from its cleanup

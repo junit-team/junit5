@@ -325,8 +325,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		Object instance = this.testInstanceFactory != null //
 				? invokeTestInstanceFactory(outerInstance, extensionContext) //
 				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
-		return outerInstances.map(instances -> DefaultTestInstances.of(instances, instance)).orElse(
-			DefaultTestInstances.of(instance));
+		return outerInstances.map(instances -> DefaultTestInstances.of(instances, instance)) //
+				.orElse(DefaultTestInstances.of(instance));
 	}
 
 	private Object invokeTestInstanceFactory(Optional<Object> outerInstance,

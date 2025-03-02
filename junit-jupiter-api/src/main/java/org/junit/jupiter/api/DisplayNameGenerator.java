@@ -310,6 +310,8 @@ public interface DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();
 
+		private static final Predicate<Class<?>> notIndicativeSentences = clazz -> clazz != IndicativeSentences.class;
+
 		public IndicativeSentences() {
 		}
 
@@ -346,7 +348,7 @@ public interface DisplayNameGenerator {
 				Class<? extends DisplayNameGenerator> generatorClass = findDisplayNameGeneration(testClass,
 					enclosingInstanceTypes)//
 							.map(DisplayNameGeneration::value)//
-							.filter(not(IndicativeSentences.class))//
+							.filter(notIndicativeSentences)//
 							.orElse(null);
 				if (generatorClass != null) {
 					return getDisplayNameGenerator(generatorClass).generateDisplayNameForClass(testClass);
@@ -411,7 +413,7 @@ public interface DisplayNameGenerator {
 		private static DisplayNameGenerator getGeneratorFor(Class<?> testClass, List<Class<?>> enclosingInstanceTypes) {
 			return findIndicativeSentencesGeneration(testClass, enclosingInstanceTypes)//
 					.map(IndicativeSentencesGeneration::generator)//
-					.filter(not(IndicativeSentences.class))//
+					.filter(notIndicativeSentences)//
 					.map(DisplayNameGenerator::getDisplayNameGenerator)//
 					.orElseGet(() -> getDisplayNameGenerator(IndicativeSentencesGeneration.DEFAULT_GENERATOR));
 		}
@@ -445,10 +447,6 @@ public interface DisplayNameGenerator {
 		private static Optional<IndicativeSentencesGeneration> findIndicativeSentencesGeneration(Class<?> testClass,
 				List<Class<?>> enclosingInstanceTypes) {
 			return findAnnotation(testClass, IndicativeSentencesGeneration.class, enclosingInstanceTypes);
-		}
-
-		private static Predicate<Class<?>> not(Class<?> clazz) {
-			return ((Predicate<Class<?>>) clazz::equals).negate();
 		}
 
 	}

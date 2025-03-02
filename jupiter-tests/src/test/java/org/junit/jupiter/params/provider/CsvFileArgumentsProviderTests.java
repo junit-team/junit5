@@ -544,7 +544,7 @@ class CsvFileArgumentsProviderTests {
 		var context = mock(ExtensionContext.class);
 		when(context.getTestClass()).thenReturn(Optional.of(CsvFileArgumentsProviderTests.class));
 		doCallRealMethod().when(context).getRequiredTestClass();
-		return provider.provideArguments(context).map(Arguments::get);
+		return provider.provideArguments(mock(), context).map(Arguments::get);
 	}
 
 	@SuppressWarnings("unchecked")

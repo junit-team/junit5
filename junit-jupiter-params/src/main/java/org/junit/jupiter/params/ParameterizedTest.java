@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -46,18 +47,18 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * <p>A {@code @ParameterizedTest} method may declare additional parameters at
  * the end of the method's parameter list to be resolved by other
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}
- * (e.g., {@code TestInfo}, {@code TestReporter}, etc). Specifically, a
+ * (e.g., {@code TestInfo}, {@code TestReporter}, etc.). Specifically, a
  * parameterized test method must declare formal parameters according to the
  * following rules.
  *
  * <ol>
- * <li>Zero or more <em>indexed arguments</em> must be declared first.</li>
+ * <li>Zero or more <em>indexed parameters</em> must be declared first.</li>
  * <li>Zero or more <em>aggregators</em> must be declared next.</li>
- * <li>Zero or more arguments supplied by other {@code ParameterResolver}
+ * <li>Zero or more parameters supplied by other {@code ParameterResolver}
  * implementations must be declared last.</li>
  * </ol>
  *
- * <p>In this context, an <em>indexed argument</em> is an argument for a given
+ * <p>In this context, an <em>indexed parameter</em> is an argument for a given
  * index in the {@code Arguments} provided by an {@code ArgumentsProvider} that
  * is passed as an argument to the parameterized method at the same index in the
  * method's formal parameter list. An <em>aggregator</em> is any parameter of type
@@ -113,6 +114,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * implementation.
  *
  * @since 5.0
+ * @see ParameterizedClass
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
  * @see org.junit.jupiter.params.provider.ArgumentsSource
@@ -136,127 +138,135 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 public @interface ParameterizedTest {
 
 	/**
-	 * Placeholder for the {@linkplain org.junit.jupiter.api.TestInfo#getDisplayName
-	 * display name} of a {@code @ParameterizedTest} method: <code>{displayName}</code>
+	 * See {@link ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}
+	 * instead.
 	 */
-	String DISPLAY_NAME_PLACEHOLDER = "{displayName}";
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
+	String DISPLAY_NAME_PLACEHOLDER = ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 
 	/**
-	 * Placeholder for the current invocation index of a {@code @ParameterizedTest}
-	 * method (1-based): <code>{index}</code>
+	 * See {@link ParameterizedInvocationConstants#INDEX_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
-	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#INDEX_PLACEHOLDER} instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String INDEX_PLACEHOLDER = "{index}";
 
 	/**
-	 * Placeholder for the complete, comma-separated arguments list of the
-	 * current invocation of a {@code @ParameterizedTest} method:
-	 * <code>{arguments}</code>
+	 * See {@link ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER}.
 	 *
 	 * @since 5.3
 	 * @see #name
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENTS_PLACEHOLDER = "{arguments}";
 
 	/**
-	 * Placeholder for the complete, comma-separated named arguments list
-	 * of the current invocation of a {@code @ParameterizedTest} method:
-	 * <code>{argumentsWithNames}</code>
-	 *
-	 * <p>Argument names will be retrieved via the {@link java.lang.reflect.Parameter#getName()}
-	 * API if the byte code contains parameter names &mdash; for example, if
-	 * the code was compiled with the {@code -parameters} command line argument
-	 * for {@code javac}.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}.
 	 *
 	 * @since 5.6
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * instead.
 	 */
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentsWithNames}";
 
 	/**
-	 * Placeholder for the name of the argument set for the current invocation
-	 * of a {@code @ParameterizedTest} method: <code>{argumentSetName}</code>.
-	 *
-	 * <p>This placeholder can be used when the current set of arguments was created via
-	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
-	 * argumentSet()}.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}.
 	 *
 	 * @since 5.11
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}
+	 * instead.
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENT_SET_NAME_PLACEHOLDER = "{argumentSetName}";
 
 	/**
-	 * Placeholder for either {@link #ARGUMENT_SET_NAME_PLACEHOLDER} or
-	 * {@link #ARGUMENTS_WITH_NAMES_PLACEHOLDER}, depending on whether the
-	 * current set of arguments was created via
-	 * {@link org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
-	 * argumentSet()}: <code>{argumentSetNameOrArgumentsWithNames}</code>.
+	 * See
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}.
 	 *
 	 * @since 5.11
 	 * @see #name
-	 * @see #ARGUMENT_SET_NAME_PLACEHOLDER
-	 * @see #ARGUMENTS_WITH_NAMES_PLACEHOLDER
-	 * @see #DEFAULT_DISPLAY_NAME
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME
 	 * @see org.junit.jupiter.params.provider.Arguments#argumentSet(String, Object...)
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * instead.
 	 */
-	@API(status = EXPERIMENTAL, since = "5.11")
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
 	String ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER = "{argumentSetNameOrArgumentsWithNames}";
 
 	/**
-	 * Default display name pattern for the current invocation of a
-	 * {@code @ParameterizedTest} method: {@value}
-	 *
-	 * <p>Note that the default pattern does <em>not</em> include the
-	 * {@linkplain #DISPLAY_NAME_PLACEHOLDER display name} of the
-	 * {@code @ParameterizedTest} method.
+	 * See
+	 * {@link ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}.
 	 *
 	 * @since 5.3
 	 * @see #name
-	 * @see #DISPLAY_NAME_PLACEHOLDER
-	 * @see #INDEX_PLACEHOLDER
-	 * @see #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#INDEX_PLACEHOLDER
+	 * @see ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
+	 * @deprecated Please reference
+	 * {@link ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME} instead.
 	 */
-	String DEFAULT_DISPLAY_NAME = "[" + INDEX_PLACEHOLDER + "] "
-			+ ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+	@API(status = DEPRECATED, since = "5.13")
+	@Deprecated
+	String DEFAULT_DISPLAY_NAME = ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
 
 	/**
 	 * The display name to be used for individual invocations of the
 	 * parameterized test; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>.
+	 * <p>Defaults to <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>.
 	 *
 	 * <p>If the default display name flag
-	 * (<code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code>)
+	 * (<code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>)
 	 * is not overridden, JUnit will:
 	 * <ul>
-	 * <li>Look up the {@value ParameterizedTestExtension#DISPLAY_NAME_PATTERN_KEY}
+	 * <li>Look up the {@value ParameterizedInvocationNameFormatter#DISPLAY_NAME_PATTERN_KEY}
 	 * <em>configuration parameter</em> and use it if available. The configuration
 	 * parameter can be supplied via the {@code Launcher} API, build tools (e.g.,
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
 	 * the class path). Consult the User Guide for further information.</li>
-	 * <li>Otherwise, <code>{@value #DEFAULT_DISPLAY_NAME}</code> will be used.</li>
+	 * <li>Otherwise, <code>{@value ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}</code> will be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>
 	 * <ul>
-	 * <li><code>{@value #DISPLAY_NAME_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #INDEX_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENTS_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
-	 * <li><code>{@value #ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#DISPLAY_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#INDEX_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENT_SET_NAME_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
+	 * <li><code>{@value ParameterizedInvocationConstants#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER}</code></li>
 	 * <li><code>"{0}"</code>, <code>"{1}"</code>, etc.: an individual argument (0-based)</li>
 	 * </ul>
 	 *
@@ -266,25 +276,25 @@ public @interface ParameterizedTest {
 	 * of any implicit or explicit argument conversions.
 	 *
 	 * <p>Note that
-	 * <code>{@value ParameterizedTestExtension#DEFAULT_DISPLAY_NAME}</code> is
+	 * <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code> is
 	 * a flag rather than a placeholder.
 	 *
 	 * @see java.text.MessageFormat
 	 */
-	String name() default ParameterizedTestExtension.DEFAULT_DISPLAY_NAME;
+	String name() default ParameterizedInvocationNameFormatter.DEFAULT_DISPLAY_NAME;
 
 	/**
-	 * Configure whether all arguments of the parameterized test that implement {@link AutoCloseable}
-	 * will be closed after {@link org.junit.jupiter.api.AfterEach @AfterEach} methods
-	 * and {@link org.junit.jupiter.api.extension.AfterEachCallback AfterEachCallback}
-	 * extensions have been called for the current parameterized test invocation.
+	 * Configure whether all arguments of the parameterized test that implement
+	 * {@link AutoCloseable} will be closed after their corresponding
+	 * invocation.
 	 *
 	 * <p>Defaults to {@code true}.
 	 *
-	 * <p><strong>WARNING</strong>: if an argument that implements {@code AutoCloseable}
-	 * is reused for multiple invocations of the same parameterized test method,
-	 * you must set {@code autoCloseArguments} to {@code false} to ensure that
-	 * the argument is not closed between invocations.
+	 * <p><strong>WARNING</strong>: if an argument that implements
+	 * {@code AutoCloseable} is reused for multiple invocations of the same
+	 * parameterized test method, you must set {@code autoCloseArguments} to
+	 * {@code false} to ensure that the argument is not closed between
+	 * invocations.
 	 *
 	 * @since 5.8
 	 * @see java.lang.AutoCloseable
@@ -307,20 +317,24 @@ public @interface ParameterizedTest {
 	boolean allowZeroInvocations() default false;
 
 	/**
-	 * Configure how the number of arguments provided by an {@link ArgumentsSource} are validated.
+	 * Configure how the number of arguments provided by an
+	 * {@link ArgumentsSource} are validated.
 	 *
 	 * <p>Defaults to {@link ArgumentCountValidationMode#DEFAULT}.
 	 *
-	 * <p>When an {@link ArgumentsSource} provides more arguments than declared by the test method,
-	 * there might be a bug in the test method or the {@link ArgumentsSource}.
-	 * By default, the additional arguments are ignored.
-	 * {@code argumentCountValidation} allows you to control how additional arguments are handled.
-	 * The default can be configured via the {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
-	 * configuration parameter (see the User Guide for details on configuration parameters).
+	 * <p>When an {@link ArgumentsSource} provides more arguments than declared
+	 * by the parameterized test method, there might be a bug in the method or
+	 * the {@link ArgumentsSource}. By default, the additional arguments are
+	 * ignored. {@code argumentCountValidation} allows you to control how
+	 * additional arguments are handled. The default can be configured via the
+	 * {@value ArgumentCountValidator#ARGUMENT_COUNT_VALIDATION_KEY}
+	 * configuration parameter (see the User Guide for details on configuration
+	 * parameters).
 	 *
 	 * @since 5.12
 	 * @see ArgumentCountValidationMode
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
 	ArgumentCountValidationMode argumentCountValidation() default ArgumentCountValidationMode.DEFAULT;
+
 }

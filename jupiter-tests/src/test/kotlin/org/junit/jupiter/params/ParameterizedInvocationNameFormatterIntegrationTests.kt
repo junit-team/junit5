@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.TestInfo
 import org.junit.jupiter.params.provider.ValueSource
 
-class ParameterizedTestNameFormatterIntegrationTests {
+class ParameterizedInvocationNameFormatterIntegrationTests {
     @ValueSource(strings = ["foo", "bar"])
     @ParameterizedTest
     fun defaultDisplayName(
@@ -21,9 +21,9 @@ class ParameterizedTestNameFormatterIntegrationTests {
         info: TestInfo
     ) {
         if (param.equals("foo")) {
-            assertEquals("[1] foo", info.displayName)
+            assertEquals("[1] param=foo", info.displayName)
         } else {
-            assertEquals("[2] bar", info.displayName)
+            assertEquals("[2] param=bar", info.displayName)
         }
     }
 

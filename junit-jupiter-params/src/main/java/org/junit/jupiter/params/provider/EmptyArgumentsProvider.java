@@ -15,7 +15,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.newInstance;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +28,8 @@ import java.util.SortedSet;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterDeclaration;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -39,15 +40,15 @@ import org.junit.platform.commons.util.Preconditions;
 class EmptyArgumentsProvider implements ArgumentsProvider {
 
 	@Override
-	public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		Method testMethod = context.getRequiredTestMethod();
-		Class<?>[] parameterTypes = testMethod.getParameterTypes();
+	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
 
-		Preconditions.condition(parameterTypes.length > 0, () -> String.format(
-			"@EmptySource cannot provide an empty argument to method [%s]: the method does not declare any formal parameters.",
-			testMethod.toGenericString()));
+		Optional<ParameterDeclaration> firstParameter = parameters.getFirst();
 
-		Class<?> parameterType = parameterTypes[0];
+		Preconditions.condition(firstParameter.isPresent(),
+			() -> String.format("@EmptySource cannot provide an empty argument to %s: no formal parameters declared.",
+				parameters.getSourceElementDescription()));
+
+		Class<?> parameterType = firstParameter.get().getParameterType();
 
 		if (String.class.equals(parameterType)) {
 			return Stream.of(arguments(""));
@@ -88,8 +89,8 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 		}
 		// else
 		throw new PreconditionViolationException(
-			String.format("@EmptySource cannot provide an empty argument to method [%s]: [%s] is not a supported type.",
-				testMethod.toGenericString(), parameterType.getName()));
+			String.format("@EmptySource cannot provide an empty argument to %s: [%s] is not a supported type.",
+				parameters.getSourceElementDescription(), parameterType.getName()));
 	}
 
 	private static Optional<Constructor<?>> getDefaultConstructor(Class<?> clazz) {

@@ -169,7 +169,7 @@ class DefaultArgumentsAccessorTests {
 	}
 
 	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex, Object... arguments) {
-		return new DefaultArgumentsAccessor(parameterContext(), invocationIndex, arguments);
+		return DefaultArgumentsAccessor.create(parameterContext(), invocationIndex, arguments);
 	}
 
 	private static ParameterContext parameterContext() {

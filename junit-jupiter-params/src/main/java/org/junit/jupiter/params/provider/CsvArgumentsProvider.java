@@ -26,6 +26,7 @@ import com.univocity.parsers.csv.CsvParser;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -41,7 +42,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	private CsvParser csvParser;
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, CsvSource csvSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			CsvSource csvSource) {
 		this.nullValues = toSet(csvSource.nullValues());
 		this.csvParser = createParserFor(csvSource);
 		final boolean textBlockDeclared = !csvSource.textBlock().isEmpty();

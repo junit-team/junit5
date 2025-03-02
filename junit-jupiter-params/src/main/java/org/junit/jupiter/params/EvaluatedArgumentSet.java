@@ -76,6 +76,10 @@ class EvaluatedArgumentSet {
 		return extractFromNamed(this.consumed, Named::getPayload);
 	}
 
+	Object getConsumedPayload(int index) {
+		return extractFromNamed(this.consumed[index], Named::getPayload);
+	}
+
 	Optional<String> getName() {
 		return this.name;
 	}
@@ -96,8 +100,12 @@ class EvaluatedArgumentSet {
 
 	private static Object[] extractFromNamed(Object[] arguments, Function<Named<?>, Object> mapper) {
 		return Arrays.stream(arguments) //
-				.map(argument -> argument instanceof Named ? mapper.apply((Named<?>) argument) : argument) //
+				.map(argument -> extractFromNamed(argument, mapper)) //
 				.toArray();
+	}
+
+	private static Object extractFromNamed(Object argument, Function<Named<?>, Object> mapper) {
+		return argument instanceof Named ? mapper.apply((Named<?>) argument) : argument;
 	}
 
 }
