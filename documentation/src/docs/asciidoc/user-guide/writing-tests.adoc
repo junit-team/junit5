@@ -227,14 +227,16 @@ ones available in Jupiter:
 | `IndicativeSentences`  | Generates complete sentences by concatenating the names of the test and the enclosing classes.
 |===
 
-Note that for `IndicativeSentences`, you can customize the separator and the
-underlying generator by using `@IndicativeSentencesGeneration` as shown in the
-following example.
+======
+Note that for `IndicativeSentences`, you can customize the separator and the underlying
+generator by using `@IndicativeSentencesGeneration` as shown in the following example.
 
 [source,java,indent=0]
 ----
 include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
 ----
+
+Running the above `DisplayNameGeneratorDemo` test class results in the following display names.
 
 ```
 +-- DisplayNameGeneratorDemo [OK]
@@ -250,6 +252,7 @@ include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
       +-- Year 2020 is a leap year. [OK]
       '-- Year 2048 is a leap year. [OK]
 ```
+======
 
 
 [[writing-tests-display-name-generator-default]]
