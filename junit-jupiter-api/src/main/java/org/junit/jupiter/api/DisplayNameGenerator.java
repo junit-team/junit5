@@ -240,7 +240,10 @@ public interface DisplayNameGenerator {
 	 * <p>This generator extends the functionality of {@link Standard} by
 	 * removing parentheses ({@code '()'}) found at the end of method names
 	 * with no parameters.
+	 *
+	 * @since 5.7
 	 */
+	@API(status = STABLE, since = "5.7")
 	class Simple extends Standard {
 
 		static final DisplayNameGenerator INSTANCE = new Simple();
