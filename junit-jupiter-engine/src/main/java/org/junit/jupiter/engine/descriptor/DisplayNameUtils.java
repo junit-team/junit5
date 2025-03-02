@@ -82,7 +82,7 @@ final class DisplayNameUtils {
 			// handling validation exceptions during the TestEngine discovery phase.
 			if (StringUtils.isBlank(displayName)) {
 				logger.warn(() -> String.format(
-					"Configuration error: @DisplayName on [%s] must be declared with a non-empty value.", element));
+					"Configuration error: @DisplayName on [%s] must be declared with a non-blank value.", element));
 			}
 			else {
 				return displayName;
