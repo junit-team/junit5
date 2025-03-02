@@ -56,7 +56,7 @@ class DisplayNameUtilsTests {
 
 			assertThat(displayName).isEqualTo("default-name");
 			assertThat(firstWarningLogRecord(listener).getMessage()).isEqualTo(
-				"Configuration error: @DisplayName on [class org.junit.jupiter.engine.descriptor.DisplayNameUtilsTests$BlankDisplayNameTestCase] must be declared with a non-empty value.");
+				"Configuration error: @DisplayName on [class org.junit.jupiter.engine.descriptor.DisplayNameUtilsTests$BlankDisplayNameTestCase] must be declared with a non-blank value.");
 		}
 
 		@Test
