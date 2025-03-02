@@ -20,8 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @FieldSource} is a {@linkplain Repeatable repeatable}
@@ -33,8 +31,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
  * arguments for individual invocations of the annotated
- * {@link ParameterizedClass @ParameterizedClass} or
- * {@link ParameterizedTest @ParameterizedTest}.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * <p>In this context, a "stream" is anything that JUnit can reliably convert to
  * a {@link java.util.stream.Stream Stream}; however, the actual concrete field
@@ -107,15 +105,15 @@ import org.junit.jupiter.params.ParameterizedTest;
  * always be {@code static}.
  *
  * <p>This behavior and the above examples also apply to parameters of a
- * {@link ParameterizedClass @ParameterizedClass}, regardless whether field or
- * constructor injection is used.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass},
+ * regardless whether field or constructor injection is used.
  *
  * @since 5.11
  * @see MethodSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedClass
- * @see ParameterizedTest
+ * @see org.junit.jupiter.params.ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
