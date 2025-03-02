@@ -228,26 +228,42 @@ ones available in Jupiter:
 |===
 
 ======
-Note that for `IndicativeSentences`, you can customize the separator and the underlying
-generator by using `@IndicativeSentencesGeneration` as shown in the following example.
+The following example demonstrates the use of the `ReplaceUnderscores` display name
+generator.
 
 [source,java,indent=0]
 ----
-include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide]
+include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide_replace_underscores]
 ----
 
-Running the above `DisplayNameGeneratorDemo` test class results in the following display names.
+Running the above `A_year_is_not_supported` test class results in the following display names.
 
 ```
-+-- DisplayNameGeneratorDemo [OK]
-  +-- A year is not supported [OK]
-  | '-- if it is zero [OK]
-  | +-- A negative value for year is not supported by the leap year computation. [OK]
-  | | +-- For example, year -1 is not supported. [OK]
-  | | '-- For example, year -4 is not supported. [OK]
-  '-- A year is a leap year [OK]
-    +-- A year is a leap year -> if it is divisible by 4 but not by 100 [OK]
-    '-- A year is a leap year -> if it is one of the following years [OK]
+A year is not supported [OK]
+   +-- if it is zero [OK]
+   '-- A negative value for year is not supported by the leap year computation. [OK]
+      +-- For example, year -1 is not supported. [OK]
+      '-- For example, year -4 is not supported. [OK]
+```
+======
+
+======
+With the `IndicativeSentences` display name generator, you can customize the separator and
+the underlying generator by using `@IndicativeSentencesGeneration` as shown in the
+following example.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/DisplayNameGeneratorDemo.java[tags=user_guide_indicative_sentences]
+----
+
+Running the above `A_year_is_a_leap_year` test class results in the following display
+names.
+
+```
+A year is a leap year [OK]
+   +-- A year is a leap year -> if it is divisible by 4 but not by 100 [OK]
+   '-- A year is a leap year -> if it is one of the following years [OK]
       +-- Year 2016 is a leap year. [OK]
       +-- Year 2020 is a leap year. [OK]
       '-- Year 2048 is a leap year. [OK]

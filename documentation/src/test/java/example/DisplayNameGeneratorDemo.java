@@ -10,8 +10,6 @@
 
 package example;
 
-// tag::user_guide[]
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -25,6 +23,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class DisplayNameGeneratorDemo {
 
 	@Nested
+	// tag::user_guide_replace_underscores[]
 	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	class A_year_is_not_supported {
 
@@ -39,8 +38,10 @@ class DisplayNameGeneratorDemo {
 		}
 
 	}
+	// end::user_guide_replace_underscores[]
 
 	@Nested
+	// tag::user_guide_indicative_sentences[]
 	@IndicativeSentencesGeneration(separator = " -> ", generator = ReplaceUnderscores.class)
 	class A_year_is_a_leap_year {
 
@@ -54,6 +55,6 @@ class DisplayNameGeneratorDemo {
 		}
 
 	}
+	// end::user_guide_indicative_sentences[]
 
 }
-// end::user_guide[]
