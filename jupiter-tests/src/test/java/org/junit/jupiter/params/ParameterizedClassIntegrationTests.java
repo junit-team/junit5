@@ -10,12 +10,44 @@
 
 package org.junit.jupiter.params;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
+import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
+import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.testkit.engine.EventConditions.container;
+import static org.junit.platform.testkit.engine.EventConditions.displayName;
+import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
+import static org.junit.platform.testkit.engine.EventConditions.engine;
+import static org.junit.platform.testkit.engine.EventConditions.event;
+import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.EventConditions.started;
+import static org.junit.platform.testkit.engine.EventConditions.test;
+import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -61,37 +93,6 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
-import static org.junit.jupiter.params.ArgumentCountValidationMode.NONE;
-import static org.junit.jupiter.params.ArgumentCountValidationMode.STRICT;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
-import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
-import static org.junit.jupiter.params.provider.Arguments.argumentSet;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.testkit.engine.EventConditions.container;
-import static org.junit.platform.testkit.engine.EventConditions.displayName;
-import static org.junit.platform.testkit.engine.EventConditions.dynamicTestRegistered;
-import static org.junit.platform.testkit.engine.EventConditions.engine;
-import static org.junit.platform.testkit.engine.EventConditions.event;
-import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
-import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
-import static org.junit.platform.testkit.engine.EventConditions.started;
-import static org.junit.platform.testkit.engine.EventConditions.test;
-import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 @SuppressWarnings("JUnitMalformedDeclaration")
 public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngineTests {
@@ -595,6 +596,14 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
 				.containsExactly("zzz_before", "aaa_after", "zzz_after");
+	}
+
+	@Test
+	void supportsInjectingArgumentsIntoLifecycleMethods() {
+
+		var results = executeTestsForClass(LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 	}
 
 	// -------------------------------------------------------------------
@@ -1676,6 +1685,39 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@Test
 		void test(TestReporter reporter) {
 			reporter.publishEntry("test");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase(
+			@ConvertWith(Converter.class) AtomicInteger counter) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(AtomicInteger counter) {
+			assertEquals(2, counter.incrementAndGet());
+		}
+
+		@AfterArgumentSet(injectArguments = true)
+		static void after(AtomicInteger counter) {
+			assertEquals(4, counter.get());
+		}
+
+		@Test
+		void test1() {
+			this.counter.incrementAndGet();
+		}
+
+		@Test
+		void test2() {
+			this.counter.incrementAndGet();
+		}
+
+		static class Converter extends SimpleArgumentConverter {
+			@Override
+			protected Object convert(Object source, Class<?> targetType) {
+				return new AtomicInteger((Integer) source);
+			}
 		}
 	}
 

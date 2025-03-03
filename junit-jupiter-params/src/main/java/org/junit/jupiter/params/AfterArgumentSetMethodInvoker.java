@@ -10,16 +10,18 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.Method;
-
 import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
+/**
+ * @since 5.13
+ */
 class AfterArgumentSetMethodInvoker extends AbstractArgumentSetLifecycleMethodInvoker
 		implements AfterContainerTemplateInvocationCallback {
 
-	AfterArgumentSetMethodInvoker(Class<?> containerTemplateClass, Method method) {
-		super(containerTemplateClass, method);
+	AfterArgumentSetMethodInvoker(ParameterizedClassContext declarationContext, EvaluatedArgumentSet arguments,
+			int invocationIndex, ResolutionCache resolutionCache, ArgumentSetLifecycleMethod lifecycleMethod) {
+		super(declarationContext, arguments, invocationIndex, resolutionCache, lifecycleMethod);
 	}
 
 	@Override

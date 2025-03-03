@@ -10,31 +10,59 @@
 
 package org.junit.jupiter.params;
 
-import java.lang.reflect.Method;
-
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.ParameterResolver;
 
-abstract class AbstractArgumentSetLifecycleMethodInvoker {
+/**
+ * @since 5.13
+ */
+abstract class AbstractArgumentSetLifecycleMethodInvoker implements ParameterResolver {
 
-	private final Class<?> containerTemplateClass;
-	private final Method method;
+	private final ParameterizedClassContext declarationContext;
+	private final EvaluatedArgumentSet arguments;
+	private final int invocationIndex;
+	private final ResolutionCache resolutionCache;
+	private final ArgumentSetLifecycleMethod lifecycleMethod;
 
-	AbstractArgumentSetLifecycleMethodInvoker(Class<?> containerTemplateClass, Method method) {
-		this.containerTemplateClass = containerTemplateClass;
-		this.method = method;
+	AbstractArgumentSetLifecycleMethodInvoker(ParameterizedClassContext declarationContext,
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache,
+			ArgumentSetLifecycleMethod lifecycleMethod) {
+		this.declarationContext = declarationContext;
+		this.arguments = arguments;
+		this.invocationIndex = invocationIndex;
+		this.resolutionCache = resolutionCache;
+		this.lifecycleMethod = lifecycleMethod;
+	}
+
+	@Override
+	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException {
+		// TODO Check for parameter index
+		return this.lifecycleMethod.injectArguments //
+				&& parameterContext.getDeclaringExecutable().equals(this.lifecycleMethod.method);
+	}
+
+	@Override
+	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+			throws ParameterResolutionException {
+		return this.declarationContext.getResolverFacade() //
+				.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,
+					this.resolutionCache);
 	}
 
 	protected void invoke(ExtensionContext context) {
 		if (isCorrectTestClass(context)) {
 			ExecutableInvoker executableInvoker = context.getExecutableInvoker();
 			Object testInstance = context.getTestInstance().orElse(null);
-			executableInvoker.invoke(method, testInstance);
+			executableInvoker.invoke(this.lifecycleMethod.method, testInstance);
 		}
 	}
 
 	private boolean isCorrectTestClass(ExtensionContext context) {
-		return this.containerTemplateClass.equals(context.getTestClass().orElse(null));
+		return this.declarationContext.getAnnotatedElement().equals(context.getTestClass().orElse(null));
 	}
 
 }

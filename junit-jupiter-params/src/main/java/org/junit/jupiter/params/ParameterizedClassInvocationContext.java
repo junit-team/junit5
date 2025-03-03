@@ -90,15 +90,15 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 	}
 
 	private Stream<BeforeContainerTemplateInvocationCallback> createBeforeArgumentSetMethodInvoker() {
-		Class<?> containerTemplateClass = this.declarationContext.getAnnotatedElement();
 		return this.declarationContext.getBeforeMethods().stream() //
-				.map(method -> new BeforeArgumentSetMethodInvoker(containerTemplateClass, method));
+				.map(method -> new BeforeArgumentSetMethodInvoker(this.declarationContext, this.arguments,
+					this.invocationIndex, this.resolutionCache, method));
 	}
 
 	private Stream<AfterContainerTemplateInvocationCallback> createAfterArgumentSetMethodInvoker() {
-		Class<?> containerTemplateClass = this.declarationContext.getAnnotatedElement();
 		return this.declarationContext.getAfterMethods().stream() //
-				.map(method -> new AfterArgumentSetMethodInvoker(containerTemplateClass, method));
+				.map(method -> new AfterArgumentSetMethodInvoker(this.declarationContext, this.arguments,
+					this.invocationIndex, this.resolutionCache, method));
 	}
 
 }

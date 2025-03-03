@@ -228,9 +228,8 @@ class ResolverFacade {
 					it -> it.getParameterIndex() == parameterIndex).findFirst() //
 						.orElseThrow(() -> new ParameterResolutionException(
 							"Parameter index out of bounds: " + parameterIndex)));
-		return resolutionCache.resolve(declaration,
-			() -> getResolver(extensionContext, declaration, parameterContext.getParameter()) //
-					.resolve(parameterContext, parameterIndex, arguments, invocationIndex));
+		return resolutionCache.resolve(declaration, () -> getResolver(extensionContext, declaration) //
+				.resolve(parameterContext, parameterIndex, arguments, invocationIndex));
 	}
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
@@ -265,15 +264,14 @@ class ResolverFacade {
 
 	private Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
 			EvaluatedArgumentSet arguments, int invocationIndex) {
-		return getResolver(extensionContext, parameterDeclaration, parameterDeclaration.getField()) //
+		return getResolver(extensionContext, parameterDeclaration) //
 				.resolve(parameterDeclaration, arguments, invocationIndex);
 	}
 
-	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration declaration,
-			AnnotatedElement annotatedElement) {
+	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration declaration) {
 		return this.resolvers.computeIfAbsent(declaration, __ -> this.aggregatorParameters.contains(declaration) //
-				? createAggregator(declaration.getParameterIndex(), annotatedElement, extensionContext) //
-				: createConverter(declaration.getParameterIndex(), annotatedElement, extensionContext));
+				? createAggregator(declaration, extensionContext) //
+				: createConverter(declaration, extensionContext));
 	}
 
 	private int toLogicalIndex(ParameterContext parameterContext) {
@@ -361,32 +359,31 @@ class ResolverFacade {
 				|| isAnnotated(declaration.getAnnotatedElement(), AggregateWith.class);
 	}
 
-	private static Converter createConverter(int index, AnnotatedElement annotatedElement,
-			ExtensionContext extensionContext) {
+	private static Converter createConverter(ParameterDeclaration declaration, ExtensionContext extensionContext) {
 		try { // @formatter:off
-			return findAnnotation(annotatedElement, ConvertWith.class)
+			return findAnnotation(declaration.getAnnotatedElement(), ConvertWith.class)
 					.map(ConvertWith::value)
 					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
-					.map(converter -> AnnotationConsumerInitializer.initialize(annotatedElement, converter))
+					.map(converter -> AnnotationConsumerInitializer.initialize(declaration.getAnnotatedElement(), converter))
 					.map(Converter::new)
 					.orElse(Converter.DEFAULT);
 		} // @formatter:on
 		catch (Exception ex) {
-			throw parameterResolutionException("Error creating ArgumentConverter", ex, index);
+			throw parameterResolutionException("Error creating ArgumentConverter", ex, declaration.getParameterIndex());
 		}
 	}
 
-	private static Aggregator createAggregator(int index, AnnotatedElement annotatedElement,
-			ExtensionContext extensionContext) {
+	private static Aggregator createAggregator(ParameterDeclaration declaration, ExtensionContext extensionContext) {
 		try { // @formatter:off
-			return findAnnotation(annotatedElement, AggregateWith.class)
+			return findAnnotation(declaration.getAnnotatedElement(), AggregateWith.class)
 					.map(AggregateWith::value)
 					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
 					.map(Aggregator::new)
 					.orElse(Aggregator.DEFAULT);
 		} // @formatter:on
 		catch (Exception ex) {
-			throw parameterResolutionException("Error creating ArgumentsAggregator", ex, index);
+			throw parameterResolutionException("Error creating ArgumentsAggregator", ex,
+				declaration.getParameterIndex());
 		}
 	}
 

@@ -28,4 +28,7 @@ import org.apiguardian.api.API;
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
 public @interface BeforeArgumentSet {
+
+	boolean injectArguments() default false;
+
 }
