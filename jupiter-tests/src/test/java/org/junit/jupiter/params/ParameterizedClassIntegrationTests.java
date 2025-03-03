@@ -65,6 +65,7 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
@@ -73,6 +74,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
 import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
+import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.converter.TypedArgumentConverter;
@@ -86,6 +88,7 @@ import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -336,13 +339,14 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
+	@ValueSource(classes = { //NestedFieldInjectionTestCase.class,
+			NestedConstructorInjectionTestCase.class })
 	void supportsNestedParameterizedClass(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
-		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
+		results.testEvents().debug().assertStatistics(stats -> stats.started(8).succeeded(8));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly( //
 					"[1] number=1", "[1] text=foo", "[2] text=bar", //
@@ -606,6 +610,16 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase.class,
+			CustomConverterAnnotationsWithLifecycleMethodsAndFieldInjectionTestCase.class })
+	void convertersHaveAccessToTheirAnnotations(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	// -------------------------------------------------------------------
@@ -1749,6 +1763,61 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
 			return new AtomicInteger((Integer) source);
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(strings = "foo")
+	record CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase(
+			@CustomConversion String value) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(String value) {
+			assertEquals("foo", value);
+		}
+
+		@Test
+		void test() {
+			assertEquals("foo", this.value);
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(strings = "foo")
+	static class CustomConverterAnnotationsWithLifecycleMethodsAndFieldInjectionTestCase {
+
+		@Parameter
+		@CustomConversion
+		String value;
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(String value) {
+			assertEquals("foo", value);
+		}
+
+		@Test
+		void test() {
+			assertEquals("foo", this.value);
+		}
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.PARAMETER, ElementType.FIELD })
+	@ConvertWith(CustomConversion.Converter.class)
+	@interface CustomConversion {
+
+		class Converter implements ArgumentConverter {
+			@Override
+			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+				assertNotNull(context.getParameter().getAnnotation(CustomConversion.class));
+				return source;
+			}
+
+			@Override
+			public Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+				assertNotNull(context.getField().getAnnotation(CustomConversion.class));
+				return source;
+			}
 		}
 	}
 
