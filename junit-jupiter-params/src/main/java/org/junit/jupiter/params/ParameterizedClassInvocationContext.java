@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -86,19 +84,20 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 	}
 
 	private Stream<Extension> createLifecycleMethodInvokers() {
-		return Stream.concat(createBeforeArgumentSetMethodInvoker(), createAfterArgumentSetMethodInvoker());
+		return Stream.concat( //
+			this.declarationContext.getBeforeMethods().stream().map(this::createBeforeArgumentSetMethodInvoker), //
+			this.declarationContext.getAfterMethods().stream().map(this::createAfterArgumentSetMethodInvoker) //
+		);
 	}
 
-	private Stream<BeforeContainerTemplateInvocationCallback> createBeforeArgumentSetMethodInvoker() {
-		return this.declarationContext.getBeforeMethods().stream() //
-				.map(method -> new BeforeArgumentSetMethodInvoker(this.declarationContext, this.arguments,
-					this.invocationIndex, this.resolutionCache, method));
+	private BeforeArgumentSetMethodInvoker createBeforeArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
+		return new BeforeArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
+			this.resolutionCache, method);
 	}
 
-	private Stream<AfterContainerTemplateInvocationCallback> createAfterArgumentSetMethodInvoker() {
-		return this.declarationContext.getAfterMethods().stream() //
-				.map(method -> new AfterArgumentSetMethodInvoker(this.declarationContext, this.arguments,
-					this.invocationIndex, this.resolutionCache, method));
+	private AfterArgumentSetMethodInvoker createAfterArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
+		return new AfterArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
+			this.resolutionCache, method);
 	}
 
 }

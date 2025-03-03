@@ -38,18 +38,22 @@ abstract class AbstractArgumentSetLifecycleMethodInvoker implements ParameterRes
 	}
 
 	@Override
+	public ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
+		return ExtensionContextScope.TEST_METHOD;
+	}
+
+	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		// TODO Check for parameter index
-		return this.lifecycleMethod.injectArguments //
-				&& parameterContext.getDeclaringExecutable().equals(this.lifecycleMethod.method);
+		return parameterContext.getDeclaringExecutable().equals(this.lifecycleMethod.method) //
+				&& this.lifecycleMethod.parameterResolver.supports(parameterContext);
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.declarationContext.getResolverFacade() //
-				.resolveForLifecycleMethod(parameterContext, extensionContext, this.arguments, this.invocationIndex,
+		return this.lifecycleMethod.parameterResolver //
+				.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,
 					this.resolutionCache);
 	}
 

@@ -64,12 +64,13 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 			this.injectionType = InjectionType.FIELDS;
 		}
 
-		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle,
-			BeforeArgumentSet.class, BeforeArgumentSet::injectArguments, TOP_DOWN);
+		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, TOP_DOWN,
+			BeforeArgumentSet.class, BeforeArgumentSet::injectArguments, this.resolverFacade);
 
 		// Make a local copy since findAnnotatedMethods() returns an immutable list.
-		this.afterMethods = new ArrayList<>(findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz,
-			testInstanceLifecycle, AfterArgumentSet.class, AfterArgumentSet::injectArguments, BOTTOM_UP));
+		this.afterMethods = new ArrayList<>(
+			findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, BOTTOM_UP,
+				AfterArgumentSet.class, AfterArgumentSet::injectArguments, this.resolverFacade));
 
 		// Since the bottom-up ordering of afterMethods will later be reversed when the
 		// AfterArgumentSetMethodInvoker extensions are executed within
@@ -143,8 +144,8 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 	}
 
 	private static <A extends Annotation> List<ArgumentSetLifecycleMethod> findLifecycleMethodsAndAssertStaticAndNonPrivate(
-			Class<?> testClass, TestInstance.Lifecycle testInstanceLifecycle, Class<A> annotationType,
-			Predicate<A> injectArgumentsPredicate, HierarchyTraversalMode traversalMode) {
+			Class<?> testClass, TestInstance.Lifecycle testInstanceLifecycle, HierarchyTraversalMode traversalMode,
+			Class<A> annotationType, Predicate<A> injectArgumentsPredicate, ResolverFacade resolverFacade) {
 
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
 
@@ -154,14 +155,20 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 						assertStatic(annotationType, method);
 					}
 				}) //
-				.map(method -> new ArgumentSetLifecycleMethod(method,
-					injectArgumentsPredicate.test(getAnnotation(method, annotationType)))) //
+				.map(method -> {
+					A annotation = getAnnotation(method, annotationType);
+					if (injectArgumentsPredicate.test(annotation)) {
+						return new ArgumentSetLifecycleMethod(method,
+							resolverFacade.createLifecycleMethodParameterResolver(method, annotation));
+					}
+					return new ArgumentSetLifecycleMethod(method);
+				}) //
 				.collect(toUnmodifiableList());
 	}
 
 	private static <A extends Annotation> A getAnnotation(Method method, Class<A> annotationType) {
-		return AnnotationSupport.findAnnotation(method, annotationType).orElseThrow(
-			() -> new JUnitException("Method not annotated with " + annotationType.getSimpleName()));
+		return AnnotationSupport.findAnnotation(method, annotationType) //
+				.orElseThrow(() -> new JUnitException("Method not annotated with @" + annotationType.getSimpleName()));
 	}
 
 	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,

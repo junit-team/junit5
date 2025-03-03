@@ -26,6 +26,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -55,6 +58,7 @@ import org.junit.jupiter.params.support.ParameterDeclaration;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -102,7 +106,7 @@ class ResolverFacade {
 		return create(constructor, annotation, implicitParameters);
 	}
 
-	static ResolverFacade create(Method method, ParameterizedTest annotation) {
+	static ResolverFacade create(Method method, Annotation annotation) {
 		return create(method, annotation, 0);
 	}
 
@@ -215,34 +219,23 @@ class ResolverFacade {
 		return arguments.getTotalLength();
 	}
 
-	Object resolveForLifecycleMethod(ParameterContext parameterContext, ExtensionContext extensionContext,
-			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+	ArgumentSetLifecycleMethod.ParameterResolver createLifecycleMethodParameterResolver(Method method,
+			Annotation annotation) {
+		ResolverFacade originalResolverFacade = this;
+		ResolverFacade lifecycleMethodResolverFacade = create(method, annotation);
 
-		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex //
-				.get(parameterContext.getIndex());
+		Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping = new HashMap<>();
+		List<String> errors = validateLifecycleMethodParameters(method, annotation, originalResolverFacade,
+			lifecycleMethodResolverFacade, parameterDeclarationMapping);
 
-		Class<?> actualType = parameterContext.getParameter().getType();
-
-		if (declaration != null && declaration.getParameterType().equals(actualType)) {
-			return resolutionCache.resolve(declaration, () -> resolve(declaration, extensionContext, arguments,
-				invocationIndex, Optional.of(parameterContext)));
-		}
-
-		ExecutableParameterDeclaration lifecycleMethodParameterDeclaration = new ExecutableParameterDeclaration(
-			parameterContext.getParameter(), parameterContext.getIndex(), 0);
-		if (lifecycleMethodParameterDeclaration.isAggregator()) {
-			Resolver resolver = createAggregator(lifecycleMethodParameterDeclaration, extensionContext);
-			return lifecycleMethodParameterDeclaration.resolve(resolver, extensionContext, arguments, invocationIndex,
-				Optional.of(parameterContext));
-		}
-
-		String prefix = String.format(
-			"Parameter with index %d on lifecycle method is incompatible with the parameter declared on the parameterized class",
-			parameterContext.getIndex());
-		throw declaration == null //
-				? new ParameterResolutionException(prefix + ": no such parameter") //
-				: new ParameterResolutionException(String.format("%s: expected type %s but found %s", prefix,
-					declaration.getParameterType(), actualType));
+		return Try //
+				.call(() -> configurationErrorOrSuccess(errors,
+					() -> new DefaultArgumentSetLifecycleMethodParameterResolver(originalResolverFacade,
+						lifecycleMethodResolverFacade, parameterDeclarationMapping))) //
+				.getOrThrow(cause -> new ExtensionConfigurationException(
+					String.format("Invalid @%s lifecycle method declaration: %s",
+						annotation.annotationType().getSimpleName(), method.toGenericString()),
+					cause));
 	}
 
 	/**
@@ -253,23 +246,23 @@ class ResolverFacade {
 			int invocationIndex, ResolutionCache resolutionCache) {
 
 		int parameterIndex = toLogicalIndex(parameterContext);
-		ResolvableParameterDeclaration declaration = findDeclaration(parameterIndex);
+		ResolvableParameterDeclaration declaration = findDeclaration(parameterIndex) //
+				.orElseThrow(
+					() -> new ParameterResolutionException("Parameter index out of bounds: " + parameterIndex));
 
 		return resolutionCache.resolve(declaration,
 			() -> resolve(declaration, extensionContext, arguments, invocationIndex, Optional.of(parameterContext)));
 	}
 
-	private ResolvableParameterDeclaration findDeclaration(int parameterIndex) {
+	private Optional<? extends ResolvableParameterDeclaration> findDeclaration(int parameterIndex) {
 		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex //
 				.get(parameterIndex);
 		if (declaration == null) {
-			declaration = this.aggregatorParameters.stream() //
+			return this.aggregatorParameters.stream() //
 					.filter(it -> it.getParameterIndex() == parameterIndex) //
-					.findFirst() //
-					.orElseThrow(
-						() -> new ParameterResolutionException("Parameter index out of bounds: " + parameterIndex));
+					.findFirst();
 		}
-		return declaration;
+		return Optional.of(declaration);
 	}
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
@@ -328,9 +321,46 @@ class ResolverFacade {
 		validateIndexedParameters(indexedParameters, errors);
 		validateAggregatorParameters(aggregatorParameters, errors);
 
+		return configurationErrorOrSuccess(errors, () -> indexedParameters.entrySet().stream() //
+				.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new)));
+	}
+
+	private static List<String> validateLifecycleMethodParameters(Method method, Annotation annotation,
+			ResolverFacade originalResolverFacade, ResolverFacade lifecycleMethodResolverFacade,
+			Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
+		List<ParameterDeclaration> actualDeclarations = lifecycleMethodResolverFacade.indexedParameterDeclarations.getAll();
+		List<String> errors = new ArrayList<>();
+		for (int parameterIndex = 0; parameterIndex < actualDeclarations.size(); parameterIndex++) {
+			ParameterDeclaration actualDeclaration = actualDeclarations.get(parameterIndex);
+			ResolvableParameterDeclaration originalDeclaration = originalResolverFacade.indexedParameterDeclarations.declarationsByIndex //
+					.get(parameterIndex);
+			if (originalDeclaration == null) {
+				break;
+			}
+			if (!actualDeclaration.getParameterType().equals(originalDeclaration.getParameterType())) {
+				errors.add(String.format(
+					"parameter%s with index %d is incompatible with the parameter declared on the parameterized class: expected type '%s' but found '%s'",
+					parameterName(actualDeclaration), parameterIndex, originalDeclaration.getParameterType(),
+					actualDeclaration.getParameterType()));
+			}
+			else if (findAnnotation(actualDeclaration.getAnnotatedElement(), ConvertWith.class).isPresent()) {
+				errors.add(String.format("parameter%s with index %d must not be annotated with @ConvertWith",
+					parameterName(actualDeclaration), parameterIndex));
+			}
+			else if (errors.isEmpty()) {
+				parameterDeclarationMapping.put(actualDeclaration, originalDeclaration);
+			}
+		}
+		return errors;
+	}
+
+	private static String parameterName(ParameterDeclaration actualDeclaration) {
+		return actualDeclaration.getParameterName().map(name -> " '" + name + "'").orElse("");
+	}
+
+	private static <T> T configurationErrorOrSuccess(List<String> errors, Supplier<T> successfulResult) {
 		if (errors.isEmpty()) {
-			return indexedParameters.entrySet().stream() //
-					.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new));
+			return successfulResult.get();
 		}
 		else if (errors.size() == 1) {
 			throw new PreconditionViolationException("Configuration error: " + errors.get(0) + ".");
@@ -564,7 +594,7 @@ class ResolverFacade {
 		}
 	}
 
-	private interface ResolvableParameterDeclaration extends ParameterDeclaration {
+	private abstract static class ResolvableParameterDeclaration implements ParameterDeclaration {
 
 		/**
 		 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
@@ -572,17 +602,17 @@ class ResolverFacade {
 		 *
 		 * @return {@code true} if the parameter is an aggregator
 		 */
-		default boolean isAggregator() {
+		boolean isAggregator() {
 			return ArgumentsAccessor.class.isAssignableFrom(getParameterType())
 					|| isAnnotated(getAnnotatedElement(), AggregateWith.class);
 		}
 
-		Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
-				int invocationIndex, Optional<ParameterContext> originalParameterContext);
-
+		protected abstract Object resolve(Resolver resolver, ExtensionContext extensionContext,
+				EvaluatedArgumentSet arguments, int invocationIndex,
+				Optional<ParameterContext> originalParameterContext);
 	}
 
-	private static class FieldParameterDeclaration implements ResolvableParameterDeclaration, FieldContext {
+	private static class FieldParameterDeclaration extends ResolvableParameterDeclaration implements FieldContext {
 
 		private final Field field;
 		private final int index;
@@ -624,7 +654,7 @@ class ResolverFacade {
 		}
 	}
 
-	private static class ExecutableParameterDeclaration implements ResolvableParameterDeclaration {
+	private static class ExecutableParameterDeclaration extends ResolvableParameterDeclaration {
 
 		private final java.lang.reflect.Parameter parameter;
 		private final int index;
@@ -691,6 +721,49 @@ class ResolverFacade {
 					return target;
 				}
 			};
+		}
+	}
+
+	private static class DefaultArgumentSetLifecycleMethodParameterResolver
+			implements ArgumentSetLifecycleMethod.ParameterResolver {
+
+		private final ResolverFacade originalResolverFacade;
+		private final ResolverFacade lifecycleMethodResolverFacade;
+		private final Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping;
+
+		DefaultArgumentSetLifecycleMethodParameterResolver(ResolverFacade originalResolverFacade,
+				ResolverFacade lifecycleMethodResolverFacade,
+				Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
+			this.originalResolverFacade = originalResolverFacade;
+			this.lifecycleMethodResolverFacade = lifecycleMethodResolverFacade;
+			this.parameterDeclarationMapping = parameterDeclarationMapping;
+		}
+
+		@Override
+		public boolean supports(ParameterContext parameterContext) {
+			return this.lifecycleMethodResolverFacade.findDeclaration(parameterContext.getIndex()) //
+					.filter(it -> this.parameterDeclarationMapping.containsKey(it) || it.isAggregator()) //
+					.isPresent();
+		}
+
+		@Override
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
+				EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+
+			ResolvableParameterDeclaration actualDeclaration = this.lifecycleMethodResolverFacade //
+					.findDeclaration(parameterContext.getIndex()) //
+					.orElseThrow(() -> new ParameterResolutionException(
+						"Parameter index out of bounds: " + parameterContext.getIndex()));
+
+			ResolvableParameterDeclaration originalDeclaration = this.parameterDeclarationMapping //
+					.get(actualDeclaration);
+			if (originalDeclaration == null) {
+				return this.lifecycleMethodResolverFacade.resolve(actualDeclaration, extensionContext, arguments,
+					invocationIndex, Optional.of(parameterContext));
+			}
+			return resolutionCache.resolve(originalDeclaration,
+				() -> this.originalResolverFacade.resolve(originalDeclaration, extensionContext, arguments,
+					invocationIndex, Optional.of(parameterContext)));
 		}
 	}
 }

@@ -12,16 +12,47 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Method;
 
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.util.Preconditions;
+
 /**
  * @since 5.13
  */
 class ArgumentSetLifecycleMethod {
 
 	final Method method;
-	final boolean injectArguments;
+	final ParameterResolver parameterResolver;
 
-	ArgumentSetLifecycleMethod(Method method, boolean injectArguments) {
-		this.method = method;
-		this.injectArguments = injectArguments;
+	ArgumentSetLifecycleMethod(Method method) {
+		this(method, ParameterResolver.DISABLED);
+	}
+
+	ArgumentSetLifecycleMethod(Method method, ParameterResolver parameterResolver) {
+		this.method = Preconditions.notNull(method, "method must not be null");
+		this.parameterResolver = Preconditions.notNull(parameterResolver, "parameterResolver must not be null");
+	}
+
+	interface ParameterResolver {
+
+		ParameterResolver DISABLED = new ParameterResolver() {
+			@Override
+			public boolean supports(ParameterContext parameterContext) {
+				return false;
+			}
+
+			@Override
+			public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
+					EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+				throw new JUnitException("Parameter resolution is disabled");
+			}
+		};
+
+		boolean supports(ParameterContext parameterContext);
+
+		Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
+				EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache);
+
 	}
 }

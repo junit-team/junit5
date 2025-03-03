@@ -38,6 +38,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
@@ -623,13 +624,42 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { AccessorOnLifecycleMethodWithConstructorInjectionTestCase.class,
-			AccessorOnLifecycleMethodWithFieldInjectionTestCase.class })
-	void supportsAggregatorsOnLifecycleMethods(Class<?> containerTemplateClass) {
+	@ValueSource(classes = { ValidLifecycleMethodInjectionWithConstructorInjectionTestCase.class,
+			ValidLifecycleMethodInjectionWithFieldInjectionTestCase.class })
+	void supportsMixedInjectionsForLifecycleMethods(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void failsForLifecycleMethodWithInvalidParameters() {
+
+		var results = executeTestsForClass(LifecycleMethodWithInvalidParametersTestCase.class);
+
+		var expectedMessage = """
+				2 configuration errors:
+				- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
+				- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
+				""".trim();
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure( //
+					message(
+						"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
+							LifecycleMethodWithInvalidParametersTestCase.class.getName())), //
+					cause(message(expectedMessage)) //
+				));
+	}
+
+	@Test
+	void failsForLifecycleMethodWithParameterAfterAggregator() {
+
+		var results = executeTestsForClass(LifecycleMethodWithParameterAfterAggregatorTestCase.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(
+					message(it -> it.contains("No ParameterResolver registered for parameter [int value]"))));
 	}
 
 	// -------------------------------------------------------------------
@@ -1381,7 +1411,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)
-	@Target(ElementType.FIELD)
+	@Target({ ElementType.FIELD, ElementType.PARAMETER })
 	@Parameter
 	@AggregateWith(TimesTwoAggregator.class)
 	@interface TimesTwo {
@@ -1833,34 +1863,118 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@ParameterizedClass
 	@ValueSource(ints = 1)
-	record AccessorOnLifecycleMethodWithConstructorInjectionTestCase(int value) {
+	static class ValidLifecycleMethodInjectionWithConstructorInjectionTestCase
+			extends AbstractValidLifecycleMethodInjectionTestCase {
 
-		@BeforeArgumentSet(injectArguments = true)
-		static void before(ArgumentsAccessor accessor) {
-			assertEquals(1, accessor.getInteger(0));
+		private final AtomicInteger value;
+
+		ValidLifecycleMethodInjectionWithConstructorInjectionTestCase(
+				@ConvertWith(AtomicIntegerConverter.class) AtomicInteger value) {
+			this.value = value;
 		}
 
 		@Test
 		void test() {
-			assertEquals(1, value);
+			assertEquals(5, this.value.getAndIncrement());
 		}
 	}
 
 	@ParameterizedClass
 	@ValueSource(ints = 1)
-	static class AccessorOnLifecycleMethodWithFieldInjectionTestCase {
+	static class ValidLifecycleMethodInjectionWithFieldInjectionTestCase
+			extends AbstractValidLifecycleMethodInjectionTestCase {
 
 		@Parameter
-		int value;
+		@ConvertWith(AtomicIntegerConverter.class)
+		AtomicInteger value;
+
+		@Test
+		void test() {
+			assertEquals(5, this.value.getAndIncrement());
+		}
+	}
+
+	abstract static class AbstractValidLifecycleMethodInjectionTestCase {
 
 		@BeforeArgumentSet(injectArguments = true)
-		static void before(ArgumentsAccessor accessor) {
+		static void before0() {
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before1(AtomicInteger value) {
+			value.incrementAndGet();
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before2(ArgumentsAccessor accessor) {
 			assertEquals(1, accessor.getInteger(0));
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before3(AtomicInteger value, TestInfo testInfo) {
+			assertEquals("[1] value=1", testInfo.getDisplayName());
+			value.incrementAndGet();
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before4(ArgumentsAccessor accessor, TestInfo testInfo) {
+			assertEquals(1, accessor.getInteger(0));
+			assertEquals("[1] value=1", testInfo.getDisplayName());
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before4(AtomicInteger value, ArgumentsAccessor accessor) {
+			assertEquals(1, accessor.getInteger(0));
+			value.incrementAndGet();
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before5(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
+			assertEquals(1, accessor.getInteger(0));
+			assertEquals("[1] value=1", testInfo.getDisplayName());
+			value.incrementAndGet();
+		}
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before6(@TimesTwo int valueTimesTwo) {
+			assertEquals(2, valueTimesTwo);
+		}
+
+		@AfterArgumentSet(injectArguments = true)
+		static void after(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
+			assertEquals(6, value.get());
+			assertEquals(1, accessor.getInteger(0));
+			assertEquals("[1] value=1", testInfo.getDisplayName());
+		}
+	}
+
+	@ParameterizedClass
+	@CsvSource("1, 2")
+	record LifecycleMethodWithInvalidParametersTestCase(int value, int anotherValue) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(long value, @ConvertWith(CustomIntegerToStringConverter.class) int anotherValue) {
+			fail("should not be called");
 		}
 
 		@Test
 		void test() {
-			assertEquals(1, value);
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record LifecycleMethodWithParameterAfterAggregatorTestCase(int value) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(@TimesTwo int valueTimesTwo, int value) {
+			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
 		}
 	}
 
