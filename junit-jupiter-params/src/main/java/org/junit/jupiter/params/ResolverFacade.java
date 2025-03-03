@@ -73,7 +73,7 @@ class ResolverFacade {
 			int index = annotation.value();
 
 			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation.value());
-			if (isAggregator(declaration)) {
+			if (declaration.isAggregator()) {
 				aggregatorParameters.add(declaration);
 			}
 			else {
@@ -126,7 +126,7 @@ class ResolverFacade {
 		for (int index = indexOffset; index < parameters.length; index++) {
 			ExecutableParameterDeclaration declaration = new ExecutableParameterDeclaration(parameters[index], index,
 				indexOffset);
-			if (isAggregator(declaration)) {
+			if (declaration.isAggregator()) {
 				Preconditions.condition(
 					aggregatorParameters.isEmpty()
 							|| aggregatorParameters.lastKey() == declaration.getParameterIndex() - 1,
@@ -358,17 +358,6 @@ class ResolverFacade {
 				.forEach(errors::add);
 	}
 
-	/**
-	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
-	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
-	 *
-	 * @return {@code true} if the parameter is an aggregator
-	 */
-	private static boolean isAggregator(ParameterDeclaration declaration) {
-		return ArgumentsAccessor.class.isAssignableFrom(declaration.getParameterType())
-				|| isAnnotated(declaration.getAnnotatedElement(), AggregateWith.class);
-	}
-
 	private static Converter createConverter(ParameterDeclaration declaration, ExtensionContext extensionContext) {
 		try { // @formatter:off
 			return findAnnotation(declaration.getAnnotatedElement(), ConvertWith.class)
@@ -546,6 +535,17 @@ class ResolverFacade {
 	}
 
 	private interface ResolvableParameterDeclaration extends ParameterDeclaration {
+
+		/**
+		 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+		 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+		 *
+		 * @return {@code true} if the parameter is an aggregator
+		 */
+		default boolean isAggregator() {
+			return ArgumentsAccessor.class.isAssignableFrom(getParameterType())
+					|| isAnnotated(getAnnotatedElement(), AggregateWith.class);
+		}
 
 		Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 				int invocationIndex, Optional<ParameterContext> originalParameterContext);
