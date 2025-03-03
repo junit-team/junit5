@@ -142,7 +142,7 @@ test {
 ----
 
 Please refer to the
-https://docs.gradle.org/current/userguide/java_testing.html#java_testing[official Gradle documentation]
+https://docs.gradle.org/current/userguide/java_testing.html[official Gradle documentation]
 for a comprehensive list of options.
 
 [[running-tests-build-gradle-bom]]
