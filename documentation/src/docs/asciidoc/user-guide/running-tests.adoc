@@ -172,18 +172,21 @@ with the `org.junit.platform`, `org.junit.jupiter`, and `org.junit.vintage` grou
 Since all JUnit artifacts declare a
 https://docs.gradle.org/current/userguide/platforms.html[platform] dependency on the BOM,
 you usually don't need to declare an explicit dependency on it yourself. Instead, it's
-sufficient to declare one dependency including a version to be able to omit the version
-for all other JUnit artifacts.
+sufficient to declare _one_ regular dependency that includes a version number. Gradle will
+then pull in the BOM automatically so you can omit the version for all other JUnit 5
+artifacts.
 
 [source,groovy,indent=0]
 [subs=attributes+]
 .Implicit platform dependency on the BOM
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // <1>
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // <2>
 }
 ----
+<1> Dependency declaration with explicit version. Pulls in the `junit-bom` automatically.
+<2> Dependency declaration without version. The version is supplied by the `junit-bom`.
 
 WARNING: Even though pre-8.0 versions of Gradle don't require declaring an explicit
 dependency on `junit-platform-launcher`, it is recommended to do so to ensure the versions
