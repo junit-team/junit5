@@ -598,10 +598,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				.containsExactly("zzz_before", "aaa_after", "zzz_after");
 	}
 
-	@Test
-	void supportsInjectingArgumentsIntoLifecycleMethods() {
+	@ParameterizedTest
+	@ValueSource(classes = { LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class,
+			LifecycleMethodArgumentInjectionWithFieldInjectionTestCase.class })
+	void supportsInjectingArgumentsIntoLifecycleMethods(Class<?> containerTemplateClass) {
 
-		var results = executeTestsForClass(LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class);
+		var results = executeTestsForClass(containerTemplateClass);
 
 		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 	}
@@ -1691,7 +1693,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ParameterizedClass
 	@ValueSource(ints = 1)
 	record LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase(
-			@ConvertWith(Converter.class) AtomicInteger counter) {
+			@ConvertWith(AtomicIntegerConverter.class) AtomicInteger counter) {
 
 		@BeforeArgumentSet(injectArguments = true)
 		static void before(AtomicInteger counter) {
@@ -1712,12 +1714,41 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		void test2() {
 			this.counter.incrementAndGet();
 		}
+	}
 
-		static class Converter extends SimpleArgumentConverter {
-			@Override
-			protected Object convert(Object source, Class<?> targetType) {
-				return new AtomicInteger((Integer) source);
-			}
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	static class LifecycleMethodArgumentInjectionWithFieldInjectionTestCase {
+
+		@Parameter
+		@ConvertWith(AtomicIntegerConverter.class)
+		AtomicInteger counter;
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(AtomicInteger counter) {
+			assertEquals(2, counter.incrementAndGet());
+		}
+
+		@AfterArgumentSet(injectArguments = true)
+		static void after(AtomicInteger counter) {
+			assertEquals(4, counter.get());
+		}
+
+		@Test
+		void test1() {
+			this.counter.incrementAndGet();
+		}
+
+		@Test
+		void test2() {
+			this.counter.incrementAndGet();
+		}
+	}
+
+	static class AtomicIntegerConverter extends SimpleArgumentConverter {
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			return new AtomicInteger((Integer) source);
 		}
 	}
 
