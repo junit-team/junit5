@@ -188,9 +188,17 @@ dependencies {
 <1> Dependency declaration with explicit version. Pulls in the `junit-bom` automatically.
 <2> Dependency declaration without version. The version is supplied by the `junit-bom`.
 
-WARNING: Even though pre-8.0 versions of Gradle don't require declaring an explicit
+[WARNING]
+.Declaring a dependency on junit-platform-launcher
+====
+Even though pre-8.0 versions of Gradle don't require declaring an explicit
 dependency on `junit-platform-launcher`, it is recommended to do so to ensure the versions
 of JUnit artifacts on the test runtime classpath are aligned.
+
+Moreover, doing so is recommended and in some cases even required when importing the
+project into an IDE like <<running-tests-ide-eclipse>> or
+<<running-tests-ide-intellij-idea>>.
+====
 
 [[running-tests-build-gradle-engines-configure]]
 ===== Configuring Test Engines
