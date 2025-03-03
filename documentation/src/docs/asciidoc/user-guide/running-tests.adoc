@@ -152,7 +152,8 @@ TIP: See <<running-tests-build-spring-boot>> for details on how to override the 
 of JUnit used in your Spring Boot application.
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
-recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
+versions of all JUnit 5 artifacts.
 
 [source,groovy,indent=0]
 [subs=attributes+]
@@ -335,7 +336,8 @@ Maven build as follows.
 ===== Aligning dependency versions
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
-recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
+versions of all JUnit 5 artifacts.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -627,8 +629,8 @@ managing the version of JUnit used in your project. In addition, the
 Jupiter, AssertJ, Mockito, etc.
 
 If your build relies on dependency management support from Spring Boot, you should not
-import the <<dependency-metadata-junit-bom,`junit-bom`>> in your build script since that
-will result in duplicate (and potentially conflicting) management of JUnit dependencies.
+import JUnit's <<dependency-metadata-junit-bom>> in your build script since that would
+result in duplicate (and potentially conflicting) management of JUnit dependencies.
 
 If you need to override the version of a dependency used in your Spring Boot application,
 you have to override the exact name of the
