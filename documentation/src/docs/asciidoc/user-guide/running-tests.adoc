@@ -160,8 +160,8 @@ recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 a
 ----
 dependencies {
 	testImplementation(platform("org.junit:junit-bom:{bom-version}"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
 
@@ -179,8 +179,8 @@ for all other JUnit artifacts.
 .Implicit platform dependency on the BOM
 ----
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
 
@@ -200,8 +200,8 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 [subs=attributes+]
 ----
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
 
@@ -214,11 +214,11 @@ support.
 .Kotlin DSL
 ----
 testing {
-    suites {
-        named<JvmTestSuite>("test") {
-            useJUnitJupiter("{jupiter-version}")
-        }
-    }
+	suites {
+		named<JvmTestSuite>("test") {
+			useJUnitJupiter("{jupiter-version}")
+		}
+	}
 }
 ----
 
@@ -227,11 +227,11 @@ testing {
 .Groovy DSL
 ----
 testing {
-    suites {
-        test {
-            useJUnitJupiter("{jupiter-version}")
-        }
-    }
+	suites {
+		test {
+			useJUnitJupiter("{jupiter-version}")
+		}
+	}
 }
 ----
 
@@ -245,7 +245,7 @@ implementation similar to the following.
 dependencies {
 	testImplementation("junit:junit:{junit4-version}")
 	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
 
