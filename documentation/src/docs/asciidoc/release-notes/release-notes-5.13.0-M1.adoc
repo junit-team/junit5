@@ -35,9 +35,9 @@ repository on GitHub.
 [[release-notes-5.13.0-M1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* If `@ParameterizedTest(autoCloseArguments = true)`, all arguments returned by the used
-  `ArgumentsProvider` implementations are now closed even if the test method declares
-  fewer parameters.
+* If the `autoCloseArguments` attribute in `@ParameterizedTest` is set to `true`, all
+  arguments returned by registered `ArgumentsProvider` implementations are now closed even
+  if the test method declares fewer parameters.
 * `AutoCloseable` arguments returned by an `ArgumentsProvider` are now closed even if they
   are wrapped with `Named`.
 * `AutoCloseable` arguments returned by an `ArgumentsProvider` are now closed even if a
@@ -51,22 +51,28 @@ repository on GitHub.
 [[release-notes-5.13.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* Introduce `@ContainerTemplate` and `ContainerTemplateInvocationContextProvider` that
-  allow declaring a top-level or `@Nested` test class as a template to be invoked multiple
-  times. This may be used, for example, to inject different parameters to be used by all
-  tests in the container template class or to set up each invocation of the container
-  template differently. Please refer to the
+* New `@ContainerTemplate` annotation and `ContainerTemplateInvocationContextProvider` API
+  that allow declaring a top-level or `@Nested` test class as a template to be invoked
+  multiple times. This may be used, for example, to inject different parameters to be used
+  by all tests in the container template class or to set up each invocation of the
+  container template differently. Please refer to the
   <<../user-guide/index.adoc#writing-tests-container-templates, User Guide>> for details.
-* Introduce `@ParameterizedClass` concept that builds on `@ContainerTemplate` and allows
+* New `@ParameterizedClass` support that builds on `@ContainerTemplate` and allows
   declaring a top-level or `@Nested` test class as a parameterized test class to be
-  invoked multiple times with different arguments. The same `@...Source` annotations as
-  for `@ParameterizedTest` may be used to provide arguments via constructor or field
-  injection. Please refer to the
+  invoked multiple times with different arguments. The same `@...Source` annotations
+  supported with `@ParameterizedTest` may be used to provide arguments via constructor or
+  field injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
+* New `@SentenceFragment` annotation which allows one to supply custom text for individual
+  sentence fragments when using the `IndicativeSentences` `DisplayNameGenerator`. See the
+  updated documentation in the
+  <<../user-guide/index.adoc#writing-tests-display-name-generator, User Guide>> for an
+  example.
 * New `TestTemplateInvocationContext.prepareInvocation(ExtensionContext)` callback method
-  allows preparing the `ExtensionContext` before the test template method is invoked. This
-  may be used, for example, to store entries in its `Store` to benefit from its cleanup
-  support or for retrieval by other extensions.
+  which allows extensions to prepare the `ExtensionContext` before the test template
+  method is invoked. This may be used, for example, to store entries in the
+  `ExtensionContext.Store` to benefit from its cleanup support or for retrieval by other
+  extensions.
 
 
 [[release-notes-5.13.0-M1-junit-vintage]]

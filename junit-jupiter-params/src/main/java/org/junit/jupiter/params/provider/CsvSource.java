@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedInvocationConstants;
 
 /**
@@ -30,7 +29,8 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
- * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
  * via either {@link #delimiter} or {@link #delimiterString}.
@@ -64,7 +64,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * @since 5.0
  * @see CsvFileSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
- * @see ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })

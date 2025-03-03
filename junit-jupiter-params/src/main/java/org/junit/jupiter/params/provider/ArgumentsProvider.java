@@ -25,8 +25,9 @@ import org.junit.platform.commons.JUnitException;
 /**
  * An {@code ArgumentsProvider} is responsible for
  * {@linkplain #provideArguments(ParameterDeclarations, ExtensionContext) providing}
- * a stream of arguments to be passed to a {@code @ParameterizedClass} or
- * {@code @ParameterizedTest}.
+ * a stream of arguments to be passed to a
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * <p>An {@code ArgumentsProvider} can be registered via the
  * {@link ArgumentsSource @ArgumentsSource} annotation.

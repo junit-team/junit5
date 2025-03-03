@@ -43,4 +43,5 @@ public @interface EnumSources {
 	 * annotations.
 	 */
 	EnumSource[] value();
+
 }

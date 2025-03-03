@@ -28,9 +28,11 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * files from one or more classpath {@link #resources} or {@link #files}.
  *
  * <p>The CSV records parsed from these resources and files will be provided as
- * arguments to the annotated {@code @ParameterizedClass} or
- * {@code @ParameterizedTest}. Note that the first record may optionally
- * be used to supply CSV headers (see {@link #useHeadersInDisplayName}).
+ * arguments to the annotated
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}. Note
+ * that the first record may optionally be used to supply CSV headers (see
+ * {@link #useHeadersInDisplayName}).
  *
  * <p>Any line beginning with a {@code #} symbol will be interpreted as a comment
  * and will be ignored.

@@ -20,7 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedClass;
 
 /**
  * {@code @ArgumentsSource} is a {@linkplain Repeatable repeatable} annotation
@@ -33,7 +32,7 @@ import org.junit.jupiter.params.ParameterizedClass;
  *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
- * @see ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })

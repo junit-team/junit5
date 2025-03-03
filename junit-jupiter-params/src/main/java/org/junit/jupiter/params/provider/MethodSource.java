@@ -20,8 +20,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedClass;
-import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @MethodSource} is a {@linkplain Repeatable repeatable}
@@ -33,12 +31,12 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the
  * physical arguments for individual invocations of the annotated
- * {@code ParameterizedClass @ParameterizedClass} or
- * {@link ParameterizedTest @ParameterizedTest}. Generally speaking this
- * translates to a {@link java.util.stream.Stream Stream} of {@link Arguments}
- * (i.e., {@code Stream<Arguments>}); however, the actual concrete return type
- * can take on many forms. In this context, a "stream" is anything that JUnit
- * can reliably convert into a {@code Stream}, such as
+ * {@code org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
+ * Generally speaking this translates to a {@link java.util.stream.Stream Stream}
+ * of {@link Arguments} (i.e., {@code Stream<Arguments>}); however, the actual
+ * concrete return type can take on many forms. In this context, a "stream" is
+ * anything that JUnit can reliably convert into a {@code Stream}, such as
  * {@link java.util.stream.Stream Stream},
  * {@link java.util.stream.DoubleStream DoubleStream},
  * {@link java.util.stream.LongStream LongStream},
@@ -95,8 +93,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * classes must always be {@code static}.
  *
  * <p>This behavior and the above examples also apply to parameters of a
- * {@link ParameterizedClass @ParameterizedClass}, regardless whether field or
- * constructor injection is used.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass},
+ * regardless whether field or constructor injection is used.
  *
  * <p>Factory methods can declare parameters, which will be provided by registered
  * implementations of {@link org.junit.jupiter.api.extension.ParameterResolver}.
@@ -105,8 +103,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * @see FieldSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedClass
- * @see ParameterizedTest
+ * @see org.junit.jupiter.params.ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
