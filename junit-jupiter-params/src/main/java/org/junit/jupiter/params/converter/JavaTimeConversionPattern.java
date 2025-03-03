@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see java.time.format.DateTimeFormatterBuilder#appendPattern(String)
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.PARAMETER })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.PARAMETER, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = STABLE, since = "5.7")
