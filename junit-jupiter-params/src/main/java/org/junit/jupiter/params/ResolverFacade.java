@@ -215,6 +215,36 @@ class ResolverFacade {
 		return arguments.getTotalLength();
 	}
 
+	Object resolveForLifecycleMethod(ParameterContext parameterContext, ExtensionContext extensionContext,
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+
+		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex //
+				.get(parameterContext.getIndex());
+
+		Class<?> actualType = parameterContext.getParameter().getType();
+
+		if (declaration != null && declaration.getParameterType().equals(actualType)) {
+			return resolutionCache.resolve(declaration, () -> resolve(declaration, extensionContext, arguments,
+				invocationIndex, Optional.of(parameterContext)));
+		}
+
+		ExecutableParameterDeclaration lifecycleMethodParameterDeclaration = new ExecutableParameterDeclaration(
+			parameterContext.getParameter(), parameterContext.getIndex(), 0);
+		if (lifecycleMethodParameterDeclaration.isAggregator()) {
+			Resolver resolver = createAggregator(lifecycleMethodParameterDeclaration, extensionContext);
+			return lifecycleMethodParameterDeclaration.resolve(resolver, extensionContext, arguments, invocationIndex,
+				Optional.of(parameterContext));
+		}
+
+		String prefix = String.format(
+			"Parameter with index %d on lifecycle method is incompatible with the parameter declared on the parameterized class",
+			parameterContext.getIndex());
+		throw declaration == null //
+				? new ParameterResolutionException(prefix + ": no such parameter") //
+				: new ParameterResolutionException(String.format("%s: expected type %s but found %s", prefix,
+					declaration.getParameterType(), actualType));
+	}
+
 	/**
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
@@ -230,8 +260,8 @@ class ResolverFacade {
 	}
 
 	private ResolvableParameterDeclaration findDeclaration(int parameterIndex) {
-		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex.get(
-			parameterIndex);
+		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex //
+				.get(parameterIndex);
 		if (declaration == null) {
 			declaration = this.aggregatorParameters.stream() //
 					.filter(it -> it.getParameterIndex() == parameterIndex) //

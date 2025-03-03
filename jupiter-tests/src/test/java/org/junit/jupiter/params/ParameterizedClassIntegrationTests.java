@@ -622,6 +622,16 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
+	@ParameterizedTest
+	@ValueSource(classes = { AccessorOnLifecycleMethodWithConstructorInjectionTestCase.class,
+			AccessorOnLifecycleMethodWithFieldInjectionTestCase.class })
+	void supportsAggregatorsOnLifecycleMethods(Class<?> containerTemplateClass) {
+
+		var results = executeTestsForClass(containerTemplateClass);
+
+		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
@@ -1818,6 +1828,39 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				assertNotNull(context.getField().getAnnotation(CustomConversion.class));
 				return source;
 			}
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record AccessorOnLifecycleMethodWithConstructorInjectionTestCase(int value) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(ArgumentsAccessor accessor) {
+			assertEquals(1, accessor.getInteger(0));
+		}
+
+		@Test
+		void test() {
+			assertEquals(1, value);
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	static class AccessorOnLifecycleMethodWithFieldInjectionTestCase {
+
+		@Parameter
+		int value;
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(ArgumentsAccessor accessor) {
+			assertEquals(1, accessor.getInteger(0));
+		}
+
+		@Test
+		void test() {
+			assertEquals(1, value);
 		}
 	}
 

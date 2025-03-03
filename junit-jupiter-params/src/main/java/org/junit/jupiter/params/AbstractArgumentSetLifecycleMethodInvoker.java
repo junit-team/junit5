@@ -49,7 +49,7 @@ abstract class AbstractArgumentSetLifecycleMethodInvoker implements ParameterRes
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 		return this.declarationContext.getResolverFacade() //
-				.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,
+				.resolveForLifecycleMethod(parameterContext, extensionContext, this.arguments, this.invocationIndex,
 					this.resolutionCache);
 	}
 
