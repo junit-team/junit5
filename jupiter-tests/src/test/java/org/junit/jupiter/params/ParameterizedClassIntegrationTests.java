@@ -664,6 +664,19 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@Test
+	void failsForLifecycleMethodWithInvalidParameterOrder() {
+
+		var results = executeTestsForClass(LifecycleMethodWithInvalidParameterOrderTestCase.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					("@BeforeArgumentSet method [static void %s.before(%s,int,%s)] declares formal parameters in an invalid order: "
+							+ "argument aggregators must be declared after any indexed arguments and before any arguments resolved by another ParameterResolver.").formatted(
+								LifecycleMethodWithInvalidParameterOrderTestCase.class.getName(),
+								ArgumentsAccessor.class.getName(), ArgumentsAccessor.class.getName()))));
+	}
+
+	@Test
 	void failsForLifecycleMethodWithParameterAfterAggregator() {
 
 		var results = executeTestsForClass(LifecycleMethodWithParameterAfterAggregatorTestCase.class);
@@ -1980,6 +1993,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@BeforeArgumentSet(injectArguments = true)
 		static void before(long value, @ConvertWith(CustomIntegerToStringConverter.class) int anotherValue) {
+			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record LifecycleMethodWithInvalidParameterOrderTestCase(int value) {
+
+		@BeforeArgumentSet(injectArguments = true)
+		static void before(ArgumentsAccessor accessor1, int value, ArgumentsAccessor accessor2) {
 			fail("should not be called");
 		}
 
