@@ -103,4 +103,5 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return this.outputDirectoryProvider;
 	}
+
 }

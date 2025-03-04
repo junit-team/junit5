@@ -26,6 +26,8 @@ import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestEngine;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherInterceptor;
@@ -96,7 +98,8 @@ public class LauncherFactory {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
 		return new DefaultLauncherSession(collectLauncherInterceptors(configurationParameters),
-			() -> createLauncherSessionListener(config), () -> createDefaultLauncher(config, configurationParameters));
+			() -> createLauncherSessionListener(config),
+			sessionLevelStore -> createDefaultLauncher(config, configurationParameters, sessionLevelStore));
 	}
 
 	/**
@@ -125,17 +128,17 @@ public class LauncherFactory {
 	public static Launcher create(LauncherConfig config) throws PreconditionViolationException {
 		Preconditions.notNull(config, "LauncherConfig must not be null");
 		LauncherConfigurationParameters configurationParameters = LauncherConfigurationParameters.builder().build();
-		return new SessionPerRequestLauncher(() -> createDefaultLauncher(config, configurationParameters),
+		return new SessionPerRequestLauncher(
+			sessionLevelStore -> createDefaultLauncher(config, configurationParameters, sessionLevelStore),
 			() -> createLauncherSessionListener(config), () -> collectLauncherInterceptors(configurationParameters));
 	}
 
 	private static DefaultLauncher createDefaultLauncher(LauncherConfig config,
-			LauncherConfigurationParameters configurationParameters) {
+			LauncherConfigurationParameters configurationParameters,
+			NamespacedHierarchicalStore<Namespace> sessionLevelStore) {
 		Set<TestEngine> engines = collectTestEngines(config);
 		List<PostDiscoveryFilter> filters = collectPostDiscoveryFilters(config);
-
-		DefaultLauncher launcher = new DefaultLauncher(engines, filters);
-
+		DefaultLauncher launcher = new DefaultLauncher(engines, filters, sessionLevelStore);
 		registerLauncherDiscoveryListeners(config, launcher);
 		registerTestExecutionListeners(config, launcher, configurationParameters);
 

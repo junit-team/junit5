@@ -22,6 +22,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * The JUnit Platform Suite {@link org.junit.platform.engine.TestEngine TestEngine}.
@@ -63,6 +65,7 @@ public final class SuiteTestEngine implements TestEngine {
 	public void execute(ExecutionRequest request) {
 		SuiteEngineDescriptor suiteEngineDescriptor = (SuiteEngineDescriptor) request.getRootTestDescriptor();
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
+		NamespacedHierarchicalStore<Namespace> requestLevelStore = request.getRequestLevelStore();
 
 		engineExecutionListener.executionStarted(suiteEngineDescriptor);
 
@@ -70,7 +73,7 @@ public final class SuiteTestEngine implements TestEngine {
 		suiteEngineDescriptor.getChildren()
 				.stream()
 				.map(SuiteTestDescriptor.class::cast)
-				.forEach(suiteTestDescriptor -> suiteTestDescriptor.execute(engineExecutionListener));
+				.forEach(suiteTestDescriptor -> suiteTestDescriptor.execute(engineExecutionListener, requestLevelStore));
 		// @formatter:on
 		engineExecutionListener.executionFinished(suiteEngineDescriptor, TestExecutionResult.successful());
 	}
