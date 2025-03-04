@@ -44,6 +44,8 @@ in the `junit-jupiter-api` module.
 | `@BeforeAll`             | Denotes that the annotated method should be executed _before_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@BeforeClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
 | `@AfterAll`              | Denotes that the annotated method should be executed _after_ *all* `@Test`, `@RepeatedTest`, `@ParameterizedTest`, and `@TestFactory` methods in the current class; analogous to JUnit 4's `@AfterClass`. Such methods are inherited unless they are overridden and must be `static` unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used.
 | `@ParameterizedClass`    | Denotes that the annotated class is a <<writing-tests-parameterized-tests, parameterized class>>.
+| `@BeforeArgumentSet`     | Denotes that the annotated method should be executed once _before_ each set of arguments a `@ParameterizedClass` is invoked with.
+| `@AfterArgumentSet`      | Denotes that the annotated method should be executed once _after_ each set of arguments a `@ParameterizedClass` is invoked with.
 | `@ContainerTemplate`     | Denotes that the annotated class is a <<writing-tests-container-templates, template for a set of test cases>> designed to be executed multiple times depending on the number of invocation contexts returned by the registered <<extensions-container-templates, providers>>.
 | `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not inherited.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are inherited at the class level but not at the method level.
@@ -1651,6 +1653,19 @@ If field injection is used, no constructor parameters will be resolved with argu
 the source. Other <<writing-tests-dependency-injection, `ParameterResolver` extensions>>
 may resolve constructor parameters as usual, though.
 
+[[writing-tests-parameterized-tests-consuming-arguments-lifecycle-method]]
+====== Lifecycle Methods
+
+`{BeforeArgumentSet}` and `{AfterArgumentSet}` can also be used to consume arguments if
+their `injectArguments` attribute is set to `true`. If so, their method signatures must
+follow the same rules apply as defined for
+<<writing-tests-parameterized-tests-consuming-arguments-methods, parameterized tests>> and
+additionally use the same parameter types as the _indexed parameters_ of the parameterized
+test class. Please refer to the Javadoc of `{BeforeArgumentSet}` and `{AfterArgumentSet}`
+for details and to the
+<<writing-tests-parameterized-tests-lifecycle-interop-classes, Lifecycle>> section for an
+example.
+
 [NOTE]
 .AutoCloseable arguments
 ====
@@ -2671,7 +2686,31 @@ IDE.
 You may use `ParameterResolver` extensions with `@ParameterizedClass` constructors.
 However, if constructor injection is used, constructor parameters that are resolved by
 argument sources need to come first in the parameter list. Values from argument sources
-are not resolved for lifecycle methods (e.g. `@BeforeEach`).
+are not resolved for regular lifecycle methods (e.g. `@BeforeEach`).
+
+In addition to regular lifecycle methods, parameterized classes may declare
+`{BeforeArgumentSet}` and `{AfterArgumentSet}` lifecycle methods that are called once
+before/after each invocation of the parameterized class. These methods must be `static`
+unless the parameterized class is configured to use `@TestInstance(Lifecycle.PER_CLASS)`
+(see <<writing-tests-test-instance-lifecycle>>).
+
+These lifecycle methods may optionally declare parameters that are resolved depending on
+the setting of the `injectArguments` annotation attribute. If it is set to `false` (the
+default), the parameters must be resolved by other registered {ParameterResolver}
+extensions. If the attribute is set to `true`, the method may declare parameters that
+match the arguments of the parameterized class (see the Javadoc of `{BeforeArgumentSet}`
+and `{AfterArgumentSet}` for details). This may, for example, be used to initialize the
+used arguments as demonstrated by the following example.
+
+[source,java,indent=0]
+.Using parameterized class lifecycle methods
+----
+include::{testRelease21Dir}/example/ParameterizedLifecycleDemo.java[tags=example]
+----
+<1> Initialization of the argument _before_ each invocation of the parameterized class
+<2> Usage of the previously initialized argument in a test method
+<3> Validation and cleanup of the argument _after_ each invocation of the parameterized
+    class
 
 [[writing-tests-container-templates]]
 === Container Templates

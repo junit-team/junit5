@@ -37,24 +37,22 @@ final class LifecycleMethodUtils {
 	}
 
 	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, BeforeAll.class,
-			HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, AfterAll.class,
-			HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP);
 	}
 
 	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
+		return findMethodsAndAssertNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
 	}
 
 	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
+		return findMethodsAndAssertNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
 	}
 
-	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass, boolean requireStatic,
+	private static List<Method> findMethodsAndAssertStatic(Class<?> testClass, boolean requireStatic,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
@@ -64,7 +62,7 @@ final class LifecycleMethodUtils {
 		return methods;
 	}
 
-	private static List<Method> findMethodsAndAssertNonStaticAndNonPrivate(Class<?> testClass,
+	private static List<Method> findMethodsAndAssertNonStatic(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 
 		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);

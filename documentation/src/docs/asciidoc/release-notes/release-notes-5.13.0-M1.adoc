@@ -63,6 +63,9 @@ repository on GitHub.
   supported with `@ParameterizedTest` may be used to provide arguments via constructor or
   field injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
+* Introduce additional `@ParameterizedClass`-specific
+  `@BeforeArgumentSet`/`@AfterArgumentSet` lifecycle methods that are invoked once
+  before/after each set of arguments the class is invoked with.
 * New `@SentenceFragment` annotation which allows one to supply custom text for individual
   sentence fragments when using the `IndicativeSentences` `DisplayNameGenerator`. See the
   updated documentation in the

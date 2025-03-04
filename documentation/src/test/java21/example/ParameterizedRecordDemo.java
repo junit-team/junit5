@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -22,7 +21,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 public class ParameterizedRecordDemo {
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@Nested
 	// tag::example[]
 	@ParameterizedClass
 	@CsvSource({ "apple, 23", "banana, 42" })

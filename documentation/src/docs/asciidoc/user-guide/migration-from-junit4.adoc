@@ -1,3 +1,5 @@
+:testDir: ../../../../src/test/java
+
 [[migrating-from-junit4]]
 == Migrating from JUnit 4
 
@@ -94,6 +96,8 @@ tests to JUnit Jupiter.
   - See also <<migrating-from-junit4-ignore-annotation-support>>.
 * `@Category` no longer exists; use `@Tag` instead.
 * `@RunWith` no longer exists; superseded by `@ExtendWith`.
+  - For `@RunWith(Enclosed.class)` use `@Nested`.
+  - For `@RunWith(Parameterized.class)` see <<migrating-from-junit4-tips-parameterized>>.
 * `@Rule` and `@ClassRule` no longer exist; superseded by `@ExtendWith` and
   `@RegisterExtension`.
   - See also <<migrating-from-junit4-rule-support>>.
@@ -105,6 +109,38 @@ tests to JUnit Jupiter.
   argument instead of the first one.
   - See <<migrating-from-junit4-failure-message-arguments>> for details.
 
+[[migrating-from-junit4-tips-parameterized]]
+==== Parameterized test classes
+
+Unless `@UseParametersRunnerFactory` is used, a JUnit 4 parameterized test class can be
+converted into a JUnit Jupiter
+<<writing-tests-parameterized-tests, `@ParameterizedClass`>> by following these steps:
+
+. Replace `@RunWith(Parameterized.class)` with `@ParameterizedClass`.
+. Add a class-level `@MethodSource("methodName")` annotation where `methodName` is the
+  name of the method annotated with `@Parameters` and remove the `@Parameters` annotation
+  from the method.
+. Replace `@BeforeParam`/`@AfterParam` with `@BeforeArgumentSet`/`@AfterArgumentSet`, if
+  there are any methods with such annotation. Moreover, if they declare parameters, set
+  the `injectArguments` annotation attribute to `true`.
+. Change the imports of the `@Test` and `@Parameter` annotations to use the
+  `org.junit.jupiter.params` package.
+. Change assertions etc. to use the `org.junit.jupiter.api` package as usual.
+. Optionally, remove all `public` modifiers from the class and its methods and fields.
+
+====
+[source,java,indent=0]
+.Before
+----
+include::{testDir}/example/ParameterizedMigrationDemo.java[tags=before]
+----
+
+[source,java,indent=0]
+.After
+----
+include::{testDir}/example/ParameterizedMigrationDemo.java[tags=after]
+----
+====
 
 [[migrating-from-junit4-rule-support]]
 === Limited JUnit 4 Rule Support
