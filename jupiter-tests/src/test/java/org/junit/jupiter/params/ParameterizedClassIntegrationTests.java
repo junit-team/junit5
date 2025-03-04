@@ -108,7 +108,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
 			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
 			FieldInjectionWithCustomAggregatorTestCase.class })
-	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
+	void injectsParametersIntoClass(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
 
@@ -143,411 +143,6 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { //NullAndEmptySourceConstructorInjectionTestCase.class,
-			NullAndEmptySourceConstructorFieldInjectionTestCase.class })
-	void supportsNullAndEmptySource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=null", "[2] value=");
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { CsvFileSourceConstructorInjectionTestCase.class,
-			CsvFileSourceFieldInjectionTestCase.class })
-	void supportsCsvFileSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] name=foo, value=1", "[2] name=bar, value=2", "[3] name=baz, value=3",
-					"[4] name=qux, value=4");
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { SingleEnumSourceConstructorInjectionTestCase.class,
-			SingleEnumSourceFieldInjectionTestCase.class })
-	void supportsSingleEnumSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=FOO");
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { RepeatedEnumSourceConstructorInjectionTestCase.class,
-			RepeatedEnumSourceFieldInjectionTestCase.class })
-	void supportsRepeatedEnumSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=FOO", "[2] value=BAR");
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { MethodSourceConstructorInjectionTestCase.class, MethodSourceFieldInjectionTestCase.class })
-	void supportsMethodSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=foo", "[2] value=bar");
-	}
-
-	@Test
-	void doesNotSupportDerivingMethodName() {
-
-		var results = executeTestsForClass(MethodSourceWithoutMethodNameTestCase.class);
-
-		results.allEvents().failed() //
-				.assertEventsMatchExactly(finishedWithFailure(
-					message("You must specify a method name when using @MethodSource with @ContainerTemplate")));
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { FieldSourceConstructorInjectionTestCase.class, FieldSourceFieldInjectionTestCase.class })
-	void supportsFieldSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=foo", "[2] value=bar");
-	}
-
-	@Test
-	void doesNotSupportDerivingFieldName() {
-
-		var results = executeTestsForClass(FieldSourceWithoutFieldNameTestCase.class);
-
-		results.allEvents().failed() //
-				.assertEventsMatchExactly(finishedWithFailure(
-					message("You must specify a field name when using @FieldSource with @ContainerTemplate")));
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { ArgumentsSourceConstructorInjectionTestCase.class,
-			ArgumentsSourceFieldInjectionTestCase.class })
-	void supportsArgumentsSource(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("[1] value=foo", "[2] value=bar");
-	}
-
-	@Test
-	void supportsCustomNamePatterns() {
-
-		var results = executeTestsForClass(CustomNamePatternTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number=2, name=bar");
-	}
-
-	@Test
-	void closesAutoCloseableArguments() {
-		AutoCloseableArgument.closeCounter = 0;
-
-		var results = executeTestsForClass(AutoCloseableArgumentTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-		assertThat(AutoCloseableArgument.closeCounter).isEqualTo(2);
-	}
-
-	@Test
-	void doesNotCloseAutoCloseableArgumentsWhenDisabled() {
-		AutoCloseableArgument.closeCounter = 0;
-
-		var results = executeTestsForClass(AutoCloseableArgumentWithDisabledCleanupTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-		assertThat(AutoCloseableArgument.closeCounter).isEqualTo(0);
-	}
-
-	@Test
-	void failsOnStrictArgumentCountValidationMode() {
-		var results = executeTestsForClass(StrictArgumentCountValidationModeTestCase.class);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { NoneArgumentCountValidationModeTestCase.class,
-			DefaultArgumentCountValidationModeTestCase.class })
-	void doesNotFailOnNoneOrDefaultArgumentCountValidationMode(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-	}
-
-	@Test
-	void failsOnStrictArgumentCountValidationModeSetViaConfigurationParameter() {
-		var results = executeTests(request -> request //
-				.selectors(selectClass(DefaultArgumentCountValidationModeTestCase.class)).configurationParameter(
-					ArgumentCountValidator.ARGUMENT_COUNT_VALIDATION_KEY, STRICT.name()));
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
-	}
-
-	@Test
-	void failsForSkippedParameters() {
-		var results = executeTestsForClass(InvalidUnusedParameterIndexesTestCase.class);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"2 configuration errors:%n- no field annotated with @Parameter(0) declared%n- no field annotated with @Parameter(2) declared".formatted()))));
-	}
-
-	@Test
-	void failsWhenInvocationIsRequiredButNoArgumentSetsAreProvided() {
-		var results = executeTestsForClass(ForbiddenZeroInvocationsTestCase.class);
-
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one set of arguments for this @ParameterizedClass"))));
-	}
-
-	@Test
-	void doesNotFailWhenInvocationIsNotRequiredAndNoArgumentSetsAreProvided() {
-		var results = executeTestsForClass(AllowedZeroInvocationsTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
-	}
-
-	@Test
-	void failsWhenNoArgumentsSourceIsDeclared() {
-		var results = executeTestsForClass(NoArgumentSourceTestCase.class);
-
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one arguments source for this @ParameterizedClass"))));
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { //NestedFieldInjectionTestCase.class,
-			NestedConstructorInjectionTestCase.class })
-	void supportsNestedParameterizedClass(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
-		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
-		assertThat(invocationDisplayNames(results)) //
-				.containsExactly( //
-					"[1] number=1", "[1] text=foo", "[2] text=bar", //
-					"[2] number=2", "[1] text=foo", "[2] text=bar" //
-				);
-		assertThat(allReportEntries(results)).map(it -> it.get("value")).containsExactly(
-		// @formatter:off
-			"beforeAll: %s".formatted(containerTemplateClass.getSimpleName()),
-				"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-					"beforeAll: InnerTestCase",
-						"beforeArgumentSet: InnerTestCase",
-							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [1] flag=true [InnerTestCase]",
-									"test(1, foo, true)",
-								"afterEach: [1] flag=true [InnerTestCase]",
-							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [2] flag=false [InnerTestCase]",
-									"test(1, foo, false)",
-								"afterEach: [2] flag=false [InnerTestCase]",
-							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-						"afterArgumentSet: InnerTestCase",
-						"beforeArgumentSet: InnerTestCase",
-							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [1] flag=true [InnerTestCase]",
-									"test(1, bar, true)",
-								"afterEach: [1] flag=true [InnerTestCase]",
-							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [2] flag=false [InnerTestCase]",
-									"test(1, bar, false)",
-								"afterEach: [2] flag=false [InnerTestCase]",
-							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-						"afterArgumentSet: InnerTestCase",
-					"afterAll: InnerTestCase",
-				"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-				"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-					"beforeAll: InnerTestCase",
-						"beforeArgumentSet: InnerTestCase",
-							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [1] flag=true [InnerTestCase]",
-									"test(2, foo, true)",
-								"afterEach: [1] flag=true [InnerTestCase]",
-							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [2] flag=false [InnerTestCase]",
-									"test(2, foo, false)",
-								"afterEach: [2] flag=false [InnerTestCase]",
-							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-						"afterArgumentSet: InnerTestCase",
-						"beforeArgumentSet: InnerTestCase",
-							"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [1] flag=true [InnerTestCase]",
-									"test(2, bar, true)",
-								"afterEach: [1] flag=true [InnerTestCase]",
-							"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-							"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-								"beforeEach: [2] flag=false [InnerTestCase]",
-									"test(2, bar, false)",
-								"afterEach: [2] flag=false [InnerTestCase]",
-							"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-						"afterArgumentSet: InnerTestCase",
-					"afterAll: InnerTestCase",
-				"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-			"afterAll: %s".formatted(containerTemplateClass.getSimpleName())
-			// @formatter:on
-		);
-	}
-
-	@ParameterizedTest
-	@ValueSource(classes = { ConstructorInjectionWithRegularNestedTestCase.class,
-			FieldInjectionWithRegularNestedTestCase.class })
-	void supportsRegularNestedTestClassesInsideParameterizedClass(Class<?> containerTemplateClass) {
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.containerEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
-	}
-
-	@Test
-	void supportsMultipleAggregatorFields() {
-
-		var results = executeTestsForClass(MultiAggregatorFieldInjectionTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-	}
-
-	@Test
-	void supportsFieldInjectionForTestInstanceLifecyclePerClass() {
-
-		var results = executeTestsForClass(FieldInjectionWithPerClassTestInstanceLifecycleTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
-
-		Supplier<Stream<Map<String, String>>> valueTrackingReportEntries = () -> allReportEntries(results) //
-				.filter(it -> it.containsKey("instanceHashCode"));
-		Supplier<Stream<Map<String, String>>> lifecycleReportEntries = () -> allReportEntries(results) //
-				.filter(it -> !it.containsKey("instanceHashCode"));
-
-		assertThat(valueTrackingReportEntries.get().map(it -> it.get("value"))) //
-				.containsExactly("foo", "foo", "bar", "bar");
-		assertThat(valueTrackingReportEntries.get().map(it -> it.get("instanceHashCode")).distinct()) //
-				.hasSize(1);
-		assertThat(lifecycleReportEntries.get().map(it -> it.get("value"))) //
-				.containsExactly(
-				//@formatter:off
-						"beforeArgumentSet1",
-						"beforeArgumentSet2",
-							"test1",
-							"test2",
-						"afterArgumentSet1",
-						"afterArgumentSet2",
-						"beforeArgumentSet1",
-						"beforeArgumentSet2",
-							"test1",
-							"test2",
-						"afterArgumentSet1",
-						"afterArgumentSet2"
-						//@formatter:on
-				);
-	}
-
-	@Test
-	void doesNotSupportConstructorInjectionForTestInstanceLifecyclePerClass() {
-
-		var results = executeTests(request -> request //
-				.selectors(selectClass(ConstructorInjectionTestCase.class)) //
-				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, PER_CLASS.name()));
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(it -> it.contains(
-					"Constructor injection is not supported for @ParameterizedClass classes with @TestInstance(Lifecycle.PER_CLASS)"))));
-	}
-
-	@Test
-	void supportsInjectionOfInheritedFields() {
-
-		var results = executeTestsForClass(InheritedHiddenParameterFieldTestCase.class);
-
-		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
-
-		assertThat(allReportEntries(results)) //
-				.extracting(it -> tuple(it.get("super.value"), it.get("this.value"))) //
-				.containsExactly(tuple("foo", "1"), tuple("bar", "2"));
-	}
-
-	@Test
-	void doesNotSupportInjectionForFinalFields() {
-
-		var containerTemplateClass = InvalidFinalFieldTestCase.class;
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"Configuration error: @Parameter field [final int %s.i] must not be declared as final.".formatted(
-						containerTemplateClass.getName()))));
-	}
-
-	@Test
-	void aggregatorFieldsMustNotDeclareIndex() {
-
-		var containerTemplateClass = InvalidAggregatorFieldWithIndexTestCase.class;
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"Configuration error: no index may be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
-						ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
-	}
-
-	@Test
-	void declaredIndexMustNotBeNegative() {
-
-		var containerTemplateClass = InvalidParameterIndexTestCase.class;
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"Configuration error: index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
-						containerTemplateClass.getName()))));
-	}
-
-	@Test
-	void declaredIndexMustBeUnique() {
-
-		var containerTemplateClass = InvalidDuplicateParameterDeclarationTestCase.class;
-
-		var results = executeTestsForClass(containerTemplateClass);
-
-		results.allEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"Configuration error: duplicate index declared in @Parameter(0) annotation on fields [int %s.i, long %s.l].".formatted(
-						containerTemplateClass.getName(), containerTemplateClass.getName()))));
-	}
-
-	@ParameterizedTest
 	@ValueSource(classes = { ArgumentConversionPerInvocationConstructorInjectionTestCase.class,
 			ArgumentConversionPerInvocationFieldInjectionTestCase.class })
 	void argumentConverterIsOnlyCalledOncePerInvocation(Class<?> containerTemplateClass) {
@@ -557,133 +152,564 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 	}
 
-	@ParameterizedTest
-	@CsvSource(textBlock = """
-			NonStaticBeforeLifecycleMethodTestCase, @BeforeArgumentSet, beforeArgumentSet
-			NonStaticAfterLifecycleMethodTestCase,  @AfterArgumentSet,  afterArgumentSet
-			""")
-	void lifecycleMethodsNeedToBeStaticByDefault(String simpleClassName, String annotationName,
-			String lifecycleMethodName) throws Exception {
+	@Nested
+	class Sources {
 
-		var className = getClass().getName() + "$" + simpleClassName;
+		@ParameterizedTest
+		@ValueSource(classes = { NullAndEmptySourceConstructorInjectionTestCase.class,
+				NullAndEmptySourceConstructorFieldInjectionTestCase.class })
+		void supportsNullAndEmptySource(Class<?> containerTemplateClass) {
 
-		var results = executeTestsForClass(Class.forName(className));
+			var results = executeTestsForClass(containerTemplateClass);
 
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
-							.formatted(annotationName, className, lifecycleMethodName))));
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=null", "[2] value=");
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { CsvFileSourceConstructorInjectionTestCase.class,
+				CsvFileSourceFieldInjectionTestCase.class })
+		void supportsCsvFileSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] name=foo, value=1", "[2] name=bar, value=2", "[3] name=baz, value=3",
+						"[4] name=qux, value=4");
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { SingleEnumSourceConstructorInjectionTestCase.class,
+				SingleEnumSourceFieldInjectionTestCase.class })
+		void supportsSingleEnumSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=FOO");
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { RepeatedEnumSourceConstructorInjectionTestCase.class,
+				RepeatedEnumSourceFieldInjectionTestCase.class })
+		void supportsRepeatedEnumSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=FOO", "[2] value=BAR");
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { MethodSourceConstructorInjectionTestCase.class,
+				MethodSourceFieldInjectionTestCase.class })
+		void supportsMethodSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=foo", "[2] value=bar");
+		}
+
+		@Test
+		void doesNotSupportDerivingMethodName() {
+
+			var results = executeTestsForClass(MethodSourceWithoutMethodNameTestCase.class);
+
+			results.allEvents().failed() //
+					.assertEventsMatchExactly(finishedWithFailure(
+						message("You must specify a method name when using @MethodSource with @ContainerTemplate")));
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { FieldSourceConstructorInjectionTestCase.class,
+				FieldSourceFieldInjectionTestCase.class })
+		void supportsFieldSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=foo", "[2] value=bar");
+		}
+
+		@Test
+		void doesNotSupportDerivingFieldName() {
+
+			var results = executeTestsForClass(FieldSourceWithoutFieldNameTestCase.class);
+
+			results.allEvents().failed() //
+					.assertEventsMatchExactly(finishedWithFailure(
+						message("You must specify a field name when using @FieldSource with @ContainerTemplate")));
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { ArgumentsSourceConstructorInjectionTestCase.class,
+				ArgumentsSourceFieldInjectionTestCase.class })
+		void supportsArgumentsSource(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("[1] value=foo", "[2] value=bar");
+		}
+
+		@Test
+		void failsWhenNoArgumentsSourceIsDeclared() {
+			var results = executeTestsForClass(NoArgumentSourceTestCase.class);
+
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: You must configure at least one arguments source for this @ParameterizedClass"))));
+		}
 	}
 
-	@Test
-	void lifecycleMethodsMustNotBePrivate() {
+	@Nested
+	class AnnotationAttributes {
 
-		var results = executeTestsForClass(PrivateLifecycleMethodTestCase.class);
+		@Test
+		void supportsCustomNamePatterns() {
 
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					"@BeforeArgumentSet method 'private static void %s.beforeArgumentSet()' must not be private." //
-							.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
+			var results = executeTestsForClass(CustomNamePatternTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly("1 | TesT | 1, foo | set", "2 | TesT | 2, bar | number=2, name=bar");
+		}
+
+		@Test
+		void closesAutoCloseableArguments() {
+			AutoCloseableArgument.closeCounter = 0;
+
+			var results = executeTestsForClass(AutoCloseableArgumentTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+			assertThat(AutoCloseableArgument.closeCounter).isEqualTo(2);
+		}
+
+		@Test
+		void doesNotCloseAutoCloseableArgumentsWhenDisabled() {
+			AutoCloseableArgument.closeCounter = 0;
+
+			var results = executeTestsForClass(AutoCloseableArgumentWithDisabledCleanupTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+			assertThat(AutoCloseableArgument.closeCounter).isEqualTo(0);
+		}
+
+		@Test
+		void failsOnStrictArgumentCountValidationMode() {
+			var results = executeTestsForClass(StrictArgumentCountValidationModeTestCase.class);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { NoneArgumentCountValidationModeTestCase.class,
+				DefaultArgumentCountValidationModeTestCase.class })
+		void doesNotFailOnNoneOrDefaultArgumentCountValidationMode(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		}
+
+		@Test
+		void failsOnStrictArgumentCountValidationModeSetViaConfigurationParameter() {
+			var results = executeTests(request -> request //
+					.selectors(selectClass(DefaultArgumentCountValidationModeTestCase.class)).configurationParameter(
+						ArgumentCountValidator.ARGUMENT_COUNT_VALIDATION_KEY, STRICT.name()));
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedClass consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
+		}
+
+		@Test
+		void failsForSkippedParameters() {
+			var results = executeTestsForClass(InvalidUnusedParameterIndexesTestCase.class);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"2 configuration errors:%n- no field annotated with @Parameter(0) declared%n- no field annotated with @Parameter(2) declared".formatted()))));
+		}
+
+		@Test
+		void failsWhenInvocationIsRequiredButNoArgumentSetsAreProvided() {
+			var results = executeTestsForClass(ForbiddenZeroInvocationsTestCase.class);
+
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: You must configure at least one set of arguments for this @ParameterizedClass"))));
+		}
+
+		@Test
+		void doesNotFailWhenInvocationIsNotRequiredAndNoArgumentSetsAreProvided() {
+			var results = executeTestsForClass(AllowedZeroInvocationsTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+		}
 	}
 
-	@Test
-	void lifecycleMethodsFromSuperclassAreWrappedAroundLifecycleMethodsFromTestClass() {
+	@Nested
+	class Nesting {
 
-		var results = executeTestsForClass(LifecycleMethodsFromSuperclassTestCase.class);
+		@ParameterizedTest
+		@ValueSource(classes = { //NestedFieldInjectionTestCase.class,
+				NestedConstructorInjectionTestCase.class })
+		void supportsNestedParameterizedClass(Class<?> containerTemplateClass) {
 
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+			var results = executeTestsForClass(containerTemplateClass);
 
-		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
-				.containsExactly("zzz_before", "aaa_before", "test", "aaa_after", "zzz_after");
+			results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
+			results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
+			assertThat(invocationDisplayNames(results)) //
+					.containsExactly( //
+						"[1] number=1", "[1] text=foo", "[2] text=bar", //
+						"[2] number=2", "[1] text=foo", "[2] text=bar" //
+					);
+			assertThat(allReportEntries(results)).map(it -> it.get("value")).containsExactly(
+			// @formatter:off
+					"beforeAll: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeAll: InnerTestCase",
+					"beforeArgumentSet: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [1] flag=true [InnerTestCase]",
+					"test(1, foo, true)",
+					"afterEach: [1] flag=true [InnerTestCase]",
+					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [InnerTestCase]",
+					"test(1, foo, false)",
+					"afterEach: [2] flag=false [InnerTestCase]",
+					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterArgumentSet: InnerTestCase",
+					"beforeArgumentSet: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [1] flag=true [InnerTestCase]",
+					"test(1, bar, true)",
+					"afterEach: [1] flag=true [InnerTestCase]",
+					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [InnerTestCase]",
+					"test(1, bar, false)",
+					"afterEach: [2] flag=false [InnerTestCase]",
+					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterArgumentSet: InnerTestCase",
+					"afterAll: InnerTestCase",
+					"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeAll: InnerTestCase",
+					"beforeArgumentSet: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [1] flag=true [InnerTestCase]",
+					"test(2, foo, true)",
+					"afterEach: [1] flag=true [InnerTestCase]",
+					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [InnerTestCase]",
+					"test(2, foo, false)",
+					"afterEach: [2] flag=false [InnerTestCase]",
+					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterArgumentSet: InnerTestCase",
+					"beforeArgumentSet: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [1] flag=true [InnerTestCase]",
+					"test(2, bar, true)",
+					"afterEach: [1] flag=true [InnerTestCase]",
+					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [InnerTestCase]",
+					"test(2, bar, false)",
+					"afterEach: [2] flag=false [InnerTestCase]",
+					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterArgumentSet: InnerTestCase",
+					"afterAll: InnerTestCase",
+					"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"afterAll: %s".formatted(containerTemplateClass.getSimpleName())
+					// @formatter:on
+			);
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { ConstructorInjectionWithRegularNestedTestCase.class,
+				FieldInjectionWithRegularNestedTestCase.class })
+		void supportsRegularNestedTestClassesInsideParameterizedClass(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.containerEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+			results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+		}
 	}
 
-	@Test
-	void exceptionsInLifecycleMethodsArePropagated() {
+	@Nested
+	class FieldInjection {
 
-		var results = executeTestsForClass(LifecycleMethodsErrorHandlingTestCase.class);
+		@Test
+		void supportsMultipleAggregatorFields() {
 
-		results.allEvents().assertStatistics(stats -> stats.started(3).failed(1).succeeded(2));
+			var results = executeTestsForClass(MultiAggregatorFieldInjectionTestCase.class);
 
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure( //
-					message("zzz_before"), //
-					suppressed(0, message("aaa_after")), //
-					suppressed(1, message("zzz_after"))));
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+		}
 
-		assertThat(allReportEntries(results).map(it -> it.get("value"))) //
-				.containsExactly("zzz_before", "aaa_after", "zzz_after");
+		@Test
+		void supportsInjectionOfInheritedFields() {
+
+			var results = executeTestsForClass(InheritedHiddenParameterFieldTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
+
+			assertThat(allReportEntries(results)) //
+					.extracting(it -> tuple(it.get("super.value"), it.get("this.value"))) //
+					.containsExactly(tuple("foo", "1"), tuple("bar", "2"));
+		}
+
+		@Test
+		void doesNotSupportInjectionForFinalFields() {
+
+			var containerTemplateClass = InvalidFinalFieldTestCase.class;
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"Configuration error: @Parameter field [final int %s.i] must not be declared as final.".formatted(
+							containerTemplateClass.getName()))));
+		}
+
+		@Test
+		void aggregatorFieldsMustNotDeclareIndex() {
+
+			var containerTemplateClass = InvalidAggregatorFieldWithIndexTestCase.class;
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"Configuration error: no index may be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
+							ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
+		}
+
+		@Test
+		void declaredIndexMustNotBeNegative() {
+
+			var containerTemplateClass = InvalidParameterIndexTestCase.class;
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"Configuration error: index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
+							containerTemplateClass.getName()))));
+		}
+
+		@Test
+		void declaredIndexMustBeUnique() {
+
+			var containerTemplateClass = InvalidDuplicateParameterDeclarationTestCase.class;
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"Configuration error: duplicate index declared in @Parameter(0) annotation on fields [int %s.i, long %s.l].".formatted(
+							containerTemplateClass.getName(), containerTemplateClass.getName()))));
+		}
 	}
 
-	@ParameterizedTest
-	@ValueSource(classes = { LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class,
-			LifecycleMethodArgumentInjectionWithFieldInjectionTestCase.class })
-	void supportsInjectingArgumentsIntoLifecycleMethods(Class<?> containerTemplateClass) {
+	@Nested
+	class PerClassLifecycle {
 
-		var results = executeTestsForClass(containerTemplateClass);
+		@Test
+		void supportsFieldInjectionForTestInstanceLifecyclePerClass() {
 
-		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
+			var results = executeTestsForClass(FieldInjectionWithPerClassTestInstanceLifecycleTestCase.class);
+
+			results.allEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
+
+			Supplier<Stream<Map<String, String>>> valueTrackingReportEntries = () -> allReportEntries(results) //
+					.filter(it -> it.containsKey("instanceHashCode"));
+			Supplier<Stream<Map<String, String>>> lifecycleReportEntries = () -> allReportEntries(results) //
+					.filter(it -> !it.containsKey("instanceHashCode"));
+
+			assertThat(valueTrackingReportEntries.get().map(it -> it.get("value"))) //
+					.containsExactly("foo", "foo", "bar", "bar");
+			assertThat(valueTrackingReportEntries.get().map(it -> it.get("instanceHashCode")).distinct()) //
+					.hasSize(1);
+			assertThat(lifecycleReportEntries.get().map(it -> it.get("value"))) //
+					.containsExactly(
+					//@formatter:off
+							"beforeArgumentSet1",
+							"beforeArgumentSet2",
+							"test1",
+							"test2",
+							"afterArgumentSet1",
+							"afterArgumentSet2",
+							"beforeArgumentSet1",
+							"beforeArgumentSet2",
+							"test1",
+							"test2",
+							"afterArgumentSet1",
+							"afterArgumentSet2"
+							//@formatter:on
+					);
+		}
+
+		@Test
+		void doesNotSupportConstructorInjectionForTestInstanceLifecyclePerClass() {
+
+			var results = executeTests(request -> request //
+					.selectors(selectClass(ConstructorInjectionTestCase.class)) //
+					.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, PER_CLASS.name()));
+
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(it -> it.contains(
+						"Constructor injection is not supported for @ParameterizedClass classes with @TestInstance(Lifecycle.PER_CLASS)"))));
+		}
 	}
 
-	@ParameterizedTest
-	@ValueSource(classes = { CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase.class,
-			CustomConverterAnnotationsWithLifecycleMethodsAndFieldInjectionTestCase.class })
-	void convertersHaveAccessToTheirAnnotations(Class<?> containerTemplateClass) {
+	@Nested
+	class LifecycleMethods {
 
-		var results = executeTestsForClass(containerTemplateClass);
+		@ParameterizedTest
+		@CsvSource(textBlock = """
+				NonStaticBeforeLifecycleMethodTestCase, @BeforeArgumentSet, beforeArgumentSet
+				NonStaticAfterLifecycleMethodTestCase,  @AfterArgumentSet,  afterArgumentSet
+				""")
+		void lifecycleMethodsNeedToBeStaticByDefault(String simpleClassName, String annotationName,
+				String lifecycleMethodName) throws Exception {
 
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-	}
+			var className = ParameterizedClassIntegrationTests.class.getName() + "$" + simpleClassName;
 
-	@ParameterizedTest
-	@ValueSource(classes = { ValidLifecycleMethodInjectionWithConstructorInjectionTestCase.class,
-			ValidLifecycleMethodInjectionWithFieldInjectionTestCase.class })
-	void supportsMixedInjectionsForLifecycleMethods(Class<?> containerTemplateClass) {
+			var results = executeTestsForClass(Class.forName(className));
 
-		var results = executeTestsForClass(containerTemplateClass);
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
+								.formatted(annotationName, className, lifecycleMethodName))));
+		}
 
-		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
-	}
+		@Test
+		void lifecycleMethodsMustNotBePrivate() {
 
-	@Test
-	void failsForLifecycleMethodWithInvalidParameters() {
+			var results = executeTestsForClass(PrivateLifecycleMethodTestCase.class);
 
-		var results = executeTestsForClass(LifecycleMethodWithInvalidParametersTestCase.class);
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						"@BeforeArgumentSet method 'private static void %s.beforeArgumentSet()' must not be private." //
+								.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
+		}
 
-		var expectedMessage = """
-				2 configuration errors:
-				- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
-				- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
-				""".trim();
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure( //
-					message(
-						"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
-							LifecycleMethodWithInvalidParametersTestCase.class.getName())), //
-					cause(message(expectedMessage)) //
-				));
-	}
+		@Test
+		void lifecycleMethodsFromSuperclassAreWrappedAroundLifecycleMethodsFromTestClass() {
 
-	@Test
-	void failsForLifecycleMethodWithInvalidParameterOrder() {
+			var results = executeTestsForClass(LifecycleMethodsFromSuperclassTestCase.class);
 
-		var results = executeTestsForClass(LifecycleMethodWithInvalidParameterOrderTestCase.class);
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(message(
-					("@BeforeArgumentSet method [static void %s.before(%s,int,%s)] declares formal parameters in an invalid order: "
-							+ "argument aggregators must be declared after any indexed arguments and before any arguments resolved by another ParameterResolver.").formatted(
-								LifecycleMethodWithInvalidParameterOrderTestCase.class.getName(),
-								ArgumentsAccessor.class.getName(), ArgumentsAccessor.class.getName()))));
-	}
+			assertThat(allReportEntries(results).map(it -> it.get("value"))) //
+					.containsExactly("zzz_before", "aaa_before", "test", "aaa_after", "zzz_after");
+		}
 
-	@Test
-	void failsForLifecycleMethodWithParameterAfterAggregator() {
+		@Test
+		void exceptionsInLifecycleMethodsArePropagated() {
 
-		var results = executeTestsForClass(LifecycleMethodWithParameterAfterAggregatorTestCase.class);
+			var results = executeTestsForClass(LifecycleMethodsErrorHandlingTestCase.class);
 
-		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, finishedWithFailure(
-					message(it -> it.contains("No ParameterResolver registered for parameter [int value]"))));
+			results.allEvents().assertStatistics(stats -> stats.started(3).failed(1).succeeded(2));
+
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure( //
+						message("zzz_before"), //
+						suppressed(0, message("aaa_after")), //
+						suppressed(1, message("zzz_after"))));
+
+			assertThat(allReportEntries(results).map(it -> it.get("value"))) //
+					.containsExactly("zzz_before", "aaa_after", "zzz_after");
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class,
+				LifecycleMethodArgumentInjectionWithFieldInjectionTestCase.class })
+		void supportsInjectingArgumentsIntoLifecycleMethods(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase.class,
+				CustomConverterAnnotationsWithLifecycleMethodsAndFieldInjectionTestCase.class })
+		void convertersHaveAccessToTheirAnnotations(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		}
+
+		@ParameterizedTest
+		@ValueSource(classes = { ValidLifecycleMethodInjectionWithConstructorInjectionTestCase.class,
+				ValidLifecycleMethodInjectionWithFieldInjectionTestCase.class })
+		void supportsMixedInjectionsForLifecycleMethods(Class<?> containerTemplateClass) {
+
+			var results = executeTestsForClass(containerTemplateClass);
+
+			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		}
+
+		@Test
+		void failsForLifecycleMethodWithInvalidParameters() {
+
+			var results = executeTestsForClass(LifecycleMethodWithInvalidParametersTestCase.class);
+
+			var expectedMessage = """
+					2 configuration errors:
+					- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
+					- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
+					""".trim();
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure( //
+						message(
+							"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
+								LifecycleMethodWithInvalidParametersTestCase.class.getName())), //
+						cause(message(expectedMessage)) //
+					));
+		}
+
+		@Test
+		void failsForLifecycleMethodWithInvalidParameterOrder() {
+
+			var results = executeTestsForClass(LifecycleMethodWithInvalidParameterOrderTestCase.class);
+
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(message(
+						("@BeforeArgumentSet method [static void %s.before(%s,int,%s)] declares formal parameters in an invalid order: "
+								+ "argument aggregators must be declared after any indexed arguments and before any arguments resolved by another ParameterResolver.").formatted(
+									LifecycleMethodWithInvalidParameterOrderTestCase.class.getName(),
+									ArgumentsAccessor.class.getName(), ArgumentsAccessor.class.getName()))));
+		}
+
+		@Test
+		void failsForLifecycleMethodWithParameterAfterAggregator() {
+
+			var results = executeTestsForClass(LifecycleMethodWithParameterAfterAggregatorTestCase.class);
+
+			results.containerEvents().assertThatEvents() //
+					.haveExactly(1, finishedWithFailure(
+						message(it -> it.contains("No ParameterResolver registered for parameter [int value]"))));
+		}
 	}
 
 	// -------------------------------------------------------------------
