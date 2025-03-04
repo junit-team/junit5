@@ -147,7 +147,7 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 			Class<?> testClass, TestInstance.Lifecycle testInstanceLifecycle, HierarchyTraversalMode traversalMode,
 			Class<A> annotationType, Predicate<A> injectArgumentsPredicate, ResolverFacade resolverFacade) {
 
-		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
+		List<Method> methods = findMethodsAndCheckVoidReturnTypeAndNonPrivate(testClass, annotationType, traversalMode);
 
 		return methods.stream() //
 				.peek(method -> {
@@ -171,11 +171,14 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 				.orElseThrow(() -> new JUnitException("Method not annotated with @" + annotationType.getSimpleName()));
 	}
 
-	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
+	private static List<Method> findMethodsAndCheckVoidReturnTypeAndNonPrivate(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
 
 		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertVoid(annotationType, method));
+		methods.forEach(method -> {
+			assertVoid(annotationType, method);
+			assertNonPrivate(annotationType, method);
+		});
 		return methods;
 	}
 
@@ -190,6 +193,13 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
 		if (!returnsPrimitiveVoid(method)) {
 			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
+				annotationType.getSimpleName(), method.toGenericString()));
+		}
+	}
+
+	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
+		if (ModifierSupport.isPrivate(method)) {
+			throw new JUnitException(String.format("@%s method '%s' must not be private.",
 				annotationType.getSimpleName(), method.toGenericString()));
 		}
 	}

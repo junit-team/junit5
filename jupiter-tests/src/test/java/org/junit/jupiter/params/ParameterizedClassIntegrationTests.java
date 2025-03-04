@@ -563,7 +563,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			NonStaticAfterLifecycleMethodTestCase,  @AfterArgumentSet,  afterArgumentSet
 			""")
 	void lifecycleMethodsNeedToBeStaticByDefault(String simpleClassName, String annotationName,
-			String lifecycleMethodName) throws ClassNotFoundException {
+			String lifecycleMethodName) throws Exception {
 
 		var className = getClass().getName() + "$" + simpleClassName;
 
@@ -573,6 +573,17 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				.haveExactly(1, finishedWithFailure(message(
 					"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
 							.formatted(annotationName, className, lifecycleMethodName))));
+	}
+
+	@Test
+	void lifecycleMethodsMustNotBePrivate() {
+
+		var results = executeTestsForClass(PrivateLifecycleMethodTestCase.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(
+					"@BeforeArgumentSet method 'private static void %s.beforeArgumentSet()' must not be private." //
+							.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
 	}
 
 	@Test
@@ -1666,6 +1677,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@AfterArgumentSet
 		void afterArgumentSet() {
+			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record PrivateLifecycleMethodTestCase() {
+
+		@BeforeArgumentSet
+		private static void beforeArgumentSet() {
 			fail("should not be called");
 		}
 
