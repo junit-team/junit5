@@ -347,7 +347,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		var results = executeTestsForClass(containerTemplateClass);
 
 		results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
-		results.testEvents().debug().assertStatistics(stats -> stats.started(8).succeeded(8));
+		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 		assertThat(invocationDisplayNames(results)) //
 				.containsExactly( //
 					"[1] number=1", "[1] text=foo", "[2] text=bar", //
@@ -602,7 +602,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		var results = executeTestsForClass(LifecycleMethodsErrorHandlingTestCase.class);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(3).failed(1).succeeded(2));
+		results.allEvents().assertStatistics(stats -> stats.started(3).failed(1).succeeded(2));
 
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure( //
@@ -631,7 +631,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		var results = executeTestsForClass(containerTemplateClass);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	@ParameterizedTest
@@ -641,7 +641,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		var results = executeTestsForClass(containerTemplateClass);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(4).succeeded(4));
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	@Test
