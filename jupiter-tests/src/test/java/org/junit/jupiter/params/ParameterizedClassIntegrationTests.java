@@ -94,11 +94,11 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	@ParameterizedTest
 	@ValueSource(classes = { ConstructorInjectionTestCase.class, RecordTestCase.class,
-			RecordWithParameterAnnotationOnComponentTestCase.class, ParameterizedDataClassTestCase.class,
-			FieldInjectionTestCase.class, RecordWithBuiltInConverterTestCase.class,
-			RecordWithRegisteredConversionTestCase.class, FieldInjectionWithRegisteredConversionTestCase.class,
-			RecordWithBuiltInAggregatorTestCase.class, FieldInjectionWithBuiltInAggregatorTestCase.class,
-			RecordWithCustomAggregatorTestCase.class, FieldInjectionWithCustomAggregatorTestCase.class })
+			RecordWithParameterAnnotationOnComponentTestCase.class, FieldInjectionTestCase.class,
+			RecordWithBuiltInConverterTestCase.class, RecordWithRegisteredConversionTestCase.class,
+			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
+			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
+			FieldInjectionWithCustomAggregatorTestCase.class })
 	void injectsParametersIntoContainerTemplate(Class<?> containerTemplateClass) {
 
 		var results = executeTestsForClass(containerTemplateClass);
