@@ -38,7 +38,6 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
-import static org.junit.platform.testkit.engine.TestExecutionResultConditions.cause;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
@@ -93,10 +92,12 @@ import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
+import org.junit.platform.testkit.engine.Events;
 
 @SuppressWarnings("JUnitMalformedDeclaration")
 public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngineTests {
@@ -679,13 +680,13 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 					- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
 					- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
 					""".trim();
-			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, finishedWithFailure( //
-						message(
-							"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
-								LifecycleMethodWithInvalidParametersTestCase.class.getName())), //
-						cause(message(expectedMessage)) //
-					));
+
+			var failedResult = getFirstTestExecutionResult(results.containerEvents().failed());
+			assertThat(failedResult.getThrowable().orElseThrow()) //
+					.hasMessage(
+						"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
+							LifecycleMethodWithInvalidParametersTestCase.class.getName())) //
+					.cause().hasMessage(expectedMessage);
 		}
 
 		@Test
@@ -731,6 +732,14 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	private static Condition<UniqueId> lastSegmentType(@SuppressWarnings("SameParameterValue") String segmentType) {
 		return new Condition<>(it -> segmentType.equals(it.getLastSegment().getType()), "last segment type is '%s'",
 			segmentType);
+	}
+
+	private static TestExecutionResult getFirstTestExecutionResult(Events events) {
+		return events.stream() //
+				.findFirst() //
+				.flatMap(Event::getPayload) //
+				.map(TestExecutionResult.class::cast) //
+				.orElseThrow();
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
