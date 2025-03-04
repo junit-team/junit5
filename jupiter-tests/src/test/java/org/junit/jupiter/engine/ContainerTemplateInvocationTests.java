@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -39,10 +40,12 @@ import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -54,13 +57,16 @@ import org.junit.jupiter.api.ContainerTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
 import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -71,6 +77,7 @@ import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
@@ -85,6 +92,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.opentest4j.AssertionFailedError;
+import org.opentest4j.TestAbortedException;
 
 /**
  * @since 5.13
@@ -846,47 +856,118 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
-	void executesLifecycleCallbackMethodsInNestedContainerTemplates() {
+	void executesLifecycleCallbacksInNestedContainerTemplates() {
 		var results = executeTestsForClass(TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase.class);
 
 		results.containerEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
-		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
 
-		var callSequence = results.allEvents().reportingEntryPublished() //
-				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
-				.map(ReportEntry::getKeyValuePairs) //
-				.map(Map::values) //
-				.flatMap(Collection::stream);
 		// @formatter:off
-		assertThat(callSequence).containsExactly(
+		assertThat(allReportEntryValues(results)).containsExactly(
 			"beforeAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
-				"beforeAll: NestedTestCase",
-					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"beforeEach: test [NestedTestCase]",
-							"test",
-						"afterEach: test [NestedTestCase]",
-					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"beforeEach: test [NestedTestCase]",
-							"test",
-						"afterEach: test [NestedTestCase]",
-					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-				"afterAll: NestedTestCase",
-				"beforeAll: NestedTestCase",
-					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"beforeEach: test [NestedTestCase]",
-							"test",
-						"afterEach: test [NestedTestCase]",
-					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-					"beforeEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"beforeEach: test [NestedTestCase]",
-							"test",
-						"afterEach: test [NestedTestCase]",
-					"afterEach: test [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-				"afterAll: NestedTestCase",
+				"beforeContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+					"beforeAll: NestedTestCase",
+						"beforeContainerTemplateInvocation: NestedTestCase",
+							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test1 [NestedTestCase]",
+									"test1",
+								"afterEach: test1 [NestedTestCase]",
+							"afterEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+							"beforeEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test2 [NestedTestCase]",
+									"test2",
+								"afterEach: test2 [NestedTestCase]",
+							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"afterContainerTemplateInvocation: NestedTestCase",
+						"beforeContainerTemplateInvocation: NestedTestCase",
+							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test1 [NestedTestCase]",
+									"test1",
+								"afterEach: test1 [NestedTestCase]",
+							"afterEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+							"beforeEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test2 [NestedTestCase]",
+									"test2",
+								"afterEach: test2 [NestedTestCase]",
+							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"afterContainerTemplateInvocation: NestedTestCase",
+					"afterAll: NestedTestCase",
+				"afterContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"beforeContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+					"beforeAll: NestedTestCase",
+						"beforeContainerTemplateInvocation: NestedTestCase",
+							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test1 [NestedTestCase]",
+									"test1",
+								"afterEach: test1 [NestedTestCase]",
+							"afterEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+							"beforeEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test2 [NestedTestCase]",
+									"test2",
+								"afterEach: test2 [NestedTestCase]",
+							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"afterContainerTemplateInvocation: NestedTestCase",
+						"beforeContainerTemplateInvocation: NestedTestCase",
+							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test1 [NestedTestCase]",
+									"test1",
+								"afterEach: test1 [NestedTestCase]",
+							"afterEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+							"beforeEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+								"beforeEach: test2 [NestedTestCase]",
+									"test2",
+								"afterEach: test2 [NestedTestCase]",
+							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
+						"afterContainerTemplateInvocation: NestedTestCase",
+					"afterAll: NestedTestCase",
+				"afterContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 			"afterAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase"
 		);
 		// @formatter:on
+	}
+
+	@Test
+	void guaranteesWrappingBehaviorForCallbacks() {
+		var results = executeTestsForClass(CallbackWrappingBehaviorTestCase.class);
+
+		results.containerEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+		results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
+
+		// @formatter:off
+		assertThat(allReportEntryValues(results)).containsExactly(
+				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"test",
+				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"test",
+				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase"
+		);
+		// @formatter:on
+	}
+
+	@Test
+	void propagatesExceptionsFromCallbacks() {
+
+		var results = executeTestsForClass(CallbackExceptionBehaviorTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).failed(2).succeeded(2));
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(2, finishedWithFailure( //
+					message("2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
+					suppressed(0,
+						message("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
+					suppressed(1,
+						message("1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
+
+		assertThat(allReportEntryValues(results).distinct()) //
+				.containsExactly("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase");
 	}
 
 	@Test
@@ -898,6 +979,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	// -------------------------------------------------------------------
+
+	private static Stream<String> allReportEntryValues(EngineExecutionResults results) {
+		return results.allEvents().reportingEntryPublished() //
+				.map(event -> event.getRequiredPayload(ReportEntry.class)) //
+				.map(ReportEntry::getKeyValuePairs) //
+				.map(Map::values) //
+				.flatMap(Collection::stream);
+	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ContainerTemplate
@@ -1227,15 +1316,24 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ExtendWith(ContainerTemplateInvocationCallbacks.class)
 	@ContainerTemplate
 	static class TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase extends LifecycleCallbacks {
+
 		@Nested
 		@ContainerTemplate
 		class NestedTestCase extends LifecycleCallbacks {
+
 			@Test
-			@DisplayName("test")
-			void test(TestReporter testReporter) {
-				testReporter.publishEntry("test");
+			@DisplayName("test1")
+			void test1(TestReporter testReporter) {
+				testReporter.publishEntry("test1");
+			}
+
+			@Test
+			@DisplayName("test2")
+			void test2(TestReporter testReporter) {
+				testReporter.publishEntry("test2");
 			}
 		}
 	}
@@ -1339,6 +1437,88 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			closed = true;
 		}
 
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class CallbackWrappingBehaviorTestCase {
+
+		@RegisterExtension
+		@Order(1)
+		static Extension first = new ContainerTemplateInvocationCallbacks("1st -> ");
+
+		@RegisterExtension
+		@Order(2)
+		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ");
+
+		@Test
+		void test(TestReporter testReporter) {
+			testReporter.publishEntry("test");
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ContainerTemplate
+	static class CallbackExceptionBehaviorTestCase {
+
+		@RegisterExtension
+		@Order(1)
+		static Extension first = new ContainerTemplateInvocationCallbacks("1st -> ", TestAbortedException::new);
+
+		@RegisterExtension
+		@Order(2)
+		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ", AssertionFailedError::new);
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	static class ContainerTemplateInvocationCallbacks
+			implements BeforeContainerTemplateInvocationCallback, AfterContainerTemplateInvocationCallback {
+
+		private final String prefix;
+		private final Function<String, Throwable> exceptionFactory;
+
+		@SuppressWarnings("unused")
+		ContainerTemplateInvocationCallbacks() {
+			this("");
+		}
+
+		ContainerTemplateInvocationCallbacks(String prefix) {
+			this(prefix, __ -> null);
+		}
+
+		ContainerTemplateInvocationCallbacks(String prefix, Function<String, Throwable> exceptionFactory) {
+			this.prefix = prefix;
+			this.exceptionFactory = exceptionFactory;
+		}
+
+		@Override
+		public void beforeContainerTemplateInvocation(ExtensionContext context) {
+			handle("beforeContainerTemplateInvocation", context);
+		}
+
+		@Override
+		public void afterContainerTemplateInvocation(ExtensionContext context) {
+			handle("afterContainerTemplateInvocation", context);
+		}
+
+		private void handle(String methodName, ExtensionContext context) {
+			var message = format(methodName, context);
+			context.publishReportEntry(message);
+			var throwable = exceptionFactory.apply(message);
+			if (throwable != null) {
+				throw throwAsUncheckedException(throwable);
+			}
+		}
+
+		private String format(String methodName, ExtensionContext context) {
+			return "%s%s: %s".formatted(prefix, methodName, context.getRequiredTestClass().getSimpleName());
+		}
 	}
 
 }

@@ -55,6 +55,8 @@ import org.junit.platform.commons.annotation.Testable;
  * @see TestTemplate
  * @see org.junit.jupiter.api.extension.ContainerTemplateInvocationContext
  * @see org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider
+ * @see org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback
+ * @see org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback
  */
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)

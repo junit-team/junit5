@@ -10,19 +10,19 @@
 
 package org.junit.jupiter.api.extension;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
 
 /**
- * {@code BeforeAllCallback} defines the API for {@link Extension Extensions}
- * that wish to provide additional behavior to test containers <strong>once</strong>
- * before all tests in the container have been executed.
+ * {@code AfterContainerTemplateInvocationCallback} defines the API for
+ * {@link Extension Extensions} that wish to provide additional behavior
+ * <strong>once</strong> before each invocation of a
+ * {@linkplain org.junit.jupiter.api.ContainerTemplate container template}.
  *
- * <p>Concrete implementations often implement {@link AfterAllCallback} as well.
- *
- * <p>Extensions that implement {@code BeforeAllCallback} must be registered at
- * the class level.
+ * <p>Concrete implementations often implement
+ * {@link BeforeContainerTemplateInvocationCallback}
+ * as well.
  *
  * <h2>Constructor Requirements</h2>
  *
@@ -34,7 +34,7 @@ import org.apiguardian.api.API;
  * <p>JUnit Jupiter guarantees <em>wrapping behavior</em> for multiple
  * registered extensions that implement lifecycle callbacks such as
  * {@link BeforeAllCallback}, {@link AfterAllCallback},
- * {@link BeforeContainerTemplateInvocationCallback},
+ * {@link AfterContainerTemplateInvocationCallback},
  * {@link AfterContainerTemplateInvocationCallback}, {@link BeforeEachCallback},
  * {@link AfterEachCallback}, {@link BeforeTestExecutionCallback}, and
  * {@link AfterTestExecutionCallback}.
@@ -49,26 +49,26 @@ import org.apiguardian.api.API;
  * {@code Extension2}. {@code Extension1} is therefore said to <em>wrap</em>
  * {@code Extension2}.
  *
- * @since 5.0
- * @see org.junit.jupiter.api.BeforeAll
+ * @since 5.13
+ * @see org.junit.jupiter.api.ContainerTemplate
+ * @see BeforeContainerTemplateInvocationCallback
+ * @see BeforeAllCallback
  * @see AfterAllCallback
  * @see BeforeEachCallback
  * @see AfterEachCallback
  * @see BeforeTestExecutionCallback
  * @see AfterTestExecutionCallback
- * @see BeforeContainerTemplateInvocationCallback
- * @see AfterContainerTemplateInvocationCallback
  */
 @FunctionalInterface
-@API(status = STABLE, since = "5.0")
-public interface BeforeAllCallback extends Extension {
+@API(status = EXPERIMENTAL, since = "5.13")
+public interface AfterContainerTemplateInvocationCallback extends Extension {
 
 	/**
-	 * Callback that is invoked once <em>before</em> all tests in the current
-	 * container.
+	 * Callback that is invoked <em>after</em> each invocation of a container
+	 * template.
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void beforeAll(ExtensionContext context) throws Exception;
+	void afterContainerTemplateInvocation(ExtensionContext context) throws Exception;
 
 }

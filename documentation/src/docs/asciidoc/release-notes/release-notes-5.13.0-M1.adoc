@@ -68,6 +68,10 @@ repository on GitHub.
   updated documentation in the
   <<../user-guide/index.adoc#writing-tests-display-name-generator, User Guide>> for an
   example.
+* New `BeforeContainerTemplateInvocationCallback` and
+  `AfterContainerTemplateInvocationCallback` extension callback interfaces allow
+  implementing extensions that are invoked before and after each invocation of a container
+  template.
 * New `TestTemplateInvocationContext.prepareInvocation(ExtensionContext)` callback method
   which allows extensions to prepare the `ExtensionContext` before the test template
   method is invoked. This may be used, for example, to store entries in the
