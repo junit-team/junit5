@@ -679,7 +679,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 					2 configuration errors:
 					- parameter 'value' with index 0 is incompatible with the parameter declared on the parameterized class: expected type 'int' but found 'long'
 					- parameter 'anotherValue' with index 1 must not be annotated with @ConvertWith
-					""".trim();
+					""";
+			expectedMessage = expectedMessage.trim() //
+					.replace("\n", System.lineSeparator()); // use platform-specific line separators
 
 			var failedResult = getFirstTestExecutionResult(results.containerEvents().failed());
 			assertThat(failedResult.getThrowable().orElseThrow()) //
