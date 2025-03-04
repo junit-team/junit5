@@ -13,11 +13,6 @@ however, that it is recommended to use IDEA 2017.3 or newer since more recent ve
 IDEA download the following JARs automatically based on the API version used in the
 project: `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-WARNING: IntelliJ IDEA releases prior to IDEA 2017.3 bundle specific versions of JUnit 5.
-Thus, if you want to use a newer version of JUnit Jupiter, execution of tests within the
-IDE might fail due to version conflicts. In such cases, please follow the instructions
-below to use a newer version of JUnit 5 than the one bundled with IntelliJ IDEA.
-
 In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine` JARs in the classpath.
@@ -27,9 +22,7 @@ include the corresponding versions of the `junit-platform-launcher`,
 [subs=attributes+]
 ----
 testImplementation(platform("org.junit:junit-bom:{bom-version}"))
-testRuntimeOnly("org.junit.platform:junit-platform-launcher") {
-  because("Only needed to run tests in a version of IntelliJ IDEA that bundles older versions")
-}
+testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 ----
@@ -40,7 +33,6 @@ testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 ----
 <!-- ... -->
 <dependencies>
-	<!-- Only needed to run tests in a version of IntelliJ IDEA that bundles older versions -->
 	<dependency>
 		<groupId>org.junit.platform</groupId>
 		<artifactId>junit-platform-launcher</artifactId>
@@ -150,28 +142,124 @@ test {
 ----
 
 Please refer to the
-https://docs.gradle.org/current/userguide/java_plugin.html#sec:java_test[official Gradle documentation]
+https://docs.gradle.org/current/userguide/java_testing.html[official Gradle documentation]
 for a comprehensive list of options.
 
 [[running-tests-build-gradle-bom]]
 ===== Aligning dependency versions
 
+TIP: See <<running-tests-build-spring-boot>> for details on how to override the version
+of JUnit used in your Spring Boot application.
+
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
-recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
+versions of all JUnit 5 artifacts.
 
 [source,groovy,indent=0]
 [subs=attributes+]
+.Explicit platform dependency on the BOM
 ----
 dependencies {
 	testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+	testImplementation("org.junit.jupiter:junit-jupiter")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
 
 Using the BOM allows you to omit the version when declaring dependencies on all artifacts
 with the `org.junit.platform`, `org.junit.jupiter`, and `org.junit.vintage` group IDs.
 
-TIP: See <<running-tests-build-spring-boot>> for details on how to override the version
-of JUnit used in your Spring Boot application.
+Since all JUnit artifacts declare a
+https://docs.gradle.org/current/userguide/platforms.html[platform] dependency on the BOM,
+you usually don't need to declare an explicit dependency on it yourself. Instead, it's
+sufficient to declare _one_ regular dependency that includes a version number. Gradle will
+then pull in the BOM automatically so you can omit the version for all other JUnit 5
+artifacts.
+
+[source,groovy,indent=0]
+[subs=attributes+]
+.Implicit platform dependency on the BOM
+----
+dependencies {
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // <1>
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // <2>
+}
+----
+<1> Dependency declaration with explicit version. Pulls in the `junit-bom` automatically.
+<2> Dependency declaration without version. The version is supplied by the `junit-bom`.
+
+[WARNING]
+.Declaring a dependency on junit-platform-launcher
+====
+Even though pre-8.0 versions of Gradle don't require declaring an explicit
+dependency on `junit-platform-launcher`, it is recommended to do so to ensure the versions
+of JUnit artifacts on the test runtime classpath are aligned.
+
+Moreover, doing so is recommended and in some cases even required when importing the
+project into an IDE like <<running-tests-ide-eclipse>> or
+<<running-tests-ide-intellij-idea>>.
+====
+
+[[running-tests-build-gradle-engines-configure]]
+===== Configuring Test Engines
+
+In order to run any tests at all, a `TestEngine` implementation must be on the classpath.
+
+To configure support for JUnit Jupiter based tests, configure a `testImplementation` dependency
+on the dependency-aggregating JUnit Jupiter artifact similar to the following.
+
+[source,groovy,indent=0]
+[subs=attributes+]
+----
+dependencies {
+	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+----
+
+Alternatively, you can use Gradle's
+https://docs.gradle.org/current/userguide/jvm_test_suite_plugin.html[JVM Test Suite]
+support.
+
+[source,kotlin,indent=0]
+[subs=attributes+]
+.Kotlin DSL
+----
+testing {
+	suites {
+		named<JvmTestSuite>("test") {
+			useJUnitJupiter("{jupiter-version}")
+		}
+	}
+}
+----
+
+[source,groovy,indent=0]
+[subs=attributes+]
+.Groovy DSL
+----
+testing {
+	suites {
+		test {
+			useJUnitJupiter("{jupiter-version}")
+		}
+	}
+}
+----
+
+The JUnit Platform can run JUnit 4 based tests as long as you configure a `testImplementation`
+dependency on JUnit 4 and a `testRuntimeOnly` dependency on the JUnit Vintage `TestEngine`
+implementation similar to the following.
+
+[source,groovy,indent=0]
+[subs=attributes+]
+----
+dependencies {
+	testImplementation("junit:junit:{junit4-version}")
+	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+----
 
 [[running-tests-build-gradle-config-params]]
 ===== Configuration Parameters
@@ -190,35 +278,6 @@ test {
 	systemProperty("junit.jupiter.extensions.autodetection.enabled", true)
 	systemProperty("junit.jupiter.testinstance.lifecycle.default", "per_class")
 	// ...
-}
-----
-
-[[running-tests-build-gradle-engines-configure]]
-===== Configuring Test Engines
-
-In order to run any tests at all, a `TestEngine` implementation must be on the classpath.
-
-To configure support for JUnit Jupiter based tests, configure a `testImplementation` dependency
-on the dependency-aggregating JUnit Jupiter artifact similar to the following.
-
-[source,groovy,indent=0]
-[subs=attributes+]
-----
-dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // version can be omitted when using the BOM
-}
-----
-
-The JUnit Platform can run JUnit 4 based tests as long as you configure a `testImplementation`
-dependency on JUnit 4 and a `testRuntimeOnly` dependency on the JUnit Vintage `TestEngine`
-implementation similar to the following.
-
-[source,groovy,indent=0]
-[subs=attributes+]
-----
-dependencies {
-	testImplementation("junit:junit:{junit4-version}")
-	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}") // version can be omitted when using the BOM
 }
 ----
 
@@ -248,8 +307,8 @@ test {
 
 Other logging frameworks provide different means to redirect messages logged using
 `java.util.logging`. For example, for {Logback} you can use the
-https://www.slf4j.org/legacy.html#jul-to-slf4j[JUL to SLF4J Bridge] by adding an
-additional dependency to the runtime classpath.
+https://www.slf4j.org/legacy.html#jul-to-slf4j[JUL to SLF4J Bridge] by adding it as a
+dependency to the test runtime classpath.
 
 [[running-tests-build-maven]]
 ==== Maven
@@ -288,7 +347,8 @@ Maven build as follows.
 ===== Aligning dependency versions
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
-recommended to use the JUnit Platform BOM to align the versions of all JUnit 5 artifacts.
+recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
+versions of all JUnit 5 artifacts.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -580,8 +640,8 @@ managing the version of JUnit used in your project. In addition, the
 Jupiter, AssertJ, Mockito, etc.
 
 If your build relies on dependency management support from Spring Boot, you should not
-import the <<dependency-metadata-junit-bom,`junit-bom`>> in your build script since that
-will result in duplicate (and potentially conflicting) management of JUnit dependencies.
+import JUnit's <<dependency-metadata-junit-bom>> in your build script since that would
+result in duplicate (and potentially conflicting) management of JUnit dependencies.
 
 If you need to override the version of a dependency used in your Spring Boot application,
 you have to override the exact name of the
