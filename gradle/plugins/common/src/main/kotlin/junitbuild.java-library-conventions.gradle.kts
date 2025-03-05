@@ -276,47 +276,39 @@ tasks.compileTestJava {
 	))
 }
 
+configurations {
+	apiElements {
+		attributes {
+			attributeProvider(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.map { it.majorVersion.toInt() })
+		}
+	}
+	runtimeElements {
+		attributes {
+			attributeProvider(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.map { it.majorVersion.toInt() })
+		}
+	}
+}
+
+tasks {
+	compileJava {
+		options.release = extension.mainJavaVersion.map { it.majorVersion.toInt() }
+	}
+	compileTestJava {
+		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
+	}
+}
+
 afterEvaluate {
-	configurations {
-		apiElements {
-			attributes {
-				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
-			}
-		}
-		runtimeElements {
-			attributes {
-				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
-			}
-		}
-	}
-	tasks {
-		compileJava {
-			if (extension.configureRelease) {
-				options.release = extension.mainJavaVersion.majorVersion.toInt()
-			} else {
-				sourceCompatibility = extension.mainJavaVersion.majorVersion
-				targetCompatibility = extension.mainJavaVersion.majorVersion
-			}
-		}
-		compileTestJava {
-			if (extension.configureRelease) {
-				options.release = extension.testJavaVersion.majorVersion.toInt()
-			} else {
-				sourceCompatibility = extension.testJavaVersion.majorVersion
-				targetCompatibility = extension.testJavaVersion.majorVersion
-			}
-		}
-	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
 			// Groovy compiler does not support the --release flag.
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			sourceCompatibility = extension.mainJavaVersion.get().majorVersion
+			targetCompatibility = extension.mainJavaVersion.get().majorVersion
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
 			// Groovy compiler does not support the --release flag.
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			sourceCompatibility = extension.testJavaVersion.get().majorVersion
+			targetCompatibility = extension.testJavaVersion.get().majorVersion
 		}
 	}
 }
@@ -335,6 +327,6 @@ pluginManager.withPlugin("java-test-fixtures") {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
-		options.release = extension.testJavaVersion.majorVersion.toInt()
+		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
 	}
 }
