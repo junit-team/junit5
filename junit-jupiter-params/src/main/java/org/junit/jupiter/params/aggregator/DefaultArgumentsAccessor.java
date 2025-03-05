@@ -19,9 +19,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
-import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -42,20 +40,11 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	private final Object[] arguments;
 	private final BiFunction<Object, Class<?>, Object> converter;
 
-	public static DefaultArgumentsAccessor create(ParameterContext parameterContext, int invocationIndex,
-			Object... arguments) {
+	public static DefaultArgumentsAccessor create(int invocationIndex, ClassLoader classLoader, Object[] arguments) {
+		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
-		Preconditions.notNull(parameterContext, "ParameterContext must not be null");
 		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> DefaultArgumentConverter.INSTANCE //
-				.convert(source, targetType, parameterContext);
-		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
-	}
-
-	public static DefaultArgumentsAccessor create(FieldContext fieldContext, int invocationIndex, Object... arguments) {
-
-		Preconditions.notNull(fieldContext, "FieldContext must not be null");
-		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> DefaultArgumentConverter.INSTANCE //
-				.convert(source, targetType, fieldContext);
+				.convert(source, targetType, classLoader);
 		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
 	}
 

@@ -13,11 +13,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ParameterContext
-import org.junit.platform.commons.util.ReflectionUtils
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.`when`
-import java.lang.reflect.Method
 
 /**
  * Unit tests for using [ArgumentsAccessor] from Kotlin.
@@ -56,13 +51,9 @@ class ArgumentsAccessorKotlinTests {
     fun defaultArgumentsAccessor(
         invocationIndex: Int,
         vararg arguments: Any
-    ): DefaultArgumentsAccessor = DefaultArgumentsAccessor.create(parameterContext(), invocationIndex, *arguments)
-
-    fun parameterContext(): ParameterContext {
-        val declaringExecutable: Method = ReflectionUtils.findMethod(DefaultArgumentsAccessorTests::class.java, "foo").get()
-        val parameterContext: ParameterContext = mock()
-        `when`(parameterContext.declaringExecutable).thenReturn(declaringExecutable)
-        return parameterContext
+    ): DefaultArgumentsAccessor {
+        val classLoader = ArgumentsAccessorKotlinTests::class.java.classLoader
+        return DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments)
     }
 
     fun foo() {
