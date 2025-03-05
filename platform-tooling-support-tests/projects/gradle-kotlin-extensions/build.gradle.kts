@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
 
 plugins {
 	kotlin("jvm") version "2.1.20"
@@ -25,10 +27,11 @@ java {
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-	kotlinOptions {
-		jvmTarget = "17"
-		apiVersion = "2.1"
-		languageVersion = "2.1"
+	compilerOptions {
+		jvmTarget = JVM_17
+		apiVersion = KOTLIN_2_1
+		languageVersion = KOTLIN_2_1
+		freeCompilerArgs.addAll("-Xskip-prerelease-check")
 	}
 }
 
