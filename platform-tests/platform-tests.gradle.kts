@@ -132,7 +132,7 @@ tasks {
 		dependsOn(testWoodstox)
 	}
 	named<JavaCompile>(processStarter.compileJavaTaskName).configure {
-		options.release = javaLibrary.testJavaVersion.majorVersion.toInt()
+		options.release = javaLibrary.testJavaVersion.map { it.majorVersion.toInt() }
 	}
 	named<Checkstyle>("checkstyle${processStarter.name.capitalized()}").configure {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleMain.xml"))

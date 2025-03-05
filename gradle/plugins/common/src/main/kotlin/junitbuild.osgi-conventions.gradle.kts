@@ -79,8 +79,8 @@ tasks.withType<Jar>().named {
 val osgiProperties by tasks.registering(WriteProperties::class) {
 	destinationFile = layout.buildDirectory.file("verifyOSGiProperties.bndrun")
 	property("-standalone", true)
-	project.extensions.getByType(JavaLibraryExtension::class.java).let { javaLibrary ->
-		property("-runee", "JavaSE-${javaLibrary.mainJavaVersion}")
+	project.extensions.getByType(JavaLibraryExtension::class).let { javaLibrary ->
+		property("-runee", Callable { "JavaSE-${javaLibrary.mainJavaVersion.get()}" })
 	}
 	property("-runrequires", "osgi.identity;filter:='(osgi.identity=${project.name})'")
 	property("-runsystempackages", "jdk.internal.misc,jdk.jfr,sun.misc")

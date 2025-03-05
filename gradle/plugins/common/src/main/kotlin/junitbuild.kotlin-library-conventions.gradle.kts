@@ -11,26 +11,19 @@ tasks.named("kotlinSourcesJar") {
 	enabled = false
 }
 
+val javaLibraryExtension = project.the<JavaLibraryExtension>()
+
 tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions {
+		jvmTarget = javaLibraryExtension.mainJavaVersion.map { JvmTarget.fromTarget(it.toString()) }
 		apiVersion = KotlinVersion.fromVersion("1.6")
 		languageVersion = apiVersion
-		allWarningsAsErrors = false
-		// Compiler arg is required for Kotlin 1.6 and below
-		// see https://kotlinlang.org/docs/whatsnew17.html#stable-opt-in-requirements
-		freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
+		allWarningsAsErrors.convention(true)
+		javaParameters = true
+		freeCompilerArgs.addAll("-Xsuppress-version-warnings", "-opt-in=kotlin.RequiresOptIn")
 	}
 }
 
-afterEvaluate {
-	val extension = project.the<JavaLibraryExtension>()
-	tasks {
-		withType<KotlinCompile>().configureEach {
-			compilerOptions.jvmTarget = JvmTarget.fromTarget(extension.mainJavaVersion.toString())
-			compilerOptions.javaParameters = true
-		}
-		named<KotlinCompile>("compileTestKotlin") {
-			compilerOptions.jvmTarget = JvmTarget.fromTarget(extension.testJavaVersion.toString())
-		}
-	}
+tasks.named<KotlinCompile>("compileTestKotlin") {
+	compilerOptions.jvmTarget = javaLibraryExtension.testJavaVersion.map { JvmTarget.fromTarget(it.toString()) }
 }

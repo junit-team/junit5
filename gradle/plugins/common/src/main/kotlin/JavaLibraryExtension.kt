@@ -1,7 +1,15 @@
 import org.gradle.api.JavaVersion
+import org.gradle.api.provider.Property
 
-open class JavaLibraryExtension {
-    var mainJavaVersion: JavaVersion = JavaVersion.VERSION_17
-    var testJavaVersion: JavaVersion = JavaVersion.VERSION_21
-    var configureRelease: Boolean = true
+@Suppress("LeakingThis")
+abstract class JavaLibraryExtension {
+
+    abstract val mainJavaVersion: Property<JavaVersion>
+    abstract val testJavaVersion: Property<JavaVersion>
+
+    init {
+        mainJavaVersion.convention(JavaVersion.VERSION_17)
+        testJavaVersion.convention(JavaVersion.VERSION_21)
+    }
+
 }
