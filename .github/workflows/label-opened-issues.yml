@@ -20,7 +20,7 @@ jobs:
             });
             const originalLabels = issue.data.labels.map(l => l.name);
             const statusLabels = originalLabels.filter(l => l.startsWith("status: "));
-            if (statusLabels.length === 0) {
+            if (statusLabels.length === 0 && !originalLabels.includes("up-for-grabs")) {
               github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
