@@ -106,6 +106,14 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  * conversion to the target type automatically (see the User Guide for further
  * details).
  *
+ * <h2>Lifecycle Methods</h2>
+ *
+ * <p>If you wish to execute custom code before or after each set of arguments
+ * is used to invoke the parameterized class, you may declare methods annotated
+ * with {@link BeforeArgumentSet @BeforeArgumentSet} or
+ * {@link AfterArgumentSet @AfterArgumentSet}. This can, for example, be useful
+ * to initialize the arguments before they are used.
+ *
  * <h2>Composed Annotations</h2>
  *
  * <p>{@code @ParameterizedClass} may also be used as a meta-annotation in
@@ -122,6 +130,8 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * @since 5.13
  * @see Parameter
+ * @see BeforeArgumentSet
+ * @see AfterArgumentSet
  * @see ParameterizedTest
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
@@ -149,7 +159,8 @@ public @interface ParameterizedClass {
 	 * The display name to be used for individual invocations of the
 	 * parameterized class; never blank or consisting solely of whitespace.
 	 *
-	 * <p>Defaults to <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>.
+	 * <p>Defaults to
+	 * <code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>.
 	 *
 	 * <p>If the default display name flag
 	 * (<code>{@value ParameterizedInvocationNameFormatter#DEFAULT_DISPLAY_NAME}</code>)
@@ -161,7 +172,9 @@ public @interface ParameterizedClass {
 	 * Gradle and Maven), a JVM system property, or the JUnit Platform configuration
 	 * file (i.e., a file named {@code junit-platform.properties} in the root of
 	 * the class path). Consult the User Guide for further information.</li>
-	 * <li>Otherwise, <code>{@value ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}</code> will be used.</li>
+	 * <li>Otherwise,
+	 * <code>{@value ParameterizedInvocationConstants#DEFAULT_DISPLAY_NAME}</code>
+	 * will be used.</li>
 	 * </ul>
 	 *
 	 * <h4>Supported placeholders</h4>

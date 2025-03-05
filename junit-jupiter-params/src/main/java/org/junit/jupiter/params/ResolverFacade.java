@@ -26,6 +26,7 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
+import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -55,6 +58,7 @@ import org.junit.jupiter.params.support.ParameterDeclaration;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -73,7 +77,7 @@ class ResolverFacade {
 			int index = annotation.value();
 
 			FieldParameterDeclaration declaration = new FieldParameterDeclaration(field, annotation.value());
-			if (isAggregator(declaration)) {
+			if (declaration.isAggregator()) {
 				aggregatorParameters.add(declaration);
 			}
 			else {
@@ -102,7 +106,7 @@ class ResolverFacade {
 		return create(constructor, annotation, implicitParameters);
 	}
 
-	static ResolverFacade create(Method method, ParameterizedTest annotation) {
+	static ResolverFacade create(Method method, Annotation annotation) {
 		return create(method, annotation, 0);
 	}
 
@@ -120,13 +124,13 @@ class ResolverFacade {
 	 * </ol>
 	 */
 	private static ResolverFacade create(Executable executable, Annotation annotation, int indexOffset) {
-		NavigableMap<Integer, ParameterDeclaration> indexedParameters = new TreeMap<>();
-		NavigableMap<Integer, ParameterDeclaration> aggregatorParameters = new TreeMap<>();
+		NavigableMap<Integer, ExecutableParameterDeclaration> indexedParameters = new TreeMap<>();
+		NavigableMap<Integer, ExecutableParameterDeclaration> aggregatorParameters = new TreeMap<>();
 		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		for (int index = indexOffset; index < parameters.length; index++) {
-			ParameterDeclaration declaration = new ExecutableParameterDeclaration(parameters[index],
-				index - indexOffset);
-			if (isAggregator(declaration)) {
+			ExecutableParameterDeclaration declaration = new ExecutableParameterDeclaration(parameters[index], index,
+				indexOffset);
+			if (declaration.isAggregator()) {
 				Preconditions.condition(
 					aggregatorParameters.isEmpty()
 							|| aggregatorParameters.lastKey() == declaration.getParameterIndex() - 1,
@@ -149,11 +153,11 @@ class ResolverFacade {
 	private final int parameterIndexOffset;
 	private final Map<ParameterDeclaration, Resolver> resolvers;
 	private final DefaultParameterDeclarations indexedParameterDeclarations;
-	private final Set<? extends ParameterDeclaration> aggregatorParameters;
+	private final Set<? extends ResolvableParameterDeclaration> aggregatorParameters;
 
 	private ResolverFacade(AnnotatedElement sourceElement,
-			NavigableMap<Integer, ? extends ParameterDeclaration> indexedParameters,
-			Set<? extends ParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
+			NavigableMap<Integer, ? extends ResolvableParameterDeclaration> indexedParameters,
+			Set<? extends ResolvableParameterDeclaration> aggregatorParameters, int parameterIndexOffset) {
 		this.aggregatorParameters = aggregatorParameters;
 		this.parameterIndexOffset = parameterIndexOffset;
 		this.resolvers = new ConcurrentHashMap<>(indexedParameters.size() + aggregatorParameters.size());
@@ -215,6 +219,25 @@ class ResolverFacade {
 		return arguments.getTotalLength();
 	}
 
+	ArgumentSetLifecycleMethod.ParameterResolver createLifecycleMethodParameterResolver(Method method,
+			Annotation annotation) {
+		ResolverFacade originalResolverFacade = this;
+		ResolverFacade lifecycleMethodResolverFacade = create(method, annotation);
+
+		Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping = new HashMap<>();
+		List<String> errors = validateLifecycleMethodParameters(method, annotation, originalResolverFacade,
+			lifecycleMethodResolverFacade, parameterDeclarationMapping);
+
+		return Try //
+				.call(() -> configurationErrorOrSuccess(errors,
+					() -> new DefaultArgumentSetLifecycleMethodParameterResolver(originalResolverFacade,
+						lifecycleMethodResolverFacade, parameterDeclarationMapping))) //
+				.getOrThrow(cause -> new ExtensionConfigurationException(
+					String.format("Invalid @%s lifecycle method declaration: %s",
+						annotation.annotationType().getSimpleName(), method.toGenericString()),
+					cause));
+	}
+
 	/**
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
@@ -223,14 +246,23 @@ class ResolverFacade {
 			int invocationIndex, ResolutionCache resolutionCache) {
 
 		int parameterIndex = toLogicalIndex(parameterContext);
-		ParameterDeclaration declaration = this.indexedParameterDeclarations.get(parameterIndex) //
-				.orElseGet(() -> this.aggregatorParameters.stream().filter(
-					it -> it.getParameterIndex() == parameterIndex).findFirst() //
-						.orElseThrow(() -> new ParameterResolutionException(
-							"Parameter index out of bounds: " + parameterIndex)));
+		ResolvableParameterDeclaration declaration = findDeclaration(parameterIndex) //
+				.orElseThrow(
+					() -> new ParameterResolutionException("Parameter index out of bounds: " + parameterIndex));
+
 		return resolutionCache.resolve(declaration,
-			() -> getResolver(extensionContext, declaration, parameterContext.getParameter()) //
-					.resolve(parameterContext, parameterIndex, arguments, invocationIndex));
+			() -> resolve(declaration, extensionContext, arguments, invocationIndex, Optional.of(parameterContext)));
+	}
+
+	private Optional<? extends ResolvableParameterDeclaration> findDeclaration(int parameterIndex) {
+		ResolvableParameterDeclaration declaration = this.indexedParameterDeclarations.declarationsByIndex //
+				.get(parameterIndex);
+		if (declaration == null) {
+			return this.aggregatorParameters.stream() //
+					.filter(it -> it.getParameterIndex() == parameterIndex) //
+					.findFirst();
+		}
+		return Optional.of(declaration);
 	}
 
 	void resolveAndInjectFields(Object testInstance, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
@@ -254,7 +286,7 @@ class ResolverFacade {
 			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
 
 		Object argument = resolutionCache.resolve(declaration,
-			() -> resolve(declaration, extensionContext, arguments, invocationIndex));
+			() -> resolve(declaration, extensionContext, arguments, invocationIndex, Optional.empty()));
 		try {
 			declaration.getField().set(testInstance, argument);
 		}
@@ -263,17 +295,16 @@ class ResolverFacade {
 		}
 	}
 
-	private Object resolve(FieldParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
-			EvaluatedArgumentSet arguments, int invocationIndex) {
-		return getResolver(extensionContext, parameterDeclaration, parameterDeclaration.getField()) //
-				.resolve(parameterDeclaration, arguments, invocationIndex);
+	private Object resolve(ResolvableParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
+			EvaluatedArgumentSet arguments, int invocationIndex, Optional<ParameterContext> parameterContext) {
+		Resolver resolver = getResolver(extensionContext, parameterDeclaration);
+		return parameterDeclaration.resolve(resolver, extensionContext, arguments, invocationIndex, parameterContext);
 	}
 
-	private Resolver getResolver(ExtensionContext extensionContext, ParameterDeclaration declaration,
-			AnnotatedElement annotatedElement) {
+	private Resolver getResolver(ExtensionContext extensionContext, ResolvableParameterDeclaration declaration) {
 		return this.resolvers.computeIfAbsent(declaration, __ -> this.aggregatorParameters.contains(declaration) //
-				? createAggregator(declaration.getParameterIndex(), annotatedElement, extensionContext) //
-				: createConverter(declaration.getParameterIndex(), annotatedElement, extensionContext));
+				? createAggregator(declaration, extensionContext) //
+				: createConverter(declaration, extensionContext));
 	}
 
 	private int toLogicalIndex(ParameterContext parameterContext) {
@@ -290,9 +321,46 @@ class ResolverFacade {
 		validateIndexedParameters(indexedParameters, errors);
 		validateAggregatorParameters(aggregatorParameters, errors);
 
+		return configurationErrorOrSuccess(errors, () -> indexedParameters.entrySet().stream() //
+				.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new)));
+	}
+
+	private static List<String> validateLifecycleMethodParameters(Method method, Annotation annotation,
+			ResolverFacade originalResolverFacade, ResolverFacade lifecycleMethodResolverFacade,
+			Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
+		List<ParameterDeclaration> actualDeclarations = lifecycleMethodResolverFacade.indexedParameterDeclarations.getAll();
+		List<String> errors = new ArrayList<>();
+		for (int parameterIndex = 0; parameterIndex < actualDeclarations.size(); parameterIndex++) {
+			ParameterDeclaration actualDeclaration = actualDeclarations.get(parameterIndex);
+			ResolvableParameterDeclaration originalDeclaration = originalResolverFacade.indexedParameterDeclarations.declarationsByIndex //
+					.get(parameterIndex);
+			if (originalDeclaration == null) {
+				break;
+			}
+			if (!actualDeclaration.getParameterType().equals(originalDeclaration.getParameterType())) {
+				errors.add(String.format(
+					"parameter%s with index %d is incompatible with the parameter declared on the parameterized class: expected type '%s' but found '%s'",
+					parameterName(actualDeclaration), parameterIndex, originalDeclaration.getParameterType(),
+					actualDeclaration.getParameterType()));
+			}
+			else if (findAnnotation(actualDeclaration.getAnnotatedElement(), ConvertWith.class).isPresent()) {
+				errors.add(String.format("parameter%s with index %d must not be annotated with @ConvertWith",
+					parameterName(actualDeclaration), parameterIndex));
+			}
+			else if (errors.isEmpty()) {
+				parameterDeclarationMapping.put(actualDeclaration, originalDeclaration);
+			}
+		}
+		return errors;
+	}
+
+	private static String parameterName(ParameterDeclaration actualDeclaration) {
+		return actualDeclaration.getParameterName().map(name -> " '" + name + "'").orElse("");
+	}
+
+	private static <T> T configurationErrorOrSuccess(List<String> errors, Supplier<T> successfulResult) {
 		if (errors.isEmpty()) {
-			return indexedParameters.entrySet().stream() //
-					.collect(toMap(Map.Entry::getKey, entry -> entry.getValue().get(0), (d, __) -> d, TreeMap::new));
+			return successfulResult.get();
 		}
 		else if (errors.size() == 1) {
 			throw new PreconditionViolationException("Configuration error: " + errors.get(0) + ".");
@@ -350,43 +418,31 @@ class ResolverFacade {
 				.forEach(errors::add);
 	}
 
-	/**
-	 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
-	 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
-	 *
-	 * @return {@code true} if the parameter is an aggregator
-	 */
-	private static boolean isAggregator(ParameterDeclaration declaration) {
-		return ArgumentsAccessor.class.isAssignableFrom(declaration.getParameterType())
-				|| isAnnotated(declaration.getAnnotatedElement(), AggregateWith.class);
-	}
-
-	private static Converter createConverter(int index, AnnotatedElement annotatedElement,
-			ExtensionContext extensionContext) {
+	private static Converter createConverter(ParameterDeclaration declaration, ExtensionContext extensionContext) {
 		try { // @formatter:off
-			return findAnnotation(annotatedElement, ConvertWith.class)
+			return findAnnotation(declaration.getAnnotatedElement(), ConvertWith.class)
 					.map(ConvertWith::value)
 					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentConverter.class, clazz, extensionContext))
-					.map(converter -> AnnotationConsumerInitializer.initialize(annotatedElement, converter))
+					.map(converter -> AnnotationConsumerInitializer.initialize(declaration.getAnnotatedElement(), converter))
 					.map(Converter::new)
 					.orElse(Converter.DEFAULT);
 		} // @formatter:on
 		catch (Exception ex) {
-			throw parameterResolutionException("Error creating ArgumentConverter", ex, index);
+			throw parameterResolutionException("Error creating ArgumentConverter", ex, declaration.getParameterIndex());
 		}
 	}
 
-	private static Aggregator createAggregator(int index, AnnotatedElement annotatedElement,
-			ExtensionContext extensionContext) {
+	private static Aggregator createAggregator(ParameterDeclaration declaration, ExtensionContext extensionContext) {
 		try { // @formatter:off
-			return findAnnotation(annotatedElement, AggregateWith.class)
+			return findAnnotation(declaration.getAnnotatedElement(), AggregateWith.class)
 					.map(AggregateWith::value)
 					.map(clazz -> ParameterizedTestSpiInstantiator.instantiate(ArgumentsAggregator.class, clazz, extensionContext))
 					.map(Aggregator::new)
 					.orElse(Aggregator.DEFAULT);
 		} // @formatter:on
 		catch (Exception ex) {
-			throw parameterResolutionException("Error creating ArgumentsAggregator", ex, index);
+			throw parameterResolutionException("Error creating ArgumentsAggregator", ex,
+				declaration.getParameterIndex());
 		}
 	}
 
@@ -489,10 +545,10 @@ class ResolverFacade {
 	private static class DefaultParameterDeclarations implements ParameterDeclarations {
 
 		private final AnnotatedElement sourceElement;
-		private final NavigableMap<Integer, ? extends ParameterDeclaration> declarationsByIndex;
+		private final NavigableMap<Integer, ? extends ResolvableParameterDeclaration> declarationsByIndex;
 
 		DefaultParameterDeclarations(AnnotatedElement sourceElement,
-				NavigableMap<Integer, ? extends ParameterDeclaration> declarationsByIndex) {
+				NavigableMap<Integer, ? extends ResolvableParameterDeclaration> declarationsByIndex) {
 			this.sourceElement = sourceElement;
 			this.declarationsByIndex = declarationsByIndex;
 		}
@@ -538,4 +594,176 @@ class ResolverFacade {
 		}
 	}
 
+	private abstract static class ResolvableParameterDeclaration implements ParameterDeclaration {
+
+		/**
+		 * Determine if the supplied {@link Parameter} is an aggregator (i.e., of
+		 * type {@link ArgumentsAccessor} or annotated with {@link AggregateWith}).
+		 *
+		 * @return {@code true} if the parameter is an aggregator
+		 */
+		boolean isAggregator() {
+			return ArgumentsAccessor.class.isAssignableFrom(getParameterType())
+					|| isAnnotated(getAnnotatedElement(), AggregateWith.class);
+		}
+
+		protected abstract Object resolve(Resolver resolver, ExtensionContext extensionContext,
+				EvaluatedArgumentSet arguments, int invocationIndex,
+				Optional<ParameterContext> originalParameterContext);
+	}
+
+	private static class FieldParameterDeclaration extends ResolvableParameterDeclaration implements FieldContext {
+
+		private final Field field;
+		private final int index;
+
+		FieldParameterDeclaration(Field field, int index) {
+			this.field = field;
+			this.index = index;
+		}
+
+		@Override
+		public Field getField() {
+			return this.field;
+		}
+
+		@Override
+		public Field getAnnotatedElement() {
+			return this.field;
+		}
+
+		@Override
+		public Class<?> getParameterType() {
+			return this.field.getType();
+		}
+
+		@Override
+		public int getParameterIndex() {
+			return index;
+		}
+
+		@Override
+		public Optional<String> getParameterName() {
+			return Optional.of(this.field.getName());
+		}
+
+		@Override
+		public Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
+				int invocationIndex, Optional<ParameterContext> originalParameterContext) {
+			return resolver.resolve(this, arguments, invocationIndex);
+		}
+	}
+
+	private static class ExecutableParameterDeclaration extends ResolvableParameterDeclaration {
+
+		private final java.lang.reflect.Parameter parameter;
+		private final int index;
+		private final int indexOffset;
+
+		ExecutableParameterDeclaration(java.lang.reflect.Parameter parameter, int index, int indexOffset) {
+			this.parameter = parameter;
+			this.index = index;
+			this.indexOffset = indexOffset;
+		}
+
+		@Override
+		public java.lang.reflect.Parameter getAnnotatedElement() {
+			return this.parameter;
+		}
+
+		@Override
+		public Class<?> getParameterType() {
+			return this.parameter.getType();
+		}
+
+		@Override
+		public int getParameterIndex() {
+			return this.index - this.indexOffset;
+		}
+
+		@Override
+		public Optional<String> getParameterName() {
+			return this.parameter.isNamePresent() ? Optional.of(this.parameter.getName()) : Optional.empty();
+		}
+
+		@Override
+		public Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
+				int invocationIndex, Optional<ParameterContext> originalParameterContext) {
+			ParameterContext parameterContext = originalParameterContext //
+					.filter(it -> it.getParameter().equals(this.parameter)) //
+					.orElseGet(() -> toParameterContext(extensionContext, originalParameterContext));
+			return resolver.resolve(parameterContext, getParameterIndex(), arguments, invocationIndex);
+		}
+
+		private ParameterContext toParameterContext(ExtensionContext extensionContext,
+				Optional<ParameterContext> originalParameterContext) {
+			Optional<Object> target = originalParameterContext.flatMap(ParameterContext::getTarget);
+			if (!target.isPresent()) {
+				target = extensionContext.getTestInstance();
+			}
+			return toParameterContext(target);
+		}
+
+		private ParameterContext toParameterContext(Optional<Object> target) {
+			return new ParameterContext() {
+				@Override
+				public java.lang.reflect.Parameter getParameter() {
+					return ExecutableParameterDeclaration.this.parameter;
+				}
+
+				@Override
+				public int getIndex() {
+					return ExecutableParameterDeclaration.this.index;
+				}
+
+				@Override
+				public Optional<Object> getTarget() {
+					return target;
+				}
+			};
+		}
+	}
+
+	private static class DefaultArgumentSetLifecycleMethodParameterResolver
+			implements ArgumentSetLifecycleMethod.ParameterResolver {
+
+		private final ResolverFacade originalResolverFacade;
+		private final ResolverFacade lifecycleMethodResolverFacade;
+		private final Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping;
+
+		DefaultArgumentSetLifecycleMethodParameterResolver(ResolverFacade originalResolverFacade,
+				ResolverFacade lifecycleMethodResolverFacade,
+				Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
+			this.originalResolverFacade = originalResolverFacade;
+			this.lifecycleMethodResolverFacade = lifecycleMethodResolverFacade;
+			this.parameterDeclarationMapping = parameterDeclarationMapping;
+		}
+
+		@Override
+		public boolean supports(ParameterContext parameterContext) {
+			return this.lifecycleMethodResolverFacade.findDeclaration(parameterContext.getIndex()) //
+					.filter(it -> this.parameterDeclarationMapping.containsKey(it) || it.isAggregator()) //
+					.isPresent();
+		}
+
+		@Override
+		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
+				EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+
+			ResolvableParameterDeclaration actualDeclaration = this.lifecycleMethodResolverFacade //
+					.findDeclaration(parameterContext.getIndex()) //
+					.orElseThrow(() -> new ParameterResolutionException(
+						"Parameter index out of bounds: " + parameterContext.getIndex()));
+
+			ResolvableParameterDeclaration originalDeclaration = this.parameterDeclarationMapping //
+					.get(actualDeclaration);
+			if (originalDeclaration == null) {
+				return this.lifecycleMethodResolverFacade.resolve(actualDeclaration, extensionContext, arguments,
+					invocationIndex, Optional.of(parameterContext));
+			}
+			return resolutionCache.resolve(originalDeclaration,
+				() -> this.originalResolverFacade.resolve(originalDeclaration, extensionContext, arguments,
+					invocationIndex, Optional.of(parameterContext)));
+		}
+	}
 }
