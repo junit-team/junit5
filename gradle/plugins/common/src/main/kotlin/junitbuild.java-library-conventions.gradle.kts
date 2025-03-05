@@ -14,6 +14,16 @@ plugins {
 	id("junitbuild.build-parameters")
 	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
+	id("org.openrewrite.rewrite")
+}
+
+rewrite {
+	activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
+}
+
+dependencies {
+	rewrite(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.release"))
+	rewrite("org.openrewrite.recipe:rewrite-migrate-java")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
