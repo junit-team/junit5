@@ -27,8 +27,8 @@ java {
 tasks.withType<KotlinCompile>().configureEach {
 	kotlinOptions {
 		jvmTarget = "17"
-		apiVersion = "1.6"
-		languageVersion = "1.6"
+		apiVersion = "2.1"
+		languageVersion = "2.1"
 	}
 }
 

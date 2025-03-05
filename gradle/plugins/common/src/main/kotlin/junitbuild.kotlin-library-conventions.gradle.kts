@@ -1,5 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -16,7 +16,7 @@ val javaLibraryExtension = project.the<JavaLibraryExtension>()
 tasks.withType<KotlinCompile>().configureEach {
 	compilerOptions {
 		jvmTarget = javaLibraryExtension.mainJavaVersion.map { JvmTarget.fromTarget(it.toString()) }
-		apiVersion = KotlinVersion.fromVersion("1.6")
+		apiVersion = KOTLIN_2_1
 		languageVersion = apiVersion
 		allWarningsAsErrors.convention(true)
 		javaParameters = true
