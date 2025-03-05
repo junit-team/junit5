@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -61,6 +62,10 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * physical line within the text block. Thus, if a CSV column wraps across a
  * new line in a text block, the column must be a quoted string.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.0
  * @see CsvFileSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
@@ -71,6 +76,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(CsvSources.class)
 @Documented
+@Inherited
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)
 @SuppressWarnings("exports")

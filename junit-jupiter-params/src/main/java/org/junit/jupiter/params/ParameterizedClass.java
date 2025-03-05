@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -122,11 +123,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <h2>Inheritance</h2>
  *
- * <p>The {@code @ParameterizedClass} annotation is <em>not</em> inherited
- * from superclasses but may be (re-)declared on a concrete parameterized
- * class. {@code Parameter}-annotated fields from superclasses are detected and
- * used for field injection as if they were declared on the concrete
- * parameterized class.
+ * <p>This annotation is inherited to subclasses.
  *
  * @since 5.13
  * @see Parameter
@@ -149,6 +146,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = EXPERIMENTAL, since = "5.13")
 @ContainerTemplate
 @ExtendWith(ParameterizedClassExtension.class)

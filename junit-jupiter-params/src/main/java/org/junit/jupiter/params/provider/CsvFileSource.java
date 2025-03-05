@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -59,6 +60,10 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
  * column is trimmed by default. This behavior can be changed by setting the
  * {@link #ignoreLeadingAndTrailingWhitespace} attribute to {@code true}.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.0
  * @see CsvSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
@@ -68,6 +73,7 @@ import org.junit.jupiter.params.ParameterizedInvocationConstants;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(CsvFileSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvFileArgumentsProvider.class)

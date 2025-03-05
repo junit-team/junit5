@@ -103,10 +103,10 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 	@ParameterizedTest
 	@ValueSource(strings = { //
-			"class:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase", //
-			"uid:[engine:junit-jupiter]/[container-template:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase]" //
+			"class:%s", //
+			"uid:[engine:junit-jupiter]/[container-template:%s]" //
 	})
-	void executesContainerTemplateClassTwice(String selectorIdentifier) {
+	void executesContainerTemplateClassTwice(String selectorIdentifierTemplate) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
@@ -119,7 +119,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		var invocation2NestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var invocation2NestedMethodBId = invocation2NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
-		var results = executeTests(DiscoverySelectors.parse(selectorIdentifier).orElseThrow());
+		var results = executeTests(DiscoverySelectors.parse(
+			selectorIdentifierTemplate.formatted(TwoInvocationsTestCase.class.getName())).orElseThrow());
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -155,6 +156,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
+	}
+
+	@Test
+	void containerTemplateAnnotationIsInherited() {
+		var results = executeTestsForClass(InheritedTwoInvocationsTestCase.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(12).succeeded(12));
 	}
 
 	@Test
@@ -1518,6 +1526,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		private String format(String methodName, ExtensionContext context) {
 			return "%s%s: %s".formatted(prefix, methodName, context.getRequiredTestClass().getSimpleName());
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class InheritedTwoInvocationsTestCase extends TwoInvocationsTestCase {
+		@Test
+		void c() {
 		}
 	}
 
