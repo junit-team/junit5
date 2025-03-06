@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
 	implementation(projects.buildParameters)
-	implementation(kotlin("gradle-plugin"))
+	implementation(libs.plugins.kotlin.markerCoordinates)
 	implementation(libs.plugins.bnd.markerCoordinates)
 	implementation(libs.plugins.commonCustomUserData.markerCoordinates)
 	implementation(libs.plugins.develocity.markerCoordinates)

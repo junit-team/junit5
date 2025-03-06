@@ -6,7 +6,6 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import org.jetbrains.kotlin.incremental.deleteRecursivelyOrThrow
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -172,7 +171,7 @@ tasks {
 		args.addAll("--exclude-tag", "timeout")
 
 		doFirst {
-			consoleLauncherTestReportsDir.get().asFile.deleteRecursivelyOrThrow()
+			consoleLauncherTestReportsDir.get().asFile.deleteRecursively()
 		}
 
 		finalizedBy(generateOpenTestHtmlReport)
