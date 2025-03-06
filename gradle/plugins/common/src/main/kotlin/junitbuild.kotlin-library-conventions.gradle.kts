@@ -20,7 +20,7 @@ tasks.withType<KotlinCompile>().configureEach {
 		languageVersion = apiVersion
 		allWarningsAsErrors.convention(true)
 		javaParameters = true
-		freeCompilerArgs.addAll("-Xsuppress-version-warnings", "-opt-in=kotlin.RequiresOptIn")
+		freeCompilerArgs.addAll("-opt-in=kotlin.RequiresOptIn")
 	}
 }
 
