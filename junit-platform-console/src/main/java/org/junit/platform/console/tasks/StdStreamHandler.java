@@ -30,6 +30,14 @@ class StdStreamHandler implements AutoCloseable {
 		return (path1.normalize().toAbsolutePath().equals(path2.normalize().toAbsolutePath()));
 	}
 
+	/**
+	 * Redirects standard output (stdout) and standard error (stderr) to the specified file paths.
+	 * If the paths are the same, both streams are redirected to the same file.
+	 * The default charset is used for writing to the files.
+	 *
+	 * @param stdoutPath The file path for standard output. {@code null} means no redirection.
+	 * @param stderrPath The file path for standard error. {@code null} means no redirection.
+	 */
 	public void redirectStdStreams(Path stdoutPath, Path stderrPath) {
 		if (isSameFile(stdoutPath, stderrPath)) {
 			try {
@@ -71,11 +79,15 @@ class StdStreamHandler implements AutoCloseable {
 
 	@Override
 	public void close() {
-		if (stdout != null) {
-			stdout.close();
+		try {
+			if (stdout != null) {
+				stdout.close();
+			}
 		}
-		if (stderr != null) {
-			stderr.close();
+		finally {
+			if (stderr != null) {
+				stderr.close();
+			}
 		}
 	}
 }

@@ -14,9 +14,20 @@ import org.junit.jupiter.api.Test;
 
 public class StdStreamTestCase {
 
+	private static final String STDOUT_DATA = "Writing to STDOUT...";
+	private static final String STDERR_DATA = "Writing to STDERR...";
+
+	public static int getStdoutOutputFileSize() {
+		return STDOUT_DATA.length();
+	}
+
+	public static int getStderrOutputFileSize() {
+		return STDERR_DATA.length();
+	}
+
 	@Test
 	void printTest() {
-		System.out.print("Writing to STDOUT...");
-		System.err.print("Writing to STDERR...");
+		System.out.print(STDOUT_DATA);
+		System.err.print(STDERR_DATA);
 	}
 }
