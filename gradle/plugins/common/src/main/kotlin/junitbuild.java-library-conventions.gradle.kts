@@ -14,6 +14,16 @@ plugins {
 	id("junitbuild.build-parameters")
 	id("junitbuild.checkstyle-conventions")
 	id("junitbuild.jacoco-java-conventions")
+	id("org.openrewrite.rewrite")
+}
+
+rewrite {
+	activeRecipe("org.openrewrite.java.migrate.UpgradeToJava17")
+}
+
+dependencies {
+	rewrite(platform("org.openrewrite.recipe:rewrite-recipe-bom:latest.release"))
+	rewrite("org.openrewrite.recipe:rewrite-migrate-java")
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
@@ -184,10 +194,8 @@ val compileModule by tasks.registering(JavaCompile::class) {
 	enabled = project in modularProjects
 	source = fileTree(combinedModuleSourceDir).builtBy(prepareModuleSourceDir)
 	destinationDirectory = moduleOutputDir
-	sourceCompatibility = "9"
-	targetCompatibility = "9"
 	classpath = files()
-	options.release = 9
+	options.release = 17
 	options.compilerArgs.addAll(listOf(
 			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
 			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
@@ -262,17 +270,14 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.compileJava {
-	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint:all", // Enables all recommended warnings.
 			"-Werror", // Terminates compilation when warnings occur.
-			// Required for compatibility with Java 8's reflection APIs (see https://github.com/junit-team/junit5/issues/3797).
 			"-parameters", // Generates metadata for reflection on method parameters.
 	))
 }
 
 tasks.compileTestJava {
-	// See: https://docs.oracle.com/en/java/javase/12/tools/javac.html
 	options.compilerArgs.addAll(listOf(
 			"-Xlint", // Enables all recommended warnings.
 			"-Xlint:-overrides", // Disables "method overrides" warnings.
@@ -281,47 +286,39 @@ tasks.compileTestJava {
 	))
 }
 
+configurations {
+	apiElements {
+		attributes {
+			attributeProvider(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.map { it.majorVersion.toInt() })
+		}
+	}
+	runtimeElements {
+		attributes {
+			attributeProvider(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.map { it.majorVersion.toInt() })
+		}
+	}
+}
+
+tasks {
+	compileJava {
+		options.release = extension.mainJavaVersion.map { it.majorVersion.toInt() }
+	}
+	compileTestJava {
+		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
+	}
+}
+
 afterEvaluate {
-	configurations {
-		apiElements {
-			attributes {
-				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
-			}
-		}
-		runtimeElements {
-			attributes {
-				attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, extension.mainJavaVersion.majorVersion.toInt())
-			}
-		}
-	}
-	tasks {
-		compileJava {
-			if (extension.configureRelease) {
-				options.release = extension.mainJavaVersion.majorVersion.toInt()
-			} else {
-				sourceCompatibility = extension.mainJavaVersion.majorVersion
-				targetCompatibility = extension.mainJavaVersion.majorVersion
-			}
-		}
-		compileTestJava {
-			if (extension.configureRelease) {
-				options.release = extension.testJavaVersion.majorVersion.toInt()
-			} else {
-				sourceCompatibility = extension.testJavaVersion.majorVersion
-				targetCompatibility = extension.testJavaVersion.majorVersion
-			}
-		}
-	}
 	pluginManager.withPlugin("groovy") {
 		tasks.named<GroovyCompile>("compileGroovy").configure {
 			// Groovy compiler does not support the --release flag.
-			sourceCompatibility = extension.mainJavaVersion.majorVersion
-			targetCompatibility = extension.mainJavaVersion.majorVersion
+			sourceCompatibility = extension.mainJavaVersion.get().majorVersion
+			targetCompatibility = extension.mainJavaVersion.get().majorVersion
 		}
 		tasks.named<GroovyCompile>("compileTestGroovy").configure {
 			// Groovy compiler does not support the --release flag.
-			sourceCompatibility = extension.testJavaVersion.majorVersion
-			targetCompatibility = extension.testJavaVersion.majorVersion
+			sourceCompatibility = extension.testJavaVersion.get().majorVersion
+			targetCompatibility = extension.testJavaVersion.get().majorVersion
 		}
 	}
 }
@@ -340,6 +337,6 @@ pluginManager.withPlugin("java-test-fixtures") {
 		config = resources.text.fromFile(checkstyle.configDirectory.file("checkstyleTest.xml"))
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
-		options.release = extension.testJavaVersion.majorVersion.toInt()
+		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
 	}
 }

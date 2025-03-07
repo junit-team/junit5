@@ -57,7 +57,7 @@ class GradleStarterTests {
 					"CalculatorContainerTemplateTests > [2] > regularTest() PASSED", //
 					"CalculatorContainerTemplateTests > [1] > parameterizedTest(int)", //
 					"CalculatorContainerTemplateTests > [2] > parameterizedTest(int)", //
-					"Using Java version: 1.8", //
+					"Using Java version: 17", //
 					"CalculatorTests > 1 + 1 = 2 PASSED", //
 					"CalculatorTests > add(int, int, int) > 0 + 1 = 1 PASSED", //
 					"CalculatorTests > add(int, int, int) > 1 + 2 = 3 PASSED", //
@@ -96,8 +96,8 @@ class GradleStarterTests {
 				.workingDir(workspace) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("--stacktrace", "--no-build-cache", "--warning-mode=fail") //
-				.addArguments(extraArgs).putEnvironment("JDK8",
-					Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.addArguments(extraArgs).putEnvironment("JDK17",
+					Helper.getJavaHome("17").orElseThrow(TestAbortedException::new).toString()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 
