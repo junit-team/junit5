@@ -65,15 +65,16 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 		}
 
 		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, TOP_DOWN,
-			BeforeArgumentSet.class, BeforeArgumentSet::injectArguments, this.resolverFacade);
+			BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
+			this.resolverFacade);
 
 		// Make a local copy since findAnnotatedMethods() returns an immutable list.
-		this.afterMethods = new ArrayList<>(
-			findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, BOTTOM_UP,
-				AfterArgumentSet.class, AfterArgumentSet::injectArguments, this.resolverFacade));
+		this.afterMethods = new ArrayList<>(findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz,
+			testInstanceLifecycle, BOTTOM_UP, AfterParameterizedClassInvocation.class,
+			AfterParameterizedClassInvocation::injectArguments, this.resolverFacade));
 
 		// Since the bottom-up ordering of afterMethods will later be reversed when the
-		// AfterArgumentSetMethodInvoker extensions are executed within
+		// AfterParameterizedClassInvocationMethodInvoker extensions are executed within
 		// ClassTemplateInvocationTestDescriptor, we have to reverse them to put them
 		// in top-down order before we register them as extensions.
 		reverse(afterMethods);

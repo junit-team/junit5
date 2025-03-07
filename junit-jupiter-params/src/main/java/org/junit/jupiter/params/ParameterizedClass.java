@@ -109,11 +109,13 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <h2>Lifecycle Methods</h2>
  *
- * <p>If you wish to execute custom code before or after each set of arguments
- * is used to invoke the parameterized class, you may declare methods annotated
- * with {@link BeforeArgumentSet @BeforeArgumentSet} or
- * {@link AfterArgumentSet @AfterArgumentSet}. This can, for example, be useful
- * to initialize the arguments before they are used.
+ * <p>If you wish to execute custom code before or after each invocation of the
+ * parameterized class, you may declare methods annotated with
+ * {@link BeforeParameterizedClassInvocation @BeforeParameterizedClassInvocation}
+ * or
+ * {@link AfterParameterizedClassInvocation @AfterParameterizedClassInvocation}.
+ * This can, for example, be useful to initialize the arguments before they are
+ * used.
  *
  * <h2>Composed Annotations</h2>
  *
@@ -127,8 +129,8 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * @since 5.13
  * @see Parameter
- * @see BeforeArgumentSet
- * @see AfterArgumentSet
+ * @see BeforeParameterizedClassInvocation
+ * @see AfterParameterizedClassInvocation
  * @see ParameterizedTest
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider

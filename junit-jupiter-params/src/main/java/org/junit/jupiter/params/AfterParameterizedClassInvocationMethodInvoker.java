@@ -16,11 +16,12 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 /**
  * @since 5.13
  */
-class AfterArgumentSetMethodInvoker extends AbstractArgumentSetLifecycleMethodInvoker
+class AfterParameterizedClassInvocationMethodInvoker extends AbstractParameterizedClassInvocationLifecycleMethodInvoker
 		implements AfterClassTemplateInvocationCallback {
 
-	AfterArgumentSetMethodInvoker(ParameterizedClassContext declarationContext, EvaluatedArgumentSet arguments,
-			int invocationIndex, ResolutionCache resolutionCache, ArgumentSetLifecycleMethod lifecycleMethod) {
+	AfterParameterizedClassInvocationMethodInvoker(ParameterizedClassContext declarationContext,
+			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache,
+			ArgumentSetLifecycleMethod lifecycleMethod) {
 		super(declarationContext, arguments, invocationIndex, resolutionCache, lifecycleMethod);
 	}
 

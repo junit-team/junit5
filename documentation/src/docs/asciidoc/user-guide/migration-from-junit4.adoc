@@ -120,9 +120,9 @@ converted into a JUnit Jupiter
 . Add a class-level `@MethodSource("methodName")` annotation where `methodName` is the
   name of the method annotated with `@Parameters` and remove the `@Parameters` annotation
   from the method.
-. Replace `@BeforeParam`/`@AfterParam` with `@BeforeArgumentSet`/`@AfterArgumentSet`, if
-  there are any methods with such annotation. Moreover, if they declare parameters, set
-  the `injectArguments` annotation attribute to `true`.
+. Replace `@BeforeParam` and `@AfterParam` with `@BeforeParameterizedClassInvocation` and
+  `@AfterParameterizedClassInvocation`, respectively, if there are any methods with such
+  annotations.
 . Change the imports of the `@Test` and `@Parameter` annotations to use the
   `org.junit.jupiter.params` package.
 . Change assertions etc. to use the `org.junit.jupiter.api` package as usual.

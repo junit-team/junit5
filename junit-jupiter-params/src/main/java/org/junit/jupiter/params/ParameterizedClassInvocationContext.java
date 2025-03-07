@@ -85,19 +85,23 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 
 	private Stream<Extension> createLifecycleMethodInvokers() {
 		return Stream.concat( //
-			this.declarationContext.getBeforeMethods().stream().map(this::createBeforeArgumentSetMethodInvoker), //
-			this.declarationContext.getAfterMethods().stream().map(this::createAfterArgumentSetMethodInvoker) //
+			this.declarationContext.getBeforeMethods().stream().map(
+				this::createBeforeParameterizedClassInvocationMethodInvoker), //
+			this.declarationContext.getAfterMethods().stream().map(
+				this::createAfterParameterizedClassInvocationMethodInvoker) //
 		);
 	}
 
-	private BeforeArgumentSetMethodInvoker createBeforeArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
-		return new BeforeArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
-			this.resolutionCache, method);
+	private BeforeParameterizedClassInvocationMethodInvoker createBeforeParameterizedClassInvocationMethodInvoker(
+			ArgumentSetLifecycleMethod method) {
+		return new BeforeParameterizedClassInvocationMethodInvoker(this.declarationContext, this.arguments,
+			this.invocationIndex, this.resolutionCache, method);
 	}
 
-	private AfterArgumentSetMethodInvoker createAfterArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
-		return new AfterArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
-			this.resolutionCache, method);
+	private AfterParameterizedClassInvocationMethodInvoker createAfterParameterizedClassInvocationMethodInvoker(
+			ArgumentSetLifecycleMethod method) {
+		return new AfterParameterizedClassInvocationMethodInvoker(this.declarationContext, this.arguments,
+			this.invocationIndex, this.resolutionCache, method);
 	}
 
 }

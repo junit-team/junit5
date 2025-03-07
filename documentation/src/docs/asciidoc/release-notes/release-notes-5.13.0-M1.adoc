@@ -64,8 +64,8 @@ repository on GitHub.
   injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
 * Introduce additional `@ParameterizedClass`-specific
-  `@BeforeArgumentSet`/`@AfterArgumentSet` lifecycle methods that are invoked once
-  before/after each set of arguments the class is invoked with.
+  `@BeforeParameterizedClassInvocation`/`@AfterParameterizedClassInvocation` lifecycle
+  methods that are invoked once before/after each invocation of the parametrized class.
 * New `@SentenceFragment` annotation which allows one to supply custom text for individual
   sentence fragments when using the `IndicativeSentences` `DisplayNameGenerator`. See the
   updated documentation in the
