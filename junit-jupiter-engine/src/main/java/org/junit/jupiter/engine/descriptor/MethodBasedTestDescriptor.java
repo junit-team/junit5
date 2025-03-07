@@ -50,7 +50,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  * @since 5.0
  */
 @API(status = INTERNAL, since = "5.0")
-public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor implements ResourceLockAware {
+public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
+		implements ResourceLockAware, TestClassAware {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodBasedTestDescriptor.class);
 
@@ -106,7 +107,8 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 				getTestMethod()));
 	}
 
-	private List<Class<?>> getEnclosingTestClasses() {
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
 		return getParent() //
 				.filter(TestClassAware.class::isInstance) //
 				.map(TestClassAware.class::cast) //

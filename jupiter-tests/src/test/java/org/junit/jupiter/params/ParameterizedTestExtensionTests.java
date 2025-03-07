@@ -23,6 +23,7 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -254,6 +255,11 @@ class ParameterizedTestExtensionTests {
 			@Override
 			public Optional<Class<?>> getTestClass() {
 				return Optional.empty();
+			}
+
+			@Override
+			public List<Class<?>> getEnclosingTestClasses() {
+				return List.of();
 			}
 
 			@Override
