@@ -10,8 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -41,6 +44,11 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.empty();
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return emptyList();
 	}
 
 	@Override
