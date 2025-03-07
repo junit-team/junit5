@@ -20,6 +20,8 @@ import org.junit.jupiter.params.provider.Arguments;
  */
 interface ParameterizedDeclarationContext<C> {
 
+	Class<?> getTestClass();
+
 	Annotation getAnnotation();
 
 	AnnotatedElement getAnnotatedElement();

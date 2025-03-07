@@ -16,21 +16,17 @@ import static org.junit.platform.commons.util.ClassLoaderUtils.getClassLoader;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.lang.reflect.Method;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.conversion.ConversionException;
 import org.junit.platform.commons.test.TestClassLoader;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
  * Unit tests for {@link DefaultArgumentConverter}.
@@ -124,12 +120,12 @@ class DefaultArgumentConverterTests {
 			var customType = testClassLoader.loadClass(customTypeName);
 			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
-			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
+			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").orElseThrow();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			doReturn(customType).when(underTest).convert(any(), any(), any(ClassLoader.class));
 
-			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
+			var clazz = (Class<?>) convert(customTypeName, Class.class, testClassLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
@@ -151,22 +147,11 @@ class DefaultArgumentConverterTests {
 	}
 
 	private Object convert(Object input, Class<?> targetClass) {
-		return convert(input, targetClass, parameterContext());
+		return convert(input, targetClass, ClassLoaderUtils.getClassLoader(getClass()));
 	}
 
-	private Object convert(Object input, Class<?> targetClass, ParameterContext parameterContext) {
-		return underTest.convert(input, targetClass, parameterContext);
-	}
-
-	private static ParameterContext parameterContext() {
-		Method declaringExecutable = ReflectionSupport.findMethod(DefaultArgumentConverterTests.class, "foo").get();
-		return parameterContext(declaringExecutable);
-	}
-
-	private static ParameterContext parameterContext(Method declaringExecutable) {
-		ParameterContext parameterContext = mock();
-		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
-		return parameterContext;
+	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+		return underTest.convert(input, targetClass, classLoader);
 	}
 
 	@SuppressWarnings("unused")

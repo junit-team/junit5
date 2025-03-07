@@ -336,7 +336,8 @@ class ParameterizedInvocationNameFormatterTests {
 	}
 
 	private static ParameterizedInvocationNameFormatter formatter(String pattern, String displayName, Method method) {
-		var context = new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class));
+		var context = new ParameterizedTestContext(method.getDeclaringClass(), method,
+			method.getAnnotation(ParameterizedTest.class));
 		return new ParameterizedInvocationNameFormatter(pattern, displayName, context, 512);
 	}
 

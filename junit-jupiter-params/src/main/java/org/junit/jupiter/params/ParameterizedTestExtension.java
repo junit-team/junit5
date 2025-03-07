@@ -35,8 +35,8 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 			return false;
 		}
 
-		ParameterizedTestContext methodContext = new ParameterizedTestContext(context.getRequiredTestMethod(),
-			annotation.get());
+		ParameterizedTestContext methodContext = new ParameterizedTestContext(context.getRequiredTestClass(),
+			context.getRequiredTestMethod(), annotation.get());
 
 		getStore(context).put(DECLARATION_CONTEXT_KEY, methodContext);
 

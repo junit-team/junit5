@@ -10,12 +10,17 @@
 
 package org.junit.jupiter.params;
 
+import static org.junit.platform.commons.util.ClassLoaderUtils.getClassLoader;
+
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.DefaultArgumentsAccessor;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?>> {
 
@@ -44,7 +49,8 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		if (this.declarationContext.isAutoClosingArguments()) {
 			registerAutoCloseableArgumentsInStoreForClosing(context);
 		}
-		new ArgumentCountValidator(this.declarationContext, this.arguments).validate(context);
+		validateArgumentCount(context);
+		storeParameterInfo(context);
 	}
 
 	private void registerAutoCloseableArgumentsInStoreForClosing(ExtensionContext context) {
@@ -56,6 +62,18 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 				.map(AutoCloseable.class::cast) //
 				.map(CloseableArgument::new) //
 				.forEach(closeable -> store.put(argumentIndex.incrementAndGet(), closeable));
+	}
+
+	private void validateArgumentCount(ExtensionContext context) {
+		new ArgumentCountValidator(this.declarationContext, this.arguments).validate(context);
+	}
+
+	private void storeParameterInfo(ExtensionContext context) {
+		ParameterDeclarations declarations = this.declarationContext.getResolverFacade().getIndexedParameterDeclarations();
+		ClassLoader classLoader = getClassLoader(this.declarationContext.getTestClass());
+		Object[] arguments = this.arguments.getConsumedPayloads();
+		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
+		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
 	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {

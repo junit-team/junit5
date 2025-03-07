@@ -44,7 +44,7 @@ class ParameterizedTestContextTests {
 
 	private ParameterizedTestContext createMethodContext(Class<?> testClass, String methodName) {
 		var method = ReflectionUtils.findMethods(testClass, m -> m.getName().equals(methodName)).getFirst();
-		return new ParameterizedTestContext(method, method.getAnnotation(ParameterizedTest.class));
+		return new ParameterizedTestContext(testClass, method, method.getAnnotation(ParameterizedTest.class));
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
