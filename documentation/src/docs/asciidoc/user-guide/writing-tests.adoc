@@ -1657,8 +1657,8 @@ may resolve constructor parameters as usual, though.
 ====== Lifecycle Methods
 
 `{BeforeArgumentSet}` and `{AfterArgumentSet}` can also be used to consume arguments if
-their `injectArguments` attribute is set to `true`. If so, their method signatures must
-follow the same rules apply as defined for
+their `injectArguments` attribute is set to `true` (the default). If so, their method
+signatures must follow the same rules apply as defined for
 <<writing-tests-parameterized-tests-consuming-arguments-methods, parameterized tests>> and
 additionally use the same parameter types as the _indexed parameters_ of the parameterized
 test class. Please refer to the Javadoc of `{BeforeArgumentSet}` and `{AfterArgumentSet}`
@@ -2695,12 +2695,12 @@ unless the parameterized class is configured to use `@TestInstance(Lifecycle.PER
 (see <<writing-tests-test-instance-lifecycle>>).
 
 These lifecycle methods may optionally declare parameters that are resolved depending on
-the setting of the `injectArguments` annotation attribute. If it is set to `false` (the
-default), the parameters must be resolved by other registered {ParameterResolver}
-extensions. If the attribute is set to `true`, the method may declare parameters that
-match the arguments of the parameterized class (see the Javadoc of `{BeforeArgumentSet}`
-and `{AfterArgumentSet}` for details). This may, for example, be used to initialize the
-used arguments as demonstrated by the following example.
+the setting of the `injectArguments` annotation attribute. If it is set to `false`, the
+parameters must be resolved by other registered {ParameterResolver} extensions. If the
+attribute is set to `true` (the default), the method may declare parameters that match the
+arguments of the parameterized class (see the Javadoc of `{BeforeArgumentSet}` and
+`{AfterArgumentSet}` for details). This may, for example, be used to initialize the used
+arguments as demonstrated by the following example.
 
 [source,java,indent=0]
 .Using parameterized class lifecycle methods

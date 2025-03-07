@@ -47,13 +47,13 @@ public class ParameterizedLifecycleDemo {
 		@Parameter
 		TextFile textFile;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void beforeArgumentSet(TextFile textFile, @TempDir Path tempDir) throws Exception {
 			var filePath = tempDir.resolve(textFile.fileName); // <1>
 			textFile.path = Files.writeString(filePath, textFile.content);
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterArgumentSet
 		static void afterArgumentSet(TextFile textFile) throws Exception {
 			var actualContent = Files.readString(textFile.path); // <3>
 			assertEquals(textFile.content, actualContent, "Content must not have changed");

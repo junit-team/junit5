@@ -49,19 +49,19 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
  * are resolved depending on the setting of the {@link #injectArguments()}
  * attribute.
  *
- * <p>If {@link #injectArguments()} is set to {@code false} (the default), the
- * parameters must be resolved by other registered
+ * <p>If {@link #injectArguments()} is set to {@code false}, the parameters must
+ * be resolved by other registered
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
- * <p>If {@link #injectArguments()} is set to {@code true}, the method must
- * declare the same parameters, in the same order, as the <em>indexed
- * parameters</em> (see {@link ParameterizedClass @ParameterizedClass}) of the
- * parameterized test class. It may declare a subset of the indexed parameters
- * starting from the first argument. Additionally, the method may declare custom
- * <em>aggregator parameters</em> (see
- * {@link ParameterizedClass @ParameterizedClass}) at the end of its parameter
- * list. If the method declares additional parameters after these aggregator
- * parameters, or more parameters than the class has indexed
+ * <p>If {@link #injectArguments()} is set to {@code true} (the default), the
+ * method must declare the same parameters, in the same order, as the
+ * <em>indexed parameters</em> (see
+ * {@link ParameterizedClass @ParameterizedClass}) of the parameterized test
+ * class. It may declare a subset of the indexed parameters starting from the
+ * first argument. Additionally, the method may declare custom <em>aggregator
+ * parameters</em> (see {@link ParameterizedClass @ParameterizedClass}) at the
+ * end of its parameter list. If the method declares additional parameters after
+ * these aggregator parameters, or more parameters than the class has indexed
  * parameters, they may be resolved by other
  * {@link org.junit.jupiter.api.extension.ParameterResolver ParameterResolvers}.
  *
@@ -70,28 +70,28 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
  * following method signatures are valid:
  *
  * <pre>{@code
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet() { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(int number) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(int number, String text) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(int number, String text, TestInfo testInfo) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(ArgumentsAccessor accessor) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(ArgumentsAccessor accessor, TestInfo testInfo) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(int number, String text, ArgumentsAccessor accessor) { ... }
  *
- * @AfterArgumentSet(injectArguments = true)
+ * @AfterArgumentSet
  * void afterArgumentSet(int number, String text, ArgumentsAccessor accessor, TestInfo testInfo) { ... }
  * }</pre>
  *
@@ -155,8 +155,8 @@ public @interface AfterArgumentSet {
 
 	/**
 	 * Whether the arguments of the parameterized test class should be injected
-	 * into the annotated method (defaults to {@code false}).
+	 * into the annotated method (defaults to {@code true}).
 	 */
-	boolean injectArguments() default false;
+	boolean injectArguments() default true;
 
 }

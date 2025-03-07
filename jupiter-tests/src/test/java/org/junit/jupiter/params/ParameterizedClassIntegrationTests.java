@@ -379,8 +379,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	class Nesting {
 
 		@ParameterizedTest
-		@ValueSource(classes = { //NestedFieldInjectionTestCase.class,
-				NestedConstructorInjectionTestCase.class })
+		@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
 		void supportsNestedParameterizedClass(Class<?> classTemplateClass) {
 
 			var results = executeTestsForClass(classTemplateClass);
@@ -1389,7 +1388,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			reporter.publishEntry("beforeAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 
-		@BeforeArgumentSet
+		@BeforeArgumentSet(injectArguments = false)
 		static void beforeArgumentSet(TestReporter reporter, TestInfo testInfo) {
 			reporter.publishEntry("beforeArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
@@ -1406,7 +1405,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				"afterEach: " + testInfo.getDisplayName() + " [" + this.getClass().getSimpleName() + "]");
 		}
 
-		@AfterArgumentSet
+		@AfterArgumentSet(injectArguments = false)
 		static void afterArgumentSet(TestReporter reporter, TestInfo testInfo) {
 			reporter.publishEntry("afterArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
@@ -1506,22 +1505,22 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		final List<String> fieldSource = List.of("bar");
 
-		@BeforeArgumentSet
+		@BeforeArgumentSet(injectArguments = false)
 		void beforeArgumentSet1(TestReporter reporter) {
 			reporter.publishEntry("beforeArgumentSet1");
 		}
 
-		@BeforeArgumentSet
+		@BeforeArgumentSet(injectArguments = false)
 		void beforeArgumentSet2(TestReporter reporter) {
 			reporter.publishEntry("beforeArgumentSet2");
 		}
 
-		@AfterArgumentSet
+		@AfterArgumentSet(injectArguments = false)
 		void afterArgumentSet1(TestReporter reporter) {
 			reporter.publishEntry("afterArgumentSet1");
 		}
 
-		@AfterArgumentSet
+		@AfterArgumentSet(injectArguments = false)
 		void afterArgumentSet2(TestReporter reporter) {
 			reporter.publishEntry("afterArgumentSet2");
 		}
@@ -1840,12 +1839,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase(
 			@ConvertWith(AtomicIntegerConverter.class) AtomicInteger counter) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(AtomicInteger counter) {
 			assertEquals(2, counter.incrementAndGet());
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterArgumentSet
 		static void after(AtomicInteger counter) {
 			assertEquals(4, counter.get());
 		}
@@ -1869,12 +1868,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ConvertWith(AtomicIntegerConverter.class)
 		AtomicInteger counter;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(AtomicInteger counter) {
 			assertEquals(2, counter.incrementAndGet());
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterArgumentSet
 		static void after(AtomicInteger counter) {
 			assertEquals(4, counter.get());
 		}
@@ -1902,7 +1901,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase(
 			@CustomConversion String value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(String value) {
 			assertEquals("foo", value);
 		}
@@ -1921,7 +1920,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@CustomConversion
 		String value;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(String value) {
 			assertEquals("foo", value);
 		}
@@ -1987,51 +1986,51 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	abstract static class AbstractValidLifecycleMethodInjectionTestCase {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before0() {
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before1(AtomicInteger value) {
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before2(ArgumentsAccessor accessor) {
 			assertEquals(1, accessor.getInteger(0));
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before3(AtomicInteger value, TestInfo testInfo) {
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before4(ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(1, accessor.getInteger(0));
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before4(AtomicInteger value, ArgumentsAccessor accessor) {
 			assertEquals(1, accessor.getInteger(0));
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before5(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(1, accessor.getInteger(0));
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before6(@TimesTwo int valueTimesTwo) {
 			assertEquals(2, valueTimesTwo);
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterArgumentSet
 		static void after(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(6, value.get());
 			assertEquals(1, accessor.getInteger(0));
@@ -2043,7 +2042,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@CsvSource("1, 2")
 	record LifecycleMethodWithInvalidParametersTestCase(int value, int anotherValue) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(long value, @ConvertWith(CustomIntegerToStringConverter.class) int anotherValue) {
 			fail("should not be called");
 		}
@@ -2058,7 +2057,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record LifecycleMethodWithInvalidParameterOrderTestCase(int value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(ArgumentsAccessor accessor1, int value, ArgumentsAccessor accessor2) {
 			fail("should not be called");
 		}
@@ -2073,7 +2072,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record LifecycleMethodWithParameterAfterAggregatorTestCase(int value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(@TimesTwo int valueTimesTwo, int value) {
 			fail("should not be called");
 		}

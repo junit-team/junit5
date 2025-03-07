@@ -80,7 +80,7 @@ public class ParameterizedMigrationDemo {
 		@org.junit.jupiter.params.Parameter(1)
 		String text;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeArgumentSet
 		static void before(int number, String text) {
 		}
 
