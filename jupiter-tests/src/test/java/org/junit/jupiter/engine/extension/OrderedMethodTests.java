@@ -176,7 +176,7 @@ class OrderedMethodTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(classes = { WithoutTestMethodOrderTestCase.class, ContainerTemplateTestCase.class })
+	@ValueSource(classes = { WithoutTestMethodOrderTestCase.class, ClassTemplateTestCase.class })
 	void defaultOrderer(Class<?> testClass) {
 		var tests = executeTestsInParallel(testClass, OrderAnnotation.class);
 
@@ -848,7 +848,7 @@ class OrderedMethodTests {
 
 	}
 
-	static class ContainerTemplateTestCase extends WithoutTestMethodOrderTestCase {
+	static class ClassTemplateTestCase extends WithoutTestMethodOrderTestCase {
 	}
 
 }

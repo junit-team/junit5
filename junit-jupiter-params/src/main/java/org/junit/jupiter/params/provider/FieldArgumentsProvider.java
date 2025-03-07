@@ -51,7 +51,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		if (fieldNames.length == 0) {
 			Optional<Method> testMethod = context.getTestMethod();
 			Preconditions.condition(testMethod.isPresent(),
-				"You must specify a field name when using @FieldSource with @ContainerTemplate");
+				"You must specify a field name when using @FieldSource with @ParameterizedClass");
 			fieldNames = new String[] { testMethod.get().getName() };
 		}
 		// @formatter:off

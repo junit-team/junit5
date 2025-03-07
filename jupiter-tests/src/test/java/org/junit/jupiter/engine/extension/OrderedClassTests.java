@@ -25,15 +25,15 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ClassOrderer;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -135,19 +135,19 @@ class OrderedClassTests {
 	}
 
 	@Test
-	void containerTemplateWithLocalConfig() {
-		var containerTemplate = ContainerTemplateWithLocalConfigTestCase.class;
-		var inner0 = ContainerTemplateWithLocalConfigTestCase.Inner0.class;
-		var inner1 = ContainerTemplateWithLocalConfigTestCase.Inner1.class;
-		var inner1Inner1 = ContainerTemplateWithLocalConfigTestCase.Inner1.Inner1Inner1.class;
-		var inner1Inner0 = ContainerTemplateWithLocalConfigTestCase.Inner1.Inner1Inner0.class;
+	void classTemplateWithLocalConfig() {
+		var classTemplate = ClassTemplateWithLocalConfigTestCase.class;
+		var inner0 = ClassTemplateWithLocalConfigTestCase.Inner0.class;
+		var inner1 = ClassTemplateWithLocalConfigTestCase.Inner1.class;
+		var inner1Inner1 = ClassTemplateWithLocalConfigTestCase.Inner1.Inner1Inner1.class;
+		var inner1Inner0 = ClassTemplateWithLocalConfigTestCase.Inner1.Inner1Inner0.class;
 
-		executeTests(ClassOrderer.Random.class, selectClass(containerTemplate))//
+		executeTests(ClassOrderer.Random.class, selectClass(classTemplate))//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		var inner1InvocationCallSequence = Stream.of(inner1, inner1Inner1, inner1Inner0, inner1Inner0).toList();
 		var inner1CallSequence = twice(inner1InvocationCallSequence).toList();
-		var outerCallSequence = Stream.concat(Stream.of(containerTemplate),
+		var outerCallSequence = Stream.concat(Stream.of(classTemplate),
 			Stream.concat(inner1CallSequence.stream(), Stream.of(inner0))).toList();
 		var expectedCallSequence = twice(outerCallSequence).map(Class::getSimpleName).toList();
 
@@ -159,15 +159,15 @@ class OrderedClassTests {
 	}
 
 	@Test
-	void containerTemplateWithGlobalConfig() {
-		var containerTemplate = ContainerTemplateWithLocalConfigTestCase.class;
+	void classTemplateWithGlobalConfig() {
+		var classTemplate = ClassTemplateWithLocalConfigTestCase.class;
 		var otherClass = A_TestCase.class;
 
-		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(otherClass), selectClass(containerTemplate))//
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(otherClass), selectClass(classTemplate))//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
 		assertThat(callSequence)//
-				.containsSubsequence(containerTemplate.getSimpleName(), otherClass.getSimpleName());
+				.containsSubsequence(classTemplate.getSimpleName(), otherClass.getSimpleName());
 	}
 
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer) {
@@ -311,13 +311,13 @@ class OrderedClassTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Order(1)
 	@TestClassOrder(ClassOrderer.OrderAnnotation.class)
-	@ContainerTemplate
-	@ExtendWith(ContainerTemplateWithLocalConfigTestCase.Twice.class)
-	static class ContainerTemplateWithLocalConfigTestCase {
+	@ClassTemplate
+	@ExtendWith(ClassTemplateWithLocalConfigTestCase.Twice.class)
+	static class ClassTemplateWithLocalConfigTestCase {
 
 		@Test
 		void test() {
-			callSequence.add(ContainerTemplateWithLocalConfigTestCase.class.getSimpleName());
+			callSequence.add(ClassTemplateWithLocalConfigTestCase.class.getSimpleName());
 		}
 
 		@Nested
@@ -330,7 +330,7 @@ class OrderedClassTests {
 		}
 
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		@Order(0)
 		class Inner1 {
 
@@ -340,7 +340,7 @@ class OrderedClassTests {
 			}
 
 			@Nested
-			@ContainerTemplate
+			@ClassTemplate
 			@Order(2)
 			class Inner1Inner0 {
 				@Test
@@ -359,20 +359,20 @@ class OrderedClassTests {
 			}
 		}
 
-		private static class Twice implements ContainerTemplateInvocationContextProvider {
+		private static class Twice implements ClassTemplateInvocationContextProvider {
 
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return true;
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 					ExtensionContext context) {
 				return Stream.of(new Ctx(), new Ctx());
 			}
 
-			private record Ctx() implements ContainerTemplateInvocationContext {
+			private record Ctx() implements ClassTemplateInvocationContext {
 			}
 		}
 	}

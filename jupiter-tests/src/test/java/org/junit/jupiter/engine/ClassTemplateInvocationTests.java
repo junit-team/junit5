@@ -53,7 +53,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
@@ -64,11 +64,11 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestReporter;
-import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.AfterClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -78,9 +78,9 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
@@ -99,22 +99,22 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 5.13
  */
-public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineTests {
+public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { //
 			"class:%s", //
-			"uid:[engine:junit-jupiter]/[container-template:%s]" //
+			"uid:[engine:junit-jupiter]/[class-template:%s]" //
 	})
-	void executesContainerTemplateClassTwice(String selectorIdentifierTemplate) {
+	void executesClassTemplateClassTwice(String selectorIdentifierTemplate) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var invocation1MethodAId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 		var invocation1NestedClassId = invocationId1.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var invocation1NestedMethodBId = invocation1NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var invocation2MethodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 		var invocation2NestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var invocation2NestedMethodBId = invocation2NestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
@@ -124,7 +124,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of TwoInvocationsTestCase"),
 				legacyReportingName("%s[1]".formatted(TwoInvocationsTestCase.class.getName()))), //
@@ -154,19 +154,19 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(invocation2NestedClassId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void containerTemplateAnnotationIsInherited() {
+	void classTemplateAnnotationIsInherited() {
 		var results = executeTestsForClass(InheritedTwoInvocationsTestCase.class);
 
 		results.allEvents().assertStatistics(stats -> stats.started(12).succeeded(12));
 	}
 
 	@Test
-	void executesOnlySelectedMethodsDeclaredInContainerTemplate() {
+	void executesOnlySelectedMethodsDeclaredInClassTemplate() {
 		var results = executeTests(selectMethod(TwoInvocationsTestCase.class, "a"));
 
 		results.testEvents() //
@@ -175,7 +175,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
-	void executesOnlySelectedMethodsDeclaredInNestedClassOfContainerTemplate() {
+	void executesOnlySelectedMethodsDeclaredInNestedClassOfClassTemplate() {
 		var results = executeTests(selectNestedMethod(List.of(TwoInvocationsTestCase.class),
 			TwoInvocationsTestCase.NestedTestCase.class, "b"));
 
@@ -207,21 +207,19 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
-	void executesNestedContainerTemplateClassTwiceWithClassSelectorForEnclosingClass() {
+	void executesNestedClassTemplateClassTwiceWithClassSelectorForEnclosingClass() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var classId = engineId.append(ClassTestDescriptor.SEGMENT_TYPE,
-			NestedContainerTemplateWithTwoInvocationsTestCase.class.getName());
+			NestedClassTemplateWithTwoInvocationsTestCase.class.getName());
 		var methodAId = classId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
-		var nestedContainerTemplateId = classId.append(ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
+		var nestedClassTemplateId = classId.append(ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
 			"NestedTestCase");
-		var invocationId1 = nestedContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#1");
+		var invocationId1 = nestedClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var invocation1NestedMethodBId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
-		var invocationId2 = nestedContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#2");
+		var invocationId2 = nestedClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var invocation2NestedMethodBId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
-		var results = executeTestsForClass(NestedContainerTemplateWithTwoInvocationsTestCase.class);
+		var results = executeTestsForClass(NestedClassTemplateWithTwoInvocationsTestCase.class);
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
@@ -230,11 +228,11 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(methodAId)), started()), //
 			event(test(uniqueId(methodAId)), finishedSuccessfully()), //
 
-			event(container(uniqueId(nestedContainerTemplateId)), started()), //
+			event(container(uniqueId(nestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of NestedTestCase"),
-				legacyReportingName("%s[1]".formatted(
-					NestedContainerTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
+				legacyReportingName(
+					"%s[1]".formatted(NestedClassTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId1)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation1NestedMethodBId))), //
 			event(test(uniqueId(invocation1NestedMethodBId)), started()), //
@@ -242,41 +240,39 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(invocationId1)), finishedSuccessfully()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of NestedTestCase"),
-				legacyReportingName("%s[2]".formatted(
-					NestedContainerTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
+				legacyReportingName(
+					"%s[2]".formatted(NestedClassTemplateWithTwoInvocationsTestCase.NestedTestCase.class.getName()))), //
 			event(container(uniqueId(invocationId2)), started()), //
 			event(dynamicTestRegistered(uniqueId(invocation2NestedMethodBId))), //
 			event(test(uniqueId(invocation2NestedMethodBId)), started()), //
 			event(test(uniqueId(invocation2NestedMethodBId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(nestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(nestedClassTemplateId)), finishedSuccessfully()), //
 
 			event(container(uniqueId(classId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void executesNestedContainerTemplateClassTwiceWithNestedClassSelector() {
+	void executesNestedClassTemplateClassTwiceWithNestedClassSelector() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
 		var classId = engineId.append(ClassTestDescriptor.SEGMENT_TYPE,
-			NestedContainerTemplateWithTwoInvocationsTestCase.class.getName());
-		var nestedContainerTemplateId = classId.append(ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
+			NestedClassTemplateWithTwoInvocationsTestCase.class.getName());
+		var nestedClassTemplateId = classId.append(ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
 			"NestedTestCase");
-		var invocationId1 = nestedContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#1");
+		var invocationId1 = nestedClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var invocation1NestedMethodBId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
-		var invocationId2 = nestedContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#2");
+		var invocationId2 = nestedClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var invocation2NestedMethodBId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
-		var results = executeTestsForClass(NestedContainerTemplateWithTwoInvocationsTestCase.NestedTestCase.class);
+		var results = executeTestsForClass(NestedClassTemplateWithTwoInvocationsTestCase.NestedTestCase.class);
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(uniqueId(classId)), started()), //
 
-			event(container(uniqueId(nestedContainerTemplateId)), started()), //
+			event(container(uniqueId(nestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId1)), displayName("[1] A of NestedTestCase")), //
 			event(container(uniqueId(invocationId1)), started()), //
@@ -292,41 +288,39 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(invocation2NestedMethodBId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(nestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(nestedClassTemplateId)), finishedSuccessfully()), //
 
 			event(container(uniqueId(classId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void executesNestedContainerTemplatesTwiceEach() {
+	void executesNestedClassTemplatesTwiceEach() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsTestCase.class.getName());
 
-		var outerInvocation1Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#1");
-		var outerInvocation1NestedContainerTemplateId = outerInvocation1Id.append(
-			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
-		var outerInvocation1InnerInvocation1Id = outerInvocation1NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation1Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation1NestedClassTemplateId = outerInvocation1Id.append(
+			ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation1InnerInvocation1Id = outerInvocation1NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var outerInvocation1InnerInvocation1NestedMethodId = outerInvocation1InnerInvocation1Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
-		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation1InnerInvocation2NestedMethodId = outerInvocation1InnerInvocation2Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
-		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#2");
-		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
-			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
-		var outerInvocation2InnerInvocation1Id = outerInvocation2NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation2Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2NestedClassTemplateId = outerInvocation2Id.append(
+			ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation2InnerInvocation1Id = outerInvocation2NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var outerInvocation2InnerInvocation1NestedMethodId = outerInvocation2InnerInvocation1Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
-		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
@@ -334,13 +328,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(outerContainerTemplateId)), started()), //
+			event(container(uniqueId(outerClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation1Id)),
 				displayName("[1] A of TwoTimesTwoInvocationsTestCase")), //
 			event(container(uniqueId(outerInvocation1Id)), started()), //
-			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedContainerTemplateId))), //
-			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedClassTemplateId))), //
+			event(container(uniqueId(outerInvocation1NestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation1Id)),
 				displayName("[1] A of NestedTestCase")), //
@@ -358,14 +352,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1NestedClassTemplateId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation1Id)), finishedSuccessfully()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
 				displayName("[2] B of TwoTimesTwoInvocationsTestCase")), //
 			event(container(uniqueId(outerInvocation2Id)), started()), //
-			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedClassTemplateId))), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation1Id)),
 				displayName("[1] A of NestedTestCase")), //
@@ -383,10 +377,10 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerClassTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -405,17 +399,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@Test
-	void supportsTestTemplateMethodsInsideContainerTemplateClasses() {
+	void supportsTestTemplateMethodsInsideClassTemplateClasses() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			CombinationWithTestTemplateTestCase.class.getName());
-		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var testTemplateId1 = invocationId1.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
 		var testTemplate1InvocationId1 = testTemplateId1.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#1");
 		var testTemplate1InvocationId2 = testTemplateId1.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#2");
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testTemplateId2 = invocationId2.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
 		var testTemplate2InvocationId1 = testTemplateId2.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#1");
@@ -426,7 +420,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId1)),
 				displayName("[1] A of CombinationWithTestTemplateTestCase")), //
@@ -456,16 +450,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(testTemplateId2)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void testTemplateInvocationInsideContainerTemplateClassCanBeSelectedByUniqueId() {
+	void testTemplateInvocationInsideClassTemplateClassCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			CombinationWithTestTemplateTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testTemplateId2 = invocationId2.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
 		var testTemplate2InvocationId2 = testTemplateId2.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#2");
@@ -474,7 +468,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)),
 				displayName("[2] B of CombinationWithTestTemplateTestCase")), //
@@ -487,22 +481,22 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(testTemplateId2)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void supportsTestFactoryMethodsInsideContainerTemplateClasses() {
+	void supportsTestFactoryMethodsInsideClassTemplateClasses() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			CombinationWithTestFactoryTestCase.class.getName());
-		var invocationId1 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var testFactoryId1 = invocationId1.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
 		var testFactory1DynamicTestId1 = testFactoryId1.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
 			"#1");
 		var testFactory1DynamicTestId2 = testFactoryId1.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
 			"#2");
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testFactoryId2 = invocationId2.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
 		var testFactory2DynamicTestId1 = testFactoryId2.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
 			"#1");
@@ -513,7 +507,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId1)),
 				displayName("[1] A of CombinationWithTestFactoryTestCase")), //
@@ -543,16 +537,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(testFactoryId2)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void specificDynamicTestInsideContainerTemplateClassCanBeSelectedByUniqueId() {
+	void specificDynamicTestInsideClassTemplateClassCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			CombinationWithTestFactoryTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testFactoryId2 = invocationId2.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
 		var testFactory2DynamicTestId2 = testFactoryId2.append(TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE,
 			"#2");
@@ -561,7 +555,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)),
 				displayName("[2] B of CombinationWithTestFactoryTestCase")), //
@@ -574,7 +568,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(testFactoryId2)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -588,7 +582,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(InvalidZeroInvocationTestCase.class),
 				finishedWithFailure(
 					message("Provider [Ext] did not provide any invocation contexts, but was expected to do so. "
-							+ "You may override mayReturnZeroContainerTemplateInvocationContexts() to allow this."))), //
+							+ "You may override mayReturnZeroClassTemplateInvocationContexts() to allow this."))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
@@ -613,17 +607,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(testClass), started()), //
 			event(container(testClass),
 				finishedWithFailure(
-					message("You must register at least one ContainerTemplateInvocationContextProvider that supports "
-							+ "@ContainerTemplate class [" + testClass.getName() + "]"))), //
+					message("You must register at least one ClassTemplateInvocationContextProvider that supports "
+							+ "@ClassTemplate class [" + testClass.getName() + "]"))), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void containerTemplateInvocationCanBeSelectedByUniqueId() {
+	void classTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
@@ -632,7 +626,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
 			event(container(uniqueId(invocationId2)), started()), //
@@ -647,16 +641,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(nestedClassId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void containerTemplateInvocationCanBeSelectedByIteration() {
+	void classTemplateInvocationCanBeSelectedByIteration() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
@@ -665,7 +659,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
 			event(container(uniqueId(invocationId2)), started()), //
@@ -680,40 +674,40 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(nestedClassId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { //
-			"class:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase", //
-			"uid:[engine:junit-jupiter]/[container-template:org.junit.jupiter.engine.ContainerTemplateInvocationTests$TwoInvocationsTestCase]" //
+			"class:org.junit.jupiter.engine.ClassTemplateInvocationTests$TwoInvocationsTestCase", //
+			"uid:[engine:junit-jupiter]/[class-template:org.junit.jupiter.engine.ClassTemplateInvocationTests$TwoInvocationsTestCase]" //
 	})
-	void executesAllInvocationsForRedundantSelectors(String containerTemplateSelectorIdentifier) {
+	void executesAllInvocationsForRedundantSelectors(String classTemplateSelectorIdentifier) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 
 		var results = executeTests(selectUniqueId(invocationId2),
-			DiscoverySelectors.parse(containerTemplateSelectorIdentifier).orElseThrow());
+			DiscoverySelectors.parse(classTemplateSelectorIdentifier).orElseThrow());
 
 		results.testEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
 	@Test
-	void methodInContainerTemplateInvocationCanBeSelectedByUniqueId() {
+	void methodInClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
 
 		var results = executeTests(selectUniqueId(methodAId));
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
 			event(container(uniqueId(invocationId2)), started()), //
@@ -722,16 +716,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(methodAId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void nestedMethodInContainerTemplateInvocationCanBeSelectedByUniqueId() {
+	void nestedMethodInClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var containerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
-		var invocationId2 = containerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
 		var nestedMethodBId = nestedClassId.append(TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
@@ -739,7 +733,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(containerTemplateId)), started()), //
+			event(container(uniqueId(classTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(invocationId2)), displayName("[2] B of TwoInvocationsTestCase")), //
 			event(container(uniqueId(invocationId2)), started()), //
@@ -751,21 +745,20 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(container(uniqueId(nestedClassId)), finishedSuccessfully()), //
 			event(container(uniqueId(invocationId2)), finishedSuccessfully()), //
 
-			event(container(uniqueId(containerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(classTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void nestedContainerTemplateInvocationCanBeSelectedByUniqueId() {
+	void nestedClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsWithMultipleMethodsTestCase.class.getName());
-		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#2");
-		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
-			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
-		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2NestedClassTemplateId = outerInvocation2Id.append(
+			ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "b()");
 
@@ -773,13 +766,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(outerContainerTemplateId)), started()), //
+			event(container(uniqueId(outerClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
 				displayName("[2] B of TwoTimesTwoInvocationsWithMultipleMethodsTestCase")), //
 			event(container(uniqueId(outerInvocation2Id)), started()), //
-			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedClassTemplateId))), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2Id)),
 				displayName("[2] B of NestedTestCase")), //
@@ -789,32 +782,30 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerClassTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void nestedContainerTemplateInvocationCanBeSelectedByIteration() {
+	void nestedClassTemplateInvocationCanBeSelectedByIteration() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerContainerTemplateId = engineId.append(ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsTestCase.class.getName());
-		var outerInvocation1Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#1");
-		var outerInvocation1NestedContainerTemplateId = outerInvocation1Id.append(
-			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
-		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation1Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
+		var outerInvocation1NestedClassTemplateId = outerInvocation1Id.append(
+			ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation1InnerInvocation2Id = outerInvocation1NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation1InnerInvocation2NestedMethodId = outerInvocation1InnerInvocation2Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
-		var outerInvocation2Id = outerContainerTemplateId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
-			"#2");
-		var outerInvocation2NestedContainerTemplateId = outerInvocation2Id.append(
-			ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
-		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedContainerTemplateId.append(
-			ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
+		var outerInvocation2NestedClassTemplateId = outerInvocation2Id.append(
+			ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE, "NestedTestCase");
+		var outerInvocation2InnerInvocation2Id = outerInvocation2NestedClassTemplateId.append(
+			ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation2InnerInvocation2NestedMethodId = outerInvocation2InnerInvocation2Id.append(
 			TestMethodTestDescriptor.SEGMENT_TYPE, "test()");
 
@@ -823,13 +814,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(uniqueId(outerContainerTemplateId)), started()), //
+			event(container(uniqueId(outerClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation1Id)),
 				displayName("[1] A of TwoTimesTwoInvocationsTestCase")), //
 			event(container(uniqueId(outerInvocation1Id)), started()), //
-			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedContainerTemplateId))), //
-			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation1NestedClassTemplateId))), //
+			event(container(uniqueId(outerInvocation1NestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation1InnerInvocation2Id)),
 				displayName("[2] B of NestedTestCase")), //
@@ -839,14 +830,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(outerInvocation1InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation1InnerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerInvocation1NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation1NestedClassTemplateId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation1Id)), finishedSuccessfully()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2Id)),
 				displayName("[2] B of TwoTimesTwoInvocationsTestCase")), //
 			event(container(uniqueId(outerInvocation2Id)), started()), //
-			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedContainerTemplateId))), //
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), started()), //
+			event(dynamicTestRegistered(uniqueId(outerInvocation2NestedClassTemplateId))), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), started()), //
 
 			event(dynamicTestRegistered(uniqueId(outerInvocation2InnerInvocation2Id)),
 				displayName("[2] B of NestedTestCase")), //
@@ -856,15 +847,15 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			event(test(uniqueId(outerInvocation2InnerInvocation2NestedMethodId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2InnerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerInvocation2NestedContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerInvocation2NestedClassTemplateId)), finishedSuccessfully()), //
 			event(container(uniqueId(outerInvocation2Id)), finishedSuccessfully()), //
 
-			event(container(uniqueId(outerContainerTemplateId)), finishedSuccessfully()), //
+			event(container(uniqueId(outerClassTemplateId)), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@Test
-	void executesLifecycleCallbacksInNestedContainerTemplates() {
+	void executesLifecycleCallbacksInNestedClassTemplates() {
 		var results = executeTestsForClass(TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase.class);
 
 		results.containerEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
@@ -873,9 +864,9 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		// @formatter:off
 		assertThat(allReportEntryValues(results)).containsExactly(
 			"beforeAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
-				"beforeContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"beforeClassTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 					"beforeAll: NestedTestCase",
-						"beforeContainerTemplateInvocation: NestedTestCase",
+						"beforeClassTemplateInvocation: NestedTestCase",
 							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
 								"beforeEach: test1 [NestedTestCase]",
 									"test1",
@@ -886,8 +877,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 									"test2",
 								"afterEach: test2 [NestedTestCase]",
 							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"afterContainerTemplateInvocation: NestedTestCase",
-						"beforeContainerTemplateInvocation: NestedTestCase",
+						"afterClassTemplateInvocation: NestedTestCase",
+						"beforeClassTemplateInvocation: NestedTestCase",
 							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
 								"beforeEach: test1 [NestedTestCase]",
 									"test1",
@@ -898,12 +889,12 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 									"test2",
 								"afterEach: test2 [NestedTestCase]",
 							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"afterContainerTemplateInvocation: NestedTestCase",
+						"afterClassTemplateInvocation: NestedTestCase",
 					"afterAll: NestedTestCase",
-				"afterContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
-				"beforeContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"afterClassTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"beforeClassTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 					"beforeAll: NestedTestCase",
-						"beforeContainerTemplateInvocation: NestedTestCase",
+						"beforeClassTemplateInvocation: NestedTestCase",
 							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
 								"beforeEach: test1 [NestedTestCase]",
 									"test1",
@@ -914,8 +905,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 									"test2",
 								"afterEach: test2 [NestedTestCase]",
 							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"afterContainerTemplateInvocation: NestedTestCase",
-						"beforeContainerTemplateInvocation: NestedTestCase",
+						"afterClassTemplateInvocation: NestedTestCase",
+						"beforeClassTemplateInvocation: NestedTestCase",
 							"beforeEach: test1 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
 								"beforeEach: test1 [NestedTestCase]",
 									"test1",
@@ -926,9 +917,9 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 									"test2",
 								"afterEach: test2 [NestedTestCase]",
 							"afterEach: test2 [TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase]",
-						"afterContainerTemplateInvocation: NestedTestCase",
+						"afterClassTemplateInvocation: NestedTestCase",
 					"afterAll: NestedTestCase",
-				"afterContainerTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
+				"afterClassTemplateInvocation: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase",
 			"afterAll: TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase"
 		);
 		// @formatter:on
@@ -943,16 +934,16 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		// @formatter:off
 		assertThat(allReportEntryValues(results)).containsExactly(
-				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> beforeClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
 				"test",
-				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-				"1st -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-				"2nd -> beforeContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> afterClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> afterClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> beforeClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"2nd -> beforeClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
 				"test",
-				"2nd -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase",
-				"1st -> afterContainerTemplateInvocation: CallbackWrappingBehaviorTestCase"
+				"2nd -> afterClassTemplateInvocation: CallbackWrappingBehaviorTestCase",
+				"1st -> afterClassTemplateInvocation: CallbackWrappingBehaviorTestCase"
 		);
 		// @formatter:on
 	}
@@ -966,21 +957,19 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(2, finishedWithFailure( //
-					message("2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
-					suppressed(0,
-						message("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
-					suppressed(1,
-						message("1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
+					message("2nd -> afterClassTemplateInvocation: CallbackExceptionBehaviorTestCase"), //
+					suppressed(0, message("1st -> beforeClassTemplateInvocation: CallbackExceptionBehaviorTestCase")), //
+					suppressed(1, message("1st -> afterClassTemplateInvocation: CallbackExceptionBehaviorTestCase"))));
 
 		assertThat(allReportEntryValues(results).distinct()) //
-				.containsExactly("1st -> beforeContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
-					"2nd -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase", //
-					"1st -> afterContainerTemplateInvocation: CallbackExceptionBehaviorTestCase");
+				.containsExactly("1st -> beforeClassTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"2nd -> afterClassTemplateInvocation: CallbackExceptionBehaviorTestCase", //
+					"1st -> afterClassTemplateInvocation: CallbackExceptionBehaviorTestCase");
 	}
 
 	@Test
 	void templateWithPreparations() {
-		var results = executeTestsForClass(ContainerTemplateWithPreparationsTestCase.class);
+		var results = executeTestsForClass(ClassTemplateWithPreparationsTestCase.class);
 
 		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertTrue(CustomCloseableResource.closed, "resource in store was closed");
@@ -997,8 +986,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ClassTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 	static class TwoInvocationsTestCase {
 		@Test
 		void a() {
@@ -1014,14 +1003,14 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	static class NestedContainerTemplateWithTwoInvocationsTestCase {
+	static class NestedClassTemplateWithTwoInvocationsTestCase {
 		@Test
 		void a() {
 		}
 
 		@Nested
-		@ContainerTemplate
-		@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+		@ClassTemplate
+		@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 		class NestedTestCase {
 			@Test
 			void b() {
@@ -1029,11 +1018,11 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
-	@ContainerTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+	@ClassTemplate
 	static class TwoTimesTwoInvocationsTestCase {
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		class NestedTestCase {
 			@Test
 			void test() {
@@ -1042,8 +1031,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ClassTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 	static class TwoInvocationsWithExtensionTestCase {
 		@Test
 		void a() {
@@ -1058,31 +1047,31 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	static class TwoInvocationsContainerTemplateInvocationContextProvider
-			implements ContainerTemplateInvocationContextProvider {
+	static class TwoInvocationsClassTemplateInvocationContextProvider
+			implements ClassTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
+		public boolean supportsClassTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<Ctx> provideContainerTemplateInvocationContexts(ExtensionContext context) {
+		public Stream<Ctx> provideClassTemplateInvocationContexts(ExtensionContext context) {
 			var suffix = " of %s".formatted(context.getRequiredTestClass().getSimpleName());
 			return Stream.of(new Ctx("A" + suffix), new Ctx("B" + suffix));
 		}
 
-		record Ctx(String displayName) implements ContainerTemplateInvocationContext {
+		record Ctx(String displayName) implements ClassTemplateInvocationContext {
 			@Override
 			public String getDisplayName(int invocationIndex) {
-				var defaultDisplayName = ContainerTemplateInvocationContext.super.getDisplayName(invocationIndex);
+				var defaultDisplayName = ClassTemplateInvocationContext.super.getDisplayName(invocationIndex);
 				return "%s %s".formatted(defaultDisplayName, displayName);
 			}
 		}
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(AdditionalExtensionRegistrationTestCase.Ext.class)
 	static class AdditionalExtensionRegistrationTestCase {
 
@@ -1092,19 +1081,19 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			assertNotNull(data.value());
 		}
 
-		static class Ext implements ContainerTemplateInvocationContextProvider {
+		static class Ext implements ClassTemplateInvocationContextProvider {
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return true;
 			}
 
 			@Override
-			public Stream<Ctx> provideContainerTemplateInvocationContexts(ExtensionContext context) {
+			public Stream<Ctx> provideClassTemplateInvocationContexts(ExtensionContext context) {
 				return Stream.of(new Data("A"), new Data("B")).map(Ctx::new);
 			}
 		}
 
-		record Ctx(Data data) implements ContainerTemplateInvocationContext {
+		record Ctx(Data data) implements ClassTemplateInvocationContext {
 			@Override
 			public String getDisplayName(int invocationIndex) {
 				return this.data.value();
@@ -1133,8 +1122,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ClassTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 	@ExtendWith(SeparateExtensionContextTestCase.SomeResourceExtension.class)
 	static class SeparateExtensionContextTestCase {
 
@@ -1181,8 +1170,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	@ContainerTemplate
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ClassTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 	static class CombinationWithTestTemplateTestCase {
 
 		@ParameterizedTest
@@ -1192,8 +1181,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	@ContainerTemplate
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
+	@ClassTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
 	static class CombinationWithTestFactoryTestCase {
 
 		@TestFactory
@@ -1204,7 +1193,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(InvalidZeroInvocationTestCase.Ext.class)
 	static class InvalidZeroInvocationTestCase {
 
@@ -1213,15 +1202,15 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			fail("should not be called");
 		}
 
-		static class Ext implements ContainerTemplateInvocationContextProvider {
+		static class Ext implements ClassTemplateInvocationContextProvider {
 
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return true;
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 					ExtensionContext context) {
 				return Stream.empty();
 			}
@@ -1229,7 +1218,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(ValidZeroInvocationTestCase.Ext.class)
 	static class ValidZeroInvocationTestCase {
 
@@ -1238,28 +1227,28 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			fail("should not be called");
 		}
 
-		static class Ext implements ContainerTemplateInvocationContextProvider {
+		static class Ext implements ClassTemplateInvocationContextProvider {
 
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return true;
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 					ExtensionContext context) {
 				return Stream.empty();
 			}
 
 			@Override
-			public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
+			public boolean mayReturnZeroClassTemplateInvocationContexts(ExtensionContext context) {
 				return true;
 			}
 		}
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	static class NoProviderRegisteredTestCase {
 
 		@Test
@@ -1269,7 +1258,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(NoSupportingProviderRegisteredTestCase.Ext.class)
 	static class NoSupportingProviderRegisteredTestCase {
 
@@ -1278,15 +1267,15 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 			fail("should not be called");
 		}
 
-		static class Ext implements ContainerTemplateInvocationContextProvider {
+		static class Ext implements ClassTemplateInvocationContextProvider {
 
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return false;
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 					ExtensionContext context) {
 				throw new RuntimeException("should not be called");
 			}
@@ -1294,8 +1283,8 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
-	@ContainerTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+	@ClassTemplate
 	static class TwoTimesTwoInvocationsWithMultipleMethodsTestCase {
 
 		@Test
@@ -1303,7 +1292,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		class NestedTestCase {
 			@Test
 			void a() {
@@ -1315,7 +1304,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		class AnotherNestedTestCase {
 			@Test
 			void test() {
@@ -1323,13 +1312,13 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
-	@ExtendWith(ContainerTemplateInvocationCallbacks.class)
-	@ContainerTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+	@ExtendWith(ClassTemplateInvocationCallbacks.class)
+	@ClassTemplate
 	static class TwoTimesTwoInvocationsWithLifecycleCallbacksTestCase extends LifecycleCallbacks {
 
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		class NestedTestCase extends LifecycleCallbacks {
 
 			@Test
@@ -1372,9 +1361,9 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
-	@ExtendWith({ PreparingContainerTemplateInvocationContextProvider.class, CompanionExtension.class })
-	static class ContainerTemplateWithPreparationsTestCase {
+	@ClassTemplate
+	@ExtendWith({ PreparingClassTemplateInvocationContextProvider.class, CompanionExtension.class })
+	static class ClassTemplateWithPreparationsTestCase {
 
 		@Test
 		void test(CustomCloseableResource resource) {
@@ -1384,31 +1373,31 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 
 	}
 
-	private static class PreparingContainerTemplateInvocationContextProvider
-			implements ContainerTemplateInvocationContextProvider {
+	private static class PreparingClassTemplateInvocationContextProvider
+			implements ClassTemplateInvocationContextProvider {
 
-		static final Namespace NAMESPACE = Namespace.create(PreparingContainerTemplateInvocationContextProvider.class);
+		static final Namespace NAMESPACE = Namespace.create(PreparingClassTemplateInvocationContextProvider.class);
 
 		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
+		public boolean supportsClassTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<? extends ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+		public Stream<? extends ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 				ExtensionContext context) {
-			var invocationContext = new PreparingContainerTemplateInvocationContext();
+			var invocationContext = new PreparingClassTemplateInvocationContext();
 			return Stream.of(invocationContext, invocationContext);
 		}
 
 	}
 
-	private static class PreparingContainerTemplateInvocationContext implements ContainerTemplateInvocationContext {
+	private static class PreparingClassTemplateInvocationContext implements ClassTemplateInvocationContext {
 
 		@Override
 		public void prepareInvocation(ExtensionContext context) {
 			CustomCloseableResource.closed = false;
-			context.getStore(PreparingContainerTemplateInvocationContextProvider.NAMESPACE) //
+			context.getStore(PreparingClassTemplateInvocationContextProvider.NAMESPACE) //
 					.put("resource", new CustomCloseableResource());
 		}
 
@@ -1430,8 +1419,7 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		@Override
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
-			return extensionContext.getStore(PreparingContainerTemplateInvocationContextProvider.NAMESPACE).get(
-				"resource");
+			return extensionContext.getStore(PreparingClassTemplateInvocationContextProvider.NAMESPACE).get("resource");
 		}
 
 	}
@@ -1448,17 +1436,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
-	@ContainerTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+	@ClassTemplate
 	static class CallbackWrappingBehaviorTestCase {
 
 		@RegisterExtension
 		@Order(1)
-		static Extension first = new ContainerTemplateInvocationCallbacks("1st -> ");
+		static Extension first = new ClassTemplateInvocationCallbacks("1st -> ");
 
 		@RegisterExtension
 		@Order(2)
-		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ");
+		static Extension second = new ClassTemplateInvocationCallbacks("2nd -> ");
 
 		@Test
 		void test(TestReporter testReporter) {
@@ -1467,17 +1455,17 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ExtendWith(TwoInvocationsContainerTemplateInvocationContextProvider.class)
-	@ContainerTemplate
+	@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+	@ClassTemplate
 	static class CallbackExceptionBehaviorTestCase {
 
 		@RegisterExtension
 		@Order(1)
-		static Extension first = new ContainerTemplateInvocationCallbacks("1st -> ", TestAbortedException::new);
+		static Extension first = new ClassTemplateInvocationCallbacks("1st -> ", TestAbortedException::new);
 
 		@RegisterExtension
 		@Order(2)
-		static Extension second = new ContainerTemplateInvocationCallbacks("2nd -> ", AssertionFailedError::new);
+		static Extension second = new ClassTemplateInvocationCallbacks("2nd -> ", AssertionFailedError::new);
 
 		@Test
 		void test() {
@@ -1485,34 +1473,34 @@ public class ContainerTemplateInvocationTests extends AbstractJupiterTestEngineT
 		}
 	}
 
-	static class ContainerTemplateInvocationCallbacks
-			implements BeforeContainerTemplateInvocationCallback, AfterContainerTemplateInvocationCallback {
+	static class ClassTemplateInvocationCallbacks
+			implements BeforeClassTemplateInvocationCallback, AfterClassTemplateInvocationCallback {
 
 		private final String prefix;
 		private final Function<String, Throwable> exceptionFactory;
 
 		@SuppressWarnings("unused")
-		ContainerTemplateInvocationCallbacks() {
+		ClassTemplateInvocationCallbacks() {
 			this("");
 		}
 
-		ContainerTemplateInvocationCallbacks(String prefix) {
+		ClassTemplateInvocationCallbacks(String prefix) {
 			this(prefix, __ -> null);
 		}
 
-		ContainerTemplateInvocationCallbacks(String prefix, Function<String, Throwable> exceptionFactory) {
+		ClassTemplateInvocationCallbacks(String prefix, Function<String, Throwable> exceptionFactory) {
 			this.prefix = prefix;
 			this.exceptionFactory = exceptionFactory;
 		}
 
 		@Override
-		public void beforeContainerTemplateInvocation(ExtensionContext context) {
-			handle("beforeContainerTemplateInvocation", context);
+		public void beforeClassTemplateInvocation(ExtensionContext context) {
+			handle("beforeClassTemplateInvocation", context);
 		}
 
 		@Override
-		public void afterContainerTemplateInvocation(ExtensionContext context) {
-			handle("afterContainerTemplateInvocation", context);
+		public void afterClassTemplateInvocation(ExtensionContext context) {
+			handle("afterClassTemplateInvocation", context);
 		}
 
 		private void handle(String methodName, ExtensionContext context) {

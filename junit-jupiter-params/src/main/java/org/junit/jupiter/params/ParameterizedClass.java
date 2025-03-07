@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
@@ -148,7 +148,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Documented
 @Inherited
 @API(status = EXPERIMENTAL, since = "5.13")
-@ContainerTemplate
+@ClassTemplate
 @ExtendWith(ParameterizedClassExtension.class)
 @SuppressWarnings("exports")
 public @interface ParameterizedClass {

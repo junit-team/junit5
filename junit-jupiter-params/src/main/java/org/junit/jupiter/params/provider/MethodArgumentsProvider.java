@@ -66,7 +66,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		// factory method with the same name as the parameterized test method.
 		if (StringUtils.isBlank(factoryMethodName)) {
 			Preconditions.condition(testMethod.isPresent(),
-				"You must specify a method name when using @MethodSource with @ContainerTemplate");
+				"You must specify a method name when using @MethodSource with @ParameterizedClass");
 			factoryMethodName = testMethod.get().getName();
 			return findFactoryMethodBySimpleName(testClass, testMethod, factoryMethodName);
 		}

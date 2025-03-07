@@ -35,13 +35,13 @@ public class KitchenSinkExtension implements
 
 	// Lifecycle Callbacks
 	BeforeAllCallback,
-		BeforeContainerTemplateInvocationCallback,
+		BeforeClassTemplateInvocationCallback,
 			BeforeEachCallback,
 				BeforeTestExecutionCallback,
 					TestExecutionExceptionHandler,
 				AfterTestExecutionCallback,
 			AfterEachCallback,
-		AfterContainerTemplateInvocationCallback,
+		AfterClassTemplateInvocationCallback,
 	AfterAllCallback,
 
 	// Lifecycle methods exception handling
@@ -57,9 +57,9 @@ public class KitchenSinkExtension implements
 	// Conditional Test Execution
 	ExecutionCondition,
 
-	// @TestTemplate and @ContainerTemplate
+	// @TestTemplate and @ClassTemplate
 	TestTemplateInvocationContextProvider,
-	ContainerTemplateInvocationContextProvider,
+	ClassTemplateInvocationContextProvider,
 
 	// Miscellaneous
 	TestWatcher,
@@ -83,7 +83,7 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
-	public void beforeContainerTemplateInvocation(ExtensionContext context) {
+	public void beforeClassTemplateInvocation(ExtensionContext context) {
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
-	public void afterContainerTemplateInvocation(ExtensionContext context) {
+	public void afterClassTemplateInvocation(ExtensionContext context) {
 	}
 
 	@Override
@@ -185,21 +185,20 @@ public class KitchenSinkExtension implements
 		return false;
 	}
 
-	// --- @ContainerTemplate -------------------------------------------------------
+	// --- @ClassTemplate -------------------------------------------------------
 
 	@Override
-	public boolean supportsContainerTemplate(ExtensionContext context) {
+	public boolean supportsClassTemplate(ExtensionContext context) {
 		return false;
 	}
 
 	@Override
-	public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-			ExtensionContext context) {
+	public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext context) {
 		return null;
 	}
 
 	@Override
-	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext context) {
+	public boolean mayReturnZeroClassTemplateInvocationContexts(ExtensionContext context) {
 		return false;
 	}
 

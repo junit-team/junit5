@@ -25,12 +25,12 @@ import org.junit.platform.engine.support.hierarchical.Node;
 /**
  * @since 5.13
  */
-final class ContainerTemplateInvocationExtensionContext
-		extends AbstractExtensionContext<ContainerTemplateInvocationTestDescriptor> {
+final class ClassTemplateInvocationExtensionContext
+		extends AbstractExtensionContext<ClassTemplateInvocationTestDescriptor> {
 
-	ContainerTemplateInvocationExtensionContext(ExtensionContext parent,
-			EngineExecutionListener engineExecutionListener, ContainerTemplateInvocationTestDescriptor testDescriptor,
-			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
+	ClassTemplateInvocationExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			ClassTemplateInvocationTestDescriptor testDescriptor, JupiterConfiguration configuration,
+			ExtensionRegistry extensionRegistry) {
 		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
 	}
 

@@ -12,10 +12,10 @@ package org.junit.jupiter.engine.discovery;
 
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
+import org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
@@ -38,7 +38,7 @@ public class JupiterUniqueIdBuilder {
 	public static UniqueId uniqueIdForClass(Class<?> clazz) {
 		if (isInnerClass(clazz)) {
 			var segmentType = classSegmentType(clazz, NestedClassTestDescriptor.SEGMENT_TYPE,
-				ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE);
+				ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE);
 			return uniqueIdForClass(clazz.getEnclosingClass()).append(segmentType, clazz.getSimpleName());
 		}
 		return uniqueIdForStaticClass(clazz.getName());
@@ -51,14 +51,13 @@ public class JupiterUniqueIdBuilder {
 	private static String staticClassSegmentType(String className) {
 		return ReflectionSupport.tryToLoadClass(className).toOptional() //
 				.map(it -> classSegmentType(it, ClassTestDescriptor.SEGMENT_TYPE,
-					ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE)) //
+					ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE)) //
 				.orElse(ClassTestDescriptor.SEGMENT_TYPE);
 	}
 
-	private static String classSegmentType(Class<?> clazz, String regularSegmentType,
-			String containerTemplateSegmentType) {
-		return AnnotationSupport.isAnnotated(clazz, ContainerTemplate.class) //
-				? containerTemplateSegmentType //
+	private static String classSegmentType(Class<?> clazz, String regularSegmentType, String classTemplateSegmentType) {
+		return AnnotationSupport.isAnnotated(clazz, ClassTemplate.class) //
+				? classTemplateSegmentType //
 				: regularSegmentType;
 	}
 
@@ -78,8 +77,8 @@ public class JupiterUniqueIdBuilder {
 		return parentId.append(TestTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 	}
 
-	public static UniqueId appendContainerTemplateInvocationSegment(UniqueId parentId, int index) {
-		return parentId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
+	public static UniqueId appendClassTemplateInvocationSegment(UniqueId parentId, int index) {
+		return parentId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 	}
 
 	public static UniqueId engineId() {

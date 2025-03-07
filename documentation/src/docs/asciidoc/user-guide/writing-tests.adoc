@@ -46,7 +46,7 @@ in the `junit-jupiter-api` module.
 | `@ParameterizedClass`    | Denotes that the annotated class is a <<writing-tests-parameterized-tests, parameterized class>>.
 | `@BeforeArgumentSet`     | Denotes that the annotated method should be executed once _before_ each set of arguments a `@ParameterizedClass` is invoked with.
 | `@AfterArgumentSet`      | Denotes that the annotated method should be executed once _after_ each set of arguments a `@ParameterizedClass` is invoked with.
-| `@ContainerTemplate`     | Denotes that the annotated class is a <<writing-tests-container-templates, template for a set of test cases>> designed to be executed multiple times depending on the number of invocation contexts returned by the registered <<extensions-container-templates, providers>>.
+| `@ClassTemplate`         | Denotes that the annotated class is a <<writing-tests-class-templates, template for a test class>> designed to be executed multiple times depending on the number of invocation contexts returned by the registered <<extensions-class-templates, providers>>.
 | `@Nested`                | Denotes that the annotated class is a non-static <<writing-tests-nested,nested test class>>. On Java 8 through Java 15, `@BeforeAll` and `@AfterAll` methods cannot be used directly in a `@Nested` test class unless the "per-class" <<writing-tests-test-instance-lifecycle, test instance lifecycle>> is used. Beginning with Java 16, `@BeforeAll` and `@AfterAll` methods can be declared as `static` in a `@Nested` test class with either test instance lifecycle mode. Such annotations are not inherited.
 | `@Tag`                   | Used to declare <<writing-tests-tagging-and-filtering,tags for filtering tests>>, either at the class or method level; analogous to test groups in TestNG or Categories in JUnit 4. Such annotations are inherited at the class level but not at the method level.
 | `@Disabled`              | Used to <<writing-tests-disabling,disable>> a test class or test method; analogous to JUnit 4's `@Ignore`. Such annotations are not inherited.
@@ -2712,19 +2712,19 @@ include::{testRelease21Dir}/example/ParameterizedLifecycleDemo.java[tags=example
 <3> Validation and cleanup of the argument _after_ each invocation of the parameterized
     class
 
-[[writing-tests-container-templates]]
-=== Container Templates
+[[writing-tests-class-templates]]
+=== Class Templates
 
-A `{ContainerTemplate}` class is not a regular test class but rather a template for the
-contained test cases. As such, it is designed to be invoked multiple times depending on
-invocation contexts returned by the registered providers. Thus, it must be used in
-conjunction with a registered `{ContainerTemplateInvocationContextProvider}` extension.
-Each invocation of a container template class behaves like the execution of a regular test
-class with full support for the same lifecycle callbacks and extensions. Please refer to
-<<extensions-container-templates>> for usage examples.
+A `{ClassTemplate}` is not a regular test class but rather a template for the contained
+test cases. As such, it is designed to be invoked multiple times depending on invocation
+contexts returned by the registered providers. Thus, it must be used in conjunction with a
+registered `{ClassTemplateInvocationContextProvider}` extension.
+Each invocation of a class template behaves like the execution of a regular test class
+with full support for the same lifecycle callbacks and extensions. Please refer to
+<<extensions-class-templates>> for usage examples.
 
 NOTE: <<writing-tests-parameterized-tests, Parameterized Classes>> are a built-in
-specialization of container templates.
+specialization of class templates.
 
 [[writing-tests-test-templates]]
 === Test Templates

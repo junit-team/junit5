@@ -51,17 +51,17 @@ repository on GitHub.
 [[release-notes-5.13.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New `@ContainerTemplate` annotation and `ContainerTemplateInvocationContextProvider` API
-  that allow declaring a top-level or `@Nested` test class as a template to be invoked
-  multiple times. This may be used, for example, to inject different parameters to be used
-  by all tests in the container template class or to set up each invocation of the
-  container template differently. Please refer to the
-  <<../user-guide/index.adoc#writing-tests-container-templates, User Guide>> for details.
-* New `@ParameterizedClass` support that builds on `@ContainerTemplate` and allows
-  declaring a top-level or `@Nested` test class as a parameterized test class to be
-  invoked multiple times with different arguments. The same `@...Source` annotations
-  supported with `@ParameterizedTest` may be used to provide arguments via constructor or
-  field injection. Please refer to the
+* New `@ClassTemplate` annotation and `ClassTemplateInvocationContextProvider` API that
+  allow declaring a top-level or `@Nested` test class as a template to be invoked multiple
+  times. This may be used, for example, to inject different parameters to be used by all
+  tests in the class template or to set up each invocation of the class template
+  differently. Please refer to the
+  <<../user-guide/index.adoc#writing-tests-class-templates, User Guide>> for details.
+* New `@ParameterizedClass` support that builds on `@ClassTemplate` and allows declaring a
+  top-level or `@Nested` test class as a parameterized test class to be invoked multiple
+  times with different arguments. The same `@...Source` annotations supported with
+  `@ParameterizedTest` may be used to provide arguments via constructor or field
+  injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
 * Introduce additional `@ParameterizedClass`-specific
   `@BeforeArgumentSet`/`@AfterArgumentSet` lifecycle methods that are invoked once
@@ -71,10 +71,9 @@ repository on GitHub.
   updated documentation in the
   <<../user-guide/index.adoc#writing-tests-display-name-generator, User Guide>> for an
   example.
-* New `BeforeContainerTemplateInvocationCallback` and
-  `AfterContainerTemplateInvocationCallback` extension callback interfaces allow
-  implementing extensions that are invoked before and after each invocation of a container
-  template.
+* New `BeforeClassTemplateInvocationCallback` and `AfterClassTemplateInvocationCallback`
+  extension callback interfaces allow implementing extensions that are invoked before and
+  after each invocation of a class template.
 * New `TestTemplateInvocationContext.prepareInvocation(ExtensionContext)` callback method
   which allows extensions to prepare the `ExtensionContext` before the test template
   method is invoked. This may be used, for example, to store entries in the

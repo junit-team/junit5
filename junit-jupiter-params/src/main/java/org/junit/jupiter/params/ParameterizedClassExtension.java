@@ -20,8 +20,8 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
@@ -34,8 +34,8 @@ import org.junit.platform.commons.PreconditionViolationException;
 /**
  * @since 5.13
  */
-class ParameterizedClassExtension extends ParameterizedInvocationContextProvider<ContainerTemplateInvocationContext>
-		implements ContainerTemplateInvocationContextProvider, ParameterResolver {
+class ParameterizedClassExtension extends ParameterizedInvocationContextProvider<ClassTemplateInvocationContext>
+		implements ClassTemplateInvocationContextProvider, ParameterResolver {
 
 	private static final String DECLARATION_CONTEXT_KEY = "context";
 
@@ -64,19 +64,19 @@ class ParameterizedClassExtension extends ParameterizedInvocationContextProvider
 	}
 
 	@Override
-	public boolean supportsContainerTemplate(ExtensionContext extensionContext) {
+	public boolean supportsClassTemplate(ExtensionContext extensionContext) {
 		return validateAndStoreClassContext(extensionContext);
 	}
 
 	@Override
-	public Stream<? extends ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+	public Stream<? extends ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 			ExtensionContext extensionContext) {
 
 		return provideInvocationContexts(extensionContext, getDeclarationContext(extensionContext));
 	}
 
 	@Override
-	public boolean mayReturnZeroContainerTemplateInvocationContexts(ExtensionContext extensionContext) {
+	public boolean mayReturnZeroClassTemplateInvocationContexts(ExtensionContext extensionContext) {
 		return getDeclarationContext(extensionContext).isAllowingZeroInvocations();
 	}
 

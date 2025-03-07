@@ -18,21 +18,21 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 /**
  * @since 5.13
  */
-class ContainerTemplateConstructorParameterResolver extends ParameterizedInvocationParameterResolver {
+class ClassTemplateConstructorParameterResolver extends ParameterizedInvocationParameterResolver {
 
-	private final Class<?> containerTemplateClass;
+	private final Class<?> classTemplateClass;
 
-	ContainerTemplateConstructorParameterResolver(ParameterizedClassContext classContext,
-			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
+	ClassTemplateConstructorParameterResolver(ParameterizedClassContext classContext, EvaluatedArgumentSet arguments,
+			int invocationIndex, ResolutionCache resolutionCache) {
 		super(classContext.getResolverFacade(), arguments, invocationIndex, resolutionCache);
-		this.containerTemplateClass = classContext.getAnnotatedElement();
+		this.classTemplateClass = classContext.getAnnotatedElement();
 	}
 
 	@Override
 	protected boolean isSupportedOnConstructorOrMethod(Executable declaringExecutable,
 			ExtensionContext extensionContext) {
 		return declaringExecutable instanceof Constructor //
-				&& this.containerTemplateClass.equals(declaringExecutable.getDeclaringClass());
+				&& this.classTemplateClass.equals(declaringExecutable.getDeclaringClass());
 	}
 
 }

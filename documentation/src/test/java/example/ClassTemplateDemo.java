@@ -19,21 +19,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import example.ContainerTemplateDemo.MyContainerTemplateInvocationContextProvider;
-
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
 // tag::user_guide[]
-@ContainerTemplate
-@ExtendWith(MyContainerTemplateInvocationContextProvider.class)
-class ContainerTemplateDemo {
+@ClassTemplate
+@ExtendWith(ClassTemplateDemo.MyClassTemplateInvocationContextProvider.class)
+class ClassTemplateDemo {
 
 	static final List<String> WELL_KNOWN_FRUITS
 	// tag::custom_line_break[]
@@ -54,25 +52,25 @@ class ContainerTemplateDemo {
 	// end::user_guide[]
 	static
 	// tag::user_guide[]
-	public class MyContainerTemplateInvocationContextProvider
+	public class MyClassTemplateInvocationContextProvider
 			// tag::custom_line_break[]
-			implements ContainerTemplateInvocationContextProvider {
+			implements ClassTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
+		public boolean supportsClassTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<ContainerTemplateInvocationContext>
+		public Stream<ClassTemplateInvocationContext>
 				// tag::custom_line_break[]
-				provideContainerTemplateInvocationContexts(ExtensionContext context) {
+				provideClassTemplateInvocationContexts(ExtensionContext context) {
 
 			return Stream.of(invocationContext("apple"), invocationContext("banana"));
 		}
 
-		private ContainerTemplateInvocationContext invocationContext(String parameter) {
-			return new ContainerTemplateInvocationContext() {
+		private ClassTemplateInvocationContext invocationContext(String parameter) {
+			return new ClassTemplateInvocationContext() {
 				@Override
 				public String getDisplayName(int invocationIndex) {
 					return parameter;
@@ -88,7 +86,7 @@ class ContainerTemplateDemo {
 						public void postProcessTestInstance(
 								// tag::custom_line_break[]
 								Object testInstance, ExtensionContext context) {
-							((ContainerTemplateDemo) testInstance).fruit = parameter;
+							((ClassTemplateDemo) testInstance).fruit = parameter;
 						}
 					});
 				}

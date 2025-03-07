@@ -10,14 +10,14 @@
 
 package org.junit.jupiter.params;
 
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 /**
  * @since 5.13
  */
 class BeforeArgumentSetMethodInvoker extends AbstractArgumentSetLifecycleMethodInvoker
-		implements BeforeContainerTemplateInvocationCallback {
+		implements BeforeClassTemplateInvocationCallback {
 
 	BeforeArgumentSetMethodInvoker(ParameterizedClassContext declarationContext, EvaluatedArgumentSet arguments,
 			int invocationIndex, ResolutionCache resolutionCache, ArgumentSetLifecycleMethod lifecycleMethod) {
@@ -25,7 +25,7 @@ class BeforeArgumentSetMethodInvoker extends AbstractArgumentSetLifecycleMethodI
 	}
 
 	@Override
-	public void beforeContainerTemplateInvocation(ExtensionContext context) {
+	public void beforeClassTemplateInvocation(ExtensionContext context) {
 		invoke(context);
 	}
 

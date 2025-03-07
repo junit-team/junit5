@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
@@ -188,12 +188,12 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void addSharedResourcesViaAnnotationValueAndProvidersForContainerTemplate() {
+	void addSharedResourcesViaAnnotationValueAndProvidersForClassTemplate() {
 		var engineDescriptor = discoverTests(
-			selectClass(SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase.class));
+			selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class));
 		engineDescriptor.accept(TestDescriptor::prune);
 
-		var containerTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
+		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
 
 		var expectedResources = List.of( //
 			new ExclusiveResource("a1", LockMode.READ_WRITE), //
@@ -208,17 +208,17 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			new ExclusiveResource("d2", LockMode.READ) //
 		);
 
-		assertThat(containerTemplateTestDescriptor.getExclusiveResources()) //
+		assertThat(classTemplateTestDescriptor.getExclusiveResources()) //
 				.containsExactlyInAnyOrderElementsOf(expectedResources);
 	}
 
 	@Test
-	void addSharedResourcesViaAnnotationValueAndProvidersForContainerTemplateInvocation() {
-		var engineDescriptor = discoverTests(selectIteration(
-			selectClass(SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase.class), 0));
+	void addSharedResourcesViaAnnotationValueAndProvidersForClassTemplateInvocation() {
+		var engineDescriptor = discoverTests(
+			selectIteration(selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class), 0));
 		engineDescriptor.accept(TestDescriptor::prune);
 
-		var containerTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
+		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
 
 		var expectedResources = List.of( //
 			new ExclusiveResource("a1", LockMode.READ_WRITE), //
@@ -233,17 +233,17 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			new ExclusiveResource("d2", LockMode.READ) //
 		);
 
-		assertThat(containerTemplateTestDescriptor.getExclusiveResources()) //
+		assertThat(classTemplateTestDescriptor.getExclusiveResources()) //
 				.containsExactlyInAnyOrderElementsOf(expectedResources);
 	}
 
 	@Test
-	void addSharedResourcesViaAnnotationValueAndProvidersForMethodInContainerTemplate() {
+	void addSharedResourcesViaAnnotationValueAndProvidersForMethodInClassTemplate() {
 		var engineDescriptor = discoverTests(
-			selectMethod(SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase.class, "test"));
+			selectMethod(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class, "test"));
 		engineDescriptor.accept(TestDescriptor::prune);
 
-		var containerTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
+		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
 
 		var expectedResources = List.of( //
 			new ExclusiveResource("a1", LockMode.READ_WRITE), //
@@ -253,7 +253,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 			new ExclusiveResource("b2", LockMode.READ) //
 		);
 
-		assertThat(containerTemplateTestDescriptor.getExclusiveResources()) //
+		assertThat(classTemplateTestDescriptor.getExclusiveResources()) //
 				.containsExactlyInAnyOrderElementsOf(expectedResources);
 	}
 
@@ -601,17 +601,17 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ResourceLock( //
 			value = "a1", //
-			providers = SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase.FirstClassLevelProvider.class //
+			providers = SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.FirstClassLevelProvider.class //
 	)
 	@ResourceLock( //
 			value = "a2", //
 			target = ResourceLockTarget.CHILDREN, //
-			providers = SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase.SecondClassLevelProvider.class //
+			providers = SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.SecondClassLevelProvider.class //
 	)
-	static class SharedResourcesViaAnnotationValueAndProvidersContainerTemplateTestCase {
+	static class SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase {
 
 		@Test
 		@ResourceLock(value = "b1", mode = ResourceAccessMode.READ)
@@ -628,9 +628,9 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Nested
-		@ContainerTemplate
+		@ClassTemplate
 		@ResourceLock(value = "d1", target = ResourceLockTarget.CHILDREN)
-		class NestedContainerTemplate {
+		class NestedClassTemplate {
 			@Test
 			@ResourceLock(value = "d2", mode = ResourceAccessMode.READ)
 			void test() {
