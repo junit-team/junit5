@@ -106,7 +106,7 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor im
 				getTestMethod()));
 	}
 
-	private List<Class<?>> getEnclosingTestClasses() {
+	List<Class<?>> getEnclosingTestClasses() {
 		return getParent() //
 				.filter(ClassBasedTestDescriptor.class::isInstance) //
 				.map(ClassBasedTestDescriptor.class::cast) //
