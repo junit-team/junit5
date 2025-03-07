@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -43,6 +44,10 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>The set of enum constants can be restricted via the {@link #names},
  * {@link #from}, {@link #to} and {@link #mode} attributes.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.ParameterizedClass
@@ -51,6 +56,7 @@ import org.junit.platform.commons.util.Preconditions;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(EnumSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EnumArgumentsProvider.class)

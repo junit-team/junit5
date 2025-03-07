@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -48,8 +49,7 @@ import org.junit.platform.commons.annotation.Testable;
  *
  * <h2>Inheritance</h2>
  *
- * <p>The {@code @ContainerTemplate} annotation is not inherited to subclasses
- * but needs to be declared on each container template class individually.
+ * <p>This annotation is inherited to subclasses.
  *
  * @since 5.13
  * @see TestTemplate
@@ -61,6 +61,7 @@ import org.junit.platform.commons.annotation.Testable;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = EXPERIMENTAL, since = "5.13")
 @Testable
 public @interface ContainerTemplate {

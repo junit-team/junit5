@@ -83,10 +83,12 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
@@ -268,6 +270,19 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, event(finishedWithFailure(message(
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedClass"))));
+		}
+
+		@Test
+		void annotationsAreInherited() {
+			var results = executeTestsForClass(ConcreteInheritanceTestCase.class);
+
+			int numArgumentSets = 13;
+			var numContainers = numArgumentSets * 3; // once for outer invocation, once for nested class, once for inner invocation
+			var numTests = numArgumentSets * 2; // once for outer test, once for inner test
+			results.containerEvents() //
+					.assertStatistics(stats -> stats.started(numContainers + 2).succeeded(numContainers + 2));
+			results.testEvents() //
+					.assertStatistics(stats -> stats.started(numTests).succeeded(numTests));
 		}
 	}
 
@@ -2067,6 +2082,52 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		void test() {
 			fail("should not be called");
 		}
+	}
+
+	@ParameterizedClass // argument sets: 13 = 2 + 4 + 1 + 1 + 1 + 1 + 1 + 1 + 1
+	@ArgumentsSource(CustomArgumentsProvider.class) // 2
+	@CsvFileSource(resources = "two-column.csv") // 4
+	@CsvSource("csv") // 1
+	@EmptySource // 1
+	@EnumSource(EnumOne.class) // 1
+	@FieldSource("field") // 1
+	@MethodSource("method") // 1
+	@NullSource // 1
+	@ValueSource(strings = "value") // 1
+	abstract static class BaseInheritanceTestCase {
+
+		static final List<String> field = List.of("field");
+
+		static List<String> method() {
+			return List.of("method");
+		}
+
+		@Parameter
+		@ConvertWith(ToStringConverter.class) // For @EnumSource
+		String value;
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		@ParameterizedClass
+		@ValueSource(ints = 1)
+		class Inner {
+			@Test
+			void test() {
+			}
+		}
+
+		static class ToStringConverter extends SimpleArgumentConverter {
+			@Override
+			protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
+				return source == null ? null : String.valueOf(source);
+			}
+		}
+	}
+
+	static class ConcreteInheritanceTestCase extends BaseInheritanceTestCase {
 	}
 
 }
