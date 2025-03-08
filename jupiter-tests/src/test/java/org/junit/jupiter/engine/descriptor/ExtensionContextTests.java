@@ -421,7 +421,7 @@ public class ExtensionContextTests {
 			named("class", (JupiterConfiguration configuration) -> {
 				var classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 				var classTestDescriptor = new ClassTestDescriptor(classUniqueId, testClass, configuration);
-				return new ClassExtensionContext(null, null, classTestDescriptor,PER_METHOD, configuration,
+				return new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD, configuration,
 					extensionRegistry, launcherStoreFacade, null);
 			}), //
 			named("method", (JupiterConfiguration configuration) -> {
