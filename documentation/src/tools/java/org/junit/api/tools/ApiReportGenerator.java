@@ -133,6 +133,7 @@ class ApiReportGenerator {
 	private static ScanResult scanClasspath(String[] packages) {
 		var classGraph = new ClassGraph() //
 				.acceptPackages(packages) //
+				.rejectPackages("*.shadow.*") //
 				.disableNestedJarScanning() //
 				.enableClassInfo() //
 				.enableMethodInfo() //
