@@ -41,7 +41,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TimeoutInvocationFactoryTests {
 
 	@Spy
-	private final Store store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null),
+	private final Store store = new NamespaceAwareStore<>(new NamespacedHierarchicalStore<>(null),
 		ExtensionContext.Namespace.create(TimeoutInvocationFactoryTests.class));
 
 	@Mock
