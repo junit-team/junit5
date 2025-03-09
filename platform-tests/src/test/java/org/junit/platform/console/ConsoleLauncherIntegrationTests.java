@@ -14,10 +14,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.console.options.StdStreamTestCase;
 
 /**
  * @since 1.0
@@ -92,4 +102,35 @@ class ConsoleLauncherIntegrationTests {
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
 	}
 
+	private static Stream<Arguments> redirectStreamParams() {
+		return Stream.of(Arguments.of("--redirect-stdout", StdStreamTestCase.getStdoutOutputFileSize()),
+			Arguments.of("--redirect-stderr", StdStreamTestCase.getStderrOutputFileSize()));
+	}
+
+	@ParameterizedTest
+	@MethodSource("redirectStreamParams")
+	void executeWithRedirectedStdStream(String redirectedStream, int outputFileSize, @TempDir Path tempDir)
+			throws IOException {
+		Path outputFile = tempDir.resolve("output.txt");
+		var line = String.format("execute -e junit-jupiter --select-class %s %s %s", StdStreamTestCase.class.getName(),
+			redirectedStream, outputFile);
+		var args = line.split(" ");
+		new ConsoleLauncherWrapper().execute(args);
+
+		assertTrue(Files.exists(outputFile), "File does not exist.");
+		assertEquals(outputFileSize, Files.size(outputFile), "Invalid file size.");
+	}
+
+	@Test
+	void executeWithRedirectedStdStreamsToSameFile(@TempDir Path tempDir) throws IOException {
+		Path outputFile = tempDir.resolve("output.txt");
+		var line = String.format("execute -e junit-jupiter --select-class %s --redirect-stdout %s --redirect-stderr %s",
+			StdStreamTestCase.class.getName(), outputFile, outputFile);
+		var args = line.split(" ");
+		new ConsoleLauncherWrapper().execute(args);
+
+		assertTrue(Files.exists(outputFile), "File does not exist.");
+		assertEquals(StdStreamTestCase.getStdoutOutputFileSize() + StdStreamTestCase.getStderrOutputFileSize(),
+			Files.size(outputFile), "Invalid file size.");
+	}
 }
