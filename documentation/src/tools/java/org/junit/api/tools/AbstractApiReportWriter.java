@@ -11,10 +11,13 @@
 package org.junit.api.tools;
 
 import static java.lang.String.format;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.apiguardian.api.API.Status;
 
@@ -49,12 +52,22 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	protected void printDeclarationSection(Set<Status> statuses, Status status, List<Declaration> declarations,
 			PrintWriter out) {
 		printDeclarationSectionHeader(statuses, status, declarations, out);
-		if (!declarations.isEmpty()) {
-			printDeclarationTableHeader(out);
-			declarations.forEach(it -> printDeclarationTableRow(it, out));
-			printDeclarationTableFooter(out);
-			out.println();
-		}
+		declarations.stream() //
+				.collect(groupingBy(Declaration::moduleName, TreeMap::new, toList())) //
+				.forEach((moduleName, moduleDeclarations) -> {
+					out.println(h4("Module " + moduleName));
+					out.println();
+					moduleDeclarations.stream() //
+							.collect(groupingBy(Declaration::packageName, TreeMap::new, toList())) //
+							.forEach((packageName, packageDeclarations) -> {
+								out.println(h5("Package " + packageName));
+								out.println();
+								printDeclarationTableHeader(out);
+								packageDeclarations.forEach(it -> printDeclarationTableRow(it, out));
+								printDeclarationTableFooter(out);
+								out.println();
+							});
+				});
 	}
 
 	protected void printDeclarationSectionHeader(Set<Status> statuses, Status status, List<Declaration> declarations,
@@ -73,6 +86,10 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 	protected abstract String h1(String header);
 
 	protected abstract String h2(String header);
+
+	protected abstract String h4(String header);
+
+	protected abstract String h5(String header);
 
 	protected abstract String code(String element);
 
