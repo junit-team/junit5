@@ -16,10 +16,9 @@ import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 public class NamespacedHierarchicalStoreProviders {
-	private static final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
 
 	public static NamespacedHierarchicalStore<Namespace> dummyNamespacedHierarchicalStore() {
-		return new NamespacedHierarchicalStore<>(store, closeAutoCloseables());
+		return new NamespacedHierarchicalStore<>(new NamespacedHierarchicalStore<>(null), closeAutoCloseables());
 	}
 
 	public static NamespacedHierarchicalStore<Namespace> dummyNamespacedHierarchicalStoreWithNoParent() {
