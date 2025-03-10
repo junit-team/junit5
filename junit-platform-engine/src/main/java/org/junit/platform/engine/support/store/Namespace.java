@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.support.store;
 
-import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 

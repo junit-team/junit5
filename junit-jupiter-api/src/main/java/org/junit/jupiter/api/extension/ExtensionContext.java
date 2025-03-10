@@ -747,21 +747,7 @@ public interface ExtensionContext {
 		public static Namespace create(Object... parts) {
 			Preconditions.notEmpty(parts, "parts array must not be null or empty");
 			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
-			return create(Arrays.asList(parts));
-		}
-
-		/**
-		 * Create a namespace which restricts access to data to all extensions
-		 * which use the same sequence of {@code parts} for creating a namespace.
-		 *
-		 * <p>The order of the {@code parts} is significant.
-		 *
-		 * <p>Internally the {@code parts} are compared using {@link Object#equals(Object)}.
-		 */
-		public static Namespace create(List<Object> objects) {
-			Preconditions.notEmpty(objects, "objects list must not be null or empty");
-			Preconditions.containsNoNullElements(objects, "individual objects must not be null");
-			return new Namespace(unmodifiableList(objects));
+			return new Namespace(new ArrayList<>(Arrays.asList(parts)));
 		}
 
 		private final List<Object> parts;
