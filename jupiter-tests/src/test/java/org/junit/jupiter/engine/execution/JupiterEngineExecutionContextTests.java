@@ -20,6 +20,7 @@ import static org.mockito.Mockito.withSettings;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.engine.EngineExecutionListener;
 
@@ -34,8 +35,10 @@ class JupiterEngineExecutionContextTests {
 
 	private final EngineExecutionListener engineExecutionListener = mock();
 
+	private final LauncherStoreFacade launcherStoreFacade = mock();
+
 	private final JupiterEngineExecutionContext originalContext = new JupiterEngineExecutionContext(
-		engineExecutionListener, configuration);
+		engineExecutionListener, configuration, launcherStoreFacade);
 
 	@Test
 	void executionListenerIsHandedOnWhenContextIsExtended() {

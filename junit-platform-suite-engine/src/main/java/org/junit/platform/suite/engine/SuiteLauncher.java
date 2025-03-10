@@ -19,6 +19,8 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase;
@@ -58,9 +60,10 @@ class SuiteLauncher {
 	}
 
 	TestExecutionSummary execute(LauncherDiscoveryResult discoveryResult,
-			EngineExecutionListener parentEngineExecutionListener) {
+			EngineExecutionListener parentEngineExecutionListener,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		SummaryGeneratingListener listener = new SummaryGeneratingListener();
-		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener);
+		executionOrchestrator.execute(discoveryResult, parentEngineExecutionListener, listener, requestLevelStore);
 		return listener.getSummary();
 	}
 

@@ -10,7 +10,9 @@
 
 package org.junit.jupiter.api.extension;
 
+import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -446,6 +448,49 @@ public interface ExtensionContext {
 	Store getStore(Namespace namespace);
 
 	/**
+	 * Returns the store for session-level data.
+	 *
+	 * <p>This store may be used to store and retrieve data that is scoped to
+	 * the current {@code LauncherSession}. Any data that is stored in this
+	 * store will be available throughout the entire session. Therefore, it may
+	 * be used to inject values from registered {@code LauncherSessionListener}
+	 * implementations, to share data across multiple executions of the Jupiter
+	 * engine within the same session, or even to share data across multiple
+	 * engines.
+	 *
+	 * <p>Contrary to the regular {@code Store} instances returned by
+	 * {@link #getStore(Namespace)}, all stored values that are instances of
+	 * {@link AutoCloseable} are notified by invoking their {@code close()}
+	 * methods when the session is closed.
+	 *
+	 * @return the store for session-level data
+	 * @since 5.13
+	 * @see org.junit.platform.launcher.LauncherSession
+	 * @see org.junit.platform.launcher.LauncherSessionListener
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	Store getSessionLevelStore(Namespace namespace);
+
+	/**
+	 * Returns the store for request-level data.
+	 *
+	 * <p>This store may be used to store and retrieve data that is scoped to
+	 * the current {@code ExecutionRequest}. Any data that is stored in this
+	 * store will be available for the duration of the current request.
+	 * Therefore, it may be used to share data across multiple engines.
+	 *
+	 * <p>Contrary to the regular {@code Store} instances returned by
+	 * {@link #getStore(Namespace)}, all stored values that are instances of
+	 * {@link AutoCloseable} are notified by invoking their {@code close()}
+	 * methods when the execution request is completed.
+	 *
+	 * @return the store for request-level data
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	Store getRequestLevelStore(Namespace namespace);
+
+	/**
 	 * Get the {@link ExecutionMode} associated with the current test or container.
 	 *
 	 * @return the {@code ExecutionMode} of the test; never {@code null}
@@ -770,6 +815,11 @@ public interface ExtensionContext {
 			newParts.addAll(this.parts);
 			Collections.addAll(newParts, parts);
 			return new Namespace(newParts);
+		}
+
+		@API(status = INTERNAL, since = "5.13")
+		public List<Object> getParts() {
+			return unmodifiableList(parts);
 		}
 	}
 
