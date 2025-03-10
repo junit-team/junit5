@@ -67,14 +67,17 @@ import org.junit.jupiter.engine.extension.ExtensionRegistrar;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -84,7 +87,7 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  */
 @API(status = INTERNAL, since = "5.5")
 public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
-		implements ResourceLockAware, TestClassAware {
+		implements ResourceLockAware, TestClassAware, Validatable {
 
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
@@ -95,8 +98,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 	private ExecutionMode defaultChildExecutionMode;
 	private TestInstanceFactory testInstanceFactory;
-	private List<Method> beforeAllMethods;
-	private List<Method> afterAllMethods;
+	private final List<Method> beforeAllMethods;
+	private final List<Method> afterAllMethods;
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
 			JupiterConfiguration configuration) {
@@ -107,6 +110,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 	}
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
@@ -118,6 +123,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 		this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 		this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
+		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
+		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 	}
 
 	// --- TestClassAware ------------------------------------------------------
@@ -137,6 +144,22 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public final String getLegacyReportingName() {
 		return this.testClass.getName();
+	}
+
+	// --- Validatable ---------------------------------------------------------
+
+	@Override
+	public void validate(IssueReporter reporter) {
+		beforeAllMethods.stream() //
+				.filter(ModifierSupport::isPrivate) //
+				.forEach(method -> reporter.reportIssue(Severity.DEPRECATION,
+					String.format("@BeforeAll method [%s] should not be private.", method.toGenericString()),
+					b -> b.source(MethodSource.from(method))));
+		afterAllMethods.stream() //
+				.filter(ModifierSupport::isPrivate) //
+				.forEach(method -> reporter.reportIssue(Severity.DEPRECATION,
+					String.format("@AfterAll method [%s] should not be private.", method.toGenericString()),
+					b -> b.source(MethodSource.from(method))));
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -177,9 +200,6 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		if (this.testInstanceFactory == null) {
 			registerExtensionsFromConstructorParameters(registry, this.testClass);
 		}
-
-		this.beforeAllMethods = findBeforeAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(this.testClass, this.lifecycle == Lifecycle.PER_METHOD);
 
 		this.beforeAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also

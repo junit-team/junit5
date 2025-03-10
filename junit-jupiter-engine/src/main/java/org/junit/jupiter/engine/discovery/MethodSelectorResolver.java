@@ -41,10 +41,10 @@ import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryIssue;
+import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -52,6 +52,7 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 /**
@@ -59,7 +60,6 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
  */
 class MethodSelectorResolver implements SelectorResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodSelectorResolver.class);
 	private static final MethodFinder methodFinder = new MethodFinder();
 	private static final Predicate<Class<?>> testClassPredicate = new IsTestClassWithTests().or(
 		new IsNestedTestClass());
@@ -72,17 +72,17 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(MethodSelector selector, Context context) {
-		return resolve(context, emptyList(), selector.getJavaClass(), selector::getJavaMethod, Match::exact);
+		return resolve(selector, context, emptyList(), selector.getJavaClass(), selector::getJavaMethod, Match::exact);
 	}
 
 	@Override
 	public Resolution resolve(NestedMethodSelector selector, Context context) {
-		return resolve(context, selector.getEnclosingClasses(), selector.getNestedClass(), selector::getMethod,
-			Match::exact);
+		return resolve(selector, context, selector.getEnclosingClasses(), selector.getNestedClass(),
+			selector::getMethod, Match::exact);
 	}
 
-	private Resolution resolve(Context context, List<Class<?>> enclosingClasses, Class<?> testClass,
-			Supplier<Method> methodSupplier,
+	private Resolution resolve(DiscoverySelector selector, Context context, List<Class<?>> enclosingClasses,
+			Class<?> testClass, Supplier<Method> methodSupplier,
 			BiFunction<TestDescriptor, Supplier<Set<? extends DiscoverySelector>>, Match> matchFactory) {
 		if (!testClassPredicate.test(testClass)) {
 			return unresolved();
@@ -97,14 +97,15 @@ class MethodSelectorResolver implements SelectorResolver {
 				.collect(toSet());
 		// @formatter:on
 		if (matches.size() > 1) {
-			logger.warn(() -> {
-				Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
-				return String.format(
-					"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
-							+ "This is typically the result of annotating a method with multiple competing annotations "
-							+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
-					method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
-			});
+			Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
+			String message = String.format(
+				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. " //
+						+ "This is typically the result of annotating a method with multiple competing annotations " //
+						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
+				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
+			context.reportIssue(EngineDiscoveryIssue.builder(Severity.NOTICE, message) //
+					.selector(selector) //
+					.source(MethodSource.from(testClass, method)));
 		}
 		return matches.isEmpty() ? unresolved() : matches(matches);
 	}
@@ -139,7 +140,7 @@ class MethodSelectorResolver implements SelectorResolver {
 	public Resolution resolve(IterationSelector selector, Context context) {
 		if (selector.getParentSelector() instanceof MethodSelector) {
 			MethodSelector methodSelector = (MethodSelector) selector.getParentSelector();
-			return resolve(context, emptyList(), methodSelector.getJavaClass(), methodSelector::getJavaMethod,
+			return resolve(selector, context, emptyList(), methodSelector.getJavaClass(), methodSelector::getJavaMethod,
 				(testDescriptor, childSelectorsSupplier) -> {
 					if (testDescriptor instanceof Filterable) {
 						Filterable filterable = (Filterable) testDescriptor;
