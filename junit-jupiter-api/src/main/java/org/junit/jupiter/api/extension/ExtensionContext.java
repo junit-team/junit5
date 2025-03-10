@@ -434,8 +434,15 @@ public interface ExtensionContext {
 	/**
 	 * Returns the store for request-level data.
 	 *
-	 * <p>This store is used to store data that is scoped to the request level.
-	 * The data stored in this store will be available only for the duration of the current request.
+	 * <p>This store may be used to store and retrieve data that is scoped to
+	 * the current {@code ExecutionRequest}. Any data that is stored in this
+	 * store will be available for the duration of the current request.
+	 * Therefore, it may be used to share data across multiple engines.
+	 *
+	 * <p>Contrary to the regular {@code Store} instances returned by
+	 * {@link #getStore(Namespace)}, all stored values that are instances of
+	 * {@link AutoCloseable} are notified by invoking their {@code close()}
+	 * methods when the execution request is completed.
 	 *
 	 * @return the store for request-level data
 	 * @since 5.13
