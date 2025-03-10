@@ -812,6 +812,27 @@ You can pass a real parameter with an initial `@` character by escaping it with 
 additional `@` symbol. For example, `@@somearg` will become `@somearg` and will not be
 subject to expansion.
 
+[[running-tests-console-launcher-redirecting-stdout-and-stderr]]
+==== Redirecting Standard Output/Error to Files
+
+You can redirect the `System.out` (stdout) and `System.err` (stderr) output streams to
+files using the `--redirect-stdout` and `--redirect-stderr` options:
+
+[source,console,subs=attributes+]
+----
+$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+  --redirect-stdout=stdout.txt \
+  --redirect-stderr=stderr.txt
+----
+
+[NOTE]
+====
+If the `--redirect-stdout` and `--redirect-stderr` arguments point to the same file, both
+output streams will be redirected to that file.
+
+The default charset is used for writing to the files.
+====
+
 [[running-tests-console-launcher-color-customization]]
 ==== Color Customization
 
