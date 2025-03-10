@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.store;
 
+import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -41,7 +42,21 @@ public class Namespace {
 	public static Namespace create(Object... parts) {
 		Preconditions.notEmpty(parts, "parts array must not be null or empty");
 		Preconditions.containsNoNullElements(parts, "individual parts must not be null");
-		return new Namespace(new ArrayList<>(Arrays.asList(parts)));
+		return create(Arrays.asList(parts));
+	}
+
+	/**
+	 * Create a namespace which restricts access to data to all extensions
+	 * which use the same sequence of {@code objects} for creating a namespace.
+	 *
+	 * <p>The order of the {@code objects} is significant.
+	 *
+	 * <p>Internally the {@code objects} are compared using {@link Object#equals(Object)}.
+	 */
+	public static Namespace create(List<Object> objects) {
+		Preconditions.notEmpty(objects, "objects list must not be null or empty");
+		Preconditions.containsNoNullElements(objects, "individual objects must not be null");
+		return new Namespace(unmodifiableList(objects));
 	}
 
 	private final List<Object> parts;
