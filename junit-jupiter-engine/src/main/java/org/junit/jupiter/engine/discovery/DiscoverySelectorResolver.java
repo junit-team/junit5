@@ -40,8 +40,9 @@ public class DiscoverySelectorResolver {
 			.addClassContainerSelectorResolver(new IsTestClassWithTests()) //
 			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx))) //
 			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx))) //
-			.addTestDescriptorVisitor(ctx -> new ClassOrderingVisitor(getConfiguration(ctx))) //
-			.addTestDescriptorVisitor(ctx -> new MethodOrderingVisitor(getConfiguration(ctx))) //
+			.addTestDescriptorVisitor(ctx -> new ClassOrderingVisitor(ctx.getIssueReporter(), getConfiguration(ctx))) //
+			.addTestDescriptorVisitor(ctx -> new MethodOrderingVisitor(ctx.getIssueReporter(), getConfiguration(ctx))) //
+			.addTestDescriptorVisitor(ctx -> new ValidatingVisitor(ctx.getIssueReporter())) //
 			.addTestDescriptorVisitor(ctx -> descriptor -> {
 				if (descriptor instanceof JupiterTestDescriptor) {
 					((JupiterTestDescriptor) descriptor).prunePriorToFiltering();
