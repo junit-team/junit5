@@ -30,4 +30,5 @@ public class StdStreamTestCase {
 		System.out.print(STDOUT_DATA);
 		System.err.print(STDERR_DATA);
 	}
+
 }

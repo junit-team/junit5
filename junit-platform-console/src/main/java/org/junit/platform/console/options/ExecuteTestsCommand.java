@@ -106,4 +106,5 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 			return reportsDir == null ? Optional.ofNullable(reportsDir2) : Optional.of(reportsDir);
 		}
 	}
+
 }

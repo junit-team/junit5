@@ -23,12 +23,12 @@ import org.apiguardian.api.API;
 public class CommandResult<T> {
 
 	/**
-	 * Exit code indicating successful execution
+	 * Exit code indicating successful execution.
 	 */
 	public static final int SUCCESS = 0;
 
 	/**
-	 * Exit code indicating any failure(s)
+	 * Exit code indicating any failure(s).
 	 */
 	protected static final int FAILURE = -1;
 
@@ -53,10 +53,11 @@ public class CommandResult<T> {
 	}
 
 	public int getExitCode() {
-		return exitCode;
+		return this.exitCode;
 	}
 
 	public Optional<T> getValue() {
-		return Optional.ofNullable(value);
+		return Optional.ofNullable(this.value);
 	}
+
 }

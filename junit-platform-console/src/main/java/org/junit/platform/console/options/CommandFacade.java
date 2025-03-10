@@ -53,4 +53,5 @@ public class CommandFacade {
 			version.map(it -> it.endsWith("-SNAPSHOT") ? "snapshot" : it).orElse("current"));
 		return new MainCommand(consoleTestExecutorFactory).run(args, outputStreamConfig);
 	}
+
 }

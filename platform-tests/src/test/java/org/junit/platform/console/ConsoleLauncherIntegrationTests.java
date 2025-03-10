@@ -15,17 +15,18 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.console.options.StdStreamTestCase;
 
@@ -50,8 +51,8 @@ class ConsoleLauncherIntegrationTests {
 			"execute -e junit-jupiter -p org.junit.platform.console.subpackage" //
 	})
 	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern(
-			final String line) {
-		String[] args = line.split(" ");
+			String line) {
+		var args = line.split(" ");
 		assertEquals(9, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
@@ -62,8 +63,8 @@ class ConsoleLauncherIntegrationTests {
 			"execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
 					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*" //
 	})
-	void executeWithExcludeClassnameOptionExcludesClasses(final String line) {
-		String[] args = line.split(" ");
+	void executeWithExcludeClassnameOptionExcludesClasses(String line) {
+		var args = line.split(" ");
 		var result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
@@ -90,28 +91,24 @@ class ConsoleLauncherIntegrationTests {
 			"-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base", //
 			"execute -e junit-jupiter -o java.base", "execute -e junit-jupiter --select-module java.base" //
 	})
-	void executeSelectingModuleNames(final String line) {
-		String[] args1 = line.split(" ");
-		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
+	void executeSelectingModuleNames(String line) {
+		var args = line.split(" ");
+		assertEquals(0, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "-e junit-jupiter --scan-modules", "execute -e junit-jupiter --scan-modules" })
-	void executeScanModules(final String line) {
-		String[] args1 = line.split(" ");
-		assertEquals(0, new ConsoleLauncherWrapper().execute(args1).getTestsFoundCount());
-	}
-
-	private static Stream<Arguments> redirectStreamParams() {
-		return Stream.of(Arguments.of("--redirect-stdout", StdStreamTestCase.getStdoutOutputFileSize()),
-			Arguments.of("--redirect-stderr", StdStreamTestCase.getStderrOutputFileSize()));
+	void executeScanModules(String line) {
+		var args = line.split(" ");
+		assertEquals(0, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
 	@ParameterizedTest
-	@MethodSource("redirectStreamParams")
+	@FieldSource("redirectStreamArguments")
 	void executeWithRedirectedStdStream(String redirectedStream, int outputFileSize, @TempDir Path tempDir)
 			throws IOException {
-		Path outputFile = tempDir.resolve("output.txt");
+
+		var outputFile = tempDir.resolve("output.txt");
 		var line = String.format("execute -e junit-jupiter --select-class %s %s %s", StdStreamTestCase.class.getName(),
 			redirectedStream, outputFile);
 		var args = line.split(" ");
@@ -121,9 +118,13 @@ class ConsoleLauncherIntegrationTests {
 		assertEquals(outputFileSize, Files.size(outputFile), "Invalid file size.");
 	}
 
+	static List<Arguments> redirectStreamArguments = List.of(
+		arguments("--redirect-stdout", StdStreamTestCase.getStdoutOutputFileSize()),
+		arguments("--redirect-stderr", StdStreamTestCase.getStderrOutputFileSize()));
+
 	@Test
 	void executeWithRedirectedStdStreamsToSameFile(@TempDir Path tempDir) throws IOException {
-		Path outputFile = tempDir.resolve("output.txt");
+		var outputFile = tempDir.resolve("output.txt");
 		var line = String.format("execute -e junit-jupiter --select-class %s --redirect-stdout %s --redirect-stderr %s",
 			StdStreamTestCase.class.getName(), outputFile, outputFile);
 		var args = line.split(" ");
@@ -133,4 +134,5 @@ class ConsoleLauncherIntegrationTests {
 		assertEquals(StdStreamTestCase.getStdoutOutputFileSize() + StdStreamTestCase.getStderrOutputFileSize(),
 			Files.size(outputFile), "Invalid file size.");
 	}
+
 }
