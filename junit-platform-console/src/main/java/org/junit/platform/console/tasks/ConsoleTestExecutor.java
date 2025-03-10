@@ -104,8 +104,9 @@ public class ConsoleTestExecutor {
 
 		PrintStream originalOut = System.out;
 		PrintStream originalErr = System.err;
-		try (StdStreamHandler stdStreamHandler = new StdStreamHandler()) {
-			stdStreamHandler.redirectStdStreams(outputOptions.getStdoutPath(), outputOptions.getStderrPath());
+		try (StandardStreamsHandler standardStreamsHandler = new StandardStreamsHandler()) {
+			standardStreamsHandler.redirectStandardStreams(outputOptions.getStdoutPath(),
+				outputOptions.getStderrPath());
 			launchTests(launcher, reportsDir);
 		}
 		finally {
@@ -208,4 +209,5 @@ public class ConsoleTestExecutor {
 	public interface Factory {
 		ConsoleTestExecutor create(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions);
 	}
+
 }
