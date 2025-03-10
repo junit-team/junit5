@@ -26,8 +26,8 @@ repository on GitHub.
 [[release-notes-5.13.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New optional CLI options `--redirect-stdout` and `--redirect-stderr` to redirect stdout
-  and stderr outputs to a file.
+* New `ConsoleLauncher` options `--redirect-stdout` and `--redirect-stderr` for
+  redirecting `stdout` and `stderr` output streams to files.
 
 
 [[release-notes-5.13.0-M1-junit-jupiter]]
@@ -64,9 +64,9 @@ repository on GitHub.
   `@ParameterizedTest` may be used to provide arguments via constructor or field
   injection. Please refer to the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests, User Guide>> for details.
-* Introduce additional `@ParameterizedClass`-specific
+* New `@ParameterizedClass`-specific
   `@BeforeParameterizedClassInvocation`/`@AfterParameterizedClassInvocation` lifecycle
-  methods that are invoked once before/after each invocation of the parametrized class.
+  methods that are invoked once before/after each invocation of the parameterized class.
 * New `@SentenceFragment` annotation which allows one to supply custom text for individual
   sentence fragments when using the `IndicativeSentences` `DisplayNameGenerator`. See the
   updated documentation in the

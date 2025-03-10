@@ -813,7 +813,7 @@ additional `@` symbol. For example, `@@somearg` will become `@somearg` and will 
 subject to expansion.
 
 [[running-tests-console-launcher-color-customization]]
-==== Color customization
+==== Color Customization
 
 The colors used in the output of the `{ConsoleLauncher}` can be customized.
 The option `--single-color` will apply a built-in monochrome style, while
