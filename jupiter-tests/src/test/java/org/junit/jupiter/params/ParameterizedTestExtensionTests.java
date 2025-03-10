@@ -47,6 +47,7 @@ import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
@@ -215,7 +216,8 @@ class ParameterizedTestExtensionTests {
 
 		return new ExtensionContext() {
 
-			private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
+			private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> store = new NamespacedHierarchicalStore<>(
+				null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
@@ -306,7 +308,8 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				var store = new NamespaceAwareStore<>(this.store, namespace);
+				var store = new NamespaceAwareStore(this.store,
+					org.junit.platform.engine.support.store.Namespace.create(namespace.getParts()));
 				method //
 						.map(it -> new ParameterizedTestContext(it, it.getAnnotation(ParameterizedTest.class))) //
 						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));

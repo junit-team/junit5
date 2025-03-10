@@ -82,7 +82,7 @@ class LauncherStoreFacadeTest {
 	@Test
 	void returnsNamespaceAwareStore() {
 		LauncherStoreFacade facade = new LauncherStoreFacade(requestLevelStore);
-		NamespaceAwareStore<Namespace> adapter = facade.getStoreAdapter(requestLevelStore, extensionNamespace);
+		NamespaceAwareStore adapter = facade.getStoreAdapter(requestLevelStore, extensionNamespace);
 
 		assertNotNull(adapter);
 	}
@@ -91,5 +91,14 @@ class LauncherStoreFacadeTest {
 	void throwsExceptionWhenNamespaceIsNull() {
 		LauncherStoreFacade facade = new LauncherStoreFacade(requestLevelStore);
 		assertThrows(PreconditionViolationException.class, () -> facade.getStoreAdapter(requestLevelStore, null));
+	}
+
+	@Test
+	void returnsNamespaceAwareStoreWithGlobalNamespace() {
+		LauncherStoreFacade facade = new LauncherStoreFacade(requestLevelStore);
+		ExtensionContext.Store store = facade.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL);
+
+		assertNotNull(store);
+		assertInstanceOf(NamespaceAwareStore.class, store);
 	}
 }

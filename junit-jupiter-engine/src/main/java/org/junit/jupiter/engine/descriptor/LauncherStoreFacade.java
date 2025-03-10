@@ -44,10 +44,10 @@ public class LauncherStoreFacade {
 		return getStoreAdapter(this.sessionLevelStore, namespace);
 	}
 
-	NamespaceAwareStore<Namespace> getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
+	NamespaceAwareStore getStoreAdapter(NamespacedHierarchicalStore<Namespace> valuesStore,
 			ExtensionContext.Namespace namespace) {
 		Preconditions.notNull(namespace, "Namespace must not be null");
-		return new NamespaceAwareStore<>(valuesStore, convert(namespace));
+		return new NamespaceAwareStore(valuesStore, convert(namespace));
 	}
 
 	private Namespace convert(ExtensionContext.Namespace namespace) {

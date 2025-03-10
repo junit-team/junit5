@@ -18,9 +18,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreException;
 
@@ -38,7 +38,7 @@ class ExtensionContextStoreTests {
 
 	private final NamespacedHierarchicalStore<Namespace> parentStore = new NamespacedHierarchicalStore<>(null);
 	private final NamespacedHierarchicalStore<Namespace> localStore = new NamespacedHierarchicalStore<>(parentStore);
-	private final Store store = new NamespaceAwareStore<>(localStore, Namespace.GLOBAL);
+	private final Store store = new NamespaceAwareStore(localStore, Namespace.GLOBAL);
 
 	@Test
 	void getOrDefaultWithNoValuePresent() {
