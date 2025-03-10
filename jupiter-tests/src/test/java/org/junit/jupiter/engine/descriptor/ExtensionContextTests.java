@@ -155,7 +155,7 @@ public class ExtensionContextTests {
 		// @formatter:on
 
 		var doublyNestedExtensionContext = new ClassExtensionContext(nestedExtensionContext, null,
-			doublyNestedClassDescriptor, PER_METHOD, configuration, extensionRegistry, null);
+			doublyNestedClassDescriptor, PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		// @formatter:off
 		assertAll("doublyNestedContext",
 				() -> assertThat(doublyNestedExtensionContext.getParent()).containsSame(nestedExtensionContext),
@@ -165,7 +165,7 @@ public class ExtensionContextTests {
 		// @formatter:on
 
 		var methodExtensionContext = new MethodExtensionContext(nestedExtensionContext, null, methodTestDescriptor,
-			configuration, extensionRegistry, new OpenTest4JAwareThrowableCollector());
+			configuration, extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
 		// @formatter:off
 		assertAll("methodContext",
 				() -> assertThat(methodExtensionContext.getParent()).containsSame(nestedExtensionContext),
