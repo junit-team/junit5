@@ -770,8 +770,8 @@ public interface ExtensionContext {
 		}
 
 		@API(status = INTERNAL, since = "5.13")
-		public Object[] getParts() {
-			return parts.toArray();
+		public List<Object> getParts() {
+			return unmodifiableList(parts);
 		}
 	}
 
