@@ -20,8 +20,10 @@ import java.util.stream.Stream;
 import picocli.CommandLine;
 
 class ClasspathEntriesConverter implements CommandLine.ITypeConverter<List<Path>> {
+
 	@Override
 	public List<Path> convert(String value) {
 		return Stream.of(value.split(File.pathSeparator)).map(Paths::get).collect(Collectors.toList());
 	}
+
 }

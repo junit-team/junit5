@@ -56,7 +56,7 @@ class CommandLineOptionsParsingTests {
 	@Test
 	void parseNoArguments() {
 		String[] noArguments = {};
-		var options = parse(noArguments);
+		Result options = parse(noArguments);
 
 		// @formatter:off
 		assertAll(
@@ -180,12 +180,12 @@ class CommandLineOptionsParsingTests {
 	void parseValidIncludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of("org.junit.included"),
-						type.parseArgLine("--include-package org.junit.included").discovery.getIncludedPackages()),
-				() -> assertEquals(List.of("org.junit.included"),
-						type.parseArgLine("--include-package=org.junit.included").discovery.getIncludedPackages()),
-				() -> assertEquals(List.of("org.junit.included1", "org.junit.included2"),
-						type.parseArgLine("--include-package org.junit.included1 --include-package org.junit.included2").discovery.getIncludedPackages())
+			() -> assertEquals(List.of("org.junit.included"),
+					type.parseArgLine("--include-package org.junit.included").discovery.getIncludedPackages()),
+			() -> assertEquals(List.of("org.junit.included"),
+					type.parseArgLine("--include-package=org.junit.included").discovery.getIncludedPackages()),
+			() -> assertEquals(List.of("org.junit.included1", "org.junit.included2"),
+					type.parseArgLine("--include-package org.junit.included1 --include-package org.junit.included2").discovery.getIncludedPackages())
 		);
 		// @formatter:on
 	}
@@ -195,12 +195,12 @@ class CommandLineOptionsParsingTests {
 	void parseValidExcludedPackages(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of("org.junit.excluded"),
-						type.parseArgLine("--exclude-package org.junit.excluded").discovery.getExcludedPackages()),
-				() -> assertEquals(List.of("org.junit.excluded"),
-						type.parseArgLine("--exclude-package=org.junit.excluded").discovery.getExcludedPackages()),
-				() -> assertEquals(List.of("org.junit.excluded1", "org.junit.excluded2"),
-						type.parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").discovery.getExcludedPackages())
+			() -> assertEquals(List.of("org.junit.excluded"),
+					type.parseArgLine("--exclude-package org.junit.excluded").discovery.getExcludedPackages()),
+			() -> assertEquals(List.of("org.junit.excluded"),
+					type.parseArgLine("--exclude-package=org.junit.excluded").discovery.getExcludedPackages()),
+			() -> assertEquals(List.of("org.junit.excluded1", "org.junit.excluded2"),
+					type.parseArgLine("--exclude-package org.junit.excluded1 --exclude-package org.junit.excluded2").discovery.getExcludedPackages())
 		);
 		// @formatter:on
 	}
@@ -210,12 +210,12 @@ class CommandLineOptionsParsingTests {
 	void parseValidIncludeMethodNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(".+#method.*"),
-						type.parseArgLine("--include-methodname .+#method.*").discovery.getIncludedMethodNamePatterns()),
-				() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
-						type.parseArgLine("--include-methodname .+#methodA.* --include-methodname .+#methodB.*").discovery.getIncludedMethodNamePatterns()),
-				() -> assertEquals(List.of(".+#method.*"),
-						type.parseArgLine("--include-methodname=.+#method.*").discovery.getIncludedMethodNamePatterns())
+			() -> assertEquals(List.of(".+#method.*"),
+					type.parseArgLine("--include-methodname .+#method.*").discovery.getIncludedMethodNamePatterns()),
+			() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
+					type.parseArgLine("--include-methodname .+#methodA.* --include-methodname .+#methodB.*").discovery.getIncludedMethodNamePatterns()),
+			() -> assertEquals(List.of(".+#method.*"),
+					type.parseArgLine("--include-methodname=.+#method.*").discovery.getIncludedMethodNamePatterns())
 		);
 		// @formatter:on
 	}
@@ -225,12 +225,12 @@ class CommandLineOptionsParsingTests {
 	void parseValidExcludeMethodNamePatterns(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(".+#method.*"),
-						type.parseArgLine("--exclude-methodname .+#method.*").discovery.getExcludedMethodNamePatterns()),
-				() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
-						type.parseArgLine("--exclude-methodname .+#methodA.* --exclude-methodname .+#methodB.*").discovery.getExcludedMethodNamePatterns()),
-				() -> assertEquals(List.of(".+#method.*"),
-						type.parseArgLine("--exclude-methodname=.+#method.*").discovery.getExcludedMethodNamePatterns())
+			() -> assertEquals(List.of(".+#method.*"),
+					type.parseArgLine("--exclude-methodname .+#method.*").discovery.getExcludedMethodNamePatterns()),
+			() -> assertEquals(List.of(".+#methodA.*", ".+#methodB.*"),
+					type.parseArgLine("--exclude-methodname .+#methodA.* --exclude-methodname .+#methodB.*").discovery.getExcludedMethodNamePatterns()),
+			() -> assertEquals(List.of(".+#method.*"),
+					type.parseArgLine("--exclude-methodname=.+#method.*").discovery.getExcludedMethodNamePatterns())
 		);
 		// @formatter:on
 	}
@@ -360,14 +360,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidUriSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-u file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--u file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-select-uri file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-select-uri=file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--select-uri file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--select-uri=file:///foo.txt").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt"), selectUri("https://example")), type.parseArgLine("-u file:///foo.txt -u https://example").discovery.getSelectedUris()),
-				() -> assertEquals(List.of(selectUri("file:///foo.txt"), selectUri("https://example")), type.parseArgLine("-u file:///foo.txt https://example").discovery.getSelectedUris())
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-u file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--u file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-select-uri file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("-select-uri=file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--select-uri file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt")), type.parseArgLine("--select-uri=file:///foo.txt").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt"), selectUri("https://example")), type.parseArgLine("-u file:///foo.txt -u https://example").discovery.getSelectedUris()),
+			() -> assertEquals(List.of(selectUri("file:///foo.txt"), selectUri("https://example")), type.parseArgLine("-u file:///foo.txt https://example").discovery.getSelectedUris())
 		);
 		// @formatter:on
 	}
@@ -382,16 +382,16 @@ class CommandLineOptionsParsingTests {
 	void parseValidFileSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-f foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--f foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-select-file foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-select-file=foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file=foo.txt").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt -f bar.csv").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt bar.csv").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(5))), type.parseArgLine("-f foo.txt?line=5").discovery.getSelectedFiles()),
-				() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(12, 34))), type.parseArgLine("-f foo.txt?line=12&column=34").discovery.getSelectedFiles())
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-f foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--f foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-select-file foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("-select-file=foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt")), type.parseArgLine("--select-file=foo.txt").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt -f bar.csv").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt"), selectFile("bar.csv")), type.parseArgLine("-f foo.txt bar.csv").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(5))), type.parseArgLine("-f foo.txt?line=5").discovery.getSelectedFiles()),
+			() -> assertEquals(List.of(selectFile("foo.txt", FilePosition.from(12, 34))), type.parseArgLine("-f foo.txt?line=12&column=34").discovery.getSelectedFiles())
 		);
 		// @formatter:on
 	}
@@ -406,14 +406,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidDirectorySelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-d foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--d foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-select-directory foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-select-directory=foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--select-directory foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--select-directory=foo/bar").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar"), selectDirectory("bar/qux")), type.parseArgLine("-d foo/bar -d bar/qux").discovery.getSelectedDirectories()),
-				() -> assertEquals(List.of(selectDirectory("foo/bar"), selectDirectory("bar/qux")), type.parseArgLine("-d foo/bar bar/qux").discovery.getSelectedDirectories())
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-d foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--d foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-select-directory foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("-select-directory=foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--select-directory foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), type.parseArgLine("--select-directory=foo/bar").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar"), selectDirectory("bar/qux")), type.parseArgLine("-d foo/bar -d bar/qux").discovery.getSelectedDirectories()),
+			() -> assertEquals(List.of(selectDirectory("foo/bar"), selectDirectory("bar/qux")), type.parseArgLine("-d foo/bar bar/qux").discovery.getSelectedDirectories())
 		);
 		// @formatter:on
 	}
@@ -428,14 +428,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidModuleSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-o com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--o com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-select-module com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-select-module=com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--select-module com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--select-module=com.acme.foo").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo"), selectModule("com.example.bar")), type.parseArgLine("-o com.acme.foo -o com.example.bar").discovery.getSelectedModules()),
-				() -> assertEquals(List.of(selectModule("com.acme.foo"), selectModule("com.example.bar")), type.parseArgLine("-o com.acme.foo com.example.bar").discovery.getSelectedModules())
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-o com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--o com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-select-module com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("-select-module=com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--select-module com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), type.parseArgLine("--select-module=com.acme.foo").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo"), selectModule("com.example.bar")), type.parseArgLine("-o com.acme.foo -o com.example.bar").discovery.getSelectedModules()),
+			() -> assertEquals(List.of(selectModule("com.acme.foo"), selectModule("com.example.bar")), type.parseArgLine("-o com.acme.foo com.example.bar").discovery.getSelectedModules())
 		);
 		// @formatter:on
 	}
@@ -450,14 +450,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidPackageSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-p com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--p com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-select-package com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-select-package=com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--select-package com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--select-package=com.acme.foo").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo"), selectPackage("com.example.bar")), type.parseArgLine("-p com.acme.foo -p com.example.bar").discovery.getSelectedPackages()),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo"), selectPackage("com.example.bar")), type.parseArgLine("-p com.acme.foo com.example.bar").discovery.getSelectedPackages())
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-p com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--p com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-select-package com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("-select-package=com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--select-package com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), type.parseArgLine("--select-package=com.acme.foo").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo"), selectPackage("com.example.bar")), type.parseArgLine("-p com.acme.foo -p com.example.bar").discovery.getSelectedPackages()),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo"), selectPackage("com.example.bar")), type.parseArgLine("-p com.acme.foo com.example.bar").discovery.getSelectedPackages())
 		);
 		// @formatter:on
 	}
@@ -472,14 +472,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidClassSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-c com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--c com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-select-class com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-select-class=com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--select-class com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--select-class=com.acme.Foo").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo"), selectClass("com.example.Bar")), type.parseArgLine("-c com.acme.Foo -c com.example.Bar").discovery.getSelectedClasses()),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo"), selectClass("com.example.Bar")), type.parseArgLine("-c com.acme.Foo com.example.Bar").discovery.getSelectedClasses())
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-c com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--c com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-select-class com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("-select-class=com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--select-class com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), type.parseArgLine("--select-class=com.acme.Foo").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo"), selectClass("com.example.Bar")), type.parseArgLine("-c com.acme.Foo -c com.example.Bar").discovery.getSelectedClasses()),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo"), selectClass("com.example.Bar")), type.parseArgLine("-c com.acme.Foo com.example.Bar").discovery.getSelectedClasses())
 		);
 		// @formatter:on
 	}
@@ -494,16 +494,16 @@ class CommandLineOptionsParsingTests {
 	void parseValidMethodSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-m com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--m com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-select-method com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-select-method=com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--select-method com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--select-method=com.acme.Foo#m()").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()"), selectMethod("com.example.Bar#method(java.lang.Object)")),
-						type.parseArgLine("-m com.acme.Foo#m() -m com.example.Bar#method(java.lang.Object)").discovery.getSelectedMethods()),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()"), selectMethod("com.example.Bar#method(java.lang.Object)")),
-						type.parseArgLine("-m com.acme.Foo#m() com.example.Bar#method(java.lang.Object)").discovery.getSelectedMethods())
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-m com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--m com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-select-method com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("-select-method=com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--select-method com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), type.parseArgLine("--select-method=com.acme.Foo#m()").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()"), selectMethod("com.example.Bar#method(java.lang.Object)")),
+					type.parseArgLine("-m com.acme.Foo#m() -m com.example.Bar#method(java.lang.Object)").discovery.getSelectedMethods()),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()"), selectMethod("com.example.Bar#method(java.lang.Object)")),
+					type.parseArgLine("-m com.acme.Foo#m() com.example.Bar#method(java.lang.Object)").discovery.getSelectedMethods())
 		);
 		// @formatter:on
 	}
@@ -518,16 +518,16 @@ class CommandLineOptionsParsingTests {
 	void parseValidClasspathResourceSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-r /foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--r /foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-select-resource /foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource /foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv -r bar.json").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv bar.json").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(5))), type.parseArgLine("-r /foo.csv?line=5").discovery.getSelectedClasspathResources()),
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(12, 34))), type.parseArgLine("-r /foo.csv?line=12&column=34").discovery.getSelectedClasspathResources())
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-r /foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--r /foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-select-resource /foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("-select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource /foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), type.parseArgLine("--select-resource=/foo.csv").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv -r bar.json").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv"), selectClasspathResource("bar.json")), type.parseArgLine("-r /foo.csv bar.json").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(5))), type.parseArgLine("-r /foo.csv?line=5").discovery.getSelectedClasspathResources()),
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv", FilePosition.from(12, 34))), type.parseArgLine("-r /foo.csv?line=12&column=34").discovery.getSelectedClasspathResources())
 		);
 		// @formatter:on
 	}
@@ -542,14 +542,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidIterationSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectIteration(selectClasspathResource("/foo.csv"), 0)), type.parseArgLine("-i resource:/foo.csv[0]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectMethod("com.acme.Foo#m()"), 1, 2)), type.parseArgLine("--i method:com.acme.Foo#m()[1..2]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectClass("com.acme.Foo"), 0, 2)), type.parseArgLine("-select-iteration class:com.acme.Foo[0,2]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectPackage("com.acme.foo"), 3)), type.parseArgLine("-select-iteration=package:com.acme.foo[3]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectModule("com.acme.foo"), 0, 1, 2, 4, 5, 6)), type.parseArgLine("--select-iteration module:com.acme.foo[0..2,4..6]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectDirectory("foo/bar"), 1, 5)), type.parseArgLine("--select-iteration=directory:foo/bar[1,5]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectFile("foo.txt"), 6), selectIteration(selectUri("file:///foo.txt"), 7)), type.parseArgLine("-i file:foo.txt[6] -i uri:file:///foo.txt[7]").discovery.getSelectedIterations()),
-				() -> assertEquals(List.of(selectIteration(selectFile("foo.txt"), 6), selectIteration(selectUri("file:///foo.txt"), 7)), type.parseArgLine("-i file:foo.txt[6] uri:file:///foo.txt[7]").discovery.getSelectedIterations())
+			() -> assertEquals(List.of(selectIteration(selectClasspathResource("/foo.csv"), 0)), type.parseArgLine("-i resource:/foo.csv[0]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectMethod("com.acme.Foo#m()"), 1, 2)), type.parseArgLine("--i method:com.acme.Foo#m()[1..2]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectClass("com.acme.Foo"), 0, 2)), type.parseArgLine("-select-iteration class:com.acme.Foo[0,2]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectPackage("com.acme.foo"), 3)), type.parseArgLine("-select-iteration=package:com.acme.foo[3]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectModule("com.acme.foo"), 0, 1, 2, 4, 5, 6)), type.parseArgLine("--select-iteration module:com.acme.foo[0..2,4..6]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectDirectory("foo/bar"), 1, 5)), type.parseArgLine("--select-iteration=directory:foo/bar[1,5]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectFile("foo.txt"), 6), selectIteration(selectUri("file:///foo.txt"), 7)), type.parseArgLine("-i file:foo.txt[6] -i uri:file:///foo.txt[7]").discovery.getSelectedIterations()),
+			() -> assertEquals(List.of(selectIteration(selectFile("foo.txt"), 6), selectIteration(selectUri("file:///foo.txt"), 7)), type.parseArgLine("-i file:foo.txt[6] uri:file:///foo.txt[7]").discovery.getSelectedIterations())
 		);
 		// @formatter:on
 	}
@@ -564,10 +564,10 @@ class CommandLineOptionsParsingTests {
 	void parseValidUniqueIdSelectors(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
-				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--select-unique-id [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
-				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] --uid [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds()),
-				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds())
+			() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
+			() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), type.parseArgLine("--select-unique-id [engine:junit-jupiter]/[class:MyClass]/[method:myMethod]").discovery.getSelectedUniqueIds()),
+			() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] --uid [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds()),
+			() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass1]"), selectUniqueId("[engine:junit-jupiter]/[class:MyClass2]")), type.parseArgLine("--uid [engine:junit-jupiter]/[class:MyClass1] [engine:junit-jupiter]/[class:MyClass2]").discovery.getSelectedUniqueIds())
 		);
 		// @formatter:on
 	}
@@ -603,16 +603,16 @@ class CommandLineOptionsParsingTests {
 	void parseValidConfigurationParameters(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertThat(type.parseArgLine("-config foo=bar").discovery.getConfigurationParameters())
-						.containsOnly(entry("foo", "bar")),
-				() -> assertThat(type.parseArgLine("-config=foo=bar").discovery.getConfigurationParameters())
-						.containsOnly(entry("foo", "bar")),
-				() -> assertThat(type.parseArgLine("--config foo=bar").discovery.getConfigurationParameters())
-						.containsOnly(entry("foo", "bar")),
-				() -> assertThat(type.parseArgLine("--config=foo=bar").discovery.getConfigurationParameters())
-						.containsOnly(entry("foo", "bar")),
-				() -> assertThat(type.parseArgLine("--config foo=bar --config baz=qux").discovery.getConfigurationParameters())
-						.containsExactly(entry("foo", "bar"), entry("baz", "qux"))
+			() -> assertThat(type.parseArgLine("-config foo=bar").discovery.getConfigurationParameters())
+					.containsOnly(entry("foo", "bar")),
+			() -> assertThat(type.parseArgLine("-config=foo=bar").discovery.getConfigurationParameters())
+					.containsOnly(entry("foo", "bar")),
+			() -> assertThat(type.parseArgLine("--config foo=bar").discovery.getConfigurationParameters())
+					.containsOnly(entry("foo", "bar")),
+			() -> assertThat(type.parseArgLine("--config=foo=bar").discovery.getConfigurationParameters())
+					.containsOnly(entry("foo", "bar")),
+			() -> assertThat(type.parseArgLine("--config foo=bar --config baz=qux").discovery.getConfigurationParameters())
+					.containsExactly(entry("foo", "bar"), entry("baz", "qux"))
 		);
 		// @formatter:on
 	}
@@ -622,10 +622,10 @@ class CommandLineOptionsParsingTests {
 	void parseValidConfigurationParametersResource(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertThat(type.parseArgLine("--config-resource foo.properties").discovery.getConfigurationParametersResources())
-						.containsOnly("foo.properties"),
-				() -> assertThat(type.parseArgLine("--config-resource foo.properties --config-resource bar.properties").discovery.getConfigurationParametersResources())
-						.containsExactly("foo.properties", "bar.properties")
+			() -> assertThat(type.parseArgLine("--config-resource foo.properties").discovery.getConfigurationParametersResources())
+					.containsOnly("foo.properties"),
+			() -> assertThat(type.parseArgLine("--config-resource foo.properties --config-resource bar.properties").discovery.getConfigurationParametersResources())
+					.containsExactly("foo.properties", "bar.properties")
 		);
 		// @formatter:on
 	}
@@ -641,17 +641,12 @@ class CommandLineOptionsParsingTests {
 		var file = Paths.get("foo.txt");
 		// @formatter:off
 		assertAll(
-				() -> assertNull(type.parseArgLine("").output.getStdoutPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stdout=foo.txt").output.getStdoutPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stdout foo.txt").output.getStdoutPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stdout bar.txt --redirect-stdout foo.txt").output.getStdoutPath())
+			() -> assertNull(type.parseArgLine("").output.getStdoutPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stdout=foo.txt").output.getStdoutPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stdout foo.txt").output.getStdoutPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stdout bar.txt --redirect-stdout foo.txt").output.getStdoutPath())
 		);
 		// @formatter:on
-	}
-
-	@Test
-	void parseInvalidStdoutRedirectionFile() {
-		assertOptionWithMissingRequiredArgumentThrowsException("--redirect-stdout");
 	}
 
 	@ParameterizedTest
@@ -660,12 +655,17 @@ class CommandLineOptionsParsingTests {
 		var file = Paths.get("foo.txt");
 		// @formatter:off
 		assertAll(
-				() -> assertNull(type.parseArgLine("").output.getStderrPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stderr=foo.txt").output.getStderrPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stderr foo.txt").output.getStderrPath()),
-				() -> assertEquals(file, type.parseArgLine("--redirect-stderr bar.txt --redirect-stderr foo.txt").output.getStderrPath())
+			() -> assertNull(type.parseArgLine("").output.getStderrPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stderr=foo.txt").output.getStderrPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stderr foo.txt").output.getStderrPath()),
+			() -> assertEquals(file, type.parseArgLine("--redirect-stderr bar.txt --redirect-stderr foo.txt").output.getStderrPath())
 		);
 		// @formatter:on
+	}
+
+	@Test
+	void parseInvalidStdoutRedirectionFile() {
+		assertOptionWithMissingRequiredArgumentThrowsException("--redirect-stdout");
 	}
 
 	@Test
@@ -691,14 +691,14 @@ class CommandLineOptionsParsingTests {
 	void parseValidSelectorIdentifier(ArgsType type) {
 		// @formatter:off
 		assertAll(
-				() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), parseIdentifiers(type,"--select resource:/foo.csv")),
-				() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), parseIdentifiers(type,"--select method:com.acme.Foo#m()")),
-				() -> assertEquals(List.of(selectClass("com.acme.Foo")), parseIdentifiers(type,"--select class:com.acme.Foo")),
-				() -> assertEquals(List.of(selectPackage("com.acme.foo")), parseIdentifiers(type,"--select package:com.acme.foo")),
-				() -> assertEquals(List.of(selectModule("com.acme.foo")), parseIdentifiers(type,"--select module:com.acme.foo")),
-				() -> assertEquals(List.of(selectDirectory("foo/bar")), parseIdentifiers(type,"--select directory:foo/bar")),
-				() -> assertEquals(List.of(selectFile("foo.txt"), selectUri("file:///foo.txt")), parseIdentifiers(type,"--select file:foo.txt --select uri:file:///foo.txt")),
-				() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), parseIdentifiers(type,"--select uid:[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]"))
+			() -> assertEquals(List.of(selectClasspathResource("/foo.csv")), parseIdentifiers(type,"--select resource:/foo.csv")),
+			() -> assertEquals(List.of(selectMethod("com.acme.Foo#m()")), parseIdentifiers(type,"--select method:com.acme.Foo#m()")),
+			() -> assertEquals(List.of(selectClass("com.acme.Foo")), parseIdentifiers(type,"--select class:com.acme.Foo")),
+			() -> assertEquals(List.of(selectPackage("com.acme.foo")), parseIdentifiers(type,"--select package:com.acme.foo")),
+			() -> assertEquals(List.of(selectModule("com.acme.foo")), parseIdentifiers(type,"--select module:com.acme.foo")),
+			() -> assertEquals(List.of(selectDirectory("foo/bar")), parseIdentifiers(type,"--select directory:foo/bar")),
+			() -> assertEquals(List.of(selectFile("foo.txt"), selectUri("file:///foo.txt")), parseIdentifiers(type,"--select file:foo.txt --select uri:file:///foo.txt")),
+			() -> assertEquals(List.of(selectUniqueId("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]")), parseIdentifiers(type,"--select uid:[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]"))
 		);
 		// @formatter:on
 	}

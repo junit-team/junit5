@@ -348,4 +348,5 @@ class TestDiscoveryOptionsMixin {
 		result.addAll(list2 == null ? Collections.emptyList() : list2);
 		return result;
 	}
+
 }

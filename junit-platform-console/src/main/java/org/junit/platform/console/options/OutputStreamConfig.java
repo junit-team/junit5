@@ -29,6 +29,7 @@ class OutputStreamConfig {
 	}
 
 	void applyTo(CommandLine commandLine) {
-		commandLine.setOut(out).setErr(err);
+		commandLine.setOut(this.out).setErr(this.err);
 	}
+
 }

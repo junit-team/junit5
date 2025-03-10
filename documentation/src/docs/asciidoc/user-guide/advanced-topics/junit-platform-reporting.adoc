@@ -145,29 +145,14 @@ $ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
   --config=junit.platform.reporting.output.dir=reports
 ----
 
-Configuration parameters can also be set in a custom properties file supplied as a classpath resource
-via the `--config-resource` option:
+Configuration parameters can also be set in a custom properties file supplied as a
+classpath resource via the `--config-resource` option:
 
 [source,console,subs=attributes+]
 ----
 $ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
   --config-resource=configuration.properties
 ----
-
-You can redirect standard output and standard error using the `--redirect-stdout` and
-`--redirect-stderr` options:
-
-[source,console,subs=attributes+]
-----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
-  --redirect-stdout=foo.txt \
-  --redirect-stderr=bar.txt
-----
-
-If both the `--redirect-stdout` and `--redirect-stderr` parameters point to the same
-file, the output will be merged into that file.
-
-The default charset is used for writing to the files.
 
 [[junit-platform-reporting-legacy-xml]]
 ==== Legacy XML format

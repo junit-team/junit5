@@ -148,4 +148,5 @@ class ArchUnitTests {
 					.orElse(actualAnnotation.isEmpty());
 		}
 	}
+
 }

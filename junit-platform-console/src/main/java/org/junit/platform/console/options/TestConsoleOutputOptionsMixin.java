@@ -78,4 +78,5 @@ class TestConsoleOutputOptionsMixin {
 	private static <T> T choose(T left, T right, T defaultValue) {
 		return left == right ? left : (left == defaultValue ? right : left);
 	}
+
 }

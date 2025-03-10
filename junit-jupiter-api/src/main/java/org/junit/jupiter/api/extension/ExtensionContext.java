@@ -42,6 +42,8 @@ import org.junit.platform.commons.util.Preconditions;
  * <p>{@link Extension Extensions} are provided an instance of
  * {@code ExtensionContext} to perform their work.
  *
+ * <p>This interface is not intended to be implemented by clients.
+ *
  * @since 5.0
  * @see Store
  * @see Namespace
@@ -130,6 +132,31 @@ public interface ExtensionContext {
 	 * @see #getRequiredTestClass()
 	 */
 	Optional<Class<?>> getTestClass();
+
+	/**
+	 * Get the enclosing test classes of the current test or container.
+	 *
+	 * <p>This method is useful to look up annotations on nested test classes
+	 * and their enclosing <em>runtime</em> types:
+	 *
+	 * <pre>{@code
+	 * AnnotationSupport.findAnnotation(
+	 *     extensionContext.getRequiredTestClass(),
+	 *     MyAnnotation.class,
+	 *     extensionContext.getEnclosingTestClasses()
+	 * );
+	 * }</pre>
+	 *
+	 * @return an empty list if there is no class associated with the current
+	 * test or container or when it is not nested; otherwise, a list containing
+	 * the enclosing test classes in order from outermost to innermost; never
+	 * {@code null}
+	 *
+	 * @since 5.12.1
+	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(Class, Class, List)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.12.1")
+	List<Class<?>> getEnclosingTestClasses();
 
 	/**
 	 * Get the <em>required</em> {@link Class} associated with the current test

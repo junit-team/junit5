@@ -106,4 +106,5 @@ abstract class BaseCommand<T> implements Callable<T> {
 	}
 
 	protected abstract T execute(PrintWriter out);
+
 }

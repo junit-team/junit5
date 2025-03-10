@@ -311,4 +311,5 @@ public class TestDiscoveryOptions {
 		this.configurationParametersResources = configurationParametersResources;
 		return this;
 	}
+
 }

@@ -64,7 +64,6 @@ class SelectorConverter {
 			FilePosition filePosition = FilePosition.fromQuery(uri.getQuery()).orElse(null);
 			return selectFile(path, filePosition);
 		}
-
 	}
 
 	static class Directory implements ITypeConverter<DirectorySelector> {
