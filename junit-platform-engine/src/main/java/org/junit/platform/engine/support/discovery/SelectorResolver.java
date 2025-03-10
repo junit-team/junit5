@@ -357,7 +357,7 @@ public interface SelectorResolver {
 	 * @see SelectorResolver
 	 */
 	@API(status = STABLE, since = "1.10")
-	interface Context {
+	interface Context extends EngineDiscoveryIssueReporter {
 
 		/**
 		 * Resolve the supplied {@link TestDescriptor}, if possible.

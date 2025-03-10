@@ -24,6 +24,7 @@ import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
 
 /**
  * @since 5.5
@@ -33,7 +34,8 @@ class MethodOrderingVisitor
 
 	private final JupiterConfiguration configuration;
 
-	MethodOrderingVisitor(JupiterConfiguration configuration) {
+	MethodOrderingVisitor(EngineDiscoveryIssueReporter issueReporter, JupiterConfiguration configuration) {
+		super(issueReporter);
 		this.configuration = configuration;
 	}
 

@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryIssue;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -66,15 +67,18 @@ class EngineDiscoveryRequestResolution {
 	private final Map<UniqueId, Match> resolvedUniqueIds = new LinkedHashMap<>();
 	private final Queue<DiscoverySelector> remainingSelectors = new ArrayDeque<>();
 	private final Map<DiscoverySelector, Context> contextBySelector = new HashMap<>();
+	private final EngineDiscoveryIssueReporter issueReporter;
 
 	EngineDiscoveryRequestResolution(EngineDiscoveryRequest request, TestDescriptor engineDescriptor,
-			List<SelectorResolver> resolvers, List<TestDescriptor.Visitor> visitors) {
+			List<SelectorResolver> resolvers, List<TestDescriptor.Visitor> visitors,
+			EngineDiscoveryIssueReporter issueReporter) {
 		this.request = request;
 		this.engineDescriptor = engineDescriptor;
 		this.resolvers = resolvers;
 		this.visitors = visitors;
 		this.defaultContext = new DefaultContext(null);
 		this.resolvedUniqueIds.put(engineDescriptor.getUniqueId(), Match.exact(engineDescriptor));
+		this.issueReporter = issueReporter;
 	}
 
 	void run() {
@@ -258,6 +262,10 @@ class EngineDiscoveryRequestResolution {
 			return child;
 		}
 
+		@Override
+		public void reportIssue(EngineDiscoveryIssue issue) {
+			issueReporter.reportIssue(issue);
+		}
 	}
 
 }

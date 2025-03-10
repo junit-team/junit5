@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.EngineDiscoveryIssue;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -86,6 +87,31 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 				loggingConsumer.accept(() -> selector + " could not be resolved by " + engineId);
 				break;
 		}
+	}
+
+	@Override
+	public void issueFound(UniqueId engineId, EngineDiscoveryIssue issue) {
+		Throwable cause = issue.cause().orElse(null);
+		switch (issue.severity()) {
+			case NOTICE:
+				logger.info(cause, () -> formatIssueMessage(engineId, issue));
+				break;
+			case DEPRECATION:
+				logger.warn(cause, () -> formatIssueMessage(engineId, issue));
+				break;
+			case WARNING:
+				logger.error(cause, () -> formatIssueMessage(engineId, issue));
+				break;
+			default:
+				throw new AssertionError("Unknown severity: " + issue.severity());
+		}
+	}
+
+	private static String formatIssueMessage(UniqueId engineId, EngineDiscoveryIssue issue) {
+		return String.format("[%s] Engine %s: %s (selector=%s, source=%s)", issue.severity(),
+			engineId.getLastSegment().getValue(), issue.message(),
+			issue.selector().map(String::valueOf).orElse("<none>"),
+			issue.source().map(String::valueOf).orElse("<none>"));
 	}
 
 	@Override

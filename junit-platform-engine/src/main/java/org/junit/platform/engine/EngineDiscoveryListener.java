@@ -53,4 +53,7 @@ public interface EngineDiscoveryListener {
 	default void selectorProcessed(UniqueId engineId, DiscoverySelector selector, SelectorResolutionResult result) {
 	}
 
+	default void issueFound(UniqueId engineId, EngineDiscoveryIssue issue) {
+	}
+
 }

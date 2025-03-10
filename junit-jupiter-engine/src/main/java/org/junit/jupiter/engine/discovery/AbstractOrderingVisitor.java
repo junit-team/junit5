@@ -23,10 +23,11 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.EngineDiscoveryIssue;
+import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
 
 /**
  * Abstract base class for {@linkplain TestDescriptor.Visitor visitors} that
@@ -40,7 +41,11 @@ import org.junit.platform.engine.TestDescriptor;
 abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>>
 		implements TestDescriptor.Visitor {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractOrderingVisitor.class);
+	private final EngineDiscoveryIssueReporter issueReporter;
+
+	AbstractOrderingVisitor(EngineDiscoveryIssueReporter issueReporter) {
+		this.issueReporter = issueReporter;
+	}
 
 	@SuppressWarnings("unchecked")
 	protected void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType, TestDescriptor testDescriptor,
@@ -53,7 +58,12 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-				logger.error(t, () -> errorMessageBuilder.apply(parentTestDescriptor));
+				String message = errorMessageBuilder.apply(parentTestDescriptor);
+				AbstractOrderingVisitor.this.issueReporter.reportIssue(
+					EngineDiscoveryIssue.builder(Severity.WARNING, message) //
+							.source(testDescriptor.getSource()) //
+							.cause(t) //
+							.build());
 			}
 		}
 	}
@@ -78,7 +88,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 				Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
 						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
 
-				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
+				descriptorWrapperOrderer.orderWrappers(parentTestDescriptor, matchingDescriptorWrappers);
 
 				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
 						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
@@ -149,7 +159,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return this.orderingAction != null;
 		}
 
-		private void orderWrappers(List<WRAPPER> wrappers) {
+		private void orderWrappers(TestDescriptor parentTestDescriptor, List<WRAPPER> wrappers) {
 			List<WRAPPER> orderedWrappers = new ArrayList<>(wrappers);
 			this.orderingAction.accept(orderedWrappers);
 			Map<Object, Integer> distinctWrappersToIndex = distinctWrappersToIndex(orderedWrappers);
@@ -157,10 +167,10 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			int difference = orderedWrappers.size() - wrappers.size();
 			int distinctDifference = distinctWrappersToIndex.size() - wrappers.size();
 			if (difference > 0) { // difference >= distinctDifference
-				logDescriptorsAddedWarning(difference);
+				logDescriptorsAddedWarning(parentTestDescriptor, difference);
 			}
 			if (distinctDifference < 0) { // distinctDifference <= difference
-				logDescriptorsRemovedWarning(distinctDifference);
+				logDescriptorsRemovedWarning(parentTestDescriptor, distinctDifference);
 			}
 
 			wrappers.sort(comparing(wrapper -> distinctWrappersToIndex.getOrDefault(wrapper, -1)));
@@ -178,12 +188,18 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return toIndex;
 		}
 
-		private void logDescriptorsAddedWarning(int number) {
-			logger.warn(() -> this.descriptorsAddedMessageGenerator.generateMessage(number));
+		private void logDescriptorsAddedWarning(TestDescriptor parentTestDescriptor, int number) {
+			reportWarning(parentTestDescriptor, this.descriptorsAddedMessageGenerator.generateMessage(number));
 		}
 
-		private void logDescriptorsRemovedWarning(int number) {
-			logger.warn(() -> this.descriptorsRemovedMessageGenerator.generateMessage(Math.abs(number)));
+		private void logDescriptorsRemovedWarning(TestDescriptor parentTestDescriptor, int number) {
+			reportWarning(parentTestDescriptor, this.descriptorsRemovedMessageGenerator.generateMessage(number));
+		}
+
+		private void reportWarning(TestDescriptor parentTestDescriptor, String message) {
+			AbstractOrderingVisitor.this.issueReporter //
+					.reportIssue(EngineDiscoveryIssue.builder(Severity.WARNING, message) //
+							.source(parentTestDescriptor.getSource()));
 		}
 
 	}

@@ -90,7 +90,7 @@ import org.junit.platform.launcher.listeners.discovery.LauncherDiscoveryListener
 public final class LauncherDiscoveryRequestBuilder {
 
 	/**
-	 * Property name used to set the default discovery listener that is added to all : {@value}
+	 * Property name used to set the default discovery listener that is added to all: {@value}
 	 *
 	 * <h4>Supported Values</h4>
 	 *
