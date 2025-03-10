@@ -17,8 +17,8 @@ import java.io.PrintWriter;
  */
 class HtmlApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String HTML_HEADER_FORMAT = "\t<tr><th>%s</th><th>%s</th><th>%s</th></tr>%n";
-	private static final String HTML_ROW_FORMAT = "\t<tr><td>%s</td><td>%s</td><td>%s</td></tr>%n";
+	private static final String HTML_HEADER_FORMAT = "\t<tr><th>%s</th><th>%s</th></tr>%n";
+	private static final String HTML_ROW_FORMAT = "\t<tr><td>%s</td><td>%s</td></tr>%n";
 
 	HtmlApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
@@ -32,6 +32,16 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	@Override
 	protected String h2(String header) {
 		return "<h2>" + header + "</h2>";
+	}
+
+	@Override
+	protected String h4(String header) {
+		return "<h4>" + header + "</h4>";
+	}
+
+	@Override
+	protected String h5(String header) {
+		return "<h5>" + header + "</h5>";
 	}
 
 	@Override
@@ -52,13 +62,12 @@ class HtmlApiReportWriter extends AbstractApiReportWriter {
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
 		out.println("<table>");
-		out.printf(HTML_HEADER_FORMAT, "Package Name", "Name", "Since");
+		out.printf(HTML_HEADER_FORMAT, "Name", "Since");
 	}
 
 	@Override
 	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(HTML_ROW_FORMAT, //
-			code(declaration.packageName()), //
 			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
 			code(declaration.since()) //
 		);
