@@ -459,6 +459,7 @@ public interface ExtensionContext {
 	 * @return the store for request-level data
 	 * @since 5.13
 	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
 	Store getRequestLevelStore(Namespace namespace);
 
 	/**
