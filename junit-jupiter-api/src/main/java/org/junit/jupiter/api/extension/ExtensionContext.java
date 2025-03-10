@@ -422,8 +422,18 @@ public interface ExtensionContext {
 	/**
 	 * Returns the store for session-level data.
 	 *
-	 * <p>This store is used to store data that is scoped to the session level.
-	 * The data stored in this store will be available throughout the entire session.
+	 * <p>This store may be used to store and retrieve data that is scoped to
+	 * the current {@code LauncherSession}. Any data that is stored in this
+	 * store will be available throughout the entire session. Therefore, it may
+	 * be used to inject values from registered {@code LauncherSessionListener}
+	 * implementations, to share data across multiple executions of the Jupiter
+	 * engine within the same session, or even to share data across multiple
+	 * engines.
+	 *
+	 * <p>Contrary to the regular {@code Store} instances returned by
+	 * {@link #getStore(Namespace)}, all stored values that are instances of
+	 * {@link AutoCloseable} are notified by invoking their {@code close()}
+	 * methods when the session is closed.
 	 *
 	 * @return the store for session-level data
 	 * @since 5.13
