@@ -21,7 +21,6 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.SelectorResolutionResult.Status;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -35,19 +34,6 @@ import org.junit.platform.launcher.LauncherDiscoveryListener;
  */
 @API(status = STABLE, since = "1.10")
 public class LauncherDiscoveryListeners {
-
-	/**
-	 * Property name used to set the issue severities that should be treated
-	 * as failures by the {@link #abortOnFailure()}: {@value}
-	 *
-	 * <h4>Supported Values</h4>
-	 *
-	 * <p>Comma-separated list of {@link Severity Severity} enum constants.
-	 *
-	 * <p>If not specified, the default is {@value #DEFAULT_ABORT_ON_FAILURE_FAILURE_ISSUE_SEVERITIES}.
-	 */
-	public static final String ABORT_ON_FAILURE_FAILURE_ISSUE_SEVERITIES_CONFIGURATION_PROPERTY_NAME = "junit.platform.discovery.listener.abortOnFailure.failureIssueSeverities";
-	public static final String DEFAULT_ABORT_ON_FAILURE_FAILURE_ISSUE_SEVERITIES = "";
 
 	private LauncherDiscoveryListeners() {
 	}
