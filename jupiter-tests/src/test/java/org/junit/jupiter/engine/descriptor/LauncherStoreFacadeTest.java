@@ -44,10 +44,8 @@ class LauncherStoreFacadeTest {
 	@BeforeEach
 	@SuppressWarnings("unchecked")
 	void setUp() {
-		requestLevelStore = mock(NamespacedHierarchicalStore.class);
-		sessionLevelStore = mock(NamespacedHierarchicalStore.class);
-		extensionNamespace = ExtensionContext.Namespace.create("test");
-		when(requestLevelStore.getParent()).thenReturn(Optional.of(sessionLevelStore));
+		sessionLevelStore = new NamespacedHierarchicalStore<>(null);
+		requestLevelStore = new NamespacedHierarchicalStore<>(sessionLevelStore);
 	}
 
 	@Test
