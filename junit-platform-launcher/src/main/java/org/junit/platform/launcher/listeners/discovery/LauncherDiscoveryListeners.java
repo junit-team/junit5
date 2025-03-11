@@ -21,7 +21,7 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.SelectorResolutionResult.Status;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.discovery.UniqueIdSelector;

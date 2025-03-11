@@ -13,16 +13,16 @@ package org.junit.jupiter.engine.discovery;
 import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.engine.descriptor.Validatable;
-import org.junit.platform.engine.EngineDiscoveryIssue;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 class ValidatingVisitor implements TestDescriptor.Visitor {
 
-	private final EngineDiscoveryIssueReporter issueReporter;
+	private final DiscoveryIssueReporter issueReporter;
 
-	ValidatingVisitor(EngineDiscoveryIssueReporter issueReporter) {
+	ValidatingVisitor(DiscoveryIssueReporter issueReporter) {
 		this.issueReporter = issueReporter;
 	}
 
@@ -42,9 +42,8 @@ class ValidatingVisitor implements TestDescriptor.Visitor {
 		}
 
 		@Override
-		public void reportIssue(Severity severity, String message,
-				UnaryOperator<EngineDiscoveryIssue.Builder> issueBuilder) {
-			EngineDiscoveryIssue.Builder builder = EngineDiscoveryIssue.builder(severity, message) //
+		public void reportIssue(Severity severity, String message, UnaryOperator<DiscoveryIssue.Builder> issueBuilder) {
+			DiscoveryIssue.Builder builder = DiscoveryIssue.builder(severity, message) //
 					.source(testDescriptor.getSource());
 			issueReporter.reportIssue(issueBuilder.apply(builder));
 		}

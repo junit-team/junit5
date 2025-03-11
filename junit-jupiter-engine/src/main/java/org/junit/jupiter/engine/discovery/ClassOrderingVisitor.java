@@ -22,7 +22,7 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * @since 5.8
@@ -32,7 +32,7 @@ class ClassOrderingVisitor
 
 	private final JupiterConfiguration configuration;
 
-	ClassOrderingVisitor(EngineDiscoveryIssueReporter issueReporter, JupiterConfiguration configuration) {
+	ClassOrderingVisitor(DiscoveryIssueReporter issueReporter, JupiterConfiguration configuration) {
 		super(issueReporter);
 		this.configuration = configuration;
 	}

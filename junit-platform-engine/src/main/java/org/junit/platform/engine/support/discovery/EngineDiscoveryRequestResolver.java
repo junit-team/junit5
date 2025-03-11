@@ -110,8 +110,8 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-		EngineDiscoveryIssueReporter issueReporter = new DefaultEngineDiscoveryIssueReporter(
-			request.getDiscoveryListener(), engineDescriptor.getUniqueId());
+		DiscoveryIssueReporter issueReporter = new DefaultDiscoveryIssueReporter(request.getDiscoveryListener(),
+			engineDescriptor.getUniqueId());
 		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor,
 			issueReporter);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
@@ -284,7 +284,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@API(status = EXPERIMENTAL, since = "1.12")
 		Predicate<String> getPackageFilter();
 
-		EngineDiscoveryIssueReporter getIssueReporter();
+		DiscoveryIssueReporter getIssueReporter();
 
 	}
 
@@ -294,10 +294,10 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		private final T engineDescriptor;
 		private final Predicate<String> classNameFilter;
 		private final Predicate<String> packageFilter;
-		private final EngineDiscoveryIssueReporter issueReporter;
+		private final DiscoveryIssueReporter issueReporter;
 
 		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor,
-				EngineDiscoveryIssueReporter issueReporter) {
+				DiscoveryIssueReporter issueReporter) {
 			this.request = request;
 			this.engineDescriptor = engineDescriptor;
 			this.classNameFilter = buildClassNamePredicate(request);
@@ -345,7 +345,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		}
 
 		@Override
-		public EngineDiscoveryIssueReporter getIssueReporter() {
+		public DiscoveryIssueReporter getIssueReporter() {
 			return issueReporter;
 		}
 	}

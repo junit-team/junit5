@@ -24,10 +24,10 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
-import org.junit.platform.engine.EngineDiscoveryIssue;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
-import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Abstract base class for {@linkplain TestDescriptor.Visitor visitors} that
@@ -41,9 +41,9 @@ import org.junit.platform.engine.support.discovery.EngineDiscoveryIssueReporter;
 abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>>
 		implements TestDescriptor.Visitor {
 
-	private final EngineDiscoveryIssueReporter issueReporter;
+	private final DiscoveryIssueReporter issueReporter;
 
-	AbstractOrderingVisitor(EngineDiscoveryIssueReporter issueReporter) {
+	AbstractOrderingVisitor(DiscoveryIssueReporter issueReporter) {
 		this.issueReporter = issueReporter;
 	}
 
@@ -59,8 +59,8 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
 				String message = errorMessageBuilder.apply(parentTestDescriptor);
-				AbstractOrderingVisitor.this.issueReporter.reportIssue(
-					EngineDiscoveryIssue.builder(Severity.WARNING, message) //
+				AbstractOrderingVisitor.this.issueReporter.reportIssue( //
+					DiscoveryIssue.builder(Severity.WARNING, message) //
 							.source(testDescriptor.getSource()) //
 							.cause(t) //
 							.build());
@@ -198,7 +198,7 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 
 		private void reportWarning(TestDescriptor parentTestDescriptor, String message) {
 			AbstractOrderingVisitor.this.issueReporter //
-					.reportIssue(EngineDiscoveryIssue.builder(Severity.WARNING, message) //
+					.reportIssue(DiscoveryIssue.builder(Severity.WARNING, message) //
 							.source(parentTestDescriptor.getSource()));
 		}
 

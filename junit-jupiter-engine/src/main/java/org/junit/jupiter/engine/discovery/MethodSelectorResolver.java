@@ -42,9 +42,9 @@ import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.EngineDiscoveryIssue;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
@@ -103,8 +103,7 @@ class MethodSelectorResolver implements SelectorResolver {
 						+ "This is typically the result of annotating a method with multiple competing annotations " //
 						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
 				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
-			context.reportIssue(EngineDiscoveryIssue.builder(Severity.NOTICE, message) //
-					.selector(selector) //
+			context.reportIssue(DiscoveryIssue.builder(Severity.NOTICE, message) //
 					.source(MethodSource.from(testClass, method)));
 		}
 		return matches.isEmpty() ? unresolved() : matches(matches);

@@ -14,8 +14,8 @@ import static java.util.function.UnaryOperator.identity;
 
 import java.util.function.UnaryOperator;
 
-import org.junit.platform.engine.EngineDiscoveryIssue;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 
 public interface Validatable {
 
@@ -27,7 +27,7 @@ public interface Validatable {
 			reportIssue(severity, message, identity());
 		}
 
-		void reportIssue(Severity severity, String message, UnaryOperator<EngineDiscoveryIssue.Builder> issueBuilder);
+		void reportIssue(Severity severity, String message, UnaryOperator<DiscoveryIssue.Builder> issueBuilder);
 
 	}
 

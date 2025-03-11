@@ -13,18 +13,16 @@ package org.junit.platform.engine;
 import java.util.Objects;
 import java.util.Optional;
 
-final class DefaultEngineDiscoveryIssue implements EngineDiscoveryIssue {
+final class DefaultDiscoveryIssue implements DiscoveryIssue {
 
 	private final Severity severity;
 	private final String message;
-	private final DiscoverySelector selector;
 	private final TestSource source;
 	private final Throwable cause;
 
-	DefaultEngineDiscoveryIssue(Builder builder) {
+	DefaultDiscoveryIssue(Builder builder) {
 		this.severity = builder.severity;
 		this.message = builder.message;
-		this.selector = builder.selector;
 		this.source = builder.source;
 		this.cause = builder.cause;
 	}
@@ -37,11 +35,6 @@ final class DefaultEngineDiscoveryIssue implements EngineDiscoveryIssue {
 	@Override
 	public String message() {
 		return this.message;
-	}
-
-	@Override
-	public Optional<DiscoverySelector> selector() {
-		return Optional.ofNullable(this.selector);
 	}
 
 	@Override
@@ -58,35 +51,28 @@ final class DefaultEngineDiscoveryIssue implements EngineDiscoveryIssue {
 	public boolean equals(Object o) {
 		if (o == null || getClass() != o.getClass())
 			return false;
-		DefaultEngineDiscoveryIssue that = (DefaultEngineDiscoveryIssue) o;
+		DefaultDiscoveryIssue that = (DefaultDiscoveryIssue) o;
 		return this.severity == that.severity //
 				&& Objects.equals(this.message, that.message) //
-				&& Objects.equals(this.selector, that.selector) //
-				&& Objects.equals(this.source, that.source);
+				&& Objects.equals(this.source, that.source) //
+				&& Objects.equals(this.cause, that.cause);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(this.severity, this.message, this.selector, this.source);
+		return Objects.hash(this.severity, this.message, this.source, this.cause);
 	}
 
-	static class Builder implements EngineDiscoveryIssue.Builder {
+	static class Builder implements DiscoveryIssue.Builder {
 
 		private final Severity severity;
 		private final String message;
-		private DiscoverySelector selector;
 		private TestSource source;
 		public Throwable cause;
 
 		Builder(Severity severity, String message) {
 			this.severity = severity;
 			this.message = message;
-		}
-
-		@Override
-		public Builder selector(DiscoverySelector selector) {
-			this.selector = selector;
-			return this;
 		}
 
 		@Override
@@ -102,8 +88,8 @@ final class DefaultEngineDiscoveryIssue implements EngineDiscoveryIssue {
 		}
 
 		@Override
-		public EngineDiscoveryIssue build() {
-			return new DefaultEngineDiscoveryIssue(this);
+		public DiscoveryIssue build() {
+			return new DefaultDiscoveryIssue(this);
 		}
 	}
 }

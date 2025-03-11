@@ -10,23 +10,23 @@
 
 package org.junit.platform.engine.support.discovery;
 
-import org.junit.platform.engine.EngineDiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.UniqueId;
 
-class DefaultEngineDiscoveryIssueReporter implements EngineDiscoveryIssueReporter {
+class DefaultDiscoveryIssueReporter implements DiscoveryIssueReporter {
 
 	private final EngineDiscoveryListener discoveryListener;
 	private final UniqueId engineId;
 
-	public DefaultEngineDiscoveryIssueReporter(EngineDiscoveryListener discoveryListener, UniqueId engineId) {
+	public DefaultDiscoveryIssueReporter(EngineDiscoveryListener discoveryListener, UniqueId engineId) {
 		this.discoveryListener = discoveryListener;
 		this.engineId = engineId;
 	}
 
 	@Override
-	public void reportIssue(EngineDiscoveryIssue issue) {
-		this.discoveryListener.issueFound(this.engineId, issue);
+	public void reportIssue(DiscoveryIssue issue) {
+		this.discoveryListener.issueEncountered(this.engineId, issue);
 	}
 
 }

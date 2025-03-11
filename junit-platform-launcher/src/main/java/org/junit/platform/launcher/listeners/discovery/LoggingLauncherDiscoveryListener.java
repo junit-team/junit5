@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.EngineDiscoveryIssue;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -90,7 +90,7 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 	}
 
 	@Override
-	public void issueFound(UniqueId engineId, EngineDiscoveryIssue issue) {
+	public void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 		Throwable cause = issue.cause().orElse(null);
 		switch (issue.severity()) {
 			case NOTICE:
@@ -107,11 +107,9 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 		}
 	}
 
-	private static String formatIssueMessage(UniqueId engineId, EngineDiscoveryIssue issue) {
-		return String.format("[%s] Engine %s: %s (selector=%s, source=%s)", issue.severity(),
-			engineId.getLastSegment().getValue(), issue.message(),
-			issue.selector().map(String::valueOf).orElse("<none>"),
-			issue.source().map(String::valueOf).orElse("<none>"));
+	private static String formatIssueMessage(UniqueId engineId, DiscoveryIssue issue) {
+		return String.format("[%s] Engine %s: %s (source=%s)", issue.severity(), engineId.getLastSegment().getValue(),
+			issue.message(), issue.source().map(String::valueOf).orElse("<none>"));
 	}
 
 	@Override

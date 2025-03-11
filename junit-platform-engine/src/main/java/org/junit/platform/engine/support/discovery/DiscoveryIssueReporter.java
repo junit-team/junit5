@@ -10,14 +10,14 @@
 
 package org.junit.platform.engine.support.discovery;
 
-import org.junit.platform.engine.EngineDiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue;
 
-public interface EngineDiscoveryIssueReporter {
+public interface DiscoveryIssueReporter {
 
-	default void reportIssue(EngineDiscoveryIssue.Builder builder) {
+	default void reportIssue(DiscoveryIssue.Builder builder) {
 		reportIssue(builder.build());
 	}
 
-	void reportIssue(EngineDiscoveryIssue issue);
+	void reportIssue(DiscoveryIssue issue);
 
 }

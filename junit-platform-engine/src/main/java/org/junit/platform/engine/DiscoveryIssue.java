@@ -12,21 +12,19 @@ package org.junit.platform.engine;
 
 import java.util.Optional;
 
-public interface EngineDiscoveryIssue {
+public interface DiscoveryIssue {
 
-	static EngineDiscoveryIssue create(Severity severity, String message) {
+	static DiscoveryIssue create(Severity severity, String message) {
 		return builder(severity, message).build();
 	}
 
 	static Builder builder(Severity severity, String message) {
-		return new DefaultEngineDiscoveryIssue.Builder(severity, message);
+		return new DefaultDiscoveryIssue.Builder(severity, message);
 	}
 
 	Severity severity();
 
 	String message();
-
-	Optional<DiscoverySelector> selector();
 
 	Optional<TestSource> source();
 
@@ -35,28 +33,32 @@ public interface EngineDiscoveryIssue {
 	enum Severity {
 
 		/**
-		 * Indicates that the engine encountered something that could
-		 * be potentially problematic, but could also happen due to a valid
-		 * setup or configuration.
+		 * Indicates that the engine encountered something that could be
+		 * potentially problematic, but could also happen due to a valid setup
+		 * or configuration.
 		 */
 		NOTICE,
 
 		/**
-		 * Indicates that a deprecated feature was used that might be
-		 * removed or change behavior in a future release.
+		 * Indicates that a deprecated feature was used that might be removed
+		 * or change behavior in a future release.
 		 */
 		DEPRECATION,
 
 		/**
-		 * Indicates that the engine encountered something that is
-		 * problematic and might lead to unexpected behavior.
+		 * Indicates that the engine encountered something that is problematic
+		 * and might lead to unexpected behavior.
 		 */
-		WARNING
+		WARNING,
+
+		/**
+		 * Indicates that the engine encountered something that is definitely
+		 * problematic and will lead to unexpected behavior.
+		 */
+		ERROR
 	}
 
 	interface Builder {
-
-		Builder selector(DiscoverySelector selector);
 
 		default Builder source(Optional<TestSource> source) {
 			source.ifPresent(this::source);
@@ -67,7 +69,7 @@ public interface EngineDiscoveryIssue {
 
 		Builder cause(Throwable cause);
 
-		EngineDiscoveryIssue build();
+		DiscoveryIssue build();
 
 	}
 }

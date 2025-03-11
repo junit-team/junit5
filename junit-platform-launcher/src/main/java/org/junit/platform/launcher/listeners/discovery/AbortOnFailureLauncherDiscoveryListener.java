@@ -25,9 +25,9 @@ import java.util.Set;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.EngineDiscoveryIssue;
-import org.junit.platform.engine.EngineDiscoveryIssue.Severity;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
@@ -41,7 +41,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
  */
 class AbortOnFailureLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
-	private final Map<UniqueId, List<EngineDiscoveryIssue>> issuesByEngineId = new LinkedHashMap<>();
+	private final Map<UniqueId, List<DiscoveryIssue>> issuesByEngineId = new LinkedHashMap<>();
 
 	@Override
 	public void launcherDiscoveryStarted(LauncherDiscoveryRequest request) {
@@ -67,7 +67,7 @@ class AbortOnFailureLauncherDiscoveryListener implements LauncherDiscoveryListen
 	}
 
 	@Override
-	public void issueFound(UniqueId engineId, EngineDiscoveryIssue issue) {
+	public void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 		issuesByEngineId.computeIfAbsent(engineId, __ -> new ArrayList<>()) //
 				.add(issue);
 	}
