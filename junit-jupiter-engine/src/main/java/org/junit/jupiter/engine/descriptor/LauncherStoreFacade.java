@@ -51,6 +51,8 @@ public class LauncherStoreFacade {
 	}
 
 	private Namespace convert(ExtensionContext.Namespace namespace) {
-		return Namespace.create(namespace.getParts());
+		return namespace.equals(ExtensionContext.Namespace.GLOBAL) //
+				? Namespace.GLOBAL //
+				: Namespace.create(namespace.getParts());
 	}
 }
