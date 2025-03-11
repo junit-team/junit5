@@ -24,6 +24,7 @@ import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoveryFilter;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
@@ -62,6 +63,11 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 		event.uniqueId = engineId.toString();
 		event.begin();
 		engineDiscoveryEvents.put(engineId, event);
+	}
+
+	@Override
+	public void issueEncountered(org.junit.platform.engine.UniqueId engineId, DiscoveryIssue issue) {
+		// TODO #242 Report JFR event for each issue
 	}
 
 	@Override
