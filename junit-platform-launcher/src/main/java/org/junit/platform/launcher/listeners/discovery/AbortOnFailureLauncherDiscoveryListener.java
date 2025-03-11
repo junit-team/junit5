@@ -13,17 +13,33 @@ package org.junit.platform.launcher.listeners.discovery;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.EngineDiscoveryResult;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 /**
  * @since 1.6
  * @see LauncherDiscoveryListeners#abortOnFailure()
  */
-class AbortOnFailureLauncherDiscoveryListener extends LoggingLauncherDiscoveryListener {
+class AbortOnFailureLauncherDiscoveryListener implements LauncherDiscoveryListener {
 
 	@Override
 	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
 		result.getThrowable().ifPresent(ExceptionUtils::throwAsUncheckedException);
-		super.engineDiscoveryFinished(engineId, result);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		return getClass() == obj.getClass();
+	}
+
+	@Override
+	public int hashCode() {
+		return 0;
 	}
 
 }
