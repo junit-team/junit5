@@ -11,12 +11,18 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.function.UnaryOperator.identity;
+import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.function.UnaryOperator;
 
+import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 
+/**
+ * @since 5.13
+ */
+@API(status = INTERNAL, since = "5.13")
 public interface Validatable {
 
 	void validate(IssueReporter issueReporter);

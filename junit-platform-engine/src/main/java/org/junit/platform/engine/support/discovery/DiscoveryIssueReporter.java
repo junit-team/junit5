@@ -10,8 +10,15 @@
 
 package org.junit.platform.engine.support.discovery;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
+import org.apiguardian.api.API;
 import org.junit.platform.engine.DiscoveryIssue;
 
+/**
+ * @since 1.13
+ */
+@API(status = EXPERIMENTAL, since = "1.13")
 public interface DiscoveryIssueReporter {
 
 	default void reportIssue(DiscoveryIssue.Builder builder) {

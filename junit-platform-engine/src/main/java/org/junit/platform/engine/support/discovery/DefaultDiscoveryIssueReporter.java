@@ -14,12 +14,15 @@ import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.UniqueId;
 
+/**
+ * @since 1.13
+ */
 class DefaultDiscoveryIssueReporter implements DiscoveryIssueReporter {
 
 	private final EngineDiscoveryListener discoveryListener;
 	private final UniqueId engineId;
 
-	public DefaultDiscoveryIssueReporter(EngineDiscoveryListener discoveryListener, UniqueId engineId) {
+	DefaultDiscoveryIssueReporter(EngineDiscoveryListener discoveryListener, UniqueId engineId) {
 		this.discoveryListener = discoveryListener;
 		this.engineId = engineId;
 	}

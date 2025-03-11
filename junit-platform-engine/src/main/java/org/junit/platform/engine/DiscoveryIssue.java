@@ -10,8 +10,16 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+
 import java.util.Optional;
 
+import org.apiguardian.api.API;
+
+/**
+ * @since 1.13
+ */
+@API(status = EXPERIMENTAL, since = "1.13")
 public interface DiscoveryIssue {
 
 	static DiscoveryIssue create(Severity severity, String message) {
