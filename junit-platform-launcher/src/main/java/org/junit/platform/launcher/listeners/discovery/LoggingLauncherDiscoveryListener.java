@@ -97,9 +97,10 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 				logger.info(cause, () -> formatIssueMessage(engineId, issue));
 				break;
 			case DEPRECATION:
+			case WARNING:
 				logger.warn(cause, () -> formatIssueMessage(engineId, issue));
 				break;
-			case WARNING:
+			case ERROR:
 				logger.error(cause, () -> formatIssueMessage(engineId, issue));
 				break;
 			default:
