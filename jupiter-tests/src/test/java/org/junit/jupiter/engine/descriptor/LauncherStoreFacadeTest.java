@@ -95,10 +95,11 @@ class LauncherStoreFacadeTest {
 
 	@Test
 	void returnsNamespaceAwareStoreWithGlobalNamespace() {
+		requestLevelStore.put(Namespace.GLOBAL, "foo", "bar");
+
 		LauncherStoreFacade facade = new LauncherStoreFacade(requestLevelStore);
 		ExtensionContext.Store store = facade.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL);
 
-		assertNotNull(store);
-		assertInstanceOf(NamespaceAwareStore.class, store);
+		assertEquals("bar", store.get("foo"));
 	}
 }
