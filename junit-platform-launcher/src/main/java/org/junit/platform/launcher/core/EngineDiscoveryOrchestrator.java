@@ -162,7 +162,8 @@ public class EngineDiscoveryOrchestrator {
 			discoveryResultValidator.validate(testEngine, engineRoot);
 			if (!issueCollector.issues.isEmpty()) {
 				Exception cause = DiscoveryIssueException.from(testEngine.getId(), issueCollector.issues);
-				engineRoot = new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
+				engineRoot = new EngineDiscoveryErrorDescriptor(uniqueEngineId, engineRoot.getDisplayName(), testEngine,
+					cause);
 			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
 			return engineRoot;
@@ -178,7 +179,7 @@ public class EngineDiscoveryOrchestrator {
 				cause = new JUnitException(message, throwable);
 			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
-			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
+			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine.getId(), testEngine, cause);
 		}
 	}
 

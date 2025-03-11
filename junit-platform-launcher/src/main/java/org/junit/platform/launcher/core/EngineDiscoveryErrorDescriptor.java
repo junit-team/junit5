@@ -29,8 +29,8 @@ class EngineDiscoveryErrorDescriptor extends AbstractTestDescriptor {
 
 	private final Throwable cause;
 
-	EngineDiscoveryErrorDescriptor(UniqueId uniqueId, TestEngine testEngine, Throwable cause) {
-		super(uniqueId, testEngine.getId(), ClassSource.from(testEngine.getClass()));
+	EngineDiscoveryErrorDescriptor(UniqueId uniqueId, String displayName, TestEngine testEngine, Throwable cause) {
+		super(uniqueId, displayName, ClassSource.from(testEngine.getClass()));
 		this.cause = cause;
 	}
 
