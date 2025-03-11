@@ -57,9 +57,7 @@ class LauncherStoreFacadeTest {
 
 	@Test
 	void throwsExceptionWhenRequestLevelStoreHasNoParent() {
-		when(requestLevelStore.getParent()).thenReturn(Optional.empty());
-
-		assertThrowsExactly(JUnitException.class, () -> new LauncherStoreFacade(requestLevelStore), () -> {
+		assertThrowsExactly(JUnitException.class, () -> new LauncherStoreFacade(sessionLevelStore), () -> {
 			throw new JUnitException("Request-level store must have a parent");
 		});
 	}
