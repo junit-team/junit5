@@ -75,6 +75,11 @@ public interface DiscoveryIssue {
 
 		Builder source(TestSource source);
 
+		default Builder cause(Optional<Throwable> cause) {
+			cause.ifPresent(this::cause);
+			return this;
+		}
+
 		Builder cause(Throwable cause);
 
 		DiscoveryIssue build();

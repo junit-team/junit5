@@ -99,7 +99,8 @@ public class EngineDiscoveryOrchestrator {
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase,
 			Function<String, UniqueId> uniqueIdCreator) {
-		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request);
+		DiscoveryIssueCollector issueCollector = new DiscoveryIssueCollector();
+		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request, issueCollector);
 		LauncherDiscoveryRequest delegatingRequest = new DelegatingLauncherDiscoveryRequest(request) {
 			@Override
 			public LauncherDiscoveryListener getDiscoveryListener() {
@@ -108,7 +109,8 @@ public class EngineDiscoveryOrchestrator {
 		};
 		listener.launcherDiscoveryStarted(request);
 		try {
-			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(delegatingRequest, phase, uniqueIdCreator);
+			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(delegatingRequest, phase, issueCollector,
+				uniqueIdCreator);
 			return new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
 				request.getOutputDirectoryProvider());
 		}
@@ -118,7 +120,7 @@ public class EngineDiscoveryOrchestrator {
 	}
 
 	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
-			Function<String, UniqueId> uniqueIdCreator) {
+			DiscoveryIssueCollector issueCollector, Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 		EngineFilterer engineFilterer = new EngineFilterer(request.getEngineFilters());
 
@@ -135,7 +137,7 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, uniqueIdCreator);
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, issueCollector, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
@@ -151,13 +153,17 @@ public class EngineDiscoveryOrchestrator {
 	}
 
 	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
-			Function<String, UniqueId> uniqueIdCreator) {
+			DiscoveryIssueCollector issueCollector, Function<String, UniqueId> uniqueIdCreator) {
 		UniqueId uniqueEngineId = uniqueIdCreator.apply(testEngine.getId());
 		LauncherDiscoveryListener listener = request.getDiscoveryListener();
 		try {
 			listener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
+			if (!issueCollector.issues.isEmpty()) {
+				Exception cause = DiscoveryIssueException.from(testEngine.getId(), issueCollector.issues);
+				engineRoot = new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine, cause);
+			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
 			return engineRoot;
 		}
@@ -176,9 +182,11 @@ public class EngineDiscoveryOrchestrator {
 		}
 	}
 
-	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest) {
+	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest,
+			DiscoveryIssueCollector issueCollector) {
 		return ListenerRegistry.copyOf(launcherDiscoveryListenerRegistry) //
 				.add(discoveryRequest.getDiscoveryListener()) //
+				.add(issueCollector) //
 				.getCompositeListener();
 	}
 
