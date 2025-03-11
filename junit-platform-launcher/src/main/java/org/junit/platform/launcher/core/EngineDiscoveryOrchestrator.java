@@ -86,8 +86,8 @@ public class EngineDiscoveryOrchestrator {
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 *
-	 * Note: The test descriptors in the discovery result can safely be used as
-	 * non-root descriptors. Engine-test descriptor entries are pruned from
+	 * <p>Note: The test descriptors in the discovery result can safely be used
+	 * as non-root descriptors. Engine-test descriptor entries are pruned from
 	 * the returned result. As such execution by
 	 * {@link EngineExecutionOrchestrator#execute(LauncherDiscoveryResult, EngineExecutionListener)}
 	 * will not emit start or emit events for engines without tests.
