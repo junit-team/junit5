@@ -20,6 +20,8 @@ import java.util.List;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 class DiscoveryIssueException extends JUnitException {
 
@@ -47,13 +49,29 @@ class DiscoveryIssueException extends JUnitException {
 		StringBuilder message = new StringBuilder(super.getMessage());
 		if (issues != null) { // after deserialization
 			message.append(":");
-			for (DiscoveryIssue issue : issues) {
-				message.append("\n- [").append(issue.severity()).append("] ").append(issue.message());
-				issue.source().ifPresent(s -> message.append(" at ").append(s).append("]"));
-				issue.cause().ifPresent(t -> message.append("\n  Caused by: ").append(getStackTrace(t)));
+			for (int i = 0; i < issues.size(); i++) {
+				DiscoveryIssue issue = issues.get(i);
+				message.append("\n\n(").append(i + 1).append(") [").append(issue.severity()).append("] ").append(
+					issue.message());
+				issue.source().ifPresent(source -> {
+					message.append("\n    Source: ").append(source);
+					if (source instanceof MethodSource) {
+						MethodSource methodSource = (MethodSource) source;
+						appendIdeCompatibleLink(message, methodSource.getClassName(), methodSource.getMethodName());
+					}
+					else if (source instanceof ClassSource) {
+						ClassSource classSource = (ClassSource) source;
+						appendIdeCompatibleLink(message, classSource.getClassName(), "<no-method>");
+					}
+				});
+				issue.cause().ifPresent(t -> message.append("\n    Cause: ").append(getStackTrace(t)));
 			}
 		}
 		return message.toString();
+	}
+
+	private static void appendIdeCompatibleLink(StringBuilder message, String className, String methodName) {
+		message.append("\n            at ").append(className).append(".").append(methodName).append("(SourceFile:0)");
 	}
 
 	private static String getStackTrace(Throwable cause) {
