@@ -135,7 +135,8 @@ class ApiReportGenerator {
 		// scan all types below "org.junit" package
 		var classGraph = new ClassGraph() //
 				.acceptPackages("org.junit") //
-				.rejectPackages("*.shadow.*", "org.opentest4j.*") //
+				.rejectPackages("*.shadow.*", "org.opentest4j.*", "org.junit.platform.commons.logging",
+					"org.junit.platform.commons.util") //
 				.disableNestedJarScanning() //
 				.enableClassInfo() //
 				.enableMethodInfo() //
