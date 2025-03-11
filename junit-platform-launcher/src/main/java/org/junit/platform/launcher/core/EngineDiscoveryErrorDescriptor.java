@@ -40,7 +40,7 @@ class EngineDiscoveryErrorDescriptor extends AbstractTestDescriptor {
 
 	@Override
 	public Type getType() {
-		return Type.TEST;
+		return Type.CONTAINER_AND_TEST;
 	}
 
 	@Override
