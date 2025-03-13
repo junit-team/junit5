@@ -25,6 +25,7 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.D
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.inOrder;
@@ -44,6 +45,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -51,6 +53,7 @@ import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
+import org.junit.platform.engine.TestExecutionResult.Status;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
@@ -265,8 +268,7 @@ class DefaultLauncherTests {
 			public void execute(ExecutionRequest request) {
 				var engineDescriptor = request.getRootTestDescriptor();
 				request.getEngineExecutionListener().executionStarted(engineDescriptor);
-				request.getEngineExecutionListener().executionFinished(engineDescriptor,
-					TestExecutionResult.successful());
+				request.getEngineExecutionListener().executionFinished(engineDescriptor, successful());
 				throw rootCause;
 			}
 		};
@@ -337,7 +339,7 @@ class DefaultLauncherTests {
 				var engineDescriptor = request.getRootTestDescriptor();
 				var listener = request.getEngineExecutionListener();
 				listener.executionStarted(engineDescriptor);
-				listener.executionFinished(engineDescriptor, TestExecutionResult.successful());
+				listener.executionFinished(engineDescriptor, successful());
 			}
 		};
 
@@ -345,7 +347,7 @@ class DefaultLauncherTests {
 		createLauncher(engine).execute(request().build(), listener);
 
 		verify(listener).executionStarted(any());
-		verify(listener).executionFinished(any(), eq(TestExecutionResult.successful()));
+		verify(listener).executionFinished(any(), eq(successful()));
 	}
 
 	@Test
@@ -698,6 +700,72 @@ class DefaultLauncherTests {
 			() -> verify(discoveryListenerOnLauncher).selectorProcessed(engineId, selector, unresolved()), //
 			() -> verify(discoveryListenerOnRequest).selectorProcessed(engineId, selector, unresolved()) //
 		);
+	}
+
+	@Test
+	void reportsEngineExecutionFailureForCriticalDiscoveryIssuesAndLogsRemaining(
+			@TrackLogRecords LogRecordListener listener) {
+
+		var engineA = new TestEngineStub("engine-a") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.ERROR, "error"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.WARNING, "warning"));
+				return new EngineDescriptor(uniqueId, "A");
+			}
+		};
+		var engineB = new TestEngineStub("engine-b") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.NOTICE, "notice"));
+				return new EngineDescriptor(uniqueId, "B");
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var executionListener = request.getEngineExecutionListener();
+				var engineDescriptor = request.getRootTestDescriptor();
+				executionListener.executionStarted(engineDescriptor);
+				executionListener.executionFinished(engineDescriptor, successful());
+			}
+		};
+		var executionListener = mock(TestExecutionListener.class);
+
+		createLauncher(engineA, engineB).execute(request().build(), executionListener);
+
+		var inOrder = inOrder(executionListener);
+		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
+		inOrder.verify(executionListener).testPlanExecutionStarted(any());
+		inOrder.verify(executionListener).executionStarted(argThat(it -> "A".equals(it.getDisplayName())));
+		inOrder.verify(executionListener).executionFinished(argThat(it -> "A".equals(it.getDisplayName())),
+			testExecutionResult.capture());
+		inOrder.verify(executionListener).executionStarted(argThat(it -> "B".equals(it.getDisplayName())));
+		inOrder.verify(executionListener).executionFinished(argThat(it -> "B".equals(it.getDisplayName())),
+			testExecutionResult.capture());
+		inOrder.verify(executionListener).testPlanExecutionFinished(any());
+		inOrder.verifyNoMoreInteractions();
+
+		var results = testExecutionResult.getAllValues();
+
+		var resultOfEngineA = results.getFirst();
+		assertThat(resultOfEngineA.getStatus()).isEqualTo(Status.FAILED);
+		assertThat(resultOfEngineA.getThrowable().orElseThrow()) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'engine-a' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [ERROR] error");
+
+		assertThat(listener.stream(Level.WARNING).map(LogRecord::getMessage).findFirst().orElseThrow()) //
+				.startsWith("TestEngine with ID 'engine-a' encountered a non-critical issue during test discovery") //
+				.contains("(1) [WARNING] warning");
+
+		var resultOfEngineB = results.getLast();
+		assertThat(resultOfEngineB.getStatus()).isEqualTo(Status.SUCCESSFUL);
+
+		assertThat(listener.stream(Level.INFO).map(LogRecord::getMessage).findFirst().orElseThrow()) //
+				.startsWith("TestEngine with ID 'engine-b' encountered a non-critical issue during test discovery") //
+				.contains("(1) [NOTICE] notice");
 	}
 
 }
