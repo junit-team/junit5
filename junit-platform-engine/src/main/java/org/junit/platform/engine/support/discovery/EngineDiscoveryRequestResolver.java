@@ -110,10 +110,13 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor);
+		DiscoveryIssueReporter issueReporter = new DefaultDiscoveryIssueReporter(request.getDiscoveryListener(),
+			engineDescriptor.getUniqueId());
+		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor,
+			issueReporter);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
 		List<TestDescriptor.Visitor> visitors = instantiate(visitorCreators, initializationContext);
-		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors).run();
+		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors, issueReporter).run();
 	}
 
 	private <R> List<R> instantiate(List<Function<InitializationContext<T>, R>> creators,
@@ -281,6 +284,14 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@API(status = EXPERIMENTAL, since = "1.12")
 		Predicate<String> getPackageFilter();
 
+		/**
+		 * {@return the {@link DiscoveryIssueReporter} for the current
+		 * resolution}
+		 *
+		 * @since 1.13
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		DiscoveryIssueReporter getIssueReporter();
 	}
 
 	private static class DefaultInitializationContext<T extends TestDescriptor> implements InitializationContext<T> {
@@ -289,12 +300,15 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		private final T engineDescriptor;
 		private final Predicate<String> classNameFilter;
 		private final Predicate<String> packageFilter;
+		private final DiscoveryIssueReporter issueReporter;
 
-		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor) {
+		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor,
+				DiscoveryIssueReporter issueReporter) {
 			this.request = request;
 			this.engineDescriptor = engineDescriptor;
 			this.classNameFilter = buildClassNamePredicate(request);
 			this.packageFilter = buildPackagePredicate(request);
+			this.issueReporter = issueReporter;
 		}
 
 		/**
@@ -334,6 +348,11 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@Override
 		public Predicate<String> getPackageFilter() {
 			return packageFilter;
+		}
+
+		@Override
+		public DiscoveryIssueReporter getIssueReporter() {
+			return issueReporter;
 		}
 	}
 
