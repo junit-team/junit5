@@ -11,23 +11,29 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Comparator.comparing;
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 
-class DiscoveryIssueException extends JUnitException {
+/**
+ * @since 1.13
+ */
+@API(status = EXPERIMENTAL, since = "1.13")
+public class DiscoveryIssueException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 
-	public static DiscoveryIssueException from(String engineId, List<DiscoveryIssue> issues) {
+	static DiscoveryIssueException from(String engineId, List<DiscoveryIssue> issues) {
 		Preconditions.notNull(engineId, "engineId must not be null");
 		Preconditions.notNull(issues, "issues must not be null");
 		Preconditions.notEmpty(issues, "issues must not be empty");

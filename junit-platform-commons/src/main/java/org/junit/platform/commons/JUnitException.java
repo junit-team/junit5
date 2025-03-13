@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons;
 
+import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -36,7 +37,8 @@ public class JUnitException extends RuntimeException {
 	/**
 	 * @since 1.13
 	 */
-	public JUnitException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	@API(status = MAINTAINED, since = "1.13")
+	protected JUnitException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 }
