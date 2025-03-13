@@ -13,6 +13,7 @@ org.junit.platform.launcher.core.LauncherConfigurationParameters$ParameterProvid
 org.junit.platform.launcher.core.LauncherConfigurationParameters$ParameterProvider$3
 org.junit.platform.launcher.core.LauncherConfigurationParameters$ParameterProvider$4
 org.junit.platform.launcher.core.LauncherDiscoveryResult
+org.junit.platform.launcher.core.LauncherDiscoveryResult$EngineResultInfo
 org.junit.platform.launcher.core.LauncherListenerRegistry
 org.junit.platform.launcher.core.ListenerRegistry
 org.junit.platform.launcher.core.SessionPerRequestLauncher

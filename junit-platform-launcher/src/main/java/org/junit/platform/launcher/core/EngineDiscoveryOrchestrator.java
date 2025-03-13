@@ -41,10 +41,12 @@ import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult.EngineResultInfo;
 
 /**
  * Orchestrates test discovery using the configured test engines.
@@ -116,9 +118,9 @@ public class EngineDiscoveryOrchestrator {
 		};
 		listener.launcherDiscoveryStarted(request);
 		try {
-			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(delegatingRequest, phase, issueCollector,
-				uniqueIdCreator);
-			return new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
+			Map<TestEngine, EngineResultInfo> testEngineResults = discoverSafely(delegatingRequest, phase,
+				issueCollector, uniqueIdCreator);
+			return new LauncherDiscoveryResult(testEngineResults, request.getConfigurationParameters(),
 				request.getOutputDirectoryProvider());
 		}
 		finally {
@@ -126,9 +128,9 @@ public class EngineDiscoveryOrchestrator {
 		}
 	}
 
-	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
+	private Map<TestEngine, EngineResultInfo> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
 			DiscoveryIssueCollector issueCollector, Function<String, UniqueId> uniqueIdCreator) {
-		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
+		Map<TestEngine, EngineResultInfo> testEngineDescriptors = new LinkedHashMap<>();
 		EngineFilterer engineFilterer = new EngineFilterer(request.getEngineFilters());
 
 		for (TestEngine testEngine : this.testEngines) {
@@ -144,8 +146,8 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, issueCollector, uniqueIdCreator);
-			testEngineDescriptors.put(testEngine, rootDescriptor);
+			EngineResultInfo engineResult = discoverEngineRoot(testEngine, request, issueCollector, uniqueIdCreator);
+			testEngineDescriptors.put(testEngine, engineResult);
 		}
 
 		engineFilterer.performSanityChecks();
@@ -159,7 +161,7 @@ public class EngineDiscoveryOrchestrator {
 		return testEngineDescriptors;
 	}
 
-	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
+	private EngineResultInfo discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
 			DiscoveryIssueCollector issueCollector, Function<String, UniqueId> uniqueIdCreator) {
 		UniqueId uniqueEngineId = uniqueIdCreator.apply(testEngine.getId());
 		LauncherDiscoveryListener listener = request.getDiscoveryListener();
@@ -167,9 +169,11 @@ public class EngineDiscoveryOrchestrator {
 			listener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			Optional<TestDescriptor> errorDescriptor = handleDiscoveryIssues(testEngine, issueCollector, engineRoot);
+			Optional<? extends Throwable> criticalDiscoveryIssue = handleDiscoveryIssues(testEngine, issueCollector);
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
-			return errorDescriptor.orElse(engineRoot);
+			return criticalDiscoveryIssue //
+					.map(cause -> EngineResultInfo.failure(engineRoot, cause)) //
+					.orElseGet(() -> EngineResultInfo.success(engineRoot));
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
@@ -182,16 +186,16 @@ public class EngineDiscoveryOrchestrator {
 				cause = new JUnitException(message, throwable);
 			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
-			return new EngineDiscoveryErrorDescriptor(uniqueEngineId, testEngine.getId(), testEngine, cause);
+			return EngineResultInfo.failure(new EngineDescriptor(uniqueEngineId, testEngine.getId()), cause);
 		}
 	}
 
-	private static Optional<TestDescriptor> handleDiscoveryIssues(TestEngine testEngine,
-			DiscoveryIssueCollector issueCollector, TestDescriptor engineRoot) {
+	private static Optional<DiscoveryIssueException> handleDiscoveryIssues(TestEngine testEngine,
+			DiscoveryIssueCollector issueCollector) {
 
-		Optional<TestDescriptor> errorDescriptor = Optional.empty();
+		Optional<DiscoveryIssueException> result = Optional.empty();
 		if (issueCollector.issues.isEmpty()) {
-			return errorDescriptor;
+			return result;
 		}
 		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
 		Map<Boolean, List<DiscoveryIssue>> issuesByCriticality = issueCollector.issues.stream() //
@@ -200,16 +204,14 @@ public class EngineDiscoveryOrchestrator {
 		List<DiscoveryIssue> criticalIssues = issuesByCriticality.get(true);
 		List<DiscoveryIssue> nonCriticalIssues = issuesByCriticality.get(false);
 		if (!criticalIssues.isEmpty()) {
-			Exception cause = DiscoveryIssueException.from(testEngine.getId(), criticalIssues);
-			errorDescriptor = Optional.of(new EngineDiscoveryErrorDescriptor(engineRoot.getUniqueId(),
-				engineRoot.getDisplayName(), testEngine, cause));
+			result = Optional.of(DiscoveryIssueException.from(testEngine.getId(), criticalIssues));
 		}
 		if (!nonCriticalIssues.isEmpty()) {
 			Severity maxSeverity = nonCriticalIssues.get(0).severity();
 			Consumer<Supplier<String>> loggerMethod = maxSeverity == Severity.NOTICE ? logger::info : logger::warn;
 			loggerMethod.accept(() -> formatMessageForNonCriticalIssues(testEngine.getId(), nonCriticalIssues));
 		}
-		return errorDescriptor;
+		return result;
 	}
 
 	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest,
@@ -220,7 +222,7 @@ public class EngineDiscoveryOrchestrator {
 				.getCompositeListener();
 	}
 
-	private void applyPostDiscoveryFilters(Map<TestEngine, TestDescriptor> testEngineDescriptors,
+	private void applyPostDiscoveryFilters(Map<TestEngine, EngineResultInfo> testEngineDescriptors,
 			List<PostDiscoveryFilter> filters) {
 		Filter<TestDescriptor> postDiscoveryFilter = composeFilters(filters);
 		Map<String, List<TestDescriptor>> excludedTestDescriptorsByReason = new LinkedHashMap<>();
@@ -260,17 +262,17 @@ public class EngineDiscoveryOrchestrator {
 	 * <p>If a {@link TestEngine} ends up with no {@code TestDescriptors} after
 	 * pruning, it will <strong>not</strong> be removed.
 	 */
-	private void prune(Map<TestEngine, TestDescriptor> testEngineDescriptors) {
-		acceptInAllTestEngines(testEngineDescriptors, TestDescriptor::prune);
+	private void prune(Map<TestEngine, EngineResultInfo> testEngineResults) {
+		acceptInAllTestEngines(testEngineResults, TestDescriptor::prune);
 	}
 
 	private boolean isExcluded(TestDescriptor descriptor, FilterResult filterResult) {
 		return descriptor.getChildren().isEmpty() && filterResult.excluded();
 	}
 
-	private void acceptInAllTestEngines(Map<TestEngine, TestDescriptor> testEngineDescriptors,
+	private void acceptInAllTestEngines(Map<TestEngine, EngineResultInfo> testEngineResults,
 			TestDescriptor.Visitor visitor) {
-		testEngineDescriptors.values().forEach(descriptor -> descriptor.accept(visitor));
+		testEngineResults.values().forEach(result -> result.getRootDescriptor().accept(visitor));
 	}
 
 	public enum Phase {

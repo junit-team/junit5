@@ -25,7 +25,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.D
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.inOrder;
@@ -34,6 +33,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -54,6 +54,7 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.engine.support.hierarchical.DemoHierarchicalTestDescriptor;
@@ -712,7 +713,12 @@ class DefaultLauncherTests {
 				var listener = discoveryRequest.getDiscoveryListener();
 				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.ERROR, "error"));
 				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.WARNING, "warning"));
-				return new EngineDescriptor(uniqueId, "A");
+				return new EngineDescriptor(uniqueId, "A") {
+					@Override
+					public Set<TestTag> getTags() {
+						return Set.of(TestTag.create("custom-tag"));
+					}
+				};
 			}
 		};
 		var engineB = new TestEngineStub("engine-b") {
@@ -736,18 +742,22 @@ class DefaultLauncherTests {
 		createLauncher(engineA, engineB).execute(request().build(), executionListener);
 
 		var inOrder = inOrder(executionListener);
+		var testIdentifier = ArgumentCaptor.forClass(TestIdentifier.class);
 		var testExecutionResult = ArgumentCaptor.forClass(TestExecutionResult.class);
 		inOrder.verify(executionListener).testPlanExecutionStarted(any());
-		inOrder.verify(executionListener).executionStarted(argThat(it -> "A".equals(it.getDisplayName())));
-		inOrder.verify(executionListener).executionFinished(argThat(it -> "A".equals(it.getDisplayName())),
-			testExecutionResult.capture());
-		inOrder.verify(executionListener).executionStarted(argThat(it -> "B".equals(it.getDisplayName())));
-		inOrder.verify(executionListener).executionFinished(argThat(it -> "B".equals(it.getDisplayName())),
-			testExecutionResult.capture());
+		inOrder.verify(executionListener).executionStarted(testIdentifier.capture());
+		inOrder.verify(executionListener).executionFinished(any(), testExecutionResult.capture());
+		inOrder.verify(executionListener).executionStarted(testIdentifier.capture());
+		inOrder.verify(executionListener).executionFinished(any(), testExecutionResult.capture());
 		inOrder.verify(executionListener).testPlanExecutionFinished(any());
 		inOrder.verifyNoMoreInteractions();
 
+		var testIdentifiers = testIdentifier.getAllValues();
 		var results = testExecutionResult.getAllValues();
+
+		var testIdentifierOfEngineA = testIdentifiers.getFirst();
+		assertThat(testIdentifierOfEngineA.getDisplayName()).isEqualTo("A");
+		assertThat(testIdentifierOfEngineA.getTags()).containsExactly(TestTag.create("custom-tag"));
 
 		var resultOfEngineA = results.getFirst();
 		assertThat(resultOfEngineA.getStatus()).isEqualTo(Status.FAILED);
@@ -759,6 +769,9 @@ class DefaultLauncherTests {
 		assertThat(listener.stream(Level.WARNING).map(LogRecord::getMessage).findFirst().orElseThrow()) //
 				.startsWith("TestEngine with ID 'engine-a' encountered a non-critical issue during test discovery") //
 				.contains("(1) [WARNING] warning");
+
+		var testIdentifierOfEngineB = testIdentifiers.getLast();
+		assertThat(testIdentifierOfEngineB.getDisplayName()).isEqualTo("B");
 
 		var resultOfEngineB = results.getLast();
 		assertThat(resultOfEngineB.getStatus()).isEqualTo(Status.SUCCESSFUL);
