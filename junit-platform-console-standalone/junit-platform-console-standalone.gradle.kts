@@ -27,6 +27,7 @@ val vintageVersion: String by project
 tasks {
 	jar {
 		manifest {
+			attributes("Automatic-Module-Name" to "org.junit.platform.console.standalone")
 			attributes("Main-Class" to "org.junit.platform.console.ConsoleLauncher")
 		}
 	}

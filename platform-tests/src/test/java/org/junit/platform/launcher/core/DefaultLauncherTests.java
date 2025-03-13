@@ -11,10 +11,12 @@
 package org.junit.platform.launcher.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
+import static org.junit.platform.engine.SelectorResolutionResult.unresolved;
 import static org.junit.platform.engine.TestExecutionResult.successful;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -42,6 +44,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
+import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
@@ -64,6 +67,7 @@ import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 
 /**
  * @since 1.0
@@ -121,7 +125,7 @@ class DefaultLauncherTests {
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build());
 		assertThat(testPlan.getRoots()).hasSize(1);
-		assertDiscoveryFailed(engine, discoveryListener);
+		assertDiscoveryFailed(engine, inOrder(discoveryListener), discoveryListener);
 	}
 
 	@ParameterizedTest
@@ -152,9 +156,11 @@ class DefaultLauncherTests {
 		assertThat(testPlan.getRoots()).hasSize(1);
 		var engineIdentifier = getOnlyElement(testPlan.getRoots());
 		assertThat(getOnlyElement(testPlan.getRoots()).getDisplayName()).isEqualTo("my-engine-id");
-		verify(discoveryListener).launcherDiscoveryStarted(request);
-		verify(discoveryListener).launcherDiscoveryFinished(request);
-		assertDiscoveryFailed(engine, discoveryListener);
+
+		InOrder inOrder = inOrder(discoveryListener);
+		inOrder.verify(discoveryListener).launcherDiscoveryStarted(request);
+		assertDiscoveryFailed(engine, inOrder, discoveryListener);
+		inOrder.verify(discoveryListener).launcherDiscoveryFinished(request);
 
 		var listener = mock(TestExecutionListener.class);
 		launcher.execute(testPlan, listener);
@@ -167,10 +173,13 @@ class DefaultLauncherTests {
 				.hasMessage("TestEngine with ID 'my-engine-id' failed to discover tests");
 	}
 
-	private void assertDiscoveryFailed(TestEngine testEngine, LauncherDiscoveryListener discoveryListener) {
+	private void assertDiscoveryFailed(TestEngine testEngine, InOrder inOrder,
+			LauncherDiscoveryListener discoveryListener) {
 		var engineId = testEngine.getId();
 		var failureCaptor = ArgumentCaptor.forClass(EngineDiscoveryResult.class);
-		verify(discoveryListener).engineDiscoveryFinished(eq(UniqueId.forEngine(engineId)), failureCaptor.capture());
+		inOrder.verify(discoveryListener).engineDiscoveryStarted(UniqueId.forEngine(engineId));
+		inOrder.verify(discoveryListener).engineDiscoveryFinished(eq(UniqueId.forEngine(engineId)),
+			failureCaptor.capture());
 		var result = failureCaptor.getValue();
 		assertThat(result.getStatus()).isEqualTo(EngineDiscoveryResult.Status.FAILED);
 		assertThat(result.getThrowable()).isPresent();
@@ -651,4 +660,44 @@ class DefaultLauncherTests {
 		inOrder.verify(listener).testPlanExecutionFinished(any());
 		inOrder.verifyNoMoreInteractions();
 	}
+
+	@Test
+	void notifiesDiscoveryListenersOfProcessedSelectors() {
+		TestEngine engine = new TestEngineStub("some-engine-id") {
+
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				discoveryRequest.getSelectorsByType(DiscoverySelector.class).forEach(selector -> {
+					discoveryRequest.getDiscoveryListener().selectorProcessed(uniqueId, selector, unresolved());
+				});
+				return new EngineDescriptor(uniqueId, uniqueId.getLastSegment().getValue());
+			}
+		};
+		var engineId = UniqueId.forEngine(engine.getId());
+
+		var discoveryListenerOnConfig = mock(LauncherDiscoveryListener.class, "discoveryListenerOnConfig");
+		var discoveryListenerOnLauncher = mock(LauncherDiscoveryListener.class, "discoveryListenerOnLauncher");
+		var discoveryListenerOnRequest = mock(LauncherDiscoveryListener.class, "discoveryListenerOnRequest");
+		var selector = mock(DiscoverySelector.class);
+
+		var launcherConfig = LauncherFactoryForTestingPurposesOnly.createLauncherConfigBuilderWithDisabledServiceLoading() //
+				.addTestEngines(engine) //
+				.addLauncherDiscoveryListeners(discoveryListenerOnConfig) //
+				.build();
+
+		var launcher = LauncherFactory.create(launcherConfig);
+		launcher.registerLauncherDiscoveryListeners(discoveryListenerOnLauncher);
+
+		launcher.discover(request() //
+				.selectors(selector) //
+				.listeners(discoveryListenerOnRequest) //
+				.build());
+
+		assertAll( //
+			() -> verify(discoveryListenerOnConfig).selectorProcessed(engineId, selector, unresolved()), //
+			() -> verify(discoveryListenerOnLauncher).selectorProcessed(engineId, selector, unresolved()), //
+			() -> verify(discoveryListenerOnRequest).selectorProcessed(engineId, selector, unresolved()) //
+		);
+	}
+
 }
