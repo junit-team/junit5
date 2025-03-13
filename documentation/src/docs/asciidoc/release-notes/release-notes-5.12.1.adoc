@@ -21,7 +21,9 @@ on GitHub.
 [[release-notes-5.12.1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Set stable module name `org.junit.platform.console.standalone` for the
+  `junit-platform-console-standalone` artifact, superseding the unstable name generated
+  from the name of the JAR file when putting the artifact on the module path.
 
 [[release-notes-5.12.1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
