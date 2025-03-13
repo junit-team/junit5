@@ -32,6 +32,7 @@ import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult.EngineResultInfo;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -160,11 +161,12 @@ public class EngineExecutionOrchestrator {
 		EngineExecutionListener listener = selectExecutionListener(engineExecutionListener, configurationParameters);
 
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
-			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
-			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
+			EngineResultInfo engineDiscoveryResult = discoveryResult.getEngineResult(testEngine);
+			TestDescriptor engineDescriptor = engineDiscoveryResult.getRootDescriptor();
+			if (engineDiscoveryResult.getFailure().isPresent()) {
 				listener.executionStarted(engineDescriptor);
 				listener.executionFinished(engineDescriptor,
-					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
+					TestExecutionResult.failed(engineDiscoveryResult.getFailure().get()));
 			}
 			else {
 				execute(engineDescriptor, listener, configurationParameters, testEngine,
