@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -86,6 +87,11 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 				loggingConsumer.accept(() -> selector + " could not be resolved by " + engineId);
 				break;
 		}
+	}
+
+	@Override
+	public void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
+		logger.trace(() -> "Issue encountered during discovery by TestEngine with ID '" + engineId + "': " + issue);
 	}
 
 	@Override
