@@ -38,7 +38,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -49,9 +49,9 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -610,39 +610,39 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@ParameterizedTest
 	@EnumSource(Lifecycle.class)
-	void containerTemplate(Lifecycle lifecycle) {
-		var containerTemplate = ContainerTemplateWithDefaultLifecycleTestCase.class;
+	void classTemplate(Lifecycle lifecycle) {
+		var classTemplate = ClassTemplateWithDefaultLifecycleTestCase.class;
 
 		var results = executeTests(r -> r //
-				.selectors(selectClass(containerTemplate)) //
+				.selectors(selectClass(classTemplate)) //
 				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, lifecycle.name()));
 
 		results.allEvents().assertStatistics(stats -> stats.failed(0));
 		results.testEvents().assertStatistics(stats -> stats.succeeded(4));
 
-		assertThat(instanceCount).containsExactly(entry(containerTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4));
-		assertThat(lifecyclesMap.keySet()).containsExactly(containerTemplate);
-		assertThat(lifecyclesMap.get(containerTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
+		assertThat(instanceCount).containsExactly(entry(classTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4));
+		assertThat(lifecyclesMap.keySet()).containsExactly(classTemplate);
+		assertThat(lifecyclesMap.get(classTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
 	}
 
 	@ParameterizedTest
 	@EnumSource(Lifecycle.class)
-	void containerTemplateWithNestedClass(Lifecycle lifecycle) {
-		var containerTemplate = ContainerTemplateWithDefaultLifecycleAndNestedClassTestCase.class;
-		var nestedClass = ContainerTemplateWithDefaultLifecycleAndNestedClassTestCase.InnerTestCase.class;
+	void classTemplateWithNestedClass(Lifecycle lifecycle) {
+		var classTemplate = ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.class;
+		var nestedClass = ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.InnerTestCase.class;
 
 		var results = executeTests(r -> r //
-				.selectors(selectClass(containerTemplate)) //
+				.selectors(selectClass(classTemplate)) //
 				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, lifecycle.name()));
 
 		results.allEvents().assertStatistics(stats -> stats.failed(0));
 		results.testEvents().assertStatistics(stats -> stats.succeeded(4));
 
 		assertThat(instanceCount).containsExactly( //
-			entry(containerTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4), //
+			entry(classTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4), //
 			entry(nestedClass, lifecycle == Lifecycle.PER_CLASS ? 2 : 4));
-		assertThat(lifecyclesMap.keySet()).containsExactlyInAnyOrder(containerTemplate, nestedClass);
-		assertThat(lifecyclesMap.get(containerTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
+		assertThat(lifecyclesMap.keySet()).containsExactlyInAnyOrder(classTemplate, nestedClass);
+		assertThat(lifecyclesMap.get(classTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
 		assertThat(lifecyclesMap.get(nestedClass)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
 	}
 
@@ -1028,7 +1028,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			String testMethod = context.getTestMethod().map(Method::getName).orElse(null);
 			if (testMethod == null) {
 				assertThat(context.getTestInstance()).isNotPresent();
-				if (!isAnnotated(context.getRequiredTestClass().getEnclosingClass(), ContainerTemplate.class)) {
+				if (!isAnnotated(context.getRequiredTestClass().getEnclosingClass(), ClassTemplate.class)) {
 					assertThat(instanceCount.getOrDefault(context.getRequiredTestClass(), 0)).isEqualTo(0);
 				}
 			}
@@ -1115,13 +1115,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(Twice.class)
 	@ExtendWith(InstanceTrackingExtension.class)
-	static class ContainerTemplateWithDefaultLifecycleTestCase {
+	static class ClassTemplateWithDefaultLifecycleTestCase {
 
-		ContainerTemplateWithDefaultLifecycleTestCase() {
-			incrementInstanceCount(ContainerTemplateWithDefaultLifecycleTestCase.class);
+		ClassTemplateWithDefaultLifecycleTestCase() {
+			incrementInstanceCount(ClassTemplateWithDefaultLifecycleTestCase.class);
 		}
 
 		@Test
@@ -1133,13 +1133,13 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@ContainerTemplate
+	@ClassTemplate
 	@ExtendWith(Twice.class)
 	@ExtendWith(InstanceTrackingExtension.class)
-	static class ContainerTemplateWithDefaultLifecycleAndNestedClassTestCase {
+	static class ClassTemplateWithDefaultLifecycleAndNestedClassTestCase {
 
-		ContainerTemplateWithDefaultLifecycleAndNestedClassTestCase() {
-			incrementInstanceCount(ContainerTemplateWithDefaultLifecycleAndNestedClassTestCase.class);
+		ClassTemplateWithDefaultLifecycleAndNestedClassTestCase() {
+			incrementInstanceCount(ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.class);
 		}
 
 		@Nested
@@ -1159,20 +1159,19 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	private static class Twice implements ContainerTemplateInvocationContextProvider {
+	private static class Twice implements ClassTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
+		public boolean supportsClassTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-				ExtensionContext context) {
+		public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext context) {
 			return Stream.of(new Ctx(), new Ctx());
 		}
 
-		private record Ctx() implements ContainerTemplateInvocationContext {
+		private record Ctx() implements ClassTemplateInvocationContext {
 		}
 	}
 

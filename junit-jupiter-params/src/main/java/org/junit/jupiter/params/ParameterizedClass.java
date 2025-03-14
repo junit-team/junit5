@@ -14,12 +14,13 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 
@@ -108,11 +109,13 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <h2>Lifecycle Methods</h2>
  *
- * <p>If you wish to execute custom code before or after each set of arguments
- * is used to invoke the parameterized class, you may declare methods annotated
- * with {@link BeforeArgumentSet @BeforeArgumentSet} or
- * {@link AfterArgumentSet @AfterArgumentSet}. This can, for example, be useful
- * to initialize the arguments before they are used.
+ * <p>If you wish to execute custom code before or after each invocation of the
+ * parameterized class, you may declare methods annotated with
+ * {@link BeforeParameterizedClassInvocation @BeforeParameterizedClassInvocation}
+ * or
+ * {@link AfterParameterizedClassInvocation @AfterParameterizedClassInvocation}.
+ * This can, for example, be useful to initialize the arguments before they are
+ * used.
  *
  * <h2>Composed Annotations</h2>
  *
@@ -122,16 +125,12 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
  *
  * <h2>Inheritance</h2>
  *
- * <p>The {@code @ParameterizedClass} annotation is <em>not</em> inherited
- * from superclasses but may be (re-)declared on a concrete parameterized
- * class. {@code Parameter}-annotated fields from superclasses are detected and
- * used for field injection as if they were declared on the concrete
- * parameterized class.
+ * <p>This annotation is inherited to subclasses.
  *
  * @since 5.13
  * @see Parameter
- * @see BeforeArgumentSet
- * @see AfterArgumentSet
+ * @see BeforeParameterizedClassInvocation
+ * @see AfterParameterizedClassInvocation
  * @see ParameterizedTest
  * @see org.junit.jupiter.params.provider.Arguments
  * @see org.junit.jupiter.params.provider.ArgumentsProvider
@@ -149,8 +148,9 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = EXPERIMENTAL, since = "5.13")
-@ContainerTemplate
+@ClassTemplate
 @ExtendWith(ParameterizedClassExtension.class)
 @SuppressWarnings("exports")
 public @interface ParameterizedClass {

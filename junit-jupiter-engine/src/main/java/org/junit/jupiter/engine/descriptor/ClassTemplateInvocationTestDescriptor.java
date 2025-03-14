@@ -23,9 +23,9 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback;
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.api.extension.AfterClassTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
@@ -40,17 +40,17 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  * @since 5.13
  */
 @API(status = INTERNAL, since = "5.13")
-public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescriptor
+public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 		implements TestClassAware, ResourceLockAware {
 
-	public static final String SEGMENT_TYPE = "container-template-invocation";
+	public static final String SEGMENT_TYPE = "class-template-invocation";
 
-	private final ContainerTemplateTestDescriptor parent;
-	private ContainerTemplateInvocationContext invocationContext;
+	private final ClassTemplateTestDescriptor parent;
+	private ClassTemplateInvocationContext invocationContext;
 	private final int index;
 
-	public ContainerTemplateInvocationTestDescriptor(UniqueId uniqueId, ContainerTemplateTestDescriptor parent,
-			ContainerTemplateInvocationContext invocationContext, int index, TestSource source,
+	public ClassTemplateInvocationTestDescriptor(UniqueId uniqueId, ClassTemplateTestDescriptor parent,
+			ClassTemplateInvocationContext invocationContext, int index, TestSource source,
 			JupiterConfiguration configuration) {
 		super(uniqueId, invocationContext.getDisplayName(index), source, configuration);
 		this.parent = parent;
@@ -65,8 +65,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 	// --- JupiterTestDescriptor -----------------------------------------------
 
 	@Override
-	protected ContainerTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		return new ContainerTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), parent,
+	protected ClassTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ClassTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), parent,
 			this.invocationContext, this.index, getSource().orElse(null), this.configuration);
 	}
 
@@ -118,8 +118,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 				extension -> childRegistry.registerExtension(extension, this.invocationContext));
 			registry = childRegistry;
 		}
-		ExtensionContext extensionContext = new ContainerTemplateInvocationExtensionContext(
-			context.getExtensionContext(), context.getExecutionListener(), this, context.getConfiguration(), registry);
+		ExtensionContext extensionContext = new ClassTemplateInvocationExtensionContext(context.getExtensionContext(),
+			context.getExecutionListener(), this, context.getConfiguration(), registry);
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		throwableCollector.execute(() -> this.invocationContext.prepareInvocation(extensionContext));
 		return context.extend() //
@@ -137,8 +137,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 
 	@Override
 	public JupiterEngineExecutionContext before(JupiterEngineExecutionContext context) throws Exception {
-		invokeBeforeCallbacks(BeforeContainerTemplateInvocationCallback.class, context,
-			BeforeContainerTemplateInvocationCallback::beforeContainerTemplateInvocation);
+		invokeBeforeCallbacks(BeforeClassTemplateInvocationCallback.class, context,
+			BeforeClassTemplateInvocationCallback::beforeClassTemplateInvocation);
 		context.getThrowableCollector().assertEmpty();
 		return context;
 	}
@@ -157,8 +157,8 @@ public class ContainerTemplateInvocationTestDescriptor extends JupiterTestDescri
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Throwable previousThrowable = throwableCollector.getThrowable();
 
-		invokeAfterCallbacks(AfterContainerTemplateInvocationCallback.class, context,
-			AfterContainerTemplateInvocationCallback::afterContainerTemplateInvocation);
+		invokeAfterCallbacks(AfterClassTemplateInvocationCallback.class, context,
+			AfterClassTemplateInvocationCallback::afterClassTemplateInvocation);
 
 		// If the previous Throwable was not null when this method was called,
 		// that means an exception was already thrown either before or during

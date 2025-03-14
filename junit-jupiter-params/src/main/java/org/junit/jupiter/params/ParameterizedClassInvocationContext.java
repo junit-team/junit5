@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedClassContext.InjectionType;
@@ -26,7 +26,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
 class ParameterizedClassInvocationContext extends ParameterizedInvocationContext<ParameterizedClassContext>
-		implements ContainerTemplateInvocationContext {
+		implements ClassTemplateInvocationContext {
 
 	private final ResolutionCache resolutionCache = ResolutionCache.enabled();
 
@@ -62,10 +62,10 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 		throw new JUnitException("Unsupported injection type: " + injectionType);
 	}
 
-	private ContainerTemplateConstructorParameterResolver createExtensionForConstructorInjection() {
+	private ClassTemplateConstructorParameterResolver createExtensionForConstructorInjection() {
 		Preconditions.condition(this.declarationContext.getTestInstanceLifecycle() == PER_METHOD,
 			"Constructor injection is only supported for lifecycle PER_METHOD");
-		return new ContainerTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
+		return new ClassTemplateConstructorParameterResolver(this.declarationContext, this.arguments,
 			this.invocationIndex, this.resolutionCache);
 	}
 
@@ -74,10 +74,10 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 		TestInstance.Lifecycle lifecycle = this.declarationContext.getTestInstanceLifecycle();
 		switch (lifecycle) {
 			case PER_CLASS:
-				return new BeforeContainerTemplateInvocationFieldInjector(resolverFacade, this.arguments,
+				return new BeforeClassTemplateInvocationFieldInjector(resolverFacade, this.arguments,
 					this.invocationIndex, this.resolutionCache);
 			case PER_METHOD:
-				return new InstancePostProcessingContainerTemplateFieldInjector(resolverFacade, this.arguments,
+				return new InstancePostProcessingClassTemplateFieldInjector(resolverFacade, this.arguments,
 					this.invocationIndex, this.resolutionCache);
 		}
 		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
@@ -85,19 +85,23 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 
 	private Stream<Extension> createLifecycleMethodInvokers() {
 		return Stream.concat( //
-			this.declarationContext.getBeforeMethods().stream().map(this::createBeforeArgumentSetMethodInvoker), //
-			this.declarationContext.getAfterMethods().stream().map(this::createAfterArgumentSetMethodInvoker) //
+			this.declarationContext.getBeforeMethods().stream().map(
+				this::createBeforeParameterizedClassInvocationMethodInvoker), //
+			this.declarationContext.getAfterMethods().stream().map(
+				this::createAfterParameterizedClassInvocationMethodInvoker) //
 		);
 	}
 
-	private BeforeArgumentSetMethodInvoker createBeforeArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
-		return new BeforeArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
-			this.resolutionCache, method);
+	private BeforeParameterizedClassInvocationMethodInvoker createBeforeParameterizedClassInvocationMethodInvoker(
+			ArgumentSetLifecycleMethod method) {
+		return new BeforeParameterizedClassInvocationMethodInvoker(this.declarationContext, this.arguments,
+			this.invocationIndex, this.resolutionCache, method);
 	}
 
-	private AfterArgumentSetMethodInvoker createAfterArgumentSetMethodInvoker(ArgumentSetLifecycleMethod method) {
-		return new AfterArgumentSetMethodInvoker(this.declarationContext, this.arguments, this.invocationIndex,
-			this.resolutionCache, method);
+	private AfterParameterizedClassInvocationMethodInvoker createAfterParameterizedClassInvocationMethodInvoker(
+			ArgumentSetLifecycleMethod method) {
+		return new AfterParameterizedClassInvocationMethodInvoker(this.declarationContext, this.arguments,
+			this.invocationIndex, this.resolutionCache, method);
 	}
 
 }

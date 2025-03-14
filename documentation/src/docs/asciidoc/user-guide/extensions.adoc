@@ -636,14 +636,14 @@ test execution lifecycle. Consult the following sections for examples and the Ja
 each of these interfaces in the `{extension-api-package}` package for further details.
 
 * `{BeforeAllCallback}`
-** `{BeforeContainerTemplateInvocationCallback}` (only applicable for
-   <<writing-tests-container-templates, container templates>>)
+** `{BeforeClassTemplateInvocationCallback}` (only applicable for
+   <<writing-tests-class-templates, class templates>>)
 *** `{BeforeEachCallback}`
 **** `{BeforeTestExecutionCallback}`
 **** `{AfterTestExecutionCallback}`
 *** `{AfterEachCallback}`
-** `{AfterContainerTemplateInvocationCallback}` (only applicable for
-   <<writing-tests-container-templates, container templates>>)
+** `{AfterClassTemplateInvocationCallback}` (only applicable for
+   <<writing-tests-class-templates, class templates>>)
 * `{AfterAllCallback}`
 
 .Implementing Multiple Extension APIs
@@ -769,32 +769,32 @@ You may override the `getTestInstantiationExtensionContextScope(...)` method to 
 on the test method level.
 ====
 
-[[extensions-container-templates]]
-=== Providing Invocation Contexts for Container Templates
+[[extensions-class-templates]]
+=== Providing Invocation Contexts for Class Templates
 
-A `{ContainerTemplate}` class can only be executed when at least one
-`{ContainerTemplateInvocationContextProvider}` is registered. Each such provider is
-responsible for providing a `Stream` of `{ContainerTemplateInvocationContext}` instances.
+A `{ClassTemplate}` class can only be executed when at least one
+`{ClassTemplateInvocationContextProvider}` is registered. Each such provider is
+responsible for providing a `Stream` of `{ClassTemplateInvocationContext}` instances.
 Each context may specify a custom display name and a list of additional extensions that
-will only be used for the next invocation of the `{ContainerTemplate}` class.
+will only be used for the next invocation of the `{ClassTemplate}`.
 
-The following example shows how to write a container template as well as how to register
-and implement a `{ContainerTemplateInvocationContextProvider}`.
+The following example shows how to write a class template as well as how to register
+and implement a `{ClassTemplateInvocationContextProvider}`.
 
 [source,java,indent=0]
-.A container template with accompanying extension
+.A class template with accompanying extension
 ----
-include::{testDir}/example/ContainerTemplateDemo.java[tags=user_guide]
+include::{testDir}/example/ClassTemplateDemo.java[tags=user_guide]
 ----
 
-In this example, the container template will be invoked twice, meaning all test methods in
-the container template class will be executed twice. The display names of the container
-invocations will be `apple` and `banana` as specified by the invocation context. Each
-invocation registers a custom `{TestInstancePostProcessor}` which is used to inject a
-value into a field. The output when using the `ConsoleLauncher` is as follows.
+In this example, the class template will be invoked twice, meaning all test methods in
+the class template will be executed twice. The display names of the invocations will be
+`apple` and `banana` as specified by the invocation context. Each invocation registers a
+custom `{TestInstancePostProcessor}` which is used to inject a value into a field. The
+output when using the `ConsoleLauncher` is as follows.
 
 ....
-└─ ContainerTemplateDemo ✔
+└─ ClassTemplateDemo ✔
    ├─ apple ✔
    │  ├─ notNull() ✔
    │  └─ wellKnown() ✔
@@ -803,7 +803,7 @@ value into a field. The output when using the `ConsoleLauncher` is as follows.
       └─ wellKnown() ✔
 ....
 
-The `{ContainerTemplateInvocationContextProvider}` extension API is primarily intended for
+The `{ClassTemplateInvocationContextProvider}` extension API is primarily intended for
 implementing different kinds of tests that rely on repetitive invocation of _all_ test
 methods in a test class albeit in different contexts — for example, with different
 parameters, by preparing the test class instance differently, or multiple times without
@@ -1021,8 +1021,9 @@ user code executed before all tests of the container are executed
 . *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
 #handleBeforeAllMethodExecutionException*` +
 extension code for handling exceptions thrown from `@BeforeAll` methods
-. *interface* `*org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback*` +
-extension code executed before each container template invocation is executed (only applicable if the test class is a <<writing-tests-container-templates, container template>>)
+. *interface* `*org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback*` +
+extension code executed before each class template invocation is executed (only applicable
+if the test class is a <<writing-tests-class-templates, class template>>)
 . *interface* `*org.junit.jupiter.api.extension.BeforeEachCallback*` +
 extension code executed before each test is executed
 . *annotation* `*org.junit.jupiter.api.BeforeEach*` +
@@ -1045,8 +1046,9 @@ user code executed after each test is executed
 extension code for handling exceptions thrown from `@AfterEach` methods
 . *interface* `*org.junit.jupiter.api.extension.AfterEachCallback*` +
 extension code executed after each test is executed
-. *interface* `*org.junit.jupiter.api.extension.AfterContainerTemplateInvocationCallback*` +
-extension code executed after each container template invocation is executed (only applicable if the test class is a <<writing-tests-container-templates, container template>>)
+. *interface* `*org.junit.jupiter.api.extension.AfterClassTemplateInvocationCallback*` +
+extension code executed after each class template invocation is executed (only applicable
+if the test class is a <<writing-tests-class-templates, class template>>)
 . *annotation* `*org.junit.jupiter.api.AfterAll*` +
 user code executed after all tests of the container are executed
 . *interface* `*org.junit.jupiter.api.extension.LifecycleMethodExecutionExceptionHandler
@@ -1068,7 +1070,7 @@ by implementing <<extensions-intercepting-invocations, `InvocationInterceptor`>>
 
 JUnit Jupiter always guarantees _wrapping_ behavior for multiple registered extensions
 that implement lifecycle callbacks such as `BeforeAllCallback`, `AfterAllCallback`,
-`BeforeContainerTemplateInvocationCallback`, `AfterContainerTemplateInvocationCallback`,
+`BeforeClassTemplateInvocationCallback`, `AfterClassTemplateInvocationCallback`,
 `BeforeEachCallback`, `AfterEachCallback`, `BeforeTestExecutionCallback`, and
 `AfterTestExecutionCallback`.
 

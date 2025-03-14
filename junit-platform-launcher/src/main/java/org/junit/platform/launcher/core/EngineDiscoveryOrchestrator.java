@@ -86,8 +86,8 @@ public class EngineDiscoveryOrchestrator {
 	 * filters} and {@linkplain PostDiscoveryFilter post-discovery filters} and
 	 * {@linkplain TestDescriptor#prune() prunes} the resulting test tree.
 	 *
-	 * Note: The test descriptors in the discovery result can safely be used as
-	 * non-root descriptors. Engine-test descriptor entries are pruned from
+	 * <p>Note: The test descriptors in the discovery result can safely be used
+	 * as non-root descriptors. Engine-test descriptor entries are pruned from
 	 * the returned result. As such execution by
 	 * {@link EngineExecutionOrchestrator#execute(LauncherDiscoveryResult, EngineExecutionListener)}
 	 * will not emit start or emit events for engines without tests.
@@ -100,9 +100,15 @@ public class EngineDiscoveryOrchestrator {
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase,
 			Function<String, UniqueId> uniqueIdCreator) {
 		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request);
+		LauncherDiscoveryRequest delegatingRequest = new DelegatingLauncherDiscoveryRequest(request) {
+			@Override
+			public LauncherDiscoveryListener getDiscoveryListener() {
+				return listener;
+			}
+		};
 		listener.launcherDiscoveryStarted(request);
 		try {
-			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(request, phase, listener, uniqueIdCreator);
+			Map<TestEngine, TestDescriptor> testEngines = discoverSafely(delegatingRequest, phase, uniqueIdCreator);
 			return new LauncherDiscoveryResult(testEngines, request.getConfigurationParameters(),
 				request.getOutputDirectoryProvider());
 		}
@@ -112,7 +118,7 @@ public class EngineDiscoveryOrchestrator {
 	}
 
 	private Map<TestEngine, TestDescriptor> discoverSafely(LauncherDiscoveryRequest request, Phase phase,
-			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
+			Function<String, UniqueId> uniqueIdCreator) {
 		Map<TestEngine, TestDescriptor> testEngineDescriptors = new LinkedHashMap<>();
 		EngineFilterer engineFilterer = new EngineFilterer(request.getEngineFilters());
 
@@ -129,7 +135,7 @@ public class EngineDiscoveryOrchestrator {
 			logger.debug(() -> String.format("Discovering tests during Launcher %s phase in engine '%s'.", phase,
 				testEngine.getId()));
 
-			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, listener, uniqueIdCreator);
+			TestDescriptor rootDescriptor = discoverEngineRoot(testEngine, request, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, rootDescriptor);
 		}
 
@@ -145,8 +151,9 @@ public class EngineDiscoveryOrchestrator {
 	}
 
 	private TestDescriptor discoverEngineRoot(TestEngine testEngine, LauncherDiscoveryRequest request,
-			LauncherDiscoveryListener listener, Function<String, UniqueId> uniqueIdCreator) {
+			Function<String, UniqueId> uniqueIdCreator) {
 		UniqueId uniqueEngineId = uniqueIdCreator.apply(testEngine.getId());
+		LauncherDiscoveryListener listener = request.getDiscoveryListener();
 		try {
 			listener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);

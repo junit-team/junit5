@@ -76,7 +76,8 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	@Override
 	public ExecutionMode getExecutionMode() {
-		return taskContext.getExecutionAdvisor().getForcedExecutionMode(testDescriptor).orElse(node.getExecutionMode());
+		return taskContext.getExecutionAdvisor().getForcedExecutionMode(testDescriptor) //
+				.orElseGet(node::getExecutionMode);
 	}
 
 	@Override

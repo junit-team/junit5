@@ -13,14 +13,14 @@ package org.junit.jupiter.params;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 
-class InstancePostProcessingContainerTemplateFieldInjector implements TestInstancePostProcessor {
+class InstancePostProcessingClassTemplateFieldInjector implements TestInstancePostProcessor {
 
 	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 	private final ResolutionCache resolutionCache;
 
-	InstancePostProcessingContainerTemplateFieldInjector(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
+	InstancePostProcessingClassTemplateFieldInjector(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
 			int invocationIndex, ResolutionCache resolutionCache) {
 		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;

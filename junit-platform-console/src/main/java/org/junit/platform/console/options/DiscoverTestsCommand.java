@@ -43,4 +43,5 @@ class DiscoverTestsCommand extends BaseCommand<Void> {
 		this.consoleTestExecutorFactory.create(discoveryOptions, testOutputOptions).discover(out);
 		return null;
 	}
+
 }

@@ -37,4 +37,5 @@ public class ConsoleUtils {
 	public static Charset charset() {
 		return Charset.defaultCharset();
 	}
+
 }

@@ -34,8 +34,8 @@ import org.apiguardian.api.API;
  * <p>JUnit Jupiter guarantees <em>wrapping behavior</em> for multiple
  * registered extensions that implement lifecycle callbacks such as
  * {@link BeforeAllCallback}, {@link AfterAllCallback},
- * {@link BeforeContainerTemplateInvocationCallback},
- * {@link AfterContainerTemplateInvocationCallback}, {@link BeforeEachCallback},
+ * {@link BeforeClassTemplateInvocationCallback},
+ * {@link AfterClassTemplateInvocationCallback}, {@link BeforeEachCallback},
  * {@link AfterEachCallback}, {@link BeforeTestExecutionCallback}, and
  * {@link AfterTestExecutionCallback}.
  *
@@ -56,8 +56,8 @@ import org.apiguardian.api.API;
  * @see AfterEachCallback
  * @see BeforeTestExecutionCallback
  * @see AfterTestExecutionCallback
- * @see BeforeContainerTemplateInvocationCallback
- * @see AfterContainerTemplateInvocationCallback
+ * @see BeforeClassTemplateInvocationCallback
+ * @see AfterClassTemplateInvocationCallback
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")

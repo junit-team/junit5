@@ -28,13 +28,13 @@ class AnsiColorOptionMixin {
 	private boolean disableAnsiColors = System.getenv("NO_COLOR") != null;
 
 	public boolean isDisableAnsiColors() {
-		return disableAnsiColors;
+		return this.disableAnsiColors;
 	}
 
 	@Option(names = "--disable-ansi-colors", description = "Disable ANSI colors in output (not supported by all terminals).")
 	public void setDisableAnsiColors(boolean disableAnsiColors) {
 		if (disableAnsiColors) {
-			commandSpec.commandLine().setColorScheme(defaultColorScheme(Ansi.OFF));
+			this.commandSpec.commandLine().setColorScheme(defaultColorScheme(Ansi.OFF));
 		}
 		this.disableAnsiColors = disableAnsiColors;
 	}
@@ -43,4 +43,5 @@ class AnsiColorOptionMixin {
 	public void setDisableAnsiColors2(boolean disableAnsiColors) {
 		setDisableAnsiColors(disableAnsiColors);
 	}
+
 }

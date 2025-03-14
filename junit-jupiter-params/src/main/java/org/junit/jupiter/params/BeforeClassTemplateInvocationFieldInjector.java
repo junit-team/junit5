@@ -10,17 +10,17 @@
 
 package org.junit.jupiter.params;
 
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
-class BeforeContainerTemplateInvocationFieldInjector implements BeforeContainerTemplateInvocationCallback {
+class BeforeClassTemplateInvocationFieldInjector implements BeforeClassTemplateInvocationCallback {
 
 	private final ResolverFacade resolverFacade;
 	private final EvaluatedArgumentSet arguments;
 	private final int invocationIndex;
 	private final ResolutionCache resolutionCache;
 
-	BeforeContainerTemplateInvocationFieldInjector(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
+	BeforeClassTemplateInvocationFieldInjector(ResolverFacade resolverFacade, EvaluatedArgumentSet arguments,
 			int invocationIndex, ResolutionCache resolutionCache) {
 		this.resolverFacade = resolverFacade;
 		this.arguments = arguments;
@@ -29,7 +29,7 @@ class BeforeContainerTemplateInvocationFieldInjector implements BeforeContainerT
 	}
 
 	@Override
-	public void beforeContainerTemplateInvocation(ExtensionContext extensionContext) {
+	public void beforeClassTemplateInvocation(ExtensionContext extensionContext) {
 		extensionContext.getTestInstance() //
 				.ifPresent(testInstance -> this.resolverFacade //
 						.resolveAndInjectFields(testInstance, extensionContext, this.arguments, this.invocationIndex,

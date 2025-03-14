@@ -13,16 +13,16 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.ClassTemplate;
 
 /**
- * {@code BeforeContainerTemplateInvocationCallback} defines the API for
+ * {@code BeforeClassTemplateInvocationCallback} defines the API for
  * {@link Extension Extensions} that wish to provide additional behavior
  * <strong>once</strong> before each invocation of a
- * {@linkplain org.junit.jupiter.api.ContainerTemplate container template}.
+ * {@link ClassTemplate @ClassTemplate}.
  *
  * <p>Concrete implementations often implement
- * {@link AfterContainerTemplateInvocationCallback}
- * as well.
+ * {@link AfterClassTemplateInvocationCallback} as well.
  *
  * <h2>Constructor Requirements</h2>
  *
@@ -34,8 +34,8 @@ import org.apiguardian.api.API;
  * <p>JUnit Jupiter guarantees <em>wrapping behavior</em> for multiple
  * registered extensions that implement lifecycle callbacks such as
  * {@link BeforeAllCallback}, {@link AfterAllCallback},
- * {@link BeforeContainerTemplateInvocationCallback},
- * {@link AfterContainerTemplateInvocationCallback}, {@link BeforeEachCallback},
+ * {@link BeforeClassTemplateInvocationCallback},
+ * {@link AfterClassTemplateInvocationCallback}, {@link BeforeEachCallback},
  * {@link AfterEachCallback}, {@link BeforeTestExecutionCallback}, and
  * {@link AfterTestExecutionCallback}.
  *
@@ -50,8 +50,8 @@ import org.apiguardian.api.API;
  * {@code Extension2}.
  *
  * @since 5.13
- * @see org.junit.jupiter.api.ContainerTemplate
- * @see AfterContainerTemplateInvocationCallback
+ * @see ClassTemplate
+ * @see AfterClassTemplateInvocationCallback
  * @see BeforeAllCallback
  * @see AfterAllCallback
  * @see BeforeEachCallback
@@ -61,7 +61,7 @@ import org.apiguardian.api.API;
  */
 @FunctionalInterface
 @API(status = EXPERIMENTAL, since = "5.13")
-public interface BeforeContainerTemplateInvocationCallback extends Extension {
+public interface BeforeClassTemplateInvocationCallback extends Extension {
 
 	/**
 	 * Callback that is invoked <em>before</em> each invocation of a container
@@ -69,6 +69,6 @@ public interface BeforeContainerTemplateInvocationCallback extends Extension {
 	 *
 	 * @param context the current extension context; never {@code null}
 	 */
-	void beforeContainerTemplateInvocation(ExtensionContext context) throws Exception;
+	void beforeClassTemplateInvocation(ExtensionContext context) throws Exception;
 
 }

@@ -25,8 +25,8 @@ import java.util.Stack;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences.SentenceFragment;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
@@ -244,28 +244,28 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void indicativeSentencesOnContainerTemplate() {
-		check(ContainerTemplateTestCase.class, //
-			"CONTAINER: Container template", //
-			"TEST: Container template, some test", //
-			"CONTAINER: Container template, Regular Nested Test Case", //
-			"TEST: Container template, Regular Nested Test Case, some nested test", //
-			"CONTAINER: Container template, Nested Container Template", //
-			"TEST: Container template, Nested Container Template, some nested test" //
+	void indicativeSentencesOnClassTemplate() {
+		check(ClassTemplateTestCase.class, //
+			"CONTAINER: Class template", //
+			"TEST: Class template, some test", //
+			"CONTAINER: Class template, Regular Nested Test Case", //
+			"TEST: Class template, Regular Nested Test Case, some nested test", //
+			"CONTAINER: Class template, Nested Class Template", //
+			"TEST: Class template, Nested Class Template, some nested test" //
 		);
 
-		assertThat(executeTestsForClass(ContainerTemplateTestCase.class).allEvents().started().stream()) //
+		assertThat(executeTestsForClass(ClassTemplateTestCase.class).allEvents().started().stream()) //
 				.map(event -> event.getTestDescriptor().getDisplayName()) //
 				.containsExactly( //
 					"JUnit Jupiter", //
-					"Container template", //
-					"[1] Container template", //
-					"Container template, some test", //
-					"Container template, Regular Nested Test Case", //
-					"Container template, Regular Nested Test Case, some nested test", //
-					"Container template, Nested Container Template", //
-					"[1] Container template, Nested Container Template", //
-					"Container template, Nested Container Template, some nested test" //
+					"Class template", //
+					"[1] Class template", //
+					"Class template, some test", //
+					"Class template, Regular Nested Test Case", //
+					"Class template, Regular Nested Test Case, some nested test", //
+					"Class template, Nested Class Template", //
+					"[1] Class template, Nested Class Template", //
+					"Class template, Nested Class Template, some nested test" //
 				);
 	}
 
@@ -568,12 +568,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ContainerTemplate
-	@ExtendWith(ContainerTemplateTestCase.Once.class)
-	@DisplayName("Container template")
+	@ClassTemplate
+	@ExtendWith(ClassTemplateTestCase.Once.class)
+	@DisplayName("Class template")
 	@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	@TestClassOrder(ClassOrderer.OrderAnnotation.class)
-	static class ContainerTemplateTestCase {
+	static class ClassTemplateTestCase {
 
 		@Test
 		void some_test() {
@@ -589,28 +589,27 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 		@Nested
 		@Order(2)
-		@ContainerTemplate
-		class Nested_Container_Template {
+		@ClassTemplate
+		class Nested_Class_Template {
 			@Test
 			void some_nested_test() {
 			}
 		}
 
-		private static class Once implements ContainerTemplateInvocationContextProvider {
+		private static class Once implements ClassTemplateInvocationContextProvider {
 
 			@Override
-			public boolean supportsContainerTemplate(ExtensionContext context) {
+			public boolean supportsClassTemplate(ExtensionContext context) {
 				return true;
 			}
 
 			@Override
-			public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
 					ExtensionContext context) {
-				return Stream.of(new ContainerTemplateInvocationContext() {
+				return Stream.of(new ClassTemplateInvocationContext() {
 					@Override
 					public String getDisplayName(int invocationIndex) {
-						return "%s %s".formatted(
-							ContainerTemplateInvocationContext.super.getDisplayName(invocationIndex),
+						return "%s %s".formatted(ClassTemplateInvocationContext.super.getDisplayName(invocationIndex),
 							context.getDisplayName());
 					}
 				});

@@ -68,7 +68,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
@@ -83,10 +83,12 @@ import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.FieldSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
@@ -109,15 +111,15 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			FieldInjectionWithRegisteredConversionTestCase.class, RecordWithBuiltInAggregatorTestCase.class,
 			FieldInjectionWithBuiltInAggregatorTestCase.class, RecordWithCustomAggregatorTestCase.class,
 			FieldInjectionWithCustomAggregatorTestCase.class })
-	void injectsParametersIntoClass(Class<?> containerTemplateClass) {
+	void injectsParametersIntoClass(Class<?> classTemplateClass) {
 
-		var results = executeTestsForClass(containerTemplateClass);
+		var results = executeTestsForClass(classTemplateClass);
 
-		String parameterNamePrefix = containerTemplateClass.getSimpleName().contains("Aggregator") ? "" : "value=";
+		String parameterNamePrefix = classTemplateClass.getSimpleName().contains("Aggregator") ? "" : "value=";
 
 		results.allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
-			event(container(containerTemplateClass), started()), //
+			event(container(classTemplateClass), started()), //
 
 			event(dynamicTestRegistered("#1"), displayName("[1] %s-1".formatted(parameterNamePrefix))), //
 			event(container("#1"), started()), //
@@ -139,16 +141,16 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			event(test("test2"), finishedWithFailure(message(it -> it.contains("negative")))), //
 			event(container("#2"), finishedSuccessfully()), //
 
-			event(container(containerTemplateClass), finishedSuccessfully()), //
+			event(container(classTemplateClass), finishedSuccessfully()), //
 			event(engine(), finishedSuccessfully()));
 	}
 
 	@ParameterizedTest
 	@ValueSource(classes = { ArgumentConversionPerInvocationConstructorInjectionTestCase.class,
 			ArgumentConversionPerInvocationFieldInjectionTestCase.class })
-	void argumentConverterIsOnlyCalledOncePerInvocation(Class<?> containerTemplateClass) {
+	void argumentConverterIsOnlyCalledOncePerInvocation(Class<?> classTemplateClass) {
 
-		var results = executeTestsForClass(containerTemplateClass);
+		var results = executeTestsForClass(classTemplateClass);
 
 		results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 	}
@@ -159,9 +161,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { NullAndEmptySourceConstructorInjectionTestCase.class,
 				NullAndEmptySourceConstructorFieldInjectionTestCase.class })
-		void supportsNullAndEmptySource(Class<?> containerTemplateClass) {
+		void supportsNullAndEmptySource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
@@ -171,9 +173,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { CsvFileSourceConstructorInjectionTestCase.class,
 				CsvFileSourceFieldInjectionTestCase.class })
-		void supportsCsvFileSource(Class<?> containerTemplateClass) {
+		void supportsCsvFileSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(10).succeeded(10));
 			assertThat(invocationDisplayNames(results)) //
@@ -184,9 +186,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { SingleEnumSourceConstructorInjectionTestCase.class,
 				SingleEnumSourceFieldInjectionTestCase.class })
-		void supportsSingleEnumSource(Class<?> containerTemplateClass) {
+		void supportsSingleEnumSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 			assertThat(invocationDisplayNames(results)) //
@@ -196,9 +198,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { RepeatedEnumSourceConstructorInjectionTestCase.class,
 				RepeatedEnumSourceFieldInjectionTestCase.class })
-		void supportsRepeatedEnumSource(Class<?> containerTemplateClass) {
+		void supportsRepeatedEnumSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
@@ -208,9 +210,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { MethodSourceConstructorInjectionTestCase.class,
 				MethodSourceFieldInjectionTestCase.class })
-		void supportsMethodSource(Class<?> containerTemplateClass) {
+		void supportsMethodSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
@@ -224,15 +226,15 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().failed() //
 					.assertEventsMatchExactly(finishedWithFailure(
-						message("You must specify a method name when using @MethodSource with @ContainerTemplate")));
+						message("You must specify a method name when using @MethodSource with @ParameterizedClass")));
 		}
 
 		@ParameterizedTest
 		@ValueSource(classes = { FieldSourceConstructorInjectionTestCase.class,
 				FieldSourceFieldInjectionTestCase.class })
-		void supportsFieldSource(Class<?> containerTemplateClass) {
+		void supportsFieldSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
@@ -246,15 +248,15 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.allEvents().failed() //
 					.assertEventsMatchExactly(finishedWithFailure(
-						message("You must specify a field name when using @FieldSource with @ContainerTemplate")));
+						message("You must specify a field name when using @FieldSource with @ParameterizedClass")));
 		}
 
 		@ParameterizedTest
 		@ValueSource(classes = { ArgumentsSourceConstructorInjectionTestCase.class,
 				ArgumentsSourceFieldInjectionTestCase.class })
-		void supportsArgumentsSource(Class<?> containerTemplateClass) {
+		void supportsArgumentsSource(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			assertThat(invocationDisplayNames(results)) //
@@ -268,6 +270,19 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, event(finishedWithFailure(message(
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedClass"))));
+		}
+
+		@Test
+		void annotationsAreInherited() {
+			var results = executeTestsForClass(ConcreteInheritanceTestCase.class);
+
+			int numArgumentSets = 13;
+			var numContainers = numArgumentSets * 3; // once for outer invocation, once for nested class, once for inner invocation
+			var numTests = numArgumentSets * 2; // once for outer test, once for inner test
+			results.containerEvents() //
+					.assertStatistics(stats -> stats.started(numContainers + 2).succeeded(numContainers + 2));
+			results.testEvents() //
+					.assertStatistics(stats -> stats.started(numTests).succeeded(numTests));
 		}
 	}
 
@@ -316,9 +331,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { NoneArgumentCountValidationModeTestCase.class,
 				DefaultArgumentCountValidationModeTestCase.class })
-		void doesNotFailOnNoneOrDefaultArgumentCountValidationMode(Class<?> containerTemplateClass) {
+		void doesNotFailOnNoneOrDefaultArgumentCountValidationMode(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		}
@@ -364,11 +379,10 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	class Nesting {
 
 		@ParameterizedTest
-		@ValueSource(classes = { //NestedFieldInjectionTestCase.class,
-				NestedConstructorInjectionTestCase.class })
-		void supportsNestedParameterizedClass(Class<?> containerTemplateClass) {
+		@ValueSource(classes = { NestedFieldInjectionTestCase.class, NestedConstructorInjectionTestCase.class })
+		void supportsNestedParameterizedClass(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.containerEvents().assertStatistics(stats -> stats.started(14).succeeded(14));
 			results.testEvents().assertStatistics(stats -> stats.started(8).succeeded(8));
@@ -379,64 +393,64 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 					);
 			assertThat(allReportEntries(results)).map(it -> it.get("value")).containsExactly(
 			// @formatter:off
-					"beforeAll: %s".formatted(containerTemplateClass.getSimpleName()),
-					"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"beforeAll: %s".formatted(classTemplateClass.getSimpleName()),
+					"beforeParameterizedClassInvocation: %s".formatted(classTemplateClass.getSimpleName()),
 					"beforeAll: InnerTestCase",
-					"beforeArgumentSet: InnerTestCase",
-					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeParameterizedClassInvocation: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [1] flag=true [InnerTestCase]",
 					"test(1, foo, true)",
 					"afterEach: [1] flag=true [InnerTestCase]",
-					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [2] flag=false [InnerTestCase]",
 					"test(1, foo, false)",
 					"afterEach: [2] flag=false [InnerTestCase]",
-					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"afterArgumentSet: InnerTestCase",
-					"beforeArgumentSet: InnerTestCase",
-					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
+					"afterParameterizedClassInvocation: InnerTestCase",
+					"beforeParameterizedClassInvocation: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [1] flag=true [InnerTestCase]",
 					"test(1, bar, true)",
 					"afterEach: [1] flag=true [InnerTestCase]",
-					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [2] flag=false [InnerTestCase]",
 					"test(1, bar, false)",
 					"afterEach: [2] flag=false [InnerTestCase]",
-					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"afterArgumentSet: InnerTestCase",
+					"afterEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
+					"afterParameterizedClassInvocation: InnerTestCase",
 					"afterAll: InnerTestCase",
-					"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-					"beforeArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
+					"afterParameterizedClassInvocation: %s".formatted(classTemplateClass.getSimpleName()),
+					"beforeParameterizedClassInvocation: %s".formatted(classTemplateClass.getSimpleName()),
 					"beforeAll: InnerTestCase",
-					"beforeArgumentSet: InnerTestCase",
-					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"beforeParameterizedClassInvocation: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [1] flag=true [InnerTestCase]",
 					"test(2, foo, true)",
 					"afterEach: [1] flag=true [InnerTestCase]",
-					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [2] flag=false [InnerTestCase]",
 					"test(2, foo, false)",
 					"afterEach: [2] flag=false [InnerTestCase]",
-					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"afterArgumentSet: InnerTestCase",
-					"beforeArgumentSet: InnerTestCase",
-					"beforeEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
+					"afterParameterizedClassInvocation: InnerTestCase",
+					"beforeParameterizedClassInvocation: InnerTestCase",
+					"beforeEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [1] flag=true [InnerTestCase]",
 					"test(2, bar, true)",
 					"afterEach: [1] flag=true [InnerTestCase]",
-					"afterEach: [1] flag=true [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"beforeEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
+					"afterEach: [1] flag=true [%s]".formatted(classTemplateClass.getSimpleName()),
+					"beforeEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
 					"beforeEach: [2] flag=false [InnerTestCase]",
 					"test(2, bar, false)",
 					"afterEach: [2] flag=false [InnerTestCase]",
-					"afterEach: [2] flag=false [%s]".formatted(containerTemplateClass.getSimpleName()),
-					"afterArgumentSet: InnerTestCase",
+					"afterEach: [2] flag=false [%s]".formatted(classTemplateClass.getSimpleName()),
+					"afterParameterizedClassInvocation: InnerTestCase",
 					"afterAll: InnerTestCase",
-					"afterArgumentSet: %s".formatted(containerTemplateClass.getSimpleName()),
-					"afterAll: %s".formatted(containerTemplateClass.getSimpleName())
+					"afterParameterizedClassInvocation: %s".formatted(classTemplateClass.getSimpleName()),
+					"afterAll: %s".formatted(classTemplateClass.getSimpleName())
 					// @formatter:on
 			);
 		}
@@ -444,9 +458,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { ConstructorInjectionWithRegularNestedTestCase.class,
 				FieldInjectionWithRegularNestedTestCase.class })
-		void supportsRegularNestedTestClassesInsideParameterizedClass(Class<?> containerTemplateClass) {
+		void supportsRegularNestedTestClassesInsideParameterizedClass(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.containerEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 			results.testEvents().assertStatistics(stats -> stats.started(2).succeeded(2));
@@ -479,53 +493,53 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@Test
 		void doesNotSupportInjectionForFinalFields() {
 
-			var containerTemplateClass = InvalidFinalFieldTestCase.class;
+			var classTemplateClass = InvalidFinalFieldTestCase.class;
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
 						"Configuration error: @Parameter field [final int %s.i] must not be declared as final.".formatted(
-							containerTemplateClass.getName()))));
+							classTemplateClass.getName()))));
 		}
 
 		@Test
 		void aggregatorFieldsMustNotDeclareIndex() {
 
-			var containerTemplateClass = InvalidAggregatorFieldWithIndexTestCase.class;
+			var classTemplateClass = InvalidAggregatorFieldWithIndexTestCase.class;
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
 						"Configuration error: no index may be declared in @Parameter(0) annotation on aggregator field [%s %s.accessor].".formatted(
-							ArgumentsAccessor.class.getName(), containerTemplateClass.getName()))));
+							ArgumentsAccessor.class.getName(), classTemplateClass.getName()))));
 		}
 
 		@Test
 		void declaredIndexMustNotBeNegative() {
 
-			var containerTemplateClass = InvalidParameterIndexTestCase.class;
+			var classTemplateClass = InvalidParameterIndexTestCase.class;
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
 						"Configuration error: index must be greater than or equal to zero in @Parameter(-42) annotation on field [int %s.i].".formatted(
-							containerTemplateClass.getName()))));
+							classTemplateClass.getName()))));
 		}
 
 		@Test
 		void declaredIndexMustBeUnique() {
 
-			var containerTemplateClass = InvalidDuplicateParameterDeclarationTestCase.class;
+			var classTemplateClass = InvalidDuplicateParameterDeclarationTestCase.class;
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
 						"Configuration error: duplicate index declared in @Parameter(0) annotation on fields [int %s.i, long %s.l].".formatted(
-							containerTemplateClass.getName(), containerTemplateClass.getName()))));
+							classTemplateClass.getName(), classTemplateClass.getName()))));
 		}
 	}
 
@@ -551,18 +565,18 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			assertThat(lifecycleReportEntries.get().map(it -> it.get("value"))) //
 					.containsExactly(
 					//@formatter:off
-							"beforeArgumentSet1",
-							"beforeArgumentSet2",
+							"beforeParameterizedClassInvocation1",
+							"beforeParameterizedClassInvocation2",
 							"test1",
 							"test2",
-							"afterArgumentSet1",
-							"afterArgumentSet2",
-							"beforeArgumentSet1",
-							"beforeArgumentSet2",
+							"afterParameterizedClassInvocation1",
+							"afterParameterizedClassInvocation2",
+							"beforeParameterizedClassInvocation1",
+							"beforeParameterizedClassInvocation2",
 							"test1",
 							"test2",
-							"afterArgumentSet1",
-							"afterArgumentSet2"
+							"afterParameterizedClassInvocation1",
+							"afterParameterizedClassInvocation2"
 							//@formatter:on
 					);
 		}
@@ -585,8 +599,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@ParameterizedTest
 		@CsvSource(textBlock = """
-				NonStaticBeforeLifecycleMethodTestCase, @BeforeArgumentSet, beforeArgumentSet
-				NonStaticAfterLifecycleMethodTestCase,  @AfterArgumentSet,  afterArgumentSet
+				NonStaticBeforeLifecycleMethodTestCase, @BeforeParameterizedClassInvocation, beforeParameterizedClassInvocation
+				NonStaticAfterLifecycleMethodTestCase,  @AfterParameterizedClassInvocation,  afterParameterizedClassInvocation
 				""")
 		void lifecycleMethodsNeedToBeStaticByDefault(String simpleClassName, String annotationName,
 				String lifecycleMethodName) throws Exception {
@@ -608,7 +622,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
-						"@BeforeArgumentSet method 'private static void %s.beforeArgumentSet()' must not be private." //
+						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private." //
 								.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
 		}
 
@@ -643,9 +657,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase.class,
 				LifecycleMethodArgumentInjectionWithFieldInjectionTestCase.class })
-		void supportsInjectingArgumentsIntoLifecycleMethods(Class<?> containerTemplateClass) {
+		void supportsInjectingArgumentsIntoLifecycleMethods(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(5).succeeded(5));
 		}
@@ -653,9 +667,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase.class,
 				CustomConverterAnnotationsWithLifecycleMethodsAndFieldInjectionTestCase.class })
-		void convertersHaveAccessToTheirAnnotations(Class<?> containerTemplateClass) {
+		void convertersHaveAccessToTheirAnnotations(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		}
@@ -663,9 +677,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ParameterizedTest
 		@ValueSource(classes = { ValidLifecycleMethodInjectionWithConstructorInjectionTestCase.class,
 				ValidLifecycleMethodInjectionWithFieldInjectionTestCase.class })
-		void supportsMixedInjectionsForLifecycleMethods(Class<?> containerTemplateClass) {
+		void supportsMixedInjectionsForLifecycleMethods(Class<?> classTemplateClass) {
 
-			var results = executeTestsForClass(containerTemplateClass);
+			var results = executeTestsForClass(classTemplateClass);
 
 			results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 		}
@@ -686,7 +700,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			var failedResult = getFirstTestExecutionResult(results.containerEvents().failed());
 			assertThat(failedResult.getThrowable().orElseThrow()) //
 					.hasMessage(
-						"Invalid @BeforeArgumentSet lifecycle method declaration: static void %s.before(long,int)".formatted(
+						"Invalid @BeforeParameterizedClassInvocation lifecycle method declaration: static void %s.before(long,int)".formatted(
 							LifecycleMethodWithInvalidParametersTestCase.class.getName())) //
 					.cause().hasMessage(expectedMessage);
 		}
@@ -698,7 +712,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(message(
-						("@BeforeArgumentSet method [static void %s.before(%s,int,%s)] declares formal parameters in an invalid order: "
+						("@BeforeParameterizedClassInvocation method [static void %s.before(%s,int,%s)] declares formal parameters in an invalid order: "
 								+ "argument aggregators must be declared after any indexed arguments and before any arguments resolved by another ParameterResolver.").formatted(
 									LifecycleMethodWithInvalidParameterOrderTestCase.class.getName(),
 									ArgumentsAccessor.class.getName(), ArgumentsAccessor.class.getName()))));
@@ -720,7 +734,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	private static Stream<String> invocationDisplayNames(EngineExecutionResults results) {
 		return results.containerEvents() //
 				.started() //
-				.filter(uniqueId(lastSegmentType(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE))::matches) //
+				.filter(uniqueId(lastSegmentType(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE))::matches) //
 				.map(Event::getTestDescriptor) //
 				.map(TestDescriptor::getDisplayName);
 	}
@@ -1374,9 +1388,10 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			reporter.publishEntry("beforeAll: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 
-		@BeforeArgumentSet
-		static void beforeArgumentSet(TestReporter reporter, TestInfo testInfo) {
-			reporter.publishEntry("beforeArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		@BeforeParameterizedClassInvocation(injectArguments = false)
+		static void beforeParameterizedClassInvocation(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry(
+				"beforeParameterizedClassInvocation: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 
 		@BeforeEach
@@ -1391,9 +1406,10 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				"afterEach: " + testInfo.getDisplayName() + " [" + this.getClass().getSimpleName() + "]");
 		}
 
-		@AfterArgumentSet
-		static void afterArgumentSet(TestReporter reporter, TestInfo testInfo) {
-			reporter.publishEntry("afterArgumentSet: " + testInfo.getTestClass().orElseThrow().getSimpleName());
+		@AfterParameterizedClassInvocation(injectArguments = false)
+		static void afterParameterizedClassInvocation(TestReporter reporter, TestInfo testInfo) {
+			reporter.publishEntry(
+				"afterParameterizedClassInvocation: " + testInfo.getTestClass().orElseThrow().getSimpleName());
 		}
 
 		@AfterAll
@@ -1491,24 +1507,24 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		final List<String> fieldSource = List.of("bar");
 
-		@BeforeArgumentSet
-		void beforeArgumentSet1(TestReporter reporter) {
-			reporter.publishEntry("beforeArgumentSet1");
+		@BeforeParameterizedClassInvocation(injectArguments = false)
+		void beforeParameterizedClassInvocation1(TestReporter reporter) {
+			reporter.publishEntry("beforeParameterizedClassInvocation1");
 		}
 
-		@BeforeArgumentSet
-		void beforeArgumentSet2(TestReporter reporter) {
-			reporter.publishEntry("beforeArgumentSet2");
+		@BeforeParameterizedClassInvocation(injectArguments = false)
+		void beforeParameterizedClassInvocation2(TestReporter reporter) {
+			reporter.publishEntry("beforeParameterizedClassInvocation2");
 		}
 
-		@AfterArgumentSet
-		void afterArgumentSet1(TestReporter reporter) {
-			reporter.publishEntry("afterArgumentSet1");
+		@AfterParameterizedClassInvocation(injectArguments = false)
+		void afterParameterizedClassInvocation1(TestReporter reporter) {
+			reporter.publishEntry("afterParameterizedClassInvocation1");
 		}
 
-		@AfterArgumentSet
-		void afterArgumentSet2(TestReporter reporter) {
-			reporter.publishEntry("afterArgumentSet2");
+		@AfterParameterizedClassInvocation(injectArguments = false)
+		void afterParameterizedClassInvocation2(TestReporter reporter) {
+			reporter.publishEntry("afterParameterizedClassInvocation2");
 		}
 
 		@Parameter
@@ -1710,8 +1726,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record NonStaticBeforeLifecycleMethodTestCase() {
 
-		@BeforeArgumentSet
-		void beforeArgumentSet() {
+		@BeforeParameterizedClassInvocation
+		void beforeParameterizedClassInvocation() {
 			fail("should not be called");
 		}
 
@@ -1725,8 +1741,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record NonStaticAfterLifecycleMethodTestCase() {
 
-		@AfterArgumentSet
-		void afterArgumentSet() {
+		@AfterParameterizedClassInvocation
+		void afterParameterizedClassInvocation() {
 			fail("should not be called");
 		}
 
@@ -1740,8 +1756,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record PrivateLifecycleMethodTestCase() {
 
-		@BeforeArgumentSet
-		private static void beforeArgumentSet() {
+		@BeforeParameterizedClassInvocation
+		private static void beforeParameterizedClassInvocation() {
 			fail("should not be called");
 		}
 
@@ -1753,12 +1769,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	static abstract class AbstractBaseLifecycleTestCase {
 
-		@BeforeArgumentSet
+		@BeforeParameterizedClassInvocation
 		static void zzz_before(TestReporter reporter) {
 			reporter.publishEntry("zzz_before");
 		}
 
-		@AfterArgumentSet
+		@AfterParameterizedClassInvocation
 		static void zzz_after(TestReporter reporter) {
 			reporter.publishEntry("zzz_after");
 		}
@@ -1768,12 +1784,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	static class LifecycleMethodsFromSuperclassTestCase extends AbstractBaseLifecycleTestCase {
 
-		@BeforeArgumentSet
+		@BeforeParameterizedClassInvocation
 		static void aaa_before(TestReporter reporter) {
 			reporter.publishEntry("aaa_before");
 		}
 
-		@AfterArgumentSet
+		@AfterParameterizedClassInvocation
 		static void aaa_after(TestReporter reporter) {
 			reporter.publishEntry("aaa_after");
 		}
@@ -1786,13 +1802,13 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	static abstract class AbstractBaseLifecycleWithErrorsTestCase {
 
-		@BeforeArgumentSet
+		@BeforeParameterizedClassInvocation
 		static void zzz_before(TestReporter reporter) {
 			reporter.publishEntry("zzz_before");
 			fail("zzz_before");
 		}
 
-		@AfterArgumentSet
+		@AfterParameterizedClassInvocation
 		static void zzz_after(TestReporter reporter) {
 			reporter.publishEntry("zzz_after");
 			fail("zzz_after");
@@ -1803,12 +1819,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	static class LifecycleMethodsErrorHandlingTestCase extends AbstractBaseLifecycleWithErrorsTestCase {
 
-		@BeforeArgumentSet
+		@BeforeParameterizedClassInvocation
 		static void aaa_before(TestReporter reporter) {
 			fail("should not be called");
 		}
 
-		@AfterArgumentSet
+		@AfterParameterizedClassInvocation
 		static void aaa_after(TestReporter reporter) {
 			reporter.publishEntry("aaa_after");
 			fail("aaa_after");
@@ -1825,12 +1841,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record LifecycleMethodArgumentInjectionWithConstructorInjectionTestCase(
 			@ConvertWith(AtomicIntegerConverter.class) AtomicInteger counter) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(AtomicInteger counter) {
 			assertEquals(2, counter.incrementAndGet());
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterParameterizedClassInvocation
 		static void after(AtomicInteger counter) {
 			assertEquals(4, counter.get());
 		}
@@ -1854,12 +1870,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@ConvertWith(AtomicIntegerConverter.class)
 		AtomicInteger counter;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(AtomicInteger counter) {
 			assertEquals(2, counter.incrementAndGet());
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterParameterizedClassInvocation
 		static void after(AtomicInteger counter) {
 			assertEquals(4, counter.get());
 		}
@@ -1887,7 +1903,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record CustomConverterAnnotationsWithLifecycleMethodsAndConstructorInjectionTestCase(
 			@CustomConversion String value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(String value) {
 			assertEquals("foo", value);
 		}
@@ -1906,7 +1922,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@CustomConversion
 		String value;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(String value) {
 			assertEquals("foo", value);
 		}
@@ -1972,51 +1988,51 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	abstract static class AbstractValidLifecycleMethodInjectionTestCase {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before0() {
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before1(AtomicInteger value) {
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before2(ArgumentsAccessor accessor) {
 			assertEquals(1, accessor.getInteger(0));
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before3(AtomicInteger value, TestInfo testInfo) {
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before4(ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(1, accessor.getInteger(0));
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before4(AtomicInteger value, ArgumentsAccessor accessor) {
 			assertEquals(1, accessor.getInteger(0));
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before5(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(1, accessor.getInteger(0));
 			assertEquals("[1] value=1", testInfo.getDisplayName());
 			value.incrementAndGet();
 		}
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before6(@TimesTwo int valueTimesTwo) {
 			assertEquals(2, valueTimesTwo);
 		}
 
-		@AfterArgumentSet(injectArguments = true)
+		@AfterParameterizedClassInvocation
 		static void after(AtomicInteger value, ArgumentsAccessor accessor, TestInfo testInfo) {
 			assertEquals(6, value.get());
 			assertEquals(1, accessor.getInteger(0));
@@ -2028,7 +2044,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@CsvSource("1, 2")
 	record LifecycleMethodWithInvalidParametersTestCase(int value, int anotherValue) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(long value, @ConvertWith(CustomIntegerToStringConverter.class) int anotherValue) {
 			fail("should not be called");
 		}
@@ -2043,7 +2059,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record LifecycleMethodWithInvalidParameterOrderTestCase(int value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(ArgumentsAccessor accessor1, int value, ArgumentsAccessor accessor2) {
 			fail("should not be called");
 		}
@@ -2058,7 +2074,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	record LifecycleMethodWithParameterAfterAggregatorTestCase(int value) {
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(@TimesTwo int valueTimesTwo, int value) {
 			fail("should not be called");
 		}
@@ -2067,6 +2083,52 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		void test() {
 			fail("should not be called");
 		}
+	}
+
+	@ParameterizedClass // argument sets: 13 = 2 + 4 + 1 + 1 + 1 + 1 + 1 + 1 + 1
+	@ArgumentsSource(CustomArgumentsProvider.class) // 2
+	@CsvFileSource(resources = "two-column.csv") // 4
+	@CsvSource("csv") // 1
+	@EmptySource // 1
+	@EnumSource(EnumOne.class) // 1
+	@FieldSource("field") // 1
+	@MethodSource("method") // 1
+	@NullSource // 1
+	@ValueSource(strings = "value") // 1
+	abstract static class BaseInheritanceTestCase {
+
+		static final List<String> field = List.of("field");
+
+		static List<String> method() {
+			return List.of("method");
+		}
+
+		@Parameter
+		@ConvertWith(ToStringConverter.class) // For @EnumSource
+		String value;
+
+		@Test
+		void test() {
+		}
+
+		@Nested
+		@ParameterizedClass
+		@ValueSource(ints = 1)
+		class Inner {
+			@Test
+			void test() {
+			}
+		}
+
+		static class ToStringConverter extends SimpleArgumentConverter {
+			@Override
+			protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
+				return source == null ? null : String.valueOf(source);
+			}
+		}
+	}
+
+	static class ConcreteInheritanceTestCase extends BaseInheritanceTestCase {
 	}
 
 }

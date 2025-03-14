@@ -35,13 +35,13 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.ContainerTemplate;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.api.ClassTemplate;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor;
+import org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateInvocationTestDescriptor;
-import org.junit.jupiter.engine.descriptor.ContainerTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestClassAware;
@@ -65,8 +65,8 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	private static final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
 	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
-	private static final Predicate<Class<?>> isAnnotatedWithContainerTemplate = testClass -> isAnnotated(testClass,
-		ContainerTemplate.class);
+	private static final Predicate<Class<?>> isAnnotatedWithClassTemplate = testClass -> isAnnotated(testClass,
+		ClassTemplate.class);
 
 	private final Predicate<String> classNameFilter;
 	private final JupiterConfiguration configuration;
@@ -109,22 +109,22 @@ class ClassSelectorResolver implements SelectorResolver {
 		if (ClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			return resolveStaticClassUniqueId(context, lastSegment, __ -> true, this::newClassTestDescriptor);
 		}
-		if (ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveStaticClassUniqueId(context, lastSegment, isAnnotatedWithContainerTemplate,
-				this::newStaticContainerTemplateTestDescriptor);
+		if (ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
+			return resolveStaticClassUniqueId(context, lastSegment, isAnnotatedWithClassTemplate,
+				this::newStaticClassTemplateTestDescriptor);
 		}
 		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
 			return resolveNestedClassUniqueId(context, uniqueId, __ -> true, this::newNestedClassTestDescriptor);
 		}
-		if (ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveNestedClassUniqueId(context, uniqueId, isAnnotatedWithContainerTemplate,
-				this::newNestedContainerTemplateTestDescriptor);
+		if (ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
+			return resolveNestedClassUniqueId(context, uniqueId, isAnnotatedWithClassTemplate,
+				this::newNestedClassTemplateTestDescriptor);
 		}
-		if (ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor = context.addToParent(
+		if (ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
+			Optional<ClassTemplateInvocationTestDescriptor> testDescriptor = context.addToParent(
 				() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 					int index = Integer.parseInt(lastSegment.getValue().substring(1));
-					return Optional.of(newDummyContainerTemplateInvocationTestDescriptor(parent, index));
+					return Optional.of(newDummyClassTemplateInvocationTestDescriptor(parent, index));
 				});
 			return toInvocationMatch(testDescriptor) //
 					.map(Resolution::match) //
@@ -137,11 +137,11 @@ class ClassSelectorResolver implements SelectorResolver {
 	public Resolution resolve(IterationSelector selector, Context context) {
 		DiscoverySelector parentSelector = selector.getParentSelector();
 		if (parentSelector instanceof ClassSelector
-				&& isAnnotatedWithContainerTemplate.test(((ClassSelector) parentSelector).getJavaClass())) {
+				&& isAnnotatedWithClassTemplate.test(((ClassSelector) parentSelector).getJavaClass())) {
 			return resolveIterations(selector, context);
 		}
 		if (parentSelector instanceof NestedClassSelector
-				&& isAnnotatedWithContainerTemplate.test(((NestedClassSelector) parentSelector).getNestedClass())) {
+				&& isAnnotatedWithClassTemplate.test(((NestedClassSelector) parentSelector).getNestedClass())) {
 			return resolveIterations(selector, context);
 		}
 		return unresolved();
@@ -151,7 +151,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		DiscoverySelector parentSelector = selector.getParentSelector();
 		Set<Match> matches = selector.getIterationIndices().stream() //
 				.map(index -> context.addToParent(() -> parentSelector,
-					parent -> Optional.of(newDummyContainerTemplateInvocationTestDescriptor(parent, index + 1)))) //
+					parent -> Optional.of(newDummyClassTemplateInvocationTestDescriptor(parent, index + 1)))) //
 				.map(this::toInvocationMatch) //
 				.filter(Optional::isPresent) //
 				.map(Optional::get) //
@@ -187,23 +187,23 @@ class ClassSelectorResolver implements SelectorResolver {
 		}));
 	}
 
-	private ContainerTemplateInvocationTestDescriptor newDummyContainerTemplateInvocationTestDescriptor(
-			TestDescriptor parent, int index) {
-		UniqueId uniqueId = parent.getUniqueId().append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE,
+	private ClassTemplateInvocationTestDescriptor newDummyClassTemplateInvocationTestDescriptor(TestDescriptor parent,
+			int index) {
+		UniqueId uniqueId = parent.getUniqueId().append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE,
 			"#" + index);
-		return new ContainerTemplateInvocationTestDescriptor(uniqueId, (ContainerTemplateTestDescriptor) parent,
-			DummyContainerTemplateInvocationContext.INSTANCE, index, parent.getSource().orElse(null), configuration);
+		return new ClassTemplateInvocationTestDescriptor(uniqueId, (ClassTemplateTestDescriptor) parent,
+			DummyClassTemplateInvocationContext.INSTANCE, index, parent.getSource().orElse(null), configuration);
 	}
 
 	private ClassBasedTestDescriptor newStaticClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		return isAnnotatedWithContainerTemplate.test(testClass) //
-				? newStaticContainerTemplateTestDescriptor(parent, testClass) //
+		return isAnnotatedWithClassTemplate.test(testClass) //
+				? newStaticClassTemplateTestDescriptor(parent, testClass) //
 				: newClassTestDescriptor(parent, testClass);
 	}
 
-	private ContainerTemplateTestDescriptor newStaticContainerTemplateTestDescriptor(TestDescriptor parent,
+	private ClassTemplateTestDescriptor newStaticClassTemplateTestDescriptor(TestDescriptor parent,
 			Class<?> testClass) {
-		return newContainerTemplateTestDescriptor(parent, ContainerTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		return newClassTemplateTestDescriptor(parent, ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
 			newClassTestDescriptor(parent, testClass));
 	}
 
@@ -214,14 +214,14 @@ class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private ClassBasedTestDescriptor newMemberClassTestDescriptor(TestDescriptor parent, Class<?> testClass) {
-		return isAnnotatedWithContainerTemplate.test(testClass) //
-				? newNestedContainerTemplateTestDescriptor(parent, testClass) //
+		return isAnnotatedWithClassTemplate.test(testClass) //
+				? newNestedClassTemplateTestDescriptor(parent, testClass) //
 				: newNestedClassTestDescriptor(parent, testClass);
 	}
 
-	private ContainerTemplateTestDescriptor newNestedContainerTemplateTestDescriptor(TestDescriptor parent,
+	private ClassTemplateTestDescriptor newNestedClassTemplateTestDescriptor(TestDescriptor parent,
 			Class<?> testClass) {
-		return newContainerTemplateTestDescriptor(parent, ContainerTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
+		return newClassTemplateTestDescriptor(parent, ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE,
 			newNestedClassTestDescriptor(parent, testClass));
 	}
 
@@ -231,16 +231,16 @@ class ClassSelectorResolver implements SelectorResolver {
 		return new NestedClassTestDescriptor(uniqueId, testClass, () -> getEnclosingTestClasses(parent), configuration);
 	}
 
-	private ContainerTemplateTestDescriptor newContainerTemplateTestDescriptor(TestDescriptor parent,
-			String segmentType, ClassBasedTestDescriptor delegate) {
+	private ClassTemplateTestDescriptor newClassTemplateTestDescriptor(TestDescriptor parent, String segmentType,
+			ClassBasedTestDescriptor delegate) {
 
 		delegate.setParent(parent);
 		String segmentValue = delegate.getUniqueId().getLastSegment().getValue();
 		UniqueId uniqueId = parent.getUniqueId().append(segmentType, segmentValue);
-		return new ContainerTemplateTestDescriptor(uniqueId, delegate);
+		return new ClassTemplateTestDescriptor(uniqueId, delegate);
 	}
 
-	private Optional<Match> toInvocationMatch(Optional<ContainerTemplateInvocationTestDescriptor> testDescriptor) {
+	private Optional<Match> toInvocationMatch(Optional<ClassTemplateInvocationTestDescriptor> testDescriptor) {
 		return testDescriptor //
 				.map(it -> Match.exact(it, expansionCallback(it,
 					() -> it.getParent().map(parent -> getTestClasses((TestClassAware) parent)).orElse(emptyList()))));
@@ -296,7 +296,7 @@ class ClassSelectorResolver implements SelectorResolver {
 		return DiscoverySelectors.selectNestedMethod(classes.subList(0, lastIndex), classes.get(lastIndex), method);
 	}
 
-	static class DummyContainerTemplateInvocationContext implements ContainerTemplateInvocationContext {
-		private static final DummyContainerTemplateInvocationContext INSTANCE = new DummyContainerTemplateInvocationContext();
+	static class DummyClassTemplateInvocationContext implements ClassTemplateInvocationContext {
+		private static final DummyClassTemplateInvocationContext INSTANCE = new DummyClassTemplateInvocationContext();
 	}
 }

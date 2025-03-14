@@ -21,7 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 
 /**
  * {@code @ResourceLock} is used to declare that the annotated test class or test
@@ -72,9 +72,8 @@ import org.junit.jupiter.api.ContainerTemplate;
  * via implementations of {@link ResourceLocksProvider} is not changed.
  *
  * <p>Shared resources declared on or provided for methods or nested test
- * classes in a {@link ContainerTemplate @ContainerTemplate} are propagated as
- * if they were declared on the outermost enclosing {@code @ContainerTemplate}
- * class itself.
+ * classes in a {@link ClassTemplate @ClassTemplate} are propagated as if they
+ * were declared on the outermost enclosing {@code @ClassTemplate} class itself.
  *
  * @see Isolated
  * @see Resources

@@ -53,10 +53,10 @@ class GradleStarterTests {
 
 		assertThat(result.stdOut()) //
 				.contains( //
-					"CalculatorContainerTemplateTests > [1] > regularTest() PASSED", //
-					"CalculatorContainerTemplateTests > [2] > regularTest() PASSED", //
-					"CalculatorContainerTemplateTests > [1] > parameterizedTest(int)", //
-					"CalculatorContainerTemplateTests > [2] > parameterizedTest(int)", //
+					"CalculatorClassTemplateTests > [1] > regularTest() PASSED", //
+					"CalculatorClassTemplateTests > [2] > regularTest() PASSED", //
+					"CalculatorClassTemplateTests > [1] > parameterizedTest(int)", //
+					"CalculatorClassTemplateTests > [2] > parameterizedTest(int)", //
 					"Using Java version: 1.8", //
 					"CalculatorTests > 1 + 1 = 2 PASSED", //
 					"CalculatorTests > add(int, int, int) > 0 + 1 = 1 PASSED", //
@@ -70,23 +70,23 @@ class GradleStarterTests {
 	}
 
 	@Test
-	void runOnlyOneMethodInContainerTemplate(@FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
+	void runOnlyOneMethodInClassTemplate(@FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 
-		var result = runGradle(outputFiles, "test", "--tests", "CalculatorContainer*.regular*");
+		var result = runGradle(outputFiles, "test", "--tests", "CalculatorClassTemplate*.regular*");
 
 		assertThat(result.stdOut()) //
 				.contains( //
-					"CalculatorContainerTemplateTests > [1] > regularTest() PASSED", //
-					"CalculatorContainerTemplateTests > [2] > regularTest() PASSED" //
+					"CalculatorClassTemplateTests > [1] > regularTest() PASSED", //
+					"CalculatorClassTemplateTests > [2] > regularTest() PASSED" //
 				) //
 				.doesNotContain("parameterizedTest(int)", "CalculatorTests");
 
-		result = runGradle(outputFiles, "test", "--tests", "*ContainerTemplateTests.parameterized*");
+		result = runGradle(outputFiles, "test", "--tests", "*ClassTemplateTests.parameterized*");
 
 		assertThat(result.stdOut()) //
 				.contains( //
-					"CalculatorContainerTemplateTests > [1] > parameterizedTest(int)", //
-					"CalculatorContainerTemplateTests > [2] > parameterizedTest(int)" //
+					"CalculatorClassTemplateTests > [1] > parameterizedTest(int)", //
+					"CalculatorClassTemplateTests > [2] > parameterizedTest(int)" //
 				) //
 				.doesNotContain("regularTest()", "CalculatorTests");
 	}

@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -25,12 +26,12 @@ import org.junit.platform.engine.support.hierarchical.Node;
 /**
  * @since 5.13
  */
-final class ContainerTemplateInvocationExtensionContext
-		extends AbstractExtensionContext<ContainerTemplateInvocationTestDescriptor> {
+final class ClassTemplateInvocationExtensionContext
+		extends AbstractExtensionContext<ClassTemplateInvocationTestDescriptor> {
 
-	ContainerTemplateInvocationExtensionContext(ExtensionContext parent,
-			EngineExecutionListener engineExecutionListener, ContainerTemplateInvocationTestDescriptor testDescriptor,
-			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry) {
+	ClassTemplateInvocationExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
+			ClassTemplateInvocationTestDescriptor testDescriptor, JupiterConfiguration configuration,
+			ExtensionRegistry extensionRegistry) {
 		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
 	}
 
@@ -42,6 +43,11 @@ final class ContainerTemplateInvocationExtensionContext
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return getTestDescriptor().getEnclosingTestClasses();
 	}
 
 	@Override

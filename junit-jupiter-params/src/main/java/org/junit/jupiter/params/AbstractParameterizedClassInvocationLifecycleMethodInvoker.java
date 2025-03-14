@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ParameterResolver;
 /**
  * @since 5.13
  */
-abstract class AbstractArgumentSetLifecycleMethodInvoker implements ParameterResolver {
+abstract class AbstractParameterizedClassInvocationLifecycleMethodInvoker implements ParameterResolver {
 
 	private final ParameterizedClassContext declarationContext;
 	private final EvaluatedArgumentSet arguments;
@@ -27,7 +27,7 @@ abstract class AbstractArgumentSetLifecycleMethodInvoker implements ParameterRes
 	private final ResolutionCache resolutionCache;
 	private final ArgumentSetLifecycleMethod lifecycleMethod;
 
-	AbstractArgumentSetLifecycleMethodInvoker(ParameterizedClassContext declarationContext,
+	AbstractParameterizedClassInvocationLifecycleMethodInvoker(ParameterizedClassContext declarationContext,
 			EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache,
 			ArgumentSetLifecycleMethod lifecycleMethod) {
 		this.declarationContext = declarationContext;

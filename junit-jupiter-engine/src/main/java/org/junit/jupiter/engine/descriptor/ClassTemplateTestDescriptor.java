@@ -27,9 +27,9 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.ContainerTemplate;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.ClassTemplate;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
@@ -46,21 +46,21 @@ import org.junit.platform.engine.support.hierarchical.Node;
  * @since 5.13
  */
 @API(status = INTERNAL, since = "5.13")
-public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor implements Filterable {
+public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implements Filterable {
 
-	public static final String STATIC_CLASS_SEGMENT_TYPE = "container-template";
-	public static final String NESTED_CLASS_SEGMENT_TYPE = "nested-container-template";
+	public static final String STATIC_CLASS_SEGMENT_TYPE = "class-template";
+	public static final String NESTED_CLASS_SEGMENT_TYPE = "nested-class-template";
 
 	private final Map<Integer, Collection<? extends TestDescriptor>> childrenPrototypesByIndex = new HashMap<>();
 	private final List<TestDescriptor> childrenPrototypes = new ArrayList<>();
 	private final ClassBasedTestDescriptor delegate;
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
-	public ContainerTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate) {
+	public ClassTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate) {
 		this(uniqueId, delegate, new DynamicDescendantFilter());
 	}
 
-	private ContainerTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate,
+	private ClassTemplateTestDescriptor(UniqueId uniqueId, ClassBasedTestDescriptor delegate,
 			DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, delegate.getTestClass(), delegate.getDisplayName(), delegate.configuration);
 		this.delegate = delegate;
@@ -86,7 +86,7 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 
 	@Override
 	protected JupiterTestDescriptor copyIncludingDescendants(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		ContainerTemplateTestDescriptor copy = (ContainerTemplateTestDescriptor) super.copyIncludingDescendants(
+		ClassTemplateTestDescriptor copy = (ClassTemplateTestDescriptor) super.copyIncludingDescendants(
 			uniqueIdTransformer);
 		this.childrenPrototypes.forEach(oldChild -> {
 			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
@@ -102,8 +102,8 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	}
 
 	@Override
-	protected ContainerTemplateTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		return new ContainerTemplateTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.delegate,
+	protected ClassTemplateTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ClassTemplateTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.delegate,
 			this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
@@ -120,8 +120,8 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		this.children.forEach(child -> child.accept(TestDescriptor::prune));
 		// Second iteration to avoid processing children that were pruned in the first iteration
 		this.children.forEach(child -> {
-			if (child instanceof ContainerTemplateInvocationTestDescriptor) {
-				int index = ((ContainerTemplateInvocationTestDescriptor) child).getIndex();
+			if (child instanceof ClassTemplateInvocationTestDescriptor) {
+				int index = ((ClassTemplateInvocationTestDescriptor) child).getIndex();
 				this.dynamicDescendantFilter.allowIndex(index - 1);
 				this.childrenPrototypesByIndex.put(index, child.getChildren());
 			}
@@ -189,60 +189,60 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) throws Exception {
 
-		new ContainerTemplateExecutor().execute(context, dynamicTestExecutor);
+		new ClassTemplateExecutor().execute(context, dynamicTestExecutor);
 		return context;
 	}
 
-	class ContainerTemplateExecutor
-			extends TemplateExecutor<ContainerTemplateInvocationContextProvider, ContainerTemplateInvocationContext> {
+	class ClassTemplateExecutor
+			extends TemplateExecutor<ClassTemplateInvocationContextProvider, ClassTemplateInvocationContext> {
 
-		public ContainerTemplateExecutor() {
-			super(ContainerTemplateTestDescriptor.this, ContainerTemplateInvocationContextProvider.class);
+		public ClassTemplateExecutor() {
+			super(ClassTemplateTestDescriptor.this, ClassTemplateInvocationContextProvider.class);
 		}
 
 		@Override
-		boolean supports(ContainerTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
-			return provider.supportsContainerTemplate(extensionContext);
+		boolean supports(ClassTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+			return provider.supportsClassTemplate(extensionContext);
 		}
 
 		@Override
 		protected String getNoRegisteredProviderErrorMessage() {
 			return String.format("You must register at least one %s that supports @%s class [%s]",
-				ContainerTemplateInvocationContextProvider.class.getSimpleName(),
-				ContainerTemplate.class.getSimpleName(), getTestClass().getName());
+				ClassTemplateInvocationContextProvider.class.getSimpleName(), ClassTemplate.class.getSimpleName(),
+				getTestClass().getName());
 		}
 
 		@Override
-		Stream<? extends ContainerTemplateInvocationContext> provideContexts(
-				ContainerTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
-			return provider.provideContainerTemplateInvocationContexts(extensionContext);
+		Stream<? extends ClassTemplateInvocationContext> provideContexts(
+				ClassTemplateInvocationContextProvider provider, ExtensionContext extensionContext) {
+			return provider.provideClassTemplateInvocationContexts(extensionContext);
 		}
 
 		@Override
-		boolean mayReturnZeroContexts(ContainerTemplateInvocationContextProvider provider,
+		boolean mayReturnZeroContexts(ClassTemplateInvocationContextProvider provider,
 				ExtensionContext extensionContext) {
-			return provider.mayReturnZeroContainerTemplateInvocationContexts(extensionContext);
+			return provider.mayReturnZeroClassTemplateInvocationContexts(extensionContext);
 		}
 
 		@Override
-		protected String getZeroContextsProvidedErrorMessage(ContainerTemplateInvocationContextProvider provider) {
+		protected String getZeroContextsProvidedErrorMessage(ClassTemplateInvocationContextProvider provider) {
 			return String.format(
 				"Provider [%s] did not provide any invocation contexts, but was expected to do so. "
-						+ "You may override mayReturnZeroContainerTemplateInvocationContexts() to allow this.",
+						+ "You may override mayReturnZeroClassTemplateInvocationContexts() to allow this.",
 				provider.getClass().getSimpleName());
 		}
 
 		@Override
 		UniqueId createInvocationUniqueId(UniqueId parentUniqueId, int index) {
-			return parentUniqueId.append(ContainerTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
+			return parentUniqueId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#" + index);
 		}
 
 		@Override
 		TestDescriptor createInvocationTestDescriptor(UniqueId uniqueId,
-				ContainerTemplateInvocationContext invocationContext, int index) {
-			ContainerTemplateInvocationTestDescriptor containerInvocationDescriptor = new ContainerTemplateInvocationTestDescriptor(
-				uniqueId, ContainerTemplateTestDescriptor.this, invocationContext, index, getSource().orElse(null),
-				ContainerTemplateTestDescriptor.this.configuration);
+				ClassTemplateInvocationContext invocationContext, int index) {
+			ClassTemplateInvocationTestDescriptor containerInvocationDescriptor = new ClassTemplateInvocationTestDescriptor(
+				uniqueId, ClassTemplateTestDescriptor.this, invocationContext, index, getSource().orElse(null),
+				ClassTemplateTestDescriptor.this.configuration);
 
 			collectChildren(index, uniqueId) //
 					.forEach(containerInvocationDescriptor::addChild);
@@ -251,11 +251,11 @@ public class ContainerTemplateTestDescriptor extends ClassBasedTestDescriptor im
 		}
 
 		private Stream<? extends TestDescriptor> collectChildren(int index, UniqueId invocationUniqueId) {
-			if (ContainerTemplateTestDescriptor.this.childrenPrototypesByIndex.containsKey(index)) {
-				return ContainerTemplateTestDescriptor.this.childrenPrototypesByIndex.remove(index).stream();
+			if (ClassTemplateTestDescriptor.this.childrenPrototypesByIndex.containsKey(index)) {
+				return ClassTemplateTestDescriptor.this.childrenPrototypesByIndex.remove(index).stream();
 			}
 			UnaryOperator<UniqueId> transformer = new UniqueIdPrefixTransformer(getUniqueId(), invocationUniqueId);
-			return ContainerTemplateTestDescriptor.this.childrenPrototypes.stream() //
+			return ClassTemplateTestDescriptor.this.childrenPrototypes.stream() //
 					.map(JupiterTestDescriptor.class::cast) //
 					.map(it -> it.copyIncludingDescendants(transformer));
 		}

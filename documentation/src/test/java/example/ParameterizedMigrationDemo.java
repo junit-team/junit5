@@ -12,8 +12,8 @@ package example;
 
 import java.util.Arrays;
 
-import org.junit.jupiter.params.AfterArgumentSet;
-import org.junit.jupiter.params.BeforeArgumentSet;
+import org.junit.jupiter.params.AfterParameterizedClassInvocation;
+import org.junit.jupiter.params.BeforeParameterizedClassInvocation;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
@@ -80,11 +80,11 @@ public class ParameterizedMigrationDemo {
 		@org.junit.jupiter.params.Parameter(1)
 		String text;
 
-		@BeforeArgumentSet(injectArguments = true)
+		@BeforeParameterizedClassInvocation
 		static void before(int number, String text) {
 		}
 
-		@AfterArgumentSet
+		@AfterParameterizedClassInvocation
 		static void after() {
 		}
 

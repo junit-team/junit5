@@ -17,7 +17,7 @@ log4j = "2.24.3"
 logback = "1.5.17"
 mockito = "5.16.0"
 opentest4j = "1.3.0"
-openTestReporting = "0.2.0"
+openTestReporting = "0.2.1"
 snapshotTests = "1.11.0"
 surefire = "3.5.2"
 xmlunit = "2.10.0"
@@ -96,10 +96,11 @@ buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.1" }
 develocity = { id = "com.gradle.develocity", version = "3.19.2" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.9.0" }
-gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.0" }
+gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.10" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
-plantuml = { id = "io.freefair.plantuml", version = "8.12.2.1" }
+plantuml = { id = "io.freefair.plantuml", version = "8.13" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }

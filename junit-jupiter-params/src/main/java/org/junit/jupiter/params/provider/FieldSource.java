@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -108,6 +109,10 @@ import org.apiguardian.api.API;
  * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass},
  * regardless whether field or constructor injection is used.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.11
  * @see MethodSource
  * @see Arguments
@@ -119,6 +124,7 @@ import org.apiguardian.api.API;
 @Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(FieldSources.class)
 @API(status = EXPERIMENTAL, since = "5.11")
 @ArgumentsSource(FieldArgumentsProvider.class)

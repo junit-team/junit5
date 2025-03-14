@@ -14,18 +14,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-@ContainerTemplate
-@ExtendWith(CalculatorContainerTemplateTests.Twice.class)
-class CalculatorContainerTemplateTests {
+@ClassTemplate
+@ExtendWith(CalculatorClassTemplateTests.Twice.class)
+class CalculatorClassTemplateTests {
 
 	@Test
 	void regularTest() {
@@ -40,20 +40,19 @@ class CalculatorContainerTemplateTests {
 		assertEquals(i, calculator.add(i, 0));
 	}
 
-	static class Twice implements ContainerTemplateInvocationContextProvider {
+	static class Twice implements ClassTemplateInvocationContextProvider {
 
 		@Override
-		public boolean supportsContainerTemplate(ExtensionContext context) {
+		public boolean supportsClassTemplate(ExtensionContext context) {
 			return true;
 		}
 
 		@Override
-		public Stream<ContainerTemplateInvocationContext> provideContainerTemplateInvocationContexts(
-				ExtensionContext context) {
+		public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext context) {
 			return Stream.of(new Ctx(), new Ctx());
 		}
 
-		static class Ctx implements ContainerTemplateInvocationContext {
+		static class Ctx implements ClassTemplateInvocationContext {
 		}
 	}
 }

@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ContainerTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.AnnotationSupport;
@@ -38,7 +38,7 @@ import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
-class ParameterizedClassContext implements ParameterizedDeclarationContext<ContainerTemplateInvocationContext> {
+class ParameterizedClassContext implements ParameterizedDeclarationContext<ClassTemplateInvocationContext> {
 
 	private final Class<?> testClass;
 	private final ParameterizedClass annotation;
@@ -64,17 +64,18 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 			this.injectionType = InjectionType.FIELDS;
 		}
 
-		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle,
-			TOP_DOWN, BeforeArgumentSet.class, BeforeArgumentSet::injectArguments, this.resolverFacade);
+		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle, TOP_DOWN,
+			BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
+			this.resolverFacade);
 
 		// Make a local copy since findAnnotatedMethods() returns an immutable list.
-		this.afterMethods = new ArrayList<>(
-			findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle, BOTTOM_UP,
-				AfterArgumentSet.class, AfterArgumentSet::injectArguments, this.resolverFacade));
+		this.afterMethods = new ArrayList<>(findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass,
+			testInstanceLifecycle, BOTTOM_UP, AfterParameterizedClassInvocation.class,
+			AfterParameterizedClassInvocation::injectArguments, this.resolverFacade));
 
 		// Since the bottom-up ordering of afterMethods will later be reversed when the
-		// AfterArgumentSetMethodInvoker extensions are executed within
-		// ContainerTemplateInvocationTestDescriptor, we have to reverse them to put them
+		// AfterParameterizedClassInvocationMethodInvoker extensions are executed within
+		// ClassTemplateInvocationTestDescriptor, we have to reverse them to put them
 		// in top-down order before we register them as extensions.
 		reverse(afterMethods);
 	}
@@ -127,7 +128,7 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Conta
 	}
 
 	@Override
-	public ContainerTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
+	public ClassTemplateInvocationContext createInvocationContext(ParameterizedInvocationNameFormatter formatter,
 			Arguments arguments, int invocationIndex) {
 		return new ParameterizedClassInvocationContext(this, formatter, arguments, invocationIndex);
 	}

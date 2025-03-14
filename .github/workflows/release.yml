@@ -51,7 +51,7 @@ jobs:
             :verifyArtifactsInStagingRepositoryAreReproducible \
             --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
-        uses: actions/attest-build-provenance@bd77c077858b8d561b7a36cbe48ef4cc642ca39d # v2.2.2
+        uses: actions/attest-build-provenance@c074443f1aee8d4aeeae555aebba3282517141b2 # v2.2.3
         with:
           subject-path: build/repo/**/*.jar
       - name: Upload local repository for later jobs
@@ -75,7 +75,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1.1.5
+      - uses: sbt/setup-sbt@8ee7ec888f2a1af33ba66f994c4fb05aaf23e7d0 # v1.1.6
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Inject staging repository URL
@@ -216,7 +216,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@96cf3f09dc501acdad7807fffe97dba9fa0709be # v1.1.5
+      - uses: sbt/setup-sbt@8ee7ec888f2a1af33ba66f994c4fb05aaf23e7d0 # v1.1.6
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Build samples

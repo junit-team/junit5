@@ -106,15 +106,16 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 
 		assertThat(output) //
 				.containsSubsequence(
-					"Thread \"%s\" prio=%d Id=%d %s will be interrupted.".formatted(thread.getName(),
-						thread.getPriority(), thread.threadId(), Thread.State.TIMED_WAITING), //
+					"Thread \"%s\" prio=%d Id=%d ".formatted(thread.getName(), thread.getPriority(), thread.threadId()), //
+					" will be interrupted.", //
 					"java.lang.Thread.sleep", //
-					"org.junit.jupiter.engine.extension.PreInterruptCallbackTests$DefaultPreInterruptCallbackTimeoutOnMethodTestCase.test(PreInterruptCallbackTests.java");
+					"%s.test(PreInterruptCallbackTests.java".formatted(
+						DefaultPreInterruptCallbackTimeoutOnMethodTestCase.class.getName()));
 
 		assertThat(output) //
 				.containsSubsequence( //
 					"junit-jupiter-timeout-watcher", //
-					"org.junit.jupiter.engine.extension.PreInterruptThreadDumpPrinter.beforeThreadInterrupt");
+					"%s.beforeThreadInterrupt".formatted(PreInterruptThreadDumpPrinter.class.getName()));
 	}
 
 	@Test

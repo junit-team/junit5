@@ -64,15 +64,15 @@ class MavenStarterTests {
 	}
 
 	@Test
-	void runOnlyOneMethodInContainerTemplate(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
+	void runOnlyOneMethodInClassTemplate(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 
-		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorContainerTemplateTests#regularTest");
+		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorClassTemplateTests#regularTest");
 
 		assertThat(result.stdOutLines()) //
 				.doesNotContain("CalculatorTests") //
 				.contains("[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0");
 
-		result = runMaven(outputFiles, "test", "-Dtest=CalculatorContainerTemplateTests#parameterizedTest");
+		result = runMaven(outputFiles, "test", "-Dtest=CalculatorClassTemplateTests#parameterizedTest");
 
 		assertThat(result.stdOutLines()) //
 				.doesNotContain("CalculatorTests") //

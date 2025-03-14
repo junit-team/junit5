@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
-import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendContainerTemplateInvocationSegment;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendClassTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
@@ -54,7 +54,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.ContainerTemplate;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
@@ -195,46 +195,46 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
-	void classResolutionOfContainerTemplate() {
-		var selector = selectClass(ContainerTemplateTestCase.class);
+	void classResolutionOfClassTemplate() {
+		var selector = selectClass(ClassTemplateTestCase.class);
 
 		resolve(request().selectors(selector));
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
-		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
-		assertThat(containerTemplateDescriptor.mayRegisterTests()).isFalse();
-		assertThat(containerTemplateDescriptor.getDescendants()).hasSize(1);
+		TestDescriptor classTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isFalse();
+		assertThat(classTemplateDescriptor.getDescendants()).hasSize(1);
 
-		var containerTemplateSegment = containerTemplateDescriptor.getUniqueId().getLastSegment();
-		assertThat(containerTemplateSegment.getType()).isEqualTo("container-template");
-		assertThat(containerTemplateSegment.getValue()).isEqualTo(ContainerTemplateTestCase.class.getName());
+		var classTemplateSegment = classTemplateDescriptor.getUniqueId().getLastSegment();
+		assertThat(classTemplateSegment.getType()).isEqualTo("class-template");
+		assertThat(classTemplateSegment.getValue()).isEqualTo(ClassTemplateTestCase.class.getName());
 
-		containerTemplateDescriptor.prune();
-		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
-		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
+		classTemplateDescriptor.prune();
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
 	}
 
 	@Test
-	void uniqueIdResolutionOfContainerTemplateInvocation() {
+	void uniqueIdResolutionOfClassTemplateInvocation() {
 		var selector = selectUniqueId(
-			appendContainerTemplateInvocationSegment(uniqueIdForClass(ContainerTemplateTestCase.class), 1));
+			appendClassTemplateInvocationSegment(uniqueIdForClass(ClassTemplateTestCase.class), 1));
 
 		resolve(request().selectors(selector));
 
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
 
-		TestDescriptor containerTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		TestDescriptor classTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
 
-		containerTemplateDescriptor.prune();
+		classTemplateDescriptor.prune();
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
-		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
-		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
 
-		containerTemplateDescriptor.prune();
+		classTemplateDescriptor.prune();
 		assertThat(engineDescriptor.getChildren()).hasSize(1);
-		assertThat(containerTemplateDescriptor.mayRegisterTests()).isTrue();
-		assertThat(containerTemplateDescriptor.getDescendants()).isEmpty();
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
 	}
 
 	@Test
@@ -945,8 +945,8 @@ class OtherClass {
 	}
 }
 
-@ContainerTemplate
-class ContainerTemplateTestCase {
+@ClassTemplate
+class ClassTemplateTestCase {
 	@Test
 	void test() {
 	}
