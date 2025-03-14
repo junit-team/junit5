@@ -64,8 +64,8 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 			this.injectionType = InjectionType.FIELDS;
 		}
 
-		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle, TOP_DOWN,
-			BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
+		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle,
+			TOP_DOWN, BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
 			this.resolverFacade);
 
 		// Make a local copy since findAnnotatedMethods() returns an immutable list.

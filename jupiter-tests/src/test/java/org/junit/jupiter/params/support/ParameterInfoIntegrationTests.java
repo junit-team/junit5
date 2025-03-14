@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.BeforeContainerTemplateInvocationCallback;
+import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -61,10 +61,10 @@ class ParameterInfoIntegrationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static class ParameterInfoConsumingExtension
-			implements BeforeContainerTemplateInvocationCallback, BeforeEachCallback {
+			implements BeforeClassTemplateInvocationCallback, BeforeEachCallback {
 
 		@Override
-		public void beforeContainerTemplateInvocation(ExtensionContext parameterizedClassInvocationContext) {
+		public void beforeClassTemplateInvocation(ExtensionContext parameterizedClassInvocationContext) {
 			if (TestCase.Inner.class.equals(parameterizedClassInvocationContext.getRequiredTestClass())) {
 				assertParameterInfo(parameterizedClassInvocationContext, "j", 2);
 
@@ -78,14 +78,6 @@ class ParameterInfoIntegrationTests extends AbstractJupiterTestEngineTests {
 
 			var outerParameterizedClassContext = parameterizedClassInvocationContext.getParent().orElseThrow();
 			assertNull(ParameterInfo.get(outerParameterizedClassContext));
-		}
-
-		private static void assertParameterInfo(ExtensionContext context, String parameterName, int argumentValue) {
-			var parameterInfo = ParameterInfo.get(context);
-			var declaration = parameterInfo.getDeclarations().get(0).orElseThrow();
-			assertEquals(parameterName, declaration.getParameterName().orElseThrow());
-			assertEquals(int.class, declaration.getParameterType());
-			assertEquals(argumentValue, parameterInfo.getArguments().getInteger(0));
 		}
 
 		@Override
@@ -106,6 +98,14 @@ class ParameterInfoIntegrationTests extends AbstractJupiterTestEngineTests {
 
 			var outerParameterizedClassContext = outerParameterizedClassInvocationContext.getParent().orElseThrow();
 			assertNull(ParameterInfo.get(outerParameterizedClassContext));
+		}
+
+		private static void assertParameterInfo(ExtensionContext context, String parameterName, int argumentValue) {
+			var parameterInfo = ParameterInfo.get(context);
+			var declaration = parameterInfo.getDeclarations().get(0).orElseThrow();
+			assertEquals(parameterName, declaration.getParameterName().orElseThrow());
+			assertEquals(int.class, declaration.getParameterType());
+			assertEquals(argumentValue, parameterInfo.getArguments().getInteger(0));
 		}
 	}
 }
