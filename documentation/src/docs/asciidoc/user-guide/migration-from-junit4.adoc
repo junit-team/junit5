@@ -86,8 +86,8 @@ ForkJoinPool-1-worker-2 - FooTest::test3
 [[migrating-from-junit4-parallel-execution-method-level]]
 ==== Parallelization at Method Level
 
-Alternatively, we can enable parallel test execution at a `method` level,
-rather than the `class` level:
+Alternatively, we can enable parallel test execution at a method level,
+rather than the class level:
 
 [source,properties]
 ----
