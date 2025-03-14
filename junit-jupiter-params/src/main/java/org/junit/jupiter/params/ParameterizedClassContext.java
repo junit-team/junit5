@@ -40,7 +40,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 
 class ParameterizedClassContext implements ParameterizedDeclarationContext<ClassTemplateInvocationContext> {
 
-	private final Class<?> clazz;
+	private final Class<?> testClass;
 	private final ParameterizedClass annotation;
 	private final TestInstance.Lifecycle testInstanceLifecycle;
 	private final ResolverFacade resolverFacade;
@@ -48,28 +48,28 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 	private final List<ArgumentSetLifecycleMethod> beforeMethods;
 	private final List<ArgumentSetLifecycleMethod> afterMethods;
 
-	ParameterizedClassContext(Class<?> clazz, ParameterizedClass annotation,
+	ParameterizedClassContext(Class<?> testClass, ParameterizedClass annotation,
 			TestInstance.Lifecycle testInstanceLifecycle) {
-		this.clazz = clazz;
+		this.testClass = testClass;
 		this.annotation = annotation;
 		this.testInstanceLifecycle = testInstanceLifecycle;
 
-		List<Field> fields = findParameterAnnotatedFields(clazz);
+		List<Field> fields = findParameterAnnotatedFields(testClass);
 		if (fields.isEmpty()) {
-			this.resolverFacade = ResolverFacade.create(ReflectionUtils.getDeclaredConstructor(clazz), annotation);
+			this.resolverFacade = ResolverFacade.create(ReflectionUtils.getDeclaredConstructor(testClass), annotation);
 			this.injectionType = InjectionType.CONSTRUCTOR;
 		}
 		else {
-			this.resolverFacade = ResolverFacade.create(clazz, fields);
+			this.resolverFacade = ResolverFacade.create(testClass, fields);
 			this.injectionType = InjectionType.FIELDS;
 		}
 
-		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz, testInstanceLifecycle, TOP_DOWN,
-			BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
+		this.beforeMethods = findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass, testInstanceLifecycle,
+			TOP_DOWN, BeforeParameterizedClassInvocation.class, BeforeParameterizedClassInvocation::injectArguments,
 			this.resolverFacade);
 
 		// Make a local copy since findAnnotatedMethods() returns an immutable list.
-		this.afterMethods = new ArrayList<>(findLifecycleMethodsAndAssertStaticAndNonPrivate(clazz,
+		this.afterMethods = new ArrayList<>(findLifecycleMethodsAndAssertStaticAndNonPrivate(testClass,
 			testInstanceLifecycle, BOTTOM_UP, AfterParameterizedClassInvocation.class,
 			AfterParameterizedClassInvocation::injectArguments, this.resolverFacade));
 
@@ -88,13 +88,18 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 	}
 
 	@Override
+	public Class<?> getTestClass() {
+		return this.testClass;
+	}
+
+	@Override
 	public ParameterizedClass getAnnotation() {
 		return this.annotation;
 	}
 
 	@Override
 	public Class<?> getAnnotatedElement() {
-		return this.clazz;
+		return this.testClass;
 	}
 
 	@Override

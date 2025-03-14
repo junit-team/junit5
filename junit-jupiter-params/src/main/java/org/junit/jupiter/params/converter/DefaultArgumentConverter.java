@@ -11,9 +11,9 @@
 package org.junit.jupiter.params.converter;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.ClassLoaderUtils.getClassLoader;
 
 import java.io.File;
-import java.lang.reflect.Member;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.net.URI;
@@ -27,7 +27,6 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.support.conversion.ConversionException;
 import org.junit.platform.commons.support.conversion.ConversionSupport;
-import org.junit.platform.commons.util.ClassLoaderUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -60,24 +59,18 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	@Override
 	public final Object convert(Object source, ParameterContext context) {
 		Class<?> targetType = context.getParameter().getType();
-		return convert(source, targetType, context);
+		ClassLoader classLoader = getClassLoader(context.getDeclaringExecutable().getDeclaringClass());
+		return convert(source, targetType, classLoader);
 	}
 
 	@Override
 	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
 		Class<?> targetType = context.getField().getType();
-		return convert(source, targetType, context);
+		ClassLoader classLoader = getClassLoader(context.getField().getDeclaringClass());
+		return convert(source, targetType, classLoader);
 	}
 
-	public final Object convert(Object source, Class<?> targetType, ParameterContext context) {
-		return convert(source, targetType, context.getDeclaringExecutable());
-	}
-
-	public final Object convert(Object source, Class<?> targetType, FieldContext context) {
-		return convert(source, targetType, context.getField());
-	}
-
-	private Object convert(Object source, Class<?> targetType, Member member) {
+	public final Object convert(Object source, Class<?> targetType, ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
@@ -91,8 +84,6 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String) {
-			Class<?> declaringClass = member.getDeclaringClass();
-			ClassLoader classLoader = ClassLoaderUtils.getClassLoader(declaringClass);
 			try {
 				return convert((String) source, targetType, classLoader);
 			}
