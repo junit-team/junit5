@@ -24,6 +24,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.descriptor.DemoMethodTestDescriptor;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult.EngineResultInfo;
 
 /**
  * @since 1.0
@@ -35,7 +36,8 @@ class ExecutionListenerAdapterTests {
 	void testReportingEntryPublished() {
 		var testDescriptor = getSampleMethodTestDescriptor();
 
-		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(), testDescriptor), mock(),
+		var discoveryResult = new LauncherDiscoveryResult(
+			Map.of(mock(), EngineResultInfo.completed(testDescriptor, DiscoveryIssueNotifier.NO_ISSUES)), mock(),
 			dummyOutputDirectoryProvider());
 		var testPlan = InternalTestPlan.from(discoveryResult);
 		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());

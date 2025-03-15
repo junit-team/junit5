@@ -32,6 +32,7 @@ import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.junit.platform.launcher.core.LauncherDiscoveryResult.EngineResultInfo;
 
 /**
  * Orchestrates test execution using the configured test engines.
@@ -160,16 +161,7 @@ public class EngineExecutionOrchestrator {
 		EngineExecutionListener listener = selectExecutionListener(engineExecutionListener, configurationParameters);
 
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
-			TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
-			if (engineDescriptor instanceof EngineDiscoveryErrorDescriptor) {
-				listener.executionStarted(engineDescriptor);
-				listener.executionFinished(engineDescriptor,
-					TestExecutionResult.failed(((EngineDiscoveryErrorDescriptor) engineDescriptor).getCause()));
-			}
-			else {
-				execute(engineDescriptor, listener, configurationParameters, testEngine,
-					discoveryResult.getOutputDirectoryProvider());
-			}
+			failOrExecuteEngine(discoveryResult, listener, testEngine);
 		}
 	}
 
@@ -183,6 +175,28 @@ public class EngineExecutionOrchestrator {
 		return engineExecutionListener;
 	}
 
+	private void failOrExecuteEngine(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener,
+			TestEngine testEngine) {
+
+		EngineResultInfo engineDiscoveryResult = discoveryResult.getEngineResult(testEngine);
+		DiscoveryIssueNotifier discoveryIssueNotifier = engineDiscoveryResult.getDiscoveryIssueNotifier();
+		TestDescriptor engineDescriptor = engineDiscoveryResult.getRootDescriptor();
+		Throwable failure = engineDiscoveryResult.getCause() //
+				.orElseGet(() -> discoveryIssueNotifier.createExceptionForCriticalIssues(testEngine));
+		if (failure != null) {
+			listener.executionStarted(engineDescriptor);
+			if (engineDiscoveryResult.getCause().isPresent()) {
+				discoveryIssueNotifier.logCriticalIssues(testEngine);
+			}
+			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
+			listener.executionFinished(engineDescriptor, TestExecutionResult.failed(failure));
+		}
+		else {
+			executeEngine(engineDescriptor, listener, discoveryResult.getConfigurationParameters(), testEngine,
+				discoveryResult.getOutputDirectoryProvider(), discoveryIssueNotifier);
+		}
+	}
+
 	private ListenerRegistry<TestExecutionListener> buildListenerRegistryForExecution(
 			TestExecutionListener... listeners) {
 		if (listeners.length == 0) {
@@ -191,15 +205,16 @@ public class EngineExecutionOrchestrator {
 		return ListenerRegistry.copyOf(this.listenerRegistry).addAll(listeners);
 	}
 
-	private void execute(TestDescriptor engineDescriptor, EngineExecutionListener listener,
+	private void executeEngine(TestDescriptor engineDescriptor, EngineExecutionListener listener,
 			ConfigurationParameters configurationParameters, TestEngine testEngine,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueNotifier discoveryIssueNotifier) {
 
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
 			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
 				outputDirectoryProvider));
+			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
@@ -212,6 +227,7 @@ public class EngineExecutionOrchestrator {
 				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
 				cause = new JUnitException(message, throwable);
 			}
+			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
 			delayingListener.reportEngineFailure(cause);
 		}
 	}
