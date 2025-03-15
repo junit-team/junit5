@@ -10,12 +10,9 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.partitioningBy;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
-import static org.junit.platform.launcher.core.DiscoveryIssueException.formatMessageForNonCriticalIssues;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -24,17 +21,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
-import org.junit.platform.engine.DiscoveryIssue;
-import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.FilterResult;
@@ -169,11 +162,8 @@ public class EngineDiscoveryOrchestrator {
 			listener.engineDiscoveryStarted(uniqueEngineId);
 			TestDescriptor engineRoot = testEngine.discover(request, uniqueEngineId);
 			discoveryResultValidator.validate(testEngine, engineRoot);
-			Optional<? extends Throwable> criticalDiscoveryIssue = handleDiscoveryIssues(testEngine, issueCollector);
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.successful());
-			return criticalDiscoveryIssue //
-					.map(cause -> EngineResultInfo.failure(engineRoot, cause)) //
-					.orElseGet(() -> EngineResultInfo.success(engineRoot));
+			return EngineResultInfo.completed(engineRoot, issueCollector.toNotifier());
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
@@ -186,32 +176,9 @@ public class EngineDiscoveryOrchestrator {
 				cause = new JUnitException(message, throwable);
 			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
-			return EngineResultInfo.failure(new EngineDescriptor(uniqueEngineId, testEngine.getId()), cause);
+			return EngineResultInfo.errored(new EngineDescriptor(uniqueEngineId, testEngine.getId()),
+				issueCollector.toNotifier(), cause);
 		}
-	}
-
-	private static Optional<DiscoveryIssueException> handleDiscoveryIssues(TestEngine testEngine,
-			DiscoveryIssueCollector issueCollector) {
-
-		Optional<DiscoveryIssueException> result = Optional.empty();
-		if (issueCollector.issues.isEmpty()) {
-			return result;
-		}
-		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
-		Map<Boolean, List<DiscoveryIssue>> issuesByCriticality = issueCollector.issues.stream() //
-				.sorted(comparing(DiscoveryIssue::severity).reversed()) //
-				.collect(partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0));
-		List<DiscoveryIssue> criticalIssues = issuesByCriticality.get(true);
-		List<DiscoveryIssue> nonCriticalIssues = issuesByCriticality.get(false);
-		if (!criticalIssues.isEmpty()) {
-			result = Optional.of(DiscoveryIssueException.from(testEngine.getId(), criticalIssues));
-		}
-		if (!nonCriticalIssues.isEmpty()) {
-			Severity maxSeverity = nonCriticalIssues.get(0).severity();
-			Consumer<Supplier<String>> loggerMethod = maxSeverity == Severity.NOTICE ? logger::info : logger::warn;
-			loggerMethod.accept(() -> formatMessageForNonCriticalIssues(testEngine.getId(), nonCriticalIssues));
-		}
-		return result;
 	}
 
 	LauncherDiscoveryListener getLauncherDiscoveryListener(LauncherDiscoveryRequest discoveryRequest,

@@ -22,7 +22,6 @@ import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
-import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 class DiscoveryIssueCollector implements LauncherDiscoveryListener {
@@ -45,12 +44,20 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 	}
 
 	@Override
+	public void engineDiscoveryStarted(UniqueId engineId) {
+		this.issues.clear();
+	}
+
+	@Override
 	public void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 		this.issues.add(issue);
 	}
 
-	@Override
-	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
-		this.issues.clear();
+	DiscoveryIssueNotifier toNotifier() {
+		if (issues.isEmpty()) {
+			return DiscoveryIssueNotifier.NO_ISSUES;
+		}
+		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
+		return DiscoveryIssueNotifier.from(criticalSeverity, issues);
 	}
 }
