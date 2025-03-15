@@ -93,29 +93,39 @@ public class LauncherDiscoveryResult {
 
 	static class EngineResultInfo {
 
-		static EngineResultInfo success(TestDescriptor rootDescriptor) {
-			return new EngineResultInfo(rootDescriptor, null);
+		static EngineResultInfo completed(TestDescriptor rootDescriptor,
+				DiscoveryIssueNotifier discoveryIssueNotifier) {
+			return new EngineResultInfo(rootDescriptor, discoveryIssueNotifier, null);
 		}
 
-		static EngineResultInfo failure(TestDescriptor rootDescriptor, Throwable failure) {
-			return new EngineResultInfo(rootDescriptor, failure);
+		static EngineResultInfo errored(TestDescriptor rootDescriptor, DiscoveryIssueNotifier discoveryIssueNotifier,
+				Throwable cause) {
+			return new EngineResultInfo(rootDescriptor, discoveryIssueNotifier, cause);
 		}
 
 		private final TestDescriptor rootDescriptor;
-		private final Throwable failure;
+		private final Throwable cause;
+		private final DiscoveryIssueNotifier discoveryIssueNotifier;
 
-		EngineResultInfo(TestDescriptor rootDescriptor, Throwable failure) {
+		EngineResultInfo(TestDescriptor rootDescriptor, DiscoveryIssueNotifier discoveryIssueNotifier,
+				Throwable cause) {
 			this.rootDescriptor = rootDescriptor;
-			this.failure = failure;
+			this.discoveryIssueNotifier = discoveryIssueNotifier;
+			this.cause = cause;
 		}
 
 		TestDescriptor getRootDescriptor() {
 			return this.rootDescriptor;
 		}
 
-		Optional<Throwable> getFailure() {
-			return Optional.ofNullable(this.failure);
+		DiscoveryIssueNotifier getDiscoveryIssueNotifier() {
+			return discoveryIssueNotifier;
 		}
+
+		Optional<Throwable> getCause() {
+			return Optional.ofNullable(this.cause);
+		}
+
 	}
 
 }

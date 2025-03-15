@@ -46,6 +46,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -586,7 +587,7 @@ class DefaultLauncherTests {
 		verify(engine, times(1)).execute(any());
 
 		var e = assertThrows(PreconditionViolationException.class, () -> launcher.execute(testPlan));
-		assertEquals(e.getMessage(), "TestPlan must only be executed once");
+		assertEquals("TestPlan must only be executed once", e.getMessage());
 	}
 
 	@Test
@@ -707,26 +708,44 @@ class DefaultLauncherTests {
 	void reportsEngineExecutionFailureForCriticalDiscoveryIssuesAndLogsRemaining(
 			@TrackLogRecords LogRecordListener listener) {
 
-		var engineA = new TestEngineStub("engine-a") {
+		var result = execute(new TestEngineStub("engine-id") {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				var listener = discoveryRequest.getDiscoveryListener();
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.ERROR, "error"));
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.WARNING, "warning"));
-				return new EngineDescriptor(uniqueId, "A") {
+				var listener1 = discoveryRequest.getDiscoveryListener();
+				listener1.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
+				listener1.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.WARNING, "warning"));
+				return new EngineDescriptor(uniqueId, "Engine") {
 					@Override
 					public Set<TestTag> getTags() {
 						return Set.of(TestTag.create("custom-tag"));
 					}
 				};
 			}
-		};
-		var engineB = new TestEngineStub("engine-b") {
+		});
+
+		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("Engine");
+		assertThat(result.testIdentifier().getTags()).containsExactly(TestTag.create("custom-tag"));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [ERROR] error");
+
+		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.WARNING)) //
+				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
+				.contains("(1) [WARNING] warning");
+	}
+
+	@Test
+	void logsNonCriticalIssuesForRegularEngineExecution(@TrackLogRecords LogRecordListener listener) {
+
+		var result = execute(new TestEngineStub("engine-id") {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				var listener = discoveryRequest.getDiscoveryListener();
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(DiscoveryIssue.Severity.NOTICE, "notice"));
-				return new EngineDescriptor(uniqueId, "B");
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				return new EngineDescriptor(uniqueId, "Engine");
 			}
 
 			@Override
@@ -736,10 +755,83 @@ class DefaultLauncherTests {
 				executionListener.executionStarted(engineDescriptor);
 				executionListener.executionFinished(engineDescriptor, successful());
 			}
-		};
-		var executionListener = mock(TestExecutionListener.class);
+		});
 
-		createLauncher(engineA, engineB).execute(request().build(), executionListener);
+		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("Engine");
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.SUCCESSFUL);
+
+		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
+				.contains("(1) [NOTICE] notice");
+	}
+
+	@Test
+	void logsAllIssuesForDiscoveryFailure(@TrackLogRecords LogRecordListener listener) {
+
+		var result = execute(new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				throw new RuntimeException("boom");
+			}
+		});
+
+		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("engine-id");
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.hasMessage("TestEngine with ID 'engine-id' failed to discover tests") //
+				.cause().hasMessage("boom");
+
+		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.SEVERE)) //
+				.startsWith("TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
+				.contains("(1) [ERROR] error");
+
+		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
+				.contains("(1) [NOTICE] notice");
+	}
+
+	@Test
+	void logsNonCriticalIssuesForExecutionFailure(@TrackLogRecords LogRecordListener listener) {
+
+		var result = execute(new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				return new EngineDescriptor(uniqueId, "Engine");
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var executionListener = request.getEngineExecutionListener();
+				var engineDescriptor = request.getRootTestDescriptor();
+				executionListener.executionStarted(engineDescriptor);
+				throw new RuntimeException("boom");
+			}
+		});
+
+		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("Engine");
+
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.hasMessage("TestEngine with ID 'engine-id' failed to execute tests") //
+				.cause().hasMessage("boom");
+
+		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
+				.contains("(1) [NOTICE] notice");
+	}
+
+	private static ReportedData execute(TestEngine engine) {
+		var executionListener = mock(TestExecutionListener.class);
+		var request = request() //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
+				.build();
+		var launcher = createLauncher(engine);
+
+		launcher.execute(request, executionListener);
 
 		var inOrder = inOrder(executionListener);
 		var testIdentifier = ArgumentCaptor.forClass(TestIdentifier.class);
@@ -747,38 +839,20 @@ class DefaultLauncherTests {
 		inOrder.verify(executionListener).testPlanExecutionStarted(any());
 		inOrder.verify(executionListener).executionStarted(testIdentifier.capture());
 		inOrder.verify(executionListener).executionFinished(any(), testExecutionResult.capture());
-		inOrder.verify(executionListener).executionStarted(testIdentifier.capture());
-		inOrder.verify(executionListener).executionFinished(any(), testExecutionResult.capture());
 		inOrder.verify(executionListener).testPlanExecutionFinished(any());
 		inOrder.verifyNoMoreInteractions();
 
-		var testIdentifiers = testIdentifier.getAllValues();
-		var results = testExecutionResult.getAllValues();
+		return new ReportedData(testIdentifier.getValue(), testExecutionResult.getValue());
+	}
 
-		var testIdentifierOfEngineA = testIdentifiers.getFirst();
-		assertThat(testIdentifierOfEngineA.getDisplayName()).isEqualTo("A");
-		assertThat(testIdentifierOfEngineA.getTags()).containsExactly(TestTag.create("custom-tag"));
+	private static String findFirstDiscoveryIssueLogMessage(LogRecordListener listener, Level level) {
+		return listener.stream(DiscoveryIssueNotifier.class, level) //
+				.map(LogRecord::getMessage) //
+				.findFirst() //
+				.orElseThrow();
+	}
 
-		var resultOfEngineA = results.getFirst();
-		assertThat(resultOfEngineA.getStatus()).isEqualTo(Status.FAILED);
-		assertThat(resultOfEngineA.getThrowable().orElseThrow()) //
-				.hasMessageStartingWith(
-					"TestEngine with ID 'engine-a' encountered a critical issue during test discovery") //
-				.hasMessageContaining("(1) [ERROR] error");
-
-		assertThat(listener.stream(Level.WARNING).map(LogRecord::getMessage).findFirst().orElseThrow()) //
-				.startsWith("TestEngine with ID 'engine-a' encountered a non-critical issue during test discovery") //
-				.contains("(1) [WARNING] warning");
-
-		var testIdentifierOfEngineB = testIdentifiers.getLast();
-		assertThat(testIdentifierOfEngineB.getDisplayName()).isEqualTo("B");
-
-		var resultOfEngineB = results.getLast();
-		assertThat(resultOfEngineB.getStatus()).isEqualTo(Status.SUCCESSFUL);
-
-		assertThat(listener.stream(Level.INFO).map(LogRecord::getMessage).findFirst().orElseThrow()) //
-				.startsWith("TestEngine with ID 'engine-b' encountered a non-critical issue during test discovery") //
-				.contains("(1) [NOTICE] notice");
+	private record ReportedData(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
 	}
 
 }
