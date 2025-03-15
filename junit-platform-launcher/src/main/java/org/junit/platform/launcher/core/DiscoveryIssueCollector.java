@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
@@ -29,5 +30,13 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 	@Override
 	public void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 		this.issues.add(issue);
+	}
+
+	DiscoveryIssueNotifier toNotifier() {
+		if (issues.isEmpty()) {
+			return DiscoveryIssueNotifier.NO_ISSUES;
+		}
+		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
+		return DiscoveryIssueNotifier.from(criticalSeverity, issues);
 	}
 }

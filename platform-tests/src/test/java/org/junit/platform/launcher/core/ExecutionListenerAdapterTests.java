@@ -36,8 +36,9 @@ class ExecutionListenerAdapterTests {
 	void testReportingEntryPublished() {
 		var testDescriptor = getSampleMethodTestDescriptor();
 
-		var discoveryResult = new LauncherDiscoveryResult(Map.of(mock(), EngineResultInfo.success(testDescriptor)),
-			mock(), dummyOutputDirectoryProvider());
+		var discoveryResult = new LauncherDiscoveryResult(
+			Map.of(mock(), EngineResultInfo.completed(testDescriptor, DiscoveryIssueNotifier.NO_ISSUES)), mock(),
+			dummyOutputDirectoryProvider());
 		var testPlan = InternalTestPlan.from(discoveryResult);
 		var testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 
