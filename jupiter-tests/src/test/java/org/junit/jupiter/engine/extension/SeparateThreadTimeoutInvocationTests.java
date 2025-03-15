@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvocationParameters;
+import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
@@ -71,7 +72,8 @@ class SeparateThreadTimeoutInvocationTests {
 
 	private static <T> SeparateThreadTimeoutInvocation<T> aSeparateThreadInvocation(Invocation<T> invocation) {
 		var namespace = ExtensionContext.Namespace.create(SeparateThreadTimeoutInvocationTests.class);
-		var store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null), namespace);
+		var store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null),
+			Namespace.create(namespace.getParts()));
 		var parameters = new TimeoutInvocationParameters<>(invocation,
 			new TimeoutDuration(PREEMPTIVE_TIMEOUT_MILLIS, MILLISECONDS), () -> "method()",
 			PreInterruptCallbackInvocation.NOOP);

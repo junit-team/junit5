@@ -31,8 +31,8 @@ final class ClassTemplateInvocationExtensionContext
 
 	ClassTemplateInvocationExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassTemplateInvocationTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade) {
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 	}
 
 	@Override
