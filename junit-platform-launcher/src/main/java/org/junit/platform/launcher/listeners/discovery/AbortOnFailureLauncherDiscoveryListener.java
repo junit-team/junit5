@@ -10,15 +10,8 @@
 
 package org.junit.platform.launcher.listeners.discovery;
 
-import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
-import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLVED;
-
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
-import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
@@ -31,19 +24,6 @@ class AbortOnFailureLauncherDiscoveryListener implements LauncherDiscoveryListen
 	@Override
 	public void engineDiscoveryFinished(UniqueId engineId, EngineDiscoveryResult result) {
 		result.getThrowable().ifPresent(ExceptionUtils::throwAsUncheckedException);
-	}
-
-	@Override
-	public void selectorProcessed(UniqueId engineId, DiscoverySelector selector, SelectorResolutionResult result) {
-		if (result.getStatus() == FAILED) {
-			throw new JUnitException(selector + " resolution failed", result.getThrowable().orElse(null));
-		}
-		if (result.getStatus() == UNRESOLVED && selector instanceof UniqueIdSelector) {
-			UniqueId uniqueId = ((UniqueIdSelector) selector).getUniqueId();
-			if (uniqueId.hasPrefix(engineId)) {
-				throw new JUnitException(selector + " could not be resolved");
-			}
-		}
 	}
 
 	@Override

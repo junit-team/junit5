@@ -8,19 +8,20 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-package org.junit.platform.launcher.listeners.discovery;
+package org.junit.platform.fakes;
 
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
+import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
-import org.junit.platform.fakes.TestEngineStub;
 
-abstract class AbstractLauncherDiscoveryListenerTests {
+public class FaultyTestEngines {
 
-	protected TestEngineStub createEngineThatCannotResolveAnything(String engineId) {
+	public static TestEngineStub createEngineThatCannotResolveAnything(String engineId) {
 		return new TestEngineStub(engineId) {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
@@ -29,10 +30,18 @@ abstract class AbstractLauncherDiscoveryListenerTests {
 							selector, SelectorResolutionResult.unresolved()));
 				return new EngineDescriptor(uniqueId, "Some Engine");
 			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var listener = request.getEngineExecutionListener();
+				var rootTestDescriptor = request.getRootTestDescriptor();
+				listener.executionStarted(rootTestDescriptor);
+				listener.executionFinished(rootTestDescriptor, TestExecutionResult.successful());
+			}
 		};
 	}
 
-	protected TestEngineStub createEngineThatFailsToResolveAnything(String engineId, RuntimeException rootCause) {
+	public static TestEngineStub createEngineThatFailsToResolveAnything(String engineId, Throwable rootCause) {
 		return new TestEngineStub(engineId) {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
@@ -41,7 +50,14 @@ abstract class AbstractLauncherDiscoveryListenerTests {
 							selector, SelectorResolutionResult.failed(rootCause)));
 				return new EngineDescriptor(uniqueId, "Some Engine");
 			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var listener = request.getEngineExecutionListener();
+				var rootTestDescriptor = request.getRootTestDescriptor();
+				listener.executionStarted(rootTestDescriptor);
+				listener.executionFinished(rootTestDescriptor, TestExecutionResult.successful());
+			}
 		};
 	}
-
 }
