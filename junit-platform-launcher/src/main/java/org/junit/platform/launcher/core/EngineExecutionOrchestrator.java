@@ -227,6 +227,7 @@ public class EngineExecutionOrchestrator {
 				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
 				cause = new JUnitException(message, throwable);
 			}
+			delayingListener.reportEngineStartIfNecessary();
 			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
 			delayingListener.reportEngineFailure(cause);
 		}

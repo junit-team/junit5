@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,13 +28,16 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.time.Instant;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -732,9 +736,12 @@ class DefaultLauncherTests {
 					"TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
 				.hasMessageContaining("(1) [ERROR] error");
 
-		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.WARNING)) //
+		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.WARNING);
+		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
 				.contains("(1) [WARNING] warning");
+		assertThat(logRecord.getInstant()) //
+				.isBetween(result.startTime(), result.finishTime());
 	}
 
 	@Test
@@ -760,9 +767,12 @@ class DefaultLauncherTests {
 		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("Engine");
 		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.SUCCESSFUL);
 
-		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
+		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
 				.contains("(1) [NOTICE] notice");
+		assertThat(logRecord.getInstant()) //
+				.isBetween(result.startTime(), result.finishTime());
 	}
 
 	@Test
@@ -784,13 +794,19 @@ class DefaultLauncherTests {
 				.hasMessage("TestEngine with ID 'engine-id' failed to discover tests") //
 				.cause().hasMessage("boom");
 
-		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.SEVERE)) //
+		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.SEVERE);
+		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
 				.contains("(1) [ERROR] error");
+		assertThat(logRecord.getInstant()) //
+				.isBetween(result.startTime(), result.finishTime());
 
-		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+		logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
+		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
 				.contains("(1) [NOTICE] notice");
+		assertThat(logRecord.getInstant()) //
+				.isBetween(result.startTime(), result.finishTime());
 	}
 
 	@Test
@@ -806,9 +822,6 @@ class DefaultLauncherTests {
 
 			@Override
 			public void execute(ExecutionRequest request) {
-				var executionListener = request.getEngineExecutionListener();
-				var engineDescriptor = request.getRootTestDescriptor();
-				executionListener.executionStarted(engineDescriptor);
 				throw new RuntimeException("boom");
 			}
 		});
@@ -819,13 +832,29 @@ class DefaultLauncherTests {
 				.hasMessage("TestEngine with ID 'engine-id' failed to execute tests") //
 				.cause().hasMessage("boom");
 
-		assertThat(findFirstDiscoveryIssueLogMessage(listener, Level.INFO)) //
+		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
+		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
 				.contains("(1) [NOTICE] notice");
+		assertThat(logRecord.getInstant()) //
+				.isBetween(result.startTime(), result.finishTime());
 	}
 
 	private static ReportedData execute(TestEngine engine) {
 		var executionListener = mock(TestExecutionListener.class);
+
+		AtomicReference<Instant> startTime = new AtomicReference<>();
+		doAnswer(invocation -> {
+			startTime.set(Instant.now());
+			return null;
+		}).when(executionListener).executionStarted(any());
+
+		AtomicReference<Instant> finishTime = new AtomicReference<>();
+		doAnswer(invocation -> {
+			finishTime.set(Instant.now());
+			return null;
+		}).when(executionListener).executionFinished(any(), any());
+
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.build();
@@ -842,17 +871,18 @@ class DefaultLauncherTests {
 		inOrder.verify(executionListener).testPlanExecutionFinished(any());
 		inOrder.verifyNoMoreInteractions();
 
-		return new ReportedData(testIdentifier.getValue(), testExecutionResult.getValue());
+		return new ReportedData(testIdentifier.getValue(), testExecutionResult.getValue(),
+			requireNonNull(startTime.get()), requireNonNull(finishTime.get()));
 	}
 
-	private static String findFirstDiscoveryIssueLogMessage(LogRecordListener listener, Level level) {
+	private static LogRecord findFirstDiscoveryIssueLogRecord(LogRecordListener listener, Level level) {
 		return listener.stream(DiscoveryIssueNotifier.class, level) //
-				.map(LogRecord::getMessage) //
 				.findFirst() //
 				.orElseThrow();
 	}
 
-	private record ReportedData(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+	private record ReportedData(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult,
+			Instant startTime, Instant finishTime) {
 	}
 
 }
