@@ -45,7 +45,7 @@ public class TestFeedPrintingListenerTests {
 			"%c ool test");
 		engineDescriptor.addChild(testDescriptor);
 
-		testPlan = TestPlan.from(Collections.singleton(engineDescriptor), mock(), dummyOutputDirectoryProvider());
+		testPlan = TestPlan.from(true, Collections.singleton(engineDescriptor), mock(), dummyOutputDirectoryProvider());
 		testIdentifier = testPlan.getTestIdentifier(testDescriptor.getUniqueId());
 
 		listener.testPlanExecutionStarted(testPlan);

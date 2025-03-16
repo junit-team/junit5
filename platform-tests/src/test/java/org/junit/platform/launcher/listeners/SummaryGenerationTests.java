@@ -40,7 +40,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(List.of(), mock(), dummyOutputDirectoryProvider());
+	private final TestPlan testPlan = TestPlan.from(true, List.of(), mock(), dummyOutputDirectoryProvider());
 
 	@Test
 	void emptyReport() {

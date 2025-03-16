@@ -67,6 +67,11 @@ public class LauncherDiscoveryResult {
 		return this.testEngineResults.keySet();
 	}
 
+	boolean containsCriticalIssuesOrContainsTests() {
+		return this.testEngineResults.values().stream() //
+				.anyMatch(EngineResultInfo::containsCriticalIssuesOrContainsTests);
+	}
+
 	Collection<TestDescriptor> getEngineTestDescriptors() {
 		return this.testEngineResults.values().stream() //
 				.map(EngineResultInfo::getRootDescriptor) //
@@ -126,6 +131,11 @@ public class LauncherDiscoveryResult {
 			return Optional.ofNullable(this.cause);
 		}
 
+		boolean containsCriticalIssuesOrContainsTests() {
+			return cause != null //
+					|| discoveryIssueNotifier.hasCriticalIssues() //
+					|| TestDescriptor.containsTests(rootDescriptor);
+		}
 	}
 
 }

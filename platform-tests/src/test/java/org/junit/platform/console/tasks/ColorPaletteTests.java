@@ -187,7 +187,7 @@ class ColorPaletteTests {
 
 		private void demoTestRun(TestExecutionListener listener) {
 			TestDescriptor testDescriptor = new TestDescriptorStub(UniqueId.forEngine("demo-engine"), "My Test");
-			TestPlan testPlan = TestPlan.from(List.of(testDescriptor), mock(), dummyOutputDirectoryProvider());
+			TestPlan testPlan = TestPlan.from(true, List.of(testDescriptor), mock(), dummyOutputDirectoryProvider());
 			listener.testPlanExecutionStarted(testPlan);
 			listener.executionStarted(TestIdentifier.from(testDescriptor));
 			listener.executionFinished(TestIdentifier.from(testDescriptor), TestExecutionResult.successful());
