@@ -207,7 +207,7 @@ class CompositeTestExecutionListenerTests {
 	}
 
 	private static TestPlan anyTestPlan() {
-		return TestPlan.from(Set.of(anyTestDescriptor()), mock(), dummyOutputDirectoryProvider());
+		return TestPlan.from(true, Set.of(anyTestDescriptor()), mock(), dummyOutputDirectoryProvider());
 	}
 
 	private static DemoMethodTestDescriptor anyTestDescriptor() {

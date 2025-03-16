@@ -38,7 +38,7 @@ class XmlReportDataTests {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		var childUniqueId = UniqueId.root("child", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
+		var testPlan = TestPlan.from(true, Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var results = reportData.getResults(testPlan.getTestIdentifier(childUniqueId));
@@ -51,7 +51,7 @@ class XmlReportDataTests {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		var childUniqueId = UniqueId.root("child", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
+		var testPlan = TestPlan.from(true, Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		var failureOfAncestor = failed(new RuntimeException("failed!"));
@@ -67,7 +67,7 @@ class XmlReportDataTests {
 		var engineDescriptor = new EngineDescriptor(UniqueId.forEngine("engine"), "Engine");
 		var childUniqueId = UniqueId.root("child", "test");
 		engineDescriptor.addChild(new TestDescriptorStub(childUniqueId, "test"));
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
+		var testPlan = TestPlan.from(true, Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
 
 		var reportData = new XmlReportData(testPlan, Clock.systemDefaultZone());
 		reportData.markFinished(testPlan.getTestIdentifier(engineDescriptor.getUniqueId()), successful());

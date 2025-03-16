@@ -63,13 +63,10 @@ import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 public class TestPlan {
 
 	private final Set<TestIdentifier> roots = synchronizedSet(new LinkedHashSet<>(4));
-
 	private final Map<UniqueId, Set<TestIdentifier>> children = new ConcurrentHashMap<>(32);
-
 	private final Map<UniqueId, TestIdentifier> allIdentifiers = new ConcurrentHashMap<>(32);
 
 	private final boolean containsTests;
-
 	private final ConfigurationParameters configurationParameters;
 	private final OutputDirectoryProvider outputDirectoryProvider;
 
@@ -80,6 +77,7 @@ public class TestPlan {
 	 * <p>Each supplied {@code TestDescriptor} is expected to be a descriptor
 	 * for a {@link org.junit.platform.engine.TestEngine TestEngine}.
 	 *
+	 * @param containsTests whether the test plan contains tests
 	 * @param engineDescriptors the engine test descriptors from which the test
 	 * plan should be created; never {@code null}
 	 * @param configurationParameters the {@code ConfigurationParameters} for
@@ -88,13 +86,12 @@ public class TestPlan {
 	 * this test plan; never {@code null}
 	 * @return a new test plan
 	 */
-	@API(status = INTERNAL, since = "1.12")
-	public static TestPlan from(Collection<TestDescriptor> engineDescriptors,
+	@API(status = INTERNAL, since = "1.13")
+	public static TestPlan from(boolean containsTests, Collection<TestDescriptor> engineDescriptors,
 			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
 		Preconditions.notNull(engineDescriptors, "Cannot create TestPlan from a null collection of TestDescriptors");
 		Preconditions.notNull(configurationParameters, "Cannot create TestPlan from null ConfigurationParameters");
-		TestPlan testPlan = new TestPlan(engineDescriptors.stream().anyMatch(TestDescriptor::containsTests),
-			configurationParameters, outputDirectoryProvider);
+		TestPlan testPlan = new TestPlan(containsTests, configurationParameters, outputDirectoryProvider);
 		TestDescriptor.Visitor visitor = descriptor -> testPlan.addInternal(TestIdentifier.from(descriptor));
 		engineDescriptors.forEach(engineDescriptor -> engineDescriptor.accept(visitor));
 		return testPlan;

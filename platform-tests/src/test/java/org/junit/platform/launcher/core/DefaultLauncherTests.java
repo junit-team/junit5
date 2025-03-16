@@ -715,9 +715,9 @@ class DefaultLauncherTests {
 		var result = execute(new TestEngineStub("engine-id") {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-				var listener1 = discoveryRequest.getDiscoveryListener();
-				listener1.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
-				listener1.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.WARNING, "warning"));
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.WARNING, "warning"));
 				return new EngineDescriptor(uniqueId, "Engine") {
 					@Override
 					public Set<TestTag> getTags() {
@@ -726,6 +726,8 @@ class DefaultLauncherTests {
 				};
 			}
 		});
+
+		assertThat(result.testPlan().containsTests()).isTrue();
 
 		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("Engine");
 		assertThat(result.testIdentifier().getTags()).containsExactly(TestTag.create("custom-tag"));
@@ -787,6 +789,8 @@ class DefaultLauncherTests {
 				throw new RuntimeException("boom");
 			}
 		});
+
+		assertThat(result.testPlan().containsTests()).isTrue();
 
 		assertThat(result.testIdentifier().getDisplayName()).isEqualTo("engine-id");
 		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
@@ -860,7 +864,8 @@ class DefaultLauncherTests {
 				.build();
 		var launcher = createLauncher(engine);
 
-		launcher.execute(request, executionListener);
+		var testPlan = launcher.discover(request);
+		launcher.execute(testPlan, executionListener);
 
 		var inOrder = inOrder(executionListener);
 		var testIdentifier = ArgumentCaptor.forClass(TestIdentifier.class);
@@ -871,7 +876,7 @@ class DefaultLauncherTests {
 		inOrder.verify(executionListener).testPlanExecutionFinished(any());
 		inOrder.verifyNoMoreInteractions();
 
-		return new ReportedData(testIdentifier.getValue(), testExecutionResult.getValue(),
+		return new ReportedData(testPlan, testIdentifier.getValue(), testExecutionResult.getValue(),
 			requireNonNull(startTime.get()), requireNonNull(finishTime.get()));
 	}
 
@@ -881,8 +886,8 @@ class DefaultLauncherTests {
 				.orElseThrow();
 	}
 
-	private record ReportedData(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult,
-			Instant startTime, Instant finishTime) {
+	private record ReportedData(TestPlan testPlan, TestIdentifier testIdentifier,
+			TestExecutionResult testExecutionResult, Instant startTime, Instant finishTime) {
 	}
 
 }

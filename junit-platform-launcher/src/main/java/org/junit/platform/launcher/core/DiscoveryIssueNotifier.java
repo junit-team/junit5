@@ -55,6 +55,10 @@ class DiscoveryIssueNotifier {
 		this.nonCriticalIssues = nonCriticalIssues;
 	}
 
+	boolean hasCriticalIssues() {
+		return !criticalIssues.isEmpty();
+	}
+
 	void logCriticalIssues(TestEngine testEngine) {
 		logIssues(testEngine, criticalIssues, "critical");
 	}

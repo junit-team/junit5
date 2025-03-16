@@ -10,18 +10,15 @@
 
 package org.junit.platform.launcher;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.UniqueId;
-import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 import org.junit.platform.fakes.TestDescriptorStub;
 
@@ -30,56 +27,6 @@ class TestPlanTests {
 	private final ConfigurationParameters configParams = mock();
 
 	private final EngineDescriptor engineDescriptor = new EngineDescriptor(UniqueId.forEngine("foo"), "Foo");
-
-	@Test
-	void doesNotContainTestsForEmptyContainers() {
-		engineDescriptor.addChild(
-			new AbstractTestDescriptor(engineDescriptor.getUniqueId().append("test", "bar"), "Bar") {
-				@Override
-				public Type getType() {
-					return Type.CONTAINER;
-				}
-			});
-
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
-
-		assertThat(testPlan.containsTests()).as("contains tests").isFalse();
-	}
-
-	@Test
-	void containsTestsForTests() {
-		engineDescriptor.addChild(
-			new AbstractTestDescriptor(engineDescriptor.getUniqueId().append("test", "bar"), "Bar") {
-				@Override
-				public Type getType() {
-					return Type.TEST;
-				}
-			});
-
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
-
-		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
-	}
-
-	@Test
-	void containsTestsForContainersThatMayRegisterTests() {
-		engineDescriptor.addChild(
-			new AbstractTestDescriptor(engineDescriptor.getUniqueId().append("test", "bar"), "Bar") {
-				@Override
-				public Type getType() {
-					return Type.CONTAINER;
-				}
-
-				@Override
-				public boolean mayRegisterTests() {
-					return true;
-				}
-			});
-
-		var testPlan = TestPlan.from(Set.of(engineDescriptor), configParams, dummyOutputDirectoryProvider());
-
-		assertThat(testPlan.containsTests()).as("contains tests").isTrue();
-	}
 
 	@Test
 	void acceptsVisitorsInDepthFirstOrder() {
@@ -94,7 +41,7 @@ class TestPlanTests {
 		engineDescriptor2.addChild(test2);
 		engineDescriptor2.addChild(test3);
 
-		var testPlan = TestPlan.from(List.of(engineDescriptor, engineDescriptor2), configParams,
+		var testPlan = TestPlan.from(true, List.of(engineDescriptor, engineDescriptor2), configParams,
 			dummyOutputDirectoryProvider());
 		var visitor = mock(TestPlan.Visitor.class);
 
