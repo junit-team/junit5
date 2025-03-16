@@ -38,10 +38,10 @@ class LauncherStoreFacadeTest {
 	private ExtensionContext.Namespace extensionNamespace;
 
 	@BeforeEach
-	@SuppressWarnings("unchecked")
 	void setUp() {
 		sessionLevelStore = new NamespacedHierarchicalStore<>(null);
 		requestLevelStore = new NamespacedHierarchicalStore<>(sessionLevelStore);
+		extensionNamespace = ExtensionContext.Namespace.create("foo", "bar");
 	}
 
 	@Test
