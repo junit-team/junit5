@@ -24,7 +24,8 @@ var openTestReportingCliClasspath = configurations.resolvable("openTestReporting
 
 val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 	mustRunAfter(tasks.withType<Test>())
-	mainClass.set("org.opentest4j.reporting.cli.ReportingCli")
+	mainModule.set("org.opentest4j.reporting.cli")
+	modularity.inferModulePath = true
 	args("html-report")
 	classpath(openTestReportingCliClasspath)
 	argumentProviders += objects.newInstance(HtmlReportParameters::class).apply {
