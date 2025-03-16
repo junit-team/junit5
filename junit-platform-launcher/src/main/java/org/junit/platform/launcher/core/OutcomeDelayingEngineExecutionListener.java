@@ -73,10 +73,13 @@ class OutcomeDelayingEngineExecutionListener extends DelegatingEngineExecutionLi
 		}
 	}
 
-	void reportEngineFailure(Throwable throwable) {
+	void reportEngineStartIfNecessary() {
 		if (!engineStarted) {
 			super.executionStarted(engineDescriptor);
 		}
+	}
+
+	void reportEngineFailure(Throwable throwable) {
 		if (executionResult != null && executionResult.getThrowable().isPresent()) {
 			throwable.addSuppressed(executionResult.getThrowable().get());
 		}
