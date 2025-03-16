@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.function.UnaryOperator.identity;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,8 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.unresolved;
 import static org.junit.platform.engine.TestExecutionResult.successful;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatCannotResolveAnything;
+import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatFailsToResolveAnything;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -38,6 +42,7 @@ import static org.mockito.Mockito.when;
 import java.time.Instant;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
@@ -844,7 +849,47 @@ class DefaultLauncherTests {
 				.isBetween(result.startTime(), result.finishTime());
 	}
 
+	@Test
+	void reportsEngineExecutionFailureOnUnresolvedUniqueIdSelectorWithEnginePrefix() {
+		var engine = createEngineThatCannotResolveAnything("some-engine");
+		var selector = selectUniqueId(UniqueId.forEngine(engine.getId()));
+		var result = execute(engine, request -> request.selectors(selector));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [ERROR] %s could not be resolved", selector);
+	}
+
+	@Test
+	void ignoresUnresolvedUniqueIdSelectorWithoutEnginePrefix() {
+		var engine = createEngineThatCannotResolveAnything("some-engine");
+		var selector = selectUniqueId(UniqueId.forEngine("some-other-engine"));
+		var result = execute(engine, request -> request.selectors(selector));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.SUCCESSFUL);
+	}
+
+	@Test
+	void reportsEngineExecutionFailureForSelectorResolutionFailure() {
+		var engine = createEngineThatFailsToResolveAnything("some-engine", new RuntimeException("boom"));
+		var selector = selectClass(Object.class);
+		var result = execute(engine, request -> request.selectors(selector));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [ERROR] %s resolution failed", selector) //
+				.hasMessageContaining("Cause: java.lang.RuntimeException: boom");
+	}
+
 	private static ReportedData execute(TestEngine engine) {
+		return execute(engine, identity());
+	}
+
+	private static ReportedData execute(TestEngine engine, UnaryOperator<LauncherDiscoveryRequestBuilder> configurer) {
 		var executionListener = mock(TestExecutionListener.class);
 
 		AtomicReference<Instant> startTime = new AtomicReference<>();
@@ -859,9 +904,9 @@ class DefaultLauncherTests {
 			return null;
 		}).when(executionListener).executionFinished(any(), any());
 
-		var request = request() //
-				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
-				.build();
+		var builder = request() //
+				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging");
+		var request = configurer.apply(builder).build();
 		var launcher = createLauncher(engine);
 
 		var testPlan = launcher.discover(request);
