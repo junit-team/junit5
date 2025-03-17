@@ -75,7 +75,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@8ee7ec888f2a1af33ba66f994c4fb05aaf23e7d0 # v1.1.6
+      - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Inject staging repository URL
@@ -216,7 +216,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@8ee7ec888f2a1af33ba66f994c4fb05aaf23e7d0 # v1.1.6
+      - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Build samples
