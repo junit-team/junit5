@@ -67,7 +67,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void testFactoryMethodsAreCorrectlyDiscoveredForClassSelector() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(MyDynamicTestCase.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(13);
 	}
 
@@ -75,7 +75,7 @@ class DynamicNodeGenerationTests extends AbstractJupiterTestEngineTests {
 	void testFactoryMethodIsCorrectlyDiscoveredForMethodSelector() {
 		LauncherDiscoveryRequest request = request().selectors(
 			selectMethod(MyDynamicTestCase.class, "dynamicStream")).build();
-		TestDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertThat(engineDescriptor.getDescendants()).as("# resolved test descriptors").hasSize(2);
 	}
 

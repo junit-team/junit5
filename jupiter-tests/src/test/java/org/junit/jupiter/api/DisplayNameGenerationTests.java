@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.testkit.engine.Event;
 
 /**
  * Check generated display names.
@@ -247,10 +248,12 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	void indicativeSentencesOnClassTemplate() {
 		check(ClassTemplateTestCase.class, //
 			"CONTAINER: Class template", //
+			"CONTAINER: [1] Class template", //
 			"TEST: Class template, some test", //
 			"CONTAINER: Class template, Regular Nested Test Case", //
 			"TEST: Class template, Regular Nested Test Case, some nested test", //
 			"CONTAINER: Class template, Nested Class Template", //
+			"CONTAINER: [1] Class template, Nested Class Template", //
 			"TEST: Class template, Nested Class Template, some nested test" //
 		);
 
@@ -271,7 +274,9 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
 		var request = request().selectors(selectClass(testClass)).build();
-		var descriptors = discoverTests(request).getDescendants();
+		var descriptors = executeTests(request).allEvents().started().stream() //
+				.map(Event::getTestDescriptor) //
+				.skip(1); // Skip engine descriptor
 		assertThat(descriptors).map(this::describe).containsExactlyInAnyOrder(expectedDisplayNames);
 	}
 

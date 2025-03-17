@@ -109,7 +109,7 @@ class DefaultExecutionModeTests extends AbstractJupiterTestEngineTests {
 		if (executionMode != null) {
 			request.configurationParameter(Constants.DEFAULT_PARALLEL_EXECUTION_MODE, executionMode.name());
 		}
-		return (JupiterEngineDescriptor) discoverTests(request.build());
+		return (JupiterEngineDescriptor) discoverTests(request.build()).getEngineDescriptor();
 	}
 
 	private static void assertExecutionMode(TestDescriptor testDescriptor, ExecutionMode expectedExecutionMode) {
