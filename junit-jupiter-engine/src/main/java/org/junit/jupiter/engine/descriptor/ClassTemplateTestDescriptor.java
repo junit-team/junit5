@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -71,15 +70,14 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 
 	@Override
 	public Set<TestTag> getTags() {
-		// return modifiable copy
-		return new LinkedHashSet<>(this.classInfo.tags);
+		return this.delegate.getTags();
 	}
 
 	// --- Filterable ----------------------------------------------------------
 
 	@Override
 	public DynamicDescendantFilter getDynamicDescendantFilter() {
-		return dynamicDescendantFilter;
+		return this.dynamicDescendantFilter;
 	}
 
 	// --- JupiterTestDescriptor -----------------------------------------------

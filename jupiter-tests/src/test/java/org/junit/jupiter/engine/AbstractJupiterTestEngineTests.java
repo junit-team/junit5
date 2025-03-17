@@ -59,6 +59,10 @@ public abstract class AbstractJupiterTestEngineTests {
 		return EngineTestKit.execute(this.engine, request);
 	}
 
+	protected TestDescriptor discoverTestsForClass(Class<?> testClass) {
+		return discoverTests(selectClass(testClass));
+	}
+
 	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
 		return discoverTests(defaultRequest().selectors(selectors).build());
 	}

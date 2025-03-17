@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
@@ -89,6 +90,7 @@ import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -975,6 +977,18 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 		assertTrue(CustomCloseableResource.closed, "resource in store was closed");
 	}
 
+	@Test
+	void propagatesTagsFromEnclosingClassesToNestedClassTemplates() {
+		var engineDescriptor = discoverTestsForClass(NestedClassTemplateWithTagOnEnclosingClassTestCase.class);
+		var classDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		var nestedClassTemplateDescriptor = getOnlyElement(classDescriptor.getChildren());
+
+		assertThat(classDescriptor.getTags()).extracting(TestTag::getName) //
+				.containsExactly("top-level");
+		assertThat(nestedClassTemplateDescriptor.getTags()).extracting(TestTag::getName) //
+				.containsExactlyInAnyOrder("top-level", "nested");
+	}
+
 	// -------------------------------------------------------------------
 
 	private static Stream<String> allReportEntryValues(EngineExecutionResults results) {
@@ -1521,6 +1535,19 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	static class InheritedTwoInvocationsTestCase extends TwoInvocationsTestCase {
 		@Test
 		void c() {
+		}
+	}
+
+	@Tag("top-level")
+	static class NestedClassTemplateWithTagOnEnclosingClassTestCase {
+		@Nested
+		@ClassTemplate
+		@Tag("nested")
+		@ExtendWith(TwoInvocationsClassTemplateInvocationContextProvider.class)
+		class NestedTestCase {
+			@Test
+			void test() {
+			}
 		}
 	}
 
