@@ -23,6 +23,7 @@ import org.junit.platform.engine.DiscoveryIssue;
  * @see SelectorResolver.Context
  */
 @API(status = EXPERIMENTAL, since = "1.13")
+@FunctionalInterface
 public interface DiscoveryIssueReporter {
 
 	/**

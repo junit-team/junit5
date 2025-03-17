@@ -166,8 +166,14 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			registerExtensionsFromConstructorParameters(registry, getTestClass());
 		}
 
-		this.beforeAllMethods = findBeforeAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD);
+		this.beforeAllMethods = findBeforeAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD,
+			issue -> {
+				throw new JUnitException(issue.message());
+			});
+		this.afterAllMethods = findAfterAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD,
+			issue -> {
+				throw new JUnitException(issue.message());
+			});
 
 		this.beforeAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also
@@ -466,13 +472,17 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
-		List<Method> beforeEachMethods = findBeforeEachMethods(getTestClass());
+		List<Method> beforeEachMethods = findBeforeEachMethods(getTestClass(), issue -> {
+			throw new JUnitException(issue.message());
+		});
 		registerMethodsAsExtensions(beforeEachMethods, registrar, this::synthesizeBeforeEachMethodAdapter);
 	}
 
 	private void registerAfterEachMethodAdapters(ExtensionRegistrar registrar) {
 		// Make a local copy since findAfterEachMethods() returns an immutable list.
-		List<Method> afterEachMethods = new ArrayList<>(findAfterEachMethods(getTestClass()));
+		List<Method> afterEachMethods = new ArrayList<>(findAfterEachMethods(getTestClass(), issue -> {
+			throw new JUnitException(issue.message());
+		}));
 
 		// Since the bottom-up ordering of afterEachMethods will later be reversed when the
 		// synthesized AfterEachMethodAdapters are executed within TestMethodTestDescriptor,
