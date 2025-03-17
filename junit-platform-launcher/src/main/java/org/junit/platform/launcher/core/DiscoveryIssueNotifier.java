@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.partitioningBy;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -35,9 +36,10 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  */
 class DiscoveryIssueNotifier {
 
-	static final DiscoveryIssueNotifier NO_ISSUES = new DiscoveryIssueNotifier(emptyList(), emptyList());
+	static final DiscoveryIssueNotifier NO_ISSUES = new DiscoveryIssueNotifier(emptyList(), emptyList(), emptyList());
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryIssueNotifier.class);
 
+	private final List<DiscoveryIssue> allIssues;
 	private final List<DiscoveryIssue> criticalIssues;
 	private final List<DiscoveryIssue> nonCriticalIssues;
 
@@ -47,12 +49,18 @@ class DiscoveryIssueNotifier {
 				.collect(partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0));
 		List<DiscoveryIssue> criticalIssues = issuesByCriticality.get(true);
 		List<DiscoveryIssue> nonCriticalIssues = issuesByCriticality.get(false);
-		return new DiscoveryIssueNotifier(criticalIssues, nonCriticalIssues);
+		return new DiscoveryIssueNotifier(new ArrayList<>(issues), criticalIssues, nonCriticalIssues);
 	}
 
-	private DiscoveryIssueNotifier(List<DiscoveryIssue> criticalIssues, List<DiscoveryIssue> nonCriticalIssues) {
+	private DiscoveryIssueNotifier(List<DiscoveryIssue> allIssues, List<DiscoveryIssue> criticalIssues,
+			List<DiscoveryIssue> nonCriticalIssues) {
+		this.allIssues = allIssues;
 		this.criticalIssues = criticalIssues;
 		this.nonCriticalIssues = nonCriticalIssues;
+	}
+
+	List<DiscoveryIssue> getAllIssues() {
+		return allIssues;
 	}
 
 	boolean hasCriticalIssues() {

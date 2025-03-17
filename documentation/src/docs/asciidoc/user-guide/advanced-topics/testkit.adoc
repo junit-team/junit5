@@ -1,3 +1,5 @@
+:testDir: ../../../../../src/test/java
+
 [[testkit]]
 === JUnit Platform Test Kit
 
@@ -9,16 +11,17 @@ JUnit Platform and then verifying the expected results. As of JUnit Platform
 [[testkit-engine]]
 ==== Engine Test Kit
 
-The `{testkit-engine-package}` package provides support for executing a `{TestPlan}` for a
-given `{TestEngine}` running on the JUnit Platform and then accessing the results via a
-fluent API to verify the expected results. The key entry point into this API is the
-`{EngineTestKit}` which provides static factory methods named `engine()` and `execute()`.
-It is recommended that you select one of the `engine()` variants to benefit from the
-fluent API for building a `LauncherDiscoveryRequest`.
+The `{testkit-engine-package}` package provides support for discovering and executing a
+`{TestPlan}` for a given `{TestEngine}` running on the JUnit Platform and then accessing
+the results via convenient result objects. For execution, a fluent API may be used to
+verify the expected execution events were received. The key entry point into this API is
+the `{EngineTestKit}` which provides static factory methods named `engine()`,
+`discover()`, and `execute()`. It is recommended that you select one of the `engine()`
+variants to benefit from the fluent API for building a `LauncherDiscoveryRequest`.
 
 NOTE: If you prefer to use the `LauncherDiscoveryRequestBuilder` from the `Launcher` API
-to build your `LauncherDiscoveryRequest`, you must use one of the `execute()` variants in
-`EngineTestKit`.
+to build your `LauncherDiscoveryRequest`, you must use one of the `discover()` or
+`execute()` variants in `EngineTestKit`.
 
 The following test class written using JUnit Jupiter will be used in subsequent examples.
 
@@ -34,8 +37,24 @@ own `TestEngine` implementation, you need to use its unique engine ID. Alternati
 may test your own `TestEngine` by supplying an instance of it to the
 `EngineTestKit.engine(TestEngine)` static factory method.
 
+[[testkit-engine-discovery]]
+==== Verifying Test Discovery
+
+The following test demonstrates how to verify that a `TestPlan` was discovered as expected
+by the JUnit Jupiter `TestEngine`.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/testkit/EngineTestKitDiscoveryDemo.java[tags=user_guide]
+----
+<1> Select the JUnit Jupiter `TestEngine`.
+<2> Select the <<testkit-engine-ExampleTestCase, `ExampleTestCase`>> test class.
+<3> Discover the `TestPlan`.
+<4> Assert engine root descriptor has expected display name.
+<5> Assert no discovery issues were encountered.
+
 [[testkit-engine-statistics]]
-==== Asserting Statistics
+==== Asserting Execution Statistics
 
 One of the most common features of the Test Kit is the ability to assert statistics
 against events fired during the execution of a `TestPlan`. The following tests demonstrate
