@@ -183,7 +183,7 @@ class VintageTestEngineExecutionTests {
 		String commonNestedClassPrefix = EnclosedWithParameterizedChildrenJUnit4TestCase.class.getName()
 				+ "$NestedTestCase";
 
-		execute(testClass).allEvents().debug().assertEventsMatchExactly( //
+		execute(testClass).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(commonNestedClassPrefix), started()), //
@@ -499,7 +499,7 @@ class VintageTestEngineExecutionTests {
 
 		Class<?> testClass = ParameterizedTimingTestCase.class;
 
-		var events = execute(testClass).allEvents().debug();
+		var events = execute(testClass).allEvents();
 
 		var firstParamStartedEvent = events.filter(event(container("[foo]"), started())::matches).findFirst() //
 				.orElseThrow(() -> new AssertionError("No start event for [foo]"));

@@ -5,6 +5,7 @@ org.junit.jupiter.engine.config.EnumConfigurationParameterConverter
 org.junit.jupiter.engine.config.InstantiatingConfigurationParameterConverter
 org.junit.jupiter.engine.descriptor.ClassTestDescriptor
 org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor
+org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor$ClassInfo
 org.junit.jupiter.engine.descriptor.DynamicDescendantFilter
 org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector$1
 org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor

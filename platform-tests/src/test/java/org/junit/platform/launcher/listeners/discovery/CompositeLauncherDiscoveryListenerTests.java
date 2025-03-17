@@ -17,6 +17,8 @@ import static org.mockito.Mockito.mock;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.EngineDiscoveryResult;
@@ -36,20 +38,28 @@ class CompositeLauncherDiscoveryListenerTests {
 		var engineDiscoveryResult = EngineDiscoveryResult.successful();
 		var selector = selectUniqueId(engineId);
 		var selectorResolutionResult = SelectorResolutionResult.resolved();
+		var discoveryIssue = DiscoveryIssue.create(Severity.WARNING, "message");
 
 		var composite = new CompositeLauncherDiscoveryListener(List.of(firstListener, secondListener));
 		composite.launcherDiscoveryStarted(launcherDiscoveryRequest);
 		composite.engineDiscoveryStarted(engineId);
 		composite.selectorProcessed(engineId, selector, selectorResolutionResult);
+		composite.issueEncountered(engineId, discoveryIssue);
 		composite.engineDiscoveryFinished(engineId, engineDiscoveryResult);
 		composite.launcherDiscoveryFinished(launcherDiscoveryRequest);
 
 		InOrder inOrder = inOrder(firstListener, secondListener);
+
 		inOrder.verify(firstListener).launcherDiscoveryStarted(launcherDiscoveryRequest);
 		inOrder.verify(secondListener).launcherDiscoveryStarted(launcherDiscoveryRequest);
 		inOrder.verify(firstListener).engineDiscoveryStarted(engineId);
 		inOrder.verify(secondListener).engineDiscoveryStarted(engineId);
+
+		inOrder.verify(firstListener).selectorProcessed(engineId, selector, selectorResolutionResult);
 		inOrder.verify(secondListener).selectorProcessed(engineId, selector, selectorResolutionResult);
+		inOrder.verify(firstListener).issueEncountered(engineId, discoveryIssue);
+		inOrder.verify(secondListener).issueEncountered(engineId, discoveryIssue);
+
 		inOrder.verify(secondListener).engineDiscoveryFinished(engineId, engineDiscoveryResult);
 		inOrder.verify(firstListener).engineDiscoveryFinished(engineId, engineDiscoveryResult);
 		inOrder.verify(secondListener).launcherDiscoveryFinished(launcherDiscoveryRequest);

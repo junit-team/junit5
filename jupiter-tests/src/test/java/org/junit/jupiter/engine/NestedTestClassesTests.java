@@ -10,15 +10,14 @@
 
 package org.junit.jupiter.engine;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.util.Throwables.getRootCause;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedSiblingClass;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
@@ -111,8 +109,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void extendedNestedTestsAreExecuted() {
-		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithExtendedNested.class);
-		executionResults.allEvents().debug();
+		var executionResults = executeTestsForClass(TestCaseWithExtendedNested.class);
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -126,11 +123,10 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void deeplyNestedInheritedMethodsAreExecutedWhenSelectedViaUniqueId() {
-		EngineExecutionResults executionResults = executeTests(selectUniqueId(
+		var executionResults = executeTests(selectUniqueId(
 			"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner1]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"),
 			selectUniqueId(
 				"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner2]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"));
-		executionResults.allEvents().debug();
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -180,12 +176,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
-		assertThatExceptionOfType(JUnitException.class)//
-				.isThrownBy(() -> executeTestsForClass(start))//
-				.withCauseExactlyInstanceOf(JUnitException.class)//
-				.satisfies(ex -> assertThat(getRootCause(ex)).hasMessageMatching(
-					String.format("Detected cycle in inner class hierarchy between .+%s and .+%s", from.getSimpleName(),
-						to.getSimpleName())));
+		var results = executeTestsForClass(start);
+		var expectedMessage = String.format(
+			"Cause: org.junit.platform.commons.JUnitException: Detected cycle in inner class hierarchy between %s and %s",
+			from.getName(), to.getName());
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(it -> it.contains(expectedMessage))));
 	}
 
 	// -------------------------------------------------------------------

@@ -13,6 +13,8 @@ package org.junit.platform.launcher.listeners.discovery;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatCannotResolveAnything;
+import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatFailsToResolveAnything;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposesOnly.createLauncher;
@@ -29,7 +31,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.fakes.TestEngineStub;
 
 @TrackLogRecords
-public class LoggingLauncherDiscoveryListenerTests extends AbstractLauncherDiscoveryListenerTests {
+public class LoggingLauncherDiscoveryListenerTests {
 
 	@Test
 	void logsWarningOnUnresolvedUniqueIdSelectorWithEnginePrefix(LogRecordListener log) {

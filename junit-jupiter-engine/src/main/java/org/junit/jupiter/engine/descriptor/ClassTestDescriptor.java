@@ -70,7 +70,7 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 	@Override
 	public Set<TestTag> getTags() {
 		// return modifiable copy
-		return new LinkedHashSet<>(this.tags);
+		return new LinkedHashSet<>(this.classInfo.tags);
 	}
 
 	// --- TestClassAware ------------------------------------------------------
