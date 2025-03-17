@@ -18,7 +18,6 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -26,6 +25,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -69,31 +69,31 @@ final class LifecycleMethodUtils {
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
 			DiscoveryIssueReporter issueReporter) {
 
-		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter) //
-				.filter(requireStatic ? isStatic(annotationType, issueReporter) : __ -> true) //
-				.collect(toUnmodifiableList());
+		Predicate<Method> additionalCondition = requireStatic ? isStatic(annotationType, issueReporter) : __ -> true;
+		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
+			additionalCondition);
 	}
 
 	private static List<Method> findMethodsAndCheckNonStatic(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
 			DiscoveryIssueReporter issueReporter) {
 
-		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter) //
-				.filter(isNotStatic(annotationType, issueReporter)) //
-				.collect(toUnmodifiableList());
+		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
+			isNotStatic(annotationType, issueReporter));
 	}
 
-	private static Stream<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
+	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
-			DiscoveryIssueReporter issueReporter) {
+			DiscoveryIssueReporter issueReporter, Predicate<? super Method> additionalCondition) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
-				.filter(returnsPrimitiveVoid(annotationType, issueReporter));
+				.filter(allOf(returnsPrimitiveVoid(annotationType, issueReporter), additionalCondition)) //
+				.collect(toUnmodifiableList());
 	}
 
 	private static Predicate<Method> isStatic(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
-		return DiscoveryIssueReportingPredicate.from(issueReporter, ModifierSupport::isStatic, method -> {
+		return DiscoveryIssueReportingPredicate.from(ModifierSupport::isStatic, issueReporter, method -> {
 			String message = String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationType.getSimpleName(), method.toGenericString());
@@ -103,7 +103,7 @@ final class LifecycleMethodUtils {
 
 	private static Predicate<Method> isNotStatic(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
-		return DiscoveryIssueReportingPredicate.from(issueReporter, ModifierSupport::isNotStatic, method -> {
+		return DiscoveryIssueReportingPredicate.from(ModifierSupport::isNotStatic, issueReporter, method -> {
 			String message = String.format("@%s method '%s' must not be static.", annotationType.getSimpleName(),
 				method.toGenericString());
 			return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
@@ -112,16 +112,31 @@ final class LifecycleMethodUtils {
 
 	private static Predicate<Method> returnsPrimitiveVoid(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
-		return DiscoveryIssueReportingPredicate.from(issueReporter, ReflectionUtils::returnsPrimitiveVoid, method -> {
+		return DiscoveryIssueReportingPredicate.from(ReflectionUtils::returnsPrimitiveVoid, issueReporter, method -> {
 			String message = String.format("@%s method '%s' must not return a value.", annotationType.getSimpleName(),
 				method.toGenericString());
 			return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
 		});
 	}
 
-	abstract static class DiscoveryIssueReportingPredicate<T> implements Predicate<T> {
+	@SafeVarargs
+	@SuppressWarnings("varargs")
+	private static <T> Predicate<T> allOf(Predicate<? super T>... predicates) {
+		Preconditions.notNull(predicates, "predicates must not be null");
+		Preconditions.notEmpty(predicates, "predicates must not be empty");
+		Preconditions.containsNoNullElements(predicates, "predicates must not contain null elements");
+		return value -> {
+			boolean result = true;
+			for (Predicate<? super T> predicate : predicates) {
+				result &= predicate.test(value);
+			}
+			return result;
+		};
+	}
 
-		static <T> DiscoveryIssueReportingPredicate<T> from(DiscoveryIssueReporter reporter, Predicate<T> predicate,
+	private abstract static class DiscoveryIssueReportingPredicate<T> implements Predicate<T> {
+
+		static <T> DiscoveryIssueReportingPredicate<T> from(Predicate<T> predicate, DiscoveryIssueReporter reporter,
 				Function<T, DiscoveryIssue> issueBuilder) {
 			return new DiscoveryIssueReportingPredicate<T>(reporter) {
 				@Override
