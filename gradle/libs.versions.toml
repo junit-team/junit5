@@ -6,7 +6,7 @@ asciidoctor-plugins = "4.0.4" # Check if workaround in documentation.gradle.kts 
 assertj = "3.27.3"
 bnd = "7.1.0"
 checkstyle = "10.21.4"
-eclipse = "4.34.0"
+eclipse = "4.35.0"
 jackson = "2.18.3"
 jacoco = "0.8.12"
 jmh = "1.37"
@@ -15,9 +15,8 @@ junit4Min = "4.12"
 ktlint = "1.5.0"
 log4j = "2.24.3"
 logback = "1.5.17"
-mockito = "5.16.0"
 opentest4j = "1.3.0"
-openTestReporting = "0.2.1"
+openTestReporting = "0.2.2"
 snapshotTests = "1.11.0"
 surefire = "3.5.2"
 xmlunit = "2.10.0"
@@ -55,8 +54,9 @@ log4j-jul = { module = "org.apache.logging.log4j:log4j-jul", version.ref = "log4
 maven = { module = "org.apache.maven:apache-maven", version = "3.9.9" }
 mavenSurefirePlugin = { module = "org.apache.maven.plugins:maven-surefire-plugin", version.ref = "surefire" }
 memoryfilesystem = { module = "com.github.marschall:memoryfilesystem", version = "2.8.1" }
-mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
-mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+mockito-bom = { module = "org.mockito:mockito-bom", version = "5.16.1" }
+mockito-core = { module = "org.mockito:mockito-core" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter" }
 nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-cli = { module = "org.opentest4j.reporting:open-test-reporting-cli", version.ref = "openTestReporting" }
@@ -98,6 +98,7 @@ develocity = { id = "com.gradle.develocity", version = "3.19.2" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.9.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
+# check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.10" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13" }

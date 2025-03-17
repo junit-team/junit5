@@ -1769,6 +1769,15 @@ method, you must specify the `autoCloseArguments = false` on the `{Parameterized
 invocations.
 ====
 
+[[writing-tests-parameterized-tests-consuming-arguments-other-extensions]]
+===== Other Extensions
+
+Other extensions can access the parameters and resolved arguments of a parameterized test
+or class by retrieving a `{ParameterInfo}` object from the `{ExtensionContext_Store}`.
+Please refer to the Javadoc of `{ParameterInfo}` for details.
+
+[[writing-tests-parameterized-tests-argument-aggregation]]
+
 [[writing-tests-parameterized-tests-sources]]
 ==== Sources of Arguments
 

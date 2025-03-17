@@ -24,7 +24,8 @@ var openTestReportingCliClasspath = configurations.resolvable("openTestReporting
 
 val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 	mustRunAfter(tasks.withType<Test>())
-	mainClass.set("org.opentest4j.reporting.cli.ReportingCli")
+	mainModule.set("org.opentest4j.reporting.cli")
+	modularity.inferModulePath = true
 	args("html-report")
 	classpath(openTestReportingCliClasspath)
 	argumentProviders += objects.newInstance(HtmlReportParameters::class).apply {
@@ -149,6 +150,7 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
+	testImplementation(platform(dependencyFromLibs("mockito-bom")))
 	testImplementation(dependencyFromLibs("assertj"))
 	testImplementation(dependencyFromLibs("mockito-junit-jupiter"))
 	testImplementation(dependencyFromLibs("testingAnnotations"))
@@ -169,6 +171,7 @@ dependencies {
 	openTestReportingCli(dependencyFromLibs("openTestReporting-cli"))
 	openTestReportingCli(project(":junit-platform-reporting"))
 
+	javaAgent(platform(dependencyFromLibs("mockito-bom")))
 	javaAgent(dependencyFromLibs("mockito-core")) {
 		isTransitive = false
 	}

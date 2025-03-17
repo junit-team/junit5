@@ -211,8 +211,8 @@ class ParameterizedTestExtensionTests {
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase,
 			Function<String, Optional<String>> configurationSupplier) {
 
-		var method = ReflectionUtils.findMethods(testCase.getClass(),
-			it -> "method".equals(it.getName())).stream().findFirst();
+		Class<?> testClass = testCase.getClass();
+		var method = ReflectionUtils.findMethods(testClass, it -> "method".equals(it.getName())).stream().findFirst();
 
 		return new ExtensionContext() {
 
@@ -256,7 +256,7 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<Class<?>> getTestClass() {
-				return Optional.empty();
+				return Optional.of(testClass);
 			}
 
 			@Override
@@ -311,7 +311,8 @@ class ParameterizedTestExtensionTests {
 				var store = new NamespaceAwareStore(this.store,
 					org.junit.platform.engine.support.store.Namespace.create(namespace.getParts()));
 				method //
-						.map(it -> new ParameterizedTestContext(it, it.getAnnotation(ParameterizedTest.class))) //
+						.map(it -> new ParameterizedTestContext(testClass, it,
+							it.getAnnotation(ParameterizedTest.class))) //
 						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
 			}

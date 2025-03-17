@@ -24,14 +24,21 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class ParameterizedTestContext implements ParameterizedDeclarationContext<TestTemplateInvocationContext> {
 
+	private final Class<?> testClass;
 	private final Method method;
 	private final ParameterizedTest annotation;
 	private final ResolverFacade resolverFacade;
 
-	ParameterizedTestContext(Method method, ParameterizedTest annotation) {
+	ParameterizedTestContext(Class<?> testClass, Method method, ParameterizedTest annotation) {
+		this.testClass = testClass;
 		this.method = Preconditions.notNull(method, "method must not be null");
 		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
 		this.resolverFacade = ResolverFacade.create(method, annotation);
+	}
+
+	@Override
+	public Class<?> getTestClass() {
+		return this.testClass;
 	}
 
 	@Override

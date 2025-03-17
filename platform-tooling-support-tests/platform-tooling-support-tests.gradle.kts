@@ -132,6 +132,7 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 				useJUnitPlatform()
 				(options as JUnitPlatformOptions).apply {
 					includeEngines("archunit")
+					excludeEngines("junit-jupiter")
 				}
 				develocity {
 					testRetry.maxRetries = 0
