@@ -418,7 +418,7 @@ class LauncherFactoryTests {
 		}
 	}
 
-	@SuppressWarnings({"JUnitMalformedDeclaration" })
+	@SuppressWarnings({ "JUnitMalformedDeclaration" })
 	@ExtendWith(JupiterExtensionExample.class)
 	static class JupiterTest {
 
