@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
@@ -49,6 +51,11 @@ public class LauncherDiscoveryResult {
 
 	public TestDescriptor getEngineTestDescriptor(TestEngine testEngine) {
 		return getEngineResult(testEngine).getRootDescriptor();
+	}
+
+	@API(status = INTERNAL, since = "1.13")
+	public List<DiscoveryIssue> getDiscoveryIssues(TestEngine testEngine) {
+		return getEngineResult(testEngine).getDiscoveryIssueNotifier().getAllIssues();
 	}
 
 	EngineResultInfo getEngineResult(TestEngine testEngine) {
