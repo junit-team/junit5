@@ -29,6 +29,8 @@ repository on GitHub.
 
 * New `ConsoleLauncher` options `--redirect-stdout` and `--redirect-stderr` for
   redirecting `stdout` and `stderr` output streams to files.
+* Add `TestDescriptor.Visitor.composite(List)` factory method for creating a composite
+  visitor that delegates to the given visitors in order.
 
 
 [[release-notes-5.13.0-M1-junit-jupiter]]

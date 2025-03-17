@@ -320,6 +320,25 @@ public interface TestDescriptor {
 	interface Visitor {
 
 		/**
+		 * Combine the supplied {@code visitors} into a single {@code Visitor}.
+		 *
+		 * <p>If the supplied array contains only a single {@code Visitor}, that
+		 * {@code Visitor} is returned as is.
+		 *
+		 * @param visitors the {@code Visitor}s to combine; never {@code null}
+		 * or empty
+		 * @return the combined {@code Visitor}
+		 * @throws org.junit.platform.commons.PreconditionViolationException if
+		 * {@code visitors} is {@code null}, contains {@code null} elements, or
+		 * is empty
+		 * @since 1.13
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		static Visitor composite(Visitor... visitors) {
+			return CompositeTestDescriptorVisitor.from(visitors);
+		}
+
+		/**
 		 * Visit a {@link TestDescriptor}.
 		 *
 		 * @param descriptor the {@code TestDescriptor} to visit; never {@code null}
