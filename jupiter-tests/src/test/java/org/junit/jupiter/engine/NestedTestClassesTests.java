@@ -109,8 +109,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void extendedNestedTestsAreExecuted() {
-		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithExtendedNested.class);
-		executionResults.allEvents().debug();
+		var executionResults = executeTestsForClass(TestCaseWithExtendedNested.class);
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -124,11 +123,10 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void deeplyNestedInheritedMethodsAreExecutedWhenSelectedViaUniqueId() {
-		EngineExecutionResults executionResults = executeTests(selectUniqueId(
+		var executionResults = executeTests(selectUniqueId(
 			"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner1]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"),
 			selectUniqueId(
 				"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner2]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"));
-		executionResults.allEvents().debug();
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 

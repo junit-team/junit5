@@ -971,7 +971,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	void templateWithPreparations() {
 		var results = executeTestsForClass(ClassTemplateWithPreparationsTestCase.class);
 
-		results.allEvents().debug().assertStatistics(stats -> stats.started(6).succeeded(6));
+		results.allEvents().assertStatistics(stats -> stats.started(6).succeeded(6));
 		assertTrue(CustomCloseableResource.closed, "resource in store was closed");
 	}
 
