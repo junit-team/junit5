@@ -47,11 +47,15 @@ class LifecycleMethodUtilsTests {
 		var methods = findBeforeAllMethods(TestCaseWithNonVoidLifecyleMethods.class, true, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
-		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR,
+		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
 			"@BeforeAll method 'java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.cc()' must not return a value.") //
 				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("cc"))) //
 				.build();
-		assertThat(discoveryIssues).containsExactly(expectedIssue);
+		var notStaticIssue = DiscoveryIssue.builder(Severity.ERROR,
+			"@BeforeAll method 'java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.cc()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
+				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("cc"))) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue);
 	}
 
 	@Test
@@ -59,11 +63,15 @@ class LifecycleMethodUtilsTests {
 		var methods = findAfterAllMethods(TestCaseWithNonVoidLifecyleMethods.class, true, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
-		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR,
+		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
 			"@AfterAll method 'java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.dd()' must not return a value.") //
 				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("dd"))) //
 				.build();
-		assertThat(discoveryIssues).containsExactly(expectedIssue);
+		var notStaticIssue = DiscoveryIssue.builder(Severity.ERROR,
+			"@AfterAll method 'java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.dd()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
+				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("dd"))) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue);
 	}
 
 	@Test
