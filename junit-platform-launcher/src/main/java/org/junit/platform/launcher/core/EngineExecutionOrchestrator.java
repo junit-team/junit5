@@ -168,7 +168,7 @@ public class EngineExecutionOrchestrator {
 		EngineExecutionListener listener = selectExecutionListener(engineExecutionListener, configurationParameters);
 
 		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
-			failOrExecuteEngine(discoveryResult, listener, testEngine);
+			failOrExecuteEngine(discoveryResult, listener, testEngine, requestLevelStore);
 		}
 	}
 
@@ -183,8 +183,7 @@ public class EngineExecutionOrchestrator {
 	}
 
 	private void failOrExecuteEngine(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener,
-			TestEngine testEngine) {
-
+			TestEngine testEngine, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		EngineResultInfo engineDiscoveryResult = discoveryResult.getEngineResult(testEngine);
 		DiscoveryIssueNotifier discoveryIssueNotifier = engineDiscoveryResult.getDiscoveryIssueNotifier();
 		TestDescriptor engineDescriptor = engineDiscoveryResult.getRootDescriptor();
@@ -200,7 +199,7 @@ public class EngineExecutionOrchestrator {
 		}
 		else {
 			executeEngine(engineDescriptor, listener, discoveryResult.getConfigurationParameters(), testEngine,
-				discoveryResult.getOutputDirectoryProvider(), discoveryIssueNotifier);
+				discoveryResult.getOutputDirectoryProvider(), discoveryIssueNotifier, requestLevelStore);
 		}
 	}
 
@@ -214,13 +213,14 @@ public class EngineExecutionOrchestrator {
 
 	private void executeEngine(TestDescriptor engineDescriptor, EngineExecutionListener listener,
 			ConfigurationParameters configurationParameters, TestEngine testEngine,
-			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueNotifier discoveryIssueNotifier, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
+			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueNotifier discoveryIssueNotifier,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		OutcomeDelayingEngineExecutionListener delayingListener = new OutcomeDelayingEngineExecutionListener(listener,
 			engineDescriptor);
 		try {
 			testEngine.execute(ExecutionRequest.create(engineDescriptor, delayingListener, configurationParameters,
 				outputDirectoryProvider, requestLevelStore));
-      	discoveryIssueNotifier.logNonCriticalIssues(testEngine);
+			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
 			delayingListener.reportEngineOutcome();
 		}
 		catch (Throwable throwable) {
