@@ -74,7 +74,7 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 	@Override
 	public final Set<TestTag> getTags() {
 		// return modifiable copy
-		Set<TestTag> allTags = new LinkedHashSet<>(this.tags);
+		Set<TestTag> allTags = new LinkedHashSet<>(this.classInfo.tags);
 		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
 		return allTags;
 	}

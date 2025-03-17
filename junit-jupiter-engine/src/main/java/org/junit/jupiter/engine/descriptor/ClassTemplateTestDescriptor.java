@@ -72,7 +72,7 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	@Override
 	public Set<TestTag> getTags() {
 		// return modifiable copy
-		return new LinkedHashSet<>(this.tags);
+		return new LinkedHashSet<>(this.classInfo.tags);
 	}
 
 	// --- Filterable ----------------------------------------------------------
