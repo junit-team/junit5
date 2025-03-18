@@ -139,7 +139,7 @@ class CompositeEngineExecutionListenerTests {
 	private static TestDescriptor anyTestDescriptor() {
 		var testClass = CompositeEngineExecutionListenerTests.class;
 		var method = ReflectionUtils.findMethod(testClass, "anyTestDescriptor", new Class<?>[0]).orElseThrow();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), testClass, method);
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), method);
 	}
 
 	private static class ThrowingEngineExecutionListener implements EngineExecutionListener {

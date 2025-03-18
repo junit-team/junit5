@@ -28,16 +28,14 @@ import org.junit.platform.engine.UniqueId;
  */
 public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 
-	private final Class<?> testClass;
 	private final Method testMethod;
 
-	public DemoMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod) {
+	public DemoMethodTestDescriptor(UniqueId uniqueId, Method testMethod) {
 		super(uniqueId,
 			String.format("%s(%s)", Preconditions.notNull(testMethod, "Method must not be null").getName(),
 				ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes())),
 			MethodSource.from(testMethod));
 
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;
 	}
 
@@ -45,19 +43,12 @@ public class DemoMethodTestDescriptor extends AbstractTestDescriptor {
 	public Set<TestTag> getTags() {
 		Set<TestTag> methodTags = findRepeatableAnnotations(this.testMethod, Tag.class).stream() //
 				.map(Tag::value) //
+				.filter(TestTag::isValid) //
 				.map(TestTag::create) //
 				.collect(toCollection(LinkedHashSet::new));
 
 		getParent().ifPresent(parentDescriptor -> methodTags.addAll(parentDescriptor.getTags()));
 		return methodTags;
-	}
-
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
-	public final Method getTestMethod() {
-		return this.testMethod;
 	}
 
 	@Override
