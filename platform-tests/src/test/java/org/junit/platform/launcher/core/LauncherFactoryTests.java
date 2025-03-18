@@ -340,8 +340,9 @@ class LauncherFactoryTests {
 
 	@Test
 	void extensionCanReadValueFromSessionStore() {
-		var config = LauncherConfig.builder().addLauncherSessionListeners(
-			new LauncherSessionListenerExample()).enableTestEngineAutoRegistration(true).build();
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new LauncherSessionListenerExample()) //
+				.build();
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
 			var launcher = session.getLauncher();
