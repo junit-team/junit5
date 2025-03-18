@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -90,25 +89,18 @@ abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 			Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
 					.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
 
-			// If we are ordering children of type ClassBasedTestDescriptor, that means we
-			// are ordering top-level classes or @Nested test classes. Thus, the
-			// nonMatchingTestDescriptors list is either empty (for top-level classes) or
-			// contains only local test methods (for @Nested classes) which must be executed
-			// before tests in @Nested test classes. So we add the test methods before adding
-			// the @Nested test classes.
-			if (matchingChildrenType == ClassBasedTestDescriptor.class) {
+			if (shouldNonMatchingDescriptorsComeBeforeOrderedOnes()) {
 				return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
 						.collect(toList());
 			}
-			// Otherwise, we add the ordered descriptors before the non-matching descriptors,
-			// which is the case when we are ordering test methods. In other words, local
-			// test methods always get added before @Nested test classes.
 			else {
 				return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
 						.collect(toList());
 			}
 		});
 	}
+
+	protected abstract boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes();
 
 	/**
 	 * @param <WRAPPER> the wrapper type for the children to order
