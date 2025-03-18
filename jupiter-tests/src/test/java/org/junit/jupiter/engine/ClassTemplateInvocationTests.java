@@ -979,7 +979,8 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 
 	@Test
 	void propagatesTagsFromEnclosingClassesToNestedClassTemplates() {
-		var engineDescriptor = discoverTestsForClass(NestedClassTemplateWithTagOnEnclosingClassTestCase.class);
+		var engineDescriptor = discoverTestsForClass(
+			NestedClassTemplateWithTagOnEnclosingClassTestCase.class).getEngineDescriptor();
 		var classDescriptor = getOnlyElement(engineDescriptor.getChildren());
 		var nestedClassTemplateDescriptor = getOnlyElement(classDescriptor.getChildren());
 

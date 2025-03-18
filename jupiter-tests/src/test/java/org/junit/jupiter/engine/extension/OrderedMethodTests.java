@@ -618,7 +618,11 @@ class OrderedMethodTests {
 	static class OuterTestCase {
 
 		@Nested
-		class NestedOrderAnnotationTestCase extends OrderAnnotationTestCase {
+		class InnerTestCase {
+
+			@Nested
+			class NestedOrderAnnotationTestCase extends OrderAnnotationTestCase {
+			}
 		}
 	}
 

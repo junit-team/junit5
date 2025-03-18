@@ -17,14 +17,13 @@ import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_E
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
-import java.util.Set;
 import java.util.function.Consumer;
 
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
@@ -59,11 +58,11 @@ public abstract class AbstractJupiterTestEngineTests {
 		return EngineTestKit.execute(this.engine, request);
 	}
 
-	protected TestDescriptor discoverTestsForClass(Class<?> testClass) {
+	protected EngineDiscoveryResults discoverTestsForClass(Class<?> testClass) {
 		return discoverTests(selectClass(testClass));
 	}
 
-	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
+	protected EngineDiscoveryResults discoverTests(DiscoverySelector... selectors) {
 		return discoverTests(defaultRequest().selectors(selectors).build());
 	}
 
@@ -73,15 +72,16 @@ public abstract class AbstractJupiterTestEngineTests {
 				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false));
 	}
 
-	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
-		return engine.discover(request, UniqueId.forEngine(engine.getId()));
+	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequest request) {
+		return EngineTestKit.discover(this.engine, request);
 	}
 
 	protected UniqueId discoverUniqueId(Class<?> clazz, String methodName) {
-		TestDescriptor engineDescriptor = discoverTests(selectMethod(clazz, methodName));
-		Set<? extends TestDescriptor> descendants = engineDescriptor.getDescendants();
+		var results = discoverTests(selectMethod(clazz, methodName));
+		var engineDescriptor = results.getEngineDescriptor();
+		var descendants = engineDescriptor.getDescendants();
 		// @formatter:off
-		TestDescriptor testDescriptor = descendants.stream()
+		var testDescriptor = descendants.stream()
 				.skip(descendants.size() - 1)
 				.findFirst()
 				.orElseGet(() -> fail("no descendants"));

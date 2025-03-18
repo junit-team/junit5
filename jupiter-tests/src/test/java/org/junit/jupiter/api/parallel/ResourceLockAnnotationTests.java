@@ -189,8 +189,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void addSharedResourcesViaAnnotationValueAndProvidersForClassTemplate() {
-		var engineDescriptor = discoverTests(
-			selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class));
+		var selector = selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class);
+		var engineDescriptor = discoverTests(selector).getEngineDescriptor();
 		engineDescriptor.accept(TestDescriptor::prune);
 
 		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
@@ -214,8 +214,9 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void addSharedResourcesViaAnnotationValueAndProvidersForClassTemplateInvocation() {
-		var engineDescriptor = discoverTests(
-			selectIteration(selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class), 0));
+		var selector = selectIteration(
+			selectClass(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class), 0);
+		var engineDescriptor = discoverTests(selector).getEngineDescriptor();
 		engineDescriptor.accept(TestDescriptor::prune);
 
 		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());
@@ -239,8 +240,8 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void addSharedResourcesViaAnnotationValueAndProvidersForMethodInClassTemplate() {
-		var engineDescriptor = discoverTests(
-			selectMethod(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class, "test"));
+		var selector = selectMethod(SharedResourcesViaAnnotationValueAndProvidersClassTemplateTestCase.class, "test");
+		var engineDescriptor = discoverTests(selector).getEngineDescriptor();
 		engineDescriptor.accept(TestDescriptor::prune);
 
 		var classTemplateTestDescriptor = (JupiterTestDescriptor) getOnlyElement(engineDescriptor.getChildren());

@@ -28,8 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
 /**
  * @since 5.5
  */
-class MethodOrderingVisitor
-		extends AbstractOrderingVisitor<ClassBasedTestDescriptor, MethodBasedTestDescriptor, DefaultMethodDescriptor> {
+class MethodOrderingVisitor extends AbstractOrderingVisitor {
 
 	private final JupiterConfiguration configuration;
 
@@ -42,6 +41,13 @@ class MethodOrderingVisitor
 		doWithMatchingDescriptor(ClassBasedTestDescriptor.class, testDescriptor,
 			descriptor -> orderContainedMethods(descriptor, descriptor.getTestClass()),
 			descriptor -> "Failed to order methods for " + descriptor.getTestClass());
+	}
+
+	@Override
+	protected boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes() {
+		// Non-matching descriptors can only contain @Nested test classes which should be
+		// added after local test methods.
+		return false;
 	}
 
 	/**
@@ -65,8 +71,8 @@ class MethodOrderingVisitor
 						"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
 						methodOrderer.getClass().getName(), number, testClass.getName());
 
-					DescriptorWrapperOrderer descriptorWrapperOrderer = new DescriptorWrapperOrderer(orderingAction,
-						descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
+					DescriptorWrapperOrderer<DefaultMethodDescriptor> descriptorWrapperOrderer = new DescriptorWrapperOrderer<>(
+						orderingAction, descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
 
 					orderChildrenTestDescriptors(classBasedTestDescriptor, //
 						MethodBasedTestDescriptor.class, //

@@ -22,7 +22,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -32,19 +31,18 @@ import org.junit.platform.engine.TestDescriptor;
  * Abstract base class for {@linkplain TestDescriptor.Visitor visitors} that
  * order children nodes.
  *
- * @param <PARENT> the parent container type to search in for matching children
- * @param <CHILD> the type of children (containers or tests) to order
- * @param <WRAPPER> the wrapper type for the children to order
  * @since 5.8
  */
-abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>>
-		implements TestDescriptor.Visitor {
+abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOrderingVisitor.class);
 
+	/**
+	 * @param <PARENT> the parent container type to search in for matching children
+	 */
 	@SuppressWarnings("unchecked")
-	protected void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType, TestDescriptor testDescriptor,
-			Consumer<PARENT> action, Function<PARENT, String> errorMessageBuilder) {
+	protected <PARENT extends TestDescriptor> void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType,
+			TestDescriptor testDescriptor, Consumer<PARENT> action, Function<PARENT, String> errorMessageBuilder) {
 
 		if (parentTestDescriptorType.isInstance(testDescriptor)) {
 			PARENT parentTestDescriptor = (PARENT) testDescriptor;
@@ -58,8 +56,17 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 		}
 	}
 
-	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
-			Function<CHILD, WRAPPER> descriptorWrapperFactory, DescriptorWrapperOrderer descriptorWrapperOrderer) {
+	/**
+	 * @param <CHILD> the type of children (containers or tests) to order
+	 */
+	protected <CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>> void orderChildrenTestDescriptors(
+			TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
+			Function<CHILD, WRAPPER> descriptorWrapperFactory,
+			DescriptorWrapperOrderer<WRAPPER> descriptorWrapperOrderer) {
+
+		if (!descriptorWrapperOrderer.canOrderWrappers()) {
+			return;
+		}
 
 		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
 				.stream()//
@@ -73,67 +80,43 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return;
 		}
 
-		if (descriptorWrapperOrderer.canOrderWrappers()) {
-			parentTestDescriptor.orderChildren(children -> {
-				Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
+		parentTestDescriptor.orderChildren(children -> {
+			Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+					.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
 
-				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
+			descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
 
-				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
-						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
+			Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
+					.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
 
-				// If we are ordering children of type ClassBasedTestDescriptor, that means we
-				// are ordering top-level classes or @Nested test classes. Thus, the
-				// nonMatchingTestDescriptors list is either empty (for top-level classes) or
-				// contains only local test methods (for @Nested classes) which must be executed
-				// before tests in @Nested test classes. So we add the test methods before adding
-				// the @Nested test classes.
-				if (matchingChildrenType == ClassBasedTestDescriptor.class) {
-					return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
-							.collect(toList());
-				}
-				// Otherwise, we add the ordered descriptors before the non-matching descriptors,
-				// which is the case when we are ordering test methods. In other words, local
-				// test methods always get added before @Nested test classes.
-				else {
-					return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
-							.collect(toList());
-				}
-			});
-		}
-
-		// Recurse through the children in order to support ordering for @Nested test classes.
-		matchingDescriptorWrappers.forEach(descriptorWrapper -> {
-			TestDescriptor newParentTestDescriptor = descriptorWrapper.getTestDescriptor();
-			DescriptorWrapperOrderer newDescriptorWrapperOrderer = getDescriptorWrapperOrderer(descriptorWrapperOrderer,
-				descriptorWrapper);
-
-			orderChildrenTestDescriptors(newParentTestDescriptor, matchingChildrenType, descriptorWrapperFactory,
-				newDescriptorWrapperOrderer);
+			if (shouldNonMatchingDescriptorsComeBeforeOrderedOnes()) {
+				return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
+						.collect(toList());
+			}
+			else {
+				return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
+						.collect(toList());
+			}
 		});
 	}
 
+	protected abstract boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes();
+
 	/**
-	 * Get the {@link DescriptorWrapperOrderer} for the supplied {@link AbstractAnnotatedDescriptorWrapper}.
-	 *
-	 * <p>The default implementation returns the supplied {@code DescriptorWrapperOrderer}.
-	 *
-	 * @return a new {@code DescriptorWrapperOrderer} or the one supplied as an argument
+	 * @param <WRAPPER> the wrapper type for the children to order
 	 */
-	protected DescriptorWrapperOrderer getDescriptorWrapperOrderer(
-			DescriptorWrapperOrderer inheritedDescriptorWrapperOrderer,
-			AbstractAnnotatedDescriptorWrapper<?> descriptorWrapper) {
+	protected static class DescriptorWrapperOrderer<WRAPPER> {
 
-		return inheritedDescriptorWrapperOrderer;
-	}
+		private static final DescriptorWrapperOrderer<?> NOOP = new DescriptorWrapperOrderer<>(null, __ -> "",
+			___ -> "");
 
-	protected class DescriptorWrapperOrderer {
+		@SuppressWarnings("unchecked")
+		protected static <WRAPPER> DescriptorWrapperOrderer<WRAPPER> noop() {
+			return (DescriptorWrapperOrderer<WRAPPER>) NOOP;
+		}
 
 		private final Consumer<List<WRAPPER>> orderingAction;
-
 		private final MessageGenerator descriptorsAddedMessageGenerator;
-
 		private final MessageGenerator descriptorsRemovedMessageGenerator;
 
 		DescriptorWrapperOrderer(Consumer<List<WRAPPER>> orderingAction,

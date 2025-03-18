@@ -213,6 +213,12 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 * Add a context sensitive {@link TestDescriptor.Visitor} to this
 		 * builder.
 		 *
+		 * <p>If multiple {@linkplain TestDescriptor.Visitor visitors} are registered,
+		 * they will iterate over the test tree separately. To avoid the overhead of
+		 * multiple iterations, consider combining multiple visitors into a single
+		 * visitor using
+		 * {@link TestDescriptor.Visitor#composite(TestDescriptor.Visitor...)}.
+		 *
 		 * @param visitorCreator the function that will be called to create the
 		 * {@link TestDescriptor.Visitor} to be added.
 		 * @return this builder for method chaining
