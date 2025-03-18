@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.discovery;
 
-import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -21,67 +20,86 @@ import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.commons.util.LruCache;
 import org.junit.platform.engine.TestDescriptor;
 
 /**
  * @since 5.8
  */
-class ClassOrderingVisitor
-		extends AbstractOrderingVisitor<JupiterEngineDescriptor, ClassBasedTestDescriptor, DefaultClassDescriptor> {
+class ClassOrderingVisitor extends AbstractOrderingVisitor {
 
+	private final LruCache<ClassBasedTestDescriptor, DescriptorWrapperOrderer<DefaultClassDescriptor>> ordererCache = new LruCache<>(
+		10);
 	private final JupiterConfiguration configuration;
+	private final DescriptorWrapperOrderer<DefaultClassDescriptor> globalOrderer;
 
 	ClassOrderingVisitor(JupiterConfiguration configuration) {
 		this.configuration = configuration;
+		this.globalOrderer = createGlobalOrderer(configuration);
 	}
 
 	@Override
 	public void visit(TestDescriptor testDescriptor) {
-		ClassOrderer globalClassOrderer = this.configuration.getDefaultTestClassOrderer().orElse(null);
-		doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor,
-			descriptor -> orderContainedClasses(descriptor, globalClassOrderer),
-			descriptor -> "Failed to order classes");
+		doWithMatchingDescriptor(JupiterEngineDescriptor.class, testDescriptor, this::orderTopLevelClasses,
+			descriptor -> "Failed to order top-level classes");
+		doWithMatchingDescriptor(ClassBasedTestDescriptor.class, testDescriptor, this::orderNestedClasses,
+			descriptor -> "Failed to order nested classes for " + descriptor.getTestClass());
 	}
 
-	private void orderContainedClasses(JupiterEngineDescriptor jupiterEngineDescriptor, ClassOrderer classOrderer) {
+	private void orderTopLevelClasses(JupiterEngineDescriptor engineDescriptor) {
 		orderChildrenTestDescriptors(//
-			jupiterEngineDescriptor, //
+			engineDescriptor, //
 			ClassBasedTestDescriptor.class, //
 			DefaultClassDescriptor::new, //
-			createDescriptorWrapperOrderer(classOrderer));
+			globalOrderer);
 	}
 
-	@Override
-	protected DescriptorWrapperOrderer getDescriptorWrapperOrderer(
-			DescriptorWrapperOrderer inheritedDescriptorWrapperOrderer,
-			AbstractAnnotatedDescriptorWrapper<?> descriptorWrapper) {
+	private void orderNestedClasses(ClassBasedTestDescriptor descriptor) {
+		orderChildrenTestDescriptors(//
+			descriptor, //
+			ClassBasedTestDescriptor.class, //
+			DefaultClassDescriptor::new, //
+			lookupOrCreateClassLevelOrderer(descriptor));
+	}
 
-		AnnotatedElement annotatedElement = descriptorWrapper.getAnnotatedElement();
-		return AnnotationSupport.findAnnotation(annotatedElement, TestClassOrder.class)//
+	private DescriptorWrapperOrderer<DefaultClassDescriptor> createGlobalOrderer(JupiterConfiguration configuration) {
+		ClassOrderer classOrderer = configuration.getDefaultTestClassOrderer().orElse(null);
+		return classOrderer == null ? DescriptorWrapperOrderer.noop() : createDescriptorWrapperOrderer(classOrderer);
+	}
+
+	private DescriptorWrapperOrderer<DefaultClassDescriptor> lookupOrCreateClassLevelOrderer(
+			ClassBasedTestDescriptor classBasedTestDescriptor) {
+		return ordererCache.computeIfAbsent(classBasedTestDescriptor, this::createClassLevelOrderer);
+	}
+
+	private DescriptorWrapperOrderer<DefaultClassDescriptor> createClassLevelOrderer(
+			ClassBasedTestDescriptor classBasedTestDescriptor) {
+		return AnnotationSupport.findAnnotation(classBasedTestDescriptor.getTestClass(), TestClassOrder.class)//
 				.map(TestClassOrder::value)//
-				.<ClassOrderer> map(ReflectionSupport::newInstance)//
+				.map(ReflectionSupport::newInstance)//
 				.map(this::createDescriptorWrapperOrderer)//
-				.orElse(inheritedDescriptorWrapperOrderer);
+				.orElseGet(() -> {
+					Object parent = classBasedTestDescriptor.getParent().orElse(null);
+					if (parent instanceof ClassBasedTestDescriptor) {
+						return lookupOrCreateClassLevelOrderer((ClassBasedTestDescriptor) parent);
+					}
+					return globalOrderer;
+				});
 	}
 
-	private DescriptorWrapperOrderer createDescriptorWrapperOrderer(ClassOrderer classOrderer) {
-		Consumer<List<DefaultClassDescriptor>> orderingAction = classOrderer == null ? null : //
-				classDescriptors -> classOrderer.orderClasses(
-					new DefaultClassOrdererContext(classDescriptors, this.configuration));
+	private DescriptorWrapperOrderer<DefaultClassDescriptor> createDescriptorWrapperOrderer(ClassOrderer classOrderer) {
+		Consumer<List<DefaultClassDescriptor>> orderingAction = classDescriptors -> classOrderer.orderClasses(
+			new DefaultClassOrdererContext(classDescriptors, this.configuration));
 
 		MessageGenerator descriptorsAddedMessageGenerator = number -> String.format(
-			"ClassOrderer [%s] added %s ClassDescriptor(s) which will be ignored.", nullSafeToString(classOrderer),
+			"ClassOrderer [%s] added %s ClassDescriptor(s) which will be ignored.", classOrderer.getClass().getName(),
 			number);
 		MessageGenerator descriptorsRemovedMessageGenerator = number -> String.format(
 			"ClassOrderer [%s] removed %s ClassDescriptor(s) which will be retained with arbitrary ordering.",
-			nullSafeToString(classOrderer), number);
+			classOrderer.getClass().getName(), number);
 
-		return new DescriptorWrapperOrderer(orderingAction, descriptorsAddedMessageGenerator,
+		return new DescriptorWrapperOrderer<>(orderingAction, descriptorsAddedMessageGenerator,
 			descriptorsRemovedMessageGenerator);
-	}
-
-	private static String nullSafeToString(ClassOrderer classOrderer) {
-		return (classOrderer != null ? classOrderer.getClass().getName() : "<unknown>");
 	}
 
 }
