@@ -139,7 +139,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getFiltersByType(ClassNameFilter.class);
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 
 			// Excluded by default
 			assertExcludes(filter, "example.MyClass");
@@ -185,7 +185,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getFiltersByType(PackageNameFilter.class);
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertIncludes(filter, "includedpackage1.TestClass");
 			assertIncludes(filter, "includedpackage2.TestClass");
 			assertExcludes(filter, "excludedpackage1.TestClass");
@@ -203,7 +203,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getFiltersByType(PackageNameFilter.class);
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertIncludes(filter, "includedpackage1.TestClass");
 			assertExcludes(filter, "excludedpackage1.TestClass");
 			assertExcludes(filter, "excludedpackage2.TestClass");
@@ -221,7 +221,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertIncludes(filter, testDescriptorWithTags("foo"));
 			assertIncludes(filter, testDescriptorWithTags("bar"));
 			assertExcludes(filter, testDescriptorWithTags("baz"));
@@ -239,7 +239,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertExcludes(filter, testDescriptorWithTags("foo"));
 			assertExcludes(filter, testDescriptorWithTags("bar"));
 			assertIncludes(filter, testDescriptorWithTags("baz"));
@@ -257,7 +257,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertIncludes(filter, testDescriptorWithTags("foo"));
 			assertIncludes(filter, testDescriptorWithTags("foo", "any_other_tag"));
 			assertExcludes(filter, testDescriptorWithTags("foo", "bar"));
@@ -277,7 +277,7 @@ class JUnitPlatformRunnerTests {
 			var filters = request.getPostDiscoveryFilters();
 			assertThat(filters).hasSize(1);
 
-			var filter = filters.get(0);
+			var filter = filters.getFirst();
 			assertExcludes(filter, testDescriptorWithTags("foo"));
 			assertExcludes(filter, testDescriptorWithTags("foo", "any_other_tag"));
 			assertIncludes(filter, testDescriptorWithTags("foo", "bar"));
@@ -309,7 +309,7 @@ class JUnitPlatformRunnerTests {
 			assertIncludes(includeFilter, bazEngine);
 			assertExcludes(includeFilter, quuxEngine);
 
-			var excludeFilter = filters.get(0);
+			var excludeFilter = filters.getFirst();
 			assertIncludes(excludeFilter, fooEngine);
 			assertExcludes(excludeFilter, barEngine);
 			assertIncludes(excludeFilter, bazEngine);
@@ -697,7 +697,7 @@ class JUnitPlatformRunnerTests {
 
 			List<Description> children = platformRunner.getDescription().getChildren();
 			assertEquals(1, children.size());
-			var engineDescription = children.get(0);
+			var engineDescription = children.getFirst();
 			assertEquals("dummy", engineDescription.getDisplayName());
 
 			var containerDescription = getOnlyElement(engineDescription.getChildren());
@@ -733,7 +733,7 @@ class JUnitPlatformRunnerTests {
 
 			List<Description> children = platformRunner.getDescription().getChildren();
 			assertEquals(1, children.size());
-			var engineDescription = children.get(0);
+			var engineDescription = children.getFirst();
 			assertEquals("dummy", engineDescription.getDisplayName());
 
 			var containerDescription = getOnlyElement(engineDescription.getChildren());

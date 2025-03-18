@@ -146,7 +146,7 @@ class EventsTests {
 
 		var failures = error.getFailures();
 		assertEquals(1, failures.size());
-		assertEquals(AssertionError.class, failures.get(0).getClass());
+		assertEquals(AssertionError.class, failures.getFirst().getClass());
 	}
 
 	@Test

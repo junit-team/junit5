@@ -415,7 +415,7 @@ class DefaultClasspathScannerTests {
 	void scanForClassesInPackageWithFilter() {
 		var thisClassOnly = ClassFilter.of(clazz -> clazz == DefaultClasspathScannerTests.class);
 		var classes = classpathScanner.scanForClassesInPackage("org.junit.platform.commons", thisClassOnly);
-		assertSame(DefaultClasspathScannerTests.class, classes.get(0));
+		assertSame(DefaultClasspathScannerTests.class, classes.getFirst());
 	}
 
 	@Test
@@ -432,7 +432,7 @@ class DefaultClasspathScannerTests {
 		Predicate<Resource> thisResourceOnly = resource -> "org/junit/platform/commons/example.resource".equals(
 			resource.getName());
 		var resources = classpathScanner.scanForResourcesInPackage("org.junit.platform.commons", thisResourceOnly);
-		Resource resource = resources.get(0);
+		Resource resource = resources.getFirst();
 
 		assertThat(resource.getName()).isEqualTo("org/junit/platform/commons/example.resource");
 		assertThat(resource.getUri()).isEqualTo(uriOf("/org/junit/platform/commons/example.resource"));
@@ -501,7 +501,7 @@ class DefaultClasspathScannerTests {
 		var thisClassOnly = ClassFilter.of(clazz -> clazz == DefaultClasspathScannerTests.class);
 		var root = getTestClasspathRoot();
 		var classes = classpathScanner.scanForClassesInClasspathRoot(root, thisClassOnly);
-		assertSame(DefaultClasspathScannerTests.class, classes.get(0));
+		assertSame(DefaultClasspathScannerTests.class, classes.getFirst());
 	}
 
 	@Test
@@ -510,7 +510,7 @@ class DefaultClasspathScannerTests {
 		var classes = classpathScanner.scanForClassesInClasspathRoot(getTestClasspathRoot(), classFilter);
 
 		assertEquals(1, classes.size(), "number of classes found in default package");
-		var testClass = classes.get(0);
+		var testClass = classes.getFirst();
 		assertTrue(inDefaultPackage(testClass));
 		assertEquals("DefaultPackageTestCase", testClass.getName());
 	}

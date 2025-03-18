@@ -101,7 +101,7 @@ class CloseablePathTests {
 		assertDoesNotThrow(() -> FileSystems.getFileSystem(jarUri), "FileSystem should still be open");
 
 		// Close last remaining path
-		paths.get(0).close();
+		paths.getFirst().close();
 		assertThrows(FileSystemNotFoundException.class, () -> FileSystems.getFileSystem(jarUri),
 			"FileSystem should have been closed");
 	}

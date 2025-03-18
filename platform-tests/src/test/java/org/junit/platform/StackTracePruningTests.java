@@ -174,7 +174,7 @@ class StackTracePruningTests {
 	}
 
 	private static Throwable getThrowable(EngineExecutionResults results) {
-		var failedTestEvent = results.testEvents().failed().list().get(0);
+		var failedTestEvent = results.testEvents().failed().list().getFirst();
 		var testResult = failedTestEvent.getRequiredPayload(TestExecutionResult.class);
 		return testResult.getThrowable().orElseThrow();
 	}

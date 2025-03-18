@@ -1569,7 +1569,7 @@ class ReflectionUtilsTests {
 
 			var methods = findMethods(MethodShadowingChild.class, method -> true, TOP_DOWN);
 			assertEquals(6, methods.size());
-			assertEquals(MethodShadowingInterface.class.getMethod("method2", int.class, int.class), methods.get(0));
+			assertEquals(MethodShadowingInterface.class.getMethod("method2", int.class, int.class), methods.getFirst());
 			assertThat(methods.subList(1, 3)).containsOnly(
 				MethodShadowingParent.class.getMethod("method2", int.class, int.class, int.class),
 				MethodShadowingParent.class.getMethod("method5", String.class));
@@ -1704,7 +1704,7 @@ class ReflectionUtilsTests {
 
 				var methods = findMethods(child, method -> true, TOP_DOWN);
 				assertEquals(6, methods.size());
-				assertEquals(ifcMethod2, methods.get(0));
+				assertEquals(ifcMethod2, methods.getFirst());
 				assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
 				assertThat(methods.subList(3, 6)).containsOnly(childMethod1, childMethod4, childMethod5);
 			}

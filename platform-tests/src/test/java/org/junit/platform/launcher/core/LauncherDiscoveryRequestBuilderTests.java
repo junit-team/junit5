@@ -109,7 +109,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			var methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			var methodSelector = methodSelectors.get(0);
+			var methodSelector = methodSelectors.getFirst();
 			assertThat(methodSelector.getJavaClass()).isEqualTo(LauncherDiscoveryRequestBuilderTests.class);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(fullyQualifiedMethod());
 		}
@@ -128,7 +128,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			var methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			var methodSelector = methodSelectors.get(0);
+			var methodSelector = methodSelectors.getFirst();
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -148,7 +148,7 @@ class LauncherDiscoveryRequestBuilderTests {
 			var methodSelectors = discoveryRequest.getSelectorsByType(MethodSelector.class);
 			assertThat(methodSelectors).hasSize(1);
 
-			var methodSelector = methodSelectors.get(0);
+			var methodSelector = methodSelectors.getFirst();
 			assertThat(methodSelector.getJavaClass()).isEqualTo(testClass);
 			assertThat(methodSelector.getJavaMethod()).isEqualTo(testMethod);
 		}
@@ -190,7 +190,7 @@ class LauncherDiscoveryRequestBuilderTests {
 
 			var filters = discoveryRequest.getEngineFilters();
 			assertThat(filters).hasSize(1);
-			var engineFilter = filters.get(0);
+			var engineFilter = filters.getFirst();
 			assertTrue(engineFilter.apply(engine1).included());
 			assertTrue(engineFilter.apply(engine2).included());
 			assertTrue(engineFilter.apply(engine3).excluded());
