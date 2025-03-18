@@ -28,8 +28,7 @@ import org.junit.platform.engine.TestDescriptor;
 /**
  * @since 5.5
  */
-class MethodOrderingVisitor
-		extends AbstractOrderingVisitor<ClassBasedTestDescriptor, MethodBasedTestDescriptor, DefaultMethodDescriptor> {
+class MethodOrderingVisitor extends AbstractOrderingVisitor {
 
 	private final JupiterConfiguration configuration;
 
@@ -65,8 +64,8 @@ class MethodOrderingVisitor
 						"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
 						methodOrderer.getClass().getName(), number, testClass.getName());
 
-					DescriptorWrapperOrderer descriptorWrapperOrderer = new DescriptorWrapperOrderer(orderingAction,
-						descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
+					DescriptorWrapperOrderer<DefaultMethodDescriptor> descriptorWrapperOrderer = new DescriptorWrapperOrderer<>(
+						orderingAction, descriptorsAddedMessageGenerator, descriptorsRemovedMessageGenerator);
 
 					orderChildrenTestDescriptors(classBasedTestDescriptor, //
 						MethodBasedTestDescriptor.class, //
