@@ -346,7 +346,8 @@ class LauncherFactoryTests {
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
 			var launcher = session.getLauncher();
-			var request = LauncherDiscoveryRequestBuilder.request().selectors(selectClass(JupiterTest.class)).build();
+			var request = LauncherDiscoveryRequestBuilder.request().selectors(
+				selectClass(JupiterTestCase.class)).build();
 
 			AtomicReference<Throwable> errorRef = new AtomicReference<>();
 			launcher.execute(request, new TestExecutionListener() {
@@ -421,7 +422,7 @@ class LauncherFactoryTests {
 
 	@SuppressWarnings({ "JUnitMalformedDeclaration" })
 	@ExtendWith(JupiterExtensionExample.class)
-	static class JupiterTest {
+	static class JupiterTestCase {
 
 		@Test
 		void dummyTest() {
