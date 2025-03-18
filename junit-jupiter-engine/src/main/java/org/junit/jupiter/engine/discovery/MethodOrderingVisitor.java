@@ -43,6 +43,13 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 			descriptor -> "Failed to order methods for " + descriptor.getTestClass());
 	}
 
+	@Override
+	protected boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes() {
+		// Non-matching descriptors can only contain @Nested test classes which should be
+		// added after local test methods.
+		return false;
+	}
+
 	/**
 	 * @since 5.4
 	 */

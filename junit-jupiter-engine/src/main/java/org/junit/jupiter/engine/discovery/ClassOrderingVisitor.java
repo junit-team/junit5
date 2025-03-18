@@ -46,6 +46,15 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 			descriptor -> "Failed to order nested classes for " + descriptor.getTestClass());
 	}
 
+	@Override
+	protected boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes() {
+		// Non-matching descriptors can only occur when ordering nested classes in which
+		// case they contain only local test methods (for @Nested classes) which must be
+		// executed before tests in @Nested test classes. So we add the test methods before
+		// adding the @Nested test classes.
+		return true;
+	}
+
 	private void orderTopLevelClasses(JupiterEngineDescriptor engineDescriptor) {
 		orderChildrenTestDescriptors(//
 			engineDescriptor, //
