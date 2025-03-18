@@ -68,7 +68,7 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 			descriptor, //
 			ClassBasedTestDescriptor.class, //
 			DefaultClassDescriptor::new, //
-			lookupOrCreateClassLevelOrderer(descriptor));
+			createAndCacheClassLevelOrderer(descriptor));
 	}
 
 	private DescriptorWrapperOrderer<DefaultClassDescriptor> createGlobalOrderer(JupiterConfiguration configuration) {
@@ -76,9 +76,11 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 		return classOrderer == null ? DescriptorWrapperOrderer.noop() : createDescriptorWrapperOrderer(classOrderer);
 	}
 
-	private DescriptorWrapperOrderer<DefaultClassDescriptor> lookupOrCreateClassLevelOrderer(
+	private DescriptorWrapperOrderer<DefaultClassDescriptor> createAndCacheClassLevelOrderer(
 			ClassBasedTestDescriptor classBasedTestDescriptor) {
-		return ordererCache.computeIfAbsent(classBasedTestDescriptor, this::createClassLevelOrderer);
+		DescriptorWrapperOrderer<DefaultClassDescriptor> orderer = createClassLevelOrderer(classBasedTestDescriptor);
+		ordererCache.put(classBasedTestDescriptor, orderer);
+		return orderer;
 	}
 
 	private DescriptorWrapperOrderer<DefaultClassDescriptor> createClassLevelOrderer(
@@ -90,7 +92,10 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 				.orElseGet(() -> {
 					Object parent = classBasedTestDescriptor.getParent().orElse(null);
 					if (parent instanceof ClassBasedTestDescriptor) {
-						return lookupOrCreateClassLevelOrderer((ClassBasedTestDescriptor) parent);
+						ClassBasedTestDescriptor parentClassTestDescriptor = (ClassBasedTestDescriptor) parent;
+						DescriptorWrapperOrderer<DefaultClassDescriptor> cacheEntry = ordererCache.get(
+							parentClassTestDescriptor);
+						return cacheEntry != null ? cacheEntry : createClassLevelOrderer(parentClassTestDescriptor);
 					}
 					return globalOrderer;
 				});
