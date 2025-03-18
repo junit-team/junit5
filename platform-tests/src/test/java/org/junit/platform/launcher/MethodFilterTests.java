@@ -150,6 +150,7 @@ class MethodFilterTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class Class1 {
 		@Test
 		void test1() {
@@ -160,6 +161,7 @@ class MethodFilterTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class Class2 {
 		@Test
 		void test1() {
