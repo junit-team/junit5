@@ -20,7 +20,7 @@ public class ListenerRegistryTests {
 
 	@Test
 	void registerWithNullArray() {
-		var registry = ListenerRegistry.create(l -> l.get(0));
+		var registry = ListenerRegistry.create(l -> l.getFirst());
 
 		var exception = assertThrows(PreconditionViolationException.class, () -> registry.addAll((Object[]) null));
 
@@ -29,7 +29,7 @@ public class ListenerRegistryTests {
 
 	@Test
 	void registerWithEmptyArray() {
-		var registry = ListenerRegistry.create(l -> l.get(0));
+		var registry = ListenerRegistry.create(l -> l.getFirst());
 
 		var exception = assertThrows(PreconditionViolationException.class, registry::addAll);
 
@@ -38,7 +38,7 @@ public class ListenerRegistryTests {
 
 	@Test
 	void registerWithArrayContainingNullElements() {
-		var registry = ListenerRegistry.create(l -> l.get(0));
+		var registry = ListenerRegistry.create(l -> l.getFirst());
 
 		var exception = assertThrows(PreconditionViolationException.class,
 			() -> registry.addAll(new Object[] { null }));

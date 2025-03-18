@@ -639,7 +639,7 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public void run(RunNotifier notifier) {
-			var staticDescription = getDescription().getChildren().get(0);
+			var staticDescription = getDescription().getChildren().getFirst();
 			notifier.fireTestStarted(staticDescription);
 			notifier.fireTestFinished(staticDescription);
 			var dynamicDescription = createTestDescription(testClass, "dynamicTest");

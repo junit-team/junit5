@@ -113,7 +113,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
 		String testTemplateKey = testTemplateKey(testClass, "singletonTest");
-		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.getFirst());
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
 		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
@@ -195,7 +195,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String preDestroyCallbackTestInstanceKey = preDestroyCallbackTestInstanceKey(testClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
-		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.getFirst());
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
 		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
@@ -274,7 +274,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
@@ -396,7 +396,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
@@ -516,7 +516,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));

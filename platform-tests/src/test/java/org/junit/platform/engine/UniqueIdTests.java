@@ -46,7 +46,7 @@ class UniqueIdTests {
 			var uniqueId = UniqueId.forEngine(ENGINE_ID);
 
 			assertEquals("[engine:junit-jupiter]", uniqueId.toString());
-			assertSegment(uniqueId.getSegments().get(0), "engine", "junit-jupiter");
+			assertSegment(uniqueId.getSegments().getFirst(), "engine", "junit-jupiter");
 		}
 
 		@Test
@@ -70,7 +70,7 @@ class UniqueIdTests {
 			var uniqueId = UniqueId.root("aType", "aValue");
 
 			assertEquals("[aType:aValue]", uniqueId.toString());
-			assertSegment(uniqueId.getSegments().get(0), "aType", "aValue");
+			assertSegment(uniqueId.getSegments().getFirst(), "aType", "aValue");
 		}
 
 		@Test
@@ -96,7 +96,7 @@ class UniqueIdTests {
 			uniqueId.append("class", "org.junit.MyClass");
 
 			assertThat(uniqueId.getSegments()).hasSize(1);
-			assertSegment(uniqueId.getSegments().get(0), "engine", ENGINE_ID);
+			assertSegment(uniqueId.getSegments().getFirst(), "engine", ENGINE_ID);
 		}
 
 		@Test
@@ -153,7 +153,7 @@ class UniqueIdTests {
 
 		@Test
 		void ensureDefaultUniqueIdFormatDecodingEncodesSegmentParts() {
-			var segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().get(0);
+			var segment = UniqueId.parse("[%5B+%25+%5D):(%3A+%2B+%2F]").getSegments().getFirst();
 			assertEquals("[ % ])", segment.getType());
 			assertEquals("(: + /", segment.getValue());
 		}
@@ -163,7 +163,7 @@ class UniqueIdTests {
 			for (char c = 0; c < Character.MAX_VALUE; c++) {
 				var value = "foo " + c + " bar";
 				var uniqueId = UniqueId.parse(UniqueId.root("type", value).toString());
-				var segment = uniqueId.getSegments().get(0);
+				var segment = uniqueId.getSegments().getFirst();
 				assertEquals(value, segment.getValue());
 			}
 		}

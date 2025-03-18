@@ -821,8 +821,8 @@ class OrderedMethodTests {
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
 			context.getMethodDescriptors().sort(comparing(MethodDescriptor::getDisplayName));
-			context.getMethodDescriptors().remove(0);
-			context.getMethodDescriptors().remove(0);
+			context.getMethodDescriptors().removeFirst();
+			context.getMethodDescriptors().removeFirst();
 		}
 	}
 
