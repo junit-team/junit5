@@ -44,58 +44,78 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findNonVoidBeforeAllMethodsWithStandardLifecycle() throws Exception {
-		var methods = findBeforeAllMethods(TestCaseWithNonVoidLifecyleMethods.class, true, discoveryIssues::add);
+		var methods = findBeforeAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
+		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("cc"));
 		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@BeforeAll method 'java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.cc()' must not return a value.") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("cc"))) //
+			"@BeforeAll method 'private java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.cc()' must not return a value.") //
+				.source(methodSource) //
 				.build();
 		var notStaticIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@BeforeAll method 'java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.cc()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("cc"))) //
+			"@BeforeAll method 'private java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.cc()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
+				.source(methodSource) //
 				.build();
-		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue);
+		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+			"@BeforeAll method 'private java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.cc()' should not be private. This will be disallowed in a future release.") //
+				.source(methodSource) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue, privateIssue);
 	}
 
 	@Test
 	void findNonVoidAfterAllMethodsWithStandardLifecycle() throws Exception {
-		var methods = findAfterAllMethods(TestCaseWithNonVoidLifecyleMethods.class, true, discoveryIssues::add);
+		var methods = findAfterAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
+		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("dd"));
 		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@AfterAll method 'java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.dd()' must not return a value.") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("dd"))) //
+			"@AfterAll method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.dd()' must not return a value.") //
+				.source(methodSource) //
 				.build();
 		var notStaticIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@AfterAll method 'java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.dd()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("dd"))) //
+			"@AfterAll method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.dd()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
+				.source(methodSource) //
 				.build();
-		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue);
+		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+			"@AfterAll method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.dd()' should not be private. This will be disallowed in a future release.") //
+				.source(methodSource) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, notStaticIssue, privateIssue);
 	}
 
 	@Test
 	void findNonVoidBeforeEachMethodsWithStandardLifecycle() throws Exception {
-		var methods = findBeforeEachMethods(TestCaseWithNonVoidLifecyleMethods.class, discoveryIssues::add);
+		var methods = findBeforeEachMethods(TestCaseWithInvalidLifecycleMethods.class, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
-		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@BeforeEach method 'java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.aa()' must not return a value.") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("aa"))) //
+		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("aa"));
+		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
+			"@BeforeEach method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.aa()' must not return a value.") //
+				.source(methodSource) //
 				.build();
-		assertThat(discoveryIssues).containsExactly(expectedIssue);
+		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+			"@BeforeEach method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.aa()' should not be private. This will be disallowed in a future release.") //
+				.source(methodSource) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, privateIssue);
 	}
 
 	@Test
 	void findNonVoidAfterEachMethodsWithStandardLifecycle() throws Exception {
-		var methods = findAfterEachMethods(TestCaseWithNonVoidLifecyleMethods.class, discoveryIssues::add);
+		var methods = findAfterEachMethods(TestCaseWithInvalidLifecycleMethods.class, discoveryIssues::add);
 		assertThat(methods).isEmpty();
 
-		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR,
-			"@AfterEach method 'int org.junit.jupiter.engine.descriptor.TestCaseWithNonVoidLifecyleMethods.bb()' must not return a value.") //
-				.source(MethodSource.from(TestCaseWithNonVoidLifecyleMethods.class.getDeclaredMethod("bb"))) //
+		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("bb"));
+		var notVoidIssue = DiscoveryIssue.builder(Severity.ERROR,
+			"@AfterEach method 'private int org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.bb()' must not return a value.") //
+				.source(methodSource) //
 				.build();
-		assertThat(discoveryIssues).containsExactly(expectedIssue);
+		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+			"@AfterEach method 'private int org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.bb()' should not be private. This will be disallowed in a future release.") //
+				.source(methodSource) //
+				.build();
+		assertThat(discoveryIssues).containsExactlyInAnyOrder(notVoidIssue, privateIssue);
 	}
 
 	@Test
@@ -228,29 +248,26 @@ class TestCaseWithLifecyclePerClass {
 
 }
 
-class TestCaseWithNonVoidLifecyleMethods {
+@SuppressWarnings("JUnitMalformedDeclaration")
+class TestCaseWithInvalidLifecycleMethods {
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
 	@BeforeEach
-	String aa() {
+	private String aa() {
 		return null;
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterEach
-	int bb() {
+	private int bb() {
 		return 1;
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
 	@BeforeAll
-	Double cc() {
+	private Double cc() {
 		return null;
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
 	@AfterAll
-	String dd() {
+	private String dd() {
 		return "";
 	}
 

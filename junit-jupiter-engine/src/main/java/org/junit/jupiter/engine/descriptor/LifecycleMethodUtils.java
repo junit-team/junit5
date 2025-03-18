@@ -16,6 +16,7 @@ import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -87,6 +88,7 @@ final class LifecycleMethodUtils {
 			DiscoveryIssueReporter issueReporter, Predicate<? super Method> additionalCondition) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
+				.peek(isNotPrivate(annotationType, issueReporter)) //
 				.filter(allOf(returnsPrimitiveVoid(annotationType, issueReporter), additionalCondition)) //
 				.collect(toUnmodifiableList());
 	}
@@ -97,7 +99,7 @@ final class LifecycleMethodUtils {
 			String message = String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationType.getSimpleName(), method.toGenericString());
-			return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
+			return createIssue(Severity.ERROR, message, method);
 		});
 	}
 
@@ -106,7 +108,17 @@ final class LifecycleMethodUtils {
 		return DiscoveryIssueReportingPredicate.from(ModifierSupport::isNotStatic, issueReporter, method -> {
 			String message = String.format("@%s method '%s' must not be static.", annotationType.getSimpleName(),
 				method.toGenericString());
-			return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
+			return createIssue(Severity.ERROR, message, method);
+		});
+	}
+
+	private static Consumer<Method> isNotPrivate(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return DiscoveryIssueReportingPredicate.from(ModifierSupport::isNotPrivate, issueReporter, method -> {
+			String message = String.format(
+				"@%s method '%s' should not be private. This will be disallowed in a future release.",
+				annotationType.getSimpleName(), method.toGenericString());
+			return createIssue(Severity.DEPRECATION, message, method);
 		});
 	}
 
@@ -115,8 +127,12 @@ final class LifecycleMethodUtils {
 		return DiscoveryIssueReportingPredicate.from(ReflectionUtils::returnsPrimitiveVoid, issueReporter, method -> {
 			String message = String.format("@%s method '%s' must not return a value.", annotationType.getSimpleName(),
 				method.toGenericString());
-			return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
+			return createIssue(Severity.ERROR, message, method);
 		});
+	}
+
+	private static DiscoveryIssue createIssue(Severity severity, String message, Method method) {
+		return DiscoveryIssue.builder(severity, message).source(MethodSource.from(method)).build();
 	}
 
 	@SafeVarargs
@@ -134,19 +150,19 @@ final class LifecycleMethodUtils {
 		};
 	}
 
-	private abstract static class DiscoveryIssueReportingPredicate<T> implements Predicate<T> {
+	private abstract static class DiscoveryIssueReportingPredicate<T> implements Predicate<T>, Consumer<T> {
 
 		static <T> DiscoveryIssueReportingPredicate<T> from(Predicate<T> predicate, DiscoveryIssueReporter reporter,
 				Function<T, DiscoveryIssue> issueBuilder) {
 			return new DiscoveryIssueReportingPredicate<T>(reporter) {
 				@Override
-				protected boolean checkCondition(T t) {
-					return predicate.test(t);
+				protected boolean checkCondition(T value) {
+					return predicate.test(value);
 				}
 
 				@Override
-				protected DiscoveryIssue createIssue(T t) {
-					return issueBuilder.apply(t);
+				protected DiscoveryIssue createIssue(T value) {
+					return issueBuilder.apply(value);
 				}
 			};
 		}
@@ -158,17 +174,22 @@ final class LifecycleMethodUtils {
 		}
 
 		@Override
-		public final boolean test(T t) {
-			if (checkCondition(t)) {
+		public final boolean test(T value) {
+			if (checkCondition(value)) {
 				return true;
 			}
-			reporter.reportIssue(createIssue(t));
+			reporter.reportIssue(createIssue(value));
 			return false;
 		}
 
-		protected abstract boolean checkCondition(T t);
+		@Override
+		public void accept(T value) {
+			test(value);
+		}
 
-		protected abstract DiscoveryIssue createIssue(T t);
+		protected abstract boolean checkCondition(T value);
+
+		protected abstract DiscoveryIssue createIssue(T value);
 	}
 
 }
