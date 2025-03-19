@@ -12,6 +12,7 @@ package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -29,7 +30,7 @@ import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
 /**
  * @since  5.13
  */
-public class JupiterEngineTests {
+public class JupiterTestEngineTests {
 
 	private final TestDescriptor rootTestDescriptor = mock(JupiterEngineDescriptor.class);
 
@@ -40,6 +41,8 @@ public class JupiterEngineTests {
 	private final ExecutionRequest executionRequest = mock();
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
+
+	private final JupiterTestEngine jupiter = new JupiterTestEngine();
 
 	@BeforeEach
 	void setUp() {
@@ -62,8 +65,33 @@ public class JupiterEngineTests {
 		when(executionRequest.getRequestLevelStore()).thenReturn(
 			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStoreWithNoParent());
 
-		assertThatThrownBy(() -> engine.createExecutionContext(executionRequest)).isInstanceOf(
-			JUnitException.class).hasMessageContaining("Request-level store must have a parent");
+		assertThatThrownBy(() -> engine //
+				.createExecutionContext(executionRequest)) //
+				.isInstanceOf(JUnitException.class) //
+				.hasMessageContaining("Request-level store must have a parent");
+	}
+
+	@Test
+	void id() {
+		assertEquals("junit-jupiter", jupiter.getId());
+	}
+
+	@Test
+	void groupId() {
+		assertEquals("org.junit.jupiter", jupiter.getGroupId().orElseThrow());
+	}
+
+	@Test
+	void artifactId() {
+		assertEquals("junit-jupiter-engine", jupiter.getArtifactId().orElseThrow());
+	}
+
+	@Test
+	void version() {
+		assertThat(jupiter.getVersion().orElseThrow()).isIn( //
+				System.getProperty("developmentVersion"), // with Test Distribution
+				"DEVELOPMENT" // without Test Distribution
+		);
 	}
 
 }
