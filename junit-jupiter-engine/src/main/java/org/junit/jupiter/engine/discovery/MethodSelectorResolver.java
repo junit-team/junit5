@@ -41,9 +41,9 @@ import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -52,6 +52,8 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.NestedMethodSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 /**
@@ -59,15 +61,16 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
  */
 class MethodSelectorResolver implements SelectorResolver {
 
-	private static final Logger logger = LoggerFactory.getLogger(MethodSelectorResolver.class);
 	private static final MethodFinder methodFinder = new MethodFinder();
 	private static final Predicate<Class<?>> testClassPredicate = new IsTestClassWithTests().or(
 		new IsNestedTestClass());
 
-	protected final JupiterConfiguration configuration;
+	private final JupiterConfiguration configuration;
+	private final DiscoveryIssueReporter issueReporter;
 
-	MethodSelectorResolver(JupiterConfiguration configuration) {
+	MethodSelectorResolver(JupiterConfiguration configuration, DiscoveryIssueReporter issueReporter) {
 		this.configuration = configuration;
+		this.issueReporter = issueReporter;
 	}
 
 	@Override
@@ -97,14 +100,14 @@ class MethodSelectorResolver implements SelectorResolver {
 				.collect(toSet());
 		// @formatter:on
 		if (matches.size() > 1) {
-			logger.warn(() -> {
-				Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
-				return String.format(
-					"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
-							+ "This is typically the result of annotating a method with multiple competing annotations "
-							+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
-					method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
-			});
+			Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
+			String message = String.format(
+				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
+						+ "This is typically the result of annotating a method with multiple competing annotations "
+						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
+				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
+			issueReporter.reportIssue(
+				DiscoveryIssue.builder(Severity.WARNING, message).source(MethodSource.from(method)));
 		}
 		return matches.isEmpty() ? unresolved() : matches(matches);
 	}

@@ -31,11 +31,12 @@ public class EngineDiscoveryRequestResolverTests {
 	@Test
 	void allowsSelectorResolversToReportDiscoveryIssues() {
 		var resolver = EngineDiscoveryRequestResolver.builder() //
-				.addSelectorResolver(new SelectorResolver() {
+				.addSelectorResolver(ctx -> new SelectorResolver() {
 					@Override
 					public Resolution resolve(ClassSelector selector, Context context) {
-						context.reportIssue(DiscoveryIssue.builder(NOTICE, "test") //
-								.source(ClassSource.from(selector.getClassName())));
+						ctx.getIssueReporter() //
+								.reportIssue(DiscoveryIssue.builder(NOTICE, "test") //
+										.source(ClassSource.from(selector.getClassName())));
 						return unresolved();
 					}
 				}) //

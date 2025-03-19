@@ -40,7 +40,7 @@ public class DiscoverySelectorResolver {
 	private static final EngineDiscoveryRequestResolver<JupiterEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<JupiterEngineDescriptor> builder() //
 			.addClassContainerSelectorResolver(new IsTestClassWithTests()) //
 			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx))) //
-			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx))) //
+			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx), ctx.getIssueReporter())) //
 			.addTestDescriptorVisitor(ctx -> TestDescriptor.Visitor.composite( //
 				new ClassOrderingVisitor(getConfiguration(ctx)), //
 				new MethodOrderingVisitor(getConfiguration(ctx)), //
