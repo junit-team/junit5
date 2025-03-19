@@ -35,20 +35,6 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 
 	private TestInstances testInstances;
 
-	/**
-	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
-	 *
-	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor, Lifecycle, JupiterConfiguration, ExtensionRegistry, LauncherStoreFacade, ThrowableCollector)
-	 */
-	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
-			ThrowableCollector throwableCollector) {
-
-		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, extensionRegistry,
-			launcherStoreFacade, throwableCollector);
-	}
-
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
 			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
