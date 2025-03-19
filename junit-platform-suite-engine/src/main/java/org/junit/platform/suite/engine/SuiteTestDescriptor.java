@@ -29,6 +29,7 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -57,17 +58,19 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	private final OutputDirectoryProvider outputDirectoryProvider;
 	private final Boolean failIfNoTests;
 	private final Class<?> suiteClass;
+	private final LifecycleMethods lifecycleMethods;
 
 	private LauncherDiscoveryResult launcherDiscoveryResult;
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueReporter issueReporter) {
 		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
 		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
+		this.lifecycleMethods = new LifecycleMethods(suiteClass, issueReporter);
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {
@@ -134,24 +137,21 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		parentEngineExecutionListener.executionStarted(this);
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 
-		List<Method> beforeSuiteMethods = LifecycleMethodUtils.findBeforeSuiteMethods(suiteClass, throwableCollector);
-		List<Method> afterSuiteMethods = LifecycleMethodUtils.findAfterSuiteMethods(suiteClass, throwableCollector);
-
-		executeBeforeSuiteMethods(beforeSuiteMethods, throwableCollector);
+		executeBeforeSuiteMethods(throwableCollector);
 
 		TestExecutionSummary summary = executeTests(parentEngineExecutionListener, throwableCollector);
 
-		executeAfterSuiteMethods(afterSuiteMethods, throwableCollector);
+		executeAfterSuiteMethods(throwableCollector);
 
 		TestExecutionResult testExecutionResult = computeTestExecutionResult(summary, throwableCollector);
 		parentEngineExecutionListener.executionFinished(this, testExecutionResult);
 	}
 
-	private void executeBeforeSuiteMethods(List<Method> beforeSuiteMethods, ThrowableCollector throwableCollector) {
+	private void executeBeforeSuiteMethods(ThrowableCollector throwableCollector) {
 		if (throwableCollector.isNotEmpty()) {
 			return;
 		}
-		for (Method beforeSuiteMethod : beforeSuiteMethods) {
+		for (Method beforeSuiteMethod : lifecycleMethods.beforeSuite) {
 			throwableCollector.execute(() -> ReflectionSupport.invokeMethod(beforeSuiteMethod, null));
 			if (throwableCollector.isNotEmpty()) {
 				return;
@@ -173,8 +173,8 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		return launcher.execute(discoveryResult, parentEngineExecutionListener);
 	}
 
-	private void executeAfterSuiteMethods(List<Method> afterSuiteMethods, ThrowableCollector throwableCollector) {
-		for (Method afterSuiteMethod : afterSuiteMethods) {
+	private void executeAfterSuiteMethods(ThrowableCollector throwableCollector) {
+		for (Method afterSuiteMethod : lifecycleMethods.afterSuite) {
 			throwableCollector.execute(() -> ReflectionSupport.invokeMethod(afterSuiteMethod, null));
 		}
 	}
@@ -196,6 +196,17 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// it does. This allows the suite to fail if no tests were discovered.
 		// Otherwise, the empty suite would be pruned.
 		return true;
+	}
+
+	private static class LifecycleMethods {
+
+		final List<Method> beforeSuite;
+		final List<Method> afterSuite;
+
+		LifecycleMethods(Class<?> suiteClass, DiscoveryIssueReporter issueReporter) {
+			beforeSuite = LifecycleMethodUtils.findBeforeSuiteMethods(suiteClass, issueReporter);
+			afterSuite = LifecycleMethodUtils.findAfterSuiteMethods(suiteClass, issueReporter);
+		}
 	}
 
 }

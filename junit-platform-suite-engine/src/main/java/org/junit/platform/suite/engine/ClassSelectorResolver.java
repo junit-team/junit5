@@ -26,6 +26,7 @@ import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 /**
@@ -41,13 +42,16 @@ final class ClassSelectorResolver implements SelectorResolver {
 	private final SuiteEngineDescriptor suiteEngineDescriptor;
 	private final ConfigurationParameters configurationParameters;
 	private final OutputDirectoryProvider outputDirectoryProvider;
+	private final DiscoveryIssueReporter issueReporter;
 
 	ClassSelectorResolver(Predicate<String> classNameFilter, SuiteEngineDescriptor suiteEngineDescriptor,
-			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
+			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider,
+			DiscoveryIssueReporter issueReporter) {
 		this.classNameFilter = classNameFilter;
 		this.suiteEngineDescriptor = suiteEngineDescriptor;
 		this.configurationParameters = configurationParameters;
 		this.outputDirectoryProvider = outputDirectoryProvider;
+		this.issueReporter = issueReporter;
 	}
 
 	@Override
@@ -106,7 +110,8 @@ final class ClassSelectorResolver implements SelectorResolver {
 			return Optional.empty();
 		}
 
-		return Optional.of(new SuiteTestDescriptor(id, suiteClass, configurationParameters, outputDirectoryProvider));
+		return Optional.of(
+			new SuiteTestDescriptor(id, suiteClass, configurationParameters, outputDirectoryProvider, issueReporter));
 	}
 
 	private static boolean containsCycle(UniqueId id) {

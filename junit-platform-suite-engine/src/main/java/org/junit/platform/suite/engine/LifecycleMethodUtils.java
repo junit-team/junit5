@@ -11,16 +11,20 @@
 package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.allOf;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
-import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.suite.api.AfterSuite;
 import org.junit.platform.suite.api.BeforeSuite;
 
@@ -35,56 +39,68 @@ final class LifecycleMethodUtils {
 		/* no-op */
 	}
 
-	static List<Method> findBeforeSuiteMethods(Class<?> testClass, ThrowableCollector throwableCollector) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, BeforeSuite.class, HierarchyTraversalMode.TOP_DOWN,
-			throwableCollector);
+	static List<Method> findBeforeSuiteMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckStaticAndNonPrivate(testClass, BeforeSuite.class, HierarchyTraversalMode.TOP_DOWN,
+			issueReporter);
 	}
 
-	static List<Method> findAfterSuiteMethods(Class<?> testClass, ThrowableCollector throwableCollector) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, AfterSuite.class, HierarchyTraversalMode.BOTTOM_UP,
-			throwableCollector);
+	static List<Method> findAfterSuiteMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckStaticAndNonPrivate(testClass, AfterSuite.class, HierarchyTraversalMode.BOTTOM_UP,
+			issueReporter);
 	}
 
-	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass,
+	private static List<Method> findMethodsAndCheckStaticAndNonPrivate(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
-			ThrowableCollector throwableCollector) {
+			DiscoveryIssueReporter issueReporter) {
 
-		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
-		throwableCollector.execute(() -> methods.forEach(method -> {
-			assertVoid(annotationType, method);
-			assertStatic(annotationType, method);
-			assertNonPrivate(annotationType, method);
-			assertNoParameters(annotationType, method);
-		}));
-		return methods;
+		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
+				.filter(allOf( //
+					returnsPrimitiveVoid(annotationType, issueReporter), //
+					isStatic(annotationType, issueReporter), //
+					isNotPrivate(annotationType, issueReporter), //
+					hasNoParameters(annotationType, issueReporter) //
+				)) //
+				.collect(toUnmodifiableList());
 	}
 
-	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ModifierSupport.isNotStatic(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must be static.", annotationType.getSimpleName(),
-				method.toGenericString()));
-		}
+	private static DiscoveryIssueReporter.Condition<Method> isStatic(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ModifierSupport::isStatic, method -> {
+			String message = String.format("@%s method '%s' must be static.", annotationType.getSimpleName(),
+				method.toGenericString());
+			return createError(message, method);
+		});
 	}
 
-	private static void assertNonPrivate(Class<? extends Annotation> annotationType, Method method) {
-		if (ModifierSupport.isPrivate(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must not be private.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+	private static DiscoveryIssueReporter.Condition<Method> isNotPrivate(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
+			String message = String.format("@%s method '%s' must not be private.", annotationType.getSimpleName(),
+				method.toGenericString());
+			return createError(message, method);
+		});
 	}
 
-	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
-		if (!returnsPrimitiveVoid(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+	private static DiscoveryIssueReporter.Condition<Method> returnsPrimitiveVoid(
+			Class<? extends Annotation> annotationType, DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid, method -> {
+			String message = String.format("@%s method '%s' must not return a value.", annotationType.getSimpleName(),
+				method.toGenericString());
+			return createError(message, method);
+		});
 	}
 
-	private static void assertNoParameters(Class<? extends Annotation> annotationType, Method method) {
-		if (method.getParameterCount() > 0) {
-			throw new JUnitException(String.format("@%s method '%s' must not accept parameters.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+	private static DiscoveryIssueReporter.Condition<Method> hasNoParameters(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(method -> method.getParameterCount() == 0, method -> {
+			String message = String.format("@%s method '%s' must not accept parameters.",
+				annotationType.getSimpleName(), method.toGenericString());
+			return createError(message, method);
+		});
+	}
+
+	private static DiscoveryIssue createError(String message, Method method) {
+		return DiscoveryIssue.builder(Severity.ERROR, message).source(MethodSource.from(method)).build();
 	}
 
 }

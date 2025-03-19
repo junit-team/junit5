@@ -13,6 +13,7 @@ package org.junit.platform.suite.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.suite.engine.SuiteEngineDescriptor.ENGINE_ID;
 import static org.junit.platform.suite.engine.testsuites.LifecycleMethodsSuites.FailingAfterSuite;
@@ -47,7 +48,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.suite.api.AfterSuite;
 import org.junit.platform.suite.api.BeforeSuite;
 import org.junit.platform.suite.engine.testcases.StatefulTestCase;
@@ -192,14 +193,12 @@ public class BeforeAndAfterSuiteTests {
 	@ParameterizedTest(name = "{0}")
 	@MethodSource
 	void invalidBeforeOrAfterSuiteMethod(Class<?> testSuiteClass, Predicate<String> failureMessagePredicate) {
-		// @formatter:off
-		executeSuite(testSuiteClass)
-				.allEvents()
-				.assertThatEvents()
-				.haveExactly(1, event(
-						container(testSuiteClass),
-						finishedWithFailure(instanceOf(JUnitException.class), message(failureMessagePredicate))));
-		// @formatter:on
+		var results = engineWithSelectedSuite(testSuiteClass).discover();
+
+		var issue = getOnlyElement(results.getDiscoveryIssues());
+		assertThat(issue.severity()).isEqualTo(Severity.ERROR);
+		assertThat(issue.message()).matches(failureMessagePredicate);
+		assertThat(issue.source()).containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
 	}
 
 	private static Stream<Arguments> invalidBeforeOrAfterSuiteMethod() {
@@ -219,11 +218,19 @@ public class BeforeAndAfterSuiteTests {
 	private static Arguments invalidBeforeOrAfterSuiteCase(Class<?> suiteClass, String failureMessageStart,
 			String failureMessageEnd) {
 		return arguments(named(suiteClass.getSimpleName(), suiteClass),
-			(Predicate<String>) s -> s.startsWith(failureMessageStart) && s.endsWith(failureMessageEnd));
+			expectedMessage(failureMessageStart, failureMessageEnd));
+	}
+
+	private static Predicate<String> expectedMessage(String failureMessageStart, String failureMessageEnd) {
+		return message -> message.startsWith(failureMessageStart) && message.endsWith(failureMessageEnd);
 	}
 
 	private static EngineExecutionResults executeSuite(Class<?> suiteClass) {
-		return EngineTestKit.engine(ENGINE_ID).selectors(selectClass(suiteClass)).execute();
+		return engineWithSelectedSuite(suiteClass).execute();
+	}
+
+	private static EngineTestKit.Builder engineWithSelectedSuite(Class<?> suiteClass) {
+		return EngineTestKit.engine(ENGINE_ID).selectors(selectClass(suiteClass));
 	}
 
 }
