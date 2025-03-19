@@ -10,8 +10,8 @@
 
 package org.junit.platform.engine.support.store;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndHashCode;
 
 import org.junit.jupiter.api.Test;
 
@@ -21,8 +21,9 @@ public class NamespaceTests {
 	void namespacesEqualForSamePartsSequence() {
 		Namespace ns1 = Namespace.create("part1", "part2");
 		Namespace ns2 = Namespace.create("part1", "part2");
+		Namespace ns3 = Namespace.create("part2", "part1");
 
-		assertEquals(ns1, ns2);
+		assertEqualsAndHashCode(ns1, ns2, ns3);
 	}
 
 	@Test

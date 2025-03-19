@@ -41,7 +41,8 @@ import org.junit.platform.launcher.TestPlan;
 class DefaultLauncher implements Launcher {
 
 	private final LauncherListenerRegistry listenerRegistry = new LauncherListenerRegistry();
-	private final EngineExecutionOrchestrator executionOrchestrator;
+	private final EngineExecutionOrchestrator executionOrchestrator = new EngineExecutionOrchestrator(
+		listenerRegistry.testExecutionListeners);
 	private final EngineDiscoveryOrchestrator discoveryOrchestrator;
 	private final NamespacedHierarchicalStore<Namespace> sessionLevelStore;
 
@@ -64,7 +65,6 @@ class DefaultLauncher implements Launcher {
 		this.discoveryOrchestrator = new EngineDiscoveryOrchestrator(testEngines,
 			unmodifiableCollection(postDiscoveryFilters), listenerRegistry.launcherDiscoveryListeners);
 		this.sessionLevelStore = sessionLevelStore;
-		this.executionOrchestrator = new EngineExecutionOrchestrator(listenerRegistry.testExecutionListeners);
 	}
 
 	@Override

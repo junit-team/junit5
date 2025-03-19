@@ -339,9 +339,32 @@ class LauncherFactoryTests {
 	}
 
 	@Test
-	void extensionCanReadValueFromSessionStore() {
+	void extensionCanReadValueFromSessionStoreAndReadByLauncherSessionListenerOnOpened() {
 		var config = LauncherConfig.builder() //
-				.addLauncherSessionListeners(new LauncherSessionListenerExample()) //
+				.addLauncherSessionListeners(new LauncherSessionListenerOpenedExample()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = LauncherDiscoveryRequestBuilder.request().selectors(
+				selectClass(JupiterTestCase.class)).build();
+
+			AtomicReference<Throwable> errorRef = new AtomicReference<>();
+			launcher.execute(request, new TestExecutionListener() {
+				@Override
+				public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+					testExecutionResult.getThrowable().ifPresent(errorRef::set);
+				}
+			});
+
+			assertThat(errorRef.get()).isNull();
+		}
+	}
+
+	@Test
+	void extensionCanReadValueFromSessionStoreAndReadByLauncherSessionListenerOnClose() {
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new LauncherSessionListenerClosedExample()) //
 				.build();
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
@@ -430,9 +453,16 @@ class LauncherFactoryTests {
 		}
 	}
 
-	static class LauncherSessionListenerExample implements LauncherSessionListener {
+	static class LauncherSessionListenerOpenedExample implements LauncherSessionListener {
 		@Override
 		public void launcherSessionOpened(LauncherSession session) {
+			session.getStore().put(Namespace.GLOBAL, "testKey", "testValue");
+		}
+	}
+
+	static class LauncherSessionListenerClosedExample implements LauncherSessionListener {
+		@Override
+		public void launcherSessionClosed(LauncherSession session) {
 			session.getStore().put(Namespace.GLOBAL, "testKey", "testValue");
 		}
 	}
@@ -440,7 +470,12 @@ class LauncherFactoryTests {
 	static class JupiterExtensionExample implements BeforeAllCallback {
 		@Override
 		public void beforeAll(ExtensionContext context) {
-			var value = context.getRoot().getStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
+			var value = context.getStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
+			if (!"testValue".equals(value)) {
+				throw new IllegalStateException("Expected 'testValue' but got: " + value);
+			}
+
+			value = context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
 			if (!"testValue".equals(value)) {
 				throw new IllegalStateException("Expected 'testValue' but got: " + value);
 			}

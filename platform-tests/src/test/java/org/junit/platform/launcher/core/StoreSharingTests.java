@@ -19,6 +19,8 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
  * @since 5.13
@@ -48,7 +50,15 @@ class StoreSharingTests {
 		when(request.getRequestLevelStore()).thenReturn(
 			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
-		engineWriter.execute(request);
-		engineReader.execute(request);
+		Launcher launcher = LauncherFactory.create( //
+			LauncherConfig.builder() //
+					.addTestEngines(engineWriter, engineReader) //
+					.build());
+
+		LauncherDiscoveryRequest discoveryRequest = LauncherDiscoveryRequestBuilder //
+				.request() //
+				.build();
+
+		launcher.execute(discoveryRequest);
 	}
 }

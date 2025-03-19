@@ -83,8 +83,8 @@ class DefaultLauncherSession implements LauncherSession {
 	public void close() {
 		if (launcher.delegate != ClosedLauncher.INSTANCE) {
 			launcher.delegate = ClosedLauncher.INSTANCE;
-			store.close();
 			listener.launcherSessionClosed(this);
+			store.close();
 			interceptor.close();
 		}
 	}

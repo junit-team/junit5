@@ -67,8 +67,8 @@ public class JupiterTestEngineTests {
 
 		assertThatThrownBy(() -> engine //
 				.createExecutionContext(executionRequest)) //
-				.isInstanceOf(JUnitException.class) //
-				.hasMessageContaining("Request-level store must have a parent");
+				.isInstanceOf(JUnitException.class)
+				.hasMessageContaining("Request-level store must have a parent"); //
 	}
 
 	@Test
@@ -89,8 +89,8 @@ public class JupiterTestEngineTests {
 	@Test
 	void version() {
 		assertThat(jupiter.getVersion().orElseThrow()).isIn( //
-				System.getProperty("developmentVersion"), // with Test Distribution
-				"DEVELOPMENT" // without Test Distribution
+			System.getProperty("developmentVersion"), // with Test Distribution
+			"DEVELOPMENT" // without Test Distribution
 		);
 	}
 

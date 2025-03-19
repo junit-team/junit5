@@ -49,6 +49,12 @@ public interface LauncherSession extends AutoCloseable {
 	@Override
 	void close();
 
+	/**
+	 * Get the {@link NamespacedHierarchicalStore} associated with this session.
+	 *
+	 * <p>Any call to the store returned by this method after the session has
+	 * been closed will throw an exception.
+	 */
 	NamespacedHierarchicalStore<Namespace> getStore();
 
 }

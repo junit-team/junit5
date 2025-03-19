@@ -80,8 +80,7 @@ public class ExtensionContextTests {
 	private final JupiterConfiguration configuration = mock();
 	private final ExtensionRegistry extensionRegistry = mock();
 	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
-			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStoreWithNoParent()
-	);
+		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
 	@BeforeEach
 	void setUp() {
