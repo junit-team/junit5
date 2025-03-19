@@ -15,7 +15,6 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
-import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Validatable;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -49,11 +48,7 @@ public class DiscoverySelectorResolver {
 						((Validatable) descriptor).validate(ctx.getIssueReporter());
 					}
 				})) //
-			.addTestDescriptorVisitor(ctx -> descriptor -> {
-				if (descriptor instanceof JupiterTestDescriptor) {
-					((JupiterTestDescriptor) descriptor).prunePriorToFiltering();
-				}
-			}).build();
+			.build();
 
 	private static JupiterConfiguration getConfiguration(InitializationContext<JupiterEngineDescriptor> context) {
 		return context.getEngineDescriptor().getConfiguration();

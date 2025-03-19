@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -105,17 +106,16 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 			this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
-	@Override
-	public void prunePriorToFiltering() {
-		// do nothing to allow PostDiscoveryFilters to be applied first
-	}
-
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public void prune() {
 		super.prune();
-		this.children.forEach(child -> child.accept(TestDescriptor::prune));
+		if (this.children.isEmpty()) {
+			return;
+		}
+		// Create copy to avoid ConcurrentModificationException
+		new LinkedHashSet<>(this.children).forEach(child -> child.accept(TestDescriptor::prune));
 		// Second iteration to avoid processing children that were pruned in the first iteration
 		this.children.forEach(child -> {
 			if (child instanceof ClassTemplateInvocationTestDescriptor) {
