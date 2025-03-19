@@ -11,7 +11,6 @@
 package org.junit.platform.engine.support.store;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
-import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,7 +20,15 @@ import java.util.List;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
 
-@API(status = EXPERIMENTAL, since = "5.13")
+/**
+ * A {@code Namespace} is used to provide a <em>scope</em> for data saved by
+ * extensions within a {@link NamespacedHierarchicalStore}.
+ *
+ * <p>Storing data in custom namespaces allows extensions to avoid accidentally
+ * mixing data between extensions or across different invocations within the
+ * lifecycle of a single extension.
+ */
+@API(status = EXPERIMENTAL, since = "1.13")
 public class Namespace {
 
 	/**
@@ -86,9 +93,7 @@ public class Namespace {
 	 * existing sequence of parts in this namespace.
 	 *
 	 * @return new namespace; never {@code null}
-	 * @since 5.13
 	 */
-	@API(status = STABLE, since = "5.13")
 	public Namespace append(Object... parts) {
 		Preconditions.notEmpty(parts, "parts array must not be null or empty");
 		Preconditions.containsNoNullElements(parts, "individual parts must not be null");
