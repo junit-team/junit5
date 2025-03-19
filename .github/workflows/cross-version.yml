@@ -38,7 +38,7 @@ jobs:
         uses: ./.github/actions/setup-test-jdk
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
         if: matrix.jdk.type == 'ea'
-        uses: oracle-actions/setup-java@2e744f723b003fdd759727d0ff654c8717024845 # v1.4.0
+        uses: oracle-actions/setup-java@8fb9d7717810ccde9f8d4bef1e6f43d180f506b5 # v1.4.1
         with:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
