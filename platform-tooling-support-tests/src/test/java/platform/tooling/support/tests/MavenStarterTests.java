@@ -35,6 +35,7 @@ import platform.tooling.support.ProcessStarters;
  * @since 1.3
  */
 @EnableSnapshotTests
+//@SnapshotTestOptions(alwaysPersistActualResult = true)
 class MavenStarterTests {
 
 	@ManagedResource
@@ -66,13 +67,13 @@ class MavenStarterTests {
 	@Test
 	void runOnlyOneMethodInClassTemplate(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 
-		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorClassTemplateTests#regularTest");
+		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorParameterizedClassTests#regularTest");
 
 		assertThat(result.stdOutLines()) //
 				.doesNotContain("CalculatorTests") //
 				.contains("[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0");
 
-		result = runMaven(outputFiles, "test", "-Dtest=CalculatorClassTemplateTests#parameterizedTest");
+		result = runMaven(outputFiles, "test", "-Dtest=CalculatorParameterizedClassTests#parameterizedTest");
 
 		assertThat(result.stdOutLines()) //
 				.doesNotContain("CalculatorTests") //

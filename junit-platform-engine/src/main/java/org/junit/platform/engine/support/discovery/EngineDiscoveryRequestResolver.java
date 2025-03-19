@@ -110,7 +110,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-		DiscoveryIssueReporter issueReporter = new DefaultDiscoveryIssueReporter(request.getDiscoveryListener(),
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.create(request.getDiscoveryListener(),
 			engineDescriptor.getUniqueId());
 		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor,
 			issueReporter);

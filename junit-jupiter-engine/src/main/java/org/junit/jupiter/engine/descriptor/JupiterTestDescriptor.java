@@ -215,10 +215,6 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		context.close();
 	}
 
-	public void prunePriorToFiltering() {
-		prune();
-	}
-
 	/**
 	 * {@return a deep copy (with copies of children) of this descriptor with the supplied unique ID}
 	 */

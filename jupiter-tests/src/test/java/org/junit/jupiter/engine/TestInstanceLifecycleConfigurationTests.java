@@ -73,7 +73,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 		Class<?> testClass = AssumedInstancePerClassTestCase.class;
 
 		// Should fail by default...
-		performAssertions(testClass, 2, 1, 0);
+		performAssertions(testClass, 1, 1, 0);
 
 		// Should pass with the system property set
 		System.setProperty(KEY, PER_CLASS.name());
@@ -85,7 +85,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 		Class<?> testClass = AssumedInstancePerClassTestCase.class;
 
 		// Should fail by default...
-		performAssertions(testClass, 2, 1, 0);
+		performAssertions(testClass, 1, 1, 0);
 
 		// Should pass with the config param
 		performAssertions(testClass, singletonMap(KEY, PER_CLASS.name()), 2, 0, 1, "beforeAll", "test", "afterAll");
@@ -97,7 +97,7 @@ class TestInstanceLifecycleConfigurationTests extends AbstractJupiterTestEngineT
 
 		// Should fail with system property
 		System.setProperty(KEY, PER_METHOD.name());
-		performAssertions(testClass, 2, 1, 0);
+		performAssertions(testClass, 1, 1, 0);
 
 		// Should pass with the config param
 		performAssertions(testClass, singletonMap(KEY, PER_CLASS.name()), 2, 0, 1, "beforeAll", "test", "afterAll");

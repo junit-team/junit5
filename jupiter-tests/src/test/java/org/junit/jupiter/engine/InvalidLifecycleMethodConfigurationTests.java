@@ -10,24 +10,23 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static java.util.function.Predicate.isEqual;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.commons.util.FunctionUtils.where;
+
+import java.lang.annotation.Annotation;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.testkit.engine.EngineExecutionResults;
-import org.junit.platform.testkit.engine.Events;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 
 /**
  * Integration tests that verify proper handling of invalid configuration for
  * lifecycle methods in conjunction with the {@link JupiterTestEngine}.
- *
- * <p>In general, configuration errors should not be thrown until the
- * execution phase, thereby giving all containers a chance to execute.
  *
  * @since 5.0
  */
@@ -35,57 +34,40 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticBeforeAllDeclaration() {
-		assertContainerFailed(TestCaseWithInvalidNonStaticBeforeAllMethod.class);
+		assertReportsError(TestCaseWithInvalidNonStaticBeforeAllMethod.class, BeforeAll.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidNonStaticAfterAllDeclaration() {
-		assertContainerFailed(TestCaseWithInvalidNonStaticAfterAllMethod.class);
+		assertReportsError(TestCaseWithInvalidNonStaticAfterAllMethod.class, AfterAll.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticBeforeEachDeclaration() {
-		assertContainerFailed(TestCaseWithInvalidStaticBeforeEachMethod.class);
+		assertReportsError(TestCaseWithInvalidStaticBeforeEachMethod.class, BeforeEach.class);
 	}
 
 	@Test
 	void executeValidTestCaseAlongsideTestCaseWithInvalidStaticAfterEachDeclaration() {
-		assertContainerFailed(TestCaseWithInvalidStaticAfterEachMethod.class);
+		assertReportsError(TestCaseWithInvalidStaticAfterEachMethod.class, AfterEach.class);
 	}
 
-	private void assertContainerFailed(Class<?> invalidTestClass) {
-		EngineExecutionResults executionResults = executeTests(selectClass(TestCase.class),
-			selectClass(invalidTestClass));
-		Events containers = executionResults.containerEvents();
-		Events tests = executionResults.testEvents();
+	private void assertReportsError(Class<?> invalidTestClass, Class<? extends Annotation> annotationType) {
+		var results = discoverTestsForClass(invalidTestClass);
 
-		// @formatter:off
-		assertAll(
-			() -> assertEquals(3, containers.started().count(), "# containers started"),
-			() -> assertEquals(1, tests.started().count(), "# tests started"),
-			() -> assertEquals(1, tests.succeeded().count(), "# tests succeeded"),
-			() -> assertEquals(0, tests.failed().count(), "# tests failed"),
-			() -> assertEquals(3, containers.finished().count(), "# containers finished"),
-			() -> assertEquals(1, containers.failed().count(), "# containers failed")
-		);
-		// @formatter:on
+		assertThat(results.getDiscoveryIssues()) //
+				.filteredOn(where(DiscoveryIssue::severity, isEqual(Severity.ERROR))) //
+				.extracting(DiscoveryIssue::message) //
+				.asString().contains("@%s method".formatted(annotationType.getSimpleName()));
 	}
 
 	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
-	static class TestCase {
-
-		@Test
-		void test() {
-		}
-	}
-
-	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCaseWithInvalidNonStaticBeforeAllMethod {
 
 		// must be static
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@SuppressWarnings("unused")
 		@BeforeAll
 		void beforeAll() {
 		}
@@ -99,7 +81,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	static class TestCaseWithInvalidNonStaticAfterAllMethod {
 
 		// must be static
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@SuppressWarnings("unused")
 		@AfterAll
 		void afterAll() {
 		}
@@ -113,7 +95,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	static class TestCaseWithInvalidStaticBeforeEachMethod {
 
 		// must NOT be static
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@SuppressWarnings("unused")
 		@BeforeEach
 		static void beforeEach() {
 		}
@@ -127,7 +109,7 @@ class InvalidLifecycleMethodConfigurationTests extends AbstractJupiterTestEngine
 	static class TestCaseWithInvalidStaticAfterEachMethod {
 
 		// must NOT be static
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@SuppressWarnings("unused")
 		@AfterEach
 		static void afterEach() {
 		}

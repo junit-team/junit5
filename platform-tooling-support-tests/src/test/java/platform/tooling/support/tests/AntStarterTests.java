@@ -33,6 +33,7 @@ import platform.tooling.support.ProcessStarters;
  * @since 1.3
  */
 @EnableSnapshotTests
+//@SnapshotTestOptions(alwaysPersistActualResult = true)
 class AntStarterTests {
 
 	@Test

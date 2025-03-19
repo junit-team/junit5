@@ -15,7 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
-import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
+import org.junit.jupiter.engine.descriptor.Validatable;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -39,16 +39,15 @@ public class DiscoverySelectorResolver {
 	private static final EngineDiscoveryRequestResolver<JupiterEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<JupiterEngineDescriptor> builder() //
 			.addClassContainerSelectorResolver(new IsTestClassWithTests()) //
 			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx))) //
-			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx))) //
+			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx), ctx.getIssueReporter())) //
 			.addTestDescriptorVisitor(ctx -> TestDescriptor.Visitor.composite( //
 				new ClassOrderingVisitor(getConfiguration(ctx)), //
 				new MethodOrderingVisitor(getConfiguration(ctx)), //
 				descriptor -> {
-					if (descriptor instanceof JupiterTestDescriptor) {
-						((JupiterTestDescriptor) descriptor).prunePriorToFiltering();
+					if (descriptor instanceof Validatable) {
+						((Validatable) descriptor).validate(ctx.getIssueReporter());
 					}
-				} //
-			)) //
+				})) //
 			.build();
 
 	private static JupiterConfiguration getConfiguration(InitializationContext<JupiterEngineDescriptor> context) {

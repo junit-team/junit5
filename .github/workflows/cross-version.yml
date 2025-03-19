@@ -22,13 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         jdk:
-        - version: 23
+        - version: 24
           type: ga
-        - version: 24
-          type: ea
-        - version: 24
-          type: ea
-          release: leyden
+          distribution: oracle
         - version: 25
           type: ea
     name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }})"

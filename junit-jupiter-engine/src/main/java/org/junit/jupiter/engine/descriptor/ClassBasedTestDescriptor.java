@@ -71,10 +71,12 @@ import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 
 /**
@@ -84,21 +86,21 @@ import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
  */
 @API(status = INTERNAL, since = "5.5")
 public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
-		implements ResourceLockAware, TestClassAware {
+		implements ResourceLockAware, TestClassAware, Validatable {
 
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
 	protected final ClassInfo classInfo;
 
+	private LifecycleMethods lifecycleMethods;
 	private TestInstanceFactory testInstanceFactory;
-	private List<Method> beforeAllMethods;
-	private List<Method> afterAllMethods;
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
 			JupiterConfiguration configuration) {
 		super(uniqueId, testClass, displayNameSupplier, ClassSource.from(testClass), configuration);
 
 		this.classInfo = new ClassInfo(testClass, configuration);
+		this.lifecycleMethods = new LifecycleMethods(this.classInfo);
 	}
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
@@ -106,6 +108,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		super(uniqueId, displayName, ClassSource.from(testClass), configuration);
 
 		this.classInfo = new ClassInfo(testClass, configuration);
+		this.lifecycleMethods = new LifecycleMethods(this.classInfo);
 	}
 
 	// --- TestClassAware ------------------------------------------------------
@@ -125,6 +128,15 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public final String getLegacyReportingName() {
 		return getTestClass().getName();
+	}
+
+	// --- Validatable ---------------------------------------------------------
+
+	@Override
+	public void validate(DiscoveryIssueReporter reporter) {
+		List<DiscoveryIssue> discoveryIssues = this.lifecycleMethods.discoveryIssues;
+		discoveryIssues.forEach(reporter::reportIssue);
+		discoveryIssues.clear();
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -166,10 +178,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			registerExtensionsFromConstructorParameters(registry, getTestClass());
 		}
 
-		this.beforeAllMethods = findBeforeAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD);
-		this.afterAllMethods = findAfterAllMethods(getTestClass(), this.classInfo.lifecycle == Lifecycle.PER_METHOD);
-
-		this.beforeAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		this.lifecycleMethods.beforeAll.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also
 		// invoke registerExtensionsFromExecutableParameters(), we invoke those methods before
 		// invoking registerExtensionsFromExecutableParameters() for @AfterAll methods,
@@ -177,7 +186,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		// on parameters in lifecycle methods.
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
-		this.afterAllMethods.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		this.lifecycleMethods.afterAll.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
 		registerExtensionsFromInstanceFields(registry, getTestClass());
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
@@ -250,6 +259,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		if (previousThrowable != throwableCollector.getThrowable()) {
 			throwableCollector.assertEmpty();
 		}
+	}
+
+	@Override
+	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
+		super.cleanUp(context);
+		this.lifecycleMethods = null;
+		this.testInstanceFactory = null;
 	}
 
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
@@ -404,7 +420,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		for (Method method : this.beforeAllMethods) {
+		for (Method method : this.lifecycleMethods.beforeAll) {
 			throwableCollector.execute(() -> {
 				try {
 					executableInvoker.invoke(method, testInstance, extensionContext, registry,
@@ -433,7 +449,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		this.afterAllMethods.forEach(method -> throwableCollector.execute(() -> {
+		this.lifecycleMethods.afterAll.forEach(method -> throwableCollector.execute(() -> {
 			try {
 				executableInvoker.invoke(method, testInstance, extensionContext, registry,
 					ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod));
@@ -466,13 +482,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
-		List<Method> beforeEachMethods = findBeforeEachMethods(getTestClass());
-		registerMethodsAsExtensions(beforeEachMethods, registrar, this::synthesizeBeforeEachMethodAdapter);
+		registerMethodsAsExtensions(this.lifecycleMethods.beforeEach, registrar,
+			this::synthesizeBeforeEachMethodAdapter);
 	}
 
 	private void registerAfterEachMethodAdapters(ExtensionRegistrar registrar) {
 		// Make a local copy since findAfterEachMethods() returns an immutable list.
-		List<Method> afterEachMethods = new ArrayList<>(findAfterEachMethods(getTestClass()));
+		List<Method> afterEachMethods = new ArrayList<>(this.lifecycleMethods.afterEach);
 
 		// Since the bottom-up ordering of afterEachMethods will later be reversed when the
 		// synthesized AfterEachMethodAdapters are executed within TestMethodTestDescriptor,
@@ -513,6 +529,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	protected static class ClassInfo {
+
 		final Class<?> testClass;
 		final Set<TestTag> tags;
 		final Lifecycle lifecycle;
@@ -525,6 +542,25 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 			this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 			this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
+		}
+	}
+
+	private static class LifecycleMethods {
+
+		private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+
+		private final List<Method> beforeAll;
+		private final List<Method> afterAll;
+		private final List<Method> beforeEach;
+		private final List<Method> afterEach;
+
+		LifecycleMethods(ClassInfo classInfo) {
+			Class<?> testClass = classInfo.testClass;
+			boolean requireStatic = classInfo.lifecycle == Lifecycle.PER_METHOD;
+			this.beforeAll = findBeforeAllMethods(testClass, requireStatic, discoveryIssues::add);
+			this.afterAll = findAfterAllMethods(testClass, requireStatic, discoveryIssues::add);
+			this.beforeEach = findBeforeEachMethods(testClass, discoveryIssues::add);
+			this.afterEach = findAfterEachMethods(testClass, discoveryIssues::add);
 		}
 	}
 
