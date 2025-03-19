@@ -25,9 +25,6 @@ jobs:
         - version: 24
           type: ga
           distribution: oracle
-        - version: 24
-          type: ea
-          release: leyden
         - version: 25
           type: ea
     name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }})"
