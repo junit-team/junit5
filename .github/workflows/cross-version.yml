@@ -22,10 +22,9 @@ jobs:
       fail-fast: false
       matrix:
         jdk:
-        - version: 23
-          type: ga
         - version: 24
-          type: ea
+          type: ga
+          distribution: oracle
         - version: 24
           type: ea
           release: leyden
