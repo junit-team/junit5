@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
+import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.validateClassTemplateInvocationLifecycleMethods;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +41,7 @@ import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
 import org.junit.platform.engine.support.hierarchical.Node;
 
@@ -72,6 +75,15 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	@Override
 	public Set<TestTag> getTags() {
 		return this.delegate.getTags();
+	}
+
+	// --- Validatable ---------------------------------------------------------
+
+	@Override
+	public void validate(DiscoveryIssueReporter reporter) {
+		this.delegate.validate(reporter);
+		boolean requireStatic = this.classInfo.lifecycle == PER_METHOD;
+		validateClassTemplateInvocationLifecycleMethods(getTestClass(), requireStatic, reporter);
 	}
 
 	// --- Filterable ----------------------------------------------------------

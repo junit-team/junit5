@@ -27,6 +27,7 @@ import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -93,6 +94,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -607,23 +609,49 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var className = ParameterizedClassIntegrationTests.class.getName() + "$" + simpleClassName;
 
-			var results = executeTestsForClass(Class.forName(className));
+			var results = discoverTestsForClass(Class.forName(className));
 
-			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, finishedWithFailure(message(
-						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
-								.formatted(annotationName, className, lifecycleMethodName))));
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+						annotationName, className, lifecycleMethodName);
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
 		}
 
 		@Test
 		void lifecycleMethodsMustNotBePrivate() {
 
-			var results = executeTestsForClass(PrivateLifecycleMethodTestCase.class);
+			var results = discoverTestsForClass(PrivateLifecycleMethodTestCase.class);
 
-			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, finishedWithFailure(message(
-						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private." //
-								.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private.",
+						PrivateLifecycleMethodTestCase.class.getName());
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
+		}
+
+		@Test
+		void lifecycleMethodsMustNotDeclareReturnType() {
+
+			var results = discoverTestsForClass(NonVoidLifecycleMethodTestCase.class);
+
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'static int %s.beforeParameterizedClassInvocation()' must not return a value.",
+						NonVoidLifecycleMethodTestCase.class.getName());
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
 		}
 
 		@Test
@@ -1759,6 +1787,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		@BeforeParameterizedClassInvocation
 		private static void beforeParameterizedClassInvocation() {
 			fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record NonVoidLifecycleMethodTestCase() {
+
+		@BeforeParameterizedClassInvocation
+		static int beforeParameterizedClassInvocation() {
+			return fail("should not be called");
 		}
 
 		@Test
