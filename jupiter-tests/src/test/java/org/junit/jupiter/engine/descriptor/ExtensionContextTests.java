@@ -65,7 +65,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
-import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
+import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
 import org.mockito.ArgumentCaptor;
 
 /**
@@ -80,7 +80,8 @@ public class ExtensionContextTests {
 	private final JupiterConfiguration configuration = mock();
 	private final ExtensionRegistry extensionRegistry = mock();
 	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
-		new NamespacedHierarchicalStore<>(new NamespacedHierarchicalStore<>(null)));
+			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStoreWithNoParent()
+	);
 
 	@BeforeEach
 	void setUp() {
