@@ -10,18 +10,15 @@
 
 package org.junit.jupiter.engine;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
-
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.fixtures.TrackLogRecords;
-import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Integration tests that verify the correct behavior for methods annotated
@@ -32,23 +29,27 @@ import org.junit.platform.commons.logging.LogRecordListener;
 class MultipleTestableAnnotationsTests extends AbstractJupiterTestEngineTests {
 
 	@Test
-	void testAndRepeatedTest(@TrackLogRecords LogRecordListener listener) {
-		discoverTests(request().selectors(selectClass(TestCase.class)).build());
+	void testAndRepeatedTest() throws Exception {
+		var results = discoverTestsForClass(TestCase.class);
 
-		// @formatter:off
-		assertTrue(listener.stream(Level.WARNING)
-			.map(LogRecord::getMessage)
-			.anyMatch(m -> m.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+")));
-		// @formatter:on
+		var discoveryIssue = getOnlyElement(results.getDiscoveryIssues());
+
+		assertThat(discoveryIssue.severity()) //
+				.isEqualTo(Severity.WARNING);
+		assertThat(discoveryIssue.message()) //
+				.matches("Possible configuration error: method .+ resulted in multiple TestDescriptors .+");
+		assertThat(discoveryIssue.source()) //
+				.contains(
+					MethodSource.from(TestCase.class.getDeclaredMethod("testAndRepeatedTest", RepetitionInfo.class)));
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class TestCase {
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		@RepeatedTest(1)
 		void testAndRepeatedTest(RepetitionInfo repetitionInfo) {
+			assertNotNull(repetitionInfo);
 		}
 
 	}

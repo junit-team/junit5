@@ -30,7 +30,6 @@ import java.util.function.Supplier;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
-import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineDiscoveryRequest;
@@ -260,11 +259,6 @@ class EngineDiscoveryRequestResolution {
 				parent.addChild(child.get());
 			}
 			return child;
-		}
-
-		@Override
-		public void reportIssue(DiscoveryIssue issue) {
-			issueReporter.reportIssue(issue);
 		}
 
 	}
