@@ -81,7 +81,7 @@ engine ....> opentest4j
 engine ..> commons
 
 reporting ..> launcher
-reporting ..> otr_tooling_spi
+reporting ......> otr_tooling_spi
 
 runner ..> suite_commons
 runner ...> junit4
