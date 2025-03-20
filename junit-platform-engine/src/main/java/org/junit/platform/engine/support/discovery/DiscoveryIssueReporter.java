@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -34,17 +35,25 @@ import org.junit.platform.engine.UniqueId;
 public interface DiscoveryIssueReporter {
 
 	/**
-	 * Create a new {@code DiscoveryIssueReporter} that reports issues to the
+	 * Create a new {@code DiscoveryIssueReporter} that forwards issues to the
 	 * supplied {@link EngineDiscoveryListener} for the specified engine.
 	 *
-	 * @param engineDiscoveryListener the listener to report issues to; never
+	 * @param engineDiscoveryListener the listener to forward issues to; never
 	 * {@code null}
 	 * @param engineId the unique identifier of the engine; never {@code null}
 	 */
-	static DiscoveryIssueReporter create(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
+	static DiscoveryIssueReporter forwarding(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
 		Preconditions.notNull(engineDiscoveryListener, "engineDiscoveryListener must not be null");
 		Preconditions.notNull(engineId, "engineId must not be null");
 		return issue -> engineDiscoveryListener.issueEncountered(engineId, issue);
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that discards all reported
+	 * issues.
+	 */
+	static DiscoveryIssueReporter discarding() {
+		return DiscardingDiscoveryIssueReporter.INSTANCE;
 	}
 
 	/**
@@ -52,7 +61,17 @@ public interface DiscoveryIssueReporter {
 	 * resulting {@link DiscoveryIssue}.
 	 */
 	default void reportIssue(DiscoveryIssue.Builder builder) {
+		Preconditions.notNull(builder, "builder must not be null");
 		reportIssue(builder.build());
+	}
+
+	/**
+	 * Build the supplied {@link DiscoveryIssue.Builder Builder} and report the
+	 * resulting {@link DiscoveryIssue}.
+	 */
+	default void reportIssue(Supplier<DiscoveryIssue> issueCreator) {
+		Preconditions.notNull(issueCreator, "issueCreator must not be null");
+		reportIssue(issueCreator.get());
 	}
 
 	/**
@@ -133,4 +152,5 @@ public interface DiscoveryIssueReporter {
 			test(value);
 		}
 	}
+
 }
