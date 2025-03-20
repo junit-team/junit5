@@ -13,7 +13,6 @@ package org.junit.platform.suite.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -50,7 +49,7 @@ class SuiteTestDescriptorTests {
 
 	final ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
 	final OutputDirectoryProvider outputDirectoryProvider = OutputDirectoryProviders.dummyOutputDirectoryProvider();
-	final DiscoveryIssueReporter discoveryIssueReporter = DiscoveryIssueReporter.forwarding(mock(), engineId);
+	final DiscoveryIssueReporter discoveryIssueReporter = DiscoveryIssueReporter.discarding();
 	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters,
 		outputDirectoryProvider, discoveryIssueReporter);
 

@@ -102,14 +102,17 @@ class MethodSelectorResolver implements SelectorResolver {
 				.collect(toSet());
 		// @formatter:on
 		if (matches.size() > 1) {
-			Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
-			String message = String.format(
-				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
-						+ "This is typically the result of annotating a method with multiple competing annotations "
-						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
-				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
-			issueReporter.reportIssue(
-				DiscoveryIssue.builder(Severity.WARNING, message).source(MethodSource.from(method)));
+			issueReporter.reportIssue(() -> {
+				Stream<TestDescriptor> testDescriptors = matches.stream().map(Match::getTestDescriptor);
+				String message = String.format(
+					"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
+							+ "This is typically the result of annotating a method with multiple competing annotations "
+							+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
+					method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
+				return DiscoveryIssue.builder(Severity.WARNING, message) //
+						.source(MethodSource.from(method)) //
+						.build();
+			});
 		}
 		return matches.isEmpty() ? unresolved() : matches(matches);
 	}

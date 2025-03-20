@@ -74,13 +74,13 @@ final class LifecycleMethodUtils {
 
 		findAllClassTemplateInvocationLifecycleMethods(testClass) //
 				.forEach(method -> findClassTemplateInvocationLifecycleMethodAnnotation(method) //
-						.ifPresent(annotation -> {
+						.ifPresent(annotation -> issueReporter.reportIssue(() -> {
 							String message = String.format(
 								"@%s method '%s' must not be declared in test class '%s' because it is not annotated with @%s.",
 								annotation.lifecycleMethodAnnotation().getSimpleName(), method.toGenericString(),
 								testClass.getName(), annotation.classTemplateAnnotation().getSimpleName());
-							issueReporter.reportIssue(createIssue(Severity.ERROR, message, method));
-						}));
+							return createIssue(Severity.ERROR, message, method);
+						})));
 	}
 
 	static void validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(Class<?> testClass,
