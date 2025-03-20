@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -48,6 +49,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -95,6 +97,7 @@ import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -613,7 +616,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var issue = getOnlyElement(results.getDiscoveryIssues());
 			assertThat(issue.severity()) //
-					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+					.isEqualTo(Severity.ERROR);
 			assertThat(issue.message()) //
 					.isEqualTo(
 						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
@@ -629,7 +632,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var issue = getOnlyElement(results.getDiscoveryIssues());
 			assertThat(issue.severity()) //
-					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+					.isEqualTo(Severity.ERROR);
 			assertThat(issue.message()) //
 					.isEqualTo(
 						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private.",
@@ -645,7 +648,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var issue = getOnlyElement(results.getDiscoveryIssues());
 			assertThat(issue.severity()) //
-					.isEqualTo(DiscoveryIssue.Severity.ERROR);
+					.isEqualTo(Severity.ERROR);
 			assertThat(issue.message()) //
 					.isEqualTo(
 						"@BeforeParameterizedClassInvocation method 'static int %s.beforeParameterizedClassInvocation()' must not return a value.",
@@ -754,6 +757,35 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(
 						message(it -> it.contains("No ParameterResolver registered for parameter [int value]"))));
+		}
+
+		@Test
+		void lifecycleMethodsMustNotBeDeclaredInRegularTestClasses() {
+			var testClassName = RegularClassWithLifecycleMethodsTestCase.class.getName();
+
+			var results = discoverTestsForClass(RegularClassWithLifecycleMethodsTestCase.class);
+
+			assertThat(results.getDiscoveryIssues()).hasSize(2);
+
+			var issues = results.getDiscoveryIssues().stream() //
+					.sorted(comparing(DiscoveryIssue::message)) //
+					.toList();
+
+			assertThat(issues) //
+					.extracting(DiscoveryIssue::severity) //
+					.containsOnly(Severity.ERROR);
+			assertThat(issues) //
+					.extracting(DiscoveryIssue::source) //
+					.extracting(Optional::orElseThrow) //
+					.allMatch(org.junit.platform.engine.support.descriptor.MethodSource.class::isInstance);
+			assertThat(issues.getFirst().message()) //
+					.isEqualTo(
+						"@AfterParameterizedClassInvocation method 'static void %s.after()' must not be declared in test class '%s' because it is not annotated with @ParameterizedClass.",
+						testClassName, testClassName);
+			assertThat(issues.getLast().message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'static void %s.before()' must not be declared in test class '%s' because it is not annotated with @ParameterizedClass.",
+						testClassName, testClassName);
 		}
 	}
 
@@ -2172,6 +2204,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	static class ConcreteInheritanceTestCase extends BaseInheritanceTestCase {
+	}
+
+	static class RegularClassWithLifecycleMethodsTestCase {
+
+		@BeforeParameterizedClassInvocation
+		static void before() {
+		}
+
+		@AfterParameterizedClassInvocation
+		static void after() {
+		}
+
+		@Test
+		void test() {
+		}
 	}
 
 }

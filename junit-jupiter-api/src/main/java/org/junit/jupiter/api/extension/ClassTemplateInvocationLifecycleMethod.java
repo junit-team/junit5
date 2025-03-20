@@ -32,8 +32,14 @@ import org.apiguardian.api.API;
 public @interface ClassTemplateInvocationLifecycleMethod {
 
 	/**
-	 * The actual annotation class for reporting of discovery issues.
+	 * The corresponding {@link org.junit.jupiter.api.ClassTemplate}-derived
+	 * annotation class.
 	 */
-	Class<? extends Annotation> value();
+	Class<? extends Annotation> classTemplateAnnotation();
+
+	/**
+	 * The actual lifecycle method annotation class.
+	 */
+	Class<? extends Annotation> lifecycleMethodAnnotation();
 
 }

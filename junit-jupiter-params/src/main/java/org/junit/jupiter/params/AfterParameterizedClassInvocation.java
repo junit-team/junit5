@@ -158,7 +158,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
-@ClassTemplateInvocationLifecycleMethod(AfterParameterizedClassInvocation.class)
+@ClassTemplateInvocationLifecycleMethod(classTemplateAnnotation = ParameterizedClass.class, lifecycleMethodAnnotation = AfterParameterizedClassInvocation.class)
 public @interface AfterParameterizedClassInvocation {
 
 	/**

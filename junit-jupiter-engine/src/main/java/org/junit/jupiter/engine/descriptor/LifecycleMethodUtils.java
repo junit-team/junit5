@@ -11,12 +11,14 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.allOf;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -26,7 +28,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod;
-import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -69,17 +70,24 @@ final class LifecycleMethodUtils {
 			issueReporter);
 	}
 
-	static void validateClassTemplateInvocationLifecycleMethods(Class<?> testClass, boolean requireStatic,
+	static void validateNoClassTemplateInvocationLifecycleMethodsAreDeclared(Class<?> testClass,
 			DiscoveryIssueReporter issueReporter) {
 
-		Stream<Method> allMethods = Stream.concat( //
-			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
-				HierarchyTraversalMode.TOP_DOWN).stream(), //
-			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
-				HierarchyTraversalMode.BOTTOM_UP).stream() //
-		);
-		allMethods //
-				.distinct() //
+		findAllClassTemplateInvocationLifecycleMethods(testClass) //
+				.forEach(method -> findClassTemplateInvocationLifecycleMethodAnnotation(method) //
+						.ifPresent(annotation -> {
+							String message = String.format(
+								"@%s method '%s' must not be declared in test class '%s' because it is not annotated with @%s.",
+								annotation.lifecycleMethodAnnotation().getSimpleName(), method.toGenericString(),
+								testClass.getName(), annotation.classTemplateAnnotation().getSimpleName());
+							issueReporter.reportIssue(createIssue(Severity.ERROR, message, method));
+						}));
+	}
+
+	static void validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(Class<?> testClass,
+			boolean requireStatic, DiscoveryIssueReporter issueReporter) {
+
+		findAllClassTemplateInvocationLifecycleMethods(testClass) //
 				.forEach(allOf( //
 					isNotPrivateError(issueReporter), //
 					returnsPrimitiveVoid(issueReporter,
@@ -89,6 +97,16 @@ final class LifecycleMethodUtils {
 								LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)
 							: __ -> true //
 				));
+	}
+
+	private static Stream<Method> findAllClassTemplateInvocationLifecycleMethods(Class<?> testClass) {
+		Stream<Method> allMethods = Stream.concat( //
+			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
+				HierarchyTraversalMode.TOP_DOWN).stream(), //
+			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
+				HierarchyTraversalMode.BOTTOM_UP).stream() //
+		);
+		return allMethods.distinct();
 	}
 
 	private static List<Method> findMethodsAndCheckStatic(Class<?> testClass, boolean requireStatic,
@@ -168,9 +186,15 @@ final class LifecycleMethodUtils {
 	}
 
 	private static String classTemplateInvocationLifecycleMethodAnnotationName(Method method) {
-		return AnnotationSupport.findAnnotation(method, ClassTemplateInvocationLifecycleMethod.class) //
-				.map(ClassTemplateInvocationLifecycleMethod::value).map(Class::getSimpleName) //
+		return findClassTemplateInvocationLifecycleMethodAnnotation(method) //
+				.map(ClassTemplateInvocationLifecycleMethod::lifecycleMethodAnnotation) //
+				.map(Class::getSimpleName) //
 				.orElseGet(ClassTemplateInvocationLifecycleMethod.class::getSimpleName);
+	}
+
+	private static Optional<ClassTemplateInvocationLifecycleMethod> findClassTemplateInvocationLifecycleMethodAnnotation(
+			Method method) {
+		return findAnnotation(method, ClassTemplateInvocationLifecycleMethod.class);
 	}
 
 	private static DiscoveryIssue createIssue(Severity severity, String message, Method method) {

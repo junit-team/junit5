@@ -14,7 +14,7 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
-import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.validateClassTemplateInvocationLifecycleMethods;
+import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -80,10 +80,14 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	// --- Validatable ---------------------------------------------------------
 
 	@Override
-	public void validate(DiscoveryIssueReporter reporter) {
-		this.delegate.validate(reporter);
+	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {
+		this.delegate.validateCoreLifecycleMethods(reporter);
+	}
+
+	@Override
+	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
 		boolean requireStatic = this.classInfo.lifecycle == PER_METHOD;
-		validateClassTemplateInvocationLifecycleMethods(getTestClass(), requireStatic, reporter);
+		validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(getTestClass(), requireStatic, reporter);
 	}
 
 	// --- Filterable ----------------------------------------------------------
