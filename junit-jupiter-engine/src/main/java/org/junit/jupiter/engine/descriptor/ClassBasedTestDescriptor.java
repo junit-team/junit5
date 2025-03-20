@@ -133,10 +133,19 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	// --- Validatable ---------------------------------------------------------
 
 	@Override
-	public void validate(DiscoveryIssueReporter reporter) {
+	public final void validate(DiscoveryIssueReporter reporter) {
+		validateCoreLifecycleMethods(reporter);
+		validateClassTemplateInvocationLifecycleMethods(reporter);
+	}
+
+	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {
 		List<DiscoveryIssue> discoveryIssues = this.lifecycleMethods.discoveryIssues;
 		discoveryIssues.forEach(reporter::reportIssue);
 		discoveryIssues.clear();
+	}
+
+	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
+		LifecycleMethodUtils.validateNoClassTemplateInvocationLifecycleMethodsAreDeclared(getTestClass(), reporter);
 	}
 
 	// --- Node ----------------------------------------------------------------
