@@ -34,6 +34,11 @@ repository on GitHub.
 * Introduce test _discovery_ support in `EngineTestKit` to ease testing for discovery
   issues produced by a `TestEngine`. Please refer to the
   <<../user-guide/index.adoc#testkit-engine, User Guide>> for details.
+* This milestone contains preliminary APIs for reporting issues encountered by test
+  engines during test discovery. However, these are still under active development and not
+  yet ready for general use. If you're a maintainer of a test engine, please wait for the
+  next milestone before adopting these new APIs. If you're interested, you can follow
+  along our progress in link:{junit5-repo}/issues/242[#242].
 
 
 [[release-notes-5.13.0-M1-junit-jupiter]]
