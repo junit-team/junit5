@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +28,7 @@ import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.INDEX_PLACEHOLDER;
 import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -47,6 +49,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -93,6 +96,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -607,23 +612,49 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 			var className = ParameterizedClassIntegrationTests.class.getName() + "$" + simpleClassName;
 
-			var results = executeTestsForClass(Class.forName(className));
+			var results = discoverTestsForClass(Class.forName(className));
 
-			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, finishedWithFailure(message(
-						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS)." //
-								.formatted(annotationName, className, lifecycleMethodName))));
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"%s method 'void %s.%s()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+						annotationName, className, lifecycleMethodName);
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
 		}
 
 		@Test
 		void lifecycleMethodsMustNotBePrivate() {
 
-			var results = executeTestsForClass(PrivateLifecycleMethodTestCase.class);
+			var results = discoverTestsForClass(PrivateLifecycleMethodTestCase.class);
 
-			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, finishedWithFailure(message(
-						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private." //
-								.formatted(PrivateLifecycleMethodTestCase.class.getName()))));
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'private static void %s.beforeParameterizedClassInvocation()' must not be private.",
+						PrivateLifecycleMethodTestCase.class.getName());
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
+		}
+
+		@Test
+		void lifecycleMethodsMustNotDeclareReturnType() {
+
+			var results = discoverTestsForClass(NonVoidLifecycleMethodTestCase.class);
+
+			var issue = getOnlyElement(results.getDiscoveryIssues());
+			assertThat(issue.severity()) //
+					.isEqualTo(Severity.ERROR);
+			assertThat(issue.message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'static int %s.beforeParameterizedClassInvocation()' must not return a value.",
+						NonVoidLifecycleMethodTestCase.class.getName());
+			assertThat(issue.source()) //
+					.containsInstanceOf(org.junit.platform.engine.support.descriptor.MethodSource.class);
 		}
 
 		@Test
@@ -726,6 +757,35 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			results.containerEvents().assertThatEvents() //
 					.haveExactly(1, finishedWithFailure(
 						message(it -> it.contains("No ParameterResolver registered for parameter [int value]"))));
+		}
+
+		@Test
+		void lifecycleMethodsMustNotBeDeclaredInRegularTestClasses() {
+			var testClassName = RegularClassWithLifecycleMethodsTestCase.class.getName();
+
+			var results = discoverTestsForClass(RegularClassWithLifecycleMethodsTestCase.class);
+
+			assertThat(results.getDiscoveryIssues()).hasSize(2);
+
+			var issues = results.getDiscoveryIssues().stream() //
+					.sorted(comparing(DiscoveryIssue::message)) //
+					.toList();
+
+			assertThat(issues) //
+					.extracting(DiscoveryIssue::severity) //
+					.containsOnly(Severity.ERROR);
+			assertThat(issues) //
+					.extracting(DiscoveryIssue::source) //
+					.extracting(Optional::orElseThrow) //
+					.allMatch(org.junit.platform.engine.support.descriptor.MethodSource.class::isInstance);
+			assertThat(issues.getFirst().message()) //
+					.isEqualTo(
+						"@AfterParameterizedClassInvocation method 'static void %s.after()' must not be declared in test class '%s' because it is not annotated with @ParameterizedClass.",
+						testClassName, testClassName);
+			assertThat(issues.getLast().message()) //
+					.isEqualTo(
+						"@BeforeParameterizedClassInvocation method 'static void %s.before()' must not be declared in test class '%s' because it is not annotated with @ParameterizedClass.",
+						testClassName, testClassName);
 		}
 	}
 
@@ -1767,6 +1827,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		}
 	}
 
+	@ParameterizedClass
+	@ValueSource(ints = 1)
+	record NonVoidLifecycleMethodTestCase() {
+
+		@BeforeParameterizedClassInvocation
+		static int beforeParameterizedClassInvocation() {
+			return fail("should not be called");
+		}
+
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+	}
+
 	static abstract class AbstractBaseLifecycleTestCase {
 
 		@BeforeParameterizedClassInvocation
@@ -2129,6 +2204,21 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	}
 
 	static class ConcreteInheritanceTestCase extends BaseInheritanceTestCase {
+	}
+
+	static class RegularClassWithLifecycleMethodsTestCase {
+
+		@BeforeParameterizedClassInvocation
+		static void before() {
+		}
+
+		@AfterParameterizedClassInvocation
+		static void after() {
+		}
+
+		@Test
+		void test() {
+		}
 	}
 
 }

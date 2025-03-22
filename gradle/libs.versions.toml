@@ -99,7 +99,7 @@ foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.9.
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 # check if workaround in gradle.properties can be removed when updating
-kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.10" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.20" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }

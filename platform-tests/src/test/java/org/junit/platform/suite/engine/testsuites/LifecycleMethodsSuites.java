@@ -29,6 +29,7 @@ import org.junit.platform.suite.engine.testcases.StatefulTestCase;
  *
  * @since 1.11
  */
+@SuppressWarnings("NewClassNamingConvention")
 public class LifecycleMethodsSuites {
 
 	@Retention(RetentionPolicy.RUNTIME)

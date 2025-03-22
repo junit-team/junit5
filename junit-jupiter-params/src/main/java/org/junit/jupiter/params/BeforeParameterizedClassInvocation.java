@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 
@@ -158,6 +159,7 @@ import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @API(status = EXPERIMENTAL, since = "5.13")
+@ClassTemplateInvocationLifecycleMethod(classTemplateAnnotation = ParameterizedClass.class, lifecycleMethodAnnotation = BeforeParameterizedClassInvocation.class)
 public @interface BeforeParameterizedClassInvocation {
 
 	/**
