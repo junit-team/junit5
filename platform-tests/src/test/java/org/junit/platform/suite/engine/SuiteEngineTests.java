@@ -492,7 +492,7 @@ class SuiteEngineTests {
 
 		new SuiteTestEngine().execute(request);
 
-		verify(mockDescriptor).execute(listener, requestLevelStore);
+		verify(mockDescriptor).execute(same(listener), same(requestLevelStore));
 	}
 
 	@Suite
