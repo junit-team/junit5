@@ -119,7 +119,8 @@ public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 			registry = childRegistry;
 		}
 		ExtensionContext extensionContext = new ClassTemplateInvocationExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), registry);
+			context.getExecutionListener(), this, context.getConfiguration(), registry,
+			context.getLauncherStoreFacade());
 		ThrowableCollector throwableCollector = createThrowableCollector();
 		throwableCollector.execute(() -> this.invocationContext.prepareInvocation(extensionContext));
 		return context.extend() //

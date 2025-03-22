@@ -32,9 +32,9 @@ final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTe
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, TestInstances testInstances) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade, TestInstances testInstances) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 		this.testInstances = testInstances;
 	}
 

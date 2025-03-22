@@ -37,9 +37,10 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, ThrowableCollector throwableCollector) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 
 		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;
