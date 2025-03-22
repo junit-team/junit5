@@ -18,7 +18,6 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -32,7 +31,7 @@ import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
  */
 public class JupiterTestEngineTests {
 
-	private final TestDescriptor rootTestDescriptor = mock(JupiterEngineDescriptor.class);
+	private final TestDescriptor rootTestDescriptor = mock();
 
 	private final ConfigurationParameters configurationParameters = mock();
 
@@ -67,8 +66,8 @@ public class JupiterTestEngineTests {
 
 		assertThatThrownBy(() -> engine //
 				.createExecutionContext(executionRequest)) //
-				.isInstanceOf(JUnitException.class)
-				.hasMessageContaining("Request-level store must have a parent"); //
+						.isInstanceOf(JUnitException.class) //
+						.hasMessageContaining("Request-level store must have a parent");
 	}
 
 	@Test
