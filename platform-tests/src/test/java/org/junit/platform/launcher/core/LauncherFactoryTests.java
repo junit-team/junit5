@@ -346,8 +346,7 @@ class LauncherFactoryTests {
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
 			var launcher = session.getLauncher();
-			var request = LauncherDiscoveryRequestBuilder.request().selectors(
-				selectClass(JupiterTestCase.class)).build();
+			var request = request().selectors(selectClass(SessionTrackingExtension.class)).build();
 
 			AtomicReference<Throwable> errorRef = new AtomicReference<>();
 			launcher.execute(request, new TestExecutionListener() {
@@ -369,8 +368,7 @@ class LauncherFactoryTests {
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
 			var launcher = session.getLauncher();
-			var request = LauncherDiscoveryRequestBuilder.request().selectors(
-				selectClass(JupiterTestCase.class)).build();
+			var request = request().selectors(selectClass(SessionStoringTestCase.class)).build();
 
 			AtomicReference<Throwable> errorRef = new AtomicReference<>();
 			launcher.execute(request, new TestExecutionListener() {
@@ -444,8 +442,18 @@ class LauncherFactoryTests {
 	}
 
 	@SuppressWarnings({ "JUnitMalformedDeclaration" })
-	@ExtendWith(JupiterExtensionExample.class)
-	static class JupiterTestCase {
+	@ExtendWith(SessionTrackingExtension.class)
+	static class SessionTrackingTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionStoringExtension.class)
+	static class SessionStoringTestCase {
 
 		@Test
 		void dummyTest() {
@@ -463,11 +471,12 @@ class LauncherFactoryTests {
 	static class LauncherSessionListenerClosedExample implements LauncherSessionListener {
 		@Override
 		public void launcherSessionClosed(LauncherSession session) {
-			session.getStore().put(Namespace.GLOBAL, "testKey", "testValue");
+			Object storedValue = session.getStore().get(Namespace.GLOBAL, "testKey");
+			assertThat(storedValue).isEqualTo("testValue");
 		}
 	}
 
-	static class JupiterExtensionExample implements BeforeAllCallback {
+	static class SessionTrackingExtension implements BeforeAllCallback {
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			var value = context.getStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
@@ -482,4 +491,10 @@ class LauncherFactoryTests {
 		}
 	}
 
+	static class SessionStoringExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("testKey", "testValue");
+		}
+	}
 }
