@@ -68,7 +68,7 @@ public class Namespace {
 	private final List<Object> parts;
 
 	private Namespace(List<Object> parts) {
-		this.parts = parts;
+		this.parts = new ArrayList<>(parts);
 	}
 
 	@Override
