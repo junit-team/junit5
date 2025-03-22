@@ -652,8 +652,10 @@ public class NamespacedHierarchicalStoreTests {
 	private static class RequestResourceCheckUsingExtension implements AfterAllCallback {
 		@Override
 		public void afterAll(ExtensionContext context) {
-			CloseTrackingResource requestResource = context.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL).get(
-				"requestResource", CloseTrackingResource.class);
+			CloseTrackingResource requestResource = context //
+					.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL) //
+					.get("requestResource", CloseTrackingResource.class);
+
 			assertThat(requestResource.isClosed()).isTrue();
 		}
 	}
@@ -682,8 +684,10 @@ public class NamespacedHierarchicalStoreTests {
 		@Override
 		public void launcherSessionClosed(LauncherSession session) {
 			session.getStore().close();
-			CloseTrackingResource sessionResource = session.getStore().get(Namespace.GLOBAL, "sessionResource",
-				CloseTrackingResource.class);
+			CloseTrackingResource sessionResource = session //
+					.getStore() //
+					.get(Namespace.GLOBAL, "sessionResource", CloseTrackingResource.class);
+
 			assertThat(sessionResource.isClosed()).isTrue();
 		}
 	}
