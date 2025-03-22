@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.platform.commons.test.ConcurrencyTestingUtils.executeConcurrently;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -31,6 +33,14 @@ import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.platform.launcher.LauncherSession;
+import org.junit.platform.launcher.LauncherSessionListener;
+import org.junit.platform.launcher.core.LauncherConfig;
+import org.junit.platform.launcher.core.LauncherFactory;
 
 /**
  * Unit tests for {@link NamespacedHierarchicalStore}.
@@ -560,6 +570,46 @@ public class NamespacedHierarchicalStoreTests {
 
 	}
 
+	@Test
+	void sessionResourceClosedOnSessionClose() {
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new AutoCloseCheckListener()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+		}
+	}
+
+	@Test
+	void RequestResourceClosedOnExecutionClose() {
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new AutoCloseCheckListener()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+		}
+	}
+
+	@Test
+	void requestResourceClosedOnExecutionClose() {
+		var config = LauncherConfig.builder().build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(RequestResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+		}
+	}
+
 	private static Object createObject(String display) {
 		return new Object() {
 
@@ -568,6 +618,74 @@ public class NamespacedHierarchicalStoreTests {
 				return display;
 			}
 		};
+	}
+
+	private static class CloseTrackingResource implements AutoCloseable {
+		private boolean closed = false;
+
+		@Override
+		public void close() {
+			this.closed = true;
+		}
+
+		public boolean isClosed() {
+			return this.closed;
+		}
+	}
+
+	private static class SessionResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource sessionResource = new CloseTrackingResource();
+			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("sessionResource", sessionResource);
+		}
+	}
+
+	private static class RequestResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource requestResource = new CloseTrackingResource();
+			context.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL).put("requestResource", requestResource);
+		}
+	}
+
+	private static class RequestResourceCheckUsingExtension implements AfterAllCallback {
+		@Override
+		public void afterAll(ExtensionContext context) {
+			CloseTrackingResource requestResource = context.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL).get(
+				"requestResource", CloseTrackingResource.class);
+			assertThat(requestResource.isClosed()).isTrue();
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionResourceStoreUsingExtension.class)
+	static class SessionResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith({ RequestResourceStoreUsingExtension.class, RequestResourceCheckUsingExtension.class })
+	static class RequestResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	private static class AutoCloseCheckListener implements LauncherSessionListener {
+		@Override
+		public void launcherSessionClosed(LauncherSession session) {
+			session.getStore().close();
+			CloseTrackingResource sessionResource = session.getStore().get(Namespace.GLOBAL, "sessionResource",
+				CloseTrackingResource.class);
+			assertThat(sessionResource.isClosed()).isTrue();
+		}
 	}
 
 }

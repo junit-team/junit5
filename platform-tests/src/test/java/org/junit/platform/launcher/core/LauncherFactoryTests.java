@@ -346,7 +346,7 @@ class LauncherFactoryTests {
 
 		try (LauncherSession session = LauncherFactory.openSession(config)) {
 			var launcher = session.getLauncher();
-			var request = request().selectors(selectClass(SessionTrackingExtension.class)).build();
+			var request = request().selectors(selectClass(SessionTrackingTestCase.class)).build();
 
 			AtomicReference<Throwable> errorRef = new AtomicReference<>();
 			launcher.execute(request, new TestExecutionListener() {
@@ -441,7 +441,7 @@ class LauncherFactoryTests {
 		}
 	}
 
-	@SuppressWarnings({ "JUnitMalformedDeclaration" })
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(SessionTrackingExtension.class)
 	static class SessionTrackingTestCase {
 
