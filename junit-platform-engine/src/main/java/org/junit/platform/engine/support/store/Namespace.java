@@ -62,7 +62,7 @@ public class Namespace {
 	public static Namespace create(List<Object> objects) {
 		Preconditions.notEmpty(objects, "objects list must not be null or empty");
 		Preconditions.containsNoNullElements(objects, "individual objects must not be null");
-		return new Namespace(new ArrayList<>(objects));
+		return new Namespace(objects);
 	}
 
 	private final List<Object> parts;
