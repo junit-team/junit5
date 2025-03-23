@@ -24,6 +24,8 @@ import de.skuzzle.test.snapshots.junit5.EnableSnapshotTests;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.tests.process.OutputFiles;
 import org.junit.platform.tests.process.ProcessResult;
 import org.opentest4j.TestAbortedException;
@@ -47,18 +49,22 @@ class GradleStarterTests {
 		copyToWorkspace(Projects.JUPITER_STARTER, workspace);
 	}
 
-	@Test
-	void buildJupiterStarterProject(@FilePrefix("gradle") OutputFiles outputFiles, Snapshot snapshot) throws Exception {
+	@ParameterizedTest(name = "Java {0}")
+	@ValueSource(ints = { 8, 17 })
+	void buildJupiterStarterProject(int javaVersion, @FilePrefix("gradle") OutputFiles outputFiles, Snapshot snapshot)
+			throws Exception {
 
-		var result = runGradle(outputFiles, "build");
+		var result = runGradle(outputFiles, javaVersion, "build");
 
 		assertThat(result.stdOut()) //
 				.contains( //
-					"CalculatorParameterizedClassTests > [1] i=1 > regularTest() PASSED", //
-					"CalculatorParameterizedClassTests > [2] i=2 > regularTest() PASSED", //
 					"CalculatorParameterizedClassTests > [1] i=1 > parameterizedTest(int)", //
+					"CalculatorParameterizedClassTests > [1] i=1 > Inner > [1] 1 > regularTest() PASSED", //
+					"CalculatorParameterizedClassTests > [1] i=1 > Inner > [2] 2 > regularTest() PASSED", //
 					"CalculatorParameterizedClassTests > [2] i=2 > parameterizedTest(int)", //
-					"Using Java version: 1.8", //
+					"CalculatorParameterizedClassTests > [2] i=2 > Inner > [1] 1 > regularTest() PASSED", //
+					"CalculatorParameterizedClassTests > [2] i=2 > Inner > [2] 2 > regularTest() PASSED", //
+					"Using Java version: " + (javaVersion == 8 ? "1.8" : javaVersion), //
 					"CalculatorTests > 1 + 1 = 2 PASSED", //
 					"CalculatorTests > add(int, int, int) > 0 + 1 = 1 PASSED", //
 					"CalculatorTests > add(int, int, int) > 1 + 2 = 3 PASSED", //
@@ -73,16 +79,18 @@ class GradleStarterTests {
 	@Test
 	void runOnlyOneMethodInClassTemplate(@FilePrefix("gradle") OutputFiles outputFiles) throws Exception {
 
-		var result = runGradle(outputFiles, "test", "--tests", "CalculatorParameterized*.regular*");
+		var result = runGradle(outputFiles, 8, "test", "--tests", "CalculatorParameterized*.regular*");
 
 		assertThat(result.stdOut()) //
 				.contains( //
-					"CalculatorParameterizedClassTests > [1] i=1 > regularTest() PASSED", //
-					"CalculatorParameterizedClassTests > [2] i=2 > regularTest() PASSED" //
+					"CalculatorParameterizedClassTests > [1] i=1 > Inner > [1] 1 > regularTest() PASSED", //
+					"CalculatorParameterizedClassTests > [1] i=1 > Inner > [2] 2 > regularTest() PASSED", //
+					"CalculatorParameterizedClassTests > [2] i=2 > Inner > [1] 1 > regularTest() PASSED", //
+					"CalculatorParameterizedClassTests > [2] i=2 > Inner > [2] 2 > regularTest() PASSED" //
 				) //
 				.doesNotContain("parameterizedTest(int)", "CalculatorTests");
 
-		result = runGradle(outputFiles, "test", "--tests", "*ParameterizedClassTests.parameterized*");
+		result = runGradle(outputFiles, 8, "test", "--tests", "*ParameterizedClassTests.parameterized*");
 
 		assertThat(result.stdOut()) //
 				.contains( //
@@ -92,13 +100,16 @@ class GradleStarterTests {
 				.doesNotContain("regularTest()", "CalculatorTests");
 	}
 
-	private ProcessResult runGradle(OutputFiles outputFiles, String... extraArgs) throws InterruptedException {
+	private ProcessResult runGradle(OutputFiles outputFiles, int javaVersion, String... extraArgs)
+			throws InterruptedException {
 		var result = ProcessStarters.gradlew() //
 				.workingDir(workspace) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
+				.addArguments("-Djava.toolchain.version=" + javaVersion) //
 				.addArguments("--stacktrace", "--no-build-cache", "--warning-mode=fail") //
-				.addArguments(extraArgs).putEnvironment("JDK8",
-					Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.addArguments(extraArgs) //
+				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.putEnvironment("JDK17", Helper.getJavaHome("17").orElseThrow(TestAbortedException::new).toString()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 

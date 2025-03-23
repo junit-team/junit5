@@ -223,6 +223,7 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 					}
 				}
 				jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
+				jvmArgumentProviders += JavaHomeDir(project, 17, develocity.testDistribution.enabled)
 
 				val gradleJavaVersion = JavaVersion.current().majorVersion.toInt()
 				jvmArgumentProviders += JavaHomeDir(project, gradleJavaVersion, develocity.testDistribution.enabled)
