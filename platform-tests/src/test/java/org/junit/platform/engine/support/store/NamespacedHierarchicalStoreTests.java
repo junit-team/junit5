@@ -585,20 +585,6 @@ public class NamespacedHierarchicalStoreTests {
 	}
 
 	@Test
-	void RequestResourceClosedOnExecutionClose() {
-		var config = LauncherConfig.builder() //
-				.addLauncherSessionListeners(new AutoCloseCheckListener()) //
-				.build();
-
-		try (LauncherSession session = LauncherFactory.openSession(config)) {
-			var launcher = session.getLauncher();
-			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
-
-			launcher.execute(request);
-		}
-	}
-
-	@Test
 	void requestResourceClosedOnExecutionClose() {
 		var config = LauncherConfig.builder().build();
 
