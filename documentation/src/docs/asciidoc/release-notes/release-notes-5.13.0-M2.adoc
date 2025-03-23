@@ -35,7 +35,8 @@ repository on GitHub.
 [[release-notes-5.13.0-M2-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* Fix regression when executing `@Nested` classes compiled without `-parameters` in
+  versions of Java prior to 21.
 
 [[release-notes-5.13.0-M2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

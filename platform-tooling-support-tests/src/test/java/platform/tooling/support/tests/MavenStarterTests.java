@@ -57,7 +57,7 @@ class MavenStarterTests {
 
 		var result = runMaven(outputFiles, "verify");
 
-		assertThat(result.stdOutLines()).contains("[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0");
+		assertThat(result.stdOutLines()).contains("[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0");
 		assertThat(result.stdOut()).contains("Using Java version: 1.8");
 
 		var testResultsDir = workspace.resolve("target/surefire-reports");
@@ -67,11 +67,11 @@ class MavenStarterTests {
 	@Test
 	void runOnlyOneMethodInClassTemplate(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
 
-		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorParameterizedClassTests#regularTest");
+		var result = runMaven(outputFiles, "test", "-Dtest=CalculatorParameterizedClassTests$Inner#regularTest");
 
 		assertThat(result.stdOutLines()) //
 				.doesNotContain("CalculatorTests") //
-				.contains("[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0");
+				.contains("[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0");
 
 		result = runMaven(outputFiles, "test", "-Dtest=CalculatorParameterizedClassTests#parameterizedTest");
 

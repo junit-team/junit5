@@ -99,7 +99,6 @@ public class ParameterResolutionUtils {
 		// Ensure that the outer instance is resolved as the first parameter if
 		// the executable is a constructor for an inner class.
 		if (outerInstance.isPresent()) {
-			Preconditions.condition(parameters[0].isImplicit(), "First parameter must be implicit");
 			values[0] = outerInstance.get();
 			start = 1;
 		}
@@ -114,9 +113,6 @@ public class ParameterResolutionUtils {
 
 	private static Object resolveParameter(ParameterContext parameterContext, Executable executable,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry extensionRegistry) {
-
-		Preconditions.condition(!parameterContext.getParameter().isImplicit(),
-			() -> String.format("Parameter at index %d must not be implicit", parameterContext.getIndex()));
 
 		try {
 			// @formatter:off
