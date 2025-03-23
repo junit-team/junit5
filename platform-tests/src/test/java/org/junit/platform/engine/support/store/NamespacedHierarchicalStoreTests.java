@@ -33,7 +33,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -635,9 +635,9 @@ public class NamespacedHierarchicalStoreTests {
 		}
 	}
 
-	private static class RequestResourceCheckUsingExtension implements AfterAllCallback {
+	private static class RequestResourceCheckUsingExtension implements AfterTestExecutionCallback {
 		@Override
-		public void afterAll(ExtensionContext context) {
+		public void afterTestExecution(ExtensionContext context) {
 			CloseTrackingResource requestResource = context //
 					.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL) //
 					.get("requestResource", CloseTrackingResource.class);
