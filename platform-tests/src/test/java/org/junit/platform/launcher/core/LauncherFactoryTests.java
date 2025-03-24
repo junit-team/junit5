@@ -407,8 +407,9 @@ class LauncherFactoryTests {
 			var request = request().selectors(selectClass(RequestResourceAutoCloseTestCase.class)).build();
 
 			launcher.execute(request);
+
+			assertThat(CloseTrackingResource.closed).isTrue();
 		}
-		assertThat(CloseTrackingResource.closed).isTrue();
 	}
 
 	@SuppressWarnings("SameParameterValue")
