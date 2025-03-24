@@ -19,6 +19,7 @@ import org.junit.jupiter.engine.descriptor.Validatable;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver.InitializationContext;
 
@@ -56,7 +57,9 @@ public class DiscoverySelectorResolver {
 	}
 
 	public void resolveSelectors(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor) {
-		resolver.resolve(request, engineDescriptor);
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.deduplicating(
+			DiscoveryIssueReporter.forwarding(request.getDiscoveryListener(), engineDescriptor.getUniqueId()));
+		resolver.resolve(request, engineDescriptor, issueReporter);
 	}
 
 }

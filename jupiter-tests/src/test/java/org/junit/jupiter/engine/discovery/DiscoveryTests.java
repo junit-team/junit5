@@ -197,7 +197,11 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 			named("indirectly selected", request() //
 					.selectors(selectPackage(InvalidTestMethodTestCase.class.getPackageName())) //
 					.filters(
-						includeClassNamePatterns(Pattern.quote(InvalidTestMethodTestCase.class.getName()))).build()) //
+						includeClassNamePatterns(Pattern.quote(InvalidTestMethodTestCase.class.getName()))).build()), //
+			named("subclasses", request() //
+					.selectors(selectClass(InvalidTestMethodSubclass1TestCase.class),
+						selectClass(InvalidTestMethodSubclass2TestCase.class)) //
+					.build()) //
 		);
 	}
 
@@ -275,6 +279,12 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		private static int test() {
 			return fail("should not be called");
 		}
+	}
+
+	static class InvalidTestMethodSubclass1TestCase extends InvalidTestMethodTestCase {
+	}
+
+	static class InvalidTestMethodSubclass2TestCase extends InvalidTestMethodTestCase {
 	}
 
 }

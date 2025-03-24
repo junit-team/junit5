@@ -65,7 +65,9 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 
 	/**
 	 * Resolve the supplied {@link EngineDiscoveryRequest} and collect the
-	 * results into the supplied {@link TestDescriptor}.
+	 * results into the supplied {@link TestDescriptor} while forwarding
+	 * encountered discovery issues to the {@link EngineDiscoveryRequest}'s
+	 * {@link org.junit.platform.engine.EngineDiscoveryListener}.
 	 *
 	 * <p>The algorithm works as follows:
 	 *
@@ -110,8 +112,35 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.create(request.getDiscoveryListener(),
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.forwarding(request.getDiscoveryListener(),
 			engineDescriptor.getUniqueId());
+		resolve(request, engineDescriptor, issueReporter);
+	}
+
+	/**
+	 * Resolve the supplied {@link EngineDiscoveryRequest} and collect the
+	 * results into the supplied {@link TestDescriptor} using the supplied
+	 * {@link DiscoveryIssueReporter} to report issues encountered during
+	 * resolution.
+	 *
+	 * <p>The algorithm works as described in
+	 * {@link #resolve(EngineDiscoveryRequest, TestDescriptor)}.
+	 *
+	 * @param request the request to be resolved; never {@code null}
+	 * @param engineDescriptor the engine's {@code TestDescriptor} to be used
+	 * for adding direct children
+	 * @param issueReporter the {@link DiscoveryIssueReporter} to report issues
+	 * encountered during resolution
+	 * @since 1.13
+	 * @see #resolve(EngineDiscoveryRequest, TestDescriptor)
+	 * @see SelectorResolver
+	 * @see TestDescriptor.Visitor
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public void resolve(EngineDiscoveryRequest request, T engineDescriptor, DiscoveryIssueReporter issueReporter) {
+		Preconditions.notNull(request, "request must not be null");
+		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
+		Preconditions.notNull(issueReporter, "issueReporter must not be null");
 		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor,
 			issueReporter);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);

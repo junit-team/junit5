@@ -50,7 +50,7 @@ class SuiteTestDescriptorTests {
 
 	final ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
 	final OutputDirectoryProvider outputDirectoryProvider = OutputDirectoryProviders.dummyOutputDirectoryProvider();
-	final DiscoveryIssueReporter discoveryIssueReporter = DiscoveryIssueReporter.create(mock(), engineId);
+	final DiscoveryIssueReporter discoveryIssueReporter = DiscoveryIssueReporter.forwarding(mock(), engineId);
 	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters,
 		outputDirectoryProvider, discoveryIssueReporter);
 
