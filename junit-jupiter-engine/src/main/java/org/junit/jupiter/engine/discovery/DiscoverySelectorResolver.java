@@ -37,8 +37,9 @@ import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolve
 public class DiscoverySelectorResolver {
 
 	private static final EngineDiscoveryRequestResolver<JupiterEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<JupiterEngineDescriptor> builder() //
-			.addClassContainerSelectorResolver(new IsTestClassWithTests()) //
-			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx))) //
+			.addClassContainerSelectorResolverWithContext(ctx -> new IsTestClassWithTests(ctx.getIssueReporter())) //
+			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx),
+				ctx.getIssueReporter())) //
 			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx), ctx.getIssueReporter())) //
 			.addTestDescriptorVisitor(ctx -> TestDescriptor.Visitor.composite( //
 				new ClassOrderingVisitor(getConfiguration(ctx)), //

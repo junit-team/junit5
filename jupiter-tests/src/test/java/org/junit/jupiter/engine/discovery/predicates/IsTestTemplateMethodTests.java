@@ -11,12 +11,17 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Unit tests for {@link IsTestTemplateMethod}.
@@ -25,7 +30,8 @@ import org.junit.platform.commons.support.ReflectionSupport;
  */
 class IsTestTemplateMethodTests {
 
-	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
+	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+	final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod(discoveryIssues::add);
 
 	@Test
 	void testTemplateMethodReturningVoid() {
@@ -34,13 +40,22 @@ class IsTestTemplateMethodTests {
 
 	@Test
 	void bogusTestTemplateMethodReturningObject() {
-		assertThat(isTestTemplateMethod).rejects(method("bogusTemplateReturningObject"));
+		var method = method("bogusTemplateReturningObject");
+
+		assertThat(isTestTemplateMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
+		assertThat(issue.message()).isEqualTo(
+			"@TestTemplate method '%s' must not return a value. It will be not be executed.", method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
 
 	private static Method method(String name) {
-		return ReflectionSupport.findMethod(ClassWithTestTemplateMethods.class, name).get();
+		return ReflectionSupport.findMethod(ClassWithTestTemplateMethods.class, name).orElseThrow();
 	}
 
+	@SuppressWarnings("unused")
 	private static class ClassWithTestTemplateMethods {
 
 		@TestTemplate

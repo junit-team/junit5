@@ -162,8 +162,28 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 */
 		public Builder<T> addClassContainerSelectorResolver(Predicate<Class<?>> classFilter) {
 			Preconditions.notNull(classFilter, "classFilter must not be null");
-			return addSelectorResolver(
-				context -> new ClassContainerSelectorResolver(classFilter, context.getClassNameFilter()));
+			return addClassContainerSelectorResolverWithContext(__ -> classFilter);
+		}
+
+		/**
+		 * Add a predefined resolver that resolves {@link ClasspathRootSelector
+		 * ClasspathRootSelectors}, {@link ModuleSelector ModuleSelectors}, and
+		 * {@link PackageSelector PackageSelectors} into {@link ClassSelector
+		 * ClassSelectors} by scanning for classes that satisfy the predicate
+		 * created by the supplied {@code Function} in the respective class
+		 * containers to this builder.
+		 *
+		 * @param classFilterCreator the function that will be called to create
+		 * the predicate the resolved classes must satisfy; never
+		 * {@code null}
+		 * @return this builder for method chaining
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		public Builder<T> addClassContainerSelectorResolverWithContext(
+				Function<InitializationContext<T>, Predicate<Class<?>>> classFilterCreator) {
+			Preconditions.notNull(classFilterCreator, "classFilterCreator must not be null");
+			return addSelectorResolver(context -> new ClassContainerSelectorResolver(classFilterCreator.apply(context),
+				context.getClassNameFilter()));
 		}
 
 		/**

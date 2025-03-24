@@ -30,7 +30,8 @@ import org.junit.jupiter.api.TestTemplate;
  */
 class IsTestClassWithTestsTests {
 
-	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests();
+	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests(__ -> {
+	});
 
 	@Test
 	void classWithTestMethodEvaluatesToTrue() {

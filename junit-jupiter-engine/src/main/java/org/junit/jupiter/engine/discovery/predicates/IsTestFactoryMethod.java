@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Test if a method is a JUnit Jupiter {@link TestFactory @TestFactory} method.
@@ -26,8 +27,8 @@ import org.junit.jupiter.api.TestFactory;
 @API(status = INTERNAL, since = "5.0")
 public class IsTestFactoryMethod extends IsTestableMethod {
 
-	public IsTestFactoryMethod() {
-		super(TestFactory.class, false);
+	public IsTestFactoryMethod(DiscoveryIssueReporter issueReporter) {
+		super(TestFactory.class, false, issueReporter);
 	}
 
 }

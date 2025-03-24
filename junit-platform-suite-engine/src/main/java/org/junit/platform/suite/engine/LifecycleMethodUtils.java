@@ -12,7 +12,6 @@ package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
-import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.allOf;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -54,12 +53,12 @@ final class LifecycleMethodUtils {
 			DiscoveryIssueReporter issueReporter) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
-				.filter(allOf( //
-					returnsPrimitiveVoid(annotationType, issueReporter), //
-					isStatic(annotationType, issueReporter), //
-					isNotPrivate(annotationType, issueReporter), //
-					hasNoParameters(annotationType, issueReporter) //
-				)) //
+				.filter(//
+					returnsPrimitiveVoid(annotationType, issueReporter) //
+							.and(isStatic(annotationType, issueReporter)) //
+							.and(isNotPrivate(annotationType, issueReporter)) //
+							.and(hasNoParameters(annotationType, issueReporter)) //
+				) //
 				.collect(toUnmodifiableList());
 	}
 
