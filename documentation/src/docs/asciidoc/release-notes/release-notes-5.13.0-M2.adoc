@@ -1,9 +1,9 @@
 [[release-notes-5.13.0-M2]]
 == 5.13.0-M2
 
-*Date of Release:* ❓
+*Date of Release:* March 24, 2025
 
-*Scope:* ❓
+*Scope:* Fix regression in 5.13.0-M1
 
 For a complete list of all _closed_ issues and pull requests for this release, consult the
 link:{junit5-repo}+/milestone/92?closed=1+[5.13.0-M2] milestone page in the JUnit
@@ -13,20 +13,7 @@ repository on GitHub.
 [[release-notes-5.13.0-M2-junit-platform]]
 === JUnit Platform
 
-[[release-notes-5.13.0-M2-junit-platform-bug-fixes]]
-==== Bug Fixes
-
-* ❓
-
-[[release-notes-5.13.0-M2-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.0-M2-junit-platform-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
 
 
 [[release-notes-5.13.0-M2-junit-jupiter]]
@@ -38,31 +25,9 @@ repository on GitHub.
 * Fix regression when executing `@Nested` classes compiled without `-parameters` in
   versions of Java prior to 21.
 
-[[release-notes-5.13.0-M2-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.0-M2-junit-jupiter-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
-
 
 [[release-notes-5.13.0-M2-junit-vintage]]
 === JUnit Vintage
 
-[[release-notes-5.13.0-M2-junit-vintage-bug-fixes]]
-==== Bug Fixes
 
-* ❓
-
-[[release-notes-5.13.0-M2-junit-vintage-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
-[[release-notes-5.13.0-M2-junit-vintage-new-features-and-improvements]]
-==== New Features and Improvements
-
-* ❓
+No changes.
