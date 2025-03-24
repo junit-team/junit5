@@ -31,29 +31,32 @@ class HttpTests {
 
 	@Test
 	void respondsWith204(HttpServer server) throws IOException {
-		String host = server.getAddress().getHostString(); // <1>
-		int port = server.getAddress().getPort(); // <2>
+		String host = server.getAddress().getHostString(); // <2>
+		int port = server.getAddress().getPort(); // <3>
 		URL url = URI.create("http://" + host + ":" + port + "/test").toURL();
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setRequestMethod("GET");
-		int responseCode = connection.getResponseCode(); // <3>
+		int responseCode = connection.getResponseCode(); // <4>
 
-		assertEquals(204, responseCode); // <4>
+		assertEquals(204, responseCode); // <5>
 	}
 }
 
 class HttpServerParameterResolver implements ParameterResolver {
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return parameterContext.getParameter().getType() == HttpServer.class;
+		return HttpServer.class.equals(parameterContext.getParameter().getType());
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return extensionContext //
-				.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL) //
-				.get("httpServer", HttpServer.class);
+		return extensionContext
+				// tag::custom_line_break[]
+				.getStore(ExtensionContext.Namespace.GLOBAL)
+				// tag::custom_line_break[]
+				.get("httpServer", CloseableHttpServer.class) // <1>
+				.getServer();
 	}
 }
 //end::user_guide[]

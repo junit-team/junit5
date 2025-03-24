@@ -1,3 +1,6 @@
+:testDir: ../../../../../src/test/java
+:testResourcesDir: ../../../../../src/test/resources
+
 [[launcher-api]]
 === JUnit Platform Launcher API
 
@@ -132,9 +135,22 @@ package example.session;
 
 include::{testDir}/example/session/GlobalSetupTeardownListener.java[tags=user_guide]
 ----
-<1> Start the HTTP server
-<2> Retrieve the HTTP server instance from the session-level store
-<3> Stop the HTTP server
+<1> Get the store from the launcher session
+<2> Lazily create the HTTP server and put it into the store
+<3> Start the HTTP server
+
+It uses a wrapper class to ensure the server is stopped when the launcher session is
+closed:
+
+[source,java]
+.src/test/java/example/session/CloseableHttpServer.java
+----
+package example.session;
+
+include::{testDir}/example/session/CloseableHttpServer.java[tags=user_guide]
+----
+<1> The `close()` method is called when the launcher session is closed
+<2> Stop the HTTP server
 
 This sample uses the HTTP server implementation from the jdk.httpserver module that comes
 with the JDK but would work similarly with any other server or resource. In order for the
@@ -157,10 +173,11 @@ package example.session;
 
 include::{testDir}/example/session/HttpTests.java[tags=user_guide]
 ----
-<1> Get the host string directly from the injected HTTP server instance
-<2> Get the port number directly from the injected HTTP server instance
-<3> Send a request to the server
-<4> Check the status code of the response
+<1> Retrieve the HTTP server instance from the store
+<2> Get the host string directly from the injected HTTP server instance
+<3> Get the port number directly from the injected HTTP server instance
+<4> Send a request to the server
+<5> Check the status code of the response
 
 [[launcher-api-launcher-interceptors-custom]]
 ==== Registering a LauncherInterceptor
