@@ -62,18 +62,28 @@ public abstract class AbstractJupiterTestEngineTests {
 		return discoverTests(selectClass(testClass));
 	}
 
+	protected EngineDiscoveryResults discoverTests(Consumer<LauncherDiscoveryRequestBuilder> configurer) {
+		var builder = defaultRequest();
+		configurer.accept(builder);
+		return discoverTests(builder);
+	}
+
 	protected EngineDiscoveryResults discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(defaultRequest().selectors(selectors).build());
+		return discoverTests(defaultRequest().selectors(selectors));
+	}
+
+	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequestBuilder builder) {
+		return discoverTests(builder.build());
+	}
+
+	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequest request) {
+		return EngineTestKit.discover(this.engine, request);
 	}
 
 	private static LauncherDiscoveryRequestBuilder defaultRequest() {
 		return request() //
 				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
 				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false));
-	}
-
-	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequest request) {
-		return EngineTestKit.discover(this.engine, request);
 	}
 
 	protected UniqueId discoverUniqueId(Class<?> clazz, String methodName) {

@@ -36,7 +36,6 @@ import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
-import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
@@ -62,15 +61,18 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
 class MethodSelectorResolver implements SelectorResolver {
 
 	private static final MethodFinder methodFinder = new MethodFinder();
-	private static final Predicate<Class<?>> testClassPredicate = new IsTestClassWithTests().or(
-		new IsNestedTestClass());
+	private final Predicate<Class<?>> testClassPredicate;
 
 	private final JupiterConfiguration configuration;
 	private final DiscoveryIssueReporter issueReporter;
+	private final List<MethodType> methodTypes;
 
 	MethodSelectorResolver(JupiterConfiguration configuration, DiscoveryIssueReporter issueReporter) {
 		this.configuration = configuration;
 		this.issueReporter = issueReporter;
+		this.methodTypes = MethodType.allPossibilities(issueReporter);
+		IsTestClassWithTests classPredicate = new IsTestClassWithTests(issueReporter);
+		this.testClassPredicate = classPredicate.or(classPredicate.isNestedTestClass);
 	}
 
 	@Override
@@ -92,7 +94,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		}
 		Method method = methodSupplier.get();
 		// @formatter:off
-		Set<Match> matches = Arrays.stream(MethodType.values())
+		Set<Match> matches = methodTypes.stream()
 				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -116,7 +118,7 @@ class MethodSelectorResolver implements SelectorResolver {
 	public Resolution resolve(UniqueIdSelector selector, Context context) {
 		UniqueId uniqueId = selector.getUniqueId();
 		// @formatter:off
-		return Arrays.stream(MethodType.values())
+		return methodTypes.stream()
 				.map(methodType -> methodType.resolveUniqueIdIntoTestDescriptor(uniqueId, context, configuration))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
@@ -164,48 +166,34 @@ class MethodSelectorResolver implements SelectorResolver {
 		};
 	}
 
-	private enum MethodType {
+	private static class MethodType {
 
-		TEST(new IsTestMethod(), TestMethodTestDescriptor.SEGMENT_TYPE) {
-			@Override
-			protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
-					Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
-				return new TestMethodTestDescriptor(uniqueId, testClass, method, enclosingInstanceTypes, configuration);
-			}
-		},
-
-		TEST_FACTORY(new IsTestFactoryMethod(), TestFactoryTestDescriptor.SEGMENT_TYPE,
-				TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE,
-				TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE) {
-			@Override
-			protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
-					Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
-				return new TestFactoryTestDescriptor(uniqueId, testClass, method, enclosingInstanceTypes,
-					configuration);
-			}
-		},
-
-		TEST_TEMPLATE(new IsTestTemplateMethod(), TestTemplateTestDescriptor.SEGMENT_TYPE,
-				TestTemplateInvocationTestDescriptor.SEGMENT_TYPE) {
-			@Override
-			protected TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
-					Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
-				return new TestTemplateTestDescriptor(uniqueId, testClass, method, enclosingInstanceTypes,
-					configuration);
-			}
-		};
+		static List<MethodType> allPossibilities(DiscoveryIssueReporter issueReporter) {
+			return Arrays.asList( //
+				new MethodType(new IsTestMethod(issueReporter), TestMethodTestDescriptor::new,
+					TestMethodTestDescriptor.SEGMENT_TYPE), //
+				new MethodType(new IsTestFactoryMethod(issueReporter), TestFactoryTestDescriptor::new,
+					TestFactoryTestDescriptor.SEGMENT_TYPE, TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE,
+					TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE), //
+				new MethodType(new IsTestTemplateMethod(issueReporter), TestTemplateTestDescriptor::new,
+					TestTemplateTestDescriptor.SEGMENT_TYPE, TestTemplateInvocationTestDescriptor.SEGMENT_TYPE) //
+			);
+		}
 
 		private final Predicate<Method> methodPredicate;
+		private final TestDescriptorFactory testDescriptorFactory;
 		private final String segmentType;
 		private final Set<String> dynamicDescendantSegmentTypes;
 
-		MethodType(Predicate<Method> methodPredicate, String segmentType, String... dynamicDescendantSegmentTypes) {
+		private MethodType(Predicate<Method> methodPredicate, TestDescriptorFactory testDescriptorFactory,
+				String segmentType, String... dynamicDescendantSegmentTypes) {
 			this.methodPredicate = methodPredicate;
+			this.testDescriptorFactory = testDescriptorFactory;
 			this.segmentType = segmentType;
 			this.dynamicDescendantSegmentTypes = new LinkedHashSet<>(Arrays.asList(dynamicDescendantSegmentTypes));
 		}
 
-		private Optional<TestDescriptor> resolve(List<Class<?>> enclosingClasses, Class<?> testClass, Method method,
+		Optional<TestDescriptor> resolve(List<Class<?>> enclosingClasses, Class<?> testClass, Method method,
 				Context context, JupiterConfiguration configuration) {
 			if (!methodPredicate.test(method)) {
 				return Optional.empty();
@@ -221,7 +209,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			return DiscoverySelectors.selectNestedClass(enclosingClasses, testClass);
 		}
 
-		private Optional<TestDescriptor> resolveUniqueIdIntoTestDescriptor(UniqueId uniqueId, Context context,
+		Optional<TestDescriptor> resolveUniqueIdIntoTestDescriptor(UniqueId uniqueId, Context context,
 				JupiterConfiguration configuration) {
 			UniqueId.Segment lastSegment = uniqueId.getLastSegment();
 			if (segmentType.equals(lastSegment.getType())) {
@@ -244,8 +232,8 @@ class MethodSelectorResolver implements SelectorResolver {
 		private TestDescriptor createTestDescriptor(TestDescriptor parent, Class<?> testClass, Method method,
 				JupiterConfiguration configuration) {
 			UniqueId uniqueId = createUniqueId(method, parent);
-			return createTestDescriptor(uniqueId, testClass, method, ((TestClassAware) parent)::getEnclosingTestClasses,
-				configuration);
+			return testDescriptorFactory.create(uniqueId, testClass, method,
+				((TestClassAware) parent)::getEnclosingTestClasses, configuration);
 		}
 
 		private UniqueId createUniqueId(Method method, TestDescriptor parent) {
@@ -254,8 +242,10 @@ class MethodSelectorResolver implements SelectorResolver {
 			return parent.getUniqueId().append(segmentType, methodId);
 		}
 
-		protected abstract TestDescriptor createTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method method,
-				Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration);
+		interface TestDescriptorFactory {
+			TestDescriptor create(UniqueId uniqueId, Class<?> testClass, Method method,
+					Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration);
+		}
 
 	}
 

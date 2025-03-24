@@ -20,6 +20,7 @@ import static org.junit.platform.engine.support.discovery.SelectorResolver.Resol
 import java.util.List;
 import java.util.function.Predicate;
 
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.discovery.ClasspathRootSelector;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.ModuleSelector;
@@ -34,8 +35,8 @@ class ClassContainerSelectorResolver implements SelectorResolver {
 	private final Predicate<String> classNameFilter;
 
 	ClassContainerSelectorResolver(Predicate<Class<?>> classFilter, Predicate<String> classNameFilter) {
-		this.classFilter = classFilter;
-		this.classNameFilter = classNameFilter;
+		this.classFilter = Preconditions.notNull(classFilter, "classFilter must not be null");
+		this.classNameFilter = Preconditions.notNull(classNameFilter, "classNameFilter must not be null");
 	}
 
 	@Override

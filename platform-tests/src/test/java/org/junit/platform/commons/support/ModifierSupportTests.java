@@ -103,6 +103,23 @@ class ModifierSupportTests {
 	}
 
 	@Test
+	void isNotAbstractPreconditions() {
+		assertPreconditionViolationException("Class", () -> ModifierSupport.isNotAbstract((Class<?>) null));
+		assertPreconditionViolationException("Member", () -> ModifierSupport.isNotAbstract((Member) null));
+	}
+
+	@Classes
+	void isNotAbstractDelegates(Class<?> clazz) {
+		assertEquals(ReflectionUtils.isNotAbstract(clazz), ModifierSupport.isNotAbstract(clazz));
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@Methods
+	void isNotAbstractDelegates(Method method) {
+		assertEquals(ReflectionUtils.isNotAbstract(method), ModifierSupport.isNotAbstract(method));
+	}
+
+	@Test
 	void isStaticPreconditions() {
 		assertPreconditionViolationException("Class", () -> ModifierSupport.isStatic((Class<?>) null));
 		assertPreconditionViolationException("Member", () -> ModifierSupport.isStatic((Member) null));

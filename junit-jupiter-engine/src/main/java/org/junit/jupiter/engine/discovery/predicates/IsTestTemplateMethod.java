@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Test if a method is a JUnit Jupiter {@link TestTemplate @TestTemplate} method.
@@ -23,8 +24,8 @@ import org.junit.jupiter.api.TestTemplate;
 @API(status = INTERNAL, since = "5.0")
 public class IsTestTemplateMethod extends IsTestableMethod {
 
-	public IsTestTemplateMethod() {
-		super(TestTemplate.class, true);
+	public IsTestTemplateMethod(DiscoveryIssueReporter issueReporter) {
+		super(TestTemplate.class, true, issueReporter);
 	}
 
 }
