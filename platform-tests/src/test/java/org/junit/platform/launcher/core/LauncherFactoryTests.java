@@ -382,6 +382,35 @@ class LauncherFactoryTests {
 		}
 	}
 
+	@Test
+	void sessionResourceClosedOnSessionClose() {
+		CloseTrackingResource.closed = false;
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new AutoCloseCheckListener()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+		}
+	}
+
+	@Test
+	void requestResourceClosedOnExecutionClose() {
+		CloseTrackingResource.closed = false;
+		var config = LauncherConfig.builder().build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(RequestResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+		}
+		assertThat(CloseTrackingResource.closed).isTrue();
+	}
+
 	@SuppressWarnings("SameParameterValue")
 	private static void withSystemProperty(String key, String value, Runnable runnable) {
 		var oldValue = System.getProperty(key);
@@ -495,6 +524,67 @@ class LauncherFactoryTests {
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("testKey", "testValue");
+		}
+	}
+
+	private static class CloseTrackingResource implements AutoCloseable {
+		private static boolean closed = false;
+
+		@Override
+		public void close() {
+			closed = true;
+		}
+
+		public boolean isClosed() {
+			return closed;
+		}
+	}
+
+	private static class SessionResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource sessionResource = new CloseTrackingResource();
+			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("sessionResource", sessionResource);
+		}
+	}
+
+	private static class RequestResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource requestResource = new CloseTrackingResource();
+			context.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL).put("requestResource", requestResource);
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionResourceStoreUsingExtension.class)
+	static class SessionResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(RequestResourceStoreUsingExtension.class)
+	static class RequestResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	private static class AutoCloseCheckListener implements LauncherSessionListener {
+		@Override
+		public void launcherSessionClosed(LauncherSession session) {
+			session.getStore().close();
+			CloseTrackingResource sessionResource = session //
+					.getStore() //
+					.get(Namespace.GLOBAL, "sessionResource", CloseTrackingResource.class);
+
+			assertThat(sessionResource.isClosed()).isTrue();
 		}
 	}
 }
