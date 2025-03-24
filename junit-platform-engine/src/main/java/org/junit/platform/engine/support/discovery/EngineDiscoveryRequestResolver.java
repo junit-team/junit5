@@ -116,7 +116,7 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 			issueReporter);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
 		List<TestDescriptor.Visitor> visitors = instantiate(visitorCreators, initializationContext);
-		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors, issueReporter).run();
+		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors).run();
 	}
 
 	private <R> List<R> instantiate(List<Function<InitializationContext<T>, R>> creators,
