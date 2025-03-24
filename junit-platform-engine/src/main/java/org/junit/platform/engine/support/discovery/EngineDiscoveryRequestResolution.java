@@ -61,7 +61,6 @@ class EngineDiscoveryRequestResolution {
 	private final Context defaultContext;
 	private final List<SelectorResolver> resolvers;
 	private final List<TestDescriptor.Visitor> visitors;
-	private final DiscoveryIssueReporter issueReporter;
 	private final TestDescriptor engineDescriptor;
 	private final Map<DiscoverySelector, Resolution> resolvedSelectors = new LinkedHashMap<>();
 	private final Map<UniqueId, Match> resolvedUniqueIds = new LinkedHashMap<>();
@@ -69,13 +68,11 @@ class EngineDiscoveryRequestResolution {
 	private final Map<DiscoverySelector, Context> contextBySelector = new HashMap<>();
 
 	EngineDiscoveryRequestResolution(EngineDiscoveryRequest request, TestDescriptor engineDescriptor,
-			List<SelectorResolver> resolvers, List<TestDescriptor.Visitor> visitors,
-			DiscoveryIssueReporter issueReporter) {
+			List<SelectorResolver> resolvers, List<TestDescriptor.Visitor> visitors) {
 		this.request = request;
 		this.engineDescriptor = engineDescriptor;
 		this.resolvers = resolvers;
 		this.visitors = visitors;
-		this.issueReporter = issueReporter;
 		this.defaultContext = new DefaultContext(null);
 		this.resolvedUniqueIds.put(engineDescriptor.getUniqueId(), Match.exact(engineDescriptor));
 	}
