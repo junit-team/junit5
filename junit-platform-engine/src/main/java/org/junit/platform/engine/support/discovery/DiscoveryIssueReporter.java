@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -41,10 +43,29 @@ public interface DiscoveryIssueReporter {
 	 * {@code null}
 	 * @param engineId the unique identifier of the engine; never {@code null}
 	 */
-	static DiscoveryIssueReporter create(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
+	static DiscoveryIssueReporter forwarding(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
 		Preconditions.notNull(engineDiscoveryListener, "engineDiscoveryListener must not be null");
 		Preconditions.notNull(engineId, "engineId must not be null");
 		return issue -> engineDiscoveryListener.issueEncountered(engineId, issue);
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that avoids reporting
+	 * duplicate issues.
+	 *
+	 * <p>The implementation returned by this method is not thread-safe.
+	 *
+	 * @param delegate the delegate to forward issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter deduplicating(DiscoveryIssueReporter delegate) {
+		Preconditions.notNull(delegate, "delegate must not be null");
+		Set<DiscoveryIssue> seen = new HashSet<>();
+		return issue -> {
+			boolean notSeen = seen.add(issue);
+			if (notSeen) {
+				delegate.reportIssue(issue);
+			}
+		};
 	}
 
 	/**
