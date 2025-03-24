@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.toMap;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
@@ -100,9 +101,8 @@ class ResolverFacade {
 	}
 
 	static ResolverFacade create(Constructor<?> constructor, ParameterizedClass annotation) {
-		java.lang.reflect.Parameter[] parameters = constructor.getParameters();
-		// Inner classes get the outer instance as first parameter
-		int implicitParameters = parameters.length > 0 && parameters[0].isImplicit() ? 1 : 0;
+		// Inner classes get the outer instance as first (implicit) parameter
+		int implicitParameters = isInnerClass(constructor.getDeclaringClass()) ? 1 : 0;
 		return create(constructor, annotation, implicitParameters);
 	}
 

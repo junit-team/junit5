@@ -12,6 +12,7 @@ package com.example.project;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
@@ -25,16 +26,28 @@ class CalculatorParameterizedClassTests {
 	@Parameter
 	int i;
 
-	@Test
-	void regularTest() {
-		Calculator calculator = new Calculator();
-		assertEquals(2 * i, calculator.add(i, i), () -> i + " + " + i + " should equal 2 * " + i);
-	}
-
 	@ParameterizedTest
 	@ValueSource(ints = { 1, 2 })
 	void parameterizedTest(int j) {
 		Calculator calculator = new Calculator();
 		assertEquals(i + j, calculator.add(i, j));
+	}
+
+	@Nested
+	@ParameterizedClass
+	@ValueSource(ints = { 1, 2 })
+	class Inner {
+
+		final int j;
+
+		Inner(int j) {
+			this.j = j;
+		}
+
+		@Test
+		void regularTest() {
+			Calculator calculator = new Calculator();
+			assertEquals(i + j, calculator.add(i, j));
+		}
 	}
 }

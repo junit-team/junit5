@@ -17,7 +17,7 @@ dependencies {
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
+		languageVersion = JavaLanguageVersion.of(System.getProperty("java.toolchain.version"))
 	}
 }
 
@@ -26,6 +26,7 @@ tasks.test {
 
 	testLogging {
 		events("passed", "skipped", "failed", "standardOut")
+		exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 	}
 
 	reports {
