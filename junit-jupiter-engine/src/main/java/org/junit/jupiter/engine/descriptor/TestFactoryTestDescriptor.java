@@ -35,7 +35,6 @@ import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -138,17 +137,11 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		if (testFactoryMethodResult instanceof DynamicNode) {
 			return Stream.of((DynamicNode) testFactoryMethodResult);
 		}
-		try {
-			return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
-		}
-		catch (PreconditionViolationException ex) {
-			throw invalidReturnTypeException(ex);
-		}
+		return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
 	}
 
 	private JUnitException invalidReturnTypeException(Throwable cause) {
-		String message = String.format(
-			"@TestFactory method [%s] must return a single %2$s or a Stream, Collection, Iterable, Iterator, or array of %2$s.",
+		String message = String.format("Objects produced by @TestFactory method '%s' must be of type %s.",
 			getTestMethod().toGenericString(), DynamicNode.class.getName());
 		return new JUnitException(message, cause);
 	}

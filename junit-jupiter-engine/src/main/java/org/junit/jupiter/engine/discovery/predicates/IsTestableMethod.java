@@ -11,10 +11,10 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.support.ModifierSupport;
@@ -33,13 +33,14 @@ abstract class IsTestableMethod implements Predicate<Method> {
 	private final Class<? extends Annotation> annotationType;
 	private final Condition<Method> condition;
 
-	IsTestableMethod(Class<? extends Annotation> annotationType, boolean mustReturnPrimitiveVoid,
+	IsTestableMethod(Class<? extends Annotation> annotationType,
+			BiFunction<Class<? extends Annotation>, DiscoveryIssueReporter, Condition<Method>> returnTypeConditionFactory,
 			DiscoveryIssueReporter issueReporter) {
 		this.annotationType = annotationType;
-		this.condition = isNotStatic(issueReporter) //
-				.and(isNotPrivate(issueReporter)) //
-				.and(isNotAbstract(issueReporter)) //
-				.and(hasCompatibleReturnType(mustReturnPrimitiveVoid, issueReporter));
+		this.condition = isNotStatic(annotationType, issueReporter) //
+				.and(isNotPrivate(annotationType, issueReporter)) //
+				.and(isNotAbstract(annotationType, issueReporter)) //
+				.and(returnTypeConditionFactory.apply(annotationType, issueReporter));
 	}
 
 	@Override
@@ -50,37 +51,34 @@ abstract class IsTestableMethod implements Predicate<Method> {
 		return false;
 	}
 
-	private Condition<Method> isNotStatic(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotStatic,
-			method -> createIssue(method, "must not be static"));
-	}
-
-	private Condition<Method> isNotPrivate(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate,
-			method -> createIssue(method, "must not be private"));
-	}
-
-	private Condition<Method> isNotAbstract(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotAbstract,
-			method -> createIssue(method, "must not be abstract"));
-	}
-
-	private Condition<Method> hasCompatibleReturnType(boolean mustReturnPrimitiveVoid,
+	private static Condition<Method> isNotStatic(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
-		if (mustReturnPrimitiveVoid) {
-			return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid,
-				method -> createIssue(method, "must not return a value"));
-		}
-		else {
-			// TODO [#4246] Use `Predicate.not`
-			return issueReporter.createReportingCondition(method -> !returnsPrimitiveVoid(method),
-				method -> createIssue(method, "must return a value"));
-		}
+		return issueReporter.createReportingCondition(ModifierSupport::isNotStatic,
+			method -> createIssue(annotationType, method, "must not be static"));
 	}
 
-	private DiscoveryIssue createIssue(Method method, String condition) {
+	private static Condition<Method> isNotPrivate(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate,
+			method -> createIssue(annotationType, method, "must not be private"));
+	}
+
+	private static Condition<Method> isNotAbstract(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotAbstract,
+			method -> createIssue(annotationType, method, "must not be abstract"));
+	}
+
+	protected static Condition<Method> hasVoidReturnType(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid,
+			method -> createIssue(annotationType, method, "must not return a value"));
+	}
+
+	protected static DiscoveryIssue createIssue(Class<? extends Annotation> annotationType, Method method,
+			String condition) {
 		String message = String.format("@%s method '%s' %s. It will be not be executed.",
-			this.annotationType.getSimpleName(), method.toGenericString(), condition);
+			annotationType.getSimpleName(), method.toGenericString(), condition);
 		return DiscoveryIssue.builder(Severity.WARNING, message) //
 				.source(MethodSource.from(method)) //
 				.build();
