@@ -91,8 +91,9 @@ class DiscoveryIssueNotifier {
 	}
 
 	private static Consumer<Supplier<String>> logger(Severity severity) {
+		// TODO [#4246] Use switch expression
 		switch (severity) {
-			case NOTICE:
+			case INFO:
 				return logger::info;
 			case WARNING:
 				return logger::warn;

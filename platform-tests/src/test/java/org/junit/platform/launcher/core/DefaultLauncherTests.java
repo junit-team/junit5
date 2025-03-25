@@ -758,7 +758,7 @@ class DefaultLauncherTests {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				var listener = discoveryRequest.getDiscoveryListener();
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.INFO, "info"));
 				return new EngineDescriptor(uniqueId, "Engine");
 			}
 
@@ -777,7 +777,7 @@ class DefaultLauncherTests {
 		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
 		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
-				.contains("(1) [NOTICE] notice");
+				.contains("(1) [INFO] info");
 		assertThat(logRecord.getInstant()) //
 				.isBetween(result.startTime(), result.finishTime());
 	}
@@ -790,7 +790,7 @@ class DefaultLauncherTests {
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				var listener = discoveryRequest.getDiscoveryListener();
 				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.INFO, "info"));
 				throw new RuntimeException("boom");
 			}
 		});
@@ -813,7 +813,7 @@ class DefaultLauncherTests {
 		logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
 		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
-				.contains("(1) [NOTICE] notice");
+				.contains("(1) [INFO] info");
 		assertThat(logRecord.getInstant()) //
 				.isBetween(result.startTime(), result.finishTime());
 	}
@@ -825,7 +825,7 @@ class DefaultLauncherTests {
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				var listener = discoveryRequest.getDiscoveryListener();
-				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.NOTICE, "notice"));
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.INFO, "info"));
 				return new EngineDescriptor(uniqueId, "Engine");
 			}
 
@@ -844,7 +844,7 @@ class DefaultLauncherTests {
 		var logRecord = findFirstDiscoveryIssueLogRecord(listener, Level.INFO);
 		assertThat(logRecord.getMessage()) //
 				.startsWith("TestEngine with ID 'engine-id' encountered a non-critical issue during test discovery") //
-				.contains("(1) [NOTICE] notice");
+				.contains("(1) [INFO] info");
 		assertThat(logRecord.getInstant()) //
 				.isBetween(result.startTime(), result.finishTime());
 	}
