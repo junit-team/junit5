@@ -79,14 +79,9 @@ public interface DiscoveryIssue {
 		NOTICE,
 
 		/**
-		 * Indicates that a deprecated feature was used that might be removed
-		 * or change behavior in a future release.
-		 */
-		DEPRECATION,
-
-		/**
 		 * Indicates that the engine encountered something that is problematic
-		 * and might lead to unexpected behavior.
+		 * and might lead to unexpected behavior or will be removed or changed
+		 * in a future release.
 		 */
 		WARNING,
 
