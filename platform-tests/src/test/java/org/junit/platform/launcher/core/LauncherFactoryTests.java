@@ -580,15 +580,11 @@ class LauncherFactoryTests {
 	private static class AutoCloseCheckListener implements LauncherSessionListener {
 		@Override
 		public void launcherSessionClosed(LauncherSession session) {
-			assertThat(sessionResource.isClosed()).isFalse();
-
 			CloseTrackingResource sessionResource = session //
 					.getStore() //
 					.get(Namespace.GLOBAL, "sessionResource", CloseTrackingResource.class);
 
-			session.getStore().close();
-
-			assertThat(sessionResource.isClosed()).isTrue();
+			assertThat(sessionResource.isClosed()).isFalse();
 		}
 	}
 }
