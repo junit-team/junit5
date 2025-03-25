@@ -394,7 +394,10 @@ class LauncherFactoryTests {
 			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
 
 			launcher.execute(request);
+			assertThat(CloseTrackingResource.closed).isFalse();
 		}
+
+		assertThat(CloseTrackingResource.closed).isTrue();
 	}
 
 	@Test
