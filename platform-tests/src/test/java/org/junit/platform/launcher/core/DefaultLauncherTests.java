@@ -73,6 +73,7 @@ import org.junit.platform.fakes.TestDescriptorStub;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.fakes.TestEngineStub;
 import org.junit.platform.launcher.EngineDiscoveryResult;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.PostDiscoveryFilterStub;
@@ -739,6 +740,7 @@ class DefaultLauncherTests {
 
 		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
 		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(DiscoveryIssueException.class) //
 				.hasMessageStartingWith(
 					"TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
 				.hasMessageContaining("(1) [ERROR] error");
@@ -857,6 +859,7 @@ class DefaultLauncherTests {
 
 		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
 		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(DiscoveryIssueException.class) //
 				.hasMessageStartingWith(
 					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
 				.hasMessageContaining("(1) [ERROR] %s could not be resolved", selector);
@@ -879,10 +882,70 @@ class DefaultLauncherTests {
 
 		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
 		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(DiscoveryIssueException.class) //
 				.hasMessageStartingWith(
 					"TestEngine with ID 'some-engine' encountered a critical issue during test discovery") //
 				.hasMessageContaining("(1) [ERROR] %s resolution failed", selector) //
 				.hasMessageContaining("Cause: java.lang.RuntimeException: boom");
+	}
+
+	@Test
+	void allowsConfiguringCriticalDiscoveryIssueSeverity() {
+
+		var engine = new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.INFO, "info"));
+				return new EngineDescriptor(uniqueId, "Engine");
+			}
+		};
+
+		var result = execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, "info"));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.FAILED);
+		assertThat(result.testExecutionResult().getThrowable().orElseThrow()) //
+				.isInstanceOf(DiscoveryIssueException.class) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [INFO] info");
+	}
+
+	@Test
+	void fallsBackToErrorSeverityIfCriticalSeverityIsConfiguredIncorrectly(
+			@TrackLogRecords LogRecordListener listener) {
+
+		var engine = new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.INFO, "info"));
+				return new EngineDescriptor(uniqueId, "Engine");
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var executionListener = request.getEngineExecutionListener();
+				var engineDescriptor = request.getRootTestDescriptor();
+				executionListener.executionStarted(engineDescriptor);
+				executionListener.executionFinished(engineDescriptor, successful());
+			}
+		};
+
+		var result = execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, "wrong"));
+
+		assertThat(result.testExecutionResult().getStatus()).isEqualTo(Status.SUCCESSFUL);
+
+		var logRecord = listener.stream(DiscoveryIssueCollector.class, Level.WARNING) //
+				.findFirst() //
+				.orElseThrow();
+		assertThat(logRecord.getMessage()) //
+				.isEqualTo(
+					"Invalid DiscoveryIssue.Severity 'wrong' set via the '%s' configuration parameter. "
+							+ "Falling back to the ERROR default value.",
+					LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME);
 	}
 
 	private static ReportedData execute(TestEngine engine) {

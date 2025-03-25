@@ -101,7 +101,7 @@ public class EngineDiscoveryOrchestrator {
 
 	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest request, Phase phase,
 			Function<String, UniqueId> uniqueIdCreator) {
-		DiscoveryIssueCollector issueCollector = new DiscoveryIssueCollector();
+		DiscoveryIssueCollector issueCollector = new DiscoveryIssueCollector(request.getConfigurationParameters());
 		LauncherDiscoveryListener listener = getLauncherDiscoveryListener(request, issueCollector);
 		LauncherDiscoveryRequest delegatingRequest = new DelegatingLauncherDiscoveryRequest(request) {
 			@Override
