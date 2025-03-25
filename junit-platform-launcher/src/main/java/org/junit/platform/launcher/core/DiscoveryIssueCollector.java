@@ -54,10 +54,10 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 	}
 
 	DiscoveryIssueNotifier toNotifier() {
-		if (issues.isEmpty()) {
+		if (this.issues.isEmpty()) {
 			return DiscoveryIssueNotifier.NO_ISSUES;
 		}
 		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
-		return DiscoveryIssueNotifier.from(criticalSeverity, issues);
+		return DiscoveryIssueNotifier.from(criticalSeverity, this.issues);
 	}
 }

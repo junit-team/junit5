@@ -15,7 +15,6 @@ import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor.getEnclosingTestClasses;
-import static org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
@@ -45,7 +44,6 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.Filterable;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestClassAware;
-import org.junit.jupiter.engine.discovery.predicates.IsNestedTestClass;
 import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoverySelector;
@@ -56,6 +54,7 @@ import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.NestedClassSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.SelectorResolver;
 
 /**
@@ -63,30 +62,32 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
  */
 class ClassSelectorResolver implements SelectorResolver {
 
-	private static final IsTestClassWithTests isTestClassWithTests = new IsTestClassWithTests();
-	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
 	private static final Predicate<Class<?>> isAnnotatedWithClassTemplate = testClass -> isAnnotated(testClass,
 		ClassTemplate.class);
+
+	private final IsTestClassWithTests isTestClassWithTests;
 
 	private final Predicate<String> classNameFilter;
 	private final JupiterConfiguration configuration;
 
-	ClassSelectorResolver(Predicate<String> classNameFilter, JupiterConfiguration configuration) {
+	ClassSelectorResolver(Predicate<String> classNameFilter, JupiterConfiguration configuration,
+			DiscoveryIssueReporter issueReporter) {
 		this.classNameFilter = classNameFilter;
 		this.configuration = configuration;
+		this.isTestClassWithTests = new IsTestClassWithTests(issueReporter);
 	}
 
 	@Override
 	public Resolution resolve(ClassSelector selector, Context context) {
 		Class<?> testClass = selector.getJavaClass();
-		if (isTestClassWithTests.test(testClass)) {
+		if (this.isTestClassWithTests.test(testClass)) {
 			// Nested tests are never filtered out
 			if (classNameFilter.test(testClass.getName())) {
 				return toResolution(
 					context.addToParent(parent -> Optional.of(newStaticClassTestDescriptor(parent, testClass))));
 			}
 		}
-		else if (isNestedTestClass.test(testClass)) {
+		else if (this.isTestClassWithTests.isNestedTestClass.test(testClass)) {
 			return toResolution(context.addToParent(() -> DiscoverySelectors.selectClass(testClass.getEnclosingClass()),
 				parent -> Optional.of(newMemberClassTestDescriptor(parent, testClass))));
 		}
@@ -95,7 +96,7 @@ class ClassSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(NestedClassSelector selector, Context context) {
-		if (isNestedTestClass.test(selector.getNestedClass())) {
+		if (this.isTestClassWithTests.isNestedTestClass.test(selector.getNestedClass())) {
 			return toResolution(context.addToParent(() -> selectClass(selector.getEnclosingClasses()),
 				parent -> Optional.of(newMemberClassTestDescriptor(parent, selector.getNestedClass()))));
 		}
@@ -165,7 +166,7 @@ class ClassSelectorResolver implements SelectorResolver {
 
 		String className = lastSegment.getValue();
 		return ReflectionSupport.tryToLoadClass(className).toOptional() //
-				.filter(isTestClassWithTests) //
+				.filter(this.isTestClassWithTests) //
 				.filter(condition) //
 				.map(testClass -> toResolution(
 					context.addToParent(parent -> Optional.of(factory.apply(parent, testClass))))) //
@@ -179,8 +180,8 @@ class ClassSelectorResolver implements SelectorResolver {
 		String simpleClassName = uniqueId.getLastSegment().getValue();
 		return toResolution(context.addToParent(() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
 			Class<?> parentTestClass = ((TestClassAware) parent).getTestClass();
-			return ReflectionSupport.findNestedClasses(parentTestClass,
-				isNestedTestClass.and(where(Class::getSimpleName, isEqual(simpleClassName)))).stream() //
+			return ReflectionSupport.findNestedClasses(parentTestClass, this.isTestClassWithTests.isNestedTestClass.and(
+				where(Class::getSimpleName, isEqual(simpleClassName)))).stream() //
 					.findFirst() //
 					.filter(condition) //
 					.map(testClass -> factory.apply(parent, testClass));
@@ -271,10 +272,12 @@ class ClassSelectorResolver implements SelectorResolver {
 			}
 			List<Class<?>> testClasses = testClassesSupplier.get();
 			Class<?> testClass = testClasses.get(testClasses.size() - 1);
-			Stream<DiscoverySelector> methods = findMethods(testClass, isTestOrTestFactoryOrTestTemplateMethod,
-				TOP_DOWN).stream().map(method -> selectMethod(testClasses, method));
-			Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass, isNestedTestClass).map(
-				nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
+			Stream<DiscoverySelector> methods = findMethods(testClass,
+				this.isTestClassWithTests.isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN).stream().map(
+					method -> selectMethod(testClasses, method));
+			Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass,
+				this.isTestClassWithTests.isNestedTestClass).map(
+					nestedClass -> DiscoverySelectors.selectNestedClass(testClasses, nestedClass));
 			return Stream.concat(methods, nestedClasses).collect(
 				toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 		};

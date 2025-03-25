@@ -80,7 +80,6 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	@Override
 	protected TestFactoryTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		// TODO #871 Check that dynamic descendant filter is copied correctly
 		return new TestFactoryTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getDisplayName(), getTestClass(),
 			getTestMethod(), this.configuration, this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}

@@ -28,6 +28,9 @@ public class IsNestedTestClass implements Predicate<Class<?>> {
 
 	private static final IsInnerClass isInnerClass = new IsInnerClass();
 
+	IsNestedTestClass() {
+	}
+
 	@Override
 	public boolean test(Class<?> candidate) {
 		//please do not collapse into single return

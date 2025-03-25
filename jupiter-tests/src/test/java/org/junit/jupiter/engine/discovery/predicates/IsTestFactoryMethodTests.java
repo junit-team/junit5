@@ -11,10 +11,12 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Disabled;
@@ -22,6 +24,8 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.support.descriptor.MethodSource;
 
 /**
  * Unit tests for {@link IsTestFactoryMethod}.
@@ -30,7 +34,8 @@ import org.junit.platform.commons.support.ReflectionSupport;
  */
 class IsTestFactoryMethodTests {
 
-	private static final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod();
+	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+	final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod(discoveryIssues::add);
 
 	@Test
 	void factoryMethodReturningCollectionOfDynamicTests() {
@@ -39,7 +44,15 @@ class IsTestFactoryMethodTests {
 
 	@Test
 	void bogusFactoryMethodReturningVoid() {
-		assertThat(isTestFactoryMethod).rejects(method("bogusVoidFactory"));
+		var method = method("bogusVoidFactory");
+
+		assertThat(isTestFactoryMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
+		assertThat(issue.message()).isEqualTo(
+			"@TestFactory method '%s' must return a value. It will be not be executed.", method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
 
 	// TODO [#949] Enable test once IsTestFactoryMethod properly checks return type.
@@ -57,9 +70,10 @@ class IsTestFactoryMethodTests {
 	}
 
 	private static Method method(String name) {
-		return ReflectionSupport.findMethod(ClassWithTestFactoryMethods.class, name).get();
+		return ReflectionSupport.findMethod(ClassWithTestFactoryMethods.class, name).orElseThrow();
 	}
 
+	@SuppressWarnings("unused")
 	private static class ClassWithTestFactoryMethods {
 
 		@TestFactory

@@ -289,9 +289,19 @@ public final class ReflectionUtils {
 		return Modifier.isAbstract(clazz.getModifiers());
 	}
 
+	@API(status = INTERNAL, since = "1.13")
+	public static boolean isNotAbstract(Class<?> clazz) {
+		return !isAbstract(clazz);
+	}
+
 	public static boolean isAbstract(Member member) {
 		Preconditions.notNull(member, "Member must not be null");
 		return Modifier.isAbstract(member.getModifiers());
+	}
+
+	@API(status = INTERNAL, since = "1.13")
+	public static boolean isNotAbstract(Member member) {
+		return !isAbstract(member);
 	}
 
 	public static boolean isStatic(Class<?> clazz) {

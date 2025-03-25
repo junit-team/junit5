@@ -12,6 +12,8 @@ package org.junit.platform.engine.support.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -41,10 +43,29 @@ public interface DiscoveryIssueReporter {
 	 * {@code null}
 	 * @param engineId the unique identifier of the engine; never {@code null}
 	 */
-	static DiscoveryIssueReporter create(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
+	static DiscoveryIssueReporter forwarding(EngineDiscoveryListener engineDiscoveryListener, UniqueId engineId) {
 		Preconditions.notNull(engineDiscoveryListener, "engineDiscoveryListener must not be null");
 		Preconditions.notNull(engineId, "engineId must not be null");
 		return issue -> engineDiscoveryListener.issueEncountered(engineId, issue);
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that avoids reporting
+	 * duplicate issues.
+	 *
+	 * <p>The implementation returned by this method is not thread-safe.
+	 *
+	 * @param delegate the delegate to forward issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter deduplicating(DiscoveryIssueReporter delegate) {
+		Preconditions.notNull(delegate, "delegate must not be null");
+		Set<DiscoveryIssue> seen = new HashSet<>();
+		return issue -> {
+			boolean notSeen = seen.add(issue);
+			if (notSeen) {
+				delegate.reportIssue(issue);
+			}
+		};
 	}
 
 	/**
@@ -98,30 +119,35 @@ public interface DiscoveryIssueReporter {
 	interface Condition<T> extends Predicate<T>, Consumer<T> {
 
 		/**
-		 * Return a composed condition that represents a logical AND of the
-		 * supplied conditions without short-circuiting.
+		 * Return a composed condition that represents a logical AND of this
+		 * and the supplied condition.
 		 *
-		 * <p><em>All</em> of the supplied conditions will be evaluated even if
-		 * one or more of them return {@code false} to ensure that all issues
-		 * are reported.
+		 * <p>The default implementation avoids short-circuiting so
+		 * <em>both</em> conditions will be evaluated even if this condition
+		 * returns {@code false} to ensure that all issues are reported.
 		 *
-		 * @param conditions the conditions to compose; never {@code null}, not
-		 * empty, and must not contain any {@code null} elements
 		 * @return the composed condition; never {@code null}
 		 */
-		@SafeVarargs
-		@SuppressWarnings("varargs")
-		static <T> Condition<T> allOf(Condition<? super T>... conditions) {
-			Preconditions.notNull(conditions, "conditions must not be null");
-			Preconditions.notEmpty(conditions, "conditions must not be empty");
-			Preconditions.containsNoNullElements(conditions, "conditions must not contain null elements");
-			return value -> {
-				boolean result = true;
-				for (Condition<? super T> condition : conditions) {
-					result &= condition.test(value);
-				}
-				return result;
-			};
+		@Override
+		default Condition<T> and(Predicate<? super T> other) {
+			Preconditions.notNull(other, "other condition must not be null");
+			return (t) -> test(t) & other.test(t);
+		}
+
+		/**
+		 * Return a composed condition that represents a logical AND of this
+		 * and the supplied condition.
+		 *
+		 * <p>The default implementation avoids short-circuiting so
+		 * <em>both</em> conditions will be evaluated even if this condition
+		 * returns {@code true} to ensure that all issues are reported.
+		 *
+		 * @return the composed condition; never {@code null}
+		 */
+		@Override
+		default Predicate<T> or(Predicate<? super T> other) {
+			Preconditions.notNull(other, "other condition must not be null");
+			return (t) -> test(t) | other.test(t);
 		}
 
 		/**

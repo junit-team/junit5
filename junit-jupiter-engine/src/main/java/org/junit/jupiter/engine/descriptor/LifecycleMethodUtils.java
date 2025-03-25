@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
-import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.allOf;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -88,15 +87,14 @@ final class LifecycleMethodUtils {
 			boolean requireStatic, DiscoveryIssueReporter issueReporter) {
 
 		findAllClassTemplateInvocationLifecycleMethods(testClass) //
-				.forEach(allOf( //
-					isNotPrivateError(issueReporter), //
-					returnsPrimitiveVoid(issueReporter,
-						LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName), //
-					requireStatic
-							? isStatic(issueReporter,
-								LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)
-							: __ -> true //
-				));
+				.forEach(isNotPrivateError(issueReporter) //
+						.and(returnsPrimitiveVoid(issueReporter,
+							LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)) //
+						.and(requireStatic
+								? isStatic(issueReporter,
+									LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)
+								: __ -> true) //
+				);
 	}
 
 	private static Stream<Method> findAllClassTemplateInvocationLifecycleMethods(Class<?> testClass) {
@@ -134,8 +132,8 @@ final class LifecycleMethodUtils {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
 				.peek(isNotPrivateDeprecation(issueReporter, annotationType::getSimpleName)) //
-				.filter(allOf(returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()),
-					additionalCondition)) //
+				.filter(
+					returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(additionalCondition)) //
 				.collect(toUnmodifiableList());
 	}
 

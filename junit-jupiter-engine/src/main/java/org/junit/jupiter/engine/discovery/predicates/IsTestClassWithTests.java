@@ -18,6 +18,7 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Test if a class is a JUnit Jupiter test class containing executable tests,
@@ -28,18 +29,18 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.1")
 public class IsTestClassWithTests implements Predicate<Class<?>> {
 
-	private static final IsTestMethod isTestMethod = new IsTestMethod();
-
-	private static final IsTestFactoryMethod isTestFactoryMethod = new IsTestFactoryMethod();
-
-	private static final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod();
-
-	public static final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod = isTestMethod.or(
-		isTestFactoryMethod).or(isTestTemplateMethod);
+	public final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod;
 
 	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
 
-	private static final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+	public final IsNestedTestClass isNestedTestClass = new IsNestedTestClass();
+
+	@API(status = INTERNAL, since = "5.13")
+	public IsTestClassWithTests(DiscoveryIssueReporter issueReporter) {
+		this.isTestOrTestFactoryOrTestTemplateMethod = new IsTestMethod(issueReporter) //
+				.or(new IsTestFactoryMethod(issueReporter)) //
+				.or(new IsTestTemplateMethod(issueReporter));
+	}
 
 	@Override
 	public boolean test(Class<?> candidate) {
