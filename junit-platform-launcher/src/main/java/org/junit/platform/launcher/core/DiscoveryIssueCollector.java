@@ -15,18 +15,30 @@ import static org.junit.platform.engine.SelectorResolutionResult.Status.UNRESOLV
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 
+	private static final Logger logger = LoggerFactory.getLogger(DiscoveryIssueCollector.class);
+
 	final List<DiscoveryIssue> issues = new ArrayList<>();
+	private final ConfigurationParameters configurationParameters;
+
+	DiscoveryIssueCollector(ConfigurationParameters configurationParameters) {
+		this.configurationParameters = configurationParameters;
+	}
 
 	@Override
 	public void engineDiscoveryStarted(UniqueId engineId) {
@@ -57,7 +69,24 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		if (this.issues.isEmpty()) {
 			return DiscoveryIssueNotifier.NO_ISSUES;
 		}
-		Severity criticalSeverity = Severity.ERROR; // TODO #242 - make this configurable
-		return DiscoveryIssueNotifier.from(criticalSeverity, this.issues);
+		return DiscoveryIssueNotifier.from(getCriticalSeverity(), this.issues);
+	}
+
+	private Severity getCriticalSeverity() {
+		Severity defaultValue = Severity.ERROR;
+		return this.configurationParameters //
+				.get(LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, value -> {
+					try {
+						return Severity.valueOf(value.toUpperCase(Locale.ROOT));
+					}
+					catch (Exception e) {
+						logger.warn(() -> String.format(
+							"Invalid DiscoveryIssue.Severity '%s' set via the '%s' configuration parameter. "
+									+ "Falling back to the %s default value.",
+							value, LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, defaultValue));
+						return defaultValue;
+					}
+				}) //
+				.orElse(defaultValue);
 	}
 }

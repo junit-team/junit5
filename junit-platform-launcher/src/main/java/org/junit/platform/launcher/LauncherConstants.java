@@ -219,6 +219,31 @@ public class LauncherConstants {
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public static final String OUTPUT_DIR_UNIQUE_NUMBER_PLACEHOLDER = "{uniqueNumber}";
 
+	/**
+	 * Property name used to configure the critical severity of issues
+	 * encountered during test discovery.
+	 *
+	 * <p>If an engine reports an issue with a severity equal to or higher than
+	 * the configured critical severity, its tests will not be executed.
+	 * Instead, the engine will be reported as failed during execution with a
+	 * {@link org.junit.platform.launcher.core.DiscoveryIssueException} listing
+	 * all critical issues.
+	 *
+	 * <h4>Supported Values</h4>
+	 *
+	 * <p>Supported values include names of enum constants defined in
+	 * {@link org.junit.platform.engine.DiscoveryIssue.Severity Severity},
+	 * ignoring case.
+	 *
+	 * <p>If not specified, the default is "error" which corresponds to
+	 * {@code Severity.ERROR)}.
+	 *
+	 * @since 1.13
+	 * @see org.junit.platform.engine.DiscoveryIssue.Severity
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public static final String CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME = "junit.platform.discovery.issue.severity.critical";
+
 	private LauncherConstants() {
 		/* no-op */
 	}
