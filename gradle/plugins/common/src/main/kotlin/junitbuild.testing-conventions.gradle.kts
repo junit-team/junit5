@@ -132,6 +132,7 @@ tasks.withType<Test>().configureEach {
 	}
 	systemProperty("junit.platform.output.capture.stdout", "true")
 	systemProperty("junit.platform.output.capture.stderr", "true")
+	systemProperty("junit.platform.discovery.issue.severity.critical", "info")
 
 	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
 		classpath.from(javaAgentClasspath)
