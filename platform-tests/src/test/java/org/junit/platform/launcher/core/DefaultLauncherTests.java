@@ -968,6 +968,7 @@ class DefaultLauncherTests {
 		}).when(executionListener).executionFinished(any(), any());
 
 		var builder = request() //
+				.enableImplicitConfigurationParameters(false) //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging");
 		var request = configurer.apply(builder).build();
 		var launcher = createLauncher(engine);
