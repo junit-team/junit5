@@ -131,7 +131,7 @@ final class LifecycleMethodUtils {
 			DiscoveryIssueReporter issueReporter, Condition<? super Method> additionalCondition) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
-				.peek(isNotPrivateDeprecation(issueReporter, annotationType::getSimpleName)) //
+				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName)) //
 				.filter(
 					returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(additionalCondition)) //
 				.collect(toUnmodifiableList());
@@ -164,13 +164,13 @@ final class LifecycleMethodUtils {
 		});
 	}
 
-	private static Condition<Method> isNotPrivateDeprecation(DiscoveryIssueReporter issueReporter,
+	private static Condition<Method> isNotPrivateWarning(DiscoveryIssueReporter issueReporter,
 			Supplier<String> annotationNameProvider) {
 		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
 			String message = String.format(
 				"@%s method '%s' should not be private. This will be disallowed in a future release.",
 				annotationNameProvider.get(), method.toGenericString());
-			return createIssue(Severity.DEPRECATION, message, method);
+			return createIssue(Severity.WARNING, message, method);
 		});
 	}
 

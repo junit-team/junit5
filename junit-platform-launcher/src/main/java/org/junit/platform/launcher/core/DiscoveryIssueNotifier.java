@@ -94,7 +94,6 @@ class DiscoveryIssueNotifier {
 		switch (severity) {
 			case NOTICE:
 				return logger::info;
-			case DEPRECATION:
 			case WARNING:
 				return logger::warn;
 			case ERROR:
