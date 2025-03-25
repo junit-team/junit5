@@ -76,7 +76,7 @@ public interface DiscoveryIssue {
 		 * potentially problematic, but could also happen due to a valid setup
 		 * or configuration.
 		 */
-		NOTICE,
+		INFO,
 
 		/**
 		 * Indicates that the engine encountered something that is problematic

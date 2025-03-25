@@ -10,7 +10,7 @@
 
 package org.junit.platform.engine.support.discovery;
 
-import static org.junit.platform.engine.DiscoveryIssue.Severity.NOTICE;
+import static org.junit.platform.engine.DiscoveryIssue.Severity.INFO;
 import static org.junit.platform.engine.DiscoveryIssue.Severity.WARNING;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.unresolved;
@@ -35,7 +35,7 @@ public class EngineDiscoveryRequestResolverTests {
 					@Override
 					public Resolution resolve(ClassSelector selector, Context context) {
 						ctx.getIssueReporter() //
-								.reportIssue(DiscoveryIssue.builder(NOTICE, "test") //
+								.reportIssue(DiscoveryIssue.builder(INFO, "test") //
 										.source(ClassSource.from(selector.getClassName())));
 						return unresolved();
 					}
@@ -52,7 +52,7 @@ public class EngineDiscoveryRequestResolverTests {
 
 		resolver.resolve(request, engineDescriptor);
 
-		var issue = DiscoveryIssue.builder(NOTICE, "test") //
+		var issue = DiscoveryIssue.builder(INFO, "test") //
 				.source(ClassSource.from(EngineDiscoveryRequestResolverTests.class)) //
 				.build();
 		verify(listener).issueEncountered(engineId, issue);
