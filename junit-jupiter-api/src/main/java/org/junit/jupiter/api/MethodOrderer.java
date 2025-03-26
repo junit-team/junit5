@@ -265,7 +265,7 @@ public interface MethodOrderer {
 		private static final Logger logger = LoggerFactory.getLogger(Random.class);
 
 		static {
-			logger.config(() -> "MethodOrderer.Random default seed: " + RandomOrdererUtils.DEFAULT_SEED);
+			logger.config(() -> "MethodOrderer.Random default seed: " + SeedResolver.DEFAULT_SEED);
 		}
 
 		/**
@@ -286,7 +286,7 @@ public interface MethodOrderer {
 		 *
 		 * @see ClassOrderer.Random
 		 */
-		public static final String RANDOM_SEED_PROPERTY_NAME = RandomOrdererUtils.RANDOM_SEED_PROPERTY_NAME;
+		public static final String RANDOM_SEED_PROPERTY_NAME = SeedResolver.EXECUTION_ORDER_RANDOM_SEED_PROPERTY;
 
 		public Random() {
 		}
@@ -298,9 +298,8 @@ public interface MethodOrderer {
 		@Override
 		public void orderMethods(MethodOrdererContext context) {
 			Collections.shuffle(context.getMethodDescriptors(),
-				new java.util.Random(RandomOrdererUtils.getSeed(context::getConfigurationParameter, logger)));
+				new java.util.Random(SeedResolver.resolveSeed(context::getConfigurationParameter, logger)));
 		}
-
 	}
 
 }

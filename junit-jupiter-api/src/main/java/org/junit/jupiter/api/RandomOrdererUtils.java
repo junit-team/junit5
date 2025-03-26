@@ -23,44 +23,20 @@ import org.junit.platform.commons.logging.Logger;
  * @see MethodOrderer.Random
  */
 class RandomOrdererUtils {
-	@Deprecated
-	static final String EXECUTION_ORDER_RANDOM_SEED_PROPERTY = "junit.jupiter.execution.order.random.seed";
-	static final String RANDOM_SEED_PROPERTY_NAME = EXECUTION_ORDER_RANDOM_SEED_PROPERTY;
 
-	static final long DEFAULT_SEED = System.nanoTime();
+	/**
+	 * @deprecated Use {@link SeedResolver#EXECUTION_ORDER_RANDOM_SEED_PROPERTY} instead.
+	 */
+	@Deprecated
+	static final String RANDOM_SEED_PROPERTY_NAME = SeedResolver.EXECUTION_ORDER_RANDOM_SEED_PROPERTY;
+
+	/**
+	 * @deprecated Use {@link SeedResolver#DEFAULT_SEED} instead.
+	 */
+	@Deprecated
+	static final long DEFAULT_SEED = SeedResolver.DEFAULT_SEED;
 
 	static Long getSeed(Function<String, Optional<String>> configurationParameterLookup, Logger logger) {
-		return getCustomSeed(configurationParameterLookup, logger).orElse(DEFAULT_SEED);
+		return SeedResolver.resolveSeed(configurationParameterLookup, logger);
 	}
-
-	private static Optional<Long> getCustomSeed(Function<String, Optional<String>> configurationParameterLookup,
-			Logger logger) {
-		return configurationParameterLookup.apply(EXECUTION_ORDER_RANDOM_SEED_PROPERTY).map(
-			configurationParameter -> parseAndLogSeed(configurationParameter, logger));
-	}
-
-	private static Long parseAndLogSeed(String configurationParameter, Logger logger) {
-		try {
-			logCustomSeedUsage(configurationParameter, logger);
-			return Long.valueOf(configurationParameter);
-		}
-		catch (NumberFormatException ex) {
-			logSeedFallbackWarning(configurationParameter, logger, ex);
-			return null;
-		}
-	}
-
-	private static void logCustomSeedUsage(String configurationParameter, Logger logger) {
-		logger.config(() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-			EXECUTION_ORDER_RANDOM_SEED_PROPERTY, configurationParameter));
-	}
-
-	private static void logSeedFallbackWarning(String configurationParameter, Logger logger, NumberFormatException ex) {
-		logger.warn(ex,
-			() -> String.format(
-				"Failed to convert configuration parameter [%s] with value [%s] to a long. "
-						+ "Using default seed [%s] as fallback.",
-				EXECUTION_ORDER_RANDOM_SEED_PROPERTY, configurationParameter, DEFAULT_SEED));
-	}
-
 }
