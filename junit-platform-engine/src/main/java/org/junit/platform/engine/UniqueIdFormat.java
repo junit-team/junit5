@@ -124,7 +124,6 @@ class UniqueIdFormat implements Serializable {
 		return String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenCharacter);
 	}
 
-
 	/**
 	 * Format and return the string representation of the supplied {@code UniqueId}.
 	 */
