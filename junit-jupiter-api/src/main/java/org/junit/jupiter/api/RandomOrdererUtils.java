@@ -24,18 +24,6 @@ import org.junit.platform.commons.logging.Logger;
  */
 class RandomOrdererUtils {
 
-	/**
-	 * @deprecated Use {@link SeedResolver#EXECUTION_ORDER_RANDOM_SEED_PROPERTY} instead.
-	 */
-	@Deprecated
-	static final String RANDOM_SEED_PROPERTY_NAME = SeedResolver.EXECUTION_ORDER_RANDOM_SEED_PROPERTY;
-
-	/**
-	 * @deprecated Use {@link SeedResolver#DEFAULT_SEED} instead.
-	 */
-	@Deprecated
-	static final long DEFAULT_SEED = SeedResolver.DEFAULT_SEED;
-
 	static Long getSeed(Function<String, Optional<String>> configurationParameterLookup, Logger logger) {
 		return SeedResolver.resolveSeed(configurationParameterLookup, logger);
 	}
