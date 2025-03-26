@@ -76,17 +76,12 @@ public interface DiscoveryIssue {
 		 * potentially problematic, but could also happen due to a valid setup
 		 * or configuration.
 		 */
-		NOTICE,
-
-		/**
-		 * Indicates that a deprecated feature was used that might be removed
-		 * or change behavior in a future release.
-		 */
-		DEPRECATION,
+		INFO,
 
 		/**
 		 * Indicates that the engine encountered something that is problematic
-		 * and might lead to unexpected behavior.
+		 * and might lead to unexpected behavior or will be removed or changed
+		 * in a future release.
 		 */
 		WARNING,
 

@@ -56,7 +56,7 @@ class LifecycleMethodUtilsTests {
 			"@BeforeAll method 'private java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.cc()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
 				.source(methodSource) //
 				.build();
-		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+		var privateIssue = DiscoveryIssue.builder(Severity.WARNING,
 			"@BeforeAll method 'private java.lang.Double org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.cc()' should not be private. This will be disallowed in a future release.") //
 				.source(methodSource) //
 				.build();
@@ -77,7 +77,7 @@ class LifecycleMethodUtilsTests {
 			"@AfterAll method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.dd()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).") //
 				.source(methodSource) //
 				.build();
-		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+		var privateIssue = DiscoveryIssue.builder(Severity.WARNING,
 			"@AfterAll method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.dd()' should not be private. This will be disallowed in a future release.") //
 				.source(methodSource) //
 				.build();
@@ -94,7 +94,7 @@ class LifecycleMethodUtilsTests {
 			"@BeforeEach method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.aa()' must not return a value.") //
 				.source(methodSource) //
 				.build();
-		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+		var privateIssue = DiscoveryIssue.builder(Severity.WARNING,
 			"@BeforeEach method 'private java.lang.String org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.aa()' should not be private. This will be disallowed in a future release.") //
 				.source(methodSource) //
 				.build();
@@ -111,7 +111,7 @@ class LifecycleMethodUtilsTests {
 			"@AfterEach method 'private int org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.bb()' must not return a value.") //
 				.source(methodSource) //
 				.build();
-		var privateIssue = DiscoveryIssue.builder(Severity.DEPRECATION,
+		var privateIssue = DiscoveryIssue.builder(Severity.WARNING,
 			"@AfterEach method 'private int org.junit.jupiter.engine.descriptor.TestCaseWithInvalidLifecycleMethods.bb()' should not be private. This will be disallowed in a future release.") //
 				.source(methodSource) //
 				.build();
