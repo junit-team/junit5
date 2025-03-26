@@ -34,20 +34,32 @@ class RandomOrdererUtils {
 
 	private static Optional<Long> getCustomSeed(Function<String, Optional<String>> configurationParameterLookup,
 			Logger logger) {
-		return configurationParameterLookup.apply(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
-			try {
-				logger.config(() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-					RANDOM_SEED_PROPERTY_NAME, configurationParameter));
-				return Long.valueOf(configurationParameter);
-			}
-			catch (NumberFormatException ex) {
-				logger.warn(ex,
-					() -> String.format(
-						"Failed to convert configuration parameter [%s] with value [%s] to a long. "
-								+ "Using default seed [%s] as fallback.",
-						RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
-				return null;
-			}
-		});
+		return configurationParameterLookup.apply(RANDOM_SEED_PROPERTY_NAME).map(
+			configurationParameter -> parseAndLogSeed(configurationParameter, logger));
 	}
+
+	private static Long parseAndLogSeed(String configurationParameter, Logger logger) {
+		try {
+			logCustomSeedUsage(configurationParameter, logger);
+			return Long.valueOf(configurationParameter);
+		}
+		catch (NumberFormatException ex) {
+			logSeedFallbackWarning(configurationParameter, logger, ex);
+			return null;
+		}
+	}
+
+	private static void logCustomSeedUsage(String configurationParameter, Logger logger) {
+		logger.config(() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
+			RANDOM_SEED_PROPERTY_NAME, configurationParameter));
+	}
+
+	private static void logSeedFallbackWarning(String configurationParameter, Logger logger, NumberFormatException ex) {
+		logger.warn(ex,
+			() -> String.format(
+				"Failed to convert configuration parameter [%s] with value [%s] to a long. "
+						+ "Using default seed [%s] as fallback.",
+				RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
+	}
+
 }
