@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.EqualsAndHashCodeAssertions.assertEqualsAndH
 import static org.mockito.Mockito.mock;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -95,4 +96,32 @@ public class DiscoveryIssueTests {
 				.isEqualTo(
 					"DiscoveryIssue [severity = WARNING, message = 'message', source = ClassSource [className = 'org.junit.platform.engine.DiscoveryIssue', filePosition = null], cause = java.lang.RuntimeException: boom]");
 	}
+
+	@Test
+	void withNewMessage() {
+		var issue = DiscoveryIssue.builder(Severity.WARNING, "message") //
+				.source(ClassSource.from(DiscoveryIssue.class)) //
+				.cause(new RuntimeException("boom")) //
+				.build();
+
+		var newIssue = issue.withMessage(__ -> "new message");
+
+		assertThat(newIssue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(newIssue.message()).isEqualTo("new message");
+		assertThat(newIssue.source()).containsSame(issue.source().orElseThrow());
+		assertThat(newIssue.cause()).containsSame(issue.cause().orElseThrow());
+	}
+
+	@Test
+	void withSameMessage() {
+		var issue = DiscoveryIssue.builder(Severity.WARNING, "message") //
+				.source(ClassSource.from(DiscoveryIssue.class)) //
+				.cause(new RuntimeException("boom")) //
+				.build();
+
+		var newIssue = issue.withMessage(UnaryOperator.identity());
+
+		assertThat(newIssue).isSameAs(issue);
+	}
+
 }

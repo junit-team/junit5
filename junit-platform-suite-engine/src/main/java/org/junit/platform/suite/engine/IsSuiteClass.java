@@ -32,7 +32,7 @@ final class IsSuiteClass implements Predicate<Class<?>> {
 	private final Condition<Class<?>> condition;
 
 	IsSuiteClass(DiscoveryIssueReporter issueReporter) {
-		this.condition = isAbstractOrNotPrivate(issueReporter) //
+		this.condition = isNotPrivateUnlessAbstract(issueReporter) //
 				.and(isNotLocal(issueReporter)) //
 				.and(isNotInner(issueReporter));
 	}
@@ -41,15 +41,16 @@ final class IsSuiteClass implements Predicate<Class<?>> {
 	public boolean test(Class<?> testClass) {
 		return hasSuiteAnnotation(testClass) //
 				&& condition.test(testClass) //
-				&& isNotAbstract(testClass); // Don't report an issue since @Suite is inherited
+				&& isNotAbstract(testClass);
 	}
 
 	private boolean hasSuiteAnnotation(Class<?> testClass) {
 		return AnnotationSupport.isAnnotated(testClass, Suite.class);
 	}
 
-	private static Condition<Class<?>> isAbstractOrNotPrivate(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(testClass -> isAbstract(testClass) || isNotPrivate(testClass),
+	private static Condition<Class<?>> isNotPrivateUnlessAbstract(DiscoveryIssueReporter issueReporter) {
+		// Allow abstract test classes to be private because @Suite is inherited and subclasses may widen access.
+		return issueReporter.createReportingCondition(testClass -> isNotPrivate(testClass) || isAbstract(testClass),
 			testClass -> createIssue(testClass, "must not be private."));
 	}
 

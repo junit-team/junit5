@@ -75,12 +75,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
 		this.lifecycleMethods = new LifecycleMethods(suiteClass, issueReporter);
-		this.discoveryRequestBuilder.listener(new LauncherDiscoveryListener() {
-			@Override
-			public void issueEncountered(UniqueId engineUniqueId, DiscoveryIssue issue) {
-				discoveryListener.issueEncountered(engineUniqueId, issue);
-			}
-		});
+		this.discoveryRequestBuilder.listener(new DiscoveryIssueForwardingListener(discoveryListener));
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {
@@ -219,4 +214,27 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
+	private static class DiscoveryIssueForwardingListener implements LauncherDiscoveryListener {
+
+		private final EngineDiscoveryListener discoveryListener;
+
+		DiscoveryIssueForwardingListener(EngineDiscoveryListener discoveryListener) {
+			this.discoveryListener = discoveryListener;
+		}
+
+		@Override
+		public void issueEncountered(UniqueId engineUniqueId, DiscoveryIssue issue) {
+			String engineId = engineUniqueId.getLastSegment().getValue();
+			if (!SuiteEngineDescriptor.ENGINE_ID.equals(engineId)) {
+				issue = issue.withMessage(message -> {
+					String prefix = String.format("[%s] ", engineId);
+					if (message.startsWith(prefix)) {
+						return message;
+					}
+					return prefix + message;
+				});
+			}
+			discoveryListener.issueEncountered(engineUniqueId, issue);
+		}
+	}
 }
