@@ -115,9 +115,15 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private void checkDoesNotContain(String typeOrValue, char forbiddenCharacter) {
-		Preconditions.condition(typeOrValue.indexOf(forbiddenCharacter) < 0,
-			() -> String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenCharacter));
+		boolean containsForbiddenChar = typeOrValue.indexOf(forbiddenCharacter) >= 0;
+		String errorMessage = formatForbiddenCharMessage(typeOrValue, forbiddenCharacter);
+		Preconditions.condition(!containsForbiddenChar, () -> errorMessage);
 	}
+
+	private String formatForbiddenCharMessage(String typeOrValue, char forbiddenCharacter) {
+		return String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenCharacter);
+	}
+
 
 	/**
 	 * Format and return the string representation of the supplied {@code UniqueId}.
