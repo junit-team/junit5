@@ -497,9 +497,24 @@ class SuiteEngineTests {
 	@Test
 	void cyclicSuite() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
+		var expectedUniqueId = UniqueId.forEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName())
+				.appendEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName());
+		var message = "The suite configuration of [%s] resulted in a cycle [%s] and will not be discovered a second time."
+				.formatted(CyclicSuite.class.getName(), expectedUniqueId);
+		var issue = DiscoveryIssue.builder(Severity.INFO, message)
+				.source(ClassSource.from(CyclicSuite.class))
+				.build();
+
+		var testKit = EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(CyclicSuite.class))
-				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
 				.execute()
 				.allEvents()
 				.assertThatEvents()

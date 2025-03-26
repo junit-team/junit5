@@ -21,6 +21,8 @@ import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -32,6 +34,7 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -64,13 +67,20 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueReporter issueReporter) {
+			OutputDirectoryProvider outputDirectoryProvider, EngineDiscoveryListener discoveryListener,
+			DiscoveryIssueReporter issueReporter) {
 		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
 		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
 		this.lifecycleMethods = new LifecycleMethods(suiteClass, issueReporter);
+		this.discoveryRequestBuilder.listener(new LauncherDiscoveryListener() {
+			@Override
+			public void issueEncountered(UniqueId engineUniqueId, DiscoveryIssue issue) {
+				discoveryListener.issueEncountered(engineUniqueId, issue);
+			}
+		});
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {

@@ -28,6 +28,7 @@ final class DiscoverySelectorResolver {
 					context.getEngineDescriptor(),
 					context.getDiscoveryRequest().getConfigurationParameters(),
 					context.getDiscoveryRequest().getOutputDirectoryProvider(),
+					context.getDiscoveryRequest().getDiscoveryListener(),
 					context.getIssueReporter()))
 			.build();
 	// @formatter:on

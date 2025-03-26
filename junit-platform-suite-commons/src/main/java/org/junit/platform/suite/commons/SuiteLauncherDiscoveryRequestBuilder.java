@@ -11,6 +11,7 @@
 package org.junit.platform.suite.commons;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
@@ -30,7 +31,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.apiguardian.api.API.Status;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -43,6 +43,7 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -111,8 +112,7 @@ import org.junit.platform.suite.api.SelectUris;
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(status = Status.INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine",
-		"org.junit.platform.runner" })
+@API(status = INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine", "org.junit.platform.runner" })
 public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder delegate = LauncherDiscoveryRequestBuilder.request();
@@ -265,6 +265,12 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	public SuiteLauncherDiscoveryRequestBuilder outputDirectoryProvider(
 			OutputDirectoryProvider outputDirectoryProvider) {
 		delegate.outputDirectoryProvider(outputDirectoryProvider);
+		return this;
+	}
+
+	@API(status = INTERNAL, since = "1.13")
+	public SuiteLauncherDiscoveryRequestBuilder listener(LauncherDiscoveryListener listener) {
+		delegate.listeners(listener);
 		return this;
 	}
 
