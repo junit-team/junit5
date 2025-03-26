@@ -23,8 +23,9 @@ import org.junit.platform.commons.logging.Logger;
  * @see MethodOrderer.Random
  */
 class RandomOrdererUtils {
-
-	static final String RANDOM_SEED_PROPERTY_NAME = "junit.jupiter.execution.order.random.seed";
+	@Deprecated
+	static final String EXECUTION_ORDER_RANDOM_SEED_PROPERTY = "junit.jupiter.execution.order.random.seed";
+	static final String RANDOM_SEED_PROPERTY_NAME = EXECUTION_ORDER_RANDOM_SEED_PROPERTY;
 
 	static final long DEFAULT_SEED = System.nanoTime();
 
@@ -34,7 +35,7 @@ class RandomOrdererUtils {
 
 	private static Optional<Long> getCustomSeed(Function<String, Optional<String>> configurationParameterLookup,
 			Logger logger) {
-		return configurationParameterLookup.apply(RANDOM_SEED_PROPERTY_NAME).map(
+		return configurationParameterLookup.apply(EXECUTION_ORDER_RANDOM_SEED_PROPERTY).map(
 			configurationParameter -> parseAndLogSeed(configurationParameter, logger));
 	}
 
@@ -51,7 +52,7 @@ class RandomOrdererUtils {
 
 	private static void logCustomSeedUsage(String configurationParameter, Logger logger) {
 		logger.config(() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
-			RANDOM_SEED_PROPERTY_NAME, configurationParameter));
+			EXECUTION_ORDER_RANDOM_SEED_PROPERTY, configurationParameter));
 	}
 
 	private static void logSeedFallbackWarning(String configurationParameter, Logger logger, NumberFormatException ex) {
@@ -59,7 +60,7 @@ class RandomOrdererUtils {
 			() -> String.format(
 				"Failed to convert configuration parameter [%s] with value [%s] to a long. "
 						+ "Using default seed [%s] as fallback.",
-				RANDOM_SEED_PROPERTY_NAME, configurationParameter, DEFAULT_SEED));
+				EXECUTION_ORDER_RANDOM_SEED_PROPERTY, configurationParameter, DEFAULT_SEED));
 	}
 
 }
