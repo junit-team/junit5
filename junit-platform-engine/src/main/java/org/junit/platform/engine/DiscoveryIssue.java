@@ -13,8 +13,10 @@ package org.junit.platform.engine;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code DiscoveryIssue} represents an issue that was encountered during test
@@ -71,6 +73,22 @@ public interface DiscoveryIssue {
 	 * {@return the cause of this issue}
 	 */
 	Optional<Throwable> cause();
+
+	/**
+	 * Create a copy of this issue with the modified message produced by the
+	 * supplied operator.
+	 */
+	default DiscoveryIssue withMessage(UnaryOperator<String> messageModifier) {
+		String oldMessage = message();
+		String newMessage = messageModifier.apply(oldMessage);
+		if (oldMessage.equals(newMessage)) {
+			return this;
+		}
+		return DiscoveryIssue.builder(severity(), newMessage) //
+				.source(source()) //
+				.cause(cause()) //
+				.build();
+	}
 
 	/**
 	 * The severity of a {@code DiscoveryIssue}.

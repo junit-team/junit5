@@ -46,6 +46,7 @@ import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.ConfigurationSensitiveTestCase;
 import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+import org.junit.platform.suite.engine.testcases.ErroneousTestCase;
 import org.junit.platform.suite.engine.testcases.JUnit4TestsTestCase;
 import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
@@ -67,6 +68,7 @@ import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 import org.junit.platform.suite.engine.testsuites.SelectMethodsSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteDisplayNameSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteSuite;
+import org.junit.platform.suite.engine.testsuites.SuiteWithErroneousTestSuite;
 import org.junit.platform.suite.engine.testsuites.ThreePartCyclicSuite;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
@@ -576,6 +578,29 @@ class SuiteEngineTests {
 		// @formatter:on
 
 		assertThat(outputDir).isDirectoryRecursivelyContaining("glob:**/test.txt");
+	}
+
+	@Test
+	void discoveryIssueOfNestedTestEnginesAreReported() throws Exception {
+		// @formatter:off
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SuiteWithErroneousTestSuite.class));
+
+		var discoveryIssues = testKit.discover().getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+
+		var issue = discoveryIssues.getFirst();
+		assertThat(issue.message()).startsWith("[junit-jupiter] @BeforeAll method");
+
+		var method = ErroneousTestCase.class.getDeclaredMethod("nonStaticLifecycleMethod");
+		assertThat(issue.source()).contains(MethodSource.from(method));
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
 	}
 
 	@Suite
