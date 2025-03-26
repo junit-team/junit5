@@ -33,8 +33,13 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.suite.api.SelectClasses;
@@ -115,8 +120,13 @@ class SuiteEngineTests {
 	@Test
 	void abstractSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(AbstractSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(AbstractSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -127,8 +137,18 @@ class SuiteEngineTests {
 	@Test
 	void privateSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(PrivateSuite.class))
+		var message = "@Suite class '%s' must not be private."
+				.formatted(PrivateSuite.class.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(PrivateSuite.class))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(PrivateSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -137,10 +157,86 @@ class SuiteEngineTests {
 	}
 
 	@Test
-	void innerSuiteIsNotExecuted() {
+	void abstractPrivateSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(InnerSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(AbstractPrivateSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { InnerSuite.class, AbstractInnerSuite.class })
+	void innerSuiteIsNotExecuted(Class<?> suiteClass) {
+		// @formatter:off
+		var message = "@Suite class '%s' must not be an inner class. Did you forget to declare it static?"
+				.formatted(suiteClass.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(suiteClass))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(suiteClass));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void localSuiteIsNotExecuted() {
+
+		@Suite
+		@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
+		class LocalSuite {
+		}
+
+		// @formatter:off
+		var message = "@Suite class '%s' must not be a local class."
+				.formatted(LocalSuite.class.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(LocalSuite.class))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(LocalSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void anonymousSuiteIsNotExecuted() {
+		var object = new Object() {
+		};
+
+		// @formatter:off
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(object.getClass()));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -469,12 +565,22 @@ class SuiteEngineTests {
 
 	@Suite
 	@SelectClasses(SingleTestTestCase.class)
+	abstract private static class AbstractPrivateSuite {
+	}
+
+	@Suite
+	@SelectClasses(SingleTestTestCase.class)
 	private static class PrivateSuite {
 	}
 
 	@Suite
 	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
-	private class InnerSuite {
+	abstract class AbstractInnerSuite {
+	}
+
+	@Suite
+	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
+	class InnerSuite {
 	}
 
 }

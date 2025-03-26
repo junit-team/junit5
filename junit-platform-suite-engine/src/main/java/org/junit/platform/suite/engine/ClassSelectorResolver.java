@@ -36,8 +36,7 @@ final class ClassSelectorResolver implements SelectorResolver {
 
 	private static final Logger log = LoggerFactory.getLogger(ClassSelectorResolver.class);
 
-	private static final IsSuiteClass isSuiteClass = new IsSuiteClass();
-
+	private final IsSuiteClass isSuiteClass;
 	private final Predicate<String> classNameFilter;
 	private final SuiteEngineDescriptor suiteEngineDescriptor;
 	private final ConfigurationParameters configurationParameters;
@@ -47,6 +46,8 @@ final class ClassSelectorResolver implements SelectorResolver {
 	ClassSelectorResolver(Predicate<String> classNameFilter, SuiteEngineDescriptor suiteEngineDescriptor,
 			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider,
 			DiscoveryIssueReporter issueReporter) {
+
+		this.isSuiteClass = new IsSuiteClass(issueReporter);
 		this.classNameFilter = classNameFilter;
 		this.suiteEngineDescriptor = suiteEngineDescriptor;
 		this.configurationParameters = configurationParameters;
