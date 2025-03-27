@@ -301,3 +301,45 @@ execute any tests but will notify registered `{TestExecutionListener}` instances
 tests had been skipped and their containers had been successful. This can be useful to
 test changes in the configuration of a build or to verify a listener is called as expected
 without having to wait for all tests to be executed.
+
+[[launcher-api-shared-resources]]
+==== Managing State Across Test Engines
+When running tests on the JUnit Platform, multiple test engines may need to access shared
+resources. Rather than initializing these resources multiple times, JUnit Platform
+provides mechanisms to share state across test engines efficiently. Test engines can use
+the platform's store API to lazily initialize and share resources, ensuring they are
+created only once regardless of execution order. The following example demonstrates two
+custom test engines sharing a ServerSocket resource. `FirstCustomEngine` attempts to
+retrieve an existing ServerSocket from the global store or creates a new one if it
+doesn't exist:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/FirstCustomEngine.java[tags=user_guide]
+----
+
+`SecondCustomEngine` follows the same pattern, ensuring that whether it runs first or
+second, it will use the same socket instance:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/SecondCustomEngine.java[tags=user_guide]
+----
+
+The resource is wrapped in a `CloseableServerSocket` class that implements `AutoCloseable`
+to ensure proper cleanup:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/session/CloseableServerSocket.java[tags=user_guide]
+----
+
+The following test verifies that both engines are sharing the same socket instance:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/sharedresources/SharedResourceTest.java[tags=user_guide]
+----
+
+By using the platform's store API with global namespaces, test engines can coordinate
+resource creation and sharing without direct dependencies between them.

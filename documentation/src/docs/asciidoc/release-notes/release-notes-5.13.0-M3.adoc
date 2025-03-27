@@ -26,7 +26,8 @@ repository on GitHub.
 [[release-notes-5.13.0-M3-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Introduced a unified resource management mechanism across test engines and executions
+via session- and request-level stores, with support in Jupiter, Suite engine, and EngineTestKit.
 
 
 [[release-notes-5.13.0-M3-junit-jupiter]]
