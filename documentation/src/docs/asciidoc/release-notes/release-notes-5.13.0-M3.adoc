@@ -45,7 +45,10 @@ repository on GitHub.
 [[release-notes-5.13.0-M3-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Return types of `@TestFactory` methods are now validated during discovery rather than
+  during execution. Invalid `@TestFactory` methods are no longer executed but reported as
+  discovery issues for consistency with how `@Test` and `@TestTemplate` methods are
+  handled.
 
 
 [[release-notes-5.13.0-M3-junit-vintage]]

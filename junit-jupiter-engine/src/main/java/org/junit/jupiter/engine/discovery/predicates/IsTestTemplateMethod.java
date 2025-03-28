@@ -25,7 +25,7 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 public class IsTestTemplateMethod extends IsTestableMethod {
 
 	public IsTestTemplateMethod(DiscoveryIssueReporter issueReporter) {
-		super(TestTemplate.class, true, issueReporter);
+		super(TestTemplate.class, IsTestableMethod::hasVoidReturnType, issueReporter);
 	}
 
 }
