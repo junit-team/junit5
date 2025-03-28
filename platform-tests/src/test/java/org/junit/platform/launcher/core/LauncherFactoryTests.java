@@ -31,6 +31,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.StoreScope;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -517,7 +518,7 @@ class LauncherFactoryTests {
 				throw new IllegalStateException("Expected 'testValue' but got: " + value);
 			}
 
-			value = context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
+			value = context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).get("testKey");
 			if (!"testValue".equals(value)) {
 				throw new IllegalStateException("Expected 'testValue' but got: " + value);
 			}
@@ -527,7 +528,8 @@ class LauncherFactoryTests {
 	static class SessionStoringExtension implements BeforeAllCallback {
 		@Override
 		public void beforeAll(ExtensionContext context) {
-			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("testKey", "testValue");
+			context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).put("testKey",
+				"testValue");
 		}
 	}
 
@@ -548,7 +550,8 @@ class LauncherFactoryTests {
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			CloseTrackingResource sessionResource = new CloseTrackingResource();
-			context.getSessionLevelStore(ExtensionContext.Namespace.GLOBAL).put("sessionResource", sessionResource);
+			context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).put("sessionResource",
+				sessionResource);
 		}
 	}
 
@@ -556,7 +559,8 @@ class LauncherFactoryTests {
 		@Override
 		public void beforeAll(ExtensionContext context) {
 			CloseTrackingResource requestResource = new CloseTrackingResource();
-			context.getRequestLevelStore(ExtensionContext.Namespace.GLOBAL).put("requestResource", requestResource);
+			context.getStore(StoreScope.EXECUTION_REQUEST, ExtensionContext.Namespace.GLOBAL).put("requestResource",
+				requestResource);
 		}
 	}
 

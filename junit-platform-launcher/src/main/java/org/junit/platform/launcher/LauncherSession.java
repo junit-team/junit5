@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -52,9 +53,16 @@ public interface LauncherSession extends AutoCloseable {
 	/**
 	 * Get the {@link NamespacedHierarchicalStore} associated with this session.
 	 *
+	 * <p>All stored values that implement {@link AutoCloseable} are notified by
+	 * invoking their {@code close()} methods when this session is closed.
+	 *
 	 * <p>Any call to the store returned by this method after the session has
 	 * been closed will throw an exception.
+	 *
+	 * @since 1.13
+	 * @see NamespacedHierarchicalStore
 	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
 	NamespacedHierarchicalStore<Namespace> getStore();
 
 }

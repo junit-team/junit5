@@ -52,7 +52,7 @@ public class JupiterTestEngineTests {
 
 	@Test
 	void createExecutionContextWithValidRequest() {
-		when(executionRequest.getRequestLevelStore()).thenReturn(
+		when(executionRequest.getStore()).thenReturn(
 			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
 		JupiterEngineExecutionContext context = engine.createExecutionContext(executionRequest);
@@ -61,7 +61,7 @@ public class JupiterTestEngineTests {
 
 	@Test
 	void createExecutionContextWithNoParentsRequestLevelStore() {
-		when(executionRequest.getRequestLevelStore()).thenReturn(
+		when(executionRequest.getStore()).thenReturn(
 			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStoreWithNoParent());
 
 		assertThatThrownBy(() -> engine //

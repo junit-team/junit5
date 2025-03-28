@@ -150,8 +150,19 @@ public class ExecutionRequest {
 			"No OutputDirectoryProvider was configured for this request");
 	}
 
+	/**
+	 * {@return the {@link NamespacedHierarchicalStore} for this request for
+	 * storing request-scoped data}
+	 *
+	 * <p>All stored values that implement {@link AutoCloseable} are notified by
+	 * invoking their {@code close()} methods when this request has been
+	 * executed.
+	 *
+	 * @since 1.13
+	 * @see NamespacedHierarchicalStore
+	 */
 	@API(status = EXPERIMENTAL, since = "1.13")
-	public NamespacedHierarchicalStore<Namespace> getRequestLevelStore() {
+	public NamespacedHierarchicalStore<Namespace> getStore() {
 		return Preconditions.notNull(this.requestLevelStore,
 			"No NamespacedHierarchicalStore was configured for this request");
 	}

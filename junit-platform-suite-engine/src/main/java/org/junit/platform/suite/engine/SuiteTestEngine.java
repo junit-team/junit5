@@ -65,7 +65,7 @@ public final class SuiteTestEngine implements TestEngine {
 	public void execute(ExecutionRequest request) {
 		SuiteEngineDescriptor suiteEngineDescriptor = (SuiteEngineDescriptor) request.getRootTestDescriptor();
 		EngineExecutionListener engineExecutionListener = request.getEngineExecutionListener();
-		NamespacedHierarchicalStore<Namespace> requestLevelStore = request.getRequestLevelStore();
+		NamespacedHierarchicalStore<Namespace> requestLevelStore = request.getStore();
 
 		engineExecutionListener.executionStarted(suiteEngineDescriptor);
 

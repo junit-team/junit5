@@ -199,13 +199,17 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	}
 
 	@Override
-	public Store getSessionLevelStore(Namespace namespace) {
-		return launcherStoreFacade.getSessionLevelStore(namespace);
-	}
-
-	@Override
-	public Store getRequestLevelStore(Namespace namespace) {
-		return launcherStoreFacade.getRequestLevelStore(namespace);
+	public Store getStore(StoreScope scope, Namespace namespace) {
+		// TODO [#4246] Use switch expression
+		switch (scope) {
+			case LAUNCHER_SESSION:
+				return launcherStoreFacade.getSessionLevelStore(namespace);
+			case EXECUTION_REQUEST:
+				return launcherStoreFacade.getRequestLevelStore(namespace);
+			case EXTENSION_CONTEXT:
+				return getStore(namespace);
+		}
+		throw new JUnitException("Unknown StoreScope: " + scope);
 	}
 
 	@Override

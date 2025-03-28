@@ -32,7 +32,7 @@ class StoreSharingTests {
 		TestEngineSpy engineWriter = new TestEngineSpy("Writer") {
 			@Override
 			public void execute(ExecutionRequest request) {
-				request.getRequestLevelStore().put(Namespace.GLOBAL, "sharedKey", "Hello from Writer");
+				request.getStore().put(Namespace.GLOBAL, "sharedKey", "Hello from Writer");
 				super.execute(request);
 			}
 		};
@@ -40,15 +40,14 @@ class StoreSharingTests {
 		TestEngineStub engineReader = new TestEngineStub("Reader") {
 			@Override
 			public void execute(ExecutionRequest request) {
-				Object value = request.getRequestLevelStore().get(Namespace.GLOBAL, "sharedKey");
+				Object value = request.getStore().get(Namespace.GLOBAL, "sharedKey");
 				assertEquals("Hello from Writer", value);
 				super.execute(request);
 			}
 		};
 
 		ExecutionRequest request = mock(ExecutionRequest.class);
-		when(request.getRequestLevelStore()).thenReturn(
-			NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
+		when(request.getStore()).thenReturn(NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
 		Launcher launcher = LauncherFactory.create( //
 			LauncherConfig.builder() //

@@ -48,7 +48,7 @@ public class SecondCustomEngine implements TestEngine {
 
 	@Override
 	public void execute(ExecutionRequest request) {
-		NamespacedHierarchicalStore<Namespace> store = request.getRequestLevelStore();
+		NamespacedHierarchicalStore<Namespace> store = request.getStore();
 		socket = (CloseableServerSocket) store.getOrComputeIfAbsent(Namespace.GLOBAL, "serverSocket", key -> {
 			ServerSocket serverSocket;
 			try {

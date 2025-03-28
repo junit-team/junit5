@@ -47,7 +47,6 @@ import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
-import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
@@ -270,7 +269,7 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public java.util.Optional<Object> getTestInstance() {
+			public Optional<Object> getTestInstance() {
 				return Optional.empty();
 			}
 
@@ -318,12 +317,7 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public Store getSessionLevelStore(Namespace namespace) {
-				return getStore(namespace);
-			}
-
-			@Override
-			public Store getRequestLevelStore(Namespace namespace) {
+			public Store getStore(StoreScope scope, Namespace namespace) {
 				return getStore(namespace);
 			}
 
