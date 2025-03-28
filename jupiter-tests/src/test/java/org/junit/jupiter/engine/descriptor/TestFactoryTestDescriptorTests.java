@@ -154,11 +154,10 @@ class TestFactoryTestDescriptorTests {
 		private ExtensionContext extensionContext;
 		private TestFactoryTestDescriptor descriptor;
 		private boolean isClosed;
-		private JupiterConfiguration jupiterConfiguration;
 
 		@BeforeEach
 		void before() throws Exception {
-			jupiterConfiguration = mock();
+			JupiterConfiguration jupiterConfiguration = mock();
 			when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 
 			extensionContext = mock();

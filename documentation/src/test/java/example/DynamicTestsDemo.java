@@ -43,11 +43,12 @@ class DynamicTestsDemo {
 
 	private final Calculator calculator = new Calculator();
 
+	// This method will not be executed but produce a warning
+	@TestFactory
 	// end::user_guide[]
 	@Tag("exclude")
+	DynamicTest dummy() { return null; }
 	// tag::user_guide[]
-	// This will result in a JUnitException!
-	@TestFactory
 	List<String> dynamicTestsWithInvalidReturnType() {
 		return Arrays.asList("Hello");
 	}
