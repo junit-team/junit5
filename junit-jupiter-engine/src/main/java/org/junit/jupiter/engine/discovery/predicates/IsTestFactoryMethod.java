@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
@@ -40,6 +39,10 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 @API(status = INTERNAL, since = "5.0")
 public class IsTestFactoryMethod extends IsTestableMethod {
 
+	private static final String EXPECTED_RETURN_TYPE_MESSAGE = String.format(
+		"must return a single %1$s or a Stream, Collection, Iterable, Iterator, or array of %1$s",
+		DynamicNode.class.getName());
+
 	public IsTestFactoryMethod(DiscoveryIssueReporter issueReporter) {
 		super(TestFactory.class, IsTestFactoryMethod::hasCompatibleReturnType, issueReporter);
 	}
@@ -47,7 +50,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 	private static DiscoveryIssueReporter.Condition<Method> hasCompatibleReturnType(
 			Class<? extends Annotation> annotationType, DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(method -> isCompatible(method, issueReporter),
-			method -> createIssue(annotationType, method, formatExpectedReturnTypeMessage()));
+			method -> createIssue(annotationType, method, EXPECTED_RETURN_TYPE_MESSAGE));
 	}
 
 	private static boolean isCompatible(Method method, DiscoveryIssueReporter issueReporter) {
@@ -55,12 +58,11 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 		if (DynamicNode.class.isAssignableFrom(returnType) || DynamicNode[].class.isAssignableFrom(returnType)) {
 			return true;
 		}
-		if (Object.class.equals(returnType) || Object[].class.equals(returnType)) {
+		if (returnType == Object.class || returnType == Object[].class) {
 			issueReporter.reportIssue(createTooGenericReturnTypeIssue(method));
 			return true;
 		}
 		boolean validContainerType = Stream.class.isAssignableFrom(returnType) //
-				|| Collection.class.isAssignableFrom(returnType) //
 				|| Iterable.class.isAssignableFrom(returnType) //
 				|| Iterator.class.isAssignableFrom(returnType);
 		return validContainerType && isCompatibleContainerType(method, issueReporter);
@@ -102,15 +104,11 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 
 	private static DiscoveryIssue.Builder createTooGenericReturnTypeIssue(Method method) {
 		String message = String.format(
-			"The declared return type of @TestFactory method '%s' does not support static validation. It %s.",
-			method.toGenericString(), formatExpectedReturnTypeMessage());
+			"The declared return type of @TestFactory method '%s' does not support static validation. It "
+					+ EXPECTED_RETURN_TYPE_MESSAGE + ".",
+			method.toGenericString());
 		return DiscoveryIssue.builder(Severity.INFO, message) //
 				.source(MethodSource.from(method));
-	}
-
-	private static String formatExpectedReturnTypeMessage() {
-		return String.format("must return a single %1$s or a Stream, Collection, Iterable, Iterator, or array of %1$s",
-			DynamicNode.class.getName());
 	}
 
 }
