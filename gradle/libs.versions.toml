@@ -46,7 +46,7 @@ jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.1" }
-jte = { module = "gg.jte:jte", version = "3.1.16" }
+jte = { module = "gg.jte:jte", version = "3.2.0" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.10.1" }
 log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
