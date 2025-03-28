@@ -19,6 +19,8 @@ import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
 /**
  * Provides a single {@link TestEngine} access to the information necessary to
@@ -40,22 +42,25 @@ public class ExecutionRequest {
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
 	private final OutputDirectoryProvider outputDirectoryProvider;
+	private final NamespacedHierarchicalStore<Namespace> requestLevelStore;
 
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.11")
 	public ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
 			ConfigurationParameters configurationParameters) {
-		this(rootTestDescriptor, engineExecutionListener, configurationParameters, null);
+		this(rootTestDescriptor, engineExecutionListener, configurationParameters, null, null);
 	}
 
 	private ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
-			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider) {
+			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		this.rootTestDescriptor = Preconditions.notNull(rootTestDescriptor, "rootTestDescriptor must not be null");
 		this.engineExecutionListener = Preconditions.notNull(engineExecutionListener,
 			"engineExecutionListener must not be null");
 		this.configurationParameters = Preconditions.notNull(configurationParameters,
 			"configurationParameters must not be null");
 		this.outputDirectoryProvider = outputDirectoryProvider;
+		this.requestLevelStore = requestLevelStore;
 	}
 
 	/**
@@ -68,7 +73,7 @@ public class ExecutionRequest {
 	 * engine may use to influence test execution
 	 * @return a new {@code ExecutionRequest}; never {@code null}
 	 * @since 1.9
-	 * @deprecated Use {@link #create(TestDescriptor, EngineExecutionListener, ConfigurationParameters, OutputDirectoryProvider)}
+	 * @deprecated without replacement
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "1.11")
@@ -88,16 +93,19 @@ public class ExecutionRequest {
 	 * engine may use to influence test execution; never {@code null}
 	 * @param outputDirectoryProvider {@link OutputDirectoryProvider} for
 	 * writing reports and other output files; never {@code null}
+	 * @param requestLevelStore {@link NamespacedHierarchicalStore} for storing
+	 * request-scoped data; never {@code null}
 	 * @return a new {@code ExecutionRequest}; never {@code null}
-	 * @since 1.12
+	 * @since 1.13
 	 */
-	@API(status = INTERNAL, since = "1.12")
+	@API(status = INTERNAL, since = "1.13")
 	public static ExecutionRequest create(TestDescriptor rootTestDescriptor,
 			EngineExecutionListener engineExecutionListener, ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 
 		return new ExecutionRequest(rootTestDescriptor, engineExecutionListener, configurationParameters,
-			Preconditions.notNull(outputDirectoryProvider, "outputDirectoryProvider must not be null"));
+			Preconditions.notNull(outputDirectoryProvider, "outputDirectoryProvider must not be null"),
+			Preconditions.notNull(requestLevelStore, "requestLevelStore must not be null"));
 	}
 
 	/**
@@ -138,8 +146,25 @@ public class ExecutionRequest {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.12")
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
-		return Preconditions.notNull(outputDirectoryProvider,
+		return Preconditions.notNull(this.outputDirectoryProvider,
 			"No OutputDirectoryProvider was configured for this request");
+	}
+
+	/**
+	 * {@return the {@link NamespacedHierarchicalStore} for this request for
+	 * storing request-scoped data}
+	 *
+	 * <p>All stored values that implement {@link AutoCloseable} are notified by
+	 * invoking their {@code close()} methods when this request has been
+	 * executed.
+	 *
+	 * @since 1.13
+	 * @see NamespacedHierarchicalStore
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public NamespacedHierarchicalStore<Namespace> getStore() {
+		return Preconditions.notNull(this.requestLevelStore,
+			"No NamespacedHierarchicalStore was configured for this request");
 	}
 
 }

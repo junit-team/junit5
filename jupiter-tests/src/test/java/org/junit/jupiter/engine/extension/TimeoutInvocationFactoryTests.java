@@ -20,12 +20,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.SingleThreadExecutorResource;
 import org.junit.jupiter.engine.extension.TimeoutInvocationFactory.TimeoutInvocationParameters;
+import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -42,7 +42,7 @@ class TimeoutInvocationFactoryTests {
 
 	@Spy
 	private final Store store = new NamespaceAwareStore(new NamespacedHierarchicalStore<>(null),
-		ExtensionContext.Namespace.create(TimeoutInvocationFactoryTests.class));
+		Namespace.create(TimeoutInvocationFactoryTests.class));
 
 	@Mock
 	private Invocation<String> invocation;
