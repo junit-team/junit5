@@ -95,4 +95,20 @@ public class DiscoveryIssueTests {
 				.isEqualTo(
 					"DiscoveryIssue [severity = WARNING, message = 'message', source = ClassSource [className = 'org.junit.platform.engine.DiscoveryIssue', filePosition = null], cause = java.lang.RuntimeException: boom]");
 	}
+
+	@Test
+	void withMessage() {
+		var issue = DiscoveryIssue.builder(Severity.WARNING, "message") //
+				.source(ClassSource.from(DiscoveryIssue.class)) //
+				.cause(new RuntimeException("boom")) //
+				.build();
+
+		var newIssue = issue.withMessage(__ -> "new message");
+
+		assertThat(newIssue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(newIssue.message()).isEqualTo("new message");
+		assertThat(newIssue.source()).containsSame(issue.source().orElseThrow());
+		assertThat(newIssue.cause()).containsSame(issue.cause().orElseThrow());
+	}
+
 }
