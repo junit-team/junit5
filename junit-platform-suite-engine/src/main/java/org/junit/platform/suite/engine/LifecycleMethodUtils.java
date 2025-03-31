@@ -58,7 +58,7 @@ final class LifecycleMethodUtils {
 							.and(isStatic(annotationType, issueReporter)) //
 							.and(isNotPrivate(annotationType, issueReporter)) //
 							.and(hasNoParameters(annotationType, issueReporter)) //
-				) //
+							.toPredicate()) //
 				.collect(toUnmodifiableList());
 	}
 

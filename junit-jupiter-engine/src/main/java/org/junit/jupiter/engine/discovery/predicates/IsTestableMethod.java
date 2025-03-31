@@ -46,7 +46,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 	@Override
 	public boolean test(Method candidate) {
 		if (isAnnotated(candidate, this.annotationType)) {
-			return condition.test(candidate);
+			return condition.check(candidate);
 		}
 		return false;
 	}
