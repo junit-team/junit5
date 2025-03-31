@@ -60,6 +60,7 @@ import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestFalseSuite;
+import org.junit.platform.suite.engine.testsuites.InheritedSuite;
 import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
@@ -80,16 +81,22 @@ class SuiteEngineTests {
 	@TempDir
 	private Path outputDir;
 
-	@Test
-	void selectClasses() {
+	@ParameterizedTest
+	@ValueSource(classes = { SelectClassesSuite.class, InheritedSuite.class })
+	void selectClasses(Class<?> suiteClass) {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(SelectClassesSuite.class))
-				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(suiteClass))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
+				.haveExactly(1, event(test(suiteClass.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
@@ -97,8 +104,13 @@ class SuiteEngineTests {
 	@Test
 	void selectMethods() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(SelectMethodsSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SelectMethodsSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
