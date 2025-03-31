@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -28,11 +29,12 @@ import org.junit.platform.engine.UniqueId;
  * {@code DiscoveryIssueReporter} defines the API for reporting
  * {@link DiscoveryIssue DiscoveryIssues}.
  *
+ * <p>This interface is not intended to be implemented by clients.
+ *
  * @since 1.13
  * @see SelectorResolver.Context
  */
 @API(status = EXPERIMENTAL, since = "1.13")
-@FunctionalInterface
 public interface DiscoveryIssueReporter {
 
 	/**
@@ -47,6 +49,28 @@ public interface DiscoveryIssueReporter {
 		Preconditions.notNull(engineDiscoveryListener, "engineDiscoveryListener must not be null");
 		Preconditions.notNull(engineId, "engineId must not be null");
 		return issue -> engineDiscoveryListener.issueEncountered(engineId, issue);
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that adds reported issues to
+	 * the supplied collection.
+	 *
+	 * @param collection the collection to add issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter collecting(Collection<? super DiscoveryIssue> collection) {
+		Preconditions.notNull(collection, "collection must not be null");
+		return collection::add;
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that adds reported issues to
+	 * the supplied consumer.
+	 *
+	 * @param consumer the consumer to report issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter consuming(Consumer<? super DiscoveryIssue> consumer) {
+		Preconditions.notNull(consumer, "consumer must not be null");
+		return consumer::accept;
 	}
 
 	/**

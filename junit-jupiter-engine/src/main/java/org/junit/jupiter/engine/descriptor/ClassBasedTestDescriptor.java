@@ -566,10 +566,11 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		LifecycleMethods(ClassInfo classInfo) {
 			Class<?> testClass = classInfo.testClass;
 			boolean requireStatic = classInfo.lifecycle == Lifecycle.PER_METHOD;
-			this.beforeAll = findBeforeAllMethods(testClass, requireStatic, discoveryIssues::add);
-			this.afterAll = findAfterAllMethods(testClass, requireStatic, discoveryIssues::add);
-			this.beforeEach = findBeforeEachMethods(testClass, discoveryIssues::add);
-			this.afterEach = findAfterEachMethods(testClass, discoveryIssues::add);
+			DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.collecting(discoveryIssues);
+			this.beforeAll = findBeforeAllMethods(testClass, requireStatic, issueReporter);
+			this.afterAll = findAfterAllMethods(testClass, requireStatic, issueReporter);
+			this.beforeEach = findBeforeEachMethods(testClass, issueReporter);
+			this.afterEach = findAfterEachMethods(testClass, issueReporter);
 		}
 	}
 
