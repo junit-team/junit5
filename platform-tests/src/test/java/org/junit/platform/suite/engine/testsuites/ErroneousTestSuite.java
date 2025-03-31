@@ -16,5 +16,5 @@ import org.junit.platform.suite.engine.testcases.ErroneousTestCase;
 
 @Suite
 @SelectClasses(ErroneousTestCase.class)
-class ErroneousTestSuite {
+public class ErroneousTestSuite {
 }
