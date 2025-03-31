@@ -10,7 +10,9 @@
 
 package org.junit.jupiter.api.extension;
 
+import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.AnnotatedElement;
@@ -442,8 +444,27 @@ public interface ExtensionContext {
 	 * @return the store in which to put and get objects for other invocations
 	 * working in the same namespace; never {@code null}
 	 * @see Namespace#GLOBAL
+	 * @see #getStore(StoreScope, Namespace)
 	 */
 	Store getStore(Namespace namespace);
+
+	/**
+	 * Returns the store for supplied scope and namespace.
+	 *
+	 * <p>If {@code scope} is
+	 * {@link StoreScope#EXTENSION_CONTEXT EXTENSION_CONTEXT}, the store behaves
+	 * exactly like the one returned by {@link #getStore(Namespace)}. If the
+	 * {@code scope} is {@link StoreScope#LAUNCHER_SESSION LAUNCHER_SESSION} or
+	 * {@link StoreScope#EXECUTION_REQUEST EXECUTION_REQUEST}, all stored values
+	 * that are instances of {@link AutoCloseable} are notified by invoking
+	 * their {@code close()} methods when the scope is closed.
+	 *
+	 * @since 5.13
+	 * @see StoreScope
+	 * @see #getStore(Namespace)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	Store getStore(StoreScope scope, Namespace namespace);
 
 	/**
 	 * Get the {@link ExecutionMode} associated with the current test or container.
@@ -771,6 +792,57 @@ public interface ExtensionContext {
 			Collections.addAll(newParts, parts);
 			return new Namespace(newParts);
 		}
+
+		@API(status = INTERNAL, since = "5.13")
+		public List<Object> getParts() {
+			return unmodifiableList(parts);
+		}
+	}
+
+	/**
+	 * {@code StoreScope} is an enumeration of the different scopes for
+	 * {@link Store} instances.
+	 *
+	 * @since 5.13
+	 * @see #getStore(StoreScope, Namespace)
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	enum StoreScope {
+
+		/**
+		 * The store is scoped to the current {@code LauncherSession}.
+		 *
+		 * <p>Any data that is stored in a {@code Store} with this scope will be
+		 * available throughout the entire launcher session. Therefore, it may
+		 * be used to inject values from registered
+		 * {@code LauncherSessionListener} implementations, to share data across
+		 * multiple executions of the Jupiter engine within the same session, or
+		 * even to share data across multiple engines.
+		 *
+		 * @see org.junit.platform.launcher.LauncherSession#getStore()
+		 * @see org.junit.platform.launcher.LauncherSessionListener
+		 */
+		LAUNCHER_SESSION,
+
+		/**
+		 * The store is scoped to the current {@code ExecutionRequest} of the
+		 * JUnit Platform {@code Launcher}.
+		 *
+		 * <p>Any data that is stored in a {@code Store} with this scope will be
+		 * available for the duration of the current execution request.
+		 * Therefore, it may be used to share data across multiple engines.
+		 *
+		 * @see org.junit.platform.engine.ExecutionRequest#getStore()
+		 */
+		EXECUTION_REQUEST,
+
+		/**
+		 * The store is scoped to the current {@code ExtensionContext}.
+		 *
+		 * <p>Any data that is stored in a {@code Store} with this scope will be
+		 * bound to the current extension context lifecycle.
+		 */
+		EXTENSION_CONTEXT
 	}
 
 }

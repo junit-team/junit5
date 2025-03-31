@@ -28,6 +28,10 @@ import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ExtensionContext.StoreScope;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -37,11 +41,13 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.fakes.TestEngineSpy;
 import org.junit.platform.launcher.InterceptedTestEngine;
 import org.junit.platform.launcher.InterceptorInjectedLauncherSessionListener;
 import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.LauncherSession;
 import org.junit.platform.launcher.LauncherSessionListener;
 import org.junit.platform.launcher.TagFilter;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -333,6 +339,83 @@ class LauncherFactoryTests {
 		}));
 	}
 
+	@Test
+	void extensionCanReadValueFromSessionStoreAndReadByLauncherSessionListenerOnOpened() {
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new LauncherSessionListenerOpenedExample()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionTrackingTestCase.class)).build();
+
+			AtomicReference<Throwable> errorRef = new AtomicReference<>();
+			launcher.execute(request, new TestExecutionListener() {
+				@Override
+				public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+					testExecutionResult.getThrowable().ifPresent(errorRef::set);
+				}
+			});
+
+			assertThat(errorRef.get()).isNull();
+		}
+	}
+
+	@Test
+	void extensionCanReadValueFromSessionStoreAndReadByLauncherSessionListenerOnClose() {
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new LauncherSessionListenerClosedExample()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionStoringTestCase.class)).build();
+
+			AtomicReference<Throwable> errorRef = new AtomicReference<>();
+			launcher.execute(request, new TestExecutionListener() {
+				@Override
+				public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
+					testExecutionResult.getThrowable().ifPresent(errorRef::set);
+				}
+			});
+
+			assertThat(errorRef.get()).isNull();
+		}
+	}
+
+	@Test
+	void sessionResourceClosedOnSessionClose() {
+		CloseTrackingResource.closed = false;
+		var config = LauncherConfig.builder() //
+				.addLauncherSessionListeners(new AutoCloseCheckListener()) //
+				.build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(SessionResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+			assertThat(CloseTrackingResource.closed).isFalse();
+		}
+
+		assertThat(CloseTrackingResource.closed).isTrue();
+	}
+
+	@Test
+	void requestResourceClosedOnExecutionClose() {
+		CloseTrackingResource.closed = false;
+		var config = LauncherConfig.builder().build();
+
+		try (LauncherSession session = LauncherFactory.openSession(config)) {
+			var launcher = session.getLauncher();
+			var request = request().selectors(selectClass(RequestResourceAutoCloseTestCase.class)).build();
+
+			launcher.execute(request);
+
+			assertThat(CloseTrackingResource.closed).isTrue();
+		}
+	}
+
 	@SuppressWarnings("SameParameterValue")
 	private static void withSystemProperty(String key, String value, Runnable runnable) {
 		var oldValue = System.getProperty(key);
@@ -390,6 +473,125 @@ class LauncherFactoryTests {
 		@Test
 		void testJ5() {
 		}
+	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionTrackingExtension.class)
+	static class SessionTrackingTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionStoringExtension.class)
+	static class SessionStoringTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	static class LauncherSessionListenerOpenedExample implements LauncherSessionListener {
+		@Override
+		public void launcherSessionOpened(LauncherSession session) {
+			session.getStore().put(Namespace.GLOBAL, "testKey", "testValue");
+		}
+	}
+
+	static class LauncherSessionListenerClosedExample implements LauncherSessionListener {
+		@Override
+		public void launcherSessionClosed(LauncherSession session) {
+			Object storedValue = session.getStore().get(Namespace.GLOBAL, "testKey");
+			assertThat(storedValue).isEqualTo("testValue");
+		}
+	}
+
+	static class SessionTrackingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			var value = context.getStore(ExtensionContext.Namespace.GLOBAL).get("testKey");
+			if (!"testValue".equals(value)) {
+				throw new IllegalStateException("Expected 'testValue' but got: " + value);
+			}
+
+			value = context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).get("testKey");
+			if (!"testValue".equals(value)) {
+				throw new IllegalStateException("Expected 'testValue' but got: " + value);
+			}
+		}
+	}
+
+	static class SessionStoringExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).put("testKey",
+				"testValue");
+		}
+	}
+
+	private static class CloseTrackingResource implements AutoCloseable {
+		private static boolean closed = false;
+
+		@Override
+		public void close() {
+			closed = true;
+		}
+
+		public boolean isClosed() {
+			return closed;
+		}
+	}
+
+	private static class SessionResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource sessionResource = new CloseTrackingResource();
+			context.getStore(StoreScope.LAUNCHER_SESSION, ExtensionContext.Namespace.GLOBAL).put("sessionResource",
+				sessionResource);
+		}
+	}
+
+	private static class RequestResourceStoreUsingExtension implements BeforeAllCallback {
+		@Override
+		public void beforeAll(ExtensionContext context) {
+			CloseTrackingResource requestResource = new CloseTrackingResource();
+			context.getStore(StoreScope.EXECUTION_REQUEST, ExtensionContext.Namespace.GLOBAL).put("requestResource",
+				requestResource);
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(SessionResourceStoreUsingExtension.class)
+	static class SessionResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ExtendWith(RequestResourceStoreUsingExtension.class)
+	static class RequestResourceAutoCloseTestCase {
+
+		@Test
+		void dummyTest() {
+			// Just a placeholder to trigger the extension
+		}
+	}
+
+	private static class AutoCloseCheckListener implements LauncherSessionListener {
+		@Override
+		public void launcherSessionClosed(LauncherSession session) {
+			CloseTrackingResource sessionResource = session //
+					.getStore() //
+					.get(Namespace.GLOBAL, "sessionResource", CloseTrackingResource.class);
+
+			assertThat(sessionResource.isClosed()).isFalse();
+		}
 	}
 }

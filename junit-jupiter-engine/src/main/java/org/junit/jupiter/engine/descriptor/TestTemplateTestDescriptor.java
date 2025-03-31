@@ -94,7 +94,8 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 		TestInstances testInstances = context.getExtensionContext().getTestInstances().orElse(null);
 
 		ExtensionContext extensionContext = new TestTemplateExtensionContext(context.getExtensionContext(),
-			context.getExecutionListener(), this, context.getConfiguration(), registry, testInstances);
+			context.getExecutionListener(), this, context.getConfiguration(), registry,
+			context.getLauncherStoreFacade(), testInstances);
 
 		// @formatter:off
 		return context.extend()

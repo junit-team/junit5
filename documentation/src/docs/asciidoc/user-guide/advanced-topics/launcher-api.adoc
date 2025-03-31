@@ -1,3 +1,6 @@
+:testDir: ../../../../../src/test/java
+:testResourcesDir: ../../../../../src/test/resources
+
 [[launcher-api]]
 === JUnit Platform Launcher API
 
@@ -132,10 +135,22 @@ package example.session;
 
 include::{testDir}/example/session/GlobalSetupTeardownListener.java[tags=user_guide]
 ----
-<1> Start the HTTP server
-<2> Export its host address as a system property for consumption by tests
-<3> Export its port as a system property for consumption by tests
-<4> Stop the HTTP server
+<1> Get the store from the launcher session
+<2> Lazily create the HTTP server and put it into the store
+<3> Start the HTTP server
+
+It uses a wrapper class to ensure the server is stopped when the launcher session is
+closed:
+
+[source,java]
+.src/test/java/example/session/CloseableHttpServer.java
+----
+package example.session;
+
+include::{testDir}/example/session/CloseableHttpServer.java[tags=user_guide]
+----
+<1> The `close()` method is called when the launcher session is closed
+<2> Stop the HTTP server
 
 This sample uses the HTTP server implementation from the jdk.httpserver module that comes
 with the JDK but would work similarly with any other server or resource. In order for the
@@ -158,10 +173,11 @@ package example.session;
 
 include::{testDir}/example/session/HttpTests.java[tags=user_guide]
 ----
-<1> Read the host address of the server from the system property set by the listener
-<2> Read the port of the server from the system property set by the listener
-<3> Send a request to the server
-<4> Check the status code of the response
+<1> Retrieve the HTTP server instance from the store
+<2> Get the host string directly from the injected HTTP server instance
+<3> Get the port number directly from the injected HTTP server instance
+<4> Send a request to the server
+<5> Check the status code of the response
 
 [[launcher-api-launcher-interceptors-custom]]
 ==== Registering a LauncherInterceptor
@@ -285,3 +301,55 @@ execute any tests but will notify registered `{TestExecutionListener}` instances
 tests had been skipped and their containers had been successful. This can be useful to
 test changes in the configuration of a build or to verify a listener is called as expected
 without having to wait for all tests to be executed.
+
+[[launcher-api-managing-state-across-test-engines]]
+==== Managing State Across Test Engines
+
+When running tests on the JUnit Platform, multiple test engines may need to access shared
+resources. Rather than initializing these resources multiple times, JUnit Platform
+provides mechanisms to share state across test engines efficiently. Test engines can use
+the Platform's `{NamespacedHierarchicalStore}` API to lazily initialize and share
+resources, ensuring they are created only once regardless of execution order. Any resource
+that is put into the store and implements `AutoCloseable` will be closed automatically when
+the execution is finished.
+
+TIP: The Jupiter engine allows read and write access to such resources via its
+`{ExtensionContext_Store}` API.
+
+The following example demonstrates two custom test engines sharing a `ServerSocket`
+resource. `FirstCustomEngine` attempts to retrieve an existing `ServerSocket` from the
+global store or creates a new one if it doesn't exist:
+
+[source,java]
+----
+include::{testDir}/example/FirstCustomEngine.java[tags=user_guide]
+----
+
+`SecondCustomEngine` follows the same pattern, ensuring that regardless whether it runs
+before or after `FirstCustomEngine`, it will use the same socket instance:
+
+[source,java]
+----
+include::{testDir}/example/SecondCustomEngine.java[tags=user_guide]
+----
+
+TIP: In this case, the `ServerSocket` can be stored directly in the global store while
+ensuring since it gets closed because it implements `AutoCloseable`. If you need to use a
+type that does not do so, you can wrap it in a custom class that implements
+`AutoCloseable` and delegates to the original type. This is important to ensure that the
+resource is closed properly when the test run is finished.
+
+For illustration, the following test verifies that both engines are sharing the same
+`ServerSocket` instance and that it's closed after `Launcher.execute()` returns:
+
+[source,java,indent=0]
+----
+include::{testDir}/example/sharedresources/SharedResourceDemo.java[tags=user_guide]
+----
+
+By using the Platform's `{NamespacedHierarchicalStore}` API with shared namespaces in this
+way, test engines can coordinate resource creation and sharing without direct dependencies
+between them.
+
+Alternatively, it's possible to inject resources into test engines by
+<<launcher-api-launcher-session-listeners-custom, registering a `LauncherSessionListener`>>.

@@ -40,6 +40,8 @@ import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
@@ -144,13 +146,15 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:on
 	}
 
-	void execute(EngineExecutionListener parentEngineExecutionListener) {
+	void execute(EngineExecutionListener parentEngineExecutionListener,
+			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		parentEngineExecutionListener.executionStarted(this);
 		ThrowableCollector throwableCollector = new OpenTest4JAwareThrowableCollector();
 
 		executeBeforeSuiteMethods(throwableCollector);
 
-		TestExecutionSummary summary = executeTests(parentEngineExecutionListener, throwableCollector);
+		TestExecutionSummary summary = executeTests(parentEngineExecutionListener, requestLevelStore,
+			throwableCollector);
 
 		executeAfterSuiteMethods(throwableCollector);
 
@@ -171,7 +175,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	}
 
 	private TestExecutionSummary executeTests(EngineExecutionListener parentEngineExecutionListener,
-			ThrowableCollector throwableCollector) {
+			NamespacedHierarchicalStore<Namespace> requestLevelStore, ThrowableCollector throwableCollector) {
 		if (throwableCollector.isNotEmpty()) {
 			return null;
 		}
@@ -181,7 +185,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// be pruned accordingly.
 		LauncherDiscoveryResult discoveryResult = this.launcherDiscoveryResult.withRetainedEngines(
 			getChildren()::contains);
-		return launcher.execute(discoveryResult, parentEngineExecutionListener);
+		return launcher.execute(discoveryResult, parentEngineExecutionListener, requestLevelStore);
 	}
 
 	private void executeAfterSuiteMethods(ThrowableCollector throwableCollector) {

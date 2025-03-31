@@ -31,9 +31,9 @@ final class JupiterEngineExtensionContext extends AbstractExtensionContext<Jupit
 
 	JupiterEngineExtensionContext(EngineExecutionListener engineExecutionListener,
 			JupiterEngineDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade) {
 
-		super(null, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+		super(null, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 	}
 
 	@Override

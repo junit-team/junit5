@@ -215,7 +215,8 @@ class ParameterizedTestExtensionTests {
 
 		return new ExtensionContext() {
 
-			private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
+			private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> store = new NamespacedHierarchicalStore<>(
+				null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
@@ -268,7 +269,7 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public java.util.Optional<Object> getTestInstance() {
+			public Optional<Object> getTestInstance() {
 				return Optional.empty();
 			}
 
@@ -306,12 +307,18 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				var store = new NamespaceAwareStore(this.store, namespace);
+				var store = new NamespaceAwareStore(this.store,
+					org.junit.platform.engine.support.store.Namespace.create(namespace.getParts()));
 				method //
 						.map(it -> new ParameterizedTestContext(testClass, it,
 							it.getAnnotation(ParameterizedTest.class))) //
 						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
+			}
+
+			@Override
+			public Store getStore(StoreScope scope, Namespace namespace) {
+				return getStore(namespace);
 			}
 
 			@Override

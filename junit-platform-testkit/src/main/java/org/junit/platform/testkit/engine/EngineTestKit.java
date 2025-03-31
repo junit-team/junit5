@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
@@ -23,6 +24,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -41,6 +43,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
@@ -324,15 +328,30 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider());
-		testEngine.execute(request);
+		withRequestLevelStore(store -> {
+			ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
+				discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), store);
+			testEngine.execute(request);
+		});
 	}
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
 		LauncherDiscoveryResult discoveryResult = discover(testEngine, discoveryRequest, EXECUTION);
-		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
+		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
+		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
+		withRequestLevelStore(store -> new EngineExecutionOrchestrator().execute(discoveryResult, listener, store));
+	}
+
+	private static void withRequestLevelStore(Consumer<NamespacedHierarchicalStore<Namespace>> action) {
+		try (NamespacedHierarchicalStore<Namespace> sessionLevelStore = newStore(null);
+				NamespacedHierarchicalStore<Namespace> requestLevelStore = newStore(sessionLevelStore)) {
+			action.accept(requestLevelStore);
+		}
+	}
+
+	private static NamespacedHierarchicalStore<Namespace> newStore(NamespacedHierarchicalStore<Namespace> parentStore) {
+		return new NamespacedHierarchicalStore<>(parentStore, closeAutoCloseables());
 	}
 
 	private static LauncherDiscoveryResult discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest,

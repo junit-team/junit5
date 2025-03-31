@@ -569,5 +569,4 @@ public class NamespacedHierarchicalStoreTests {
 			}
 		};
 	}
-
 }

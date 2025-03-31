@@ -25,6 +25,9 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.nio.file.Path;
 
@@ -35,13 +38,20 @@ import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.ConfigurationSensitiveTestCase;
@@ -622,6 +632,25 @@ class SuiteEngineTests {
 	@Suite
 	@SelectClasses(SingleTestTestCase.class)
 	abstract private static class AbstractPrivateSuite {
+	}
+
+	@Test
+	void suiteEnginePassesRequestLevelStoreToSuiteTestDescriptors() {
+		UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
+		SuiteEngineDescriptor engineDescriptor = new SuiteEngineDescriptor(engineId);
+
+		SuiteTestDescriptor mockDescriptor = mock(SuiteTestDescriptor.class);
+		engineDescriptor.addChild(mockDescriptor);
+
+		EngineExecutionListener listener = mock(EngineExecutionListener.class);
+		NamespacedHierarchicalStore<Namespace> requestLevelStore = NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore();
+
+		ExecutionRequest request = ExecutionRequest.create(engineDescriptor, listener,
+			mock(ConfigurationParameters.class), mock(OutputDirectoryProvider.class), requestLevelStore);
+
+		new SuiteTestEngine().execute(request);
+
+		verify(mockDescriptor).execute(same(listener), same(requestLevelStore));
 	}
 
 	@Suite
