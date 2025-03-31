@@ -60,6 +60,7 @@ import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestFalseSuite;
+import org.junit.platform.suite.engine.testsuites.ErroneousTestSuite;
 import org.junit.platform.suite.engine.testsuites.InheritedSuite;
 import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
@@ -602,7 +603,10 @@ class SuiteEngineTests {
 		assertThat(discoveryIssues).hasSize(1);
 
 		var issue = discoveryIssues.getFirst();
-		assertThat(issue.message()).startsWith("[junit-jupiter] @BeforeAll method");
+		assertThat(issue.message()) //
+				.startsWith("[junit-jupiter] @BeforeAll method") //
+				.endsWith(" (via @Suite %s > %s).".formatted(SuiteWithErroneousTestSuite.class.getName(),
+						ErroneousTestSuite.class.getName()));
 
 		var method = ErroneousTestCase.class.getDeclaredMethod("nonStaticLifecycleMethod");
 		assertThat(issue.source()).contains(MethodSource.from(method));
