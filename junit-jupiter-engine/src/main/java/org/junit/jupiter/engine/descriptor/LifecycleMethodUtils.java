@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.alwaysSatisfied;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -93,8 +94,8 @@ final class LifecycleMethodUtils {
 						.and(requireStatic
 								? isStatic(issueReporter,
 									LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)
-								: __ -> true) //
-				);
+								: alwaysSatisfied()) //
+						.toConsumer());
 	}
 
 	private static Stream<Method> findAllClassTemplateInvocationLifecycleMethods(Class<?> testClass) {
@@ -113,7 +114,7 @@ final class LifecycleMethodUtils {
 
 		Condition<Method> additionalCondition = requireStatic
 				? isStatic(issueReporter, __ -> annotationType.getSimpleName())
-				: __ -> true;
+				: alwaysSatisfied();
 		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
 			additionalCondition);
 	}
@@ -131,9 +132,9 @@ final class LifecycleMethodUtils {
 			DiscoveryIssueReporter issueReporter, Condition<? super Method> additionalCondition) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
-				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName)) //
-				.filter(
-					returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(additionalCondition)) //
+				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName).toConsumer()) //
+				.filter(returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(
+					additionalCondition).toPredicate()) //
 				.collect(toUnmodifiableList());
 	}
 

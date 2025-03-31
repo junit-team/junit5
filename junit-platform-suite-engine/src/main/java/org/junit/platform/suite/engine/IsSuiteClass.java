@@ -40,7 +40,7 @@ final class IsSuiteClass implements Predicate<Class<?>> {
 	@Override
 	public boolean test(Class<?> testClass) {
 		return hasSuiteAnnotation(testClass) //
-				&& condition.test(testClass) //
+				&& condition.check(testClass) //
 				&& isNotAbstract(testClass);
 	}
 
