@@ -12,13 +12,11 @@ package example;
 
 //tag::user_guide[]
 import static java.net.InetAddress.getLoopbackAddress;
+import static org.junit.platform.engine.TestExecutionResult.successful;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
-import java.util.concurrent.Executors;
-
-import example.session.CloseableServerSocket;
 
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
@@ -34,7 +32,7 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  */
 public class FirstCustomEngine implements TestEngine {
 
-	public static CloseableServerSocket socket;
+	public ServerSocket socket;
 
 	@Override
 	public String getId() {
@@ -43,23 +41,28 @@ public class FirstCustomEngine implements TestEngine {
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		return new EngineDescriptor(UniqueId.forEngine(getId()), "First Custom Test Engine");
+		return new EngineDescriptor(uniqueId, "First Custom Test Engine");
 	}
 
 	@Override
 	public void execute(ExecutionRequest request) {
+		request.getEngineExecutionListener()
+				// tag::custom_line_break[]
+				.executionStarted(request.getRootTestDescriptor());
+
 		NamespacedHierarchicalStore<Namespace> store = request.getStore();
-		socket = (CloseableServerSocket) store.getOrComputeIfAbsent(Namespace.GLOBAL, "serverSocket", key -> {
-			ServerSocket serverSocket;
+		socket = store.getOrComputeIfAbsent(Namespace.GLOBAL, "serverSocket", key -> {
 			try {
-				serverSocket = new ServerSocket(0, 50, getLoopbackAddress());
+				return new ServerSocket(0, 50, getLoopbackAddress());
 			}
 			catch (IOException e) {
 				throw new UncheckedIOException("Failed to start ServerSocket", e);
 			}
-			return new CloseableServerSocket(serverSocket, Executors.newCachedThreadPool());
-		});
-	}
+		}, ServerSocket.class);
 
+		request.getEngineExecutionListener()
+				// tag::custom_line_break[]
+				.executionFinished(request.getRootTestDescriptor(), successful());
+	}
 }
 //end::user_guide[]
