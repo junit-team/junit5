@@ -22,6 +22,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Unit tests for {@link IsTestTemplateMethod}.
@@ -31,7 +32,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 class IsTestTemplateMethodTests {
 
 	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
-	final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod(discoveryIssues::add);
+	final IsTestTemplateMethod isTestTemplateMethod = new IsTestTemplateMethod(
+		DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@Test
 	void testTemplateMethodReturningVoid() {

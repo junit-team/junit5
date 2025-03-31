@@ -29,6 +29,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Unit tests for {@link IsTestMethod}.
@@ -38,7 +39,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 class IsTestMethodTests {
 
 	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
-	final Predicate<Method> isTestMethod = new IsTestMethod(discoveryIssues::add);
+	final Predicate<Method> isTestMethod = new IsTestMethod(DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@Test
 	void publicTestMethod() {
