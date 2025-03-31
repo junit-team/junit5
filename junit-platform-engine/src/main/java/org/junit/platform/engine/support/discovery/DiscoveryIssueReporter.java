@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.discovery;
 
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -28,11 +29,12 @@ import org.junit.platform.engine.UniqueId;
  * {@code DiscoveryIssueReporter} defines the API for reporting
  * {@link DiscoveryIssue DiscoveryIssues}.
  *
+ * <p>This interface is not intended to be implemented by clients.
+ *
  * @since 1.13
  * @see SelectorResolver.Context
  */
 @API(status = EXPERIMENTAL, since = "1.13")
-@FunctionalInterface
 public interface DiscoveryIssueReporter {
 
 	/**
@@ -47,6 +49,28 @@ public interface DiscoveryIssueReporter {
 		Preconditions.notNull(engineDiscoveryListener, "engineDiscoveryListener must not be null");
 		Preconditions.notNull(engineId, "engineId must not be null");
 		return issue -> engineDiscoveryListener.issueEncountered(engineId, issue);
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that adds reported issues to
+	 * the supplied collection.
+	 *
+	 * @param collection the collection to add issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter collecting(Collection<? super DiscoveryIssue> collection) {
+		Preconditions.notNull(collection, "collection must not be null");
+		return collection::add;
+	}
+
+	/**
+	 * Create a new {@code DiscoveryIssueReporter} that adds reported issues to
+	 * the supplied consumer.
+	 *
+	 * @param consumer the consumer to report issues to; never {@code null}
+	 */
+	static DiscoveryIssueReporter consuming(Consumer<? super DiscoveryIssue> consumer) {
+		Preconditions.notNull(consumer, "consumer must not be null");
+		return consumer::accept;
 	}
 
 	/**
@@ -113,10 +137,23 @@ public interface DiscoveryIssueReporter {
 	 * for filtering, or to {@link java.util.stream.Stream#peek(Consumer)} if it
 	 * is only used for reporting or other side effects.
 	 *
+	 * <p>This interface is not intended to be implemented by clients.
+	 *
 	 * @see #createReportingCondition(Predicate, Function)
 	 */
-	@FunctionalInterface
-	interface Condition<T> extends Predicate<T>, Consumer<T> {
+	interface Condition<T> {
+
+		/**
+		 * Create a {@link Condition} that is always satisfied.
+		 */
+		static <T> Condition<T> alwaysSatisfied() {
+			return __ -> true;
+		}
+
+		/**
+		 * Evaluate this condition to potentially report an issue.
+		 */
+		boolean check(T value);
 
 		/**
 		 * Return a composed condition that represents a logical AND of this
@@ -128,35 +165,24 @@ public interface DiscoveryIssueReporter {
 		 *
 		 * @return the composed condition; never {@code null}
 		 */
-		@Override
-		default Condition<T> and(Predicate<? super T> other) {
-			Preconditions.notNull(other, "other condition must not be null");
-			return (t) -> test(t) & other.test(t);
+		default Condition<T> and(Condition<? super T> that) {
+			Preconditions.notNull(that, "condition must not be null");
+			return value -> this.check(value) & that.check(value);
 		}
 
 		/**
-		 * Return a composed condition that represents a logical AND of this
-		 * and the supplied condition.
-		 *
-		 * <p>The default implementation avoids short-circuiting so
-		 * <em>both</em> conditions will be evaluated even if this condition
-		 * returns {@code true} to ensure that all issues are reported.
-		 *
-		 * @return the composed condition; never {@code null}
+		 * {@return this condition as a {@link Predicate}}
 		 */
-		@Override
-		default Predicate<T> or(Predicate<? super T> other) {
-			Preconditions.notNull(other, "other condition must not be null");
-			return (t) -> test(t) | other.test(t);
+		default Predicate<T> toPredicate() {
+			return this::check;
 		}
 
 		/**
-		 * Evaluate the {@code #test(Object)} method of this condition to
-		 * potentially report an issue.
+		 * {@return this condition as a {@link Consumer}}
 		 */
-		@Override
-		default void accept(T value) {
-			test(value);
+		default Consumer<T> toConsumer() {
+			return this::check;
 		}
+
 	}
 }

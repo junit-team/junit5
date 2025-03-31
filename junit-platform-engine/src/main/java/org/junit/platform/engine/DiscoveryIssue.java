@@ -13,8 +13,10 @@ package org.junit.platform.engine;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 
 /**
  * {@code DiscoveryIssue} represents an issue that was encountered during test
@@ -29,6 +31,8 @@ public interface DiscoveryIssue {
 	 * Create a new {@code DiscoveryIssue} with the supplied {@link Severity} and
 	 * message.
 	 *
+	 * @param severity the severity of the issue; never {@code null}
+	 * @param message the message of the issue; never blank
 	 * @see #builder(Severity, String)
 	 */
 	static DiscoveryIssue create(Severity severity, String message) {
@@ -39,10 +43,14 @@ public interface DiscoveryIssue {
 	 * Create a new {@link Builder} for creating a {@code DiscoveryIssue} with
 	 * the supplied {@link Severity} and message.
 	 *
+	 * @param severity the severity of the issue; never {@code null}
+	 * @param message the message of the issue; never blank
 	 * @see Builder
 	 * @see #create(Severity, String)
 	 */
 	static Builder builder(Severity severity, String message) {
+		Preconditions.notNull(severity, "severity must not be null");
+		Preconditions.notBlank(message, "message must not be blank");
 		return new DefaultDiscoveryIssue.Builder(severity, message);
 	}
 
@@ -65,6 +73,22 @@ public interface DiscoveryIssue {
 	 * {@return the cause of this issue}
 	 */
 	Optional<Throwable> cause();
+
+	/**
+	 * Create a copy of this issue with the modified message produced by the
+	 * supplied operator.
+	 */
+	default DiscoveryIssue withMessage(UnaryOperator<String> messageModifier) {
+		String oldMessage = message();
+		String newMessage = messageModifier.apply(oldMessage);
+		if (oldMessage.equals(newMessage)) {
+			return this;
+		}
+		return DiscoveryIssue.builder(severity(), newMessage) //
+				.source(source()) //
+				.cause(cause()) //
+				.build();
+	}
 
 	/**
 	 * The severity of a {@code DiscoveryIssue}.

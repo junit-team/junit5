@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Unit tests for {@link IsTestClassWithTests}.
@@ -30,8 +31,9 @@ import org.junit.jupiter.api.TestTemplate;
  */
 class IsTestClassWithTestsTests {
 
-	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests(__ -> {
-	});
+	private final Predicate<Class<?>> isTestClassWithTests = new IsTestClassWithTests(
+		DiscoveryIssueReporter.consuming(__ -> {
+		}));
 
 	@Test
 	void classWithTestMethodEvaluatesToTrue() {

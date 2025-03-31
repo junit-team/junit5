@@ -32,6 +32,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Unit tests for {@link IsTestFactoryMethod}.
@@ -41,7 +42,8 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
 class IsTestFactoryMethodTests {
 
 	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
-	final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod(discoveryIssues::add);
+	final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod(
+		DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@ParameterizedTest
 	@ValueSource(strings = { "dynamicTestsFactoryFromCollection", "dynamicTestsFactoryFromStreamWithExtendsWildcard",

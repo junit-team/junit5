@@ -10,21 +10,29 @@
 
 package org.junit.platform.suite.engine;
 
+import static java.util.function.Predicate.isEqual;
+import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.util.FunctionUtils.where;
 import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuilder.request;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.function.BiFunction;
+import java.util.function.Predicate;
 
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.EngineDiscoveryListener;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.UniqueId.Segment;
 import org.junit.platform.engine.discovery.DiscoverySelectors;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -34,6 +42,7 @@ import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCo
 import org.junit.platform.engine.support.hierarchical.ThrowableCollector;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
@@ -66,13 +75,15 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 	private SuiteLauncher launcher;
 
 	SuiteTestDescriptor(UniqueId id, Class<?> suiteClass, ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueReporter issueReporter) {
+			OutputDirectoryProvider outputDirectoryProvider, EngineDiscoveryListener discoveryListener,
+			DiscoveryIssueReporter issueReporter) {
 		super(id, getSuiteDisplayName(suiteClass), ClassSource.from(suiteClass));
 		this.configurationParameters = configurationParameters;
 		this.outputDirectoryProvider = outputDirectoryProvider;
 		this.failIfNoTests = getFailIfNoTests(suiteClass);
 		this.suiteClass = suiteClass;
 		this.lifecycleMethods = new LifecycleMethods(suiteClass, issueReporter);
+		this.discoveryRequestBuilder.listener(DiscoveryIssueForwardingListener.create(id, discoveryListener));
 	}
 
 	private static Boolean getFailIfNoTests(Class<?> suiteClass) {
@@ -213,4 +224,45 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
+	private static class DiscoveryIssueForwardingListener implements LauncherDiscoveryListener {
+
+		private static final Predicate<Segment> SUITE_SEGMENTS = where(Segment::getType, isEqual(SEGMENT_TYPE));
+
+		static DiscoveryIssueForwardingListener create(UniqueId id, EngineDiscoveryListener discoveryListener) {
+			boolean isNestedSuite = id.getSegments().stream().filter(SUITE_SEGMENTS).count() > 1;
+			if (isNestedSuite) {
+				return new DiscoveryIssueForwardingListener(discoveryListener, (__, issue) -> issue);
+			}
+			return new DiscoveryIssueForwardingListener(discoveryListener,
+				(engineUniqueId, issue) -> issue.withMessage(message -> {
+					String engineId = engineUniqueId.getLastSegment().getValue();
+					if (SuiteEngineDescriptor.ENGINE_ID.equals(engineId)) {
+						return message;
+					}
+					String suitePath = engineUniqueId.getSegments().stream() //
+							.filter(SUITE_SEGMENTS) //
+							.map(Segment::getValue) //
+							.collect(joining(" > "));
+					if (message.endsWith(".")) {
+						message = message.substring(0, message.length() - 1);
+					}
+					return String.format("[%s] %s (via @Suite %s).", engineId, message, suitePath);
+				}));
+		}
+
+		private final EngineDiscoveryListener discoveryListener;
+		private final BiFunction<UniqueId, DiscoveryIssue, DiscoveryIssue> issueTransformer;
+
+		private DiscoveryIssueForwardingListener(EngineDiscoveryListener discoveryListener,
+				BiFunction<UniqueId, DiscoveryIssue, DiscoveryIssue> issueTransformer) {
+			this.discoveryListener = discoveryListener;
+			this.issueTransformer = issueTransformer;
+		}
+
+		@Override
+		public void issueEncountered(UniqueId engineUniqueId, DiscoveryIssue issue) {
+			DiscoveryIssue transformedIssue = this.issueTransformer.apply(engineUniqueId, issue);
+			this.discoveryListener.issueEncountered(engineUniqueId, transformedIssue);
+		}
+	}
 }
