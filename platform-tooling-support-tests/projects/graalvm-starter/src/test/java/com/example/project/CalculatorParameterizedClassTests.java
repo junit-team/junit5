@@ -42,7 +42,7 @@ class CalculatorParameterizedClassTests {
 
 		final int j;
 
-		public Inner(int j) {
+		Inner(int j) {
 			this.j = j;
 		}
 
