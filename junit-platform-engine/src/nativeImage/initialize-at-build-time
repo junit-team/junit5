@@ -5,3 +5,5 @@ org.junit.platform.engine.UniqueIdFormat
 org.junit.platform.engine.support.descriptor.ClassSource
 org.junit.platform.engine.support.descriptor.MethodSource
 org.junit.platform.engine.support.hierarchical.Node$ExecutionMode
+org.junit.platform.engine.support.store.NamespacedHierarchicalStore
+org.junit.platform.engine.support.store.NamespacedHierarchicalStore$EvaluatedValue

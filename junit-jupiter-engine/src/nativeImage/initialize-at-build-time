@@ -20,6 +20,7 @@ org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
 org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
 org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
 org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor
+org.junit.jupiter.engine.discovery.ClassSelectorResolver
 org.junit.jupiter.engine.discovery.ClassSelectorResolver$DummyClassTemplateInvocationContext
 org.junit.jupiter.engine.execution.ConditionEvaluator
 org.junit.jupiter.engine.execution.InterceptingExecutableInvoker

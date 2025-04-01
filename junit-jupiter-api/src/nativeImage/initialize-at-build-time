@@ -1,3 +1,4 @@
+org.junit.jupiter.api.DisplayNameGenerator$IndicativeSentences
 org.junit.jupiter.api.DisplayNameGenerator$Standard
 org.junit.jupiter.api.TestInstance$Lifecycle
 org.junit.jupiter.api.condition.OS
