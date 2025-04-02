@@ -112,6 +112,12 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 		return configurationParameters.getBoolean(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME).orElse(false);
 	}
 
+	// TODO [6.0]: Switch the default to 'true' for this feature in JUnit5 6.0.
+	@Override
+	public boolean isAutocloseableAsCloseableResourceEnabled() {
+		return configurationParameters.getBoolean(AUTOCLOSEABLE_AS_CLOSEABLERESOURCE_PROPERTY_NAME).orElse(false);
+	}
+
 	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return configurationParameters.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(false);

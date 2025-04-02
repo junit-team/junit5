@@ -76,6 +76,12 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isAutocloseableAsCloseableResourceEnabled() {
+		return (boolean) cache.computeIfAbsent(AUTOCLOSEABLE_AS_CLOSEABLERESOURCE_PROPERTY_NAME,
+			__ -> delegate.isAutocloseableAsCloseableResourceEnabled());
+	}
+
+	@Override
 	public boolean isThreadDumpOnTimeoutEnabled() {
 		return (boolean) cache.computeIfAbsent(EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME,
 			__ -> delegate.isThreadDumpOnTimeoutEnabled());

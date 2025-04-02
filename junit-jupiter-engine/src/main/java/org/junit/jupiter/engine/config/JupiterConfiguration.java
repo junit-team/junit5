@@ -42,6 +42,7 @@ public interface JupiterConfiguration {
 	String EXTENSIONS_AUTODETECTION_EXCLUDE_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.exclude";
 	String DEACTIVATE_CONDITIONS_PATTERN_PROPERTY_NAME = "junit.jupiter.conditions.deactivate";
 	String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = "junit.jupiter.execution.parallel.enabled";
+	String AUTOCLOSEABLE_AS_CLOSEABLERESOURCE_PROPERTY_NAME = "junit.jupiter.store.autocloseable.as.closeableresource";
 	String DEFAULT_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_EXECUTION_MODE_PROPERTY_NAME;
 	String DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME = Execution.DEFAULT_CLASSES_EXECUTION_MODE_PROPERTY_NAME;
 	String EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME = "junit.jupiter.extensions.autodetection.enabled";
@@ -59,6 +60,8 @@ public interface JupiterConfiguration {
 	<T> Optional<T> getRawConfigurationParameter(String key, Function<String, T> transformer);
 
 	boolean isParallelExecutionEnabled();
+
+	boolean isAutocloseableAsCloseableResourceEnabled();
 
 	boolean isExtensionAutoDetectionEnabled();
 
