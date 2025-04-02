@@ -218,6 +218,7 @@ public final class Constants {
 	 *
 	 * @since 5.13
 	 */
+	@SuppressWarnings("deprecation")
 	@API(status = EXPERIMENTAL, since = "5.13")
 	public static final String AUTOCLOSEABLE_AS_CLOSEABLERESOURCE_PROPERTY_NAME = JupiterConfiguration.AUTOCLOSEABLE_AS_CLOSEABLERESOURCE_PROPERTY_NAME;
 

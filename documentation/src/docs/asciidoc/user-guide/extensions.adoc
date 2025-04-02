@@ -864,10 +864,14 @@ inner contexts may also be limited. Consult the corresponding Javadoc for detail
 methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
 .`ExtensionContext.Store.CloseableResource`
-NOTE: An extension context store is bound to its extension context lifecycle. When an
+NOTE: `CloseableResource` is now deprecated and extends `AutoCloseable`.
+An extension context store is bound to its extension context lifecycle. When an
 extension context lifecycle ends it closes its associated store. All stored values
 that are instances of `CloseableResource` are notified by an invocation of their `close()`
 method in the inverse order they were added in.
+
+When the `junit.jupiter.store.autocloseable.as.closeableresource` property is set to `true`,
+any `AutoCloseable` instances stored via JUnit Jupiter\'s `Store` will be treated as `CloseableResource`.
 
 An example implementation of `CloseableResource` is shown below, using an `HttpServer`
 resource.
