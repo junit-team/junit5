@@ -27,7 +27,6 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -51,10 +50,11 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
 
+	@SuppressWarnings("deprecation")
 	private static final NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> CLOSE_RESOURCES = (
 			__, ___, value) -> {
-		if (value instanceof CloseableResource) {
-			((CloseableResource) value).close();
+		if (value instanceof Store.CloseableResource) {
+			((Store.CloseableResource) value).close();
 		}
 	};
 

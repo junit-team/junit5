@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.extension;
 
 import static java.util.Collections.unmodifiableList;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -503,16 +504,19 @@ public interface ExtensionContext {
 		 * inverse order they were added in.
 		 *
 		 * @since 5.1
+		 * @deprecated without replacement
 		 */
-		@API(status = STABLE, since = "5.1")
-		interface CloseableResource {
+		@SuppressWarnings("try")
+		@Deprecated
+		@API(status = DEPRECATED, since = "5.13")
+		interface CloseableResource extends AutoCloseable {
 
 			/**
 			 * Close underlying resources.
 			 *
-			 * @throws Throwable any throwable will be caught and rethrown
+			 * @throws Exception any exception will be caught and rethrown
 			 */
-			void close() throws Throwable;
+			void close() throws Exception;
 
 		}
 

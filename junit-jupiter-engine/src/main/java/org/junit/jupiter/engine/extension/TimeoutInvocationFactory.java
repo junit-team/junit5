@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
@@ -52,7 +51,8 @@ class TimeoutInvocationFactory {
 		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
 	}
 
-	private static abstract class ExecutorResource implements CloseableResource {
+	@SuppressWarnings({ "deprecation", "try" })
+	private static abstract class ExecutorResource implements Store.CloseableResource {
 
 		protected final ScheduledExecutorService executor;
 
@@ -65,16 +65,24 @@ class TimeoutInvocationFactory {
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			executor.shutdown();
-			boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
-			if (!terminated) {
+			try {
+				boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
+				if (!terminated) {
+					executor.shutdownNow();
+					throw new JUnitException("Scheduled executor could not be stopped in an orderly manner");
+				}
+			}
+			catch (InterruptedException exception) {
+				Thread.currentThread().interrupt();
 				executor.shutdownNow();
-				throw new JUnitException("Scheduled executor could not be stopped in an orderly manner");
+				throw new JUnitException("Scheduled executor could not be stopped in an orderly manner", exception);
 			}
 		}
 	}
 
+	@SuppressWarnings("try")
 	static class SingleThreadExecutorResource extends ExecutorResource {
 
 		@SuppressWarnings("unused")

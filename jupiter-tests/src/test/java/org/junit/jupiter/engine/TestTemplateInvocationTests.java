@@ -924,6 +924,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private static class CustomCloseableResource implements CloseableResource {
 
 		static boolean closed;

@@ -100,6 +100,7 @@ public @interface ManagedResource {
 		}
 	}
 
+	@SuppressWarnings({ "deprecation", "try" })
 	class Resource<T> implements CloseableResource {
 
 		private final T value;
@@ -115,7 +116,7 @@ public @interface ManagedResource {
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			((AutoCloseable) value).close();
 		}
 	}
