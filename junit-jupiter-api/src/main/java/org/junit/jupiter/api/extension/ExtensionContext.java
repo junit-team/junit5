@@ -504,7 +504,7 @@ public interface ExtensionContext {
 		 * inverse order they were added in.
 		 *
 		 * @since 5.1
-		 * @deprecated without replacement
+		 * @deprecated Please extend {@code AutoCloseable} directly.
 		 */
 		@SuppressWarnings("try")
 		@Deprecated
