@@ -16,7 +16,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.Validatable;
-import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
+import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
@@ -38,7 +38,8 @@ import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolve
 public class DiscoverySelectorResolver {
 
 	private static final EngineDiscoveryRequestResolver<JupiterEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<JupiterEngineDescriptor> builder() //
-			.addClassContainerSelectorResolverWithContext(ctx -> new IsTestClassWithTests(ctx.getIssueReporter())) //
+			.addClassContainerSelectorResolverWithContext(
+				ctx -> new TestClassPredicates(ctx.getIssueReporter()).looksLikeNestedOrStandaloneTestClass) //
 			.addSelectorResolver(ctx -> new ClassSelectorResolver(ctx.getClassNameFilter(), getConfiguration(ctx),
 				ctx.getIssueReporter())) //
 			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx), ctx.getIssueReporter())) //

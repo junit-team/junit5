@@ -16,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
+import static org.junit.jupiter.params.provider.Arguments.argumentSet;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.discovery.ClassNameFilter.includeClassNamePatterns;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -42,6 +44,7 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
@@ -203,6 +206,63 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@ParameterizedTest
+	@MethodSource("requestsForTestClassWithInvalidStandaloneTestClass")
+	void reportsWarningForInvalidStandaloneTestClass(LauncherDiscoveryRequest request, Class<?> testClass) {
+
+		var results = discoverTests(request);
+
+		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
+		assertThat(discoveryIssues).hasSize(2);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo(
+					"Test class '%s' must not be an inner class unless annotated with @Nested. It will not be executed.",
+					testClass.getName());
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("Test class '%s' must not be private. It will not be executed.", testClass.getName());
+	}
+
+	static List<Arguments> requestsForTestClassWithInvalidStandaloneTestClass() {
+		return List.of( //
+			argumentSet("directly selected", request().selectors(selectClass(InvalidTestClassTestCase.class)).build(),
+				InvalidTestClassTestCase.class), //
+			argumentSet("indirectly selected", request() //
+					.selectors(selectPackage(InvalidTestClassTestCase.class.getPackageName())) //
+					.filters(includeClassNamePatterns(Pattern.quote(InvalidTestClassTestCase.class.getName()))).build(), //
+				InvalidTestClassTestCase.class), //
+			argumentSet("subclass", request() //
+					.selectors(selectClass(InvalidTestClassSubclassTestCase.class)) //
+					.build(), //
+				InvalidTestClassSubclassTestCase.class) //
+		);
+	}
+
+	@ParameterizedTest
+	@MethodSource("requestsForTestClassWithInvalidNestedTestClass")
+	void reportsWarningForInvalidNestedTestClass(LauncherDiscoveryRequest request) {
+
+		var results = discoverTests(request);
+
+		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
+		assertThat(discoveryIssues).hasSize(2);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo("@Nested class '%s' must be an inner class but is static. It will not be executed.",
+					InvalidTestClassTestCase.Inner.class.getName());
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("@Nested class '%s' must not be private. It will not be executed.",
+					InvalidTestClassTestCase.Inner.class.getName());
+	}
+
+	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidNestedTestClass() {
+		return List.of( //
+			named("directly selected", request().selectors(selectClass(InvalidTestClassTestCase.Inner.class)).build()), //
+			named("subclass", request() //
+					.selectors(selectNestedClass(List.of(InvalidTestClassSubclassTestCase.class),
+						InvalidTestClassTestCase.Inner.class)) //
+					.build()) //
+		);
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")
@@ -283,6 +343,29 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	static class InvalidTestMethodSubclass2TestCase extends InvalidTestMethodTestCase {
+	}
+
+	@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
+	private class InvalidTestClassTestCase {
+
+		@SuppressWarnings("unused")
+		@Test
+		void test() {
+			fail("should not be called");
+		}
+
+		@Nested
+		private static class Inner {
+			@SuppressWarnings("unused")
+			@Test
+			void test() {
+				fail("should not be called");
+			}
+		}
+
+	}
+
+	private class InvalidTestClassSubclassTestCase extends InvalidTestClassTestCase {
 	}
 
 }
