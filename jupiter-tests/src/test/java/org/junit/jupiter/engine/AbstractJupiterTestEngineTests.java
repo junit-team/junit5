@@ -83,7 +83,8 @@ public abstract class AbstractJupiterTestEngineTests {
 	private static LauncherDiscoveryRequestBuilder defaultRequest() {
 		return request() //
 				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
-				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false));
+				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false)) //
+				.enableImplicitConfigurationParameters(false);
 	}
 
 	protected UniqueId discoverUniqueId(Class<?> clazz, String methodName) {
