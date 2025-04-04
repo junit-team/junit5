@@ -177,7 +177,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	@MethodSource("requestsForTestClassWithInvalidTestMethod")
 	void reportsWarningForTestClassWithInvalidTestMethod(LauncherDiscoveryRequest request) throws Exception {
 
-		var method = InvalidTestMethodTestCase.class.getDeclaredMethod("test");
+		var method = InvalidTestCases.InvalidTestMethodTestCase.class.getDeclaredMethod("test");
 
 		var results = discoverTests(request);
 
@@ -194,14 +194,15 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidTestMethod() {
 		return List.of( //
-			named("directly selected", request().selectors(selectClass(InvalidTestMethodTestCase.class)).build()), //
+			named("directly selected",
+				request().selectors(selectClass(InvalidTestCases.InvalidTestMethodTestCase.class)).build()), //
 			named("indirectly selected", request() //
-					.selectors(selectPackage(InvalidTestMethodTestCase.class.getPackageName())) //
-					.filters(
-						includeClassNamePatterns(Pattern.quote(InvalidTestMethodTestCase.class.getName()))).build()), //
+					.selectors(selectPackage(InvalidTestCases.InvalidTestMethodTestCase.class.getPackageName())) //
+					.filters(includeClassNamePatterns(
+						Pattern.quote(InvalidTestCases.InvalidTestMethodTestCase.class.getName()))).build()), //
 			named("subclasses", request() //
-					.selectors(selectClass(InvalidTestMethodSubclass1TestCase.class),
-						selectClass(InvalidTestMethodSubclass2TestCase.class)) //
+					.selectors(selectClass(InvalidTestCases.InvalidTestMethodSubclass1TestCase.class),
+						selectClass(InvalidTestCases.InvalidTestMethodSubclass2TestCase.class)) //
 					.build()) //
 		);
 	}
@@ -224,16 +225,18 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	static List<Arguments> requestsForTestClassWithInvalidStandaloneTestClass() {
 		return List.of( //
-			argumentSet("directly selected", request().selectors(selectClass(InvalidTestClassTestCase.class)).build(),
-				InvalidTestClassTestCase.class), //
+			argumentSet("directly selected",
+				request().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.class)).build(),
+				InvalidTestCases.InvalidTestClassTestCase.class), //
 			argumentSet("indirectly selected", request() //
-					.selectors(selectPackage(InvalidTestClassTestCase.class.getPackageName())) //
-					.filters(includeClassNamePatterns(Pattern.quote(InvalidTestClassTestCase.class.getName()))).build(), //
-				InvalidTestClassTestCase.class), //
+					.selectors(selectPackage(InvalidTestCases.InvalidTestClassTestCase.class.getPackageName())) //
+					.filters(includeClassNamePatterns(
+						Pattern.quote(InvalidTestCases.InvalidTestClassTestCase.class.getName()))).build(), //
+				InvalidTestCases.InvalidTestClassTestCase.class), //
 			argumentSet("subclass", request() //
-					.selectors(selectClass(InvalidTestClassSubclassTestCase.class)) //
+					.selectors(selectClass(InvalidTestCases.InvalidTestClassSubclassTestCase.class)) //
 					.build(), //
-				InvalidTestClassSubclassTestCase.class) //
+				InvalidTestCases.InvalidTestClassSubclassTestCase.class) //
 		);
 	}
 
@@ -247,18 +250,19 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		assertThat(discoveryIssues).hasSize(2);
 		assertThat(discoveryIssues.getFirst().message()) //
 				.isEqualTo("@Nested class '%s' must be an inner class but is static. It will not be executed.",
-					InvalidTestClassTestCase.Inner.class.getName());
+					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
 		assertThat(discoveryIssues.getLast().message()) //
 				.isEqualTo("@Nested class '%s' must not be private. It will not be executed.",
-					InvalidTestClassTestCase.Inner.class.getName());
+					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
 	}
 
 	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidNestedTestClass() {
 		return List.of( //
-			named("directly selected", request().selectors(selectClass(InvalidTestClassTestCase.Inner.class)).build()), //
+			named("directly selected",
+				request().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.Inner.class)).build()), //
 			named("subclass", request() //
-					.selectors(selectNestedClass(List.of(InvalidTestClassSubclassTestCase.class),
-						InvalidTestClassTestCase.Inner.class)) //
+					.selectors(selectNestedClass(List.of(InvalidTestCases.InvalidTestClassSubclassTestCase.class),
+						InvalidTestCases.InvalidTestClassTestCase.Inner.class)) //
 					.build()) //
 		);
 	}
@@ -331,41 +335,45 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
-	static class InvalidTestMethodTestCase {
-		@Test
-		private static int test() {
-			return fail("should not be called");
-		}
-	}
+	static class InvalidTestCases {
 
-	static class InvalidTestMethodSubclass1TestCase extends InvalidTestMethodTestCase {
-	}
-
-	static class InvalidTestMethodSubclass2TestCase extends InvalidTestMethodTestCase {
-	}
-
-	@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
-	private class InvalidTestClassTestCase {
-
-		@SuppressWarnings("unused")
-		@Test
-		void test() {
-			fail("should not be called");
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		static class InvalidTestMethodTestCase {
+			@Test
+			private static int test() {
+				return fail("should not be called");
+			}
 		}
 
-		@Nested
-		private static class Inner {
+		static class InvalidTestMethodSubclass1TestCase extends InvalidTestMethodTestCase {
+		}
+
+		static class InvalidTestMethodSubclass2TestCase extends InvalidTestMethodTestCase {
+		}
+
+		@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
+		private class InvalidTestClassTestCase {
+
 			@SuppressWarnings("unused")
 			@Test
 			void test() {
 				fail("should not be called");
 			}
+
+			@Nested
+			private static class Inner {
+				@SuppressWarnings("unused")
+				@Test
+				void test() {
+					fail("should not be called");
+				}
+			}
+
 		}
 
-	}
+		private class InvalidTestClassSubclassTestCase extends InvalidTestClassTestCase {
+		}
 
-	private class InvalidTestClassSubclassTestCase extends InvalidTestClassTestCase {
 	}
 
 }

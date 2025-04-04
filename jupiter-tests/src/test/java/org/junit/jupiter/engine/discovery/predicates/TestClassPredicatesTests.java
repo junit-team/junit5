@@ -63,8 +63,8 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void staticTestClassEvaluatesToTrue() {
-			assertTrue(predicates.looksLikeIntendedTestClass(StaticTestCase.class));
-			assertTrue(predicates.isValidStandaloneTestClass(StaticTestCase.class));
+			assertTrue(predicates.looksLikeIntendedTestClass(TestCases.StaticTestCase.class));
+			assertTrue(predicates.isValidStandaloneTestClass(TestCases.StaticTestCase.class));
 		}
 
 		// -------------------------------------------------------------------------
@@ -123,7 +123,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateClassWithTestMethodEvaluatesToFalse() {
-			var candidate = PrivateClassWithTestMethod.class;
+			var candidate = TestCases.PrivateClassWithTestMethod.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -142,7 +142,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateClassWithTestFactoryEvaluatesToFalse() {
-			var candidate = PrivateClassWithTestFactory.class;
+			var candidate = TestCases.PrivateClassWithTestFactory.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -161,7 +161,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateClassWithTestTemplateEvaluatesToFalse() {
-			var candidate = PrivateClassWithTestTemplate.class;
+			var candidate = TestCases.PrivateClassWithTestTemplate.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -180,7 +180,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateClassWithNestedTestCasesEvaluatesToFalse() {
-			var candidate = PrivateClassWithNestedTestClass.class;
+			var candidate = TestCases.PrivateClassWithNestedTestClass.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -199,7 +199,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateStaticTestClassEvaluatesToFalse() {
-			var candidate = PrivateStaticTestCase.class;
+			var candidate = TestCases.PrivateStaticTestCase.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -216,11 +216,11 @@ public class TestClassPredicatesTests {
 		 */
 		@Test
 		void recursiveHierarchies() {
-			assertTrue(predicates.looksLikeIntendedTestClass(OuterClass.class));
-			assertTrue(predicates.isValidStandaloneTestClass(OuterClass.class));
+			assertTrue(predicates.looksLikeIntendedTestClass(TestCases.OuterClass.class));
+			assertTrue(predicates.isValidStandaloneTestClass(TestCases.OuterClass.class));
 			assertThat(discoveryIssues).isEmpty();
 
-			var candidate = OuterClass.RecursiveInnerClass.class;
+			var candidate = TestCases.OuterClass.RecursiveInnerClass.class;
 
 			assertTrue(predicates.looksLikeIntendedTestClass(candidate));
 			assertFalse(predicates.isValidStandaloneTestClass(candidate));
@@ -240,7 +240,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void innerClassEvaluatesToTrue() {
-			var candidate = NestedClassesTestCase.InnerClass.class;
+			var candidate = TestCases.NestedClassesTestCase.InnerClass.class;
 			assertThat(predicates.isAnnotatedWithNested).accepts(candidate);
 			assertTrue(predicates.isValidNestedTestClass(candidate));
 			assertThat(predicates.isAnnotatedWithNestedAndValid).accepts(candidate);
@@ -248,7 +248,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void staticNestedClassEvaluatesToFalse() {
-			var candidate = NestedClassesTestCase.StaticNestedClass.class;
+			var candidate = TestCases.NestedClassesTestCase.StaticNestedClass.class;
 			assertThat(predicates.isAnnotatedWithNested).accepts(candidate);
 			assertFalse(predicates.isValidNestedTestClass(candidate));
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
@@ -263,7 +263,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void privateNestedClassEvaluatesToFalse() {
-			var candidate = NestedClassesTestCase.PrivateInnerClass.class;
+			var candidate = TestCases.NestedClassesTestCase.PrivateInnerClass.class;
 			assertThat(predicates.isAnnotatedWithNested).accepts(candidate);
 			assertFalse(predicates.isValidNestedTestClass(candidate));
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
@@ -277,7 +277,7 @@ public class TestClassPredicatesTests {
 
 		@Test
 		void abstractInnerClassEvaluatesToFalse() {
-			var candidate = NestedClassesTestCase.AbstractInnerClass.class;
+			var candidate = TestCases.NestedClassesTestCase.AbstractInnerClass.class;
 			assertThat(predicates.isAnnotatedWithNested).accepts(candidate);
 			assertFalse(predicates.isValidNestedTestClass(candidate));
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
@@ -308,113 +308,110 @@ public class TestClassPredicatesTests {
 
 	// -------------------------------------------------------------------------
 
-	@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
-	private class PrivateClassWithTestMethod {
+	static class TestCases {
 
-		@Test
-		void test() {
-		}
-
-	}
-
-	@SuppressWarnings("InnerClassMayBeStatic")
-	private class PrivateClassWithTestFactory {
-
-		@TestFactory
-		Collection<DynamicTest> factory() {
-			return new ArrayList<>();
-		}
-
-	}
-
-	@SuppressWarnings("InnerClassMayBeStatic")
-	private class PrivateClassWithTestTemplate {
-
-		@TestTemplate
-		void template(int a) {
-		}
-
-	}
-
-	@SuppressWarnings("InnerClassMayBeStatic")
-	private class PrivateClassWithNestedTestClass {
-
-		@Nested
-		class InnerClass {
+		@SuppressWarnings({ "JUnitMalformedDeclaration", "InnerClassMayBeStatic" })
+		private class PrivateClassWithTestMethod {
 
 			@Test
-			void first() {
-			}
-
-			@Test
-			void second() {
+			void test() {
 			}
 
 		}
-	}
 
-	// -------------------------------------------------------------------------
+		@SuppressWarnings("InnerClassMayBeStatic")
+		private class PrivateClassWithTestFactory {
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
-	static class StaticTestCase {
+			@TestFactory
+			Collection<DynamicTest> factory() {
+				return new ArrayList<>();
+			}
 
-		@Test
-		void test() {
 		}
-	}
 
-	private static class PrivateStaticClass {
-	}
+		@SuppressWarnings("InnerClassMayBeStatic")
+		private class PrivateClassWithTestTemplate {
 
-	static class StaticClass {
-	}
+			@TestTemplate
+			void template(int a) {
+			}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
-	private static class PrivateStaticTestCase {
-
-		@Test
-		void test() {
 		}
-	}
 
-	@SuppressWarnings("NewClassNamingConvention")
-	static class OuterClass {
+		@SuppressWarnings("InnerClassMayBeStatic")
+		private class PrivateClassWithNestedTestClass {
 
-		@Nested
-		class InnerClass {
+			@Nested
+			class InnerClass {
+
+				@Test
+				void first() {
+				}
+
+				@Test
+				void second() {
+				}
+
+			}
+		}
+
+		// -------------------------------------------------------------------------
+
+		@SuppressWarnings("JUnitMalformedDeclaration")
+		static class StaticTestCase {
 
 			@Test
 			void test() {
 			}
 		}
 
-		// Intentionally commented out so that RecursiveInnerClass is NOT a candidate test class
-		// @Nested
-		@SuppressWarnings("InnerClassMayBeStatic")
-		class RecursiveInnerClass extends OuterClass {
-		}
-	}
-
-	private static class NestedClassesTestCase {
-
-		@Nested
-		class InnerClass {
-		}
-
 		@SuppressWarnings("JUnitMalformedDeclaration")
-		@Nested
-		static class StaticNestedClass {
+		private static class PrivateStaticTestCase {
+
+			@Test
+			void test() {
+			}
 		}
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
-		@Nested
-		private class PrivateInnerClass {
+		@SuppressWarnings("NewClassNamingConvention")
+		static class OuterClass {
+
+			@Nested
+			class InnerClass {
+
+				@Test
+				void test() {
+				}
+			}
+
+			// Intentionally commented out so that RecursiveInnerClass is NOT a candidate test class
+			// @Nested
+			@SuppressWarnings("InnerClassMayBeStatic")
+			class RecursiveInnerClass extends OuterClass {
+			}
 		}
 
-		@Nested
-		private abstract class AbstractInnerClass {
-		}
+		private static class NestedClassesTestCase {
 
+			@Nested
+			class InnerClass {
+			}
+
+			@SuppressWarnings("JUnitMalformedDeclaration")
+			@Nested
+			static class StaticNestedClass {
+			}
+
+			@SuppressWarnings("JUnitMalformedDeclaration")
+			@Nested
+			private class PrivateInnerClass {
+			}
+
+			@Nested
+			private abstract class AbstractInnerClass {
+			}
+
+		}
 	}
 
 }
