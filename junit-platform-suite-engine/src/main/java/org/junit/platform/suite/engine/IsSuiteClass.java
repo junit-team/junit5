@@ -65,7 +65,8 @@ final class IsSuiteClass implements Predicate<Class<?>> {
 	}
 
 	private static DiscoveryIssue createIssue(Class<?> testClass, String detailMessage) {
-		String message = String.format("@Suite class '%s' %s", testClass.getName(), detailMessage);
+		String message = String.format("@Suite class '%s' %s It will not be executed.", testClass.getName(),
+			detailMessage);
 		return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message) //
 				.source(ClassSource.from(testClass)) //
 				.build();
