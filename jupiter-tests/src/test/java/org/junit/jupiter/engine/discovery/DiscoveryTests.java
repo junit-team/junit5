@@ -249,10 +249,10 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
 		assertThat(discoveryIssues).hasSize(2);
 		assertThat(discoveryIssues.getFirst().message()) //
-				.isEqualTo("@Nested class '%s' must be an inner class but is static. It will not be executed.",
+				.isEqualTo("@Nested class '%s' must not be private. It will not be executed.",
 					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
 		assertThat(discoveryIssues.getLast().message()) //
-				.isEqualTo("@Nested class '%s' must not be private. It will not be executed.",
+				.isEqualTo("@Nested class '%s' must not be static. It will not be executed.",
 					InvalidTestCases.InvalidTestClassTestCase.Inner.class.getName());
 	}
 

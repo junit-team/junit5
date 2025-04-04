@@ -254,7 +254,21 @@ public class TestClassPredicatesTests {
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
 
 			var issue = DiscoveryIssue.builder(Severity.WARNING,
-				"@Nested class '%s' must be an inner class but is static. It will not be executed.".formatted(
+				"@Nested class '%s' must not be static. It will not be executed.".formatted(candidate.getName())) //
+					.source(ClassSource.from(candidate)) //
+					.build();
+			assertThat(discoveryIssues.stream().distinct()).containsExactly(issue);
+		}
+
+		@Test
+		void topLevelClassEvaluatesToFalse() {
+			var candidate = InvalidTopLevelNestedTestClass.class;
+			assertThat(predicates.isAnnotatedWithNested).accepts(candidate);
+			assertFalse(predicates.isValidNestedTestClass(candidate));
+			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
+
+			var issue = DiscoveryIssue.builder(Severity.WARNING,
+				"@Nested class '%s' must not be a top-level class. It will not be executed.".formatted(
 					candidate.getName())) //
 					.source(ClassSource.from(candidate)) //
 					.build();
@@ -298,8 +312,7 @@ public class TestClassPredicatesTests {
 			assertThat(predicates.isAnnotatedWithNestedAndValid).rejects(candidate);
 
 			var issue = DiscoveryIssue.builder(Severity.WARNING,
-				"@Nested class '%s' must be an inner class but is static. It will not be executed.".formatted(
-					candidate.getName())) //
+				"@Nested class '%s' must not be static. It will not be executed.".formatted(candidate.getName())) //
 					.source(ClassSource.from(candidate)) //
 					.build();
 			assertThat(discoveryIssues.stream().distinct()).containsExactly(issue);
@@ -467,5 +480,13 @@ class ClassWithNestedTestClass {
 		void second() {
 		}
 
+	}
+}
+
+@SuppressWarnings("NewClassNamingConvention")
+@Nested
+class InvalidTopLevelNestedTestClass {
+	@Test
+	void test() {
 	}
 }
