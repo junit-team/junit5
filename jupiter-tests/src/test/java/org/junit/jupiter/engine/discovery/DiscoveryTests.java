@@ -267,6 +267,23 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@Test
+	void reportsWarningForTestClassWithPotentialNestedTestClasses() {
+
+		var results = discoverTestsForClass(InvalidTestCases.class);
+
+		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
+		assertThat(discoveryIssues).hasSize(2);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo(
+					"Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.",
+					InvalidTestCases.InvalidTestClassSubclassTestCase.class.getName());
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo(
+					"Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.",
+					InvalidTestCases.InvalidTestClassTestCase.class.getName());
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")
