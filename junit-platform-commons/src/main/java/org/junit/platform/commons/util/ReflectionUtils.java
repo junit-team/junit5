@@ -1236,8 +1236,33 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		Set<Class<?>> candidates = new LinkedHashSet<>();
-		findNestedClasses(clazz, predicate, candidates);
+		visitNestedClasses(clazz, predicate, nestedClass -> {
+			candidates.add(nestedClass);
+			return true;
+		});
 		return Collections.unmodifiableList(new ArrayList<>(candidates));
+	}
+
+	/**
+	 * Determine if a nested class within the supplied class, or inherited by the
+	 * supplied class, that conforms to the supplied predicate is present.
+	 *
+	 * <p>This method does <strong>not</strong> search for nested classes
+	 * recursively.
+	 *
+	 * @param clazz the class to be searched; never {@code null}
+	 * @param predicate the predicate against which the list of nested classes is
+	 * checked; never {@code null}
+	 * @return {@code true} if such a nested class is present
+	 * @throws JUnitException if a cycle is detected within an inner class hierarchy
+	 */
+	@API(status = INTERNAL, since = "1.13")
+	public static boolean isNestedClassPresent(Class<?> clazz, Predicate<Class<?>> predicate) {
+		Preconditions.notNull(clazz, "Class must not be null");
+		Preconditions.notNull(predicate, "Predicate must not be null");
+
+		boolean visitorWasNotCalled = visitNestedClasses(clazz, predicate, __ -> false);
+		return !visitorWasNotCalled;
 	}
 
 	/**
@@ -1248,9 +1273,10 @@ public final class ReflectionUtils {
 		return findNestedClasses(clazz, predicate).stream();
 	}
 
-	private static void findNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate, Set<Class<?>> candidates) {
+	private static boolean visitNestedClasses(Class<?> clazz, Predicate<Class<?>> predicate,
+			Visitor<Class<?>> visitor) {
 		if (!isSearchable(clazz)) {
-			return;
+			return true;
 		}
 
 		if (isInnerClass(clazz) && predicate.test(clazz)) {
@@ -1262,7 +1288,10 @@ public final class ReflectionUtils {
 			for (Class<?> nestedClass : clazz.getDeclaredClasses()) {
 				if (predicate.test(nestedClass)) {
 					detectInnerClassCycle(nestedClass);
-					candidates.add(nestedClass);
+					boolean shouldContinue = visitor.accept(nestedClass);
+					if (!shouldContinue) {
+						return false;
+					}
 				}
 			}
 		}
@@ -1271,12 +1300,20 @@ public final class ReflectionUtils {
 		}
 
 		// Search class hierarchy
-		findNestedClasses(clazz.getSuperclass(), predicate, candidates);
+		boolean shouldContinue = visitNestedClasses(clazz.getSuperclass(), predicate, visitor);
+		if (!shouldContinue) {
+			return false;
+		}
 
 		// Search interface hierarchy
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			findNestedClasses(ifc, predicate, candidates);
+			shouldContinue = visitNestedClasses(ifc, predicate, visitor);
+			if (!shouldContinue) {
+				return false;
+			}
 		}
+
+		return true;
 	}
 
 	/**
@@ -2071,6 +2108,16 @@ public final class ReflectionUtils {
 		Preconditions.condition(isTrue || "false".equals(value), () -> USE_LEGACY_SEARCH_SEMANTICS_PROPERTY_NAME
 				+ " property must be 'true' or 'false' (ignoring case): " + rawValue);
 		return isTrue;
+	}
+
+	private interface Visitor<T> {
+
+		/**
+		 * @return {@code true} if the visitor should continue searching;
+		 * {@code false} if the visitor should stop
+		 */
+		boolean accept(T value);
+
 	}
 
 }
