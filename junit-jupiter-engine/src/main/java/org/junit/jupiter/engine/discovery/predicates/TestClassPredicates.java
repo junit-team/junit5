@@ -15,6 +15,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
 import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
 
@@ -99,12 +100,16 @@ public class TestClassPredicates {
 	}
 
 	private static Condition<Class<?>> isInner(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ReflectionUtils::isInnerClass,
-			testClass -> createIssue("@Nested", testClass, "must be an inner class but is static"));
+		return issueReporter.createReportingCondition(ReflectionUtils::isInnerClass, testClass -> {
+			if (testClass.getEnclosingClass() == null) {
+				return createIssue("@Nested", testClass, "must not be a top-level class");
+			}
+			return createIssue("@Nested", testClass, "must not be static");
+		});
 	}
 
 	private static Condition<Class<?>> isNotInner(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(testClass -> !ReflectionUtils.isInnerClass(testClass),
+		return issueReporter.createReportingCondition(testClass -> !isInnerClass(testClass),
 			testClass -> createIssue("Test", testClass, "must not be an inner class unless annotated with @Nested"));
 	}
 
