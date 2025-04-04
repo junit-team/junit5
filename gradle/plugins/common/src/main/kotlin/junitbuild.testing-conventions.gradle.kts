@@ -137,6 +137,7 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
 		classpath.from(javaAgentClasspath)
 	}
+	jvmArgs("-Xshare:off") // https://github.com/mockito/mockito/issues/3111
 
 	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
