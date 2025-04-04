@@ -85,7 +85,14 @@ public class TestClassPredicates {
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {
-		return isNestedClassPresent(candidate, this.isAnnotatedWithNestedAndValid);
+		return isNestedClassPresent( //
+			candidate, //
+			isNotSame(candidate).and(
+				this.isAnnotatedWithNested.or(it -> isInnerClass(it) && looksLikeIntendedTestClass(it))));
+	}
+
+	private static Predicate<Class<?>> isNotSame(Class<?> candidate) {
+		return clazz -> candidate != clazz;
 	}
 
 	private static Condition<Class<?>> isNotPrivateUnlessAbstract(String prefix, DiscoveryIssueReporter issueReporter) {
