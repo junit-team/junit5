@@ -181,13 +181,11 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
 		assertThat(discoveryIssues).hasSize(3);
 		assertThat(discoveryIssues.getFirst().message()) //
-				.isEqualTo("@Test method '%s' must not be private. It will be not be executed.",
-					method.toGenericString());
+				.isEqualTo("@Test method '%s' must not be private. It will not be executed.", method.toGenericString());
 		assertThat(discoveryIssues.get(1).message()) //
-				.isEqualTo("@Test method '%s' must not be static. It will be not be executed.",
-					method.toGenericString());
+				.isEqualTo("@Test method '%s' must not be static. It will not be executed.", method.toGenericString());
 		assertThat(discoveryIssues.getLast().message()) //
-				.isEqualTo("@Test method '%s' must not return a value. It will be not be executed.",
+				.isEqualTo("@Test method '%s' must not return a value. It will not be executed.",
 					method.toGenericString());
 	}
 

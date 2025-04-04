@@ -67,7 +67,7 @@ class IsTestFactoryMethodTests {
 		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
 		assertThat(issue.message()).isEqualTo(
 			"@TestFactory method '%s' must return a single org.junit.jupiter.api.DynamicNode or a Stream, Collection, Iterable, Iterator, or array of org.junit.jupiter.api.DynamicNode. "
-					+ "It will be not be executed.",
+					+ "It will not be executed.",
 			method.toGenericString());
 		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
