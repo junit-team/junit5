@@ -15,6 +15,8 @@ import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotAbstract;
 import static org.junit.platform.commons.support.ModifierSupport.isNotPrivate;
+import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
+import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
 
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
@@ -22,7 +24,6 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
-import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -79,12 +80,11 @@ public class TestClassPredicates {
 	}
 
 	private boolean hasTestOrTestFactoryOrTestTemplateMethods(Class<?> candidate) {
-		return ReflectionUtils.isMethodPresent(candidate, this.isTestOrTestFactoryOrTestTemplateMethod);
+		return isMethodPresent(candidate, this.isTestOrTestFactoryOrTestTemplateMethod);
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {
-		// TODO [#242] Add ReflectionSupport.isNestedClassPresent(candidate, TestClassPredicates::isValidNestedTestClass)
-		return !ReflectionSupport.findNestedClasses(candidate, this.isAnnotatedWithNestedAndValid).isEmpty();
+		return isNestedClassPresent(candidate, this.isAnnotatedWithNestedAndValid);
 	}
 
 	private static Condition<Class<?>> isNotPrivateUnlessAbstract(String prefix, DiscoveryIssueReporter issueReporter) {
