@@ -21,7 +21,9 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.Node;
@@ -52,10 +54,24 @@ abstract class TemplateExecutor<P extends Extension, C> {
 
 		int initialValue = invocationIndex.get();
 
-		try (Stream<? extends C> stream = provideContexts(provider, extensionContext)) {
+		Stream<? extends C> stream = provideContexts(provider, extensionContext);
+		try {
 			stream.forEach(invocationContext -> createInvocationTestDescriptor(invocationContext,
 				invocationIndex.incrementAndGet()) //
 						.ifPresent(testDescriptor -> execute(dynamicTestExecutor, testDescriptor)));
+		}
+		catch (Throwable t) {
+			try {
+				stream.close();
+			}
+			catch (Throwable t2) {
+				// ignore exceptions from close() to avoid masking the original failure
+				UnrecoverableExceptions.rethrowIfUnrecoverable(t2);
+			}
+			throw ExceptionUtils.throwAsUncheckedException(t);
+		}
+		finally {
+			stream.close();
 		}
 
 		Preconditions.condition(
