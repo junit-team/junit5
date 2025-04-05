@@ -187,6 +187,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 			this.name = name;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {

@@ -536,6 +536,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 			this.name = name;
 		}
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
 			assertThat(context.getTestInstance()).isNotPresent();

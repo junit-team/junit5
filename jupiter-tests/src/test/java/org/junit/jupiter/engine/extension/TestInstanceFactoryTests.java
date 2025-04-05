@@ -737,6 +737,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	private static abstract class AbstractTestInstanceFactory implements TestInstanceFactory {
 
+		@SuppressWarnings("deprecation")
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();

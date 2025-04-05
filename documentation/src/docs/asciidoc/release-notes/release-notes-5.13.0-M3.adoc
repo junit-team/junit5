@@ -36,6 +36,10 @@ repository on GitHub.
   <<../user-guide/index.adoc#launcher-api-managing-state-across-test-engines, request-scoped>>
   resources.
 
+* CloseableResource is now deprecated and extends `AutoCloseable`. This change is
+  intended to improve the usability of the API and to align it with the standard Java
+  `AutoCloseable` interface.
+
 
 [[release-notes-5.13.0-M3-junit-jupiter]]
 === JUnit Jupiter

@@ -57,6 +57,7 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 	 * {@link ResourceValue#close()} method implementation is needed to comply
 	 * with both interfaces.
 	 */
+	@SuppressWarnings("deprecation")
 	static class ResourceValue implements Resource, CloseableResource, AutoCloseable {
 
 		static final AtomicInteger creations = new AtomicInteger();
@@ -80,6 +81,7 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static class CloseableOnlyOnceResource implements CloseableResource {
 
 		private final AtomicBoolean closed = new AtomicBoolean();
