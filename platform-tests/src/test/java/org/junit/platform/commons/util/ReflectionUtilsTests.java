@@ -1037,23 +1037,42 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
+		void isNestedClassPresentPreconditions() {
+			// @formatter:off
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, null));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(null, clazz -> true));
+			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isNestedClassPresent(getClass(), null));
+			// @formatter:on
+		}
+
+		@Test
 		void findNestedClasses() {
 			// @formatter:off
 			assertThat(findNestedClasses(Object.class)).isEmpty();
+			assertThat(isNestedClassPresent(Object.class)).isFalse();
 
 			assertThat(findNestedClasses(ClassWithNestedClasses.class))
 					.containsOnly(Nested1.class, Nested2.class, Nested3.class);
+			assertThat(isNestedClassPresent(ClassWithNestedClasses.class))
+					.isTrue();
 
 			assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
 					.containsExactly(Nested1.class);
+			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, clazz -> clazz.getName().contains("1")))
+					.isTrue();
 
 			assertThat(ReflectionUtils.findNestedClasses(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
 					.containsExactly(Nested3.class);
+			assertThat(ReflectionUtils.isNestedClassPresent(ClassWithNestedClasses.class, ReflectionUtils::isStatic))
+					.isTrue();
 
 			assertThat(findNestedClasses(ClassExtendingClassWithNestedClasses.class))
 					.containsOnly(Nested1.class, Nested2.class, Nested3.class, Nested4.class, Nested5.class);
+			assertThat(isNestedClassPresent(ClassExtendingClassWithNestedClasses.class))
+					.isTrue();
 
 			assertThat(findNestedClasses(ClassWithNestedClasses.Nested1.class)).isEmpty();
+			assertThat(isNestedClassPresent(ClassWithNestedClasses.Nested1.class)).isFalse();
 			// @formatter:on
 		}
 
@@ -1064,26 +1083,39 @@ class ReflectionUtilsTests {
 		void findNestedClassesWithSeeminglyRecursiveHierarchies() {
 			assertThat(findNestedClasses(AbstractOuterClass.class))//
 					.containsExactly(AbstractOuterClass.InnerClass.class);
+			assertThat(isNestedClassPresent(AbstractOuterClass.class))//
+					.isTrue();
 
 			// OuterClass contains recursive hierarchies, but the non-matching
 			// predicate should prevent cycle detection.
 			// See https://github.com/junit-team/junit5/issues/2249
 			assertThat(ReflectionUtils.findNestedClasses(OuterClass.class, clazz -> false)).isEmpty();
+			assertThat(ReflectionUtils.isNestedClassPresent(OuterClass.class, clazz -> false)).isFalse();
+
 			// RecursiveInnerInnerClass is part of a recursive hierarchy, but the non-matching
 			// predicate should prevent cycle detection.
 			assertThat(ReflectionUtils.findNestedClasses(RecursiveInnerInnerClass.class, clazz -> false)).isEmpty();
+			assertThat(ReflectionUtils.isNestedClassPresent(RecursiveInnerInnerClass.class, clazz -> false)).isFalse();
 
 			// Sibling types don't actually result in cycles.
 			assertThat(findNestedClasses(StaticNestedSiblingClass.class))//
 					.containsExactly(AbstractOuterClass.InnerClass.class);
+			assertThat(isNestedClassPresent(StaticNestedSiblingClass.class))//
+					.isTrue();
 			assertThat(findNestedClasses(InnerSiblingClass.class))//
 					.containsExactly(AbstractOuterClass.InnerClass.class);
+			assertThat(isNestedClassPresent(InnerSiblingClass.class))//
+					.isTrue();
 
 			// Interfaces with static nested classes
 			assertThat(findNestedClasses(OuterClassImplementingInterface.class))//
 					.containsExactly(InnerClassImplementingInterface.class, Nested4.class);
+			assertThat(isNestedClassPresent(OuterClassImplementingInterface.class))//
+					.isTrue();
 			assertThat(findNestedClasses(InnerClassImplementingInterface.class))//
 					.containsExactly(Nested4.class);
+			assertThat(isNestedClassPresent(InnerClassImplementingInterface.class))//
+					.isTrue();
 		}
 
 		/**
@@ -1103,6 +1135,10 @@ class ReflectionUtilsTests {
 
 		private static List<Class<?>> findNestedClasses(Class<?> clazz) {
 			return ReflectionUtils.findNestedClasses(clazz, c -> true);
+		}
+
+		private static boolean isNestedClassPresent(Class<?> clazz) {
+			return ReflectionUtils.isNestedClassPresent(clazz, c -> true);
 		}
 
 		private void assertNestedCycle(Class<?> from, Class<?> to) {

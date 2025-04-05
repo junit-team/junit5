@@ -51,7 +51,7 @@ public class JupiterUniqueIdBuilder {
 	private static String staticClassSegmentType(String className) {
 		return ReflectionSupport.tryToLoadClass(className).toOptional() //
 				.map(it -> classSegmentType(it, ClassTestDescriptor.SEGMENT_TYPE,
-					ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE)) //
+					ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE)) //
 				.orElse(ClassTestDescriptor.SEGMENT_TYPE);
 	}
 

@@ -36,10 +36,10 @@ import org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor;
-import org.junit.jupiter.engine.discovery.predicates.IsTestClassWithTests;
 import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
+import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -71,8 +71,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		this.configuration = configuration;
 		this.issueReporter = issueReporter;
 		this.methodTypes = MethodType.allPossibilities(issueReporter);
-		IsTestClassWithTests classPredicate = new IsTestClassWithTests(issueReporter);
-		this.testClassPredicate = classPredicate.or(classPredicate.isNestedTestClass);
+		this.testClassPredicate = new TestClassPredicates(issueReporter).looksLikeNestedOrStandaloneTestClass;
 	}
 
 	@Override
