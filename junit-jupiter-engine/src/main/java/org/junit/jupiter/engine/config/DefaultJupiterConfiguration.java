@@ -113,6 +113,11 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isAutoCloseEnabled() {
+		return configurationParameters.getBoolean(AUTOCLOSE_ENABLED_PROPERTY_NAME).orElse(true);
+	}
+
+	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return configurationParameters.getBoolean(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME).orElse(false);
 	}

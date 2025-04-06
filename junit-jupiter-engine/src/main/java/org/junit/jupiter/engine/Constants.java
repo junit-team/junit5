@@ -211,6 +211,16 @@ public final class Constants {
 	public static final String PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME = JupiterConfiguration.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 
 	/**
+	 * Property name used to enable auto-closing of {@link AutoCloseable} instances
+	 *
+	 * <p>By default, auto-closing is enabled.
+	 *
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	public static final String AUTOCLOSE_ENABLED_PROPERTY_NAME = JupiterConfiguration.AUTOCLOSE_ENABLED_PROPERTY_NAME;
+
+	/**
 	 * Property name used to set the default test execution mode: {@value}
 	 *
 	 * @see Execution#DEFAULT_EXECUTION_MODE_PROPERTY_NAME

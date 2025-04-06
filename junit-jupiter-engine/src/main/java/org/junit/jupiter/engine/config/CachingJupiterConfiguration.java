@@ -70,6 +70,11 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	}
 
 	@Override
+	public boolean isAutoCloseEnabled() {
+		return (boolean) cache.computeIfAbsent(AUTOCLOSE_ENABLED_PROPERTY_NAME, __ -> delegate.isAutoCloseEnabled());
+	}
+
+	@Override
 	public boolean isExtensionAutoDetectionEnabled() {
 		return (boolean) cache.computeIfAbsent(EXTENSIONS_AUTODETECTION_ENABLED_PROPERTY_NAME,
 			__ -> delegate.isExtensionAutoDetectionEnabled());

@@ -52,12 +52,7 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 @SuppressWarnings("deprecation")
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
 
-	private static final NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> CLOSE_RESOURCES = (
-			__, ___, value) -> {
-		if (value instanceof Store.CloseableResource) {
-			((Store.CloseableResource) value).close();
-		}
-	};
+	private static NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> CLOSE_RESOURCES;
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -90,6 +85,21 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 				.map(TestTag::getName)
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
+
+		CLOSE_RESOURCES = (__, ___, value) -> {
+			if (value instanceof Store.CloseableResource) {
+				((Store.CloseableResource) value).close();
+			}
+
+			boolean isAutoCloseEnabled = configuration.isAutoCloseEnabled();
+			if (!isAutoCloseEnabled) {
+				return;
+			}
+
+			if (value instanceof AutoCloseable) {
+				((AutoCloseable) value).close();
+			}
+		};
 	}
 
 	private static NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> createStore(
