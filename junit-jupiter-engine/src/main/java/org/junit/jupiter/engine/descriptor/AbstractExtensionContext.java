@@ -27,7 +27,6 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -89,6 +88,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		CLOSE_RESOURCES = (__, ___, value) -> {
 			if (value instanceof Store.CloseableResource) {
 				((Store.CloseableResource) value).close();
+				return;
 			}
 
 			boolean isAutoCloseEnabled = configuration.isAutoCloseEnabled();
