@@ -18,6 +18,8 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -28,6 +30,8 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreExcept
  */
 @API(status = INTERNAL, since = "5.0")
 public class NamespaceAwareStore implements Store {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(NamespaceAwareStore.class);
 
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final Namespace namespace;
@@ -66,9 +70,14 @@ public class NamespaceAwareStore implements Store {
 			() -> this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator, requiredType));
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void put(Object key, Object value) {
 		Preconditions.notNull(key, "key must not be null");
+
+		if (value instanceof CloseableResource && !(value instanceof AutoCloseable)) {
+			LOGGER.warn(() -> "The object implements CloseableResource but not AutoCloseable: " + value.getClass());
+		}
 		accessStore(() -> this.valuesStore.put(this.namespace, key, value));
 	}
 
