@@ -17,7 +17,6 @@ import java.util.function.Supplier;
 
 import org.junit.jupiter.api.Timeout.ThreadMode;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
@@ -52,7 +51,8 @@ class TimeoutInvocationFactory {
 		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
 	}
 
-	private static abstract class ExecutorResource implements CloseableResource {
+	@SuppressWarnings("deprecation")
+	private static abstract class ExecutorResource implements Store.CloseableResource {
 
 		protected final ScheduledExecutorService executor;
 

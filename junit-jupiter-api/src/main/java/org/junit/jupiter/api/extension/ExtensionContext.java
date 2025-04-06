@@ -503,7 +503,9 @@ public interface ExtensionContext {
 		 * inverse order they were added in.
 		 *
 		 * @since 5.1
+		 * @deprecated Please extend {@code AutoCloseable} directly.
 		 */
+		@Deprecated
 		@API(status = STABLE, since = "5.1")
 		interface CloseableResource {
 

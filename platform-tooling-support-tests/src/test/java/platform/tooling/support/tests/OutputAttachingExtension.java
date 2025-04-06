@@ -76,6 +76,7 @@ class OutputAttachingExtension implements ParameterResolver, AfterTestExecutionC
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	record OutputDir(Path root) implements ExtensionContext.Store.CloseableResource {
 
 		@Override

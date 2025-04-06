@@ -1175,6 +1175,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			}
 		}
 
+		@SuppressWarnings("deprecation")
 		static class SomeResource implements CloseableResource {
 			private boolean closed;
 
@@ -1439,6 +1440,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private static class CustomCloseableResource implements CloseableResource {
 
 		static boolean closed;
