@@ -13,9 +13,8 @@ package org.junit.platform.launcher.core;
 import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.partitioningBy;
+import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -133,21 +132,12 @@ class DiscoveryIssueNotifier {
 					appendIdeCompatibleLink(message, classSource.getClassName(), "<no-method>");
 				}
 			});
-			issue.cause().ifPresent(t -> message.append("\n    Cause: ").append(getStackTrace(t)));
+			issue.cause().ifPresent(t -> message.append("\n    Cause: ").append(readStackTrace(t)));
 		}
 		return message.toString();
 	}
 
 	private static void appendIdeCompatibleLink(StringBuilder message, String className, String methodName) {
 		message.append("\n            at ").append(className).append(".").append(methodName).append("(SourceFile:0)");
-	}
-
-	private static String getStackTrace(Throwable cause) {
-		StringWriter stringWriter = new StringWriter();
-		try (PrintWriter writer = new PrintWriter(stringWriter, true)) {
-			cause.printStackTrace(writer);
-			writer.flush();
-		}
-		return stringWriter.toString();
 	}
 }
