@@ -137,6 +137,14 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		validateCoreLifecycleMethods(reporter);
 		validateClassTemplateInvocationLifecycleMethods(reporter);
 		validateTags(reporter);
+		validateDisplayNameAnnotation(reporter);
+	}
+
+	private void validateDisplayNameAnnotation(DiscoveryIssueReporter reporter) {
+		DisplayNameUtils.validateAnnotation(getTestClass(), //
+			() -> String.format("class '%s'", getTestClass().getName()), //
+			() -> getSource().orElse(null), //
+			reporter);
 	}
 
 	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {

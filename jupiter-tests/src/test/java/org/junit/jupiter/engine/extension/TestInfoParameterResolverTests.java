@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.extension;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
 
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +28,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 
 /**
  * Integration tests for {@link TestInfoParameterResolver}.
@@ -33,10 +37,10 @@ import org.junit.jupiter.api.TestInfo;
  * @since 5.0
  */
 @Tag("class-tag")
-class TestInfoParameterResolverTests {
+class TestInfoParameterResolverTests extends AbstractJupiterTestEngineTests {
 
 	private static final List<String> allDisplayNames = Arrays.asList("defaultDisplayName(TestInfo)",
-		"custom display name", "getTags(TestInfo)", "customDisplayNameThatIsEmpty(TestInfo)");
+		"custom display name", "getTags(TestInfo)", "customDisplayNameThatIsEmpty()");
 
 	public TestInfoParameterResolverTests(TestInfo testInfo) {
 		assertThat(testInfo.getTestClass()).contains(TestInfoParameterResolverTests.class);
@@ -54,11 +58,13 @@ class TestInfoParameterResolverTests {
 		assertEquals("custom display name", testInfo.getDisplayName());
 	}
 
-	// TODO Update test to expect an exception once #743 is fixed.
 	@Test
-	@DisplayName("")
-	void customDisplayNameThatIsEmpty(TestInfo testInfo) {
-		assertEquals("customDisplayNameThatIsEmpty(TestInfo)", testInfo.getDisplayName());
+	void customDisplayNameThatIsEmpty() {
+		executeTests(request -> request //
+				.selectors(selectClass(BlankDisplayNameTestCase.class)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.ERROR.name())) //
+						.testEvents() //
+						.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	@Test
@@ -86,6 +92,16 @@ class TestInfoParameterResolverTests {
 	@AfterAll
 	static void beforeAndAfterAll(TestInfo testInfo) {
 		assertEquals(TestInfoParameterResolverTests.class.getSimpleName(), testInfo.getDisplayName());
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	static class BlankDisplayNameTestCase {
+
+		@Test
+		@DisplayName("")
+		void test(TestInfo testInfo) {
+			assertEquals("test(TestInfo)", testInfo.getDisplayName());
+		}
 	}
 
 }

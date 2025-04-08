@@ -113,6 +113,11 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public void validate(DiscoveryIssueReporter reporter) {
 		Validatable.reportAndClear(this.methodInfo.discoveryIssues, reporter);
+		DisplayNameUtils.validateAnnotation(getTestMethod(), //
+			() -> String.format("method '%s'", getTestMethod().toGenericString()), //
+			// Use _declaring_ class here because that's where the `@DisplayName` annotation is declared
+			() -> MethodSource.from(getTestMethod()), //
+			reporter);
 	}
 
 	// --- Node ----------------------------------------------------------------

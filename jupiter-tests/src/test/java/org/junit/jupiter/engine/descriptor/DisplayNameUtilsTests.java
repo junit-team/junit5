@@ -25,7 +25,6 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.LogRecordListener;
 
@@ -48,15 +47,12 @@ class DisplayNameUtilsTests {
 		}
 
 		@Test
-		void shouldGetDisplayNameFromSupplierIfNoDisplayNameAnnotationWithBlankStringPresent(
-				@TrackLogRecords LogRecordListener listener) {
+		void shouldGetDisplayNameFromSupplierIfDisplayNameAnnotationProvidesBlankString() {
 
 			String displayName = DisplayNameUtils.determineDisplayName(BlankDisplayNameTestCase.class,
 				() -> "default-name");
 
 			assertThat(displayName).isEqualTo("default-name");
-			assertThat(firstWarningLogRecord(listener).getMessage()).isEqualTo(
-				"Configuration error: @DisplayName on [class org.junit.jupiter.engine.descriptor.DisplayNameUtilsTests$BlankDisplayNameTestCase] must be declared with a non-blank value.");
 		}
 
 		@Test
