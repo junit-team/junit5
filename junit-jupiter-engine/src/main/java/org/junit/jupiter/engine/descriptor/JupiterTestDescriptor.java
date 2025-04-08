@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -76,21 +77,27 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- TestDescriptor ------------------------------------------------------
 
-	static Set<TestTag> getTags(AnnotatedElement element, Consumer<DiscoveryIssue.Builder> invalidTagHandler) {
-		// @formatter:off
-		return findRepeatableAnnotations(element, Tag.class).stream()
-				.map(Tag::value)
+	static Set<TestTag> getTags(AnnotatedElement element, Supplier<String> elementDescription,
+			Supplier<TestSource> sourceProvider, Consumer<DiscoveryIssue> issueCollector) {
+		AtomicReference<TestSource> source = new AtomicReference<>();
+		return findRepeatableAnnotations(element, Tag.class).stream() //
+				.map(Tag::value) //
 				.filter(tag -> {
 					boolean isValid = TestTag.isValid(tag);
 					if (!isValid) {
-						String message = String.format("Invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.", tag, element);
-						invalidTagHandler.accept(DiscoveryIssue.builder(Severity.WARNING, message));
+						String message = String.format(
+							"Invalid tag syntax in @Tag(\"%s\") declaration on %s. Tag will be ignored.", tag,
+							elementDescription.get());
+						if (source.get() == null) {
+							source.set(sourceProvider.get());
+						}
+						issueCollector.accept(
+							DiscoveryIssue.builder(Severity.WARNING, message).source(source.get()).build());
 					}
 					return isValid;
-				})
-				.map(TestTag::create)
+				}) //
+				.map(TestTag::create) //
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
-		// @formatter:on
 	}
 
 	/**

@@ -140,7 +140,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {
-		reportAndClear(this.lifecycleMethods.discoveryIssues, reporter);
+		Validatable.reportAndClear(this.lifecycleMethods.discoveryIssues, reporter);
 	}
 
 	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
@@ -148,12 +148,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void validateTags(DiscoveryIssueReporter reporter) {
-		reportAndClear(this.classInfo.discoveryIssues, reporter);
-	}
-
-	private static void reportAndClear(List<DiscoveryIssue> discoveryIssues, DiscoveryIssueReporter reporter) {
-		discoveryIssues.forEach(reporter::reportIssue);
-		discoveryIssues.clear();
+		Validatable.reportAndClear(this.classInfo.discoveryIssues, reporter);
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -557,12 +552,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 		ClassInfo(Class<?> testClass, JupiterConfiguration configuration) {
 			this.testClass = testClass;
-			List<DiscoveryIssue.Builder> tagIssues = new ArrayList<>();
-			this.tags = getTags(testClass, tagIssues::add);
-			if (!tagIssues.isEmpty()) {
-				ClassSource source = ClassSource.from(testClass);
-				tagIssues.forEach(builder -> discoveryIssues.add(builder.source(source).build()));
-			}
+			this.tags = getTags(testClass, //
+				() -> String.format("class '%s'", testClass.getName()), //
+				() -> ClassSource.from(testClass), //
+				discoveryIssues::add);
 			this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 			this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 			this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);
