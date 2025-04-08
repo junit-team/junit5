@@ -12,7 +12,10 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.util.List;
+
 import org.apiguardian.api.API;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
@@ -28,5 +31,14 @@ public interface Validatable {
 	 * supplied {@link DiscoveryIssueReporter}.
 	 */
 	void validate(DiscoveryIssueReporter reporter);
+
+	/**
+	 * Report and clear the given list of {@link DiscoveryIssue}s using the
+	 * supplied {@link DiscoveryIssueReporter}.
+	 */
+	static void reportAndClear(List<DiscoveryIssue> issues, DiscoveryIssueReporter reporter) {
+		issues.forEach(reporter::reportIssue);
+		issues.clear();
+	}
 
 }

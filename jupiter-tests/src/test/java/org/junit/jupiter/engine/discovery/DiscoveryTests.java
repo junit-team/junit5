@@ -287,17 +287,25 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void reportsWarningsForInvalidTags() {
+	void reportsWarningsForInvalidTags() throws NoSuchMethodException {
 
 		var results = discoverTestsForClass(InvalidTagsTestCase.class);
 
-		var discoveryIssues = results.getDiscoveryIssues();
-		assertThat(discoveryIssues).hasSize(1);
+		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
+		assertThat(discoveryIssues).hasSize(2);
+
 		assertThat(discoveryIssues.getFirst().message()) //
-				.isEqualTo("Invalid tag syntax in @Tag(\"\") declaration on [class %s]. Tag will be ignored.",
+				.isEqualTo("Invalid tag syntax in @Tag(\"\") declaration on class '%s'. Tag will be ignored.",
 					InvalidTagsTestCase.class.getName());
 		assertThat(discoveryIssues.getFirst().source()) //
 				.contains(ClassSource.from(InvalidTagsTestCase.class));
+
+		var method = InvalidTagsTestCase.class.getDeclaredMethod("test");
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("Invalid tag syntax in @Tag(\"|\") declaration on method '%s'. Tag will be ignored.",
+					method.toGenericString());
+		assertThat(discoveryIssues.getLast().source()) //
+				.contains(org.junit.platform.engine.support.descriptor.MethodSource.from(method));
 	}
 
 	// -------------------------------------------------------------------
@@ -413,6 +421,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	@Tag("")
 	static class InvalidTagsTestCase {
 		@Test
+		@Tag("|")
 		void test() {
 		}
 	}

@@ -16,6 +16,7 @@ org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor
 org.junit.jupiter.engine.descriptor.JupiterTestDescriptor
 org.junit.jupiter.engine.descriptor.JupiterTestDescriptor$1
 org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor
+org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor$MethodInfo
 org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor
 org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor
 org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor
