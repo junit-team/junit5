@@ -25,6 +25,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -39,10 +40,10 @@ import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -57,8 +58,6 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(status = INTERNAL, since = "5.0")
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
-
-	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
@@ -77,21 +76,15 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- TestDescriptor ------------------------------------------------------
 
-	static Set<TestTag> getTags(AnnotatedElement element) {
+	static Set<TestTag> getTags(AnnotatedElement element, Consumer<DiscoveryIssue.Builder> invalidTagHandler) {
 		// @formatter:off
 		return findRepeatableAnnotations(element, Tag.class).stream()
 				.map(Tag::value)
 				.filter(tag -> {
 					boolean isValid = TestTag.isValid(tag);
 					if (!isValid) {
-						// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-						// handling validation exceptions during the TestEngine discovery phase.
-						//
-						// As an alternative to a precondition check here, we could catch any
-						// PreconditionViolationException thrown by TestTag::create.
-						logger.warn(() -> String.format(
-							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
-							tag, element));
+						String message = String.format("Invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.", tag, element);
+						invalidTagHandler.accept(DiscoveryIssue.builder(Severity.WARNING, message));
 					}
 					return isValid;
 				})
