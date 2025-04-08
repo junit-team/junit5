@@ -18,7 +18,9 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_FIXED_PARALLELISM_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_CONFIG_STRATEGY_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
@@ -45,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.Events;
 
@@ -62,10 +65,13 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
 	}
 
-	@RepeatedTest(1)
-	@DisplayName("   \t ")
-	void customDisplayNameWithBlankName(TestInfo testInfo) {
-		assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
+	@Test
+	void customDisplayNameWithBlankName() {
+		executeTests(request -> request //
+				.selectors(selectClass(BlankDisplayNameTestCase.class)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.ERROR.name())) //
+						.testEvents() //
+						.assertStatistics(stats -> stats.started(1).succeeded(1));
 	}
 
 	@RepeatedTest(value = 1, name = "{displayName}")
@@ -404,6 +410,15 @@ class RepeatedTestTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 
+	}
+
+	static class BlankDisplayNameTestCase {
+
+		@RepeatedTest(1)
+		@DisplayName("   \t ")
+		void test(TestInfo testInfo) {
+			assertThat(testInfo.getDisplayName()).isEqualTo("repetition 1 of 1");
+		}
 	}
 
 }

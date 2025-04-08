@@ -33,6 +33,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -308,6 +309,28 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 				.contains(org.junit.platform.engine.support.descriptor.MethodSource.from(method));
 	}
 
+	@Test
+	void reportsWarningsForBlankDisplayNames() throws NoSuchMethodException {
+
+		var results = discoverTestsForClass(BlankDisplayNamesTestCase.class);
+
+		var discoveryIssues = results.getDiscoveryIssues().stream().sorted(comparing(DiscoveryIssue::message)).toList();
+		assertThat(discoveryIssues).hasSize(2);
+
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo("@DisplayName on class '%s' must be declared with a non-blank value.",
+					BlankDisplayNamesTestCase.class.getName());
+		assertThat(discoveryIssues.getFirst().source()) //
+				.contains(ClassSource.from(BlankDisplayNamesTestCase.class));
+
+		var method = BlankDisplayNamesTestCase.class.getDeclaredMethod("test");
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("@DisplayName on method '%s' must be declared with a non-blank value.",
+					method.toGenericString());
+		assertThat(discoveryIssues.getLast().source()) //
+				.contains(org.junit.platform.engine.support.descriptor.MethodSource.from(method));
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")
@@ -422,6 +445,15 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	static class InvalidTagsTestCase {
 		@Test
 		@Tag("|")
+		void test() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@DisplayName("")
+	static class BlankDisplayNamesTestCase {
+		@Test
+		@DisplayName("\t")
 		void test() {
 		}
 	}
