@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 
 import java.lang.reflect.Method;
 import java.util.EmptyStackException;
@@ -30,7 +30,8 @@ import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Event;
 
 /**
@@ -190,6 +191,30 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
+	void blankSentenceFragmentOnClassYieldsError() {
+		var results = discoverTests(selectClass(BlankSentenceFragmentOnClassTestCase.class));
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().severity()).isEqualTo(Severity.ERROR);
+		assertThat(discoveryIssues.getFirst().cause().orElseThrow()) //
+				.hasMessage("@SentenceFragment on [%s] must be declared with a non-blank value.",
+					BlankSentenceFragmentOnClassTestCase.class);
+	}
+
+	@Test
+	void blankSentenceFragmentOnMethodYieldsError() throws Exception {
+		var results = discoverTests(selectMethod(BlankSentenceFragmentOnMethodTestCase.class, "test"));
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().severity()).isEqualTo(Severity.ERROR);
+		assertThat(discoveryIssues.getFirst().cause().orElseThrow()) //
+				.hasMessage("@SentenceFragment on [%s] must be declared with a non-blank value.",
+					BlankSentenceFragmentOnMethodTestCase.class.getDeclaredMethod("test"));
+	}
+
+	@Test
 	void displayNameGenerationInheritance() {
 		check(DisplayNameGenerationInheritanceTestCase.InnerNestedTestCase.class, //
 			"CONTAINER: DisplayNameGenerationInheritanceTestCase", //
@@ -273,15 +298,17 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
-		var request = request().selectors(selectClass(testClass)).build();
-		var descriptors = executeTests(request).allEvents().started().stream() //
-				.map(Event::getTestDescriptor) //
-				.skip(1); // Skip engine descriptor
-		assertThat(descriptors).map(this::describe).containsExactlyInAnyOrder(expectedDisplayNames);
+		var results = executeTestsForClass(testClass);
+		check(results, expectedDisplayNames);
 	}
 
-	private String describe(TestDescriptor descriptor) {
-		return descriptor.getType() + ": " + descriptor.getDisplayName();
+	private void check(EngineExecutionResults results, String[] expectedDisplayNames) {
+		var descriptors = results.allEvents().started().stream() //
+				.map(Event::getTestDescriptor) //
+				.skip(1); // Skip engine descriptor
+		assertThat(descriptors) //
+				.map(it -> it.getType() + ": " + it.getDisplayName()) //
+				.containsExactlyInAnyOrder(expectedDisplayNames);
 	}
 
 	// -------------------------------------------------------------------------
@@ -619,6 +646,24 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 					}
 				});
 			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@IndicativeSentencesGeneration
+	@SentenceFragment("")
+	static class BlankSentenceFragmentOnClassTestCase {
+		@Test
+		void test() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@IndicativeSentencesGeneration
+	static class BlankSentenceFragmentOnMethodTestCase {
+		@SentenceFragment("\t")
+		@Test
+		void test() {
 		}
 	}
 

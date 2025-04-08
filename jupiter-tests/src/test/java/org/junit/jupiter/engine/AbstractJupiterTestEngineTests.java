@@ -71,7 +71,7 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineDiscoveryResults discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(defaultRequest().selectors(selectors));
+		return discoverTests(request -> request.selectors(selectors));
 	}
 
 	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequestBuilder builder) {

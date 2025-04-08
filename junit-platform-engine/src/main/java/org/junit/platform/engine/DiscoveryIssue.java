@@ -123,6 +123,9 @@ public interface DiscoveryIssue {
 
 		/**
 		 * Set the {@link TestSource} for the {@code DiscoveryIssue}.
+		 *
+		 * @param source the {@link TestSource} for the {@code DiscoveryIssue};
+		 * never {@code null} but potentially empty
 		 */
 		default Builder source(Optional<TestSource> source) {
 			source.ifPresent(this::source);
@@ -131,11 +134,17 @@ public interface DiscoveryIssue {
 
 		/**
 		 * Set the {@link TestSource} for the {@code DiscoveryIssue}.
+		 *
+		 * @param source the {@link TestSource} for the {@code DiscoveryIssue};
+		 * may be {@code null}
 		 */
 		Builder source(TestSource source);
 
 		/**
 		 * Set the {@link Throwable} that caused the {@code DiscoveryIssue}.
+		 *
+		 * @param cause the {@link Throwable} that caused the
+		 * {@code DiscoveryIssue}; never {@code null} but potentially empty
 		 */
 		default Builder cause(Optional<Throwable> cause) {
 			cause.ifPresent(this::cause);
@@ -144,6 +153,9 @@ public interface DiscoveryIssue {
 
 		/**
 		 * Set the {@link Throwable} that caused the {@code DiscoveryIssue}.
+		 *
+		 * @param cause the {@link Throwable} that caused the
+		 * {@code DiscoveryIssue}; may be {@code null}
 		 */
 		Builder cause(Throwable cause);
 
