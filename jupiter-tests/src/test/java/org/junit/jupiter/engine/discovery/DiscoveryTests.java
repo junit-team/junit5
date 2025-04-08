@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestTemplate;
@@ -48,6 +49,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
 /**
@@ -284,6 +286,20 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 					InvalidTestCases.InvalidTestClassTestCase.class.getName());
 	}
 
+	@Test
+	void reportsWarningsForInvalidTags() {
+
+		var results = discoverTestsForClass(InvalidTagsTestCase.class);
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo("Invalid tag syntax in @Tag(\"\") declaration on [class %s]. Tag will be ignored.",
+					InvalidTagsTestCase.class.getName());
+		assertThat(discoveryIssues.getFirst().source()) //
+				.contains(ClassSource.from(InvalidTagsTestCase.class));
+	}
+
 	// -------------------------------------------------------------------
 
 	@SuppressWarnings("unused")
@@ -391,6 +407,14 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 		private class InvalidTestClassSubclassTestCase extends InvalidTestClassTestCase {
 		}
 
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@Tag("")
+	static class InvalidTagsTestCase {
+		@Test
+		void test() {
+		}
 	}
 
 }

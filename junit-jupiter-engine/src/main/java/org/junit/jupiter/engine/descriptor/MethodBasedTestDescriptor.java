@@ -75,7 +75,8 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 
 		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 		this.testMethod = testMethod;
-		this.tags = getTags(testMethod);
+		this.tags = getTags(testMethod,
+			builder -> logger.warn(() -> "Configuration error: " + builder.build().message()));
 	}
 
 	@Override
