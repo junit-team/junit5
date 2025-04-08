@@ -185,7 +185,7 @@ class DisplayNameUtilsTests {
 			() -> new AssertionError("Failed to find warning log record"));
 	}
 
-	@DisplayName("my-test-case")
+	@DisplayName("my-test-case\t")
 	@DisplayNameGeneration(value = CustomDisplayNameGenerator.class)
 	static class MyTestCase {
 

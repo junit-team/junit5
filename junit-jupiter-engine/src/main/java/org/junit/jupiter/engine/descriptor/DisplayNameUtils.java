@@ -77,6 +77,7 @@ final class DisplayNameUtils {
 		return findAnnotation(element, DisplayName.class) //
 				.map(DisplayName::value) //
 				.filter(StringUtils::isNotBlank) //
+				.map(String::trim) //
 				.orElseGet(displayNameSupplier);
 	}
 
