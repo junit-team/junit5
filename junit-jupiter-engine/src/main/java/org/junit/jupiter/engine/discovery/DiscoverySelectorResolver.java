@@ -44,8 +44,8 @@ public class DiscoverySelectorResolver {
 				ctx.getIssueReporter())) //
 			.addSelectorResolver(ctx -> new MethodSelectorResolver(getConfiguration(ctx), ctx.getIssueReporter())) //
 			.addTestDescriptorVisitor(ctx -> TestDescriptor.Visitor.composite( //
-				new ClassOrderingVisitor(getConfiguration(ctx)), //
-				new MethodOrderingVisitor(getConfiguration(ctx)), //
+				new ClassOrderingVisitor(getConfiguration(ctx), ctx.getIssueReporter()), //
+				new MethodOrderingVisitor(getConfiguration(ctx), ctx.getIssueReporter()), //
 				descriptor -> {
 					if (descriptor instanceof Validatable) {
 						((Validatable) descriptor).validate(ctx.getIssueReporter());
