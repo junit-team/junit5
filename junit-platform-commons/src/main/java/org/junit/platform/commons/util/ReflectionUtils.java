@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.lang.String.format;
 import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -44,6 +43,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
@@ -1367,14 +1367,14 @@ public final class ReflectionUtils {
 	public static <T> Constructor<T> getDeclaredConstructor(Class<T> clazz) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		try {
-			List<Constructor<?>> constructors = Arrays.stream(clazz.getDeclaredConstructors())//
+			Constructor<?>[] constructors = Arrays.stream(clazz.getDeclaredConstructors())//
 					.filter(ctor -> !ctor.isSynthetic())//
-					.collect(toList());
+					.toArray(Constructor[]::new);
 
-			Preconditions.condition(constructors.size() == 1,
+			Preconditions.condition(constructors.length == 1,
 				() -> String.format("Class [%s] must declare a single constructor", clazz.getName()));
 
-			return (Constructor<T>) constructors.get(0);
+			return (Constructor<T>) constructors[0];
 		}
 		catch (Throwable t) {
 			throw ExceptionUtils.throwAsUncheckedException(getUnderlyingCause(t));
@@ -1444,26 +1444,26 @@ public final class ReflectionUtils {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Field> localFields = getDeclaredFields(clazz).stream()
+		Field[] localFields = getDeclaredFields(clazz).stream()
 				.filter(field -> !field.isSynthetic())
-				.collect(toList());
-		List<Field> superclassFields = getSuperclassFields(clazz, traversalMode).stream()
-				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
-				.collect(toList());
-		List<Field> interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
-				.filter(field -> !isFieldShadowedByLocalFields(field, localFields))
-				.collect(toList());
+				.toArray(Field[]::new);
+		Field[] superclassFields = getSuperclassFields(clazz, traversalMode).stream()
+				.filter(field -> isNotShadowedByLocalFields(field, localFields))
+				.toArray(Field[]::new);
+		Field[] interfaceFields = getInterfaceFields(clazz, traversalMode).stream()
+				.filter(field -> isNotShadowedByLocalFields(field, localFields))
+				.toArray(Field[]::new);
 		// @formatter:on
 
-		List<Field> fields = new ArrayList<>();
+		List<Field> fields = new ArrayList<>(superclassFields.length + interfaceFields.length + localFields.length);
 		if (traversalMode == TOP_DOWN) {
-			fields.addAll(superclassFields);
-			fields.addAll(interfaceFields);
+			Collections.addAll(fields, superclassFields);
+			Collections.addAll(fields, interfaceFields);
 		}
-		fields.addAll(localFields);
+		Collections.addAll(fields, localFields);
 		if (traversalMode == BOTTOM_UP) {
-			fields.addAll(interfaceFields);
-			fields.addAll(superclassFields);
+			Collections.addAll(fields, interfaceFields);
+			Collections.addAll(fields, superclassFields);
 		}
 		return fields;
 	}
@@ -1735,26 +1735,27 @@ public final class ReflectionUtils {
 		Preconditions.notNull(traversalMode, "HierarchyTraversalMode must not be null");
 
 		// @formatter:off
-		List<Method> localMethods = getDeclaredMethods(clazz, traversalMode).stream()
+		Method[] localMethods = getDeclaredMethods(clazz, traversalMode).stream()
 				.filter(method -> !method.isSynthetic())
-				.collect(toList());
-		List<Method> superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
-				.collect(toList());
-		List<Method> interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
-				.filter(method -> !isMethodOverriddenByLocalMethods(method, localMethods))
-				.collect(toList());
+				.toArray(Method[]::new);
+		Method[] superclassMethods = getSuperclassMethods(clazz, traversalMode).stream()
+				.filter(method -> isNotOverriddenByLocalMethods(method, localMethods))
+				.toArray(Method[]::new);
+		Method[] interfaceMethods = getInterfaceMethods(clazz, traversalMode).stream()
+				.filter(method -> isNotOverriddenByLocalMethods(method, localMethods))
+				.toArray(Method[]::new);
 		// @formatter:on
 
-		List<Method> methods = new ArrayList<>();
+		List<Method> methods = new ArrayList<>(
+			superclassMethods.length + interfaceMethods.length + localMethods.length);
 		if (traversalMode == TOP_DOWN) {
-			methods.addAll(superclassMethods);
-			methods.addAll(interfaceMethods);
+			Collections.addAll(methods, superclassMethods);
+			Collections.addAll(methods, interfaceMethods);
 		}
-		methods.addAll(localMethods);
+		Collections.addAll(methods, localMethods);
 		if (traversalMode == BOTTOM_UP) {
-			methods.addAll(interfaceMethods);
-			methods.addAll(superclassMethods);
+			Collections.addAll(methods, interfaceMethods);
+			Collections.addAll(methods, superclassMethods);
 		}
 		return methods;
 	}
@@ -1835,21 +1836,18 @@ public final class ReflectionUtils {
 	}
 
 	private static List<Field> toSortedMutableList(Field[] fields) {
-		// @formatter:off
-		return Arrays.stream(fields)
-				.sorted(ReflectionUtils::defaultFieldSorter)
-				// Use toCollection() instead of toList() to ensure list is mutable.
-				.collect(toCollection(ArrayList::new));
-		// @formatter:on
+		return toSortedMutableList(fields, ReflectionUtils::defaultFieldSorter);
 	}
 
 	private static List<Method> toSortedMutableList(Method[] methods) {
-		// @formatter:off
-		return Arrays.stream(methods)
-				.sorted(ReflectionUtils::defaultMethodSorter)
-				// Use toCollection() instead of toList() to ensure list is mutable.
-				.collect(toCollection(ArrayList::new));
-		// @formatter:on
+		return toSortedMutableList(methods, ReflectionUtils::defaultMethodSorter);
+	}
+
+	private static <T> List<T> toSortedMutableList(T[] items, Comparator<? super T> comparator) {
+		List<T> result = new ArrayList<>(items.length);
+		Collections.addAll(result, items);
+		result.sort(comparator);
+		return result;
 	}
 
 	/**
@@ -1882,21 +1880,21 @@ public final class ReflectionUtils {
 		for (Class<?> ifc : clazz.getInterfaces()) {
 
 			// @formatter:off
-			List<Method> localInterfaceMethods = getMethods(ifc).stream()
+			Method[] localInterfaceMethods = getMethods(ifc).stream()
 					.filter(m -> !isAbstract(m))
-					.collect(toList());
+					.toArray(Method[]::new);
 
-			List<Method> superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
-					.filter(method -> !isMethodOverriddenByLocalMethods(method, localInterfaceMethods))
-					.collect(toList());
+			Method[] superinterfaceMethods = getInterfaceMethods(ifc, traversalMode).stream()
+					.filter(method -> isNotOverriddenByLocalMethods(method, localInterfaceMethods))
+					.toArray(Method[]::new);
 			// @formatter:on
 
 			if (traversalMode == TOP_DOWN) {
-				allInterfaceMethods.addAll(superinterfaceMethods);
+				Collections.addAll(allInterfaceMethods, superinterfaceMethods);
 			}
-			allInterfaceMethods.addAll(localInterfaceMethods);
+			Collections.addAll(allInterfaceMethods, localInterfaceMethods);
 			if (traversalMode == BOTTOM_UP) {
-				allInterfaceMethods.addAll(superinterfaceMethods);
+				Collections.addAll(allInterfaceMethods, superinterfaceMethods);
 			}
 		}
 		return allInterfaceMethods;
@@ -1905,20 +1903,21 @@ public final class ReflectionUtils {
 	private static List<Field> getInterfaceFields(Class<?> clazz, HierarchyTraversalMode traversalMode) {
 		List<Field> allInterfaceFields = new ArrayList<>();
 		for (Class<?> ifc : clazz.getInterfaces()) {
-			List<Field> localInterfaceFields = getFields(ifc);
+			Field[] localInterfaceFields = ifc.getFields();
+			Arrays.sort(localInterfaceFields, ReflectionUtils::defaultFieldSorter);
 
 			// @formatter:off
-			List<Field> superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
-					.filter(field -> !isFieldShadowedByLocalFields(field, localInterfaceFields))
-					.collect(toList());
+			Field[] superinterfaceFields = getInterfaceFields(ifc, traversalMode).stream()
+					.filter(field -> isNotShadowedByLocalFields(field, localInterfaceFields))
+					.toArray(Field[]::new);
 			// @formatter:on
 
 			if (traversalMode == TOP_DOWN) {
-				allInterfaceFields.addAll(superinterfaceFields);
+				Collections.addAll(allInterfaceFields, superinterfaceFields);
 			}
-			allInterfaceFields.addAll(localInterfaceFields);
+			Collections.addAll(allInterfaceFields, localInterfaceFields);
 			if (traversalMode == BOTTOM_UP) {
-				allInterfaceFields.addAll(superinterfaceFields);
+				Collections.addAll(allInterfaceFields, superinterfaceFields);
 			}
 		}
 		return allInterfaceFields;
@@ -1932,11 +1931,16 @@ public final class ReflectionUtils {
 		return findAllFieldsInHierarchy(superclass, traversalMode);
 	}
 
-	private static boolean isFieldShadowedByLocalFields(Field field, List<Field> localFields) {
+	private static boolean isNotShadowedByLocalFields(Field field, Field[] localFields) {
 		if (useLegacySearchSemantics) {
-			return localFields.stream().anyMatch(local -> local.getName().equals(field.getName()));
+			for (Field local : localFields) {
+				if (local.getName().equals(field.getName())) {
+					return false;
+				}
+			}
+			return true;
 		}
-		return false;
+		return true;
 	}
 
 	private static List<Method> getSuperclassMethods(Class<?> clazz, HierarchyTraversalMode traversalMode) {
@@ -1947,8 +1951,13 @@ public final class ReflectionUtils {
 		return findAllMethodsInHierarchy(superclass, traversalMode);
 	}
 
-	private static boolean isMethodOverriddenByLocalMethods(Method method, List<Method> localMethods) {
-		return localMethods.stream().anyMatch(local -> isMethodOverriddenBy(method, local));
+	private static boolean isNotOverriddenByLocalMethods(Method method, Method[] localMethods) {
+		for (Method local : localMethods) {
+			if (isMethodOverriddenBy(method, local)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private static boolean isMethodOverriddenBy(Method upper, Method lower) {
