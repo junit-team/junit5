@@ -737,15 +737,13 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 
 	private static abstract class AbstractTestInstanceFactory implements TestInstanceFactory {
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public Object createTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext extensionContext) {
 			Class<?> testClass = factoryContext.getTestClass();
 			instantiated(getClass(), testClass);
 
 			extensionContext.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
-				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
-					"close " + testClass.getSimpleName()));
+				(AutoCloseable) () -> callSequence.add("close " + testClass.getSimpleName()));
 
 			if (factoryContext.getOuterInstance().isPresent()) {
 				return ReflectionSupport.newInstance(testClass, factoryContext.getOuterInstance().get());

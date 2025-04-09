@@ -14,7 +14,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +29,6 @@ class ResourceAutoClosingTests {
 	private final JupiterEngineDescriptor testDescriptor = mock();
 	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
 		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
-
-	@BeforeEach
-	void setUp() {
-		when(testDescriptor.getConfiguration()).thenReturn(configuration);
-	}
 
 	@Test
 	void shouldCloseAutoCloseableWhenAutoCloseEnabledIsTrue() throws Exception {
@@ -55,11 +49,10 @@ class ResourceAutoClosingTests {
 	void shouldNotCloseAutoCloseableWhenAutoCloseEnabledIsFalse() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
 		when(configuration.isAutoCloseEnabled()).thenReturn(false);
+
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
-
-		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.StoreScope.EXECUTION_REQUEST,
-			ExtensionContext.Namespace.GLOBAL);
+		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
 		store.put("resource", resource);
 
 		((AutoCloseable) extensionContext).close();
