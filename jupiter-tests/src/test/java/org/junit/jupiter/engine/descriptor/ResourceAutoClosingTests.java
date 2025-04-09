@@ -43,8 +43,7 @@ class ResourceAutoClosingTests {
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
-		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.StoreScope.EXECUTION_REQUEST,
-			ExtensionContext.Namespace.GLOBAL);
+		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
 		store.put("resource", resource);
 
 		((AutoCloseable) extensionContext).close();
