@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
@@ -52,13 +51,12 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 	/**
 	 * Demo resource class.
 	 *
-	 * <p>The class implements interface {@link CloseableResource}
+	 * <p>The class implements interface {@link AutoCloseable}
 	 * and interface {@link AutoCloseable} to show and ensure that a single
 	 * {@link ResourceValue#close()} method implementation is needed to comply
 	 * with both interfaces.
 	 */
-	@SuppressWarnings("deprecation")
-	static class ResourceValue implements Resource, CloseableResource, AutoCloseable {
+	static class ResourceValue implements Resource, AutoCloseable {
 
 		static final AtomicInteger creations = new AtomicInteger();
 		private final AtomicInteger usages = new AtomicInteger();
@@ -81,8 +79,7 @@ public class Heavyweight implements ParameterResolver, BeforeEachCallback {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	private static class CloseableOnlyOnceResource implements CloseableResource {
+	private static class CloseableOnlyOnceResource implements AutoCloseable {
 
 		private final AtomicBoolean closed = new AtomicBoolean();
 

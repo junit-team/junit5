@@ -187,7 +187,6 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 			this.name = name;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
 			if (testInstance instanceof Named) {
@@ -196,8 +195,7 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 			String instanceType = testInstance.getClass().getSimpleName();
 			callSequence.add(name + ":" + instanceType);
 			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
-				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
-					"close:" + name + ":" + instanceType));
+				(AutoCloseable) () -> callSequence.add("close:" + name + ":" + instanceType));
 		}
 	}
 

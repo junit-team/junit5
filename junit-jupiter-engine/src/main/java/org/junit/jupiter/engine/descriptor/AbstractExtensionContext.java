@@ -48,7 +48,6 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 /**
  * @since 5.0
  */
-@SuppressWarnings("deprecation")
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
 
 	private final ExtensionContext parent;
@@ -87,6 +86,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		this.valuesStore = createStore(parent, launcherStoreFacade);
 	}
 
+	@SuppressWarnings("deprecation")
 	private NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> createCloseResources() {
 		return (__, ___, value) -> {
 			if (value instanceof Store.CloseableResource) {

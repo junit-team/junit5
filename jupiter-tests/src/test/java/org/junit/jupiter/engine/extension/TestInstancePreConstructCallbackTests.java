@@ -536,7 +536,6 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 			this.name = name;
 		}
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void preConstructTestInstance(TestInstanceFactoryContext factoryContext, ExtensionContext context) {
 			assertThat(context.getTestInstance()).isNotPresent();
@@ -554,8 +553,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 			callSequence.add("PreConstructCallback: name=" + name + ", testClass=" + testClass + ", outerInstance: "
 					+ factoryContext.getOuterInstance().orElse(null));
 			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
-				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
-					"close: name=" + name + ", testClass=" + testClass));
+				(AutoCloseable) () -> callSequence.add("close: name=" + name + ", testClass=" + testClass));
 		}
 	}
 

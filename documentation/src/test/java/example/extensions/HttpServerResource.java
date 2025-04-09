@@ -19,14 +19,11 @@ import java.net.InetSocketAddress;
 
 import com.sun.net.httpserver.HttpServer;
 
-import org.junit.jupiter.api.extension.ExtensionContext.Store;
-
 /**
- * Demonstrates an implementation of {@link Store.CloseableResource} using an {@link HttpServer}.
+ * Demonstrates an implementation of {@link AutoCloseable} using an {@link HttpServer}.
  */
 // tag::user_guide[]
-@SuppressWarnings("deprecation")
-class HttpServerResource implements Store.CloseableResource {
+class HttpServerResource implements AutoCloseable {
 
 	private final HttpServer httpServer;
 
