@@ -129,12 +129,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static void installFailureTracker(ExtensionContext context) {
-		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (CloseableResource) () -> context.getParent() //
-				.ifPresent(parentContext -> {
-					if (selfOrChildFailed(context)) {
-						parentContext.getStore(NAMESPACE).put(CHILD_FAILED, true);
-					}
-				}));
+		context.getParent() //
+				.filter(parentContext -> !context.getRoot().equals(parentContext)) //
+				.ifPresent(parentContext -> installFailureTracker(context, parentContext));
+	}
+
+	private static void installFailureTracker(ExtensionContext context, ExtensionContext parentContext) {
+		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (CloseableResource) () -> {
+			if (selfOrChildFailed(context)) {
+				getContextSpecificStore(parentContext).put(CHILD_FAILED, true);
+			}
+		});
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
@@ -286,7 +291,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	private static boolean selfOrChildFailed(ExtensionContext context) {
 		return context.getExecutionException().isPresent() //
-				|| context.getStore(NAMESPACE).getOrDefault(CHILD_FAILED, Boolean.class, false);
+				|| getContextSpecificStore(context).getOrDefault(CHILD_FAILED, Boolean.class, false);
+	}
+
+	private static ExtensionContext.Store getContextSpecificStore(ExtensionContext context) {
+		return context.getStore(NAMESPACE.append(context));
 	}
 
 	static class CloseablePath implements CloseableResource {

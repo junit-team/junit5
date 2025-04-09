@@ -35,7 +35,9 @@ on GitHub.
 [[release-notes-5.12.2-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-*
+* Fix handling of `CleanupMode.ON_SUCCESS` with `@TempDir` that caused no temporary
+  directories (using that mode) to be deleted after the first failure even if the
+  corresponding tests passed.
 
 [[release-notes-5.12.2-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
