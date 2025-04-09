@@ -44,6 +44,7 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 	private final Condition<ClassBasedTestDescriptor> noOrderAnnotation;
 
 	ClassOrderingVisitor(JupiterConfiguration configuration, DiscoveryIssueReporter issueReporter) {
+		super(issueReporter);
 		this.configuration = configuration;
 		this.globalOrderer = createGlobalOrderer(configuration);
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
