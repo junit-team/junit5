@@ -24,8 +24,24 @@ import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.SelectorResolutionResult;
+import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.discovery.ClassSelector;
+import org.junit.platform.engine.discovery.ClasspathResourceSelector;
+import org.junit.platform.engine.discovery.DirectorySelector;
+import org.junit.platform.engine.discovery.FileSelector;
+import org.junit.platform.engine.discovery.MethodSelector;
+import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
+import org.junit.platform.engine.discovery.UriSelector;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
+import org.junit.platform.engine.support.descriptor.DirectorySource;
+import org.junit.platform.engine.support.descriptor.FilePosition;
+import org.junit.platform.engine.support.descriptor.FileSource;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.descriptor.PackageSource;
+import org.junit.platform.engine.support.descriptor.UriSource;
 import org.junit.platform.launcher.LauncherConstants;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
@@ -50,6 +66,7 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		if (result.getStatus() == FAILED) {
 			this.issues.add(DiscoveryIssue.builder(Severity.ERROR, selector + " resolution failed") //
 					.cause(result.getThrowable()) //
+					.source(toSource(selector)) //
 					.build());
 		}
 		else if (result.getStatus() == UNRESOLVED && selector instanceof UniqueIdSelector) {
@@ -58,6 +75,48 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 				this.issues.add(DiscoveryIssue.create(Severity.ERROR, selector + " could not be resolved"));
 			}
 		}
+	}
+
+	static TestSource toSource(DiscoverySelector selector) {
+		if (selector instanceof ClassSelector) {
+			return ClassSource.from(((ClassSelector) selector).getClassName());
+		}
+		if (selector instanceof MethodSelector) {
+			MethodSelector methodSelector = (MethodSelector) selector;
+			return MethodSource.from(methodSelector.getClassName(), methodSelector.getMethodName(),
+				methodSelector.getParameterTypeNames());
+		}
+		if (selector instanceof ClasspathResourceSelector) {
+			ClasspathResourceSelector resourceSelector = (ClasspathResourceSelector) selector;
+			String resourceName = resourceSelector.getClasspathResourceName();
+			return resourceSelector.getPosition() //
+					.map(DiscoveryIssueCollector::convert) //
+					.map(position -> ClasspathResourceSource.from(resourceName, position)) //
+					.orElseGet(() -> ClasspathResourceSource.from(resourceName));
+		}
+		if (selector instanceof PackageSelector) {
+			return PackageSource.from(((PackageSelector) selector).getPackageName());
+		}
+		if (selector instanceof FileSelector) {
+			FileSelector fileSelector = (FileSelector) selector;
+			return fileSelector.getPosition() //
+					.map(DiscoveryIssueCollector::convert) //
+					.map(position -> FileSource.from(fileSelector.getFile(), position)) //
+					.orElseGet(() -> FileSource.from(fileSelector.getFile()));
+		}
+		if (selector instanceof DirectorySelector) {
+			return DirectorySource.from(((DirectorySelector) selector).getDirectory());
+		}
+		if (selector instanceof UriSelector) {
+			return UriSource.from(((UriSelector) selector).getUri());
+		}
+		return null;
+	}
+
+	private static FilePosition convert(org.junit.platform.engine.discovery.FilePosition position) {
+		return position.getColumn() //
+				.map(column -> FilePosition.from(position.getLine(), column)) //
+				.orElseGet(() -> FilePosition.from(position.getLine()));
 	}
 
 	@Override

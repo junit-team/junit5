@@ -65,6 +65,10 @@ buildParameters {
 	}
 	group("testing") {
 		description = "Testing related parameters"
+		bool("dryRun") {
+			description = "Enables dry run mode for tests"
+			defaultValue = false
+		}
 		bool("enableJaCoCo") {
 			description = "Enables JaCoCo test coverage reporting"
 			defaultValue = true

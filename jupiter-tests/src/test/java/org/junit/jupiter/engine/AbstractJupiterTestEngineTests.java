@@ -13,12 +13,14 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
 import java.util.function.Consumer;
 
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
@@ -69,7 +71,7 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineDiscoveryResults discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(defaultRequest().selectors(selectors));
+		return discoverTests(request -> request.selectors(selectors));
 	}
 
 	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequestBuilder builder) {
@@ -84,6 +86,7 @@ public abstract class AbstractJupiterTestEngineTests {
 		return request() //
 				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
 				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.INFO.name()) //
 				.enableImplicitConfigurationParameters(false);
 	}
 

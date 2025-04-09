@@ -896,8 +896,6 @@ include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
 include::{testDir}/example/HttpServerDemo.java[tags=user_guide]
 ----
 
-[[extensions-conditional-test-execution]]
-
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 
