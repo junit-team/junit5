@@ -59,7 +59,7 @@ public interface DiscoveryIssueReporter {
 	 */
 	static DiscoveryIssueReporter collecting(Collection<? super DiscoveryIssue> collection) {
 		Preconditions.notNull(collection, "collection must not be null");
-		return collection::add;
+		return consuming(collection::add);
 	}
 
 	/**
