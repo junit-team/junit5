@@ -19,6 +19,7 @@ import static org.junit.jupiter.engine.Constants.DEFAULT_PARALLEL_EXECUTION_MODE
 import static org.junit.jupiter.engine.Constants.DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME;
 import static org.junit.jupiter.engine.Constants.PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -58,6 +59,7 @@ import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
@@ -289,35 +291,50 @@ class OrderedMethodTests {
 	}
 
 	@Test
-	void misbehavingMethodOrdererThatAddsElements(@TrackLogRecords LogRecordListener listener) {
+	void misbehavingMethodOrdererThatAddsElements() {
 		Class<?> testClass = MisbehavingByAddingTestCase.class;
 
-		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(2));
+		var discoveryIssues = discoverTests(testClass, null).getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+
+		var issue = discoveryIssues.getFirst();
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo(
+			"MethodOrderer [%s] added 2 MethodDescriptor(s) for test class [%s] which will be ignored.",
+			MisbehavingByAdding.class.getName(), testClass.getName());
+		assertThat(issue.source()).contains(ClassSource.from(testClass));
+
+		executeTestsInParallel(testClass, null, Severity.ERROR) //
+				.assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactly("test1()", "test2()");
-
-		var expectedMessage = "MethodOrderer [" + MisbehavingByAdding.class.getName()
-				+ "] added 2 MethodDescriptor(s) for test class [" + testClass.getName() + "] which will be ignored.";
-
-		assertExpectedLogMessage(listener, expectedMessage);
 	}
 
 	@Test
-	void misbehavingMethodOrdererThatImpersonatesElements(@TrackLogRecords LogRecordListener listener) {
+	void misbehavingMethodOrdererThatImpersonatesElements() {
 		Class<?> testClass = MisbehavingByImpersonatingTestCase.class;
 
 		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
-
-		assertThat(listener.stream(Level.WARNING)).isEmpty();
 	}
 
 	@Test
-	void misbehavingMethodOrdererThatRemovesElements(@TrackLogRecords LogRecordListener listener) {
+	void misbehavingMethodOrdererThatRemovesElements() {
 		Class<?> testClass = MisbehavingByRemovingTestCase.class;
 
-		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(4));
+		var discoveryIssues = discoverTests(testClass, null).getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+
+		var issue = discoveryIssues.getFirst();
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo(
+			"MethodOrderer [%s] removed 2 MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
+			MisbehavingByRemoving.class.getName(), testClass.getName());
+		assertThat(issue.source()).contains(ClassSource.from(testClass));
+
+		executeTestsInParallel(testClass, null, Severity.ERROR) //
+				.assertStatistics(stats -> stats.succeeded(4));
 
 		assertThat(callSequence) //
 				.containsExactlyInAnyOrder("test1()", "test2()", "test3()", "test4()") //
@@ -326,36 +343,29 @@ class OrderedMethodTests {
 				.containsSubsequence("test1()", "test4()") // removed item is re-added before ordered item
 				.containsSubsequence("test2()", "test3()") // removed item is re-added before ordered item
 				.containsSubsequence("test2()", "test4()");// removed item is re-added before ordered item
-
-		var expectedMessage = "MethodOrderer [" + MisbehavingByRemoving.class.getName()
-				+ "] removed 2 MethodDescriptor(s) for test class [" + testClass.getName()
-				+ "] which will be retained with arbitrary ordering.";
-
-		assertExpectedLogMessage(listener, expectedMessage);
-	}
-
-	private void assertExpectedLogMessage(LogRecordListener listener, String expectedMessage) {
-		// @formatter:off
-		assertThat(listener.stream(Level.WARNING)
-				.map(LogRecord::getMessage))
-				.contains(expectedMessage);
-		// @formatter:on
 	}
 
 	private EngineDiscoveryResults discoverTests(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
-		return testKit(testClass, defaultOrderer).discover();
+		return testKit(testClass, defaultOrderer, Severity.INFO).discover();
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
-		return testKit(testClass, defaultOrderer) //
+		return executeTestsInParallel(testClass, defaultOrderer, Severity.INFO);
+	}
+
+	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer,
+			Severity criticalSeverity) {
+		return testKit(testClass, defaultOrderer, criticalSeverity) //
 				.execute() //
 				.testEvents();
 	}
 
-	private static EngineTestKit.Builder testKit(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
+	private static EngineTestKit.Builder testKit(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer,
+			Severity criticalSeverity) {
 		var testKit = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
-				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
+				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent") //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, criticalSeverity.name());
 		if (defaultOrderer != null) {
 			testKit.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, defaultOrderer.getName());
 		}

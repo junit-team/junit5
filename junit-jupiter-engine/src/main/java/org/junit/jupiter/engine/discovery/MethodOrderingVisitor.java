@@ -41,6 +41,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 	private final Condition<MethodBasedTestDescriptor> noOrderAnnotation;
 
 	MethodOrderingVisitor(JupiterConfiguration configuration, DiscoveryIssueReporter issueReporter) {
+		super(issueReporter);
 		this.configuration = configuration;
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
 			testDescriptor -> !isAnnotated(testDescriptor.getTestMethod(), Order.class), testDescriptor -> {
