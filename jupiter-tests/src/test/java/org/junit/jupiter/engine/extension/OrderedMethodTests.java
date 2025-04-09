@@ -56,6 +56,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.commons.util.ClassUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 import org.mockito.Mockito;
@@ -90,7 +94,7 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isGreaterThan(testClass.getName());
 
-		var tests = executeTestsInParallel(testClass);
+		var tests = executeTestsInParallel(testClass, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -112,7 +116,7 @@ class OrderedMethodTests {
 		// on the class names.
 		assertThat(testClass.getSuperclass().getName()).isLessThan(testClass.getName());
 
-		var tests = executeTestsInParallel(testClass);
+		var tests = executeTestsInParallel(testClass, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -123,7 +127,7 @@ class OrderedMethodTests {
 
 	@Test
 	void displayName() {
-		var tests = executeTestsInParallel(DisplayNameTestCase.class);
+		var tests = executeTestsInParallel(DisplayNameTestCase.class, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -146,7 +150,7 @@ class OrderedMethodTests {
 
 	@Test
 	void orderAnnotationWithNestedTestClass() {
-		var tests = executeTestsInParallel(OrderAnnotationWithNestedClassTestCase.class);
+		var tests = executeTestsInParallel(OrderAnnotationWithNestedClassTestCase.class, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -157,7 +161,7 @@ class OrderedMethodTests {
 	}
 
 	private void assertOrderAnnotationSupport(Class<?> testClass) {
-		var tests = executeTestsInParallel(testClass);
+		var tests = executeTestsInParallel(testClass, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -168,7 +172,7 @@ class OrderedMethodTests {
 
 	@Test
 	void random() {
-		var tests = executeTestsInParallel(RandomTestCase.class);
+		var tests = executeTestsInParallel(RandomTestCase.class, Random.class);
 
 		tests.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -273,10 +277,22 @@ class OrderedMethodTests {
 	}
 
 	@Test
+	void reportsDiscoveryIssuesForIneffectiveOrderAnnotations() throws Exception {
+		var results = discoverTests(WithoutTestMethodOrderTestCase.class, OrderAnnotation.class);
+		assertThat(results.getDiscoveryIssues()).isEmpty();
+
+		results = discoverTests(WithoutTestMethodOrderTestCase.class, null);
+		assertIneffectiveOrderAnnotationIssues(results.getDiscoveryIssues());
+
+		results = discoverTests(WithoutTestMethodOrderTestCase.class, Random.class);
+		assertIneffectiveOrderAnnotationIssues(results.getDiscoveryIssues());
+	}
+
+	@Test
 	void misbehavingMethodOrdererThatAddsElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByAddingTestCase.class;
 
-		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
+		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactly("test1()", "test2()");
 
@@ -290,7 +306,7 @@ class OrderedMethodTests {
 	void misbehavingMethodOrdererThatImpersonatesElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByImpersonatingTestCase.class;
 
-		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(2));
+		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(2));
 
 		assertThat(callSequence).containsExactlyInAnyOrder("test1()", "test2()");
 
@@ -301,7 +317,7 @@ class OrderedMethodTests {
 	void misbehavingMethodOrdererThatRemovesElements(@TrackLogRecords LogRecordListener listener) {
 		Class<?> testClass = MisbehavingByRemovingTestCase.class;
 
-		executeTestsInParallel(testClass).assertStatistics(stats -> stats.succeeded(4));
+		executeTestsInParallel(testClass, Random.class).assertStatistics(stats -> stats.succeeded(4));
 
 		assertThat(callSequence) //
 				.containsExactlyInAnyOrder("test1()", "test2()", "test3()", "test4()") //
@@ -326,21 +342,24 @@ class OrderedMethodTests {
 		// @formatter:on
 	}
 
-	private Events executeTestsInParallel(Class<?> testClass) {
-		return executeTestsInParallel(testClass, Random.class);
+	private EngineDiscoveryResults discoverTests(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
+		return testKit(testClass, defaultOrderer).discover();
 	}
 
 	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
-		// @formatter:off
-		return EngineTestKit
-				.engine("junit-jupiter")
-				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true")
-				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent")
-				.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, defaultOrderer.getName())
-				.selectors(selectClass(testClass))
-				.execute()
+		return testKit(testClass, defaultOrderer) //
+				.execute() //
 				.testEvents();
-		// @formatter:on
+	}
+
+	private static EngineTestKit.Builder testKit(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
+		var testKit = EngineTestKit.engine("junit-jupiter") //
+				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
+				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent");
+		if (defaultOrderer != null) {
+			testKit.configurationParameter(DEFAULT_TEST_METHOD_ORDER_PROPERTY_NAME, defaultOrderer.getName());
+		}
+		return testKit.selectors(selectClass(testClass));
 	}
 
 	private Events executeRandomTestCaseInParallelWithRandomSeed(String seed) {
@@ -358,6 +377,19 @@ class OrderedMethodTests {
 				.execute()
 				.testEvents();
 		// @formatter:on
+	}
+
+	private static void assertIneffectiveOrderAnnotationIssues(List<DiscoveryIssue> discoveryIssues) throws Exception {
+		assertThat(discoveryIssues).hasSize(3);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::message) //
+				.allMatch(it -> it.startsWith("Ineffective @Order annotation on method")
+						&& it.endsWith("It will not be applied because MethodOrderer.OrderAnnotation is not in use."));
+		var testClass = WithoutTestMethodOrderTestCase.class;
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::source).extracting(Optional::orElseThrow) //
+				.containsExactlyInAnyOrder(MethodSource.from(testClass.getDeclaredMethod("test1")),
+					MethodSource.from(testClass.getDeclaredMethod("test2")),
+					MethodSource.from(testClass.getDeclaredMethod("test3")));
 	}
 
 	// -------------------------------------------------------------------------

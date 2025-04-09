@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -61,17 +62,24 @@ abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 	 */
 	protected <CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>> void orderChildrenTestDescriptors(
 			TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
-			Function<CHILD, WRAPPER> descriptorWrapperFactory,
-			DescriptorWrapperOrderer<WRAPPER> descriptorWrapperOrderer) {
+			Optional<Consumer<CHILD>> validationAction, Function<CHILD, WRAPPER> descriptorWrapperFactory,
+			DescriptorWrapperOrderer<?, WRAPPER> descriptorWrapperOrderer) {
+
+		Stream<CHILD> matchingChildren = parentTestDescriptor.getChildren()//
+				.stream()//
+				.filter(matchingChildrenType::isInstance)//
+				.map(matchingChildrenType::cast);
 
 		if (!descriptorWrapperOrderer.canOrderWrappers()) {
+			validationAction.ifPresent(matchingChildren::forEach);
 			return;
 		}
 
-		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
-				.stream()//
-				.filter(matchingChildrenType::isInstance)//
-				.map(matchingChildrenType::cast)//
+		if (validationAction.isPresent()) {
+			matchingChildren = matchingChildren.peek(validationAction.get());
+		}
+
+		List<WRAPPER> matchingDescriptorWrappers = matchingChildren//
 				.map(descriptorWrapperFactory)//
 				.collect(toCollection(ArrayList::new));
 
@@ -105,27 +113,33 @@ abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 	/**
 	 * @param <WRAPPER> the wrapper type for the children to order
 	 */
-	protected static class DescriptorWrapperOrderer<WRAPPER> {
+	protected static class DescriptorWrapperOrderer<ORDERER, WRAPPER> {
 
-		private static final DescriptorWrapperOrderer<?> NOOP = new DescriptorWrapperOrderer<>(null, __ -> "",
+		private static final DescriptorWrapperOrderer<?, ?> NOOP = new DescriptorWrapperOrderer<>(null, null, __ -> "",
 			___ -> "");
 
 		@SuppressWarnings("unchecked")
-		protected static <WRAPPER> DescriptorWrapperOrderer<WRAPPER> noop() {
-			return (DescriptorWrapperOrderer<WRAPPER>) NOOP;
+		protected static <ORDERER, WRAPPER> DescriptorWrapperOrderer<ORDERER, WRAPPER> noop() {
+			return (DescriptorWrapperOrderer<ORDERER, WRAPPER>) NOOP;
 		}
 
+		private final ORDERER orderer;
 		private final Consumer<List<WRAPPER>> orderingAction;
 		private final MessageGenerator descriptorsAddedMessageGenerator;
 		private final MessageGenerator descriptorsRemovedMessageGenerator;
 
-		DescriptorWrapperOrderer(Consumer<List<WRAPPER>> orderingAction,
+		DescriptorWrapperOrderer(ORDERER orderer, Consumer<List<WRAPPER>> orderingAction,
 				MessageGenerator descriptorsAddedMessageGenerator,
 				MessageGenerator descriptorsRemovedMessageGenerator) {
 
+			this.orderer = orderer;
 			this.orderingAction = orderingAction;
 			this.descriptorsAddedMessageGenerator = descriptorsAddedMessageGenerator;
 			this.descriptorsRemovedMessageGenerator = descriptorsRemovedMessageGenerator;
+		}
+
+		ORDERER getOrderer() {
+			return orderer;
 		}
 
 		private boolean canOrderWrappers() {
