@@ -113,6 +113,7 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+	systemProperty("junit.platform.execution.dryRun.enabled", buildParameters.testing.dryRun)
 
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
