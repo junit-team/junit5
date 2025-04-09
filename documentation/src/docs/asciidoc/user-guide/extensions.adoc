@@ -896,6 +896,37 @@ include::{testDir}/example/extensions/HttpServerExtension.java[tags=user_guide]
 include::{testDir}/example/HttpServerDemo.java[tags=user_guide]
 ----
 
+[[extensions-keeping-state-migration]]
+==== Migration Note for Resource Cleanup
+
+Starting with JUnit Jupiter 5.13, the framework automatically closes resources stored in the
+`ExtensionContext.Store` that implement `AutoCloseable` when auto-close is enabled (which is the default behavior).
+Prior to 5.13, only resources implementing `Store.CloseableResource` were automatically closed.
+
+If you're developing an extension that needs to support both JUnit Jupiter 5.13+ and earlier versions,
+and your extension stores resources that need to be cleaned up, you should implement both interfaces:
+
+[source,java,indent=0]
+----
+public class MyResource implements Store.CloseableResource, AutoCloseable {
+    @Override
+    public void close() throws Exception {
+        // Resource cleanup code
+    }
+}
+----
+
+This ensures that your resource will be properly closed regardless of which JUnit Jupiter version is being used.
+
+To determine if your extension is running under JUnit Jupiter 5.13+, you can check if auto-close is enabled via the configuration:
+
+[source,java,indent=0]
+----
+boolean isJupiter513OrNewer = context.getConfigurationParameter("junit.jupiter.extensions.autoclose.enabled")
+    .map(Boolean::parseBoolean)
+    .orElse(true); // Default is true in 5.13+
+----
+
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 

@@ -36,6 +36,8 @@ repository on GitHub.
   <<../user-guide/index.adoc#launcher-api-managing-state-across-test-engines, request-scoped>>
   resources.
 
+* Introduce feature flag for auto-closing `AutoCloseable` in Jupiter's ExtensionContext.Store
+
 
 [[release-notes-5.13.0-M3-junit-jupiter]]
 === JUnit Jupiter
