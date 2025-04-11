@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.RecordArguments;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
@@ -44,14 +45,15 @@ class DiscoveryIssueCollectorTests {
 
 	@ParameterizedTest(name = "{0}")
 	@MethodSource("pairs")
-	void reportsFailedResolutionResultAsDiscoveryIssue(Pair pair) {
+	void reportsFailedResolutionResultAsDiscoveryIssue(DiscoverySelector selector, TestSource source) {
 		var collector = new DiscoveryIssueCollector(mock());
 		var failure = SelectorResolutionResult.failed(new RuntimeException("boom"));
-		collector.selectorProcessed(UniqueId.forEngine("dummy"), pair.selector, failure);
+		collector.selectorProcessed(UniqueId.forEngine("dummy"), selector, failure);
 
-		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR, pair.selector + " resolution failed") //
+		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR, selector + " resolution failed") //
 				.cause(failure.getThrowable()) //
-				.source(pair.source).build();
+				.source(source) //
+				.build();
 		assertThat(collector.toNotifier().getAllIssues()).containsExactly(expectedIssue);
 	}
 
@@ -80,6 +82,6 @@ class DiscoveryIssueCollectorTests {
 		);
 	}
 
-	record Pair(DiscoverySelector selector, TestSource source) {
+	record Pair(DiscoverySelector selector, TestSource source) implements RecordArguments {
 	}
 }
