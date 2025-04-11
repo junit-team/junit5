@@ -11,6 +11,7 @@
 package org.junit.platform.console.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -28,9 +29,10 @@ import org.junit.jupiter.api.Test;
 class CustomContextClassLoaderExecutorTests {
 
 	@Test
-	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() throws Exception {
+	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() {
 		var originalClassLoader = Thread.currentThread().getContextClassLoader();
-		var executor = new CustomContextClassLoaderExecutor(Optional.empty());
+		var executor = new CustomContextClassLoaderExecutor(Optional.empty(),
+			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
 
 		int result = executor.invoke(() -> {
 			assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader());
@@ -42,10 +44,11 @@ class CustomContextClassLoaderExecutorTests {
 	}
 
 	@Test
-	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() throws Exception {
+	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() {
 		var originalClassLoader = Thread.currentThread().getContextClassLoader();
 		ClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
-		var executor = new CustomContextClassLoaderExecutor(Optional.of(customClassLoader));
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(customClassLoader),
+			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
 
 		int result = executor.invoke(() -> {
 			assertSame(customClassLoader, Thread.currentThread().getContextClassLoader());
@@ -57,7 +60,7 @@ class CustomContextClassLoaderExecutorTests {
 	}
 
 	@Test
-	void invokeWithCustomClassLoaderAndEnsureItIsClosedAfterUsage() throws Exception {
+	void invokeWithCustomClassLoaderAndEnsureItIsClosedAfterUsage() {
 		var closed = new AtomicBoolean(false);
 		ClassLoader localClassLoader = new URLClassLoader(new URL[0]) {
 			@Override
@@ -66,11 +69,31 @@ class CustomContextClassLoaderExecutorTests {
 				super.close();
 			}
 		};
-		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader));
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader),
+			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
 
 		int result = executor.invoke(() -> 4711);
 
 		assertEquals(4711, result);
 		assertTrue(closed.get());
+	}
+
+	@Test
+	void invokeWithCustomClassLoaderAndKeepItOpenAfterUsage() {
+		var closed = new AtomicBoolean(false);
+		ClassLoader localClassLoader = new URLClassLoader(new URL[0]) {
+			@Override
+			public void close() throws IOException {
+				closed.set(true);
+				super.close();
+			}
+		};
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader),
+			CustomClassLoaderCloseStrategy.KEEP_OPEN);
+
+		int result = executor.invoke(() -> 4711);
+
+		assertEquals(4711, result);
+		assertFalse(closed.get());
 	}
 }

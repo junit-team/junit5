@@ -19,6 +19,9 @@ class JupiterIntegration {
 
 	@Test
 	void successful() {
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			new other.OtherwiseNotReferencedClass();
+		}));
 	}
 
 	@Test

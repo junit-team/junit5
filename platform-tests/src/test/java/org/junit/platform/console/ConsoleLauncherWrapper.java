@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import org.junit.platform.console.options.CommandFacade;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
+import org.junit.platform.console.tasks.CustomClassLoaderCloseStrategy;
 
 /**
  * @since 1.0
@@ -30,7 +31,8 @@ class ConsoleLauncherWrapper {
 	private final ConsoleTestExecutor.Factory consoleTestExecutorFactory;
 
 	ConsoleLauncherWrapper() {
-		this(ConsoleTestExecutor::new);
+		this((discoveryOptions, outputOptions) -> new ConsoleTestExecutor(discoveryOptions, outputOptions,
+			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER));
 	}
 
 	private ConsoleLauncherWrapper(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
