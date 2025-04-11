@@ -100,6 +100,7 @@ public @interface ManagedResource {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	class Resource<T> implements CloseableResource {
 
 		private final T value;

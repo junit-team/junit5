@@ -53,7 +53,6 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -129,7 +128,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static void installFailureTracker(ExtensionContext context) {
-		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (CloseableResource) () -> context.getParent() //
+		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (AutoCloseable) () -> context.getParent() //
 				.ifPresent(parentContext -> {
 					if (selfOrChildFailed(context)) {
 						parentContext.getStore(NAMESPACE).put(CHILD_FAILED, true);
@@ -289,7 +288,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 				|| context.getStore(NAMESPACE).getOrDefault(CHILD_FAILED, Boolean.class, false);
 	}
 
-	static class CloseablePath implements CloseableResource {
+	static class CloseablePath implements AutoCloseable {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(CloseablePath.class);
 

@@ -61,7 +61,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -924,7 +923,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	}
 
-	private static class CustomCloseableResource implements CloseableResource {
+	private static class CustomCloseableResource implements AutoCloseable {
 
 		static boolean closed;
 
