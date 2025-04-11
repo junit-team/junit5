@@ -50,29 +50,36 @@ public class ConsoleTestExecutor {
 	private final TestDiscoveryOptions discoveryOptions;
 	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
+	private final CustomClassLoaderCloseStrategy classLoaderCloseStrategy;
 
-	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
-		this(discoveryOptions, outputOptions, LauncherFactory::create);
+	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
+			CustomClassLoaderCloseStrategy classLoaderCloseStrategy) {
+		this(discoveryOptions, outputOptions, classLoaderCloseStrategy, LauncherFactory::create);
 	}
 
 	// for tests only
 	ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
-			Supplier<Launcher> launcherSupplier) {
+			CustomClassLoaderCloseStrategy classLoaderCloseStrategy, Supplier<Launcher> launcherSupplier) {
 		this.discoveryOptions = discoveryOptions;
 		this.outputOptions = outputOptions;
 		this.launcherSupplier = launcherSupplier;
+		this.classLoaderCloseStrategy = classLoaderCloseStrategy;
 	}
 
 	public void discover(PrintWriter out) {
-		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> {
+		createCustomContextClassLoaderExecutor().invoke(() -> {
 			discoverTests(out);
 			return null;
 		});
 	}
 
 	public TestExecutionSummary execute(PrintWriter out, Optional<Path> reportsDir) {
-		return new CustomContextClassLoaderExecutor(createCustomClassLoader()) //
+		return createCustomContextClassLoaderExecutor() //
 				.invoke(() -> executeTests(out, reportsDir));
+	}
+
+	private CustomContextClassLoaderExecutor createCustomContextClassLoaderExecutor() {
+		return new CustomContextClassLoaderExecutor(createCustomClassLoader(), classLoaderCloseStrategy);
 	}
 
 	private void discoverTests(PrintWriter out) {
