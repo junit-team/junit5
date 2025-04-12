@@ -69,7 +69,7 @@ public class Helper {
 		}
 	}
 
-	public static Optional<Path> getJavaHome(String version) {
+	public static Optional<Path> getJavaHome(int version) {
 		// First, try various system sources...
 		var sources = Stream.of( //
 			System.getProperty("java.home." + version), //
