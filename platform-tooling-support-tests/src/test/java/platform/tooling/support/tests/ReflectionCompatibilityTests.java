@@ -37,7 +37,7 @@ class ReflectionCompatibilityTests {
 				.workingDir(copyToWorkspace(Projects.REFLECTION_TESTS, workspace)) //
 				.addArguments("-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("build", "--no-daemon", "--stacktrace", "--no-build-cache", "--warning-mode=fail") //
-				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
+				.putEnvironment("JDK8", Helper.getJavaHome(8).orElseThrow(TestAbortedException::new).toString()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 
