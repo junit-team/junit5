@@ -51,8 +51,8 @@ class TimeoutInvocationFactory {
 		return store.getOrComputeIfAbsent(SingleThreadExecutorResource.class).get();
 	}
 
-	@SuppressWarnings("deprecation")
-	private static abstract class ExecutorResource implements Store.CloseableResource {
+	@SuppressWarnings({ "deprecation", "try" })
+	private static abstract class ExecutorResource implements Store.CloseableResource, AutoCloseable {
 
 		protected final ScheduledExecutorService executor;
 
@@ -65,7 +65,7 @@ class TimeoutInvocationFactory {
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			executor.shutdown();
 			boolean terminated = executor.awaitTermination(5, TimeUnit.SECONDS);
 			if (!terminated) {
@@ -75,6 +75,7 @@ class TimeoutInvocationFactory {
 		}
 	}
 
+	@SuppressWarnings("try")
 	static class SingleThreadExecutorResource extends ExecutorResource {
 
 		@SuppressWarnings("unused")

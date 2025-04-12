@@ -1438,7 +1438,8 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 
 	}
 
-	private static class CustomCloseableResource implements AutoCloseable {
+	@SuppressWarnings("deprecation")
+	private static class CustomCloseableResource implements ExtensionContext.Store.CloseableResource {
 
 		static boolean closed;
 

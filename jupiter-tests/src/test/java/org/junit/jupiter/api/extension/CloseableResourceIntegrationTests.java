@@ -79,9 +79,16 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
-			context.getStore(GLOBAL).put("throwingResource", (AutoCloseable) () -> {
-				throw new RuntimeException("Exception in onClose");
-			});
+			context.getStore(GLOBAL).put("throwingResource", new ThrowingResource());
+		}
+	}
+
+	@SuppressWarnings({ "deprecation", "try" })
+	static class ThrowingResource implements ExtensionContext.Store.CloseableResource, AutoCloseable {
+
+		@Override
+		public void close() throws Exception {
+			throw new RuntimeException("Exception in onClose");
 		}
 	}
 

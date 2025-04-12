@@ -64,9 +64,9 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 * <li>{@link ExtensionContext#getTestMethod() getTestMethod()} is no longer
 	 * empty, unless the {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}
 	 * lifecycle is used.</li>
-	 * <li>If the callback adds a new {@link Store.CloseableResource} to the
-	 * {@link Store Store}, the resource is closed just after the instance is
-	 * destroyed.</li>
+	 * <li>If the callback adds a new {@link Store.CloseableResource} or
+	 * {@link AutoCloseable} to the {@link Store Store}, the resource is closed
+	 * just after the instance is destroyed.</li>
 	 * <li>The callbacks can now access data previously stored by
 	 * {@link TestTemplateInvocationContext}, unless the
 	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.</li>
@@ -87,7 +87,6 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 *                    configuration parameters; never {@code null}
 	 * @since 5.12
 	 */
-	@SuppressWarnings("deprecation")
 	@API(status = EXPERIMENTAL, since = "5.12")
 	default ExtensionContextScope getTestInstantiationExtensionContextScope(ExtensionContext rootContext) {
 		return ExtensionContextScope.DEFAULT;

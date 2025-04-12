@@ -53,6 +53,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -134,12 +135,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static void installFailureTracker(ExtensionContext context, ExtensionContext parentContext) {
-		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (AutoCloseable) () -> context.getParent() //
-				.ifPresent(parentContext -> {
-					if (selfOrChildFailed(context)) {
-						parentContext.getStore(NAMESPACE).put(CHILD_FAILED, true);
-					}
-				}));
+		context.getStore(NAMESPACE).put(FAILURE_TRACKER, new FailureTracker(context, parentContext));
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
@@ -298,7 +294,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		return context.getStore(NAMESPACE.append(context));
 	}
 
-	static class CloseablePath implements AutoCloseable {
+	@SuppressWarnings("deprecation")
+	static class CloseablePath implements Store.CloseableResource, AutoCloseable {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(CloseablePath.class);
 
@@ -611,6 +608,25 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			// @formatter:on
 		}
 
+	}
+
+	@SuppressWarnings("deprecation")
+	private static class FailureTracker implements Store.CloseableResource, AutoCloseable {
+
+		private final ExtensionContext context;
+		private final ExtensionContext parentContext;
+
+		private FailureTracker(ExtensionContext context, ExtensionContext parentContext) {
+			this.context = context;
+			this.parentContext = parentContext;
+		}
+
+		@Override
+		public void close() {
+			if (selfOrChildFailed(context)) {
+				getContextSpecificStore(parentContext).put(CHILD_FAILED, true);
+			}
+		}
 	}
 
 }

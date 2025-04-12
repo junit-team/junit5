@@ -918,15 +918,6 @@ public class MyResource implements Store.CloseableResource, AutoCloseable {
 
 This ensures that your resource will be properly closed regardless of which JUnit Jupiter version is being used.
 
-To determine if your extension is running under JUnit Jupiter 5.13+, you can check if auto-close is enabled via the configuration:
-
-[source,java,indent=0]
-----
-boolean isJupiter513OrNewer = context.getConfigurationParameter("junit.jupiter.extensions.autoclose.enabled")
-    .map(Boolean::parseBoolean)
-    .orElse(true); // Default is true in 5.13+
-----
-
 [[extensions-supported-utilities]]
 === Supported Utilities in Extensions
 

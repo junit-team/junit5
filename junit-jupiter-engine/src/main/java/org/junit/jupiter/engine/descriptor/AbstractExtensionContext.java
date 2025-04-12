@@ -89,18 +89,19 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@SuppressWarnings("deprecation")
 	private NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> createCloseResources() {
 		return (__, ___, value) -> {
-			if (value instanceof Store.CloseableResource) {
-				((Store.CloseableResource) value).close();
-				return;
-			}
-
 			boolean isAutoCloseEnabled = this.configuration.isAutoCloseEnabled();
-			if (!isAutoCloseEnabled) {
+
+			if (value instanceof AutoCloseable && isAutoCloseEnabled) {
+				((AutoCloseable) value).close();
 				return;
 			}
 
-			if (value instanceof AutoCloseable) {
-				((AutoCloseable) value).close();
+			if (value instanceof Store.CloseableResource) {
+				if (isAutoCloseEnabled) {
+					engineExecutionListener.reportingEntryPublished(testDescriptor, ReportEntry.from("WARNING",
+						"Type implements CloseableResource but not AutoCloseable: " + value.getClass().getName()));
+				}
+				((Store.CloseableResource) value).close();
 			}
 		};
 	}

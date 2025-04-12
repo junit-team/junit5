@@ -70,14 +70,9 @@ public class NamespaceAwareStore implements Store {
 			() -> this.valuesStore.getOrComputeIfAbsent(this.namespace, key, defaultCreator, requiredType));
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void put(Object key, Object value) {
 		Preconditions.notNull(key, "key must not be null");
-
-		if (value instanceof CloseableResource && !(value instanceof AutoCloseable)) {
-			LOGGER.warn(() -> "The object implements CloseableResource but not AutoCloseable: " + value.getClass());
-		}
 		accessStore(() -> this.valuesStore.put(this.namespace, key, value));
 	}
 
