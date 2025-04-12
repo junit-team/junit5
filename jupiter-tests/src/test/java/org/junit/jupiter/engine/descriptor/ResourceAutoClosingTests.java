@@ -14,13 +14,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.platform.commons.logging.LogRecordListener;
 import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
+import org.junit.platform.testkit.engine.ExecutionRecorder;
 
 class ResourceAutoClosingTests {
 
@@ -30,6 +34,7 @@ class ResourceAutoClosingTests {
 	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
 		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
+	// TODO when config name is renamed, update the test name
 	@Test
 	void shouldCloseAutoCloseableWhenAutoCloseEnabledIsTrue() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
@@ -60,6 +65,42 @@ class ResourceAutoClosingTests {
 		assertThat(resource.closed).isFalse();
 	}
 
+	@Test
+	void shouldLogWarningWhenClosingResourceImplementsCloseableResourceButNotAutoCloseableAndConfigIsTrue(
+			@TrackLogRecords LogRecordListener listener) throws Exception {
+		ExecutionRecorder executionRecorder = new ExecutionRecorder();
+		CloseableResource resource = new CloseableResource();
+		String msg = "Type implements CloseableResource but not AutoCloseable: " + resource.getClass().getName();
+		when(configuration.isAutoCloseEnabled()).thenReturn(true);
+
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionRecorder, testDescriptor,
+			configuration, extensionRegistry, launcherStoreFacade);
+		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
+		store.put("resource", resource);
+
+		((AutoCloseable) extensionContext).close();
+		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).anyMatch(msg::equals);
+		assertThat(resource.closed).isTrue();
+	}
+
+	@Test
+	void shouldNotLogWarningWhenClosingResourceImplementsCloseableResourceAndAutoCloseableAndConfigIsFalse(
+			@TrackLogRecords LogRecordListener listener) throws Exception {
+		ExecutionRecorder executionRecorder = new ExecutionRecorder();
+		CloseableResource resource = new CloseableResource();
+		String msg = "Type implements CloseableResource but not AutoCloseable: " + resource.getClass().getName();
+		when(configuration.isAutoCloseEnabled()).thenReturn(false);
+
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionRecorder, testDescriptor,
+			configuration, extensionRegistry, launcherStoreFacade);
+		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
+		store.put("resource", resource);
+
+		((AutoCloseable) extensionContext).close();
+		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).noneMatch(msg::equals);
+		assertThat(resource.closed).isTrue();
+	}
+
 	static class AutoCloseableResource implements AutoCloseable {
 		private boolean closed = false;
 
@@ -69,19 +110,13 @@ class ResourceAutoClosingTests {
 		}
 	}
 
-	static class AutoCloseableResourceStoreUsingExtension implements BeforeAllCallback {
-		@Override
-		public void beforeAll(ExtensionContext context) {
-			var store = context.getStore(ExtensionContext.Namespace.GLOBAL);
-			store.put("resource", new AutoCloseableResource());
-		}
-	}
+	@SuppressWarnings("deprecation")
+	static class CloseableResource implements ExtensionContext.Store.CloseableResource {
+		private boolean closed = false;
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
-	@ExtendWith(AutoCloseableResourceStoreUsingExtension.class)
-	static class AutoCloseableTestCase {
-		@Test
-		void dummyTest() {
+		@Override
+		public void close() {
+			closed = true;
 		}
 	}
 }

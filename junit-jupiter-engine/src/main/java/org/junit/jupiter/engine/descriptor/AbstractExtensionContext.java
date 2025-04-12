@@ -35,6 +35,8 @@ import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.extension.ExtensionContextInternal;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -49,6 +51,8 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  * @since 5.0
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExtensionContext.class);
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
@@ -98,8 +102,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 			if (value instanceof Store.CloseableResource) {
 				if (isAutoCloseEnabled) {
-					engineExecutionListener.reportingEntryPublished(testDescriptor, ReportEntry.from("WARNING",
-						"Type implements CloseableResource but not AutoCloseable: " + value.getClass().getName()));
+					LOGGER.warn(
+						() -> "Type implements CloseableResource but not AutoCloseable: " + value.getClass().getName());
 				}
 				((Store.CloseableResource) value).close();
 			}
