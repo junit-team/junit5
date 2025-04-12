@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
@@ -60,6 +60,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		private static Path alwaysFieldDir;
 		private static Path onSuccessFailingFieldDir;
 		private static Path onSuccessPassingFieldDir;
+		private static Path onSuccessPassingParameterDir;
 
 		/**
 		 * Ensure the cleanup mode defaults to ALWAYS for fields.
@@ -152,6 +153,14 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			assertThat(onSuccessFailingFieldDir).exists();
 		}
 
+		@Test
+		void cleanupModeOnSuccessFailingThenPassingField() {
+			executeTests(selectClass(OnSuccessFailingFieldCase.class), selectClass(OnSuccessPassingFieldCase.class));
+
+			assertThat(onSuccessFailingFieldDir).exists();
+			assertThat(onSuccessPassingFieldDir).doesNotExist();
+		}
+
 		/**
 		 * Ensure that ON_SUCCESS cleanup modes are obeyed for static fields when tests are failing.
 		 * <p/>
@@ -174,21 +183,20 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		 */
 		@Test
 		void cleanupModeOnSuccessFailingStaticFieldWithNesting() {
-			LauncherDiscoveryRequest request = request()//
-					.selectors(selectClass(OnSuccessFailingStaticFieldWithNestingCase.class))//
-					.build();
-			executeTests(request);
+			executeTestsForClass(OnSuccessFailingStaticFieldWithNestingCase.class);
 
 			assertThat(onSuccessFailingFieldDir).exists();
+			assertThat(onSuccessPassingParameterDir).doesNotExist();
 		}
 
-		@AfterAll
-		static void afterAll() throws IOException {
+		@AfterEach
+		void deleteTempDirs() throws IOException {
 			deleteIfNotNullAndExists(defaultFieldDir);
 			deleteIfNotNullAndExists(neverFieldDir);
 			deleteIfNotNullAndExists(alwaysFieldDir);
 			deleteIfNotNullAndExists(onSuccessFailingFieldDir);
 			deleteIfNotNullAndExists(onSuccessPassingFieldDir);
+			deleteIfNotNullAndExists(onSuccessPassingParameterDir);
 		}
 
 		static void deleteIfNotNullAndExists(Path dir) throws IOException {
@@ -286,12 +294,20 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			static Path onSuccessFailingFieldDir;
 
 			@Nested
+			@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 			class NestedTestCase {
 
 				@Test
-				void test() {
+				@Order(1)
+				void failingTest() {
 					TempDirFieldTests.onSuccessFailingFieldDir = onSuccessFailingFieldDir;
 					fail();
+				}
+
+				@Test
+				@Order(2)
+				void passingTest(@TempDir(cleanup = ON_SUCCESS) Path tempDir) {
+					TempDirFieldTests.onSuccessPassingParameterDir = tempDir;
 				}
 			}
 		}
@@ -400,8 +416,16 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			assertThat(onSuccessFailingParameterDir).exists();
 		}
 
-		@AfterAll
-		static void afterAll() throws IOException {
+		@Test
+		void cleanupModeOnSuccessFailingThenPassingParameter() {
+			executeTestsForClass(OnSuccessFailingThenPassingParameterCase.class);
+
+			assertThat(onSuccessFailingParameterDir).exists();
+			assertThat(onSuccessPassingParameterDir).doesNotExist();
+		}
+
+		@AfterEach
+		void deleteTempDirs() throws IOException {
 			TempDirFieldTests.deleteIfNotNullAndExists(defaultParameterDir);
 			TempDirFieldTests.deleteIfNotNullAndExists(neverParameterDir);
 			TempDirFieldTests.deleteIfNotNullAndExists(alwaysParameterDir);
@@ -454,6 +478,24 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 			void testOnSuccessFailingParameter(@TempDir(cleanup = ON_SUCCESS) Path onSuccessFailingParameterDir) {
 				TempDirParameterTests.onSuccessFailingParameterDir = onSuccessFailingParameterDir;
 				fail();
+			}
+		}
+
+		@SuppressWarnings({ "JUnitMalformedDeclaration", "NewClassNamingConvention" })
+		@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+		static class OnSuccessFailingThenPassingParameterCase {
+
+			@Test
+			@Order(1)
+			void testOnSuccessFailingParameter(@TempDir(cleanup = ON_SUCCESS) Path onSuccessFailingParameterDir) {
+				TempDirParameterTests.onSuccessFailingParameterDir = onSuccessFailingParameterDir;
+				fail();
+			}
+
+			@Test
+			@Order(2)
+			void testOnSuccessPassingParameter(@TempDir(cleanup = ON_SUCCESS) Path onSuccessPassingParameterDir) {
+				TempDirParameterTests.onSuccessPassingParameterDir = onSuccessPassingParameterDir;
 			}
 		}
 
