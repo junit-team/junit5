@@ -82,4 +82,9 @@ public class Helper {
 		);
 		return sources.filter(Objects::nonNull).findFirst().map(Path::of);
 	}
+
+	public static Optional<Path> getJavaHomeWithNativeImageSupport(int version) {
+		var value = System.getProperty("java.home." + version + ".nativeImage");
+		return Optional.ofNullable(value).map(Path::of);
+	}
 }
