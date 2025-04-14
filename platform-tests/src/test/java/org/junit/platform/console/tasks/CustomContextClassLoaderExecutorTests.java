@@ -31,8 +31,7 @@ class CustomContextClassLoaderExecutorTests {
 	@Test
 	void invokeWithoutCustomClassLoaderDoesNotSetClassLoader() {
 		var originalClassLoader = Thread.currentThread().getContextClassLoader();
-		var executor = new CustomContextClassLoaderExecutor(Optional.empty(),
-			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+		var executor = new CustomContextClassLoaderExecutor(Optional.empty());
 
 		int result = executor.invoke(() -> {
 			assertSame(originalClassLoader, Thread.currentThread().getContextClassLoader());
@@ -47,8 +46,7 @@ class CustomContextClassLoaderExecutorTests {
 	void invokeWithCustomClassLoaderSetsCustomAndResetsToOriginal() {
 		var originalClassLoader = Thread.currentThread().getContextClassLoader();
 		ClassLoader customClassLoader = URLClassLoader.newInstance(new URL[0]);
-		var executor = new CustomContextClassLoaderExecutor(Optional.of(customClassLoader),
-			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(customClassLoader));
 
 		int result = executor.invoke(() -> {
 			assertSame(customClassLoader, Thread.currentThread().getContextClassLoader());
@@ -69,8 +67,7 @@ class CustomContextClassLoaderExecutorTests {
 				super.close();
 			}
 		};
-		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader),
-			CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+		var executor = new CustomContextClassLoaderExecutor(Optional.of(localClassLoader));
 
 		int result = executor.invoke(() -> 4711);
 

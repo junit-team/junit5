@@ -21,6 +21,10 @@ class CustomContextClassLoaderExecutor {
 	private final Optional<ClassLoader> customClassLoader;
 	private final CustomClassLoaderCloseStrategy closeStrategy;
 
+	CustomContextClassLoaderExecutor(Optional<ClassLoader> customClassLoader) {
+		this(customClassLoader, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+	}
+
 	CustomContextClassLoaderExecutor(Optional<ClassLoader> customClassLoader,
 			CustomClassLoaderCloseStrategy closeStrategy) {
 		this.customClassLoader = customClassLoader;

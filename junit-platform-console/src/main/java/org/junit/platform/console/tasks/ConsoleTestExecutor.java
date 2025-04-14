@@ -52,6 +52,10 @@ public class ConsoleTestExecutor {
 	private final Supplier<Launcher> launcherSupplier;
 	private final CustomClassLoaderCloseStrategy classLoaderCloseStrategy;
 
+	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
+		this(discoveryOptions, outputOptions, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+	}
+
 	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
 			CustomClassLoaderCloseStrategy classLoaderCloseStrategy) {
 		this(discoveryOptions, outputOptions, classLoaderCloseStrategy, LauncherFactory::create);
@@ -59,6 +63,12 @@ public class ConsoleTestExecutor {
 
 	// for tests only
 	ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
+			Supplier<Launcher> launcherSupplier) {
+		this(discoveryOptions, outputOptions, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER,
+			launcherSupplier);
+	}
+
+	private ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
 			CustomClassLoaderCloseStrategy classLoaderCloseStrategy, Supplier<Launcher> launcherSupplier) {
 		this.discoveryOptions = discoveryOptions;
 		this.outputOptions = outputOptions;
