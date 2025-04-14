@@ -3,13 +3,13 @@
 ## Pre-release steps
 
 - [ ] Switch or create the release branch for this feature release (e.g. `releases/5.12.x`)
-- [ ] Change `version`, `platformVersion`, and `vintageVersion` in `gradle.properties` to the versions about to be released
+- [ ] Change `version` in `gradle.properties` to the versions about to be released
 - [ ] Change release date in Release Notes
 - [ ] Change release date in `README.MD`
 - [ ] Commit with message "Release ${VERSION}"
 - [ ] Execute `./gradlew --no-build-cache --no-configuration-cache clean build publish closeSonatypeStagingRepository`
 - [ ] Tag current commit: `git tag -s -m ${VERSION} r${VERSION}`
-- [ ] Change `version`, `platformVersion`, and `vintageVersion` properties in `gradle.properties` on release branch to new development versions and commit with message "Back to snapshots for further development" or similar
+- [ ] Change `version` in `gradle.properties` on release branch to new development versions and commit with message "Back to snapshots for further development" or similar
 - [ ] Push release branch and tag to GitHub: `git push --set-upstream --follow-tags origin HEAD`
 - [ ] Trigger a [release build](https://github.com/junit-team/junit5/actions/workflows/release.yml): `gh workflow run --ref r${VERSION} -f releaseVersion=${VERSION} -f stagingRepoId=orgjunit-1234 release.yml`
   - Select the release branch

@@ -2,8 +2,7 @@ plugins {
 	java
 }
 
-val jupiterVersion: String by project
-val platformVersion: String by project
+val junitVersion: String by project
 
 repositories {
 	maven { url = uri(file(System.getProperty("maven.repo"))) }
@@ -11,10 +10,10 @@ repositories {
 }
 
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter-api:$jupiterVersion") {
+	testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion") {
 		exclude(group = "org.junit.jupiter", module = "junit-jupiter-engine")
 	}
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")}
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")}
 
 java {
 	toolchain {

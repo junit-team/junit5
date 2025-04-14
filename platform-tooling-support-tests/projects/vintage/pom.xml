@@ -16,7 +16,7 @@
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
-            <version>${junit.vintage.version}</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>

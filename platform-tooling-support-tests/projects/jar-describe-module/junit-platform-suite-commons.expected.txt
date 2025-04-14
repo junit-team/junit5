@@ -1,4 +1,4 @@
-org.junit.platform.suite.commons@${platformVersion} jar:file:.+/junit-platform-suite-commons-\d.+\.jar..module-info\.class
+org.junit.platform.suite.commons@${version} jar:file:.+/junit-platform-suite-commons-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires org.apiguardian.api static transitive
 requires org.junit.platform.commons

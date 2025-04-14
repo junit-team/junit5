@@ -13,7 +13,7 @@ however, that it is recommended to use IDEA 2017.3 or newer since more recent ve
 IDEA download the following JARs automatically based on the API version used in the
 project: `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
+In order to use a different JUnit 5 version (e.g., {version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine` JARs in the classpath.
 
@@ -21,7 +21,7 @@ include the corresponding versions of the `junit-platform-launcher`,
 [source,groovy]
 [subs=attributes+]
 ----
-testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+testImplementation(platform("org.junit:junit-bom:{version}"))
 testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
@@ -54,7 +54,7 @@ testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>junit-bom</artifactId>
-			<version>{bom-version}</version>
+			<version>{version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -160,7 +160,7 @@ versions of all JUnit 5 artifacts.
 .Explicit platform dependency on the BOM
 ----
 dependencies {
-	testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+	testImplementation(platform("org.junit:junit-bom:{version}"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -181,7 +181,7 @@ artifacts.
 .Implicit platform dependency on the BOM
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // <1>
+	testImplementation("org.junit.jupiter:junit-jupiter:{version}") // <1>
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // <2>
 }
 ----
@@ -212,7 +212,7 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 [subs=attributes+]
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter:{version}")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
@@ -228,7 +228,7 @@ support.
 testing {
 	suites {
 		named<JvmTestSuite>("test") {
-			useJUnitJupiter("{jupiter-version}")
+			useJUnitJupiter("{version}")
 		}
 	}
 }
@@ -241,7 +241,7 @@ testing {
 testing {
 	suites {
 		test {
-			useJUnitJupiter("{jupiter-version}")
+			useJUnitJupiter("{version}")
 		}
 	}
 }
@@ -256,7 +256,7 @@ implementation similar to the following.
 ----
 dependencies {
 	testImplementation("junit:junit:{junit4-version}")
-	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{version}")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
@@ -337,7 +337,7 @@ Maven build as follows.
 <dependency>
     <groupId>org.junit.platform</groupId>
     <artifactId>junit-platform-launcher</artifactId>
-    <version>{platform-version}</version>
+    <version>{version}</version>
     <scope>test</scope>
 </dependency>
 ----
@@ -358,7 +358,7 @@ versions of all JUnit 5 artifacts.
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>junit-bom</artifactId>
-			<version>{bom-version}</version>
+			<version>{version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -391,7 +391,7 @@ following.
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>{jupiter-version}</version> <!-- can be omitted when using the BOM -->
+			<version>{version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
@@ -430,7 +430,7 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>{vintage-version}</version> <!-- can be omitted when using the BOM -->
+			<version>{version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
@@ -659,7 +659,7 @@ With Gradle you can override the JUnit Jupiter version by including the followin
 [source,groovy,indent=0]
 [subs=attributes+]
 ----
-	ext['junit-jupiter.version'] = '{jupiter-version}'
+	ext['junit-jupiter.version'] = '{version}'
 ----
 
 With Maven you can override the JUnit Jupiter version by including the following in your
@@ -669,7 +669,7 @@ With Maven you can override the JUnit Jupiter version by including the following
 [subs=attributes+]
 ----
 	<properties>
-		<junit-jupiter.version>{jupiter-version}</junit-jupiter.version>
+		<junit-jupiter.version>{version}</junit-jupiter.version>
 	</properties>
 ----
 
@@ -680,7 +680,7 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch 
 Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
 Jupiter tests and print test execution results to the console.
 
-An executable _Fat JAR_ (`junit-platform-console-standalone-{platform-version}.jar`) that
+An executable _Fat JAR_ (`junit-platform-console-standalone-{version}.jar`) that
 contains the contents of all of its dependencies is published in the {Maven_Central}
 repository under the
 https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
@@ -711,7 +711,7 @@ standalone `ConsoleLauncher` as shown below.
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar execute <OPTIONS>
+$ java -jar junit-platform-console-standalone-{version}.jar execute <OPTIONS>
 
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -820,7 +820,7 @@ files using the `--redirect-stdout` and `--redirect-stderr` options:
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+$ java -jar junit-platform-console-standalone-{version}.jar <OPTIONS> \
   --redirect-stdout=stdout.txt \
   --redirect-stderr=stderr.txt
 ----
@@ -1255,7 +1255,7 @@ to a problem.
 In order to record Flight Recorder events generated while running tests, you need to:
 
 1. Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.
-2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{platform-version}.jar`)
+2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{version}.jar`)
    on the class-path or module-path at test runtime.
 3. Start flight recording when launching a test run. Flight Recorder can be started via
    java command line option:

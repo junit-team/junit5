@@ -21,9 +21,6 @@ dependencies {
 	osgiVerification(libs.openTestReporting.tooling.spi)
 }
 
-val jupiterVersion = rootProject.version
-val vintageVersion: String by project
-
 tasks {
 	jar {
 		manifest {
@@ -76,8 +73,8 @@ tasks {
 					"Implementation-Title" to project.name,
 					// Generate test engine version information in single shared manifest file.
 					// Pattern of key and value: `"Engine-Version-{YourTestEngine#getId()}": "47.11"`
-					"Engine-Version-junit-jupiter" to jupiterVersion,
-					"Engine-Version-junit-vintage" to vintageVersion,
+					"Engine-Version-junit-jupiter" to project.version,
+					"Engine-Version-junit-vintage" to project.version,
 					// Version-aware binaries are already included - set Multi-Release flag here.
 					// See https://openjdk.java.net/jeps/238 for details
 					// Note: the "jar --update ... --release X" command does not work with the

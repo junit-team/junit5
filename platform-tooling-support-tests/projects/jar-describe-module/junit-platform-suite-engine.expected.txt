@@ -1,4 +1,4 @@
-org.junit.platform.suite.engine@${platformVersion} jar:file:.+/junit-platform-suite-engine-\d.+\.jar..module-info\.class
+org.junit.platform.suite.engine@${version} jar:file:.+/junit-platform-suite-engine-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires org.apiguardian.api static
 requires org.junit.platform.commons

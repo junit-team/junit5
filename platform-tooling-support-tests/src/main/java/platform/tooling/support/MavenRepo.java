@@ -47,7 +47,7 @@ public class MavenRepo {
 		var parentDir = dir() //
 				.resolve(groupId(artifactId).replace('.', File.separatorChar)) //
 				.resolve(artifactId) //
-				.resolve(Helper.version(artifactId));
+				.resolve(Helper.version());
 		try (var files = Files.list(parentDir)) {
 			return files.filter(
 				file -> fileNamePredicate.test(file.getFileName().toString())).findFirst().orElseThrow();

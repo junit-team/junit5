@@ -1,4 +1,4 @@
-org.junit.platform.engine@${platformVersion} jar:file:.+/junit-platform-engine-\d.+\.jar..module-info\.class
+org.junit.platform.engine@${version} jar:file:.+/junit-platform-engine-\d.+\.jar..module-info\.class
 exports org.junit.platform.engine
 exports org.junit.platform.engine.discovery
 exports org.junit.platform.engine.reporting

@@ -39,7 +39,7 @@ class ManifestTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void manifestEntriesAdhereToConventions(String module) throws Exception {
-		var version = Helper.version(module);
+		var version = Helper.version();
 		var jarFile = MavenRepo.jar(module).toFile();
 		try (var jar = new Jar(jarFile)) {
 			var manifest = jar.getManifest();

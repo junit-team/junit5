@@ -11,13 +11,12 @@ repositories {
 	mavenCentral()
 }
 
-val jupiterVersion: String by project
-val platformVersion: String by project
+val junitVersion: String by project
 
 dependencies {
 	testImplementation(kotlin("stdlib"))
-	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+	testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
 }
 
 java {

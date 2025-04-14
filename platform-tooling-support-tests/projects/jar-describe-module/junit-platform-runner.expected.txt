@@ -1,4 +1,4 @@
-org.junit.platform.runner@${platformVersion} jar:file:.+/junit-platform-runner-\d.+\.jar..module-info\.class
+org.junit.platform.runner@${version} jar:file:.+/junit-platform-runner-\d.+\.jar..module-info\.class
 exports org.junit.platform.runner
 requires java.base mandated
 requires junit transitive

@@ -1,4 +1,4 @@
-org.junit.platform.commons@${platformVersion} jar:file:.+/junit-platform-commons-\d.+\.jar..module-info\.class
+org.junit.platform.commons@${version} jar:file:.+/junit-platform-commons-\d.+\.jar..module-info\.class
 exports org.junit.platform.commons
 exports org.junit.platform.commons.annotation
 exports org.junit.platform.commons.function

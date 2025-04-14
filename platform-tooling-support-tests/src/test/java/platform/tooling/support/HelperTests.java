@@ -54,9 +54,7 @@ class HelperTests {
 
 	@Test
 	void version() {
-		assertNotNull(Helper.version("junit-jupiter"));
-		assertNotNull(Helper.version("junit-vintage"));
-		assertNotNull(Helper.version("junit-platform"));
+		assertNotNull(Helper.version());
 	}
 
 	@Test

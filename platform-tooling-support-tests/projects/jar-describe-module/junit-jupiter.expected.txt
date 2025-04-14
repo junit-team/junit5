@@ -1,4 +1,4 @@
-org.junit.jupiter@${jupiterVersion} jar:file:.+/junit-jupiter-\d.+\.jar..module-info\.class
+org.junit.jupiter@${version} jar:file:.+/junit-jupiter-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires org.junit.jupiter.api transitive
 requires org.junit.jupiter.engine transitive

@@ -45,7 +45,7 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
 ==== JUnit Platform
 
 * *Group ID*: `org.junit.platform`
-* *Version*: `{platform-version}`
+* *Version*: `{version}`
 * *Artifact IDs*:
   `junit-platform-commons`::
     Common APIs and support utilities for the JUnit Platform. Any API annotated with
@@ -94,7 +94,7 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
 ==== JUnit Jupiter
 
 * *Group ID*: `org.junit.jupiter`
-* *Version*: `{jupiter-version}`
+* *Version*: `{version}`
 * *Artifact IDs*:
   `junit-jupiter`::
     JUnit Jupiter aggregator artifact that transitively pulls in dependencies on
@@ -114,7 +114,7 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
 ==== JUnit Vintage
 
 * *Group ID*: `org.junit.vintage`
-* *Version*: `{vintage-version}`
+* *Version*: `{version}`
 * *Artifact ID*:
   `junit-vintage-engine`::
     JUnit Vintage test engine implementation that allows one to run _vintage_ JUnit tests
@@ -131,7 +131,7 @@ or https://docs.gradle.org/current/userguide/platforms.html#sub:bom_import[Gradl
 
 * *Group ID*: `org.junit`
 * *Artifact ID*: `junit-bom`
-* *Version*: `{bom-version}`
+* *Version*: `{version}`
 
 [[dependency-metadata-dependencies]]
 ==== Dependencies

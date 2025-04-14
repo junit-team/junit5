@@ -87,14 +87,11 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var suiteVersion = Helper.version("junit-platform-suite-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertLinesMatch("""
-				junit-jupiter (org.junit.jupiter:junit-jupiter-engine:%s)
-				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%s)
-				junit-vintage (org.junit.vintage:junit-vintage-engine:%s)
-				""".formatted(jupiterVersion, suiteVersion, vintageVersion).lines(), //
+				junit-jupiter (org.junit.jupiter:junit-jupiter-engine:%1$s)
+				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%1$s)
+				junit-vintage (org.junit.vintage:junit-vintage-engine:%1$s)
+				""".formatted(Helper.version()).lines(), //
 			result.stdOut().lines());
 	}
 
@@ -110,7 +107,7 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var version = Helper.version("junit-platform-console");
+		var version = Helper.version();
 		assertLinesMatch("""
 				JUnit Platform Console Launcher %s
 				JVM: .*
@@ -142,7 +139,7 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var version = Helper.version("junit-platform-console");
+		var version = Helper.version();
 		assertLinesMatch("""
 				JUnit Platform Console Launcher %s
 				JVM: .*
@@ -449,12 +446,10 @@ class StandaloneTests {
 		assertLinesMatch(expectedOutLines, result.stdOutLines());
 		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 
 	@Test
@@ -484,12 +479,10 @@ class StandaloneTests {
 		assertLinesMatch(expectedOutLines, result.stdOutLines());
 		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 
 	private static List<String> getExpectedErrLinesOnJava17(Path workspace) throws IOException {
@@ -548,11 +541,9 @@ class StandaloneTests {
 		}
 		assertLinesMatch(expectedErrLines, actualErrLines);
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 }

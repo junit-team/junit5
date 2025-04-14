@@ -9,18 +9,11 @@ val jupiterProjects: List<Project> by rootProject
 val platformProjects: List<Project> by rootProject
 val vintageProjects: List<Project> by rootProject
 
-when (project) {
-	in jupiterProjects -> {
-		group = property("jupiterGroup")!!
-	}
-	in platformProjects -> {
-		group = property("platformGroup")!!
-		version = property("platformVersion")!!
-	}
-	in vintageProjects -> {
-		group = property("vintageGroup")!!
-		version = property("vintageVersion")!!
-	}
+group = when (project) {
+	in jupiterProjects -> "org.junit.jupiter"
+	in platformProjects -> "org.junit.platform"
+	in vintageProjects -> "org.junit.vintage"
+	else -> "org.junit"
 }
 
 // ensure project is built successfully before publishing it
