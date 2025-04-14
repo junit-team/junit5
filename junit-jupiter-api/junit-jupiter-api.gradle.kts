@@ -22,10 +22,6 @@ dependencies {
 }
 
 tasks {
-	compileKotlin {
-		// https://github.com/junit-team/junit5/issues/4371
-		compilerOptions.allWarningsAsErrors = false
-	}
 	jar {
 		bundle {
 			val version = project.version
