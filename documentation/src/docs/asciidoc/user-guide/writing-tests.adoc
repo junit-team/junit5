@@ -1954,6 +1954,10 @@ an array of primitives. The "arguments" within the stream can be supplied as an 
 of `Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
 parameterized class or test method accepts a single argument.
 
+If the return type is `Stream` or one of the primitive streams,
+JUnit will properly close it by calling `BaseStream.close()`,
+making it safe to use a resource such as `Files.lines()`.
+
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated in the following example.
 
@@ -2048,6 +2052,10 @@ methods, the value of a `@FieldSource` field cannot be an instance of `Stream`,
 are _consumed_ the first time they are processed. However, if you wish to use one of
 these types, you can wrap it in a `Supplier` — for example, `Supplier<IntStream>`.
 ====
+
+If the `Supplier` return type is `Stream` or one of the primitive streams,
+JUnit will properly close it by calling `BaseStream.close()`,
+making it safe to use a resource such as `Files.lines()`.
 
 Please note that a one-dimensional array of objects supplied as a set of "arguments" will
 be handled differently than other types of arguments. Specifically, all the elements of a

@@ -61,6 +61,12 @@ import org.apiguardian.api.API;
  * use one of these types, you can wrap it in a {@code Supplier} &mdash; for
  * example, {@code Supplier<IntStream>}.
  *
+ * <p>If the {@code Supplier} return type is {@code Stream} or
+ * one of the primitive streams, JUnit will properly close it by calling
+ * {@link java.util.stream.BaseStream#close() BaseStream.close()},
+ * making it safe to use a resource such as
+ * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
+ *
  * <p>Please note that a one-dimensional array of objects supplied as a set of
  * "arguments" will be handled differently than other types of arguments.
  * Specifically, all of the elements of a one-dimensional array of objects will
