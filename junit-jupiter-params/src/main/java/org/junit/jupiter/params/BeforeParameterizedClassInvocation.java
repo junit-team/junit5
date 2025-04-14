@@ -164,7 +164,7 @@ public @interface BeforeParameterizedClassInvocation {
 
 	/**
 	 * Whether the arguments of the parameterized test class should be injected
-	 * into the annotated method (defaults to {@code false}).
+	 * into the annotated method (defaults to {@code true}).
 	 */
 	boolean injectArguments() default true;
 
