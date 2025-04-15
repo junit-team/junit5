@@ -65,8 +65,10 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 * empty, unless the {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}
 	 * lifecycle is used.</li>
 	 * <li>If the callback adds a new {@link Store.CloseableResource} or
-	 * {@link AutoCloseable} to the {@link Store Store}, the resource is closed
-	 * just after the instance is destroyed.</li>
+	 * {@link AutoCloseable} to the {@link Store Store} (unless the
+	 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+	 * configuration parameter is set to {@code false}), then
+	 * the resource is closed just after the instance is destroyed.</li>
 	 * <li>The callbacks can now access data previously stored by
 	 * {@link TestTemplateInvocationContext}, unless the
 	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.</li>
