@@ -85,8 +85,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
 
-		this.closeResources = createCloseResources();
-		this.valuesStore = createStore(parent, launcherStoreFacade);
+		this.valuesStore = createStore(parent, launcherStoreFacade, createCloseAction());
 	}
 
 	@SuppressWarnings("deprecation")
