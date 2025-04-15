@@ -20,7 +20,6 @@ import java.lang.annotation.Target;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -100,8 +99,8 @@ public @interface ManagedResource {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	class Resource<T> implements CloseableResource {
+	@SuppressWarnings("try")
+	class Resource<T> implements AutoCloseable {
 
 		private final T value;
 
@@ -116,7 +115,7 @@ public @interface ManagedResource {
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			((AutoCloseable) value).close();
 		}
 	}

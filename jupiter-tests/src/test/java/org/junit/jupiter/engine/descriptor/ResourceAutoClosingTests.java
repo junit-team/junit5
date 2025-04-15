@@ -79,6 +79,7 @@ class ResourceAutoClosingTests {
 		store.put("resource", resource);
 
 		((AutoCloseable) extensionContext).close();
+
 		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).anyMatch(msg::equals);
 		assertThat(resource.closed).isTrue();
 	}
@@ -88,7 +89,6 @@ class ResourceAutoClosingTests {
 			@TrackLogRecords LogRecordListener listener) throws Exception {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
 		CloseableResource resource = new CloseableResource();
-		String msg = "Type implements CloseableResource but not AutoCloseable: " + resource.getClass().getName();
 		when(configuration.isAutoCloseEnabled()).thenReturn(false);
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionRecorder, testDescriptor,
@@ -97,7 +97,8 @@ class ResourceAutoClosingTests {
 		store.put("resource", resource);
 
 		((AutoCloseable) extensionContext).close();
-		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).noneMatch(msg::equals);
+
+		assertThat(listener.stream(Level.WARNING)).isEmpty();
 		assertThat(resource.closed).isTrue();
 	}
 

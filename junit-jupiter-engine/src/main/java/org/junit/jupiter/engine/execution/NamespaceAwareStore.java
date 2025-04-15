@@ -18,8 +18,6 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -30,8 +28,6 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStoreExcept
  */
 @API(status = INTERNAL, since = "5.0")
 public class NamespaceAwareStore implements Store {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(NamespaceAwareStore.class);
 
 	private final NamespacedHierarchicalStore<Namespace> valuesStore;
 	private final Namespace namespace;
