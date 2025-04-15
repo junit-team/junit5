@@ -81,7 +81,7 @@ class MavenStarterTests {
 	}
 
 	private ProcessResult runMaven(OutputFiles outputFiles, String... extraArgs) throws InterruptedException {
-		var result = ProcessStarters.maven(Helper.getJavaHome("8").orElseThrow(TestAbortedException::new)) //
+		var result = ProcessStarters.maven(Helper.getJavaHome(8).orElseThrow(TestAbortedException::new)) //
 				.workingDir(workspace) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //

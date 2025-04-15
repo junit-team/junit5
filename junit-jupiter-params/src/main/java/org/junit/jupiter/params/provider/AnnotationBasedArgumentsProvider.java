@@ -76,6 +76,13 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 			getClass().getName()));
 	}
 
+	/**
+	 * The returned {@code Stream} will be {@link Stream#close() properly closed}
+	 * by the default implementation of
+	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext)},
+	 * making it safe to use a resource such as
+	 * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
+	 */
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			A annotation) {
 		return provideArguments(context, annotation);
