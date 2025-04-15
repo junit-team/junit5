@@ -117,7 +117,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		else {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
-		return new NamespacedHierarchicalStore<>(parentStore, this.closeResources);
+		return new NamespacedHierarchicalStore<>(parentStore, closeAction);
 	}
 
 	@Override
