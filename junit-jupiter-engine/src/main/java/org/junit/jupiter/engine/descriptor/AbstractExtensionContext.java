@@ -62,7 +62,6 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	private final ExecutableInvoker executableInvoker;
 	private final ExtensionRegistry extensionRegistry;
 	private final LauncherStoreFacade launcherStoreFacade;
-	private final NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> closeResources;
 	private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
