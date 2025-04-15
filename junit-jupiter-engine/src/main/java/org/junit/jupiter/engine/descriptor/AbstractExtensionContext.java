@@ -108,7 +108,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		};
 	}
 
-	private NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> createStore(
+	private static NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> createStore(
 			ExtensionContext parent, LauncherStoreFacade launcherStoreFacade) {
 		NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> parentStore;
 		if (parent == null) {
