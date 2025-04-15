@@ -61,7 +61,7 @@ public interface JupiterConfiguration {
 
 	boolean isParallelExecutionEnabled();
 
-	boolean isAutoCloseEnabled();
+	boolean isClosingStoredAutoCloseablesEnabled();
 
 	boolean isExtensionAutoDetectionEnabled();
 
