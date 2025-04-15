@@ -34,11 +34,10 @@ class ResourceAutoClosingTests {
 	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
 		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
-	// TODO when config name is renamed, update the test name
 	@Test
-	void shouldCloseAutoCloseableWhenAutoCloseEnabledIsTrue() throws Exception {
+	void shouldCloseAutoCloseableWhenIsClosingStoredAutoCloseablesEnabledIsTrue() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
-		when(configuration.isAutoCloseEnabled()).thenReturn(true);
+		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(true);
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
@@ -51,9 +50,9 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
-	void shouldNotCloseAutoCloseableWhenAutoCloseEnabledIsFalse() throws Exception {
+	void shouldNotCloseAutoCloseableWhenIsClosingStoredAutoCloseablesEnabledIsFalse() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
-		when(configuration.isAutoCloseEnabled()).thenReturn(false);
+		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(false);
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
@@ -66,12 +65,12 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
-	void shouldLogWarningWhenClosingResourceImplementsCloseableResourceButNotAutoCloseableAndConfigIsTrue(
+	void shouldLogWarningWhenResourceImplementsCloseableResourceButNotAutoCloseableAndConfigIsTrue(
 			@TrackLogRecords LogRecordListener listener) throws Exception {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
 		CloseableResource resource = new CloseableResource();
 		String msg = "Type implements CloseableResource but not AutoCloseable: " + resource.getClass().getName();
-		when(configuration.isAutoCloseEnabled()).thenReturn(true);
+		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(true);
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionRecorder, testDescriptor,
 			configuration, extensionRegistry, launcherStoreFacade);
@@ -85,11 +84,11 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
-	void shouldNotLogWarningWhenClosingResourceImplementsCloseableResourceAndAutoCloseableAndConfigIsFalse(
+	void shouldNotLogWarningWhenResourceImplementsCloseableResourceAndAutoCloseableAndConfigIsFalse(
 			@TrackLogRecords LogRecordListener listener) throws Exception {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
 		CloseableResource resource = new CloseableResource();
-		when(configuration.isAutoCloseEnabled()).thenReturn(false);
+		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(false);
 
 		ExtensionContext extensionContext = new JupiterEngineExtensionContext(executionRecorder, testDescriptor,
 			configuration, extensionRegistry, launcherStoreFacade);

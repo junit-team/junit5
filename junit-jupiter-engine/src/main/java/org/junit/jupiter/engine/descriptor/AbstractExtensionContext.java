@@ -91,7 +91,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	@SuppressWarnings("deprecation")
 	private NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> createCloseAction() {
 		return (__, ___, value) -> {
-			boolean isAutoCloseEnabled = this.configuration.isAutoCloseEnabled();
+			boolean isAutoCloseEnabled = this.configuration.isClosingStoredAutoCloseablesEnabled();
 
 			if (value instanceof AutoCloseable && isAutoCloseEnabled) {
 				((AutoCloseable) value).close();
