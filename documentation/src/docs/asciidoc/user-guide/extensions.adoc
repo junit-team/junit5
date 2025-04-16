@@ -863,17 +863,20 @@ surrounding `ExtensionContext`. Since `ExtensionContexts` may be nested, the sco
 inner contexts may also be limited. Consult the corresponding Javadoc for details on the
 methods available for storing and retrieving values via the `{ExtensionContext_Store}`.
 
-.`ExtensionContext.Store.CloseableResource`
+.`AutoCloseable`
 NOTE: An extension context store is bound to its extension context lifecycle. When an
-extension context lifecycle ends it closes its associated store. All stored values
-that are instances of `CloseableResource` are notified by an invocation of their `close()`
-method in the inverse order they were added in.
+extension context lifecycle ends it closes its associated store. As of JUnit 5.13,
+all stored values that are instances of `AutoCloseable` are notified by an invocation of
+their `close()` method in the inverse order they were added in. (unless the
+`junit.jupiter.extensions.store.close.autocloseable.enabled` configuration parameter
+is set to false). Older versions supported `CloseableResource`, which is still
+available for backward compatibility but is no longer recommended.
 
-An example implementation of `CloseableResource` is shown below, using an `HttpServer`
+An example implementation of `AutoCloseable` is shown below, using an `HttpServer`
 resource.
 
 [source,java,indent=0]
-.`HttpServer` resource implementing `CloseableResource`
+.`HttpServer` resource implementing `AutoCloseable`
 ----
 include::{testDir}/example/extensions/HttpServerResource.java[tags=user_guide]
 ----
