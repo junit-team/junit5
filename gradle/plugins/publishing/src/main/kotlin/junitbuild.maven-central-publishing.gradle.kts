@@ -1,4 +1,3 @@
-
 import org.jreleaser.model.Active.RELEASE
 import org.jreleaser.model.api.deploy.maven.MavenCentralMavenDeployer.Stage
 import java.util.Properties

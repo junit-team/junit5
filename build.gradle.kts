@@ -1,3 +1,5 @@
+import junitbuild.extensions.dependencyProject
+
 plugins {
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-metadata")
