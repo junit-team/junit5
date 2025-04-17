@@ -3,8 +3,10 @@ package junitbuild.release
 import org.gradle.api.DefaultTask
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.ProviderFactory
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputDirectory
+import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -15,7 +17,7 @@ import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
 
-abstract class VerifyBinaryArtifactsAreIdentical : DefaultTask() {
+abstract class VerifyBinaryArtifactsAreIdentical(providers: ProviderFactory) : DefaultTask() {
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.RELATIVE)
@@ -24,9 +26,13 @@ abstract class VerifyBinaryArtifactsAreIdentical : DefaultTask() {
     @get:Input
     abstract val remoteRepoUrl: Property<String>
 
+    @get:Internal
+    abstract val remoteRepoBearerToken: Property<String>
+
     init {
         // Depends on contents of remote repository
         outputs.upToDateWhen { false }
+        remoteRepoBearerToken.convention(providers.environmentVariable("MAVEN_CENTRAL_USER_TOKEN"))
     }
 
     @Suppress("unused")
@@ -51,7 +57,10 @@ abstract class VerifyBinaryArtifactsAreIdentical : DefaultTask() {
                     val relativeFile = file.relativeTo(localRootDir)
                     val url = URI.create("${baseUrl}/${relativeFile.path}")
                     logger.info("Checking {}...", url)
-                    val request = HttpRequest.newBuilder().GET().uri(url).build()
+                    val request = HttpRequest.newBuilder().GET()
+                        .uri(url)
+                        .header("Authorization", "Bearer ${remoteRepoBearerToken.get()}")
+                        .build()
                     val response = httpClient.send(request, BodyHandlers.ofString())
                     val remoteSha512 = if (response.statusCode() == 200) response.body() else "status=${response.statusCode()}"
                     if (localSha512 != remoteSha512) {
