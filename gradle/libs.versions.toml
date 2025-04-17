@@ -98,9 +98,9 @@ develocity = { id = "com.gradle.develocity", version = "4.0.1" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.10.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
+jreleaser = { id = "org.jreleaser", version = "1.17.0" }
 # check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
-nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.3" }

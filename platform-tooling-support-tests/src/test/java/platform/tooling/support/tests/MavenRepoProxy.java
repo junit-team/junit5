@@ -32,7 +32,7 @@ public class MavenRepoProxy implements AutoCloseable {
 
 	@SuppressWarnings("unused")
 	public MavenRepoProxy(int port) throws IOException {
-		this("https://oss.sonatype.org/content/repositories/snapshots", port);
+		this("https://central.sonatype.com/repository/maven-snapshots", port);
 	}
 
 	private MavenRepoProxy(String proxiedUrl, int port) throws IOException {
