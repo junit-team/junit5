@@ -3,7 +3,6 @@ import junitbuild.java.UpdateJarAction
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.java-multi-release-sources")
-	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 
