@@ -1,3 +1,5 @@
+import junitbuild.extensions.isSnapshot
+
 plugins {
 	`maven-publish`
 	signing

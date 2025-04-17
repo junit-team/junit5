@@ -2,6 +2,9 @@ import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.GenerateStandaloneConsoleLauncherShadowedArtifactsFile
 import junitbuild.exec.RunConsoleLauncher
+import junitbuild.extensions.dependencyProject
+import junitbuild.extensions.isSnapshot
+import junitbuild.extensions.javaModuleName
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask

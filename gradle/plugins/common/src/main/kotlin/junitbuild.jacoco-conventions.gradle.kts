@@ -1,3 +1,5 @@
+import junitbuild.extensions.requiredVersionFromLibs
+
 plugins {
 	jacoco
 	id("junitbuild.build-parameters")

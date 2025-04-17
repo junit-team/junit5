@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import junitbuild.extensions.javaModuleName
+import junitbuild.extensions.isSnapshot
 import junitbuild.java.ModuleCompileOptions
 import junitbuild.java.ModulePathArgumentProvider
 import junitbuild.java.PatchModuleArgumentProvider
