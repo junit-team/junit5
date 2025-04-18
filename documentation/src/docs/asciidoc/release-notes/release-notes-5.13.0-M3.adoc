@@ -10,6 +10,19 @@ link:{junit5-repo}+/milestone/93?closed=1+[5.13.0-M3] milestone page in the JUni
 repository on GitHub.
 
 
+[[release-notes-5.13.0-M3-overall-improvements]]
+=== Overall Changes
+
+[[release-notes-5.13.0-M3-overall-new-features-and-improvements]]
+==== Deprecations and Breaking Changes
+
+* The JUnit feature in GraalVM Native Build Tools has been rewritten to no longer require
+  JUnit classes to be initialized at build time. Therefore, JUnit's JARs no longer ship
+  with `native-image.properties` files that contain `--initialize-at-build-time` options
+  (introduced in 5.12.0). Please update to the most recent version of GraalVM Native Build
+  Tools prior to upgrading to this version of JUnit.
+
+
 [[release-notes-5.13.0-M3-junit-platform]]
 === JUnit Platform
 

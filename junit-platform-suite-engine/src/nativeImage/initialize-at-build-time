@@ -1,5 +1,0 @@
-org.junit.platform.suite.engine.SuiteEngineDescriptor
-org.junit.platform.suite.engine.SuiteLauncher
-org.junit.platform.suite.engine.SuiteTestDescriptor
-org.junit.platform.suite.engine.SuiteTestDescriptor$LifecycleMethods
-org.junit.platform.suite.engine.SuiteTestEngine
