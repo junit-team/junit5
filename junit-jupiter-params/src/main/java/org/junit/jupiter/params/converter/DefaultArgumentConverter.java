@@ -52,16 +52,15 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
-	private static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
+	static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
-	private static final Function<String, LocaleConversionFormat> CONFIGURATION_TRANSFORMER = value -> LocaleConversionFormat.valueOf(
+	private static final Function<String, LocaleConversionFormat> TRANSFORMER = value -> LocaleConversionFormat.valueOf(
 		value.trim().toUpperCase(Locale.ROOT));
 
-	private final LocaleConversionFormat format;
+	private final ExtensionContext context;
 
 	public DefaultArgumentConverter(ExtensionContext context) {
-		this.format = context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME,
-			CONFIGURATION_TRANSFORMER).orElse(LocaleConversionFormat.BCP_47);
+		this.context = context;
 	}
 
 	@Override
@@ -92,7 +91,7 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String) {
-			if (targetType == Locale.class && format == LocaleConversionFormat.BCP_47) {
+			if (targetType == Locale.class && getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
 				return Locale.forLanguageTag((String) source);
 			}
 
@@ -109,8 +108,36 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 				source.getClass().getTypeName(), targetType.getTypeName()));
 	}
 
+	private LocaleConversionFormat getLocaleConversionFormat() {
+		return context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, TRANSFORMER).orElse(
+			LocaleConversionFormat.BCP_47);
+	}
+
 	Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		return ConversionSupport.convert(source, targetType, classLoader);
+	}
+
+	/**
+	 * Enumeration of {@link Locale} conversion formats.
+	 *
+	 * @since 5.13
+	 */
+	enum LocaleConversionFormat {
+
+		/**
+		 * The IETF BCP 47 language tag format.
+		 *
+		 * @see Locale#forLanguageTag(String)
+		 */
+		BCP_47,
+
+		/**
+		 * The ISO 639 alpha-2 or alpha-3 language code format.
+		 *
+		 * @see Locale#Locale(String)
+		 */
+		ISO_639
+
 	}
 
 }
