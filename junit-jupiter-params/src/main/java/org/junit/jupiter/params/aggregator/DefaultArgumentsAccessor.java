@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -40,10 +41,11 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	private final Object[] arguments;
 	private final BiFunction<Object, Class<?>, Object> converter;
 
-	public static DefaultArgumentsAccessor create(int invocationIndex, ClassLoader classLoader, Object[] arguments) {
+	public static DefaultArgumentsAccessor create(ExtensionContext context, int invocationIndex,
+			ClassLoader classLoader, Object[] arguments) {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
-		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> DefaultArgumentConverter.INSTANCE //
+		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> new DefaultArgumentConverter(context) //
 				.convert(source, targetType, classLoader);
 		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
 	}

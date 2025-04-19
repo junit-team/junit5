@@ -21,8 +21,10 @@ import java.net.URL;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.support.conversion.ConversionException;
@@ -50,10 +52,16 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
-	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
+	private static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
-	private DefaultArgumentConverter() {
-		// nothing to initialize
+	private static final Function<String, LocaleConversionFormat> CONFIGURATION_TRANSFORMER = value -> LocaleConversionFormat.valueOf(
+		value.trim().toUpperCase(Locale.ROOT));
+
+	private final LocaleConversionFormat format;
+
+	public DefaultArgumentConverter(ExtensionContext context) {
+		this.format = context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME,
+			CONFIGURATION_TRANSFORMER).orElse(LocaleConversionFormat.BCP_47);
 	}
 
 	@Override
@@ -84,6 +92,10 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String) {
+			if (targetType == Locale.class && format == LocaleConversionFormat.BCP_47) {
+				return Locale.forLanguageTag((String) source);
+			}
+
 			try {
 				return convert((String) source, targetType, classLoader);
 			}

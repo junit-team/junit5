@@ -16,11 +16,13 @@ import static org.junit.platform.commons.util.ClassLoaderUtils.getClassLoader;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -35,7 +37,8 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  */
 class DefaultArgumentConverterTests {
 
-	private final DefaultArgumentConverter underTest = spy(DefaultArgumentConverter.INSTANCE);
+	private final ExtensionContext context = mock();
+	private final DefaultArgumentConverter underTest = spy(new DefaultArgumentConverter(context));
 
 	@Test
 	void isAwareOfNull() {
