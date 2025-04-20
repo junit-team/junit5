@@ -52,6 +52,22 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
+	/**
+	 * Property name used to set the format for the conversion of {@link Locale}
+	 * arguments: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 * <ul>
+	 * <li>{@code bcp_47}: uses the IETF BCP 47 language tag format, via
+	 * {@link Locale#forLanguageTag(String)}</li>
+	 * <li>{@code iso_639}: uses the ISO 639 alpha-2 or alpha-3
+	 * language code format, via {@link Locale#Locale(String)}</li>
+	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code bcp_47}.
+	 *
+	 * @since 5.13
+	 */
 	public static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
 	private static final Function<String, LocaleConversionFormat> TRANSFORMER = value -> LocaleConversionFormat.valueOf(
@@ -117,25 +133,10 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		return ConversionSupport.convert(source, targetType, classLoader);
 	}
 
-	/**
-	 * Enumeration of {@link Locale} conversion formats.
-	 *
-	 * @since 5.13
-	 */
 	enum LocaleConversionFormat {
 
-		/**
-		 * The IETF BCP 47 language tag format.
-		 *
-		 * @see Locale#forLanguageTag(String)
-		 */
 		BCP_47,
 
-		/**
-		 * The ISO 639 alpha-2 or alpha-3 language code format.
-		 *
-		 * @see Locale#Locale(String)
-		 */
 		ISO_639
 
 	}
