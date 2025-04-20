@@ -52,7 +52,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
-	static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
+	public static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
 	private static final Function<String, LocaleConversionFormat> TRANSFORMER = value -> LocaleConversionFormat.valueOf(
 		value.trim().toUpperCase(Locale.ROOT));
