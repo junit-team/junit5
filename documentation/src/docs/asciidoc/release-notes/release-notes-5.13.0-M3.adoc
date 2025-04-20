@@ -98,7 +98,10 @@ to start reporting discovery issues.
     - Blank `@SentenceFragment` declarations
     - `@BeforeParameterizedClassInvocation` and `@AfterParameterizedClassInvocation`
       methods declared in non-parameterized test classes
-
+* New `junit.jupiter.params.arguments.conversion.locale.format` configuration parameter to select the format used for the conversion of `@ParameterizedTest` `Locale` arguments.
+See the
+<<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit, User Guide>>
+for details.
 
 [[release-notes-5.13.0-M3-junit-vintage]]
 === JUnit Vintage
