@@ -58,10 +58,10 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	 *
 	 * <h4>Supported Values</h4>
 	 * <ul>
-	 * <li>{@code bcp_47}: uses the IETF BCP 47 language tag format, via
-	 * {@link Locale#forLanguageTag(String)}</li>
-	 * <li>{@code iso_639}: uses the ISO 639 alpha-2 or alpha-3
-	 * language code format, via {@link Locale#Locale(String)}</li>
+	 * <li>{@code bcp_47}: uses the IETF BCP 47 language tag format, delegating
+	 * the conversion to {@link Locale#forLanguageTag(String)}</li>
+	 * <li>{@code iso_639}: uses the ISO 639 alpha-2 or alpha-3 language code
+	 * format, delegating the conversion to {@link Locale#Locale(String)}</li>
 	 * </ul>
 	 *
 	 * <p>If not specified, the default is {@code bcp_47}.
