@@ -98,7 +98,10 @@ to start reporting discovery issues.
     - Blank `@SentenceFragment` declarations
     - `@BeforeParameterizedClassInvocation` and `@AfterParameterizedClassInvocation`
       methods declared in non-parameterized test classes
-
+* `java.util.Locale` arguments are now converted according to the IETF BCP 47 language tag
+  format. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit, User Guide>>
+  for details.
 
 [[release-notes-5.13.0-M3-junit-vintage]]
 === JUnit Vintage
