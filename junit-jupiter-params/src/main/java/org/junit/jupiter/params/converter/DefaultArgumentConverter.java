@@ -125,8 +125,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	}
 
 	private LocaleConversionFormat getLocaleConversionFormat() {
-		return context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, TRANSFORMER).orElse(
-			LocaleConversionFormat.BCP_47);
+		return context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, TRANSFORMER) //
+				.orElse(LocaleConversionFormat.BCP_47);
 	}
 
 	Object convert(String source, Class<?> targetType, ClassLoader classLoader) {

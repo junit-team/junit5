@@ -2487,9 +2487,11 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
 |===
 
-WARNING: To revert to the old `java.util.Locale` conversion behavior, you can set the
-`junit.jupiter.params.arguments.conversion.locale.format` configuration parameter to `iso_639`.
-However, please note that this option is deprecated and will be removed in a future release.
+WARNING: To revert to the old `java.util.Locale` conversion behavior of version 5.12 and
+earlier (which called the deprecated `Locale(String)` constructor), you can set the
+`junit.jupiter.params.arguments.conversion.locale.format`
+<<running-tests-config-params, configuration parameter>> to `iso_639`. However, please
+note that this parameter is deprecated and will be removed in a future release.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-fallback]]
 ====== Fallback String-to-Object Conversion
