@@ -105,11 +105,13 @@ to start reporting discovery issues.
   via a configuration parameter. Please also see the
   <<../user-guide/index.adoc#extensions-keeping-state-autocloseable-migration, migration note>>
   for third-party extensions wanting to support both JUnit 5.13 and earlier versions.
-
 * `java.util.Locale` arguments are now converted according to the IETF BCP 47 language tag
   format. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit, User Guide>>
   for details.
+* Avoid reporting potentially misleading validation exception for `@ParameterizedClass`
+  test classes and `@ParameterizedTest` methods as suppressed exception for earlier
+  failures.
 
 [[release-notes-5.13.0-M3-junit-vintage]]
 === JUnit Vintage

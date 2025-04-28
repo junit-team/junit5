@@ -86,6 +86,8 @@ public interface TestTemplateInvocationContextProvider extends Extension {
 	 * to be invoked; never {@code null}
 	 * @return a {@code Stream} of {@code TestTemplateInvocationContext}
 	 * instances for the invocation of the test template method; never {@code null}
+	 * @throws TemplateInvocationValidationException if a validation fails when
+	 * while providing or closing the {@link java.util.stream.Stream}.
 	 * @see #supportsTestTemplate
 	 * @see ExtensionContext
 	 */

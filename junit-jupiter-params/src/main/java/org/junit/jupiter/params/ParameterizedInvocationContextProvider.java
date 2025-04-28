@@ -17,6 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
@@ -47,10 +48,18 @@ class ParameterizedInvocationContextProvider<T> {
 					invocationCount.incrementAndGet();
 					return declarationContext.createInvocationContext(formatter, arguments, invocationCount.intValue());
 				})
-				.onClose(() ->
-						Preconditions.condition(invocationCount.get() > 0 || declarationContext.isAllowingZeroInvocations(),
-								() -> String.format("Configuration error: You must configure at least one set of arguments for this @%s", declarationContext.getAnnotationName())));
+				.onClose(() -> validateInvokedAtLeastOnce(invocationCount.get(),declarationContext ));
 		// @formatter:on
+	}
+
+	private static <T> void validateInvokedAtLeastOnce(long invocationCount,
+			ParameterizedDeclarationContext<T> declarationContext) {
+		if (invocationCount == 0 && !declarationContext.isAllowingZeroInvocations()) {
+			String message = String.format(
+				"Configuration error: You must configure at least one set of arguments for this @%s",
+				declarationContext.getAnnotationName());
+			throw new TemplateInvocationValidationException(message);
+		}
 	}
 
 	private static List<ArgumentsSource> collectArgumentSources(ParameterizedDeclarationContext<?> declarationContext) {
