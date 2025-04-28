@@ -79,7 +79,7 @@ class ResourceAutoClosingTests {
 
 		((AutoCloseable) extensionContext).close();
 
-		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).anyMatch(msg::equals);
+		assertThat(listener.stream(Level.WARNING)).map(LogRecord::getMessage).contains(msg);
 		assertThat(resource.closed).isTrue();
 	}
 
