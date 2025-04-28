@@ -86,6 +86,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSourcesTestCase.Action;
@@ -455,8 +456,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		var results = execute(ZeroInvocationsTestCase.class, "testThatRequiresInvocations", String.class);
 
 		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+				.haveExactly(1,
+					event(finishedWithFailure(instanceOf(TemplateInvocationValidationException.class), message(
+						"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
 	}
 
 	@Test

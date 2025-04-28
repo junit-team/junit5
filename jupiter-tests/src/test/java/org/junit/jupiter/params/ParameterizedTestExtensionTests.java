@@ -36,6 +36,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.MediaType;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -145,7 +146,7 @@ class ParameterizedTestExtensionTests {
 			extensionContextWithAnnotatedTestMethod);
 		// cause the stream to be evaluated
 		stream.toArray();
-		var exception = assertThrows(JUnitException.class, stream::close);
+		var exception = assertThrows(TemplateInvocationValidationException.class, stream::close);
 
 		assertThat(exception).hasMessage(
 			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");

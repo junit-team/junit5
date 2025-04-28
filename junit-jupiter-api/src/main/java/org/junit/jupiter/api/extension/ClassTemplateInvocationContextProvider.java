@@ -90,6 +90,8 @@ public interface ClassTemplateInvocationContextProvider extends Extension {
 	 * invoked; never {@code null}
 	 * @return a {@code Stream} of {@code ClassTemplateInvocationContext}
 	 * instances for the invocation of the class template; never {@code null}
+	 * @throws TemplateInvocationValidationException if a validation fails when
+	 * while providing or closing the {@link java.util.stream.Stream}.
 	 * @see #supportsClassTemplate
 	 * @see ExtensionContext
 	 */

@@ -40,6 +40,7 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.started;
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.EventConditions.uniqueId;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.suppressed;
 
@@ -69,6 +70,7 @@ import org.junit.jupiter.api.TestReporter;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
 import org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor;
@@ -368,8 +370,9 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 			var results = executeTestsForClass(ForbiddenZeroInvocationsTestCase.class);
 
 			results.containerEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(
-						"Configuration error: You must configure at least one set of arguments for this @ParameterizedClass"))));
+					.haveExactly(1,
+						event(finishedWithFailure(instanceOf(TemplateInvocationValidationException.class), message(
+							"Configuration error: You must configure at least one set of arguments for this @ParameterizedClass"))));
 		}
 
 		@Test
