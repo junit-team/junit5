@@ -74,7 +74,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -110,7 +109,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	})
 	void executesClassTemplateClassTwice(String selectorIdentifierTemplate) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var invocation1MethodAId = invocationId1.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
@@ -299,7 +298,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void executesNestedClassTemplatesTwiceEach() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsTestCase.class.getName());
 
 		var outerInvocation1Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
@@ -403,7 +402,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void supportsTestTemplateMethodsInsideClassTemplateClasses() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			CombinationWithTestTemplateTestCase.class.getName());
 		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var testTemplateId1 = invocationId1.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
@@ -459,7 +458,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void testTemplateInvocationInsideClassTemplateClassCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			CombinationWithTestTemplateTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testTemplateId2 = invocationId2.append(TestTemplateTestDescriptor.SEGMENT_TYPE, "test(int)");
@@ -490,7 +489,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void supportsTestFactoryMethodsInsideClassTemplateClasses() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			CombinationWithTestFactoryTestCase.class.getName());
 		var invocationId1 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var testFactoryId1 = invocationId1.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
@@ -546,7 +545,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void specificDynamicTestInsideClassTemplateClassCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			CombinationWithTestFactoryTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var testFactoryId2 = invocationId2.append(TestFactoryTestDescriptor.SEGMENT_TYPE, "test()");
@@ -617,7 +616,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void classTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
@@ -650,7 +649,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void classTemplateInvocationCanBeSelectedByIteration() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
@@ -687,7 +686,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	})
 	void executesAllInvocationsForRedundantSelectors(String classTemplateSelectorIdentifier) {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 
@@ -700,7 +699,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void methodInClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var methodAId = invocationId2.append(TestMethodTestDescriptor.SEGMENT_TYPE, "a()");
@@ -725,7 +724,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void nestedMethodInClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var classTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoInvocationsTestCase.class.getName());
 		var invocationId2 = classTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var nestedClassId = invocationId2.append(NestedClassTestDescriptor.SEGMENT_TYPE, "NestedTestCase");
@@ -754,7 +753,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void nestedClassTemplateInvocationCanBeSelectedByUniqueId() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsWithMultipleMethodsTestCase.class.getName());
 		var outerInvocation2Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#2");
 		var outerInvocation2NestedClassTemplateId = outerInvocation2Id.append(
@@ -794,7 +793,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 	@Test
 	void nestedClassTemplateInvocationCanBeSelectedByIteration() {
 		var engineId = UniqueId.forEngine(JupiterEngineDescriptor.ENGINE_ID);
-		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STATIC_CLASS_SEGMENT_TYPE,
+		var outerClassTemplateId = engineId.append(ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE,
 			TwoTimesTwoInvocationsTestCase.class.getName());
 		var outerInvocation1Id = outerClassTemplateId.append(ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE, "#1");
 		var outerInvocation1NestedClassTemplateId = outerInvocation1Id.append(
@@ -1175,7 +1174,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			}
 		}
 
-		static class SomeResource implements CloseableResource {
+		static class SomeResource implements AutoCloseable {
 			private boolean closed;
 
 			@Override
@@ -1439,7 +1438,8 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 
 	}
 
-	private static class CustomCloseableResource implements CloseableResource {
+	@SuppressWarnings("deprecation")
+	private static class CustomCloseableResource implements ExtensionContext.Store.CloseableResource {
 
 		static boolean closed;
 

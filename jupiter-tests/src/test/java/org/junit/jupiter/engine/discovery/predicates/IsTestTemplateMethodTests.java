@@ -49,7 +49,7 @@ class IsTestTemplateMethodTests {
 		var issue = getOnlyElement(discoveryIssues);
 		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
 		assertThat(issue.message()).isEqualTo(
-			"@TestTemplate method '%s' must not return a value. It will be not be executed.", method.toGenericString());
+			"@TestTemplate method '%s' must not return a value. It will not be executed.", method.toGenericString());
 		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
 

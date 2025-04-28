@@ -162,7 +162,7 @@ class SuiteEngineTests {
 	@Test
 	void privateSuiteIsNotExecuted() {
 		// @formatter:off
-		var message = "@Suite class '%s' must not be private."
+		var message = "@Suite class '%s' must not be private. It will not be executed."
 				.formatted(PrivateSuite.class.getName());
 		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
 				.source(ClassSource.from(PrivateSuite.class))
@@ -202,7 +202,7 @@ class SuiteEngineTests {
 	@ValueSource(classes = { InnerSuite.class, AbstractInnerSuite.class })
 	void innerSuiteIsNotExecuted(Class<?> suiteClass) {
 		// @formatter:off
-		var message = "@Suite class '%s' must not be an inner class. Did you forget to declare it static?"
+		var message = "@Suite class '%s' must not be an inner class. Did you forget to declare it static? It will not be executed."
 				.formatted(suiteClass.getName());
 		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
 				.source(ClassSource.from(suiteClass))
@@ -230,7 +230,7 @@ class SuiteEngineTests {
 		}
 
 		// @formatter:off
-		var message = "@Suite class '%s' must not be a local class."
+		var message = "@Suite class '%s' must not be a local class. It will not be executed."
 				.formatted(LocalSuite.class.getName());
 		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
 				.source(ClassSource.from(LocalSuite.class))

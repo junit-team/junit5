@@ -29,12 +29,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.StringUtils;
 
 /**
  * {@code DisplayNameGenerator} defines the SPI for generating display names
@@ -350,8 +347,6 @@ public interface DisplayNameGenerator {
 
 		static final DisplayNameGenerator INSTANCE = new IndicativeSentences();
 
-		private static final Logger logger = LoggerFactory.getLogger(IndicativeSentences.class);
-
 		private static final Predicate<Class<?>> notIndicativeSentences = clazz -> clazz != IndicativeSentences.class;
 
 		public IndicativeSentences() {
@@ -502,22 +497,14 @@ public interface DisplayNameGenerator {
 		}
 
 		private static String getSentenceFragment(AnnotatedElement element) {
-			Optional<SentenceFragment> annotation = findAnnotation(element, SentenceFragment.class);
-			if (annotation.isPresent()) {
-				String sentenceFragment = annotation.get().value().trim();
-
-				// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-				// handling validation exceptions during the TestEngine discovery phase.
-				if (StringUtils.isBlank(sentenceFragment)) {
-					logger.warn(() -> String.format(
-						"Configuration error: @SentenceFragment on [%s] must be declared with a non-blank value.",
-						element));
-				}
-				else {
-					return sentenceFragment;
-				}
-			}
-			return null;
+			return findAnnotation(element, SentenceFragment.class) //
+					.map(SentenceFragment::value) //
+					.map(sentenceFragment -> {
+						Preconditions.notBlank(sentenceFragment, String.format(
+							"@SentenceFragment on [%s] must be declared with a non-blank value.", element));
+						return sentenceFragment.trim();
+					}) //
+					.orElse(null);
 		}
 
 	}

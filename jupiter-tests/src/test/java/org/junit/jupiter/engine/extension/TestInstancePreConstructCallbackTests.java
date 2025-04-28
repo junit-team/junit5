@@ -553,8 +553,7 @@ class TestInstancePreConstructCallbackTests extends AbstractJupiterTestEngineTes
 			callSequence.add("PreConstructCallback: name=" + name + ", testClass=" + testClass + ", outerInstance: "
 					+ factoryContext.getOuterInstance().orElse(null));
 			context.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
-				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
-					"close: name=" + name + ", testClass=" + testClass));
+				(AutoCloseable) () -> callSequence.add("close: name=" + name + ", testClass=" + testClass));
 		}
 	}
 

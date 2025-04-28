@@ -17,6 +17,7 @@ import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingIns
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -39,10 +40,12 @@ import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Base class for {@link TestDescriptor TestDescriptors} based on Java methods.
@@ -51,17 +54,11 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  */
 @API(status = INTERNAL, since = "5.0")
 public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
-		implements ResourceLockAware, TestClassAware {
+		implements ResourceLockAware, TestClassAware, Validatable {
 
 	private static final Logger logger = LoggerFactory.getLogger(MethodBasedTestDescriptor.class);
 
-	private final Class<?> testClass;
-	private final Method testMethod;
-
-	/**
-	 * Set of method-level tags; does not contain tags from parent.
-	 */
-	private final Set<TestTag> tags;
+	private final MethodInfo methodInfo;
 
 	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
@@ -72,19 +69,58 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
 			JupiterConfiguration configuration) {
 		super(uniqueId, displayName, MethodSource.from(testClass, testMethod), configuration);
-
-		this.testClass = Preconditions.notNull(testClass, "Class must not be null");
-		this.testMethod = testMethod;
-		this.tags = getTags(testMethod);
+		this.methodInfo = new MethodInfo(testClass, testMethod);
 	}
+
+	public final Method getTestMethod() {
+		return this.methodInfo.testMethod;
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public final Set<TestTag> getTags() {
 		// return modifiable copy
-		Set<TestTag> allTags = new LinkedHashSet<>(this.tags);
+		Set<TestTag> allTags = new LinkedHashSet<>(this.methodInfo.tags);
 		getParent().ifPresent(parentDescriptor -> allTags.addAll(parentDescriptor.getTags()));
 		return allTags;
 	}
+
+	@Override
+	public String getLegacyReportingName() {
+		return String.format("%s(%s)", getTestMethod().getName(),
+			ClassUtils.nullSafeToString(Class::getSimpleName, getTestMethod().getParameterTypes()));
+	}
+
+	// --- TestClassAware ------------------------------------------------------
+
+	@Override
+	public final Class<?> getTestClass() {
+		return this.methodInfo.testClass;
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return getParent() //
+				.filter(TestClassAware.class::isInstance) //
+				.map(TestClassAware.class::cast) //
+				.map(TestClassAware::getEnclosingTestClasses) //
+				.orElseGet(Collections::emptyList);
+	}
+
+	// --- Validatable ---------------------------------------------------------
+
+	@Override
+	public void validate(DiscoveryIssueReporter reporter) {
+		Validatable.reportAndClear(this.methodInfo.discoveryIssues, reporter);
+		DisplayNameUtils.validateAnnotation(getTestMethod(), //
+			() -> String.format("method '%s'", getTestMethod().toGenericString()), //
+			// Use _declaring_ class here because that's where the `@DisplayName` annotation is declared
+			() -> MethodSource.from(getTestMethod()), //
+			reporter);
+	}
+
+	// --- Node ----------------------------------------------------------------
 
 	@Override
 	public ExclusiveResourceCollector getExclusiveResourceCollector() {
@@ -108,31 +144,8 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	@Override
-	public List<Class<?>> getEnclosingTestClasses() {
-		return getParent() //
-				.filter(TestClassAware.class::isInstance) //
-				.map(TestClassAware.class::cast) //
-				.map(TestClassAware::getEnclosingTestClasses) //
-				.orElseGet(Collections::emptyList);
-	}
-
-	@Override
 	protected Optional<ExecutionMode> getExplicitExecutionMode() {
 		return getExecutionModeFromAnnotation(getTestMethod());
-	}
-
-	public final Class<?> getTestClass() {
-		return this.testClass;
-	}
-
-	public final Method getTestMethod() {
-		return this.testMethod;
-	}
-
-	@Override
-	public String getLegacyReportingName() {
-		return String.format("%s(%s)", testMethod.getName(),
-			ClassUtils.nullSafeToString(Class::getSimpleName, testMethod.getParameterTypes()));
 	}
 
 	/**
@@ -177,6 +190,29 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 		}
 		else {
 			watchers.forEach(action);
+		}
+	}
+
+	private static class MethodInfo {
+
+		private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+
+		private final Class<?> testClass;
+		private final Method testMethod;
+
+		/**
+		 * Set of method-level tags; does not contain tags from parent.
+		 */
+		private final Set<TestTag> tags;
+
+		MethodInfo(Class<?> testClass, Method testMethod) {
+			this.testClass = Preconditions.notNull(testClass, "Class must not be null");
+			this.testMethod = testMethod;
+			this.tags = getTags(testMethod, //
+				() -> String.format("method '%s'", testMethod.toGenericString()), //
+				// Use _declaring_ class here because that's where the `@Tag` annotation is declared
+				() -> MethodSource.from(testMethod.getDeclaringClass(), testMethod), //
+				discoveryIssues::add);
 		}
 	}
 

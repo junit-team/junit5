@@ -23,7 +23,9 @@ import jdk.jfr.Name;
 import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.DiscoveryFilter;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.launcher.EngineDiscoveryResult;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
@@ -71,13 +73,23 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 		event.commit();
 	}
 
+	@Override
+	public void issueEncountered(org.junit.platform.engine.UniqueId engineId, DiscoveryIssue issue) {
+		DiscoveryIssueEvent event = new DiscoveryIssueEvent();
+		event.engineId = engineId.toString();
+		event.severity = issue.severity().name();
+		event.message = issue.message();
+		event.source = issue.source().map(Object::toString).orElse(null);
+		event.cause = issue.cause().map(ExceptionUtils::readStackTrace).orElse(null);
+		event.commit();
+	}
+
 	@Category({ "JUnit", "Discovery" })
 	@StackTrace(false)
 	abstract static class DiscoveryEvent extends Event {
 	}
 
 	@Label("Test Discovery")
-	@Category({ "JUnit", "Discovery" })
 	@Name("org.junit.LauncherDiscovery")
 	static class LauncherDiscoveryEvent extends DiscoveryEvent {
 
@@ -89,7 +101,6 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 	}
 
 	@Label("Engine Discovery")
-	@Category({ "JUnit", "Discovery" })
 	@Name("org.junit.EngineDiscovery")
 	static class EngineDiscoveryEvent extends DiscoveryEvent {
 
@@ -99,5 +110,25 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 		@Label("Result")
 		String result;
+	}
+
+	@Label("Discovery Issue")
+	@Name("org.junit.DiscoveryIssue")
+	static class DiscoveryIssueEvent extends DiscoveryEvent {
+
+		@Label("Engine Id")
+		String engineId;
+
+		@Label("Severity")
+		String severity;
+
+		@Label("Message")
+		String message;
+
+		@Label("Source")
+		String source;
+
+		@Label("Cause")
+		String cause;
 	}
 }

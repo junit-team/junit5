@@ -2,7 +2,7 @@ plugins {
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.jmh-conventions")
-	id("junitbuild.native-image-properties")
+	`java-test-fixtures`
 }
 
 description = "JUnit Jupiter Params"

@@ -227,6 +227,7 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 
 				val gradleJavaVersion = JavaVersion.current().majorVersion.toInt()
 				jvmArgumentProviders += JavaHomeDir(project, gradleJavaVersion, develocity.testDistribution.enabled)
+				jvmArgumentProviders += JavaHomeDir(project, gradleJavaVersion, develocity.testDistribution.enabled, nativeImage = true)
 				systemProperty("gradle.java.version", gradleJavaVersion)
 			}
 		}
@@ -253,7 +254,7 @@ class MavenRepo(project: Project, @get:Internal val repoDir: Provider<File>) : C
 	override fun asArguments() = listOf("-Dmaven.repo=${repoDir.get().absolutePath}")
 }
 
-class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEnabled: Provider<Boolean>) : CommandLineArgumentProvider {
+class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEnabled: Provider<Boolean>, @Input val nativeImage: Boolean = false) : CommandLineArgumentProvider {
 
 	@Internal
 	val javaLauncher: Property<JavaLauncher> = project.objects.property<JavaLauncher>()
@@ -261,6 +262,7 @@ class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEna
 				try {
 					project.javaToolchains.launcherFor {
 						languageVersion = JavaLanguageVersion.of(version)
+						nativeImageCapable = nativeImage
 					}.get()
 				} catch (e: Exception) {
 					null
@@ -276,7 +278,7 @@ class JavaHomeDir(project: Project, @Input val version: Int, testDistributionEna
 		}
 		val metadata = javaLauncher.map { it.metadata }
 		val javaHome = metadata.map { it.installationPath.asFile.absolutePath }.orNull
-		return javaHome?.let { listOf("-Djava.home.$version=$it") } ?: emptyList()
+		return javaHome?.let { listOf("-Djava.home.$version${if (nativeImage) ".nativeImage" else ""}=$it") } ?: emptyList()
 	}
 }
 

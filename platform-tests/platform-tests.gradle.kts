@@ -46,6 +46,7 @@ dependencies {
 	testImplementation(testFixtures(projects.junitPlatformLauncher))
 	testImplementation(projects.junitJupiterEngine)
 	testImplementation(testFixtures(projects.junitJupiterEngine))
+	testImplementation(testFixtures(projects.junitJupiterParams))
 	testImplementation(libs.apiguardian)
 	testImplementation(libs.classgraph)
 	testImplementation(libs.jfrunit) {

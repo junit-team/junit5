@@ -30,11 +30,13 @@ import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.DisplayNameGenerator.Simple;
 import org.junit.jupiter.api.DisplayNameGenerator.Standard;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.TestSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Collection of utilities for working with display names.
@@ -45,8 +47,6 @@ import org.junit.platform.commons.util.StringUtils;
  * @see DisplayNameGeneration
  */
 final class DisplayNameUtils {
-
-	private static final Logger logger = LoggerFactory.getLogger(DisplayNameUtils.class);
 
 	/**
 	 * Pre-defined standard display name generator instance.
@@ -74,22 +74,24 @@ final class DisplayNameUtils {
 
 	static String determineDisplayName(AnnotatedElement element, Supplier<String> displayNameSupplier) {
 		Preconditions.notNull(element, "Annotated element must not be null");
-		Optional<DisplayName> displayNameAnnotation = findAnnotation(element, DisplayName.class);
-		if (displayNameAnnotation.isPresent()) {
-			String displayName = displayNameAnnotation.get().value().trim();
+		return findAnnotation(element, DisplayName.class) //
+				.map(DisplayName::value) //
+				.filter(StringUtils::isNotBlank) //
+				.map(String::trim) //
+				.orElseGet(displayNameSupplier);
+	}
 
-			// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-			// handling validation exceptions during the TestEngine discovery phase.
-			if (StringUtils.isBlank(displayName)) {
-				logger.warn(() -> String.format(
-					"Configuration error: @DisplayName on [%s] must be declared with a non-blank value.", element));
-			}
-			else {
-				return displayName;
-			}
-		}
-		// else let a 'DisplayNameGenerator' generate a display name
-		return displayNameSupplier.get();
+	static void validateAnnotation(AnnotatedElement element, Supplier<String> elementDescription,
+			Supplier<TestSource> sourceProvider, DiscoveryIssueReporter reporter) {
+		findAnnotation(element, DisplayName.class) //
+				.map(DisplayName::value) //
+				.filter(StringUtils::isBlank) //
+				.ifPresent(__ -> {
+					String message = String.format("@DisplayName on %s must be declared with a non-blank value.",
+						elementDescription.get());
+					reporter.reportIssue(
+						DiscoveryIssue.builder(Severity.WARNING, message).source(sourceProvider.get()).build());
+				});
 	}
 
 	static String determineDisplayNameForMethod(Supplier<List<Class<?>>> enclosingInstanceTypes, Class<?> testClass,

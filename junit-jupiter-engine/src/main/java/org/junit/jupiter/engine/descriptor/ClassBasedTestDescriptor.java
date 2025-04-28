@@ -136,16 +136,27 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	public final void validate(DiscoveryIssueReporter reporter) {
 		validateCoreLifecycleMethods(reporter);
 		validateClassTemplateInvocationLifecycleMethods(reporter);
+		validateTags(reporter);
+		validateDisplayNameAnnotation(reporter);
+	}
+
+	private void validateDisplayNameAnnotation(DiscoveryIssueReporter reporter) {
+		DisplayNameUtils.validateAnnotation(getTestClass(), //
+			() -> String.format("class '%s'", getTestClass().getName()), //
+			() -> getSource().orElse(null), //
+			reporter);
 	}
 
 	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {
-		List<DiscoveryIssue> discoveryIssues = this.lifecycleMethods.discoveryIssues;
-		discoveryIssues.forEach(reporter::reportIssue);
-		discoveryIssues.clear();
+		Validatable.reportAndClear(this.lifecycleMethods.discoveryIssues, reporter);
 	}
 
 	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
 		LifecycleMethodUtils.validateNoClassTemplateInvocationLifecycleMethodsAreDeclared(getTestClass(), reporter);
+	}
+
+	private void validateTags(DiscoveryIssueReporter reporter) {
+		Validatable.reportAndClear(this.classInfo.discoveryIssues, reporter);
 	}
 
 	// --- Node ----------------------------------------------------------------
@@ -539,6 +550,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 	protected static class ClassInfo {
 
+		private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+
 		final Class<?> testClass;
 		final Set<TestTag> tags;
 		final Lifecycle lifecycle;
@@ -547,7 +560,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 		ClassInfo(Class<?> testClass, JupiterConfiguration configuration) {
 			this.testClass = testClass;
-			this.tags = getTags(testClass);
+			this.tags = getTags(testClass, //
+				() -> String.format("class '%s'", testClass.getName()), //
+				() -> ClassSource.from(testClass), //
+				discoveryIssues::add);
 			this.lifecycle = getTestInstanceLifecycle(testClass, configuration);
 			this.defaultChildExecutionMode = (this.lifecycle == Lifecycle.PER_CLASS ? ExecutionMode.SAME_THREAD : null);
 			this.exclusiveResourceCollector = ExclusiveResourceCollector.from(testClass);

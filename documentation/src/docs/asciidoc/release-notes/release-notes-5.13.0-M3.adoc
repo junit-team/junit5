@@ -10,6 +10,19 @@ link:{junit5-repo}+/milestone/93?closed=1+[5.13.0-M3] milestone page in the JUni
 repository on GitHub.
 
 
+[[release-notes-5.13.0-M3-overall-improvements]]
+=== Overall Changes
+
+[[release-notes-5.13.0-M3-overall-new-features-and-improvements]]
+==== Deprecations and Breaking Changes
+
+* The JUnit feature in GraalVM Native Build Tools has been rewritten to no longer require
+  JUnit classes to be initialized at build time. Therefore, JUnit's JARs no longer ship
+  with `native-image.properties` files that contain `--initialize-at-build-time` options
+  (introduced in 5.12.0). Please update to the most recent version of GraalVM Native Build
+  Tools prior to upgrading to this version of JUnit.
+
+
 [[release-notes-5.13.0-M3-junit-platform]]
 === JUnit Platform
 
@@ -35,6 +48,23 @@ repository on GitHub.
   and
   <<../user-guide/index.adoc#launcher-api-managing-state-across-test-engines, request-scoped>>
   resources.
+* Introduce a mechanism for `TestEngine` implementations to report issues encountered
+  during test discovery. If an engine reports a `DiscoveryIssue` with a `Severity` equal
+  to or higher than a configurable critical severity, its tests will not be executed.
+  Instead, the engine will be reported as failed during execution with a failure message
+  listing all critical issues. Non-critical issues will be logged but will not prevent the
+  engine from executing its tests. The critical severity can be configured via a new
+  configuration parameter and, currently, defaults to `ERROR`. Please refer to the
+  <<../user-guide/index.adoc#running-tests-discovery-issues, User Guide>> for details.
++
+If you're a test engine maintainer, please see the
+<<../user-guide/index.adoc#test-engines-discovery-issues, User Guide>> for details on how
+to start reporting discovery issues.
+* Start reporting discovery issues for problematic `@Suite` classes:
+  - Invalid `@Suite` class declarations (for example, when `private`)
+  - Invalid `@BeforeSuite`/`@AfterSuite` method declarations (for example, when not
+    `static`)
+  - Cyclic dependencies between `@Suite` classes
 
 
 [[release-notes-5.13.0-M3-junit-jupiter]]
@@ -53,11 +83,33 @@ repository on GitHub.
 [[release-notes-5.13.0-M3-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* Return types of `@TestFactory` methods are now validated during discovery rather than
-  during execution. Invalid `@TestFactory` methods are no longer executed but reported as
-  discovery issues for consistency with how `@Test` and `@TestTemplate` methods are
-  handled.
+* Start reporting discovery issues for potentially problematic test classes:
+    - Invalid `@Test` and `@TestTemplate` method declarations (for example, when return
+      type is not `void`)
+    - Invalid `@TestFactory` methods (for example, when return type is invalid)
+    - Multiple method-level annotations (for example, `@Test` and `@TestTemplate`)
+    - Invalid test class and `@Nested` class declarations (for example, `static` `@Nested`
+      classes)
+    - Potentially missing `@Nested` annotations (for example, non-abstract inner classes
+      that contain test methods)
+    - Invalid lifecycle method declarations (for example, when `private`)
+    - Invalid `@Tag` syntax
+    - Blank `@DisplayName` declarations
+    - Blank `@SentenceFragment` declarations
+    - `@BeforeParameterizedClassInvocation` and `@AfterParameterizedClassInvocation`
+      methods declared in non-parameterized test classes
+* By default, `AutoCloseable` objects put into `ExtensionContext.Store` are now treated
+  like instances of `CloseableResource` (which has been deprecated) and are closed
+  automatically when the store is closed at the end of the test lifecycle. It's possible
+  to <<../user-guide/index.adoc#extensions-keeping-state-autocloseable-support, revert to the old behavior>>
+  via a configuration parameter. Please also see the
+  <<../user-guide/index.adoc#extensions-keeping-state-autocloseable-migration, migration note>>
+  for third-party extensions wanting to support both JUnit 5.13 and earlier versions.
 
+* `java.util.Locale` arguments are now converted according to the IETF BCP 47 language tag
+  format. See the
+  <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit, User Guide>>
+  for details.
 
 [[release-notes-5.13.0-M3-junit-vintage]]
 === JUnit Vintage

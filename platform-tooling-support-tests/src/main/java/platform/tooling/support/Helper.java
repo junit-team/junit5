@@ -69,7 +69,7 @@ public class Helper {
 		}
 	}
 
-	public static Optional<Path> getJavaHome(String version) {
+	public static Optional<Path> getJavaHome(int version) {
 		// First, try various system sources...
 		var sources = Stream.of( //
 			System.getProperty("java.home." + version), //
@@ -81,5 +81,10 @@ public class Helper {
 			System.getenv("JDK" + version) //
 		);
 		return sources.filter(Objects::nonNull).findFirst().map(Path::of);
+	}
+
+	public static Optional<Path> getJavaHomeWithNativeImageSupport(int version) {
+		var value = System.getProperty("java.home." + version + ".nativeImage");
+		return Optional.ofNullable(value).map(Path::of);
 	}
 }

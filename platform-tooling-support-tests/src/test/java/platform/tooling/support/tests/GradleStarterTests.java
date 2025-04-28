@@ -108,8 +108,8 @@ class GradleStarterTests {
 				.addArguments("-Djava.toolchain.version=" + javaVersion) //
 				.addArguments("--stacktrace", "--no-build-cache", "--warning-mode=fail") //
 				.addArguments(extraArgs) //
-				.putEnvironment("JDK8", Helper.getJavaHome("8").orElseThrow(TestAbortedException::new).toString()) //
-				.putEnvironment("JDK17", Helper.getJavaHome("17").orElseThrow(TestAbortedException::new).toString()) //
+				.putEnvironment("JDK8", Helper.getJavaHome(8).orElseThrow(TestAbortedException::new).toString()) //
+				.putEnvironment("JDK17", Helper.getJavaHome(17).orElseThrow(TestAbortedException::new).toString()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 

@@ -27,7 +27,6 @@ import java.util.function.Function;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 import org.junit.jupiter.api.extension.MediaType;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -36,6 +35,8 @@ import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.extension.ExtensionContextInternal;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -51,22 +52,17 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  */
 abstract class AbstractExtensionContext<T extends TestDescriptor> implements ExtensionContextInternal, AutoCloseable {
 
-	private static final NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> CLOSE_RESOURCES = (
-			__, ___, value) -> {
-		if (value instanceof CloseableResource) {
-			((CloseableResource) value).close();
-		}
-	};
+	private static final Logger LOGGER = LoggerFactory.getLogger(AbstractExtensionContext.class);
 
 	private final ExtensionContext parent;
 	private final EngineExecutionListener engineExecutionListener;
 	private final T testDescriptor;
 	private final Set<String> tags;
 	private final JupiterConfiguration configuration;
-	private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> valuesStore;
 	private final ExecutableInvoker executableInvoker;
 	private final ExtensionRegistry extensionRegistry;
 	private final LauncherStoreFacade launcherStoreFacade;
+	private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> valuesStore;
 
 	AbstractExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener, T testDescriptor,
 			JupiterConfiguration configuration, ExtensionRegistry extensionRegistry,
@@ -80,7 +76,6 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;
 		this.configuration = configuration;
-		this.valuesStore = createStore(parent, launcherStoreFacade);
 		this.extensionRegistry = extensionRegistry;
 		this.launcherStoreFacade = launcherStoreFacade;
 
@@ -89,10 +84,33 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 				.map(TestTag::getName)
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
 		// @formatter:on
+
+		this.valuesStore = createStore(parent, launcherStoreFacade, createCloseAction());
+	}
+
+	@SuppressWarnings("deprecation")
+	private NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> createCloseAction() {
+		return (__, ___, value) -> {
+			boolean isAutoCloseEnabled = this.configuration.isClosingStoredAutoCloseablesEnabled();
+
+			if (value instanceof AutoCloseable && isAutoCloseEnabled) {
+				((AutoCloseable) value).close();
+				return;
+			}
+
+			if (value instanceof Store.CloseableResource) {
+				if (isAutoCloseEnabled) {
+					LOGGER.warn(
+						() -> "Type implements CloseableResource but not AutoCloseable: " + value.getClass().getName());
+				}
+				((Store.CloseableResource) value).close();
+			}
+		};
 	}
 
 	private static NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> createStore(
-			ExtensionContext parent, LauncherStoreFacade launcherStoreFacade) {
+			ExtensionContext parent, LauncherStoreFacade launcherStoreFacade,
+			NamespacedHierarchicalStore.CloseAction<org.junit.platform.engine.support.store.Namespace> closeAction) {
 		NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> parentStore;
 		if (parent == null) {
 			parentStore = launcherStoreFacade.getRequestLevelStore();
@@ -100,7 +118,7 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		else {
 			parentStore = ((AbstractExtensionContext<?>) parent).valuesStore;
 		}
-		return new NamespacedHierarchicalStore<>(parentStore, CLOSE_RESOURCES);
+		return new NamespacedHierarchicalStore<>(parentStore, closeAction);
 	}
 
 	@Override

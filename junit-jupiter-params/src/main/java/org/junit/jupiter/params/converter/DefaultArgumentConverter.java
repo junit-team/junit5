@@ -21,8 +21,10 @@ import java.net.URL;
 import java.util.Currency;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.support.conversion.ConversionException;
@@ -50,10 +52,31 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = INTERNAL, since = "5.0")
 public class DefaultArgumentConverter implements ArgumentConverter {
 
-	public static final DefaultArgumentConverter INSTANCE = new DefaultArgumentConverter();
+	/**
+	 * Property name used to set the format for the conversion of {@link Locale}
+	 * arguments: {@value}
+	 *
+	 * <h4>Supported Values</h4>
+	 * <ul>
+	 * <li>{@code bcp_47}: uses the IETF BCP 47 language tag format, delegating
+	 * the conversion to {@link Locale#forLanguageTag(String)}</li>
+	 * <li>{@code iso_639}: uses the ISO 639 alpha-2 or alpha-3 language code
+	 * format, delegating the conversion to {@link Locale#Locale(String)}</li>
+	 * </ul>
+	 *
+	 * <p>If not specified, the default is {@code bcp_47}.
+	 *
+	 * @since 5.13
+	 */
+	public static final String DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME = "junit.jupiter.params.arguments.conversion.locale.format";
 
-	private DefaultArgumentConverter() {
-		// nothing to initialize
+	private static final Function<String, LocaleConversionFormat> TRANSFORMER = value -> LocaleConversionFormat.valueOf(
+		value.trim().toUpperCase(Locale.ROOT));
+
+	private final ExtensionContext context;
+
+	public DefaultArgumentConverter(ExtensionContext context) {
+		this.context = context;
 	}
 
 	@Override
@@ -84,6 +107,10 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 		}
 
 		if (source instanceof String) {
+			if (targetType == Locale.class && getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
+				return Locale.forLanguageTag((String) source);
+			}
+
 			try {
 				return convert((String) source, targetType, classLoader);
 			}
@@ -97,8 +124,21 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 				source.getClass().getTypeName(), targetType.getTypeName()));
 	}
 
+	private LocaleConversionFormat getLocaleConversionFormat() {
+		return context.getConfigurationParameter(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, TRANSFORMER) //
+				.orElse(LocaleConversionFormat.BCP_47);
+	}
+
 	Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		return ConversionSupport.convert(source, targetType, classLoader);
+	}
+
+	enum LocaleConversionFormat {
+
+		BCP_47,
+
+		ISO_639
+
 	}
 
 }

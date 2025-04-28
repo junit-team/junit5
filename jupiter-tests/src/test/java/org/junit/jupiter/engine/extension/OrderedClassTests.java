@@ -18,6 +18,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
@@ -38,7 +39,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 
@@ -58,7 +63,22 @@ class OrderedClassTests {
 	}
 
 	@Test
+	void noOrderer() {
+		var discoveryIssues = discoverTests(null).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
+		executeTests(null)//
+				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence)//
+				.containsExactlyInAnyOrder("A_TestCase", "B_TestCase", "C_TestCase");
+	}
+
+	@Test
 	void className() {
+		var discoveryIssues = discoverTests(ClassOrderer.ClassName.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.ClassName.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -86,6 +106,9 @@ class OrderedClassTests {
 
 	@Test
 	void displayName() {
+		var discoveryIssues = discoverTests(ClassOrderer.DisplayName.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.DisplayName.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -95,6 +118,9 @@ class OrderedClassTests {
 
 	@Test
 	void orderAnnotation() {
+		var discoveryIssues = discoverTests(ClassOrderer.OrderAnnotation.class).getDiscoveryIssues();
+		assertThat(discoveryIssues).isEmpty();
+
 		executeTests(ClassOrderer.OrderAnnotation.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -130,6 +156,9 @@ class OrderedClassTests {
 
 	@Test
 	void random() {
+		var discoveryIssues = discoverTests(ClassOrderer.Random.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.Random.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 	}
@@ -170,6 +199,16 @@ class OrderedClassTests {
 				.containsSubsequence(classTemplate.getSimpleName(), otherClass.getSimpleName());
 	}
 
+	private static void assertIneffectiveOrderAnnotationIssues(List<DiscoveryIssue> discoveryIssues) {
+		assertThat(discoveryIssues).hasSize(2);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::message) //
+				.allMatch(it -> it.startsWith("Ineffective @Order annotation on class")
+						&& it.endsWith("It will not be applied because ClassOrderer.OrderAnnotation is not in use."));
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::source).extracting(Optional::orElseThrow) //
+				.containsExactlyInAnyOrder(ClassSource.from(A_TestCase.class), ClassSource.from(C_TestCase.class));
+	}
+
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer) {
 		return executeTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
 			selectClass(C_TestCase.class));
@@ -177,12 +216,30 @@ class OrderedClassTests {
 
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
 		// @formatter:off
-		return EngineTestKit.engine("junit-jupiter")
-			.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName())
-			.selectors(selectors)
-			.execute()
-			.testEvents();
+		return testKit(classOrderer, selectors)
+				.execute()
+				.testEvents();
 		// @formatter:on
+	}
+
+	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer) {
+		return discoverTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
+			selectClass(C_TestCase.class));
+	}
+
+	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer,
+			DiscoverySelector... selectors) {
+		return testKit(classOrderer, selectors).discover();
+	}
+
+	private static EngineTestKit.Builder testKit(Class<? extends ClassOrderer> classOrderer,
+			DiscoverySelector[] selectors) {
+
+		var testKit = EngineTestKit.engine("junit-jupiter");
+		if (classOrderer != null) {
+			testKit.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName());
+		}
+		return testKit.selectors(selectors);
 	}
 
 	static abstract class BaseTestCase {

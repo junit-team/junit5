@@ -114,6 +114,7 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+	systemProperty("junit.platform.execution.dryRun.enabled", buildParameters.testing.dryRun)
 
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
@@ -137,6 +138,7 @@ tasks.withType<Test>().configureEach {
 	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
 		classpath.from(javaAgentClasspath)
 	}
+	jvmArgs("-Xshare:off") // https://github.com/mockito/mockito/issues/3111
 
 	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
