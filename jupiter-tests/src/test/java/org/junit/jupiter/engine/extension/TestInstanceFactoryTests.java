@@ -743,8 +743,7 @@ class TestInstanceFactoryTests extends AbstractJupiterTestEngineTests {
 			instantiated(getClass(), testClass);
 
 			extensionContext.getStore(ExtensionContext.Namespace.create(this)).put(new Object(),
-				(ExtensionContext.Store.CloseableResource) () -> callSequence.add(
-					"close " + testClass.getSimpleName()));
+				(AutoCloseable) () -> callSequence.add("close " + testClass.getSimpleName()));
 
 			if (factoryContext.getOuterInstance().isPresent()) {
 				return ReflectionSupport.newInstance(testClass, factoryContext.getOuterInstance().get());

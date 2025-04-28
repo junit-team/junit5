@@ -503,7 +503,9 @@ public interface ExtensionContext {
 		 * inverse order they were added in.
 		 *
 		 * @since 5.1
+		 * @deprecated Please extend {@code AutoCloseable} directly.
 		 */
+		@Deprecated
 		@API(status = STABLE, since = "5.1")
 		interface CloseableResource {
 
@@ -595,9 +597,11 @@ public interface ExtensionContext {
 		 * <p>See {@link #getOrComputeIfAbsent(Object, Function, Class)} for
 		 * further details.
 		 *
-		 * <p>If {@code type} implements {@link ExtensionContext.Store.CloseableResource}
-		 * the {@code close()} method will be invoked on the stored object when
-		 * the store is closed.
+		 * <p>If {@code type} implements {@link CloseableResource} or
+		 * {@link AutoCloseable} (unless the
+		 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+		 * configuration parameter is set to {@code false}), then the {@code close()}
+		 * method will be invoked on the stored object when the store is closed.
 		 *
 		 * @param type the type of object to retrieve; never {@code null}
 		 * @param <V> the key and value type
@@ -606,6 +610,7 @@ public interface ExtensionContext {
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
+		 * @see AutoCloseable
 		 */
 		@API(status = STABLE, since = "5.1")
 		default <V> V getOrComputeIfAbsent(Class<V> type) {
@@ -625,9 +630,11 @@ public interface ExtensionContext {
 		 * <p>For greater type safety, consider using
 		 * {@link #getOrComputeIfAbsent(Object, Function, Class)} instead.
 		 *
-		 * <p>If the created value is an instance of {@link ExtensionContext.Store.CloseableResource}
-		 * the {@code close()} method will be invoked on the stored object when
-		 * the store is closed.
+		 * <p>If the created value is an instance of {@link CloseableResource} or
+		 * {@link AutoCloseable} (unless the
+		 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+		 * configuration parameter is set to {@code false}), then the {@code close()}
+		 * method will be invoked on the stored object when the store is closed.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
@@ -638,6 +645,7 @@ public interface ExtensionContext {
 		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function, Class)
 		 * @see CloseableResource
+		 * @see AutoCloseable
 		 */
 		<K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator);
 
@@ -652,9 +660,11 @@ public interface ExtensionContext {
 		 * a new value will be computed by the {@code defaultCreator} (given
 		 * the {@code key} as input), stored, and returned.
 		 *
-		 * <p>If {@code requiredType} implements {@link ExtensionContext.Store.CloseableResource}
-		 * the {@code close()} method will be invoked on the stored object when
-		 * the store is closed.
+		 * <p>If {@code requiredType} implements {@link CloseableResource} or
+		 * {@link AutoCloseable} (unless the
+		 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+		 * configuration parameter is set to {@code false}), then the {@code close()}
+		 * method will be invoked on the stored object when the store is closed.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param defaultCreator the function called with the supplied {@code key}
@@ -666,6 +676,7 @@ public interface ExtensionContext {
 		 * @see #getOrComputeIfAbsent(Class)
 		 * @see #getOrComputeIfAbsent(Object, Function)
 		 * @see CloseableResource
+		 * @see AutoCloseable
 		 */
 		<K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType);
 
@@ -676,14 +687,17 @@ public interface ExtensionContext {
 		 * ExtensionContexts} for the store's {@code Namespace} unless they
 		 * overwrite it.
 		 *
-		 * <p>If the {@code value} is an instance of {@link ExtensionContext.Store.CloseableResource}
-		 * the {@code close()} method will be invoked on the stored object when
-		 * the store is closed.
+		 * <p>If the {@code value} is an instance of {@link CloseableResource} or
+		 * {@link AutoCloseable} (unless the
+		 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+		 * configuration parameter is set to {@code false}), then the {@code close()}
+		 * method will be invoked on the stored object when the store is closed.
 		 *
 		 * @param key the key under which the value should be stored; never
 		 * {@code null}
 		 * @param value the value to store; may be {@code null}
 		 * @see CloseableResource
+		 * @see AutoCloseable
 		 */
 		void put(Object key, Object value);
 
@@ -691,8 +705,8 @@ public interface ExtensionContext {
 		 * Remove the value that was previously stored under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
-		 * not in ancestors. In addition, the {@link CloseableResource} API will not
-		 * be honored for values that are manually removed via this method.
+		 * not in ancestors. In addition, the {@link CloseableResource} and {@link AutoCloseable}
+		 * API will not be honored for values that are manually removed via this method.
 		 *
 		 * <p>For greater type safety, consider using {@link #remove(Object, Class)}
 		 * instead.
@@ -709,8 +723,8 @@ public interface ExtensionContext {
 		 * under the supplied {@code key}.
 		 *
 		 * <p>The value will only be removed in the current {@link ExtensionContext},
-		 * not in ancestors. In addition, the {@link CloseableResource} API will not
-		 * be honored for values that are manually removed via this method.
+		 * not in ancestors. In addition, the {@link CloseableResource} and {@link AutoCloseable}
+		 * API will not be honored for values that are manually removed via this method.
 		 *
 		 * @param key the key; never {@code null}
 		 * @param requiredType the required type of the value; never {@code null}

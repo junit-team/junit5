@@ -98,6 +98,14 @@ to start reporting discovery issues.
     - Blank `@SentenceFragment` declarations
     - `@BeforeParameterizedClassInvocation` and `@AfterParameterizedClassInvocation`
       methods declared in non-parameterized test classes
+* By default, `AutoCloseable` objects put into `ExtensionContext.Store` are now treated
+  like instances of `CloseableResource` (which has been deprecated) and are closed
+  automatically when the store is closed at the end of the test lifecycle. It's possible
+  to <<../user-guide/index.adoc#extensions-keeping-state-autocloseable-support, revert to the old behavior>>
+  via a configuration parameter. Please also see the
+  <<../user-guide/index.adoc#extensions-keeping-state-autocloseable-migration, migration note>>
+  for third-party extensions wanting to support both JUnit 5.13 and earlier versions.
+
 * `java.util.Locale` arguments are now converted according to the IETF BCP 47 language tag
   format. See the
   <<../user-guide/index.adoc#writing-tests-parameterized-tests-argument-conversion-implicit, User Guide>>

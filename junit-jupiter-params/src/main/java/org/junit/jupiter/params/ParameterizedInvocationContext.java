@@ -76,7 +76,8 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
-	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {
+	@SuppressWarnings({ "deprecation", "try" })
+	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource, AutoCloseable {
 
 		private final AutoCloseable autoCloseable;
 
@@ -85,7 +86,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			this.autoCloseable.close();
 		}
 

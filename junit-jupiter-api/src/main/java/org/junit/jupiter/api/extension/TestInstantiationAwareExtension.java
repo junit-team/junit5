@@ -16,7 +16,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
 
 /**
  * Interface for {@link Extension Extensions} that are aware and can influence
@@ -65,9 +64,11 @@ public interface TestInstantiationAwareExtension extends Extension {
 	 * <li>{@link ExtensionContext#getTestMethod() getTestMethod()} is no longer
 	 * empty, unless the {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS}
 	 * lifecycle is used.</li>
-	 * <li>If the callback adds a new {@link CloseableResource} to the
-	 * {@link Store Store}, the resource is closed just after the instance is
-	 * destroyed.</li>
+	 * <li>If the callback adds a new {@link Store.CloseableResource} or
+	 * {@link AutoCloseable} to the {@link Store Store} (unless the
+	 * {@code junit.jupiter.extensions.store.close.autocloseable.enabled}
+	 * configuration parameter is set to {@code false}), then
+	 * the resource is closed just after the instance is destroyed.</li>
 	 * <li>The callbacks can now access data previously stored by
 	 * {@link TestTemplateInvocationContext}, unless the
 	 * {@link TestInstance.Lifecycle#PER_CLASS PER_CLASS} lifecycle is used.</li>
