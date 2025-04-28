@@ -16,10 +16,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.PreconditionViolationException;
 
 /**
@@ -164,8 +166,9 @@ class DefaultArgumentsAccessorTests {
 	}
 
 	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex, Object... arguments) {
+		var context = mock(ExtensionContext.class);
 		var classLoader = DefaultArgumentsAccessorTests.class.getClassLoader();
-		return DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
+		return DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
 	}
 
 	@SuppressWarnings("unused")

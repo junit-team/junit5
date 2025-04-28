@@ -2483,9 +2483,15 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.time.ZoneId`         | `"Europe/Berlin"`                        -> `ZoneId.of("Europe/Berlin")`
 | `java.time.ZoneOffset`     | `"+02:30"`                               -> `ZoneOffset.ofHoursMinutes(2, 30)`
 | `java.util.Currency`       | `"JPY"`                                  -> `Currency.getInstance("JPY")`
-| `java.util.Locale`         | `"en"`                                   -> `new Locale("en")`
+| `java.util.Locale`         | `"en-US"`                                -> `Locale.forLanguageTag("en-US")`
 | `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
 |===
+
+WARNING: To revert to the old `java.util.Locale` conversion behavior of version 5.12 and
+earlier (which called the deprecated `Locale(String)` constructor), you can set the
+`junit.jupiter.params.arguments.conversion.locale.format`
+<<running-tests-config-params, configuration parameter>> to `iso_639`. However, please
+note that this parameter is deprecated and will be removed in a future release.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-fallback]]
 ====== Fallback String-to-Object Conversion
@@ -2523,7 +2529,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_fallback_con
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
-Instead of relying on implicit argument conversion you may explicitly specify an
+Instead of relying on implicit argument conversion, you may explicitly specify an
 `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation
 like in the following example. Note that an implementation of `ArgumentConverter` must be
 declared as either a top-level class or as a `static` nested class.

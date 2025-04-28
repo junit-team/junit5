@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
@@ -476,12 +477,43 @@ class ParameterizedTestIntegrationTests {
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedTest"))));
 	}
 
+	@Test
+	void executesWithDefaultLocaleConversionFormat() {
+		var results = execute(LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void executesWithBcp47LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "bcp_47"),
+			LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void executesWithIso639LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "iso_639"),
+			LocaleConversionTestCase.class, "testWithIso639", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
 	private EngineExecutionResults execute(DiscoverySelector... selectors) {
 		return EngineTestKit.engine(new JupiterTestEngine()).selectors(selectors).execute();
 	}
 
 	private EngineExecutionResults execute(Class<?> testClass, String methodName, Class<?>... methodParameterTypes) {
 		return execute(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes)));
+	}
+
+	private EngineExecutionResults execute(Map<String, String> configurationParameters, Class<?> testClass,
+			String methodName, Class<?>... methodParameterTypes) {
+		return EngineTestKit.engine(new JupiterTestEngine()) //
+				.selectors(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes))) //
+				.configurationParameters(configurationParameters) //
+				.execute();
 	}
 
 	private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
@@ -2506,6 +2538,24 @@ class ParameterizedTestIntegrationTests {
 		public static Stream<Arguments> zeroArgumentsProvider() {
 			return Stream.empty();
 		}
+	}
+
+	static class LocaleConversionTestCase {
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithBcp47(Locale locale) {
+			assertEquals("en", locale.getLanguage());
+			assertEquals("US", locale.getCountry());
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithIso639(Locale locale) {
+			assertEquals("en-us", locale.getLanguage());
+			assertEquals("", locale.getCountry());
+		}
+
 	}
 
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {

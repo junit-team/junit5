@@ -72,7 +72,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		ParameterDeclarations declarations = this.declarationContext.getResolverFacade().getIndexedParameterDeclarations();
 		ClassLoader classLoader = getClassLoader(this.declarationContext.getTestClass());
 		Object[] arguments = this.arguments.getConsumedPayloads();
-		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
+		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
 		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
