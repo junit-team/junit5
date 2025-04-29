@@ -168,6 +168,26 @@ class DefaultLauncherEngineFilterTests {
 	}
 
 	@Test
+	void launcherThrowsExceptionWhenNoEngineMatchesIdInIncludeEngineFilter(@TrackLogRecords LogRecordListener log) {
+		var engine = new DemoHierarchicalTestEngine("first");
+		TestDescriptor test1 = engine.addTest("test1", noOp);
+		LauncherDiscoveryRequest request = request() //
+				.selectors(selectUniqueId(test1.getUniqueId())) //
+				.filters(includeEngines("first", "second")) //
+				.build();
+
+		var launcher = createLauncher(engine);
+		var exception = assertThrows(JUnitException.class, () -> launcher.discover(request));
+
+		assertThat(exception.getMessage()) //
+				.startsWith("No TestEngine ID matched the following include EngineFilters: [second].") //
+				.contains("Please fix/remove the filter or add the engine.") //
+				.contains("Registered TestEngines:\n- first (") //
+				.endsWith("Registered EngineFilters:\n- EngineFilter that includes engines with IDs [first, second]");
+		assertThat(log.stream(WARNING)).isEmpty();
+	}
+
+	@Test
 	void launcherWillLogWarningWhenAllEnginesWereExcluded(@TrackLogRecords LogRecordListener log) {
 		var engine = new DemoHierarchicalTestEngine("first");
 		TestDescriptor test = engine.addTest("test1", noOp);

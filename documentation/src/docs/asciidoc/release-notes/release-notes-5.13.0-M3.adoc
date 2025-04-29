@@ -65,6 +65,10 @@ to start reporting discovery issues.
   - Invalid `@BeforeSuite`/`@AfterSuite` method declarations (for example, when not
     `static`)
   - Cyclic dependencies between `@Suite` classes
+* Make validation of including `EngineFilters` more strict to avoid misconfiguration, for
+  example, due to typos. Prior to this release, an exception was only thrown when _none_
+  of a filter's included IDs matched any engine. Now, an exception is thrown if at least
+  one included ID across all filters did not match any engine.
 
 
 [[release-notes-5.13.0-M3-junit-jupiter]]
