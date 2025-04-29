@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
@@ -87,6 +87,8 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSourcesTestCase.Action;
 import org.junit.jupiter.params.aggregator.AggregateWith;
@@ -111,8 +113,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
-import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
@@ -122,7 +124,7 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 5.0
  */
-class ParameterizedTestIntegrationTests {
+class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	private final Locale originalLocale = Locale.getDefault(Locale.Category.FORMAT);
 
@@ -394,7 +396,7 @@ class ParameterizedTestIntegrationTests {
 		LifecycleTestCase.lifecycleEvents.clear();
 		LifecycleTestCase.testMethods.clear();
 
-		var results = execute(selectClass(LifecycleTestCase.class));
+		var results = executeTestsForClass(LifecycleTestCase.class);
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1,
 					event(test("test1"), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
@@ -455,8 +457,9 @@ class ParameterizedTestIntegrationTests {
 		var results = execute(ZeroInvocationsTestCase.class, "testThatRequiresInvocations", String.class);
 
 		results.containerEvents().assertThatEvents() //
-				.haveExactly(1, event(finishedWithFailure(message(
-					"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+				.haveExactly(1,
+					event(finishedWithFailure(instanceOf(TemplateInvocationValidationException.class), message(
+						"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
 	}
 
 	@Test
@@ -476,16 +479,59 @@ class ParameterizedTestIntegrationTests {
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedTest"))));
 	}
 
-	private EngineExecutionResults execute(DiscoverySelector... selectors) {
-		return EngineTestKit.engine(new JupiterTestEngine()).selectors(selectors).execute();
+	@Test
+	void executesWithDefaultLocaleConversionFormat() {
+		var results = execute(LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
-	private EngineExecutionResults execute(Class<?> testClass, String methodName, Class<?>... methodParameterTypes) {
-		return execute(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes)));
+	@Test
+	void executesWithBcp47LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "bcp_47"),
+			LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void executesWithIso639LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "iso_639"),
+			LocaleConversionTestCase.class, "testWithIso639", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void reportsExceptionInStaticInitializersWithoutInvocationCountValidation() {
+		var results = executeTestsForClass(ExceptionInStaticInitializerTestCase.class);
+
+		var failure = results.containerEvents().stream() //
+				.filter(finishedWithFailure()::matches) //
+				.findAny() //
+				.orElseThrow();
+
+		var throwable = failure.getRequiredPayload(TestExecutionResult.class).getThrowable().orElseThrow();
+
+		assertThat(throwable) //
+				.isInstanceOf(ExceptionInInitializerError.class) //
+				.hasNoSuppressedExceptions();
+	}
+
+	private EngineExecutionResults execute(Map<String, String> configurationParameters, Class<?> testClass,
+			String methodName, Class<?>... methodParameterTypes) {
+		return EngineTestKit.engine(new JupiterTestEngine()) //
+				.selectors(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes))) //
+				.configurationParameters(configurationParameters) //
+				.execute();
 	}
 
 	private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 		return execute(TestCase.class, methodName, methodParameterTypes);
+	}
+
+	private EngineExecutionResults execute(Class<?> testClass, String methodName, Class<?>... methodParameterTypes) {
+		return executeTests(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes)));
 	}
 
 	/**
@@ -915,7 +961,7 @@ class ParameterizedTestIntegrationTests {
 			// other words, we're not really testing the support for @RepeatedTest
 			// and @TestFactory, but their presence also contributes to the bug
 			// reported in #3001.
-			ParameterizedTestIntegrationTests.this.execute(selectClass(DuplicateMethodNamesMethodSourceTestCase.class))//
+			executeTestsForClass(DuplicateMethodNamesMethodSourceTestCase.class)//
 					.testEvents()//
 					.assertStatistics(stats -> stats.started(8).failed(0).finished(8));
 		}
@@ -1334,7 +1380,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void executesTwoIterationsBasedOnIterationAndUniqueIdSelector() {
 		var methodId = uniqueIdForTestTemplateMethod(TestCase.class, "testWithThreeIterations(int)");
-		var results = execute(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
+		var results = executeTests(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
 			selectIteration(selectMethod(TestCase.class, "testWithThreeIterations", "int"), 1));
 
 		results.allEvents().assertThatEvents() //
@@ -2508,6 +2554,24 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
+	static class LocaleConversionTestCase {
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithBcp47(Locale locale) {
+			assertEquals("en", locale.getLanguage());
+			assertEquals("US", locale.getCountry());
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithIso639(Locale locale) {
+			assertEquals("en-us", locale.getLanguage());
+			assertEquals("", locale.getCountry());
+		}
+
+	}
+
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
@@ -2596,6 +2660,26 @@ class ParameterizedTestIntegrationTests {
 			assertNotNull(autoCloseable);
 			assertEquals(0, AutoCloseableArgument.closeCounter);
 		}
+	}
+
+	static class ExceptionInStaticInitializerTestCase {
+
+		static {
+			//noinspection ConstantValue
+			if (true)
+				throw new RuntimeException("boom");
+		}
+
+		private static Stream<String> getArguments() {
+			return Stream.of("foo", "bar");
+		}
+
+		@ParameterizedTest
+		@MethodSource("getArguments")
+		void test(String value) {
+			fail("should not be called: " + value);
+		}
+
 	}
 
 }

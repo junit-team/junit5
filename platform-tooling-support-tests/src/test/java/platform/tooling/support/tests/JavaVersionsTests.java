@@ -42,7 +42,7 @@ class JavaVersionsTests {
 
 	@Test
 	void java_8(@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome("8");
+		var java8Home = Helper.getJavaHome(8);
 		assumeTrue(java8Home.isPresent(), "Java 8 installation directory not found!");
 		var actualLines = execute(java8Home.get(), outputFiles, Map.of());
 

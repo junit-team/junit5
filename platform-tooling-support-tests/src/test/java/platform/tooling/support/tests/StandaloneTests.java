@@ -426,7 +426,7 @@ class StandaloneTests {
 	@Order(4)
 	@Execution(SAME_THREAD)
 	void executeOnJava8(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace) //
 				.addArguments("-showversion") //
@@ -462,7 +462,7 @@ class StandaloneTests {
 	@Execution(SAME_THREAD)
 	// https://github.com/junit-team/junit5/issues/2600
 	void executeOnJava8SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace).addArguments("-showversion") //
 				.addArguments("-enableassertions") //

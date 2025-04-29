@@ -72,11 +72,12 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		ParameterDeclarations declarations = this.declarationContext.getResolverFacade().getIndexedParameterDeclarations();
 		ClassLoader classLoader = getClassLoader(this.declarationContext.getTestClass());
 		Object[] arguments = this.arguments.getConsumedPayloads();
-		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(invocationIndex, classLoader, arguments);
+		ArgumentsAccessor accessor = DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
 		new DefaultParameterInfo(declarations, accessor).store(context);
 	}
 
-	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource {
+	@SuppressWarnings({ "deprecation", "try" })
+	private static class CloseableArgument implements ExtensionContext.Store.CloseableResource, AutoCloseable {
 
 		private final AutoCloseable autoCloseable;
 
@@ -85,7 +86,7 @@ class ParameterizedInvocationContext<T extends ParameterizedDeclarationContext<?
 		}
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			this.autoCloseable.close();
 		}
 

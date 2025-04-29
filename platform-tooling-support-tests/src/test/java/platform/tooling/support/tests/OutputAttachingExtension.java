@@ -76,10 +76,11 @@ class OutputAttachingExtension implements ParameterResolver, AfterTestExecutionC
 		}
 	}
 
-	record OutputDir(Path root) implements ExtensionContext.Store.CloseableResource {
+	@SuppressWarnings("try")
+	record OutputDir(Path root) implements AutoCloseable {
 
 		@Override
-		public void close() throws Throwable {
+		public void close() throws Exception {
 			try (var stream = Files.walk(root).sorted(Comparator.<Path> naturalOrder().reversed())) {
 				stream.forEach(path -> {
 					try {

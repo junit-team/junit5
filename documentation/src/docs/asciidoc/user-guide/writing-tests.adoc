@@ -1954,6 +1954,10 @@ an array of primitives. The "arguments" within the stream can be supplied as an 
 of `Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
 parameterized class or test method accepts a single argument.
 
+If the return type is `Stream` or one of the primitive streams,
+JUnit will properly close it by calling `BaseStream.close()`,
+making it safe to use a resource such as `Files.lines()`.
+
 If you only need a single parameter, you can return a `Stream` of instances of the
 parameter type as demonstrated in the following example.
 
@@ -2048,6 +2052,10 @@ methods, the value of a `@FieldSource` field cannot be an instance of `Stream`,
 are _consumed_ the first time they are processed. However, if you wish to use one of
 these types, you can wrap it in a `Supplier` — for example, `Supplier<IntStream>`.
 ====
+
+If the `Supplier` return type is `Stream` or one of the primitive streams,
+JUnit will properly close it by calling `BaseStream.close()`,
+making it safe to use a resource such as `Files.lines()`.
 
 Please note that a one-dimensional array of objects supplied as a set of "arguments" will
 be handled differently than other types of arguments. Specifically, all the elements of a
@@ -2475,9 +2483,15 @@ integral types: `byte`, `short`, `int`, `long`, and their boxed counterparts.
 | `java.time.ZoneId`         | `"Europe/Berlin"`                        -> `ZoneId.of("Europe/Berlin")`
 | `java.time.ZoneOffset`     | `"+02:30"`                               -> `ZoneOffset.ofHoursMinutes(2, 30)`
 | `java.util.Currency`       | `"JPY"`                                  -> `Currency.getInstance("JPY")`
-| `java.util.Locale`         | `"en"`                                   -> `new Locale("en")`
+| `java.util.Locale`         | `"en-US"`                                -> `Locale.forLanguageTag("en-US")`
 | `java.util.UUID`           | `"d043e930-7b3b-48e3-bdbe-5a3ccfb833db"` -> `UUID.fromString("d043e930-7b3b-48e3-bdbe-5a3ccfb833db")`
 |===
+
+WARNING: To revert to the old `java.util.Locale` conversion behavior of version 5.12 and
+earlier (which called the deprecated `Locale(String)` constructor), you can set the
+`junit.jupiter.params.arguments.conversion.locale.format`
+<<running-tests-config-params, configuration parameter>> to `iso_639`. However, please
+note that this parameter is deprecated and will be removed in a future release.
 
 [[writing-tests-parameterized-tests-argument-conversion-implicit-fallback]]
 ====== Fallback String-to-Object Conversion
@@ -2515,7 +2529,7 @@ include::{testDir}/example/ParameterizedTestDemo.java[tags=implicit_fallback_con
 [[writing-tests-parameterized-tests-argument-conversion-explicit]]
 ===== Explicit Conversion
 
-Instead of relying on implicit argument conversion you may explicitly specify an
+Instead of relying on implicit argument conversion, you may explicitly specify an
 `ArgumentConverter` to use for a certain parameter using the `@ConvertWith` annotation
 like in the following example. Note that an implementation of `ArgumentConverter` must be
 declared as either a top-level class or as a `static` nested class.

@@ -72,6 +72,10 @@ public class ProcessStarters {
 	}
 
 	public static Optional<Path> getGradleJavaHome() {
-		return Helper.getJavaHome(System.getProperty("gradle.java.version"));
+		return Helper.getJavaHome(getGradleJavaVersion());
+	}
+
+	public static int getGradleJavaVersion() {
+		return Integer.parseInt(System.getProperty("gradle.java.version"));
 	}
 }
