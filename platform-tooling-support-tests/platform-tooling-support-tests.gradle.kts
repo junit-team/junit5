@@ -192,12 +192,6 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 				jvmArgumentProviders += JarPath(project, antJarsClasspath.get(), "antJars")
 				jvmArgumentProviders += MavenDistribution(project, unzipMavenDistribution, mavenDistributionDir)
 
-				if (buildParameters.javaToolchain.version.getOrElse(21) < 24) {
-					(options as JUnitPlatformOptions).apply {
-						includeEngines("archunit")
-					}
-				}
-
 				inputs.apply {
 					dir("projects").withPathSensitivity(RELATIVE)
 					file("${rootDir}/gradle.properties").withPathSensitivity(RELATIVE)
