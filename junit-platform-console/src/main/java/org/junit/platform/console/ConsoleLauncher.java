@@ -19,6 +19,7 @@ import org.apiguardian.api.API;
 import org.junit.platform.console.options.CommandFacade;
 import org.junit.platform.console.options.CommandResult;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
+import org.junit.platform.console.tasks.CustomClassLoaderCloseStrategy;
 
 /**
  * The {@code ConsoleLauncher} is a stand-alone application for launching the
@@ -30,17 +31,20 @@ import org.junit.platform.console.tasks.ConsoleTestExecutor;
 public class ConsoleLauncher {
 
 	public static void main(String... args) {
-		CommandResult<?> result = newCommandFacade().run(args);
+		CommandFacade facade = newCommandFacade(CustomClassLoaderCloseStrategy.KEEP_OPEN);
+		CommandResult<?> result = facade.run(args);
 		System.exit(result.getExitCode());
 	}
 
 	@API(status = INTERNAL, since = "1.0")
 	public static CommandResult<?> run(PrintWriter out, PrintWriter err, String... args) {
-		return newCommandFacade().run(args, out, err);
+		CommandFacade facade = newCommandFacade(CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+		return facade.run(args, out, err);
 	}
 
-	private static CommandFacade newCommandFacade() {
-		return new CommandFacade(ConsoleTestExecutor::new);
+	private static CommandFacade newCommandFacade(CustomClassLoaderCloseStrategy classLoaderCleanupStrategy) {
+		return new CommandFacade((discoveryOptions, outputOptions) -> new ConsoleTestExecutor(discoveryOptions,
+			outputOptions, classLoaderCleanupStrategy));
 	}
 
 }
