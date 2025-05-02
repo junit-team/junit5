@@ -103,5 +103,5 @@ kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.20" }
 nexusPublish = { id = "io.github.gradle-nexus.publish-plugin", version = "2.0.0" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
-spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
+spotless = { id = "com.diffplug.spotless", version = "7.0.3" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
