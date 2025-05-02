@@ -3,6 +3,7 @@
   extends: [
     'github>junit-team/renovate-config',
   ],
+  baseBranches: ["main", "/^develop\\/.*/"],
   packageRules: [
     {
       matchCurrentValue: '/^2\\./',
