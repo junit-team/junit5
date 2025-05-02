@@ -36,35 +36,24 @@ import org.junit.platform.console.options.StdStreamTestCase;
 class ConsoleLauncherIntegrationTests {
 
 	@Test
-	void executeWithoutArgumentsFailsAndPrintsHelpInformation() {
+	void executeWithoutSubcommandFailsAndPrintsHelpInformation() {
 		var result = new ConsoleLauncherWrapper().execute(-1);
 		assertAll("empty args array results in display of help information and an exception stacktrace", //
 			() -> assertThat(result.err).contains("help information"), //
-			() -> assertThat(result.err).contains(
-				"Please specify an explicit selector option or use --scan-class-path or --scan-modules") //
+			() -> assertThat(result.err).contains("Missing required subcommand") //
 		);
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = { //
-			"-e junit-jupiter -p org.junit.platform.console.subpackage", //
-			"execute -e junit-jupiter -p org.junit.platform.console.subpackage" //
-	})
-	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern(
-			String line) {
-		var args = line.split(" ");
+	@Test
+	void executeWithoutExcludeClassnameOptionDoesNotExcludeClassesAndMustIncludeAllClassesMatchingTheStandardClassnamePattern() {
+		String[] args = { "execute", "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage" };
 		assertEquals(9, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = {
-			"-e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
-					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*",
-			"execute -e junit-jupiter -p org.junit.platform.console.subpackage --exclude-classname"
-					+ " ^org\\.junit\\.platform\\.console\\.subpackage\\..*" //
-	})
-	void executeWithExcludeClassnameOptionExcludesClasses(String line) {
-		var args = line.split(" ");
+	@Test
+	void executeWithExcludeClassnameOptionExcludesClasses() {
+		String[] args = { "execute", "-e", "junit-jupiter", "-p", "org.junit.platform.console.subpackage",
+				"--exclude-classname", "^org\\.junit\\.platform\\.console\\.subpackage\\..*" };
 		var result = new ConsoleLauncherWrapper().execute(args);
 		assertAll("all subpackage test classes are excluded by the class name filter", //
 			() -> assertArrayEquals(args, result.args), //
@@ -88,18 +77,17 @@ class ConsoleLauncherIntegrationTests {
 
 	@ParameterizedTest
 	@ValueSource(strings = { //
-			"-e junit-jupiter -o java.base", "-e junit-jupiter --select-module java.base", //
-			"execute -e junit-jupiter -o java.base", "execute -e junit-jupiter --select-module java.base" //
+			"execute -e junit-jupiter -o java.base", //
+			"execute -e junit-jupiter --select-module java.base" //
 	})
 	void executeSelectingModuleNames(String line) {
 		var args = line.split(" ");
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 
-	@ParameterizedTest
-	@ValueSource(strings = { "-e junit-jupiter --scan-modules", "execute -e junit-jupiter --scan-modules" })
-	void executeScanModules(String line) {
-		var args = line.split(" ");
+	@Test
+	void executeScanModules() {
+		String[] args = { "execute", "-e", "junit-jupiter", "--scan-modules" };
 		assertEquals(0, new ConsoleLauncherWrapper().execute(args).getTestsFoundCount());
 	}
 

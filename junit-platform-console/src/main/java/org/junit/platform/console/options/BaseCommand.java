@@ -30,8 +30,8 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Mixin
 	AnsiColorOptionMixin ansiColorOption;
 
-	@Mixin
-	BannerOptionMixin bannerOption;
+	@Option(names = "--disable-banner", description = "Disable print out of the welcome message.")
+	private boolean disableBanner;
 
 	@SuppressWarnings("unused")
 	@Option(names = { "-h", "--help" }, usageHelp = true, description = "Display help information.")
@@ -39,7 +39,7 @@ abstract class BaseCommand<T> implements Callable<T> {
 
 	@SuppressWarnings("unused")
 	@Option(names = "--version", versionHelp = true, description = "Display version information.")
-	private boolean versionHelpRequested;
+	private boolean versionRequested;
 
 	void execute(String... args) {
 		toCommandLine().execute(args);
@@ -74,7 +74,7 @@ abstract class BaseCommand<T> implements Callable<T> {
 	@Override
 	public final T call() {
 		PrintWriter out = getOut();
-		if (!bannerOption.isDisableBanner()) {
+		if (!disableBanner) {
 			displayBanner(out);
 		}
 		try {

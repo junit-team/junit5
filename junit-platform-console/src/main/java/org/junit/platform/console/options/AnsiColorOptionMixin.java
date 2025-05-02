@@ -39,9 +39,4 @@ class AnsiColorOptionMixin {
 		this.disableAnsiColors = disableAnsiColors;
 	}
 
-	@Option(names = "-disable-ansi-colors", hidden = true)
-	public void setDisableAnsiColors2(boolean disableAnsiColors) {
-		setDisableAnsiColors(disableAnsiColors);
-	}
-
 }

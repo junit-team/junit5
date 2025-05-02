@@ -40,7 +40,10 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* Remove deprecated support for running the `ConsoleLauncher` without specifying a
+  subcommand.
+* Remove support for deprecated non-conventional `ConsoleLauncher` options such as
+  `--h` (rather than `-h`) or `-help` (rather than `--help`).
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
