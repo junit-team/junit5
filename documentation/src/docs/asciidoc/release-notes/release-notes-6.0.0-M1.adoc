@@ -22,6 +22,7 @@ repository on GitHub.
 ==== Deprecations and Breaking Changes
 
 * Minimum required Java version is now Java 17.
+* Platform, Jupiter, and Vintage artifacts now use the same version number.
 
 [[release-notes-6.0.0-M1-overall-new-features-and-improvements]]
 ==== New Features and Improvements
