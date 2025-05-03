@@ -15,7 +15,6 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
 import java.util.List;
 
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -24,6 +23,7 @@ import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.UniqueId;
 
 class TestTemplateInvocationTestDescriptorTests {
@@ -31,7 +31,7 @@ class TestTemplateInvocationTestDescriptorTests {
 	@Test
 	void invocationsDoNotDeclareExclusiveResources() throws Exception {
 		Class<MyTestCase> testClass = MyTestCase.class;
-		Method testTemplateMethod = testClass.getDeclaredMethod("testTemplate");
+		MethodAdapter testTemplateMethod = MethodAdapter.createDefault(testClass.getDeclaredMethod("testTemplate"));
 		JupiterConfiguration configuration = mock();
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		TestTemplateTestDescriptor parent = new TestTemplateTestDescriptor(UniqueId.root("segment", "template"),

@@ -28,6 +28,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -64,6 +65,13 @@ public class ParameterResolutionUtils {
 		return resolveParameters(method, target, Optional.empty(), extensionContext, extensionRegistry);
 	}
 
+	public static Object[] resolveParameters(MethodAdapter method, Optional<Object> target,
+			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+
+		return resolveParameters(method.getMethod(), target, Optional.empty(), __ -> extensionContext,
+			extensionRegistry, method.getParameters());
+	}
+
 	/**
 	 * Resolve the array of parameters for the supplied executable, target, and
 	 * outer instance.
@@ -90,9 +98,15 @@ public class ParameterResolutionUtils {
 			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
 			ExtensionRegistry extensionRegistry) {
 
+		return resolveParameters(executable, target, outerInstance, extensionContext, extensionRegistry,
+			executable.getParameters());
+	}
+
+	private static Object[] resolveParameters(Executable executable, Optional<Object> target,
+			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
+			ExtensionRegistry extensionRegistry, Parameter[] parameters) {
 		Preconditions.notNull(target, "target must not be null");
 
-		Parameter[] parameters = executable.getParameters();
 		Object[] values = new Object[parameters.length];
 		int start = 0;
 

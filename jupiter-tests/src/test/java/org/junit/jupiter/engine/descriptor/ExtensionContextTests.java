@@ -54,6 +54,7 @@ import org.junit.jupiter.engine.config.DefaultJupiterConfiguration;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -224,7 +225,7 @@ public class ExtensionContextTests {
 		engineDescriptor.addChild(classTestDescriptor);
 
 		Object testInstance = new OuterClassTestCase();
-		var testMethod = methodTestDescriptor.getTestMethod();
+		var testMethod = methodTestDescriptor.getTestMethod().getMethod();
 
 		var engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
@@ -458,7 +459,8 @@ public class ExtensionContextTests {
 					extensionRegistry, launcherStoreFacade, null);
 			}), //
 			named("method", (JupiterConfiguration configuration) -> {
-				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").orElseThrow();
+				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").map(
+					MethodAdapter::createDefault).orElseThrow();
 				var methodUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]/[method:myMethod]");
 				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method, List::of,
 					configuration);
@@ -490,7 +492,8 @@ public class ExtensionContextTests {
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClassTestCase.class,
-				OuterClassTestCase.class.getDeclaredMethod("aMethod"), List::of, configuration);
+				MethodAdapter.createDefault(OuterClassTestCase.class.getDeclaredMethod("aMethod")), List::of,
+				configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
@@ -500,8 +503,9 @@ public class ExtensionContextTests {
 	private TestMethodTestDescriptor nestedMethodDescriptor() {
 		try {
 			return new TestMethodTestDescriptor(UniqueId.root("method", "nestedMethod"),
-				OuterClassTestCase.NestedClass.class, BaseNestedTestCase.class.getDeclaredMethod("nestedMethod"),
-				List::of, configuration);
+				OuterClassTestCase.NestedClass.class,
+				MethodAdapter.createDefault(BaseNestedTestCase.class.getDeclaredMethod("nestedMethod")), List::of,
+				configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

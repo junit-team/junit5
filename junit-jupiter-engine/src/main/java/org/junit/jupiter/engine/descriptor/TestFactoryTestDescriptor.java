@@ -34,6 +34,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -63,14 +64,15 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
-	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
+	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, MethodAdapter testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
 		this.dynamicDescendantFilter = new DynamicDescendantFilter();
 	}
 
-	private TestFactoryTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
-			JupiterConfiguration configuration, DynamicDescendantFilter dynamicDescendantFilter) {
+	private TestFactoryTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass,
+			MethodAdapter testMethod, JupiterConfiguration configuration,
+			DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
 		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}

@@ -19,15 +19,16 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.jupiter.engine.support.MethodAdapter;
 
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<Method> {
 
-	private final Method method;
+	private final MethodAdapter method;
 	private final Optional<Object> target;
 	private final Object[] arguments;
 
-	MethodInvocation(Method method, Optional<Object> target, Object[] arguments) {
+	MethodInvocation(MethodAdapter method, Optional<Object> target, Object[] arguments) {
 		this.method = method;
 		this.target = target;
 		this.arguments = arguments;
@@ -35,18 +36,17 @@ class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<
 
 	@Override
 	public Class<?> getTargetClass() {
-		return this.target.<Class<?>> map(Object::getClass).orElseGet(this.method::getDeclaringClass);
+		return this.target.<Class<?>> map(Object::getClass).orElseGet(this.method.getMethod()::getDeclaringClass);
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Optional<Object> getTarget() {
 		return this.target;
 	}
 
 	@Override
 	public Method getExecutable() {
-		return this.method;
+		return this.method.getMethod();
 	}
 
 	@Override
@@ -57,7 +57,7 @@ class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<
 	@Override
 	@SuppressWarnings("unchecked")
 	public T proceed() {
-		return (T) ReflectionSupport.invokeMethod(this.method, this.target.orElse(null), this.arguments);
+		return (T) method.invoke(this.target.orElse(null), this.arguments);
 	}
 
 }

@@ -44,12 +44,12 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 		super(issueReporter);
 		this.configuration = configuration;
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
-			testDescriptor -> !isAnnotated(testDescriptor.getTestMethod(), Order.class), testDescriptor -> {
+			testDescriptor -> !isAnnotated(testDescriptor.getTestMethod().getMethod(), Order.class), testDescriptor -> {
 				String message = String.format(
 					"Ineffective @Order annotation on method '%s'. It will not be applied because MethodOrderer.OrderAnnotation is not in use.",
 					testDescriptor.getTestMethod().toGenericString());
 				return DiscoveryIssue.builder(Severity.INFO, message) //
-						.source(MethodSource.from(testDescriptor.getTestMethod())) //
+						.source(MethodSource.from(testDescriptor.getTestMethod().getMethod())) //
 						.build();
 			});
 	}

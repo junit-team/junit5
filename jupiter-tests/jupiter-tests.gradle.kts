@@ -10,12 +10,14 @@ plugins {
 
 dependencies {
 	testImplementation(projects.junitJupiter)
+	testImplementation(projects.junitJupiterKotlin)
 	testImplementation(projects.junitJupiterMigrationsupport)
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(kotlin("stdlib"))
+	testImplementation(kotlin("reflect"))
 	testImplementation(libs.jimfs)
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)

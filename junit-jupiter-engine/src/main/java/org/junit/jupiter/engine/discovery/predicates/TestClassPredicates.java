@@ -19,12 +19,13 @@ import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 import static org.junit.platform.commons.util.ReflectionUtils.isMethodPresent;
 import static org.junit.platform.commons.util.ReflectionUtils.isNestedClassPresent;
 
-import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.engine.support.MethodAdapter;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.ClassSource;
@@ -47,12 +48,13 @@ public class TestClassPredicates {
 		candidate) && isValidNestedTestClass(candidate);
 	public final Predicate<Class<?>> looksLikeNestedOrStandaloneTestClass = candidate -> this.isAnnotatedWithNested.test(
 		candidate) || looksLikeIntendedTestClass(candidate);
-	public final Predicate<Method> isTestOrTestFactoryOrTestTemplateMethod;
+	public final Predicate<MethodAdapter> isTestOrTestFactoryOrTestTemplateMethod;
 
 	private final Condition<Class<?>> isValidNestedTestClass;
 	private final Condition<Class<?>> isValidStandaloneTestClass;
+	private final MethodAdapterFactory methodAdapterFactory;
 
-	public TestClassPredicates(DiscoveryIssueReporter issueReporter) {
+	public TestClassPredicates(DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 		this.isTestOrTestFactoryOrTestTemplateMethod = new IsTestMethod(issueReporter) //
 				.or(new IsTestFactoryMethod(issueReporter)) //
 				.or(new IsTestTemplateMethod(issueReporter));
@@ -62,6 +64,7 @@ public class TestClassPredicates {
 				.and(isNotLocal(issueReporter)) //
 				.and(isNotInner(issueReporter)) // or should be annotated with @Nested!
 				.and(isNotAnonymous(issueReporter));
+		this.methodAdapterFactory = methodAdapterFactory;
 	}
 
 	public boolean looksLikeIntendedTestClass(Class<?> candidate) {
@@ -81,7 +84,8 @@ public class TestClassPredicates {
 	}
 
 	private boolean hasTestOrTestFactoryOrTestTemplateMethods(Class<?> candidate) {
-		return isMethodPresent(candidate, this.isTestOrTestFactoryOrTestTemplateMethod);
+		return isMethodPresent(candidate,
+			m -> this.isTestOrTestFactoryOrTestTemplateMethod.test(this.methodAdapterFactory.adapt(m)));
 	}
 
 	private boolean hasNestedTests(Class<?> candidate) {

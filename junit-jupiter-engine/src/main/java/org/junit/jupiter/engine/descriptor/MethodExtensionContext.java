@@ -45,7 +45,7 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 
 	@Override
 	public Optional<AnnotatedElement> getElement() {
-		return Optional.of(getTestDescriptor().getTestMethod());
+		return Optional.of(getTestDescriptor().getTestMethod().getMethod());
 	}
 
 	@Override
@@ -79,7 +79,7 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 
 	@Override
 	public Optional<Method> getTestMethod() {
-		return Optional.of(getTestDescriptor().getTestMethod());
+		return Optional.of(getTestDescriptor().getTestMethod().getMethod());
 	}
 
 	@Override

@@ -63,6 +63,7 @@ import org.junit.platform.engine.support.discovery.SelectorResolver;
 /**
  * @since 5.5
  */
+@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 class ClassSelectorResolver implements SelectorResolver {
 
 	private final Predicate<String> classNameFilter;
@@ -74,7 +75,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			DiscoveryIssueReporter issueReporter) {
 		this.classNameFilter = classNameFilter;
 		this.configuration = configuration;
-		this.predicates = new TestClassPredicates(issueReporter);
+		this.predicates = new TestClassPredicates(issueReporter, configuration.getMethodAdapterFactory());
 		this.issueReporter = issueReporter;
 	}
 
@@ -291,8 +292,8 @@ class ClassSelectorResolver implements SelectorResolver {
 			}
 			List<Class<?>> testClasses = testClassesSupplier.get();
 			Class<?> testClass = testClasses.get(testClasses.size() - 1);
-			Stream<DiscoverySelector> methods = findMethods(testClass,
-				this.predicates.isTestOrTestFactoryOrTestTemplateMethod, TOP_DOWN).stream() //
+			Stream<DiscoverySelector> methods = findMethods(testClass, this::isTestOrTestFactoryOrTestTemplateMethod,
+				TOP_DOWN).stream() //
 						.map(method -> selectMethod(testClasses, method));
 			Stream<NestedClassSelector> nestedClasses = streamNestedClasses(testClass,
 				this.predicates.isAnnotatedWithNested.or(ReflectionUtils::isInnerClass)) //
@@ -300,6 +301,11 @@ class ClassSelectorResolver implements SelectorResolver {
 			return Stream.concat(methods, nestedClasses).collect(
 				toCollection((Supplier<Set<DiscoverySelector>>) LinkedHashSet::new));
 		};
+	}
+
+	private boolean isTestOrTestFactoryOrTestTemplateMethod(Method method) {
+		var adapter = this.configuration.getMethodAdapterFactory().adapt(method);
+		return this.predicates.isTestOrTestFactoryOrTestTemplateMethod.test(adapter);
 	}
 
 	private DiscoverySelector selectClass(List<Class<?>> classes) {

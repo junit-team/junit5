@@ -42,6 +42,7 @@ import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.NestedClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -300,7 +301,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		var messageTemplate = "'ResourceLockTarget.CHILDREN' is not supported for methods. Invalid method: %s";
 		assertThrowsJunitExceptionWithMessage( //
 			testClass, //
-			messageTemplate.formatted(getDeclaredTestMethod(testClass)) //
+			messageTemplate.formatted(getDeclaredTestMethod(testClass).toGenericString()) //
 		);
 	}
 
@@ -340,9 +341,9 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 		return descriptor.getExclusiveResources();
 	}
 
-	private static Method getDeclaredTestMethod(Class<?> testClass) {
+	private static MethodAdapter getDeclaredTestMethod(Class<?> testClass) {
 		try {
-			return testClass.getDeclaredMethod("test");
+			return MethodAdapter.createDefault(testClass.getDeclaredMethod("test"));
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);

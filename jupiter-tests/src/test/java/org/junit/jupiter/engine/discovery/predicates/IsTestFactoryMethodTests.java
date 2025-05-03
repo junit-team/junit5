@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.DynamicContainer.dynamicContainer;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +26,7 @@ import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -42,7 +42,7 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 class IsTestFactoryMethodTests {
 
 	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
-	final Predicate<Method> isTestFactoryMethod = new IsTestFactoryMethod(
+	final Predicate<MethodAdapter> isTestFactoryMethod = new IsTestFactoryMethod(
 		DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@ParameterizedTest
@@ -51,7 +51,7 @@ class IsTestFactoryMethodTests {
 			"dynamicTestsFactoryFromNodeArray", "dynamicTestsFactoryFromTestArray",
 			"dynamicTestsFactoryFromContainerArray" })
 	void validFactoryMethods(String methodName) {
-		assertThat(isTestFactoryMethod).accepts(method(methodName));
+		assertThat(isTestFactoryMethod).accepts(methodAdapter(methodName));
 		assertThat(discoveryIssues).isEmpty();
 	}
 
@@ -59,7 +59,7 @@ class IsTestFactoryMethodTests {
 	@ValueSource(strings = { "bogusVoidFactory", "bogusStringsFactory", "bogusStringArrayFactory",
 			"dynamicTestsFactoryFromStreamWithSuperWildcard" })
 	void invalidFactoryMethods(String methodName) {
-		var method = method(methodName);
+		var method = methodAdapter(methodName);
 
 		assertThat(isTestFactoryMethod).rejects(method);
 
@@ -69,13 +69,13 @@ class IsTestFactoryMethodTests {
 			"@TestFactory method '%s' must return a single org.junit.jupiter.api.DynamicNode or a Stream, Collection, Iterable, Iterator, or array of org.junit.jupiter.api.DynamicNode. "
 					+ "It will not be executed.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "objectFactory", "objectArrayFactory", "rawCollectionFactory", "unboundStreamFactory" })
 	void suspiciousFactoryMethods(String methodName) {
-		var method = method(methodName);
+		var method = methodAdapter(methodName);
 
 		assertThat(isTestFactoryMethod).accepts(method);
 
@@ -85,11 +85,12 @@ class IsTestFactoryMethodTests {
 			"The declared return type of @TestFactory method '%s' does not support static validation. "
 					+ "It must return a single org.junit.jupiter.api.DynamicNode or a Stream, Collection, Iterable, Iterator, or array of org.junit.jupiter.api.DynamicNode.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
-	private static Method method(String name) {
-		return ReflectionSupport.findMethod(ClassWithTestFactoryMethods.class, name).orElseThrow();
+	private static MethodAdapter methodAdapter(String name) {
+		return ReflectionSupport.findMethod(ClassWithTestFactoryMethods.class, name).map(
+			MethodAdapter::createDefault).orElseThrow();
 	}
 
 	@SuppressWarnings("unused")

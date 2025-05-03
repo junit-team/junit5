@@ -31,6 +31,7 @@ import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClasspathResourceSource;
@@ -57,8 +58,8 @@ class TestFactoryTestDescriptorTests {
 		var configuration = mock(JupiterConfiguration.class);
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 		Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
-		var original = new TestFactoryTestDescriptor(originalUniqueId, CustomStreamTestCase.class, testMethod, List::of,
-			configuration);
+		var original = new TestFactoryTestDescriptor(originalUniqueId, CustomStreamTestCase.class,
+			MethodAdapter.createDefault(testMethod), List::of, configuration);
 
 		original.getDynamicDescendantFilter().allowUniqueIdPrefix(originalUniqueId.append("foo", "bar"));
 		original.getDynamicDescendantFilter().allowIndex(42);
@@ -172,7 +173,7 @@ class TestFactoryTestDescriptorTests {
 
 			Method testMethod = CustomStreamTestCase.class.getDeclaredMethod("customStream");
 			descriptor = new TestFactoryTestDescriptor(UniqueId.forEngine("engine"), CustomStreamTestCase.class,
-				testMethod, List::of, jupiterConfiguration);
+				MethodAdapter.createDefault(testMethod), List::of, jupiterConfiguration);
 			when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		}
 

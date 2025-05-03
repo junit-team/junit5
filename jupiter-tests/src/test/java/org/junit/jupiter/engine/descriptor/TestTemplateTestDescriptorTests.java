@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -49,7 +50,8 @@ class TestTemplateTestDescriptorTests {
 		var parent = containerTestDescriptorWithTags(parentUniqueId, singleton(TestTag.create("foo")));
 
 		var testDescriptor = new TestTemplateTestDescriptor(parentUniqueId.append("tmp", "testTemplate()"),
-			MyTestCase.class, MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
+			MyTestCase.class, MethodAdapter.createDefault(MyTestCase.class.getDeclaredMethod("testTemplate")), List::of,
+			jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getTags()).containsExactlyInAnyOrder(TestTag.create("foo"), TestTag.create("bar"),
@@ -65,7 +67,8 @@ class TestTemplateTestDescriptorTests {
 		when(jupiterConfiguration.getDefaultDisplayNameGenerator()).thenReturn(new CustomDisplayNameGenerator());
 
 		var testDescriptor = new TestTemplateTestDescriptor(parentUniqueId.append("tmp", "testTemplate()"),
-			MyTestCase.class, MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
+			MyTestCase.class, MethodAdapter.createDefault(MyTestCase.class.getDeclaredMethod("testTemplate")), List::of,
+			jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getDisplayName()).isEqualTo("method-display-name");
@@ -78,7 +81,8 @@ class TestTemplateTestDescriptorTests {
 		var parent = containerTestDescriptorWithTags(parentUniqueId, singleton(TestTag.create("foo")));
 
 		var testDescriptor = new TestTemplateTestDescriptor(parentUniqueId.append("tmp", "testTemplate()"),
-			MyTestCase.class, MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
+			MyTestCase.class, MethodAdapter.createDefault(MyTestCase.class.getDeclaredMethod("testTemplate")), List::of,
+			jupiterConfiguration);
 		parent.addChild(testDescriptor);
 
 		assertThat(testDescriptor.getDisplayName()).isEqualTo("testTemplate()");
@@ -91,7 +95,8 @@ class TestTemplateTestDescriptorTests {
 		var originalUniqueId = parentUniqueId.append("old", "testTemplate()");
 
 		var original = new TestTemplateTestDescriptor(originalUniqueId, MyTestCase.class,
-			MyTestCase.class.getDeclaredMethod("testTemplate"), List::of, jupiterConfiguration);
+			MethodAdapter.createDefault(MyTestCase.class.getDeclaredMethod("testTemplate")), List::of,
+			jupiterConfiguration);
 
 		original.getDynamicDescendantFilter().allowUniqueIdPrefix(originalUniqueId.append("foo", "bar"));
 		original.getDynamicDescendantFilter().allowIndex(42);

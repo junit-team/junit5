@@ -17,22 +17,15 @@
  * @provides org.junit.platform.engine.TestEngine The {@code JupiterTestEngine}
  * runs Jupiter based tests on the platform.
  */
-module org.junit.jupiter.engine {
+module org.junit.jupiter.kotlin {
+
 	requires static org.apiguardian.api;
-	requires org.junit.jupiter.api;
-	requires org.junit.platform.commons;
-	requires org.junit.platform.engine;
-	requires org.opentest4j;
 
-	// exports org.junit.jupiter.engine; // Constants...
+	requires org.junit.jupiter.engine;
+	requires kotlin.stdlib;
+	requires kotlin.reflect;
+	requires kotlinx.coroutines.core;
 
-	uses org.junit.jupiter.api.extension.Extension;
-	uses org.junit.jupiter.engine.support.MethodAdapterFactory;
-
-	provides org.junit.platform.engine.TestEngine
-			with org.junit.jupiter.engine.JupiterTestEngine;
-
-	opens org.junit.jupiter.engine.extension to org.junit.platform.commons;
-
-	exports org.junit.jupiter.engine.support to org.junit.jupiter.kotlin;
+	provides org.junit.jupiter.engine.support.MethodAdapterFactory
+			with org.junit.jupiter.kotlin.KotlinSuspendFunctionAdapterFactory;
 }

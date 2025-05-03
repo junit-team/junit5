@@ -36,6 +36,7 @@ val jupiterProjects by extra(listOf(
 		projects.junitJupiter,
 		projects.junitJupiterApi,
 		projects.junitJupiterEngine,
+		projects.junitJupiterKotlin,
 		projects.junitJupiterMigrationsupport,
 		projects.junitJupiterParams
 ).map { dependencyProject(it) })

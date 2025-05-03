@@ -25,7 +25,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 class DefaultMethodDescriptor extends AbstractAnnotatedDescriptorWrapper<Method> implements MethodDescriptor {
 
 	DefaultMethodDescriptor(MethodBasedTestDescriptor testDescriptor) {
-		super(testDescriptor, testDescriptor.getTestMethod());
+		super(testDescriptor, testDescriptor.getTestMethod().getMethod());
 	}
 
 	@Override
