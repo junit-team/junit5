@@ -32,6 +32,7 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -330,8 +331,8 @@ class ParameterResolutionUtilsTests {
 	}
 
 	private Object[] resolveMethodParameters() {
-		return ParameterResolutionUtils.resolveParameters(this.method, Optional.of(this.instance),
-			this.extensionContext, this.extensionRegistry);
+		return ParameterResolutionUtils.resolveParameters(MethodAdapter.createDefault(this.method),
+			Optional.of(this.instance), this.extensionContext, this.extensionRegistry);
 	}
 
 	// -------------------------------------------------------------------------

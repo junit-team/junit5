@@ -17,7 +17,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.List;
 import java.util.Optional;
@@ -59,12 +58,6 @@ public class ParameterResolutionUtils {
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
-	public static Object[] resolveParameters(Method method, Optional<Object> target, ExtensionContext extensionContext,
-			ExtensionRegistry extensionRegistry) {
-
-		return resolveParameters(method, target, Optional.empty(), extensionContext, extensionRegistry);
-	}
-
 	public static Object[] resolveParameters(MethodAdapter method, Optional<Object> target,
 			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 

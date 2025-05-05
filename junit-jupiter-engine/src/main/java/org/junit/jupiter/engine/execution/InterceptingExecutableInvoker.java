@@ -77,13 +77,6 @@ public class InterceptingExecutableInvoker {
 	 * @param interceptorCall the call for intercepting this method invocation
 	 * via all registered {@linkplain InvocationInterceptor interceptors}
 	 */
-	public <T> T invoke(Method method, Object target, ExtensionContext extensionContext,
-			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<Method, T> interceptorCall) {
-
-		return invoke(MethodAdapter.createDefault(method), target, extensionContext, extensionRegistry,
-			interceptorCall);
-	}
-
 	public <T> T invoke(MethodAdapter method, Object target, ExtensionContext extensionContext,
 			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<Method, T> interceptorCall) {
 
