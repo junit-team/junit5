@@ -6,6 +6,8 @@ requires org.junit.platform.commons
 requires org.junit.platform.engine
 requires org.opentest4j
 uses org.junit.jupiter.api.extension.Extension
+uses org.junit.jupiter.engine.support.MethodAdapterFactory
 provides org.junit.platform.engine.TestEngine with org.junit.jupiter.engine.JupiterTestEngine
+qualified exports org.junit.jupiter.engine.support to org.junit.jupiter.kotlin
 qualified opens org.junit.jupiter.engine.extension to org.junit.platform.commons
 contains org.junit.jupiter.engine

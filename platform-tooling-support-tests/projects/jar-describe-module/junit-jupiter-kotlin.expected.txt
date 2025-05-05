@@ -1,0 +1,9 @@
+org.junit.jupiter.kotlin@${version} jar:file:.+/junit-jupiter-kotlin-\d.+\.jar..module-info\.class
+requires java.base mandated
+requires kotlin.reflect
+requires kotlin.stdlib
+requires kotlinx.coroutines.core
+requires org.apiguardian.api static
+requires org.junit.jupiter.engine
+provides org.junit.jupiter.engine.support.MethodAdapterFactory with org.junit.jupiter.kotlin.coroutines.KotlinSuspendFunctionAdapterFactory
+contains org.junit.jupiter.kotlin.coroutines
