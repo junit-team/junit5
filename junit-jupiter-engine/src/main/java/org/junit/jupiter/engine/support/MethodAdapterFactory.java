@@ -10,8 +10,13 @@
 
 package org.junit.jupiter.engine.support;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.lang.reflect.Method;
 
+import org.apiguardian.api.API;
+
+@API(status = INTERNAL, since = "6.0")
 public interface MethodAdapterFactory {
 
 	MethodAdapter adapt(Method method);
