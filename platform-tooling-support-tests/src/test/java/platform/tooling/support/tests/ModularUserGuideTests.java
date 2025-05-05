@@ -89,6 +89,9 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "net.bytebuddy", "byte-buddy");
 		ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 		ThirdPartyJars.copy(lib, "org.hamcrest", "hamcrest");
+		ThirdPartyJars.copy(lib, "org.jetbrains.kotlin", "kotlin-reflect");
+		ThirdPartyJars.copy(lib, "org.jetbrains.kotlin", "kotlin-stdlib");
+		ThirdPartyJars.copy(lib, "org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm");
 		ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
@@ -202,7 +205,8 @@ class ModularUserGuideTests {
 		try (var stream = Files.walk(root)) {
 			stream.map(root::relativize) //
 					.map(path -> path.toString().replace('\\', '/')) //
-					.sorted().filter(Predicate.not(String::isEmpty)) //
+					.sorted() //
+					.filter(Predicate.not(String::isEmpty)) //
 					.forEach(out);
 		}
 		catch (Exception e) {
