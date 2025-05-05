@@ -35,6 +35,7 @@ tasks.test {
 // These will be part of the next version of native-build-tools
 // see https://github.com/graalvm/native-build-tools/pull/693
 val initializeAtBuildTime = listOf(
+	// 5.13
 	"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$ClassInfo",
 	"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$LifecycleMethods",
 	"org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor",
@@ -47,6 +48,9 @@ val initializeAtBuildTime = listOf(
 	"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
 	"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo",
 	"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods",
+	// 6.0
+	"org.junit.jupiter.engine.support.MethodAdapter\$1",
+	"org.junit.jupiter.engine.support.MethodAdapterRegistry",
 )
 
 graalvmNative {
