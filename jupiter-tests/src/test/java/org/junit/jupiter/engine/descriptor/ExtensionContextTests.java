@@ -89,6 +89,7 @@ public class ExtensionContextTests {
 		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 		when(configuration.getDefaultClassesExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 		when(configuration.getOutputDirectoryProvider()).thenReturn(dummyOutputDirectoryProvider());
+		when(configuration.getMethodAdapterFactory()).thenReturn(MethodAdapter::createDefault);
 	}
 
 	@Test

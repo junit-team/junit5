@@ -68,6 +68,7 @@ class ResourceLockAnnotationTests extends AbstractJupiterTestEngineTests {
 	void setUp() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
+		when(configuration.getMethodAdapterFactory()).thenReturn(MethodAdapter::createDefault);
 	}
 
 	@Test
