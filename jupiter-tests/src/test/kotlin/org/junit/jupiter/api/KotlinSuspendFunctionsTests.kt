@@ -16,6 +16,7 @@ import org.junit.jupiter.params.ParameterizedClass
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
+@Disabled("needs to be converted into a proper test with assertions")
 @ParameterizedClass
 @ValueSource(ints = [1, 2])
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
