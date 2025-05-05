@@ -33,6 +33,10 @@ public interface MethodAdapter {
 
 	Object invoke(Object target, Object... args);
 
+	default boolean isStatic() {
+		return ModifierSupport.isStatic(getMethod());
+	}
+
 	default boolean isNotStatic() {
 		return ModifierSupport.isNotStatic(getMethod());
 	}

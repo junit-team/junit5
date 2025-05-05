@@ -14,6 +14,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 class KotlinSuspendFunctionsTests {
+    @Suppress("JUnitMalformedDeclaration")
+    @BeforeEach
+    suspend fun beforeEach() {
+        println("beforeEach")
+    }
+
     @Test
     fun regularTest() {
         runBlocking {
