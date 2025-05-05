@@ -10,14 +10,28 @@
 package org.junit.jupiter.api
 
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.params.BeforeParameterizedClassInvocation
+import org.junit.jupiter.params.Parameter
+import org.junit.jupiter.params.ParameterizedClass
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
+@ParameterizedClass
+@ValueSource(ints = [1, 2])
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class KotlinSuspendFunctionsTests {
+    @BeforeParameterizedClassInvocation(injectArguments = false)
+    suspend fun beforeInvocation() {
+        suspendingPrintln("beforeInvocation")
+    }
+
+    @Parameter
+    var parameter: Int = 0
+
     @Suppress("JUnitMalformedDeclaration")
     @BeforeEach
     suspend fun beforeEach() {
-        println("beforeEach")
+        suspendingPrintln("beforeEach")
     }
 
     @Test
@@ -40,5 +54,7 @@ class KotlinSuspendFunctionsTests {
             suspendingFail("manual")
         }
 
-    private suspend fun suspendingFail(message: String): Nothing = fail("boom")
+    private suspend fun suspendingFail(message: String): Nothing = fail(message)
+
+    private suspend fun suspendingPrintln(message: String) = println(message)
 }

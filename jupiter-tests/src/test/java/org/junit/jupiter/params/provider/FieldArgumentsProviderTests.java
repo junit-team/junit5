@@ -33,6 +33,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
@@ -484,7 +485,7 @@ class FieldArgumentsProviderTests {
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		when(extensionContext.getExecutableInvoker()).thenReturn(
-			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
+			new DefaultExecutableInvoker(extensionContext, extensionRegistry, MethodAdapter::createDefault));
 
 		doCallRealMethod().when(extensionContext).getRequiredTestMethod();
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();

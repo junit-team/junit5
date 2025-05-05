@@ -71,7 +71,8 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		Preconditions.notNull(configuration, "JupiterConfiguration must not be null");
 		Preconditions.notNull(extensionRegistry, "ExtensionRegistry must not be null");
-		this.executableInvoker = new DefaultExecutableInvoker(this, extensionRegistry);
+		this.executableInvoker = new DefaultExecutableInvoker(this, extensionRegistry,
+			configuration.getMethodAdapterFactory());
 		this.parent = parent;
 		this.engineExecutionListener = engineExecutionListener;
 		this.testDescriptor = testDescriptor;

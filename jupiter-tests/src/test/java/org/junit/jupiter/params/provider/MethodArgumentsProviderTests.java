@@ -38,6 +38,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.engine.execution.DefaultExecutableInvoker;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -757,7 +758,7 @@ class MethodArgumentsProviderTests {
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
 		when(extensionContext.getExecutableInvoker()).thenReturn(
-			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
+			new DefaultExecutableInvoker(extensionContext, extensionRegistry, MethodAdapter::createDefault));
 
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();
 
