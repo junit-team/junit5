@@ -7,9 +7,11 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-package org.junit.jupiter.kotlin
+package org.junit.jupiter.kotlin.coroutines
 
 import kotlinx.coroutines.runBlocking
+import org.apiguardian.api.API
+import org.apiguardian.api.API.Status.INTERNAL
 import org.junit.jupiter.engine.support.MethodAdapter
 import org.junit.jupiter.engine.support.MethodAdapterFactory
 import java.lang.reflect.InvocationTargetException
@@ -20,6 +22,7 @@ import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction
 
+@API(status = INTERNAL, since = "6.0")
 class KotlinSuspendFunctionAdapterFactory : MethodAdapterFactory {
     override fun adapt(method: Method): MethodAdapter? {
         val kotlinFunction = method.kotlinFunction

@@ -27,5 +27,5 @@ module org.junit.jupiter.kotlin {
 	requires kotlinx.coroutines.core;
 
 	provides org.junit.jupiter.engine.support.MethodAdapterFactory
-			with org.junit.jupiter.kotlin.KotlinSuspendFunctionAdapterFactory;
+			with org.junit.jupiter.kotlin.coroutines.KotlinSuspendFunctionAdapterFactory;
 }

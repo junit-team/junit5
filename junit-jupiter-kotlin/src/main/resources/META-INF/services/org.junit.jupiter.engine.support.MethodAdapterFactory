@@ -1,1 +1,1 @@
-org.junit.jupiter.kotlin.KotlinSuspendFunctionAdapterFactory
+org.junit.jupiter.kotlin.coroutines.KotlinSuspendFunctionAdapterFactory
