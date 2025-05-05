@@ -17,7 +17,6 @@ dependencies {
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(kotlin("stdlib"))
-	testImplementation(kotlin("reflect"))
 	testImplementation(libs.jimfs)
 	testImplementation(libs.junit4)
 	testImplementation(libs.kotlinx.coroutines)
