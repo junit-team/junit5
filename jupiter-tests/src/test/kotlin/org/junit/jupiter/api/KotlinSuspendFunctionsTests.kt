@@ -10,61 +10,29 @@
 package org.junit.jupiter.api
 
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import org.opentest4j.AssertionFailedError
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.ParameterizedType
-import java.util.stream.Stream
-import kotlin.coroutines.Continuation
-import kotlin.reflect.full.callSuspend
-import kotlin.reflect.jvm.javaType
-import kotlin.reflect.jvm.kotlinFunction
 
 class KotlinSuspendFunctionsTests {
     @Test
     fun regularTest() {
-        val method =
-            KotlinSuspendFunctionsTests::class.java.getDeclaredMethod("suspendFunction", String::class.java, Continuation::class.java)
-        println(method.toGenericString())
-        assertTrue(method.kotlinFunction!!.isSuspend)
-        assertEquals(
-            String::class.java,
-            method.kotlinFunction!!
-                .parameters
-                .last()
-                .type.javaType
-        )
-        assertEquals(Stream::class.java, (method.kotlinFunction!!.returnType.javaType as ParameterizedType).rawType)
-
-        val exception =
-            assertThrows<InvocationTargetException> {
-                runBlocking {
-                    method.kotlinFunction!!.callSuspend(this@KotlinSuspendFunctionsTests, "boom")
-                }
-            }
-        assertNotNull(exception.cause)
-        assertEquals(AssertionFailedError::class, exception.cause!!::class)
-        assertEquals("boom", exception.cause!!.message)
-    }
-
-    @Suppress("unused")
-    suspend fun suspendFunction(value: String): Stream<DynamicTest> {
-        fail(value)
+        runBlocking {
+            suspendingFail("regular")
+        }
     }
 
     @Suppress("JUnitMalformedDeclaration")
     @ParameterizedTest
     @ValueSource(strings = ["foo", "bar"])
     suspend fun suspendingTest(message: String) {
-        fail(message)
+        suspendingFail(message)
     }
 
     @Test
     fun manualCoroutineTest(): Unit =
         runBlocking {
-            fail("boom")
+            suspendingFail("manual")
         }
+
+    private suspend fun suspendingFail(message: String): Nothing = fail("boom")
 }
