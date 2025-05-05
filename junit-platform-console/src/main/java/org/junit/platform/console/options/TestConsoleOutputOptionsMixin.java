@@ -28,28 +28,18 @@ class TestConsoleOutputOptionsMixin {
 
 		@Option(names = "--color-palette", paramLabel = "FILE", description = "Specify a path to a properties file to customize ANSI style of output (not supported by all terminals).")
 		private Path colorPalette;
-		@Option(names = "-color-palette", hidden = true)
-		private Path colorPalette2;
 
 		@Option(names = "--single-color", description = "Style test output using only text attributes, no color (not supported by all terminals).")
 		private boolean singleColorPalette;
-		@Option(names = "-single-color", hidden = true)
-		private boolean singleColorPalette2;
 
 		@Option(names = "--details", paramLabel = "MODE", defaultValue = DEFAULT_DETAILS_NAME, description = "Select an output details mode for when tests are executed. " //
 				+ "Use one of: ${COMPLETION-CANDIDATES}. If 'none' is selected, " //
 				+ "then only the summary and test failures are shown. Default: ${DEFAULT-VALUE}.")
 		private final Details details = DEFAULT_DETAILS;
 
-		@Option(names = "-details", hidden = true, defaultValue = DEFAULT_DETAILS_NAME)
-		private final Details details2 = DEFAULT_DETAILS;
-
 		@Option(names = "--details-theme", paramLabel = "THEME", description = "Select an output details tree theme for when tests are executed. "
 				+ "Use one of: ${COMPLETION-CANDIDATES}. Default is detected based on default character encoding.")
 		private final Theme theme = DEFAULT_THEME;
-
-		@Option(names = "-details-theme", hidden = true)
-		private final Theme theme2 = DEFAULT_THEME;
 
 		@Option(names = "--redirect-stdout", paramLabel = "FILE", description = "Redirect test output to stdout to a file.")
 		private Path stdout;
@@ -58,10 +48,10 @@ class TestConsoleOutputOptionsMixin {
 		private Path stderr;
 
 		private void applyTo(TestConsoleOutputOptions result) {
-			result.setColorPalettePath(choose(colorPalette, colorPalette2, null));
-			result.setSingleColorPalette(singleColorPalette || singleColorPalette2);
-			result.setDetails(choose(details, details2, DEFAULT_DETAILS));
-			result.setTheme(choose(theme, theme2, DEFAULT_THEME));
+			result.setColorPalettePath(colorPalette);
+			result.setSingleColorPalette(singleColorPalette);
+			result.setDetails(details);
+			result.setTheme(theme);
 			result.setStdoutPath(stdout);
 			result.setStderrPath(stderr);
 		}
@@ -73,10 +63,6 @@ class TestConsoleOutputOptionsMixin {
 			this.consoleOutputOptions.applyTo(result);
 		}
 		return result;
-	}
-
-	private static <T> T choose(T left, T right, T defaultValue) {
-		return left == right ? left : (left == defaultValue ? right : left);
 	}
 
 }

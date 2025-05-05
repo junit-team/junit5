@@ -748,12 +748,6 @@ all jars in a directory):
 $ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS>
 ----
 
-.Exit Code
-NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
-failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
-supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
-is `0`.
-
 [[running-tests-console-launcher-options]]
 ==== Subcommands and Options
 
@@ -772,6 +766,12 @@ include::{consoleLauncherDiscoverOptionsFile}[]
 
 [[running-tests-console-launcher-options-executing-tests]]
 ===== Executing tests
+
+.Exit Code
+NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
+failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
+is `0`.
 
 ----
 include::{consoleLauncherExecuteOptionsFile}[]
