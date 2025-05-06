@@ -16,6 +16,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -28,7 +29,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
@@ -37,9 +37,8 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.function.Try;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Collection of utilities for working with {@link Collection Collections}.
@@ -166,10 +165,7 @@ public final class CollectionUtils {
 				|| Iterator.class.isAssignableFrom(type)//
 				|| Object[].class.isAssignableFrom(type)//
 				|| (type.isArray() && type.getComponentType().isPrimitive())//
-				|| Arrays.stream(type.getMethods())//
-						.filter(m -> m.getName().equals("iterator"))//
-						.map(Method::getReturnType)//
-						.anyMatch(returnType -> returnType == Iterator.class));
+				|| findIteratorMethod(type).isPresent());
 	}
 
 	/**
@@ -185,7 +181,9 @@ public final class CollectionUtils {
 	 * <li>{@link Iterator}</li>
 	 * <li>{@link Object} array</li>
 	 * <li>primitive array</li>
-	 * <li>An object that contains a method with name `iterator` returning an Iterator object</li>
+	 * <li>any type that provides an
+	 * {@link java.util.Iterator Iterator}-returning {@code iterator()} method
+	 * (such as, for example, a {@code kotlin.sequences.Sequence})</li>
 	 * </ul>
 	 *
 	 * @param object the object to convert into a stream; never {@code null}
@@ -236,27 +234,17 @@ public final class CollectionUtils {
 	}
 
 	private static Stream<?> tryConvertToStreamByReflection(Object object) {
-		Preconditions.notNull(object, "Object must not be null");
-		try {
-			String name = "iterator";
-			Method method = object.getClass().getMethod(name);
-			if (method.getReturnType() == Iterator.class) {
-				return stream(() -> tryIteratorToSpliterator(object, method), ORDERED, false);
-			}
-			else {
-				throw new PreconditionViolationException(
-					"Method with name 'iterator' does not return " + Iterator.class.getName());
-			}
-		}
-		catch (NoSuchMethodException | IllegalStateException e) {
-			throw new PreconditionViolationException(//
-				"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object, e);
-		}
+		return findIteratorMethod(object.getClass()) //
+				.map(method -> (Iterator<?>) invokeMethod(method, object)) //
+				.map(iterator -> spliteratorUnknownSize(iterator, ORDERED)) //
+				.map(spliterator -> stream(spliterator, false)) //
+				.orElseThrow(() -> new PreconditionViolationException(String.format(
+					"Cannot convert instance of %s into a Stream: %s", object.getClass().getName(), object)));
 	}
 
-	private static Spliterator<?> tryIteratorToSpliterator(Object object, Method method) {
-		return Try.call(() -> spliteratorUnknownSize((Iterator<?>) method.invoke(object), ORDERED))//
-				.getOrThrow(e -> new JUnitException("Cannot invoke method " + method.getName() + " onto " + object, e));//
+	private static Optional<Method> findIteratorMethod(Class<?> type) {
+		return ReflectionSupport.findMethod(type, "iterator") //
+				.filter(method -> method.getReturnType() == Iterator.class);
 	}
 
 	/**
