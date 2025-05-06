@@ -61,6 +61,7 @@ dependencies {
 	// in the generation of build provenance attestation.
 	mavenizedProjects.forEach { attestation(it) }
 
+	testImplementation(projects.junitJupiterKotlin)
 	testImplementation(projects.junitJupiterMigrationsupport)
 	testImplementation(projects.junitPlatformConsole)
 	testImplementation(projects.junitPlatformRunner)

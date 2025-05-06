@@ -271,7 +271,7 @@ lifecycle methods. For further information on runtime semantics, see
 <<extensions-execution-order-wrapping-behavior>>.
 
 [source,java,indent=0]
-.A standard test class
+.A standard Java test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
@@ -283,6 +283,15 @@ following example.
 .A test class written as a Java record
 ----
 include::{testRelease21Dir}/example/MyFirstJUnitJupiterRecordTests.java[tags=user_guide]
+----
+
+Test and lifecycle methods may be written in Kotlin and may optionally use the `suspend`
+keyword for testing code using coroutines.
+
+[source,kotlin]
+.A test class written in Kotlin
+----
+include::{kotlinTestDir}/example/KotlinCoroutinesDemo.kt[tags=user_guide]
 ----
 
 [[writing-tests-display-names]]
