@@ -11,13 +11,6 @@
 package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
@@ -27,8 +20,6 @@ import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava24;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava25;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Test;
@@ -176,7 +167,7 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
 				.withMessage(
-					"@EnabledForJreRange's minimum value [21] must be less than or equal to its maximum value [11]");
+					"@EnabledForJreRange's minimum value [21] must be less than or equal to its maximum value [17]");
 	}
 
 	/**
@@ -226,9 +217,7 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	@Test
 	void max21() {
 		evaluateCondition();
-		assertEnabledOnCurrentJreIf(
-			onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14() || onJava15()
-					|| onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21());
+		assertEnabledOnCurrentJreIf(onJava17() || onJava18() || onJava19() || onJava20() || onJava21());
 	}
 
 	/**
@@ -240,10 +229,10 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#min8Max21()
+	 * @see EnabledForJreRangeIntegrationTests#min17Max21()
 	 */
 	@Test
-	void min8Max21() {
+	void min17Max21() {
 		max21();
 	}
 

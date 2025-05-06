@@ -2,6 +2,7 @@
 @import gg.jte.support.ForSupport
 @import junitbuild.generator.model.JRE
 
+@param int minRuntimeVersion
 @param List<JRE> jres
 @param String licenseHeader
 ${licenseHeader}
@@ -51,12 +52,20 @@ public enum JRE {
 @for(var jre : jres)
 	/**
 	 * Java ${jre.getVersion()}.
-	@if(jre.getSince() != null)<%--
+	@if(jre.getSince() != null || jre.getVersion() < minRuntimeVersion)<%--
 --%> *
-	 * @since ${jre.getSince()}
+	@endif<%--
+--%>@if(jre.getSince() != null)<%--
+--%> * @since ${jre.getSince()}
+	@endif<%--
+--%>@if(jre.getVersion() < minRuntimeVersion)<%--
+--%> * @deprecated No longer supported at runtime; please use {@link #JAVA_17} or later
 	@endif<%--
 --%> */
-	@if(jre.getSince() != null)<%--
+	@if(jre.getVersion() < minRuntimeVersion)<%--
+--%>@API(status = DEPRECATED, since = "6.0") //
+	@Deprecated(since = "6.0", forRemoval = true)
+	@elseif(jre.getSince() != null)<%--
 --%>@API(status = STABLE, since = "${jre.getSince()}")
 	@endif<%--
 --%>JAVA_${jre.getVersion()}(${jre.getVersion()}),

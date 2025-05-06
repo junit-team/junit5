@@ -13,25 +13,14 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
-import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Disabled;
@@ -55,9 +44,10 @@ class DisabledForJreRangeIntegrationTests {
 		fail("should result in a configuration exception");
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JAVA_8, max = OTHER)
+	@DisabledForJreRange(min = JRE.JAVA_8, max = OTHER)
 	void effectiveJreDefaultValues() {
 		fail("should result in a configuration exception");
 	}
@@ -69,9 +59,10 @@ class DisabledForJreRangeIntegrationTests {
 		fail("should result in a configuration exception");
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JAVA_8)
+	@DisabledForJreRange(min = JRE.JAVA_8)
 	void min8() {
 		fail("should result in a configuration exception");
 	}
@@ -127,28 +118,28 @@ class DisabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JAVA_21, max = JAVA_11)
+	@DisabledForJreRange(min = JAVA_21, max = JAVA_17)
 	void minGreaterThanMax() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JAVA_21, maxVersion = 11)
+	@DisabledForJreRange(min = JAVA_21, maxVersion = 17)
 	void minGreaterThanMaxVersion() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(minVersion = 21, maxVersion = 11)
+	@DisabledForJreRange(minVersion = 21, maxVersion = 17)
 	void minVersionGreaterThanMaxVersion() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(minVersion = 21, max = JAVA_11)
+	@DisabledForJreRange(minVersion = 21, max = JAVA_17)
 	void minVersionGreaterThanMax() {
 		fail("should result in a configuration exception");
 	}
@@ -169,8 +160,7 @@ class DisabledForJreRangeIntegrationTests {
 	@Test
 	@DisabledForJreRange(max = JAVA_18)
 	void max18() {
-		assertFalse(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18());
+		assertFalse(onJava17() || onJava18());
 	}
 
 	@Test

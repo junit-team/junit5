@@ -57,9 +57,13 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
                 mapper.registerModule(KotlinModule.Builder().build())
                 mapper.readValue(input, object : TypeReference<List<JRE>>() {})
             }
+            val minRuntimeVersion = 17
+            val supportedJres = jres.filter { it.version >= minRuntimeVersion }
             val params = mapOf(
+                "minRuntimeVersion" to minRuntimeVersion,
                 "jres" to jres,
-                "jresSortedByStringValue" to jres.sortedBy { it.version.toString() },
+                "supportedJres" to supportedJres,
+                "supportedJresSortedByStringValue" to supportedJres.sortedBy { it.version.toString() },
                 "licenseHeader" to licenseHeaderFile.asFile.get().readText()
             )
             templates.forEach {

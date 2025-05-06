@@ -1,20 +1,20 @@
 @import java.util.List
 @import junitbuild.generator.model.JRE
 
-@param List<JRE> jres
-@param List<JRE> jresSortedByStringValue
+@param List<JRE> supportedJres
+@param List<JRE> supportedJresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-@for(var jre : jresSortedByStringValue)<%--
+@for(var jre : supportedJresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JRE.OTHER;
 import static org.junit.jupiter.api.condition.JRE.UNDEFINED;
-@for(var jre : jresSortedByStringValue)<%--
+@for(var jre : supportedJresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -37,7 +37,7 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledOnJre({})
+	@EnabledOnJre
 	void missingVersionDeclaration() {
 	}
 
@@ -55,21 +55,21 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@EnabledOnJre({ //
-@for(var jre : jres)<%--
+@for(var jre : supportedJres)<%--
 --%>			JAVA_${jre.getVersion()}, //
 @endfor<%--
 --%>			OTHER //
 	})
 	void enabledOnAllJavaVersions() {
 	}
-@for(var jre : jres)
+@for(var jre : supportedJres)
 	@Test
 	@EnabledOnJre(JAVA_${jre.getVersion()})
 	void jre${jre.getVersion()}() {
 		assertTrue(onJava${jre.getVersion()}());
 	}
 @endfor<%--
---%>@for(var jre : jres)
+--%>@for(var jre : supportedJres)
 	@Test
 	@EnabledOnJre(versions = ${jre.getVersion()})
 	void version${jre.getVersion()}() {
