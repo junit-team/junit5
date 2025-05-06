@@ -19,9 +19,3 @@ dependencies {
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
 }
-
-tasks {
-	compileModule {
-		options.release = 11
-	}
-}
