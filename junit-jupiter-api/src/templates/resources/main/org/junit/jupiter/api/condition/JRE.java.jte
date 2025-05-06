@@ -11,13 +11,7 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
-import java.lang.reflect.Method;
-
 import org.apiguardian.api.API;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
-import org.junit.platform.commons.support.ReflectionSupport;
-import org.junit.platform.commons.util.StringUtils;
 
 /**
  * Enumeration of Java Runtime Environment (JRE) versions.
@@ -85,59 +79,13 @@ public enum JRE {
 
 	static final int UNDEFINED_VERSION = -1;
 
-	static final int MINIMUM_VERSION = 8;
+	static final int MINIMUM_VERSION = ${jres.getFirst().getVersion()};
 
-	private static final Logger logger = LoggerFactory.getLogger(JRE.class);
-
-	private static final int CURRENT_VERSION = determineCurrentVersion();
-
-	private static final JRE CURRENT_JRE = determineCurrentJre(CURRENT_VERSION);
-
-	private static int determineCurrentVersion() {
-		String javaVersion = System.getProperty("java.version");
-		boolean javaVersionIsBlank = StringUtils.isBlank(javaVersion);
-
-		if (javaVersionIsBlank) {
-			logger.debug(
-				() -> "JVM system property 'java.version' is undefined. It is therefore not possible to detect Java 8.");
-		}
-
-		if (!javaVersionIsBlank && javaVersion.startsWith("1.8")) {
-			return 8;
-		}
-
-		try {
-			// java.lang.Runtime.version() is a static method available on Java 9+
-			// that returns an instance of java.lang.Runtime.Version which has the
-			// following method: public int major()
-			Method versionMethod = Runtime.class.getMethod("version");
-			Object version = ReflectionSupport.invokeMethod(versionMethod, null);
-			Method majorMethod = version.getClass().getMethod("major");
-			return (int) ReflectionSupport.invokeMethod(majorMethod, version);
-		}
-		catch (Exception ex) {
-			logger.debug(ex, () -> "Failed to determine the current JRE version via java.lang.Runtime.Version.");
-		}
-
-		return UNDEFINED_VERSION;
-	}
-
-	private static JRE determineCurrentJre(int currentVersion) {
-		switch (currentVersion) {
-			case UNDEFINED_VERSION:
-				return UNDEFINED;<%--
-			--%>@for(var jre : jres)
-			case ${jre.getVersion()}:
-				return JAVA_${jre.getVersion()};<%--
-			--%>@endfor
-			default:
-				return OTHER;
-		}
-	}
+	private static final int CURRENT_VERSION = Runtime.version().feature();
 
 	private final int version;
 
-	private JRE(int version) {
+	JRE(int version) {
 		this.version = version;
 	}
 
@@ -167,7 +115,7 @@ public enum JRE {
 	 * @see #currentVersionNumber()
 	 */
 	public boolean isCurrentVersion() {
-		return this == CURRENT_JRE;
+		return this == currentJre();
 	}
 
 	/**
@@ -193,7 +141,13 @@ public enum JRE {
 	 */
 	@API(status = STABLE, since = "5.12")
 	public static JRE currentJre() {
-		return CURRENT_JRE;
+		return switch (CURRENT_VERSION) {
+			case UNDEFINED_VERSION -> UNDEFINED;<%--
+				--%>@for(var jre : jres)
+			case ${jre.getVersion()} -> JAVA_${jre.getVersion()};<%--
+				--%>@endfor
+			default -> OTHER;
+		};
 	}
 
 	/**
