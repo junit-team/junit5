@@ -20,9 +20,10 @@ plugins {
 
 val mavenizedProjects: List<Project> by rootProject
 val modularProjects: List<Project> by rootProject
+val documentedProjects = modularProjects.filter { it.path != projects.junitJupiterKotlin.path }
 
 // Because we need to set up Javadoc aggregation
-modularProjects.forEach { evaluationDependsOn(it.path) }
+documentedProjects.forEach { evaluationDependsOn(it.path) }
 
 javaLibrary {
 	mainJavaVersion = JavaVersion.VERSION_17
@@ -394,8 +395,10 @@ tasks {
 	}
 
 	val aggregateJavadocs by registering(Javadoc::class) {
-		dependsOn(modularProjects.map { it.tasks.jar })
+
+		dependsOn(documentedProjects.map { it.tasks.jar })
 		dependsOn(downloadJavadocElementLists)
+
 		group = "Documentation"
 		description = "Generates aggregated Javadocs"
 
@@ -439,11 +442,11 @@ tasks {
 			use(true)
 			noTimestamp(true)
 
-			addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
+			addStringsOption("-module", ",").value = documentedProjects.map { it.javaModuleName }
 			val moduleSourcePathOption = addPathOption("-module-source-path")
-			moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
+			moduleSourcePathOption.value = documentedProjects.map { it.file("src/module") }
 			moduleSourcePathOption.value.forEach { inputs.dir(it) }
-			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate { project ->
+			addOption(ModuleSpecificJavadocFileOption("-patch-module", documentedProjects.associate { project ->
 				project.javaModuleName to files(
 					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs }
 				).asPath
@@ -456,10 +459,10 @@ tasks {
 			)))
 		}
 
-		source(modularProjects.map { project ->
+		source(documentedProjects.map { project ->
 			files(project.sourceSets.named { it.startsWith("main") }.map { it.allJava })
 		})
-		classpath = files(modularProjects.map { it.sourceSets.main.get().compileClasspath })
+		classpath = files(documentedProjects.map { it.sourceSets.main.get().compileClasspath })
 
 		setMaxMemory("1024m")
 		options.destinationDirectory = layout.buildDirectory.dir("docs/javadoc").get().asFile
