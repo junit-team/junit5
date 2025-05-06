@@ -12,6 +12,7 @@ package org.junit.api.tools;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -28,7 +29,6 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -141,12 +141,14 @@ class ApiReportGenerator {
 				.enableClassInfo() //
 				.enableMethodInfo() //
 				.enableAnnotationInfo(); //
-		var apiClasspath = System.getProperty("api.classpath");
-		if (apiClasspath != null) {
+		var apiClasspath = System.getProperty("api.modulePath");
+		var apiModules = System.getProperty("api.moduleNames");
+		if (apiClasspath != null && apiModules != null) {
 			var paths = Arrays.stream(apiClasspath.split(File.pathSeparator)).map(Path::of).toArray(Path[]::new);
 			var bootLayer = ModuleLayer.boot();
+			var roots = Arrays.stream(apiModules.split(",")).collect(toUnmodifiableSet());
 			var configuration = bootLayer.configuration().resolveAndBind(ModuleFinder.of(), ModuleFinder.of(paths),
-				Set.of());
+				roots);
 			var layer = bootLayer.defineModulesWithOneLoader(configuration, ClassLoader.getPlatformClassLoader());
 			classGraph = classGraph.overrideModuleLayers(layer);
 		}

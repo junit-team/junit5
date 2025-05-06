@@ -247,7 +247,8 @@ tasks {
 	val generateApiTables by registering(JavaExec::class) {
 		classpath = tools.runtimeClasspath
 		mainClass = "org.junit.api.tools.ApiReportGenerator"
-		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.classpath", apiReportClasspath.get())
+		systemProperty("api.moduleNames", modularProjects.map { it.javaModuleName }.sorted().joinToString(","))
+		jvmArgumentProviders += ClasspathSystemPropertyProvider("api.modulePath", apiReportClasspath.get())
 		argumentProviders += CommandLineArgumentProvider {
 			listOf(
 				"DEPRECATED=${deprecatedApisTableFile.get().asFile.absolutePath}",
