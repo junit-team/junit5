@@ -1950,11 +1950,10 @@ translates to a `Stream` of `Arguments` (i.e., `Stream<Arguments>`); however, th
 concrete return type can take on many forms. In this context, a "stream" is anything that
 JUnit can reliably convert into a `Stream`, such as `Stream`, `DoubleStream`,
 `LongStream`, `IntStream`, `Collection`, `Iterator`, `Iterable`, an array of objects or
-primitives, or
-any type that provides an `iterator(): Iterator` method (such as, for example, a
-`kotlin.sequences.Sequence`). The "arguments" within the stream can be supplied as an
-instance of `Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
-parameterized class or test method accepts a single argument.
+primitives, or any type that provides an `iterator(): Iterator` method (such as, for
+example, a `kotlin.sequences.Sequence`). The "arguments" within the stream can be supplied
+as an instance of `Arguments`, an array of objects (e.g., `Object[]`), or a single value
+if the parameterized class or test method accepts a single argument.
 
 If the return type is `Stream` or one of the primitive streams,
 JUnit will properly close it by calling `BaseStream.close()`,
