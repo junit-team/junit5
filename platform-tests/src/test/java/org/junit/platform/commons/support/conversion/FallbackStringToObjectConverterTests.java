@@ -100,7 +100,7 @@ class FallbackStringToObjectConverterTests {
 
 	private static Constructor<?> constructor(Class<?> clazz) {
 		return ReflectionUtils.findConstructors(clazz,
-			ctr -> ctr.getParameterCount() == 1 && ctr.getParameterTypes()[0] == String.class).get(0);
+			ctr -> ctr.getParameterCount() == 1 && ctr.getParameterTypes()[0] == String.class).getFirst();
 	}
 
 	private static Method bookMethod(String methodName) {

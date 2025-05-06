@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -34,25 +35,12 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 
 	private TestInstances testInstances;
 
-	/**
-	 * Create a new {@code ClassExtensionContext} with {@link Lifecycle#PER_METHOD}.
-	 *
-	 * @see #ClassExtensionContext(ExtensionContext, EngineExecutionListener, ClassBasedTestDescriptor,
-	 * Lifecycle, JupiterConfiguration, ExtensionRegistry, ThrowableCollector)
-	 */
-	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
-			ClassBasedTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, ThrowableCollector throwableCollector) {
-
-		this(parent, engineExecutionListener, testDescriptor, Lifecycle.PER_METHOD, configuration, extensionRegistry,
-			throwableCollector);
-	}
-
 	ClassExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			ClassBasedTestDescriptor testDescriptor, Lifecycle lifecycle, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, ThrowableCollector throwableCollector) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 
 		this.lifecycle = lifecycle;
 		this.throwableCollector = throwableCollector;
@@ -66,6 +54,11 @@ final class ClassExtensionContext extends AbstractExtensionContext<ClassBasedTes
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return getTestDescriptor().getEnclosingTestClasses();
 	}
 
 	@Override

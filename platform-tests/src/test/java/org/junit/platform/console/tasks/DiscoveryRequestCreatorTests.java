@@ -116,7 +116,7 @@ class DiscoveryRequestCreatorTests {
 
 		var filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertExcludes(filters.get(0), STANDARD_INCLUDE_PATTERN);
+		assertExcludes(filters.getFirst(), STANDARD_INCLUDE_PATTERN);
 	}
 
 	@Test
@@ -128,8 +128,8 @@ class DiscoveryRequestCreatorTests {
 
 		var filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertIncludes(filters.get(0), "Foo.*Bar");
-		assertIncludes(filters.get(0), "Bar.*Foo");
+		assertIncludes(filters.getFirst(), "Foo.*Bar");
+		assertIncludes(filters.getFirst(), "Bar.*Foo");
 	}
 
 	@Test
@@ -143,10 +143,10 @@ class DiscoveryRequestCreatorTests {
 
 		var filters = request.getFiltersByType(ClassNameFilter.class);
 		assertThat(filters).hasSize(1);
-		assertIncludes(filters.get(0), "SomeTest");
-		assertIncludes(filters.get(0), "com.acme.Foo");
-		assertIncludes(filters.get(0), "com.acme.Bar");
-		assertIncludes(filters.get(0), "Foo.*Bar");
+		assertIncludes(filters.getFirst(), "SomeTest");
+		assertIncludes(filters.getFirst(), "com.acme.Foo");
+		assertIncludes(filters.getFirst(), "com.acme.Bar");
+		assertIncludes(filters.getFirst(), "Foo.*Bar");
 	}
 
 	@Test
@@ -172,7 +172,7 @@ class DiscoveryRequestCreatorTests {
 		var packageNameFilters = request.getFiltersByType(PackageNameFilter.class);
 
 		assertThat(packageNameFilters).hasSize(2);
-		assertIncludes(packageNameFilters.get(0), "org.junit.included1");
+		assertIncludes(packageNameFilters.getFirst(), "org.junit.included1");
 		assertIncludes(packageNameFilters.get(0), "org.junit.included2");
 		assertIncludes(packageNameFilters.get(0), "org.junit.included3");
 		assertExcludes(packageNameFilters.get(1), "org.junit.excluded1");
@@ -279,7 +279,7 @@ class DiscoveryRequestCreatorTests {
 		var methodSelectors = request.getSelectorsByType(MethodSelector.class);
 
 		assertThat(methodSelectors).hasSize(2);
-		assertThat(methodSelectors.get(0).getClassName()).isEqualTo("com.acme.Foo");
+		assertThat(methodSelectors.getFirst().getClassName()).isEqualTo("com.acme.Foo");
 		assertThat(methodSelectors.get(0).getMethodName()).isEqualTo("m");
 		assertThat(methodSelectors.get(0).getParameterTypeNames()).isEmpty();
 		assertThat(methodSelectors.get(1).getClassName()).isEqualTo("com.example.Bar");

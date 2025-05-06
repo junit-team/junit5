@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -155,8 +154,7 @@ class StandaloneTests {
 	@Test
 	@Order(1)
 	@Execution(SAME_THREAD)
-	void compile(@FilePrefix("javac") OutputFiles javacOutputFiles, @FilePrefix("jar") OutputFiles jarOutputFiles)
-			throws Exception {
+	void compile(@FilePrefix("javac") OutputFiles javacOutputFiles) throws Exception {
 		var result = ProcessStarters.javaCommand("javac") //
 				.workingDir(workspace) //
 				.addArguments("-Xlint:-options") //
@@ -164,6 +162,7 @@ class StandaloneTests {
 				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin").toString()) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone").toString()) //
+				.addArguments(workspace.resolve("src/other/OtherwiseNotReferencedClass.java").toString()) //
 				.addArguments(workspace.resolve("src/standalone/JupiterIntegration.java").toString()) //
 				.addArguments(workspace.resolve("src/standalone/JupiterParamsIntegration.java").toString()) //
 				.addArguments(workspace.resolve("src/standalone/SuiteIntegration.java").toString()) //
@@ -174,17 +173,6 @@ class StandaloneTests {
 		assertEquals(0, result.exitCode());
 		assertTrue(result.stdOut().isEmpty());
 		assertTrue(result.stdErr().isEmpty());
-
-		// create "tests.jar" that'll be picked-up by "testWithJarredTestClasses()" later
-		var jarFolder = Files.createDirectories(workspace.resolve("jar"));
-		var jarResult = ProcessStarters.javaCommand("jar") //
-				.workingDir(workspace) //
-				.addArguments("--create") //
-				.addArguments("--file", jarFolder.resolve("tests.jar").toString()) //
-				.addArguments("-C", workspace.resolve("bin").toString(), ".") //
-				.redirectOutput(jarOutputFiles) //
-				.startAndWait();
-		assertEquals(0, jarResult.exitCode());
 	}
 
 	@Test
@@ -431,30 +419,14 @@ class StandaloneTests {
 
 		assertEquals(1, result.exitCode());
 
-		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
-		assertLinesMatch(expectedOutLines, result.stdOutLines());
-		var actualErrLines = result.stdErrLines();
-		if (actualErrLines.getFirst().contains("stty: /dev/tty: No such device or address")) {
-			// Happens intermittently on GitHub Actions on Windows
-			actualErrLines = new ArrayList<>(actualErrLines);
-			actualErrLines.removeFirst();
-		}
-		assertLinesMatch(expectedErrLines, actualErrLines);
-
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
-		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
-		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+		assertOutputOnCurrentJvm(result);
 	}
 
 	@Test
 	@Order(4)
 	@Execution(SAME_THREAD)
 	void executeOnJava8(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace) //
 				.addArguments("-showversion") //
@@ -490,7 +462,7 @@ class StandaloneTests {
 	@Execution(SAME_THREAD)
 	// https://github.com/junit-team/junit5/issues/2600
 	void executeOnJava8SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome("8").orElseThrow(TestAbortedException::new);
+		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
 		var result = ProcessStarters.java(java8Home) //
 				.workingDir(workspace).addArguments("-showversion") //
 				.addArguments("-enableassertions") //
@@ -530,27 +502,57 @@ class StandaloneTests {
 	@Test
 	@Order(6)
 	@Execution(SAME_THREAD)
-	@Disabled("https://github.com/junit-team/junit5/issues/1724")
-	void executeWithJarredTestClasses(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var jar = MavenRepo.jar("junit-platform-console-standalone");
-		var path = new ArrayList<String>();
-		// path.add("bin"); // "exploded" test classes are found, see also test() above
-		path.add(workspace.resolve("standalone/jar/tests.jar").toAbsolutePath().toString());
-		path.add(jar.toString());
+	void executeWithJarredTestClasses(@FilePrefix("jar") OutputFiles jarOutputFiles,
+			@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var jar = workspace.resolve("tests.jar");
+		var jarResult = ProcessStarters.javaCommand("jar") //
+				.workingDir(workspace) //
+				.addArguments("--create") //
+				.addArguments("--file", jar.toAbsolutePath().toString()) //
+				.addArguments("-C", workspace.resolve("bin").toString(), ".") //
+				.redirectOutput(jarOutputFiles) //
+				.startAndWait();
+
+		assertEquals(0, jarResult.exitCode());
+
 		var result = ProcessStarters.java() //
+				.workingDir(workspace) //
+				.putEnvironment("NO_COLOR", "1") // --disable-ansi-colors
 				.addArguments("--show-version") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
-				.addArguments("--class-path", String.join(File.pathSeparator, path)) //
-				.addArguments("org.junit.platform.console.ConsoleLauncher") //
+				.addArguments("-Djunit.platform.launcher.interceptors.enabled=true") //
+				.addArguments("-jar", MavenRepo.jar("junit-platform-console-standalone").toString()) //
 				.addArguments("execute") //
 				.addArguments("--scan-class-path") //
 				.addArguments("--disable-banner") //
 				.addArguments("--include-classname", "standalone.*") //
-				.addArguments("--fail-if-no-tests") //
+				.addArguments("--classpath", jar.toAbsolutePath().toString()) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 
 		assertEquals(1, result.exitCode());
+
+		assertOutputOnCurrentJvm(result);
+	}
+
+	private static void assertOutputOnCurrentJvm(ProcessResult result) throws IOException {
+		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
+		var expectedErrLines = Files.readAllLines(workspace.resolve("expected-err.txt"));
+		assertLinesMatch(expectedOutLines, result.stdOutLines());
+		var actualErrLines = result.stdErrLines();
+		if (actualErrLines.getFirst().contains("stty: /dev/tty: No such device or address")) {
+			// Happens intermittently on GitHub Actions on Windows
+			actualErrLines = new ArrayList<>(actualErrLines);
+			actualErrLines.removeFirst();
+		}
+		assertLinesMatch(expectedErrLines, actualErrLines);
+
+		var jupiterVersion = Helper.version("junit-jupiter-engine");
+		var vintageVersion = Helper.version("junit-vintage-engine");
+		assertTrue(result.stdErr().contains("junit-jupiter"
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+		assertTrue(result.stdErr().contains("junit-vintage"
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
 	}
 }

@@ -212,7 +212,7 @@ class VintageTestEngineDiscoveryTests {
 		List<TestDescriptor> testMethodDescriptors = new ArrayList<>(runnerDescriptor.getChildren());
 		assertThat(testMethodDescriptors).hasSize(2);
 
-		var testMethodDescriptor = testMethodDescriptors.get(0);
+		var testMethodDescriptor = testMethodDescriptors.getFirst();
 		assertEquals("theory", testMethodDescriptor.getDisplayName());
 		assertEquals(VintageUniqueIdBuilder.uniqueIdForMethod(testClass, "theory", "0"),
 			testMethodDescriptor.getUniqueId());

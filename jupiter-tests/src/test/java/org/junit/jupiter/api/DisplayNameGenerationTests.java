@@ -16,15 +16,23 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 
 import java.lang.reflect.Method;
 import java.util.EmptyStackException;
 import java.util.List;
 import java.util.Stack;
+import java.util.stream.Stream;
 
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences.SentenceFragment;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
-import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
+import org.junit.platform.testkit.engine.Event;
 
 /**
  * Check generated display names.
@@ -147,10 +155,10 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkDisplayNameGeneratedForIndicativeGeneratorTestCase() {
+	void checkDisplayNameGeneratedForIndicativeGenerator() {
 		check(IndicativeGeneratorTestCase.class, //
 			"CONTAINER: A stack", //
-			"TEST: A stack, is instantiated with new constructor", //
+			"TEST: A stack, is instantiated with its constructor", //
 			"CONTAINER: A stack, when new", //
 			"TEST: A stack, when new, throws EmptyStackException when peeked", //
 			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
@@ -159,15 +167,51 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparatorTestCase() {
+	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSeparator() {
 		check(IndicativeGeneratorWithCustomSeparatorTestCase.class, //
 			"CONTAINER: A stack", //
-			"TEST: A stack >> is instantiated with new constructor", //
+			"TEST: A stack >> is instantiated with its constructor", //
 			"CONTAINER: A stack >> when new", //
 			"TEST: A stack >> when new >> throws EmptyStackException when peeked", //
 			"CONTAINER: A stack >> when new >> after pushing an element to an empty stack", //
 			"TEST: A stack >> when new >> after pushing an element to an empty stack >> is no longer empty" //
 		);
+	}
+
+	@Test
+	void checkDisplayNameGeneratedForIndicativeGeneratorWithCustomSentenceFragments() {
+		check(IndicativeGeneratorWithCustomSentenceFragmentsTestCase.class, //
+			"CONTAINER: A stack", //
+			"TEST: A stack, is instantiated with its constructor", //
+			"CONTAINER: A stack, when new", //
+			"TEST: A stack, when new, throws EmptyStackException when peeked", //
+			"CONTAINER: A stack, when new, after pushing an element to an empty stack", //
+			"TEST: A stack, when new, after pushing an element to an empty stack, is no longer empty" //
+		);
+	}
+
+	@Test
+	void blankSentenceFragmentOnClassYieldsError() {
+		var results = discoverTests(selectClass(BlankSentenceFragmentOnClassTestCase.class));
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().severity()).isEqualTo(Severity.ERROR);
+		assertThat(discoveryIssues.getFirst().cause().orElseThrow()) //
+				.hasMessage("@SentenceFragment on [%s] must be declared with a non-blank value.",
+					BlankSentenceFragmentOnClassTestCase.class);
+	}
+
+	@Test
+	void blankSentenceFragmentOnMethodYieldsError() throws Exception {
+		var results = discoverTests(selectMethod(BlankSentenceFragmentOnMethodTestCase.class, "test"));
+
+		var discoveryIssues = results.getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().severity()).isEqualTo(Severity.ERROR);
+		assertThat(discoveryIssues.getFirst().cause().orElseThrow()) //
+				.hasMessage("@SentenceFragment on [%s] must be declared with a non-blank value.",
+					BlankSentenceFragmentOnMethodTestCase.class.getDeclaredMethod("test"));
 	}
 
 	@Test
@@ -225,17 +269,49 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		);
 	}
 
+	@Test
+	void indicativeSentencesOnClassTemplate() {
+		check(ClassTemplateTestCase.class, //
+			"CONTAINER: Class template", //
+			"CONTAINER: [1] Class template", //
+			"TEST: Class template, some test", //
+			"CONTAINER: Class template, Regular Nested Test Case", //
+			"TEST: Class template, Regular Nested Test Case, some nested test", //
+			"CONTAINER: Class template, Nested Class Template", //
+			"CONTAINER: [1] Class template, Nested Class Template", //
+			"TEST: Class template, Nested Class Template, some nested test" //
+		);
+
+		assertThat(executeTestsForClass(ClassTemplateTestCase.class).allEvents().started().stream()) //
+				.map(event -> event.getTestDescriptor().getDisplayName()) //
+				.containsExactly( //
+					"JUnit Jupiter", //
+					"Class template", //
+					"[1] Class template", //
+					"Class template, some test", //
+					"Class template, Regular Nested Test Case", //
+					"Class template, Regular Nested Test Case, some nested test", //
+					"Class template, Nested Class Template", //
+					"[1] Class template, Nested Class Template", //
+					"Class template, Nested Class Template, some nested test" //
+				);
+	}
+
 	private void check(Class<?> testClass, String... expectedDisplayNames) {
-		var request = request().selectors(selectClass(testClass)).build();
-		var descriptors = discoverTests(request).getDescendants();
-		assertThat(descriptors).map(this::describe).containsExactlyInAnyOrder(expectedDisplayNames);
+		var results = executeTestsForClass(testClass);
+		check(results, expectedDisplayNames);
 	}
 
-	private String describe(TestDescriptor descriptor) {
-		return descriptor.getType() + ": " + descriptor.getDisplayName();
+	private void check(EngineExecutionResults results, String[] expectedDisplayNames) {
+		var descriptors = results.allEvents().started().stream() //
+				.map(Event::getTestDescriptor) //
+				.skip(1); // Skip engine descriptor
+		assertThat(descriptors) //
+				.map(it -> it.getType() + ": " + it.getDisplayName()) //
+				.containsExactlyInAnyOrder(expectedDisplayNames);
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	static class NoNameGenerator implements DisplayNameGenerator {
 
@@ -314,7 +390,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	static class UnderscoreStyleInheritedFromSuperClassTestCase extends UnderscoreStyleTestCase {
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -381,7 +457,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -391,7 +467,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_instantiated_with_new_constructor() {
+		void is_instantiated_with_its_constructor() {
 			new Stack<>();
 		}
 
@@ -426,7 +502,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
-	// -------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@DisplayName("A stack")
@@ -436,7 +512,7 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		Stack<Object> stack;
 
 		@Test
-		void is_instantiated_with_new_constructor() {
+		void is_instantiated_with_its_constructor() {
 			new Stack<>();
 		}
 
@@ -470,4 +546,125 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 			}
 		}
 	}
+
+	// -------------------------------------------------------------------------
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@SentenceFragment("A stack")
+	@IndicativeSentencesGeneration
+	static class IndicativeGeneratorWithCustomSentenceFragmentsTestCase {
+
+		Stack<Object> stack;
+
+		@SentenceFragment("is instantiated with its constructor")
+		@Test
+		void instantiateViaConstructor() {
+			new Stack<>();
+		}
+
+		@SentenceFragment("when new")
+		@Nested
+		class NewStackTestCase {
+
+			@BeforeEach
+			void createNewStack() {
+				stack = new Stack<>();
+			}
+
+			@SentenceFragment("throws EmptyStackException when peeked")
+			@Test
+			void throwsExceptionWhenPeeked() {
+				assertThrows(EmptyStackException.class, () -> stack.peek());
+			}
+
+			@SentenceFragment("after pushing an element to an empty stack")
+			@Nested
+			class ElementPushedOntoStackTestCase {
+
+				String anElement = "an element";
+
+				@BeforeEach
+				void pushElementOntoStack() {
+					stack.push(anElement);
+				}
+
+				@SentenceFragment("is no longer empty")
+				@Test
+				void nonEmptyStack() {
+					assertFalse(stack.isEmpty());
+				}
+			}
+		}
+	}
+
+	// -------------------------------------------------------------------------
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ClassTemplate
+	@ExtendWith(ClassTemplateTestCase.Once.class)
+	@DisplayName("Class template")
+	@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
+	@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+	static class ClassTemplateTestCase {
+
+		@Test
+		void some_test() {
+		}
+
+		@Nested
+		@Order(1)
+		class Regular_Nested_Test_Case {
+			@Test
+			void some_nested_test() {
+			}
+		}
+
+		@Nested
+		@Order(2)
+		@ClassTemplate
+		class Nested_Class_Template {
+			@Test
+			void some_nested_test() {
+			}
+		}
+
+		private static class Once implements ClassTemplateInvocationContextProvider {
+
+			@Override
+			public boolean supportsClassTemplate(ExtensionContext context) {
+				return true;
+			}
+
+			@Override
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
+					ExtensionContext context) {
+				return Stream.of(new ClassTemplateInvocationContext() {
+					@Override
+					public String getDisplayName(int invocationIndex) {
+						return "%s %s".formatted(ClassTemplateInvocationContext.super.getDisplayName(invocationIndex),
+							context.getDisplayName());
+					}
+				});
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@IndicativeSentencesGeneration
+	@SentenceFragment("")
+	static class BlankSentenceFragmentOnClassTestCase {
+		@Test
+		void test() {
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@IndicativeSentencesGeneration
+	static class BlankSentenceFragmentOnMethodTestCase {
+		@SentenceFragment("\t")
+		@Test
+		void test() {
+		}
+	}
+
 }

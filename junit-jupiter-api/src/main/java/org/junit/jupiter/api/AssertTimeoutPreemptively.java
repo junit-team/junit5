@@ -143,14 +143,17 @@ class AssertTimeoutPreemptively {
 
 	/**
 	 * The thread factory used for preemptive timeout.
-	 * <p>
-	 * The factory creates threads with meaningful names, helpful for debugging purposes.
+	 *
+	 * <p>The factory creates threads with meaningful names, helpful for debugging
+	 * purposes.
 	 */
 	private static class TimeoutThreadFactory implements ThreadFactory {
 		private static final AtomicInteger threadNumber = new AtomicInteger(1);
 
+		@Override
 		public Thread newThread(Runnable r) {
 			return new Thread(r, "junit-timeout-thread-" + threadNumber.getAndIncrement());
 		}
 	}
+
 }

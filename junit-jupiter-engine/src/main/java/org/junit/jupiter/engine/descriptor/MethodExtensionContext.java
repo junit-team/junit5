@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.descriptor;
 
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -34,9 +35,10 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 
 	MethodExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestMethodTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, ThrowableCollector throwableCollector) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
+			ThrowableCollector throwableCollector) {
 
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 
 		this.throwableCollector = throwableCollector;
 	}
@@ -49,6 +51,11 @@ final class MethodExtensionContext extends AbstractExtensionContext<TestMethodTe
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.of(getTestDescriptor().getTestClass());
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return getTestDescriptor().getEnclosingTestClasses();
 	}
 
 	@Override

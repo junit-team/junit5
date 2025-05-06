@@ -25,7 +25,13 @@ import org.apiguardian.api.API;
  * executed <em>after</em> <strong>all</strong> tests in the current test class.
  *
  * <p>In contrast to {@link AfterEach @AfterEach} methods, {@code @AfterAll}
- * methods are only executed once for a given test class.
+ * methods are only executed once per execution of a given test class. If the
+ * test class is annotated with {@link ClassTemplate @ClassTemplate}, the
+ * {@code @AfterAll} methods are executed once after the last invocation of the
+ * class template. If a {@link Nested @Nested} test class is declared in a
+ * {@link ClassTemplate @ClassTemplate}, its {@code @AfterAll} methods are
+ * called once per execution of the nested test class, namely, once per
+ * invocation of the outer class template.
  *
  * <h2>Method Signatures</h2>
  *

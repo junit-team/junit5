@@ -24,7 +24,8 @@ var openTestReportingCliClasspath = configurations.resolvable("openTestReporting
 
 val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
 	mustRunAfter(tasks.withType<Test>())
-	mainClass.set("org.opentest4j.reporting.cli.ReportingCli")
+	mainModule.set("org.opentest4j.reporting.cli")
+	modularity.inferModulePath = true
 	args("html-report")
 	classpath(openTestReportingCliClasspath)
 	argumentProviders += objects.newInstance(HtmlReportParameters::class).apply {
@@ -70,12 +71,12 @@ tasks.withType<Test>().configureEach {
 	}
 	develocity {
 		testRetry {
-			maxRetries = buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0)
+			maxRetries.convention(buildParameters.testing.retries.orElse(if (buildParameters.ci) 2 else 0))
 		}
 		testDistribution {
 			enabled.convention(buildParameters.junit.develocity.testDistribution.enabled && (!buildParameters.ci || !System.getenv("DEVELOCITY_ACCESS_KEY").isNullOrBlank()))
-			maxLocalExecutors = buildParameters.junit.develocity.testDistribution.maxLocalExecutors
-			maxRemoteExecutors = buildParameters.junit.develocity.testDistribution.maxRemoteExecutors
+			maxLocalExecutors.convention(buildParameters.junit.develocity.testDistribution.maxLocalExecutors)
+			maxRemoteExecutors.convention(buildParameters.junit.develocity.testDistribution.maxRemoteExecutors)
 			if (buildParameters.ci) {
 				when {
 					OperatingSystem.current().isLinux -> requirements.add("os=linux")
@@ -85,10 +86,10 @@ tasks.withType<Test>().configureEach {
 			}
 		}
 		predictiveTestSelection {
-			enabled = buildParameters.junit.develocity.predictiveTestSelection.enabled
+			enabled.convention(buildParameters.junit.develocity.predictiveTestSelection.enabled)
 
 			if (buildParameters.junit.develocity.predictiveTestSelection.selectRemainingTests) {
-				mode = PredictiveTestSelectionMode.REMAINING_TESTS
+				mode.convention(PredictiveTestSelectionMode.REMAINING_TESTS)
 			}
 
 			// Ensure PTS works when publishing Build Scans to scans.gradle.com
@@ -113,6 +114,7 @@ tasks.withType<Test>().configureEach {
 			"-XX:FlightRecorderOptions=stackdepth=1024"
 		)
 	}
+	systemProperty("junit.platform.execution.dryRun.enabled", buildParameters.testing.dryRun)
 
 	// Track OS as input so that tests are executed on all configured operating systems on CI
 	trackOperationSystemAsInput()
@@ -131,10 +133,12 @@ tasks.withType<Test>().configureEach {
 	}
 	systemProperty("junit.platform.output.capture.stdout", "true")
 	systemProperty("junit.platform.output.capture.stderr", "true")
+	systemProperty("junit.platform.discovery.issue.severity.critical", "info")
 
 	jvmArgumentProviders += objects.newInstance(JavaAgentArgumentProvider::class).apply {
 		classpath.from(javaAgentClasspath)
 	}
+	jvmArgs("-Xshare:off") // https://github.com/mockito/mockito/issues/3111
 
 	val reportDirTree = objects.fileTree().from(reports.junitXml.outputLocation)
 	doFirst {
@@ -149,6 +153,7 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
+	testImplementation(platform(dependencyFromLibs("mockito-bom")))
 	testImplementation(dependencyFromLibs("assertj"))
 	testImplementation(dependencyFromLibs("mockito-junit-jupiter"))
 	testImplementation(dependencyFromLibs("testingAnnotations"))
@@ -169,6 +174,7 @@ dependencies {
 	openTestReportingCli(dependencyFromLibs("openTestReporting-cli"))
 	openTestReportingCli(project(":junit-platform-reporting"))
 
+	javaAgent(platform(dependencyFromLibs("mockito-bom")))
 	javaAgent(dependencyFromLibs("mockito-core")) {
 		isTransitive = false
 	}

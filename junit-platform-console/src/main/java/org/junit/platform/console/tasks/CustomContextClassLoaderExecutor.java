@@ -13,17 +13,22 @@ package org.junit.platform.console.tasks;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import org.junit.platform.commons.JUnitException;
-
 /**
  * @since 1.0
  */
 class CustomContextClassLoaderExecutor {
 
 	private final Optional<ClassLoader> customClassLoader;
+	private final CustomClassLoaderCloseStrategy closeStrategy;
 
 	CustomContextClassLoaderExecutor(Optional<ClassLoader> customClassLoader) {
+		this(customClassLoader, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+	}
+
+	CustomContextClassLoaderExecutor(Optional<ClassLoader> customClassLoader,
+			CustomClassLoaderCloseStrategy closeStrategy) {
 		this.customClassLoader = customClassLoader;
+		this.closeStrategy = closeStrategy;
 	}
 
 	<T> T invoke(Supplier<T> supplier) {
@@ -43,18 +48,7 @@ class CustomContextClassLoaderExecutor {
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
-			if (customClassLoader instanceof AutoCloseable) {
-				close((AutoCloseable) customClassLoader);
-			}
-		}
-	}
-
-	private static void close(AutoCloseable customClassLoader) {
-		try {
-			customClassLoader.close();
-		}
-		catch (Exception e) {
-			throw new JUnitException("Failed to close custom class loader", e);
+			closeStrategy.handle(customClassLoader);
 		}
 	}
 

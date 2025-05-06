@@ -39,6 +39,10 @@ package org.opentest4j {
     [opentest4j]
 }
 
+package org.opentest4j.reporting {
+    [open-test-reporting-tooling-spi] as otr_tooling_spi
+}
+
 package org.apiguardian {
     [apiguardian-api] as apiguardian
     note bottom of apiguardian #white
@@ -77,6 +81,7 @@ engine ....> opentest4j
 engine ..> commons
 
 reporting ..> launcher
+reporting ......> otr_tooling_spi
 
 runner ..> suite_commons
 runner ...> junit4

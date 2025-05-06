@@ -177,16 +177,16 @@ public interface TestDescriptor {
 	void removeFromHierarchy();
 
 	/**
-	 * Order the children from this descriptor.
+	 * Order the children of this descriptor.
 	 *
 	 * <p>The {@code orderer} is provided a modifiable list of child test
-	 * descriptors in this test descriptor; never {@code null}. The
+	 * descriptors of this test descriptor; never {@code null}. The
 	 * {@code orderer} must return a list containing the same descriptors in any
 	 * order; potentially the same list, but never {@code null}. If descriptors
-	 * were added or removed, an exception is thrown.
+	 * are added or removed, an exception is thrown.
 	 *
-	 * @param orderer a unary operator to order the children of this test
-	 * descriptor.
+	 * @param orderer a unary operator to order the children of this test descriptor
+	 * @since 1.12
 	 */
 	@API(since = "1.12", status = EXPERIMENTAL)
 	default void orderChildren(UnaryOperator<List<TestDescriptor>> orderer) {
@@ -318,6 +318,25 @@ public interface TestDescriptor {
 	 */
 	@FunctionalInterface
 	interface Visitor {
+
+		/**
+		 * Combine the supplied {@code visitors} into a single {@code Visitor}.
+		 *
+		 * <p>If the supplied array contains only a single {@code Visitor}, that
+		 * {@code Visitor} is returned as is.
+		 *
+		 * @param visitors the {@code Visitor}s to combine; never {@code null}
+		 * or empty
+		 * @return the combined {@code Visitor}
+		 * @throws org.junit.platform.commons.PreconditionViolationException if
+		 * {@code visitors} is {@code null}, contains {@code null} elements, or
+		 * is empty
+		 * @since 1.13
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		static Visitor composite(Visitor... visitors) {
+			return CompositeTestDescriptorVisitor.from(visitors);
+		}
 
 		/**
 		 * Visit a {@link TestDescriptor}.

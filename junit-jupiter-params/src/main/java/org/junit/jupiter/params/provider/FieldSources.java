@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -28,13 +29,18 @@ import org.apiguardian.api.API;
  * optional since {@code @FieldSource} is a {@linkplain java.lang.annotation.Repeatable
  * repeatable} annotation.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.11
  * @see FieldSource
  * @see java.lang.annotation.Repeatable
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = EXPERIMENTAL, since = "5.11")
 public @interface FieldSources {
 
@@ -43,4 +49,5 @@ public @interface FieldSources {
 	 * annotations.
 	 */
 	FieldSource[] value();
+
 }

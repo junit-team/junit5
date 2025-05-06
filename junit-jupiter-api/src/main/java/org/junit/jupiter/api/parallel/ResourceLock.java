@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.ClassTemplate;
 
 /**
  * {@code @ResourceLock} is used to declare that the annotated test class or test
@@ -69,6 +70,10 @@ import org.apiguardian.api.API;
  * longer apply to a node declaring the annotation. However, the {@link #providers()}
  * attribute remains applicable, and the target of "dynamic" shared resources added
  * via implementations of {@link ResourceLocksProvider} is not changed.
+ *
+ * <p>Shared resources declared on or provided for methods or nested test
+ * classes in a {@link ClassTemplate @ClassTemplate} are propagated as if they
+ * were declared on the outermost enclosing {@code @ClassTemplate} class itself.
  *
  * @see Isolated
  * @see Resources

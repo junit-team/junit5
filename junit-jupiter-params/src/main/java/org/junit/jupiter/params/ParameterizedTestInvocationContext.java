@@ -10,52 +10,41 @@
 
 package org.junit.jupiter.params;
 
-import java.util.Arrays;
+import static java.util.Collections.singletonList;
+
 import java.util.List;
 
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 
 /**
  * @since 5.0
  */
-class ParameterizedTestInvocationContext implements TestTemplateInvocationContext {
+class ParameterizedTestInvocationContext extends ParameterizedInvocationContext<ParameterizedTestContext>
+		implements TestTemplateInvocationContext {
 
-	private final ParameterizedTestNameFormatter formatter;
-	private final ParameterizedTestMethodContext methodContext;
-	private final Arguments arguments;
-	private final Object[] consumedArguments;
-	private final int invocationIndex;
-
-	ParameterizedTestInvocationContext(ParameterizedTestNameFormatter formatter,
-			ParameterizedTestMethodContext methodContext, Arguments arguments, int invocationIndex) {
-
-		this.formatter = formatter;
-		this.methodContext = methodContext;
-		this.arguments = arguments;
-		this.consumedArguments = consumedArguments(methodContext, arguments.get());
-		this.invocationIndex = invocationIndex;
+	ParameterizedTestInvocationContext(ParameterizedTestContext methodContext,
+			ParameterizedInvocationNameFormatter formatter, Arguments arguments, int invocationIndex) {
+		super(methodContext, formatter, arguments, invocationIndex);
 	}
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(invocationIndex, this.arguments, this.consumedArguments);
+		return super.getDisplayName(invocationIndex);
 	}
 
 	@Override
 	public List<Extension> getAdditionalExtensions() {
-		return Arrays.asList(
-			new ParameterizedTestParameterResolver(this.methodContext, this.consumedArguments, this.invocationIndex),
-			new ArgumentCountValidator(this.methodContext, this.arguments));
+		return singletonList( //
+			new ParameterizedTestMethodParameterResolver(this.declarationContext, this.arguments, this.invocationIndex) //
+		);
 	}
 
-	private static Object[] consumedArguments(ParameterizedTestMethodContext methodContext, Object[] arguments) {
-		if (methodContext.hasAggregator()) {
-			return arguments;
-		}
-		int parameterCount = methodContext.getParameterCount();
-		return arguments.length > parameterCount ? Arrays.copyOf(arguments, parameterCount) : arguments;
+	@Override
+	public void prepareInvocation(ExtensionContext context) {
+		super.prepareInvocation(context);
 	}
 
 }

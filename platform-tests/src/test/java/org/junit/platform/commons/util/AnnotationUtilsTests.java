@@ -383,7 +383,7 @@ class AnnotationUtilsTests {
 		var methods = findAnnotatedMethods(ClassWithAnnotatedMethods.class, Annotation1.class, TOP_DOWN);
 
 		assertEquals(3, methods.size());
-		assertEquals(superMethod, methods.get(0));
+		assertEquals(superMethod, methods.getFirst());
 		assertThat(methods.subList(1, 3)).containsOnly(method1, method3);
 	}
 
@@ -475,7 +475,7 @@ class AnnotationUtilsTests {
 		var fields = findAnnotatedFields(ClassWithAnnotatedFields.class, Annotation1.class, isStringField, TOP_DOWN);
 
 		assertEquals(3, fields.size());
-		assertEquals(superField, fields.get(0));
+		assertEquals(superField, fields.getFirst());
 		assertThat(fields.subList(1, 3)).containsOnly(field1, field3);
 	}
 

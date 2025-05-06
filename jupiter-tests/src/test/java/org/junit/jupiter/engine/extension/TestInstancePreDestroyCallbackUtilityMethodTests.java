@@ -35,7 +35,7 @@ public class TestInstancePreDestroyCallbackUtilityMethodTests extends AbstractJu
 	@ValueSource(classes = { PerMethodLifecycleOnAllLevels.class, PerMethodWithinPerClassLifecycle.class,
 			PerClassWithinPerMethodLifecycle.class, PerClassLifecycleOnAllLevels.class })
 	void destroysWhatWasPostProcessed(Class<?> testClass) {
-		executeTestsForClass(testClass).allEvents().debug() //
+		executeTestsForClass(testClass).allEvents() //
 				.assertStatistics(stats -> stats.reportingEntryPublished(4)) //
 				.assertEventsMatchLooselyInOrder( //
 					reportEntry(Map.of("post-process", testClass.getSimpleName())),

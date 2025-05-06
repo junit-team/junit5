@@ -89,8 +89,8 @@ public interface TestReporter {
 
 	/**
 	 * Publish the supplied file and attach it to the current test or container.
-	 * <p>
-	 * The file will be copied to the report output directory replacing any
+	 *
+	 * <p>The file will be copied to the report output directory replacing any
 	 * potentially existing file with the same name.
 	 *
 	 * @param file the file to be attached; never {@code null} or blank
@@ -108,8 +108,8 @@ public interface TestReporter {
 	/**
 	 * Publish the supplied directory and attach it to the current test or
 	 * container.
-	 * <p>
-	 * The entire directory will be copied to the report output directory
+	 *
+	 * <p>The entire directory will be copied to the report output directory
 	 * replacing any potentially existing files with the same name.
 	 *
 	 * @param directory the file to be attached; never {@code null} or blank
@@ -142,8 +142,8 @@ public interface TestReporter {
 	/**
 	 * Publish a file or directory with the supplied name and media type written
 	 * by the supplied action and attach it to the current test or container.
-	 * <p>
-	 * The {@link Path} passed to the supplied action will be relative to the
+	 *
+	 * <p>The {@link Path} passed to the supplied action will be relative to the
 	 * report output directory, but it's up to the action to write the file.
 	 *
 	 * @param name the name of the file to be attached; never {@code null} or
@@ -161,8 +161,8 @@ public interface TestReporter {
 	/**
 	 * Publish a directory with the supplied name written by the supplied action
 	 * and attach it to the current test or container.
-	 * <p>
-	 * The {@link Path} passed to the supplied action will be relative to the
+	 *
+	 * <p>The {@link Path} passed to the supplied action will be relative to the
 	 * report output directory and point to an existing directory, but it's up
 	 * to the action to write files to it.
 	 *

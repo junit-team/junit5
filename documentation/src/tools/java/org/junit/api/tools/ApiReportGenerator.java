@@ -10,13 +10,16 @@
 
 package org.junit.api.tools;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toCollection;
 
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UncheckedIOException;
+import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -25,6 +28,7 @@ import java.util.EnumMap;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.stream.Stream;
@@ -52,30 +56,30 @@ class ApiReportGenerator {
 		// CAUTION: The output produced by this method is used to
 		//          generate a table in the User Guide.
 
-		var reportGenerator = new ApiReportGenerator();
+		try (var scanResult = scanClasspath()) {
 
-		// scan all types below "org.junit" package
-		var apiReport = reportGenerator.generateReport("org.junit");
+			var apiReport = generateReport(scanResult);
 
-		// ApiReportWriter reportWriter = new MarkdownApiReportWriter(apiReport);
-		ApiReportWriter reportWriter = new AsciidocApiReportWriter(apiReport);
-		// ApiReportWriter reportWriter = new HtmlApiReportWriter(apiReport);
+			// ApiReportWriter reportWriter = new MarkdownApiReportWriter(apiReport);
+			ApiReportWriter reportWriter = new AsciidocApiReportWriter(apiReport);
+			// ApiReportWriter reportWriter = new HtmlApiReportWriter(apiReport);
 
-		// reportWriter.printReportHeader(new PrintWriter(System.out, true));
+			// reportWriter.printReportHeader(new PrintWriter(System.out, true));
 
-		// Print report for all Usage enum constants
-		// reportWriter.printDeclarationInfo(new PrintWriter(System.out, true), EnumSet.allOf(Status.class));
+			// Print report for all Usage enum constants
+			// reportWriter.printDeclarationInfo(new PrintWriter(System.out, true), EnumSet.allOf(Status.class));
 
-		// Print report only for specific Status constants, defaults to only EXPERIMENTAL
-		parseArgs(args).forEach((status, opener) -> {
-			try (var stream = opener.openStream()) {
-				var writer = new PrintWriter(stream == null ? System.out : stream, true);
-				reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
-			}
-			catch (IOException e) {
-				throw new UncheckedIOException("Failed to write report", e);
-			}
-		});
+			// Print report only for specific Status constants, defaults to only EXPERIMENTAL
+			parseArgs(args).forEach((status, opener) -> {
+				try (var stream = opener.openStream()) {
+					var writer = new PrintWriter(stream == null ? System.out : stream, true, UTF_8);
+					reportWriter.printDeclarationInfo(writer, EnumSet.of(status));
+				}
+				catch (IOException e) {
+					throw new UncheckedIOException("Failed to write report", e);
+				}
+			});
+		}
 	}
 
 	// -------------------------------------------------------------------------
@@ -102,44 +106,49 @@ class ApiReportGenerator {
 		OutputStream openStream() throws IOException;
 	}
 
-	ApiReport generateReport(String... packages) {
+	private static ApiReport generateReport(ScanResult scanResult) {
 		Map<Status, List<Declaration>> declarations = new EnumMap<>(Status.class);
 		for (var status : Status.values()) {
 			declarations.put(status, new ArrayList<>());
 		}
 
-		try (var scanResult = scanClasspath(packages)) {
+		var types = collectTypes(scanResult);
+		types.stream() //
+				.map(Declaration.Type::new) //
+				.forEach(type -> declarations.get(type.status()).add(type));
 
-			var types = collectTypes(scanResult);
-			types.stream() //
-					.map(Declaration.Type::new) //
-					.forEach(type -> declarations.get(type.status()).add(type));
+		collectMethods(scanResult) //
+				.map(Declaration.Method::new) //
+				.filter(method -> !declarations.get(method.status()) //
+						.contains(new Declaration.Type(method.classInfo()))) //
+				.forEach(method -> {
+					types.add(method.classInfo());
+					declarations.get(method.status()).add(method);
+				});
 
-			collectMethods(scanResult) //
-					.map(Declaration.Method::new) //
-					.filter(method -> !declarations.get(method.status()) //
-							.contains(new Declaration.Type(method.classInfo()))) //
-					.forEach(method -> {
-						types.add(method.classInfo());
-						declarations.get(method.status()).add(method);
-					});
+		declarations.values().forEach(list -> list.sort(null));
 
-			declarations.values().forEach(list -> list.sort(null));
-
-			return new ApiReport(types, declarations);
-		}
+		return new ApiReport(types, declarations);
 	}
 
-	private static ScanResult scanClasspath(String[] packages) {
+	private static ScanResult scanClasspath() {
+		// scan all types below "org.junit" package
 		var classGraph = new ClassGraph() //
-				.acceptPackages(packages) //
+				.acceptPackages("org.junit") //
+				.rejectPackages("*.shadow.*", "org.opentest4j.*", "org.junit.platform.commons.logging",
+					"org.junit.platform.commons.util") //
 				.disableNestedJarScanning() //
 				.enableClassInfo() //
 				.enableMethodInfo() //
 				.enableAnnotationInfo(); //
 		var apiClasspath = System.getProperty("api.classpath");
 		if (apiClasspath != null) {
-			classGraph = classGraph.overrideClasspath(apiClasspath);
+			var paths = Arrays.stream(apiClasspath.split(File.pathSeparator)).map(Path::of).toArray(Path[]::new);
+			var bootLayer = ModuleLayer.boot();
+			var configuration = bootLayer.configuration().resolveAndBind(ModuleFinder.of(), ModuleFinder.of(paths),
+				Set.of());
+			var layer = bootLayer.defineModulesWithOneLoader(configuration, ClassLoader.getPlatformClassLoader());
+			classGraph = classGraph.overrideModuleLayers(layer);
 		}
 		return classGraph.scan();
 	}

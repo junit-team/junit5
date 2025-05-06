@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.Named.named;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.hierarchicalOutputDirectoryProvider;
 import static org.mockito.ArgumentMatchers.eq;
@@ -39,6 +40,7 @@ import java.util.function.Function;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Named;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.Extension;
@@ -63,6 +65,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.engine.support.hierarchical.OpenTest4JAwareThrowableCollector;
+import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
 import org.mockito.ArgumentCaptor;
 
 /**
@@ -76,6 +79,8 @@ public class ExtensionContextTests {
 
 	private final JupiterConfiguration configuration = mock();
 	private final ExtensionRegistry extensionRegistry = mock();
+	private final LauncherStoreFacade launcherStoreFacade = new LauncherStoreFacade(
+		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
 	@BeforeEach
 	void setUp() {
@@ -90,7 +95,7 @@ public class ExtensionContextTests {
 		var engineTestDescriptor = new JupiterEngineDescriptor(UniqueId.root("engine", "junit-jupiter"), configuration);
 
 		try (var engineContext = new JupiterEngineExtensionContext(null, engineTestDescriptor, configuration,
-			extensionRegistry)) {
+			extensionRegistry, launcherStoreFacade)) {
 			// @formatter:off
 			assertAll("engineContext",
 				() -> assertThat(engineContext.getElement()).isEmpty(),
@@ -115,36 +120,67 @@ public class ExtensionContextTests {
 	void fromClassTestDescriptor() {
 		var nestedClassDescriptor = nestedClassDescriptor();
 		var outerClassDescriptor = outerClassDescriptor(nestedClassDescriptor);
+		var doublyNestedClassDescriptor = doublyNestedClassDescriptor();
+		var methodTestDescriptor = nestedMethodDescriptor();
+		nestedClassDescriptor.addChild(doublyNestedClassDescriptor);
+		nestedClassDescriptor.addChild(methodTestDescriptor);
 
-		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, configuration,
-			extensionRegistry, null);
+		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 
 		// @formatter:off
 		assertAll("outerContext",
-			() -> assertThat(outerExtensionContext.getElement()).contains(OuterClass.class),
-			() -> assertThat(outerExtensionContext.getTestClass()).contains(OuterClass.class),
+			() -> assertThat(outerExtensionContext.getElement()).contains(OuterClassTestCase.class),
+			() -> assertThat(outerExtensionContext.getTestClass()).contains(OuterClassTestCase.class),
 			() -> assertThat(outerExtensionContext.getTestInstance()).isEmpty(),
 			() -> assertThat(outerExtensionContext.getTestMethod()).isEmpty(),
-			() -> assertThat(outerExtensionContext.getRequiredTestClass()).isEqualTo(OuterClass.class),
+			() -> assertThat(outerExtensionContext.getRequiredTestClass()).isEqualTo(OuterClassTestCase.class),
 			() -> assertThrows(PreconditionViolationException.class, outerExtensionContext::getRequiredTestInstance),
 			() -> assertThrows(PreconditionViolationException.class, outerExtensionContext::getRequiredTestMethod),
 			() -> assertThat(outerExtensionContext.getDisplayName()).isEqualTo(outerClassDescriptor.getDisplayName()),
 			() -> assertThat(outerExtensionContext.getParent()).isEmpty(),
 			() -> assertThat(outerExtensionContext.getExecutionMode()).isEqualTo(ExecutionMode.SAME_THREAD),
-			() -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty()
+			() -> assertThat(outerExtensionContext.getExtensions(PreInterruptCallback.class)).isEmpty(),
+			() -> assertThat(outerExtensionContext.getEnclosingTestClasses()).isEmpty()
 		);
 		// @formatter:on
 
 		var nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null, nestedClassDescriptor,
-			configuration, extensionRegistry, null);
-		assertThat(nestedExtensionContext.getParent()).containsSame(outerExtensionContext);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
+		// @formatter:off
+		assertAll("nestedContext",
+			() -> assertThat(nestedExtensionContext.getParent()).containsSame(outerExtensionContext),
+			() -> assertThat(nestedExtensionContext.getTestClass()).contains(OuterClassTestCase.NestedClass.class),
+			() -> assertThat(nestedExtensionContext.getEnclosingTestClasses()).containsExactly(OuterClassTestCase.class)
+		);
+		// @formatter:on
+
+		var doublyNestedExtensionContext = new ClassExtensionContext(nestedExtensionContext, null,
+			doublyNestedClassDescriptor, PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
+		// @formatter:off
+		assertAll("doublyNestedContext",
+				() -> assertThat(doublyNestedExtensionContext.getParent()).containsSame(nestedExtensionContext),
+				() -> assertThat(doublyNestedExtensionContext.getTestClass()).contains(OuterClassTestCase.NestedClass.DoublyNestedClass.class),
+				() -> assertThat(doublyNestedExtensionContext.getEnclosingTestClasses()).containsExactly(OuterClassTestCase.class, OuterClassTestCase.NestedClass.class)
+		);
+		// @formatter:on
+
+		var methodExtensionContext = new MethodExtensionContext(nestedExtensionContext, null, methodTestDescriptor,
+			configuration, extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
+		// @formatter:off
+		assertAll("methodContext",
+				() -> assertThat(methodExtensionContext.getParent()).containsSame(nestedExtensionContext),
+				() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClassTestCase.NestedClass.class),
+				() -> assertThat(methodExtensionContext.getEnclosingTestClasses()).containsExactly(OuterClassTestCase.class)
+		);
+		// @formatter:on
 	}
 
 	@Test
 	void ExtensionContext_With_ExtensionRegistry_getExtensions() {
 		var classTestDescriptor = nestedClassDescriptor();
-		try (var ctx = new ClassExtensionContext(null, null, classTestDescriptor, configuration, extensionRegistry,
-			null)) {
+		try (var ctx = new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD, configuration,
+			extensionRegistry, launcherStoreFacade, null)) {
 
 			Extension ext = mock();
 			when(extensionRegistry.getExtensions(Extension.class)).thenReturn(List.of(ext));
@@ -161,20 +197,20 @@ public class ExtensionContextTests {
 		var methodTestDescriptor = methodDescriptor();
 		outerClassDescriptor.addChild(methodTestDescriptor);
 
-		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, configuration,
-			extensionRegistry, null);
+		var outerExtensionContext = new ClassExtensionContext(null, null, outerClassDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 
 		assertThat(outerExtensionContext.getTags()).containsExactly("outer-tag");
 		assertThat(outerExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		var nestedExtensionContext = new ClassExtensionContext(outerExtensionContext, null, nestedClassDescriptor,
-			configuration, extensionRegistry, null);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		assertThat(nestedExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "nested-tag");
 		assertThat(nestedExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 
 		var methodExtensionContext = new MethodExtensionContext(outerExtensionContext, null, methodTestDescriptor,
-			configuration, extensionRegistry, new OpenTest4JAwareThrowableCollector());
-		methodExtensionContext.setTestInstances(DefaultTestInstances.of(new OuterClass()));
+			configuration, extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
+		methodExtensionContext.setTestInstances(DefaultTestInstances.of(new OuterClassTestCase()));
 		assertThat(methodExtensionContext.getTags()).containsExactlyInAnyOrder("outer-tag", "method-tag");
 		assertThat(methodExtensionContext.getRoot()).isSameAs(outerExtensionContext);
 	}
@@ -187,24 +223,25 @@ public class ExtensionContextTests {
 		var engineDescriptor = new JupiterEngineDescriptor(UniqueId.forEngine("junit-jupiter"), configuration);
 		engineDescriptor.addChild(classTestDescriptor);
 
-		Object testInstance = new OuterClass();
+		Object testInstance = new OuterClassTestCase();
 		var testMethod = methodTestDescriptor.getTestMethod();
 
 		var engineExtensionContext = new JupiterEngineExtensionContext(null, engineDescriptor, configuration,
-			extensionRegistry);
+			extensionRegistry, launcherStoreFacade);
 		var classExtensionContext = new ClassExtensionContext(engineExtensionContext, null, classTestDescriptor,
-			configuration, extensionRegistry, null);
+			PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 		var methodExtensionContext = new MethodExtensionContext(classExtensionContext, null, methodTestDescriptor,
-			configuration, extensionRegistry, new OpenTest4JAwareThrowableCollector());
+			configuration, extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
 		methodExtensionContext.setTestInstances(DefaultTestInstances.of(testInstance));
 
 		// @formatter:off
 		assertAll("methodContext",
 			() -> assertThat(methodExtensionContext.getElement()).contains(testMethod),
-			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClass.class),
+			() -> assertThat(methodExtensionContext.getTestClass()).contains(OuterClassTestCase.class),
+			() -> assertThat(methodExtensionContext.getEnclosingTestClasses()).isEmpty(),
 			() -> assertThat(methodExtensionContext.getTestInstance()).contains(testInstance),
 			() -> assertThat(methodExtensionContext.getTestMethod()).contains(testMethod),
-			() -> assertThat(methodExtensionContext.getRequiredTestClass()).isEqualTo(OuterClass.class),
+			() -> assertThat(methodExtensionContext.getRequiredTestClass()).isEqualTo(OuterClassTestCase.class),
 			() -> assertThat(methodExtensionContext.getRequiredTestInstance()).isEqualTo(testInstance),
 			() -> assertThat(methodExtensionContext.getRequiredTestMethod()).isEqualTo(testMethod),
 			() -> assertThat(methodExtensionContext.getDisplayName()).isEqualTo(methodTestDescriptor.getDisplayName()),
@@ -221,7 +258,7 @@ public class ExtensionContextTests {
 		var classTestDescriptor = outerClassDescriptor(null);
 		var engineExecutionListener = spy(EngineExecutionListener.class);
 		ExtensionContext extensionContext = new ClassExtensionContext(null, engineExecutionListener,
-			classTestDescriptor, configuration, extensionRegistry, null);
+			classTestDescriptor, PER_METHOD, configuration, extensionRegistry, launcherStoreFacade, null);
 
 		var map1 = Collections.singletonMap("key", "value");
 		var map2 = Collections.singletonMap("other key", "other value");
@@ -346,8 +383,8 @@ public class ExtensionContextTests {
 			EngineExecutionListener engineExecutionListener, ClassTestDescriptor classTestDescriptor) {
 		when(configuration.getOutputDirectoryProvider()) //
 				.thenReturn(hierarchicalOutputDirectoryProvider(tempDir));
-		return new ClassExtensionContext(null, engineExecutionListener, classTestDescriptor, configuration,
-			extensionRegistry, null);
+		return new ClassExtensionContext(null, engineExecutionListener, classTestDescriptor, PER_METHOD, configuration,
+			extensionRegistry, launcherStoreFacade, null);
 	}
 
 	@Test
@@ -355,11 +392,11 @@ public class ExtensionContextTests {
 	void usingStore() {
 		var methodTestDescriptor = methodDescriptor();
 		var classTestDescriptor = outerClassDescriptor(methodTestDescriptor);
-		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, configuration,
-			extensionRegistry, null);
+		ExtensionContext parentContext = new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD,
+			configuration, extensionRegistry, launcherStoreFacade, null);
 		var childContext = new MethodExtensionContext(parentContext, null, methodTestDescriptor, configuration,
-			extensionRegistry, new OpenTest4JAwareThrowableCollector());
-		childContext.setTestInstances(DefaultTestInstances.of(new OuterClass()));
+			extensionRegistry, launcherStoreFacade, new OpenTest4JAwareThrowableCollector());
+		childContext.setTestInstances(DefaultTestInstances.of(new OuterClassTestCase()));
 
 		var childStore = childContext.getStore(Namespace.GLOBAL);
 		var parentStore = parentContext.getStore(Namespace.GLOBAL);
@@ -405,18 +442,20 @@ public class ExtensionContextTests {
 
 	static List<Named<Function<JupiterConfiguration, ? extends ExtensionContext>>> extensionContextFactories() {
 		ExtensionRegistry extensionRegistry = mock();
+		LauncherStoreFacade launcherStoreFacade = mock();
 		var testClass = ExtensionContextTests.class;
 		return List.of( //
 			named("engine", (JupiterConfiguration configuration) -> {
 				var engineUniqueId = UniqueId.parse("[engine:junit-jupiter]");
 				var engineDescriptor = new JupiterEngineDescriptor(engineUniqueId, configuration);
-				return new JupiterEngineExtensionContext(null, engineDescriptor, configuration, extensionRegistry);
+				return new JupiterEngineExtensionContext(null, engineDescriptor, configuration, extensionRegistry,
+					launcherStoreFacade);
 			}), //
 			named("class", (JupiterConfiguration configuration) -> {
 				var classUniqueId = UniqueId.parse("[engine:junit-jupiter]/[class:MyClass]");
 				var classTestDescriptor = new ClassTestDescriptor(classUniqueId, testClass, configuration);
-				return new ClassExtensionContext(null, null, classTestDescriptor, configuration, extensionRegistry,
-					null);
+				return new ClassExtensionContext(null, null, classTestDescriptor, PER_METHOD, configuration,
+					extensionRegistry, launcherStoreFacade, null);
 			}), //
 			named("method", (JupiterConfiguration configuration) -> {
 				var method = ReflectionSupport.findMethod(testClass, "extensionContextFactories").orElseThrow();
@@ -424,19 +463,24 @@ public class ExtensionContextTests {
 				var methodTestDescriptor = new TestMethodTestDescriptor(methodUniqueId, testClass, method, List::of,
 					configuration);
 				return new MethodExtensionContext(null, null, methodTestDescriptor, configuration, extensionRegistry,
-					null);
+					launcherStoreFacade, null);
 			}) //
 		);
 	}
 
 	private NestedClassTestDescriptor nestedClassDescriptor() {
-		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"), OuterClass.NestedClass.class,
-			List::of, configuration);
+		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "NestedClass"),
+			OuterClassTestCase.NestedClass.class, List::of, configuration);
+	}
+
+	private NestedClassTestDescriptor doublyNestedClassDescriptor() {
+		return new NestedClassTestDescriptor(UniqueId.root("nested-class", "DoublyNestedClass"),
+			OuterClassTestCase.NestedClass.DoublyNestedClass.class, List::of, configuration);
 	}
 
 	private ClassTestDescriptor outerClassDescriptor(TestDescriptor child) {
-		var classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"), OuterClass.class,
-			configuration);
+		var classTestDescriptor = new ClassTestDescriptor(UniqueId.root("class", "OuterClass"),
+			OuterClassTestCase.class, configuration);
 		if (child != null) {
 			classTestDescriptor.addChild(child);
 		}
@@ -445,19 +489,41 @@ public class ExtensionContextTests {
 
 	private TestMethodTestDescriptor methodDescriptor() {
 		try {
-			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClass.class,
-				OuterClass.class.getDeclaredMethod("aMethod"), List::of, configuration);
+			return new TestMethodTestDescriptor(UniqueId.root("method", "aMethod"), OuterClassTestCase.class,
+				OuterClassTestCase.class.getDeclaredMethod("aMethod"), List::of, configuration);
 		}
 		catch (NoSuchMethodException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	private TestMethodTestDescriptor nestedMethodDescriptor() {
+		try {
+			return new TestMethodTestDescriptor(UniqueId.root("method", "nestedMethod"),
+				OuterClassTestCase.NestedClass.class, BaseNestedTestCase.class.getDeclaredMethod("nestedMethod"),
+				List::of, configuration);
+		}
+		catch (NoSuchMethodException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	static abstract class BaseNestedTestCase {
+		@Test
+		void nestedMethod() {
+		}
+
+		@Nested
+		class DoublyNestedClass {
+		}
+	}
+
 	@Tag("outer-tag")
-	static class OuterClass {
+	static class OuterClassTestCase {
 
 		@Tag("nested-tag")
-		static class NestedClass {
+		@Nested
+		class NestedClass extends BaseNestedTestCase {
 		}
 
 		@Tag("method-tag")

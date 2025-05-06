@@ -1,0 +1,62 @@
+/*
+ * Copyright 2015-2025 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.platform.launcher.core;
+
+import java.util.List;
+
+import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryFilter;
+import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.launcher.EngineFilter;
+import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.PostDiscoveryFilter;
+
+/**
+ * @since 5.13
+ */
+class DelegatingLauncherDiscoveryRequest implements LauncherDiscoveryRequest {
+
+	private final LauncherDiscoveryRequest request;
+
+	DelegatingLauncherDiscoveryRequest(LauncherDiscoveryRequest request) {
+		this.request = request;
+	}
+
+	public List<EngineFilter> getEngineFilters() {
+		return this.request.getEngineFilters();
+	}
+
+	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
+		return this.request.getPostDiscoveryFilters();
+	}
+
+	public LauncherDiscoveryListener getDiscoveryListener() {
+		return this.request.getDiscoveryListener();
+	}
+
+	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
+		return this.request.getSelectorsByType(selectorType);
+	}
+
+	public <T extends DiscoveryFilter<?>> List<T> getFiltersByType(Class<T> filterType) {
+		return this.request.getFiltersByType(filterType);
+	}
+
+	public ConfigurationParameters getConfigurationParameters() {
+		return this.request.getConfigurationParameters();
+	}
+
+	public OutputDirectoryProvider getOutputDirectoryProvider() {
+		return this.request.getOutputDirectoryProvider();
+	}
+}

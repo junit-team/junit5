@@ -10,7 +10,7 @@ jobs:
     permissions:
       issues: write
     steps:
-      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7
+      - uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           script: |
             const issue = await github.rest.issues.get({
@@ -20,7 +20,7 @@ jobs:
             });
             const originalLabels = issue.data.labels.map(l => l.name);
             const statusLabels = originalLabels.filter(l => l.startsWith("status: "));
-            if (statusLabels.length === 0) {
+            if (statusLabels.length === 0 && !originalLabels.includes("up-for-grabs")) {
               github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,

@@ -18,21 +18,32 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ClassOrderer;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestClassOrder;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
 import org.junit.platform.commons.logging.LogRecordListener;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Events;
 
@@ -52,7 +63,22 @@ class OrderedClassTests {
 	}
 
 	@Test
+	void noOrderer() {
+		var discoveryIssues = discoverTests(null).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
+		executeTests(null)//
+				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence)//
+				.containsExactlyInAnyOrder("A_TestCase", "B_TestCase", "C_TestCase");
+	}
+
+	@Test
 	void className() {
+		var discoveryIssues = discoverTests(ClassOrderer.ClassName.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.ClassName.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -80,6 +106,9 @@ class OrderedClassTests {
 
 	@Test
 	void displayName() {
+		var discoveryIssues = discoverTests(ClassOrderer.DisplayName.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.DisplayName.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -89,6 +118,9 @@ class OrderedClassTests {
 
 	@Test
 	void orderAnnotation() {
+		var discoveryIssues = discoverTests(ClassOrderer.OrderAnnotation.class).getDiscoveryIssues();
+		assertThat(discoveryIssues).isEmpty();
+
 		executeTests(ClassOrderer.OrderAnnotation.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
 
@@ -124,8 +156,57 @@ class OrderedClassTests {
 
 	@Test
 	void random() {
+		var discoveryIssues = discoverTests(ClassOrderer.Random.class).getDiscoveryIssues();
+		assertIneffectiveOrderAnnotationIssues(discoveryIssues);
+
 		executeTests(ClassOrderer.Random.class)//
 				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+	}
+
+	@Test
+	void classTemplateWithLocalConfig() {
+		var classTemplate = ClassTemplateWithLocalConfigTestCase.class;
+		var inner0 = ClassTemplateWithLocalConfigTestCase.Inner0.class;
+		var inner1 = ClassTemplateWithLocalConfigTestCase.Inner1.class;
+		var inner1Inner1 = ClassTemplateWithLocalConfigTestCase.Inner1.Inner1Inner1.class;
+		var inner1Inner0 = ClassTemplateWithLocalConfigTestCase.Inner1.Inner1Inner0.class;
+
+		executeTests(ClassOrderer.Random.class, selectClass(classTemplate))//
+				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		var inner1InvocationCallSequence = Stream.of(inner1, inner1Inner1, inner1Inner0, inner1Inner0).toList();
+		var inner1CallSequence = twice(inner1InvocationCallSequence).toList();
+		var outerCallSequence = Stream.concat(Stream.of(classTemplate),
+			Stream.concat(inner1CallSequence.stream(), Stream.of(inner0))).toList();
+		var expectedCallSequence = twice(outerCallSequence).map(Class::getSimpleName).toList();
+
+		assertThat(callSequence).containsExactlyElementsOf(expectedCallSequence);
+	}
+
+	private static <T> Stream<T> twice(List<T> values) {
+		return Stream.concat(values.stream(), values.stream());
+	}
+
+	@Test
+	void classTemplateWithGlobalConfig() {
+		var classTemplate = ClassTemplateWithLocalConfigTestCase.class;
+		var otherClass = A_TestCase.class;
+
+		executeTests(ClassOrderer.OrderAnnotation.class, selectClass(otherClass), selectClass(classTemplate))//
+				.assertStatistics(stats -> stats.succeeded(callSequence.size()));
+
+		assertThat(callSequence)//
+				.containsSubsequence(classTemplate.getSimpleName(), otherClass.getSimpleName());
+	}
+
+	private static void assertIneffectiveOrderAnnotationIssues(List<DiscoveryIssue> discoveryIssues) {
+		assertThat(discoveryIssues).hasSize(2);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::severity).containsOnly(Severity.INFO);
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::message) //
+				.allMatch(it -> it.startsWith("Ineffective @Order annotation on class")
+						&& it.endsWith("It will not be applied because ClassOrderer.OrderAnnotation is not in use."));
+		assertThat(discoveryIssues).extracting(DiscoveryIssue::source).extracting(Optional::orElseThrow) //
+				.containsExactlyInAnyOrder(ClassSource.from(A_TestCase.class), ClassSource.from(C_TestCase.class));
 	}
 
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer) {
@@ -135,12 +216,30 @@ class OrderedClassTests {
 
 	private Events executeTests(Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
 		// @formatter:off
-		return EngineTestKit.engine("junit-jupiter")
-			.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName())
-			.selectors(selectors)
-			.execute()
-			.testEvents();
+		return testKit(classOrderer, selectors)
+				.execute()
+				.testEvents();
 		// @formatter:on
+	}
+
+	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer) {
+		return discoverTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
+			selectClass(C_TestCase.class));
+	}
+
+	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer,
+			DiscoverySelector... selectors) {
+		return testKit(classOrderer, selectors).discover();
+	}
+
+	private static EngineTestKit.Builder testKit(Class<? extends ClassOrderer> classOrderer,
+			DiscoverySelector[] selectors) {
+
+		var testKit = EngineTestKit.engine("junit-jupiter");
+		if (classOrderer != null) {
+			testKit.configurationParameter(DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME, classOrderer.getName());
+		}
+		return testKit.selectors(selectors);
 	}
 
 	static abstract class BaseTestCase {
@@ -262,6 +361,75 @@ class OrderedClassTests {
 			@Test
 			void test() {
 				callSequence.add(getClass().getSimpleName());
+			}
+		}
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@Order(1)
+	@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+	@ClassTemplate
+	@ExtendWith(ClassTemplateWithLocalConfigTestCase.Twice.class)
+	static class ClassTemplateWithLocalConfigTestCase {
+
+		@Test
+		void test() {
+			callSequence.add(ClassTemplateWithLocalConfigTestCase.class.getSimpleName());
+		}
+
+		@Nested
+		@Order(1)
+		class Inner0 {
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+		}
+
+		@Nested
+		@ClassTemplate
+		@Order(0)
+		class Inner1 {
+
+			@Test
+			void test() {
+				callSequence.add(getClass().getSimpleName());
+			}
+
+			@Nested
+			@ClassTemplate
+			@Order(2)
+			class Inner1Inner0 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+
+			@Nested
+			@Order(1)
+			class Inner1Inner1 {
+				@Test
+				void test() {
+					callSequence.add(getClass().getSimpleName());
+				}
+			}
+		}
+
+		private static class Twice implements ClassTemplateInvocationContextProvider {
+
+			@Override
+			public boolean supportsClassTemplate(ExtensionContext context) {
+				return true;
+			}
+
+			@Override
+			public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(
+					ExtensionContext context) {
+				return Stream.of(new Ctx(), new Ctx());
+			}
+
+			private record Ctx() implements ClassTemplateInvocationContext {
 			}
 		}
 	}

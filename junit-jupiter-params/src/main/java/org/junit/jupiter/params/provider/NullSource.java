@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -22,21 +23,28 @@ import org.apiguardian.api.API;
 
 /**
  * {@code @NullSource} is an {@link ArgumentsSource} which provides a single
- * {@code null} argument to the annotated {@code @ParameterizedTest} method.
+ * {@code null} argument to the annotated {@code @ParameterizedClass} or
+ * {@code @ParameterizedTest}.
  *
  * <p>Note that {@code @NullSource} cannot be used for an argument that has
  * a primitive type, unless the argument is converted to a corresponding wrapper
  * type with an {@link org.junit.jupiter.params.converter.ArgumentConverter}.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.4
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see EmptySource
  * @see NullAndEmptySource
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(NullArgumentsProvider.class)
 @SuppressWarnings("exports")

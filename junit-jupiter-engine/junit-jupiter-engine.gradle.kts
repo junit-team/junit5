@@ -1,6 +1,5 @@
 plugins {
 	id("junitbuild.kotlin-library-conventions")
-	id("junitbuild.native-image-properties")
 	`java-test-fixtures`
 }
 

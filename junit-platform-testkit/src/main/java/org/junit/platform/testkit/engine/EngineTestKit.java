@@ -16,11 +16,15 @@ import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
+import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
+import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
 import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -29,6 +33,7 @@ import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
+import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -38,6 +43,8 @@ import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
@@ -46,15 +53,24 @@ import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
 
 /**
- * {@code EngineTestKit} provides support for executing a test plan for a given
- * {@link TestEngine} and then accessing the results via
- * {@linkplain EngineExecutionResults a fluent API} to verify the expected results.
+ * {@code EngineTestKit} provides support for discovering and executing tests
+ * for a given {@link TestEngine} and provides convenient access to the results.
+ *
+ * <p>For <em>discovery</em>, {@link EngineDiscoveryResults} provides access to
+ * the {@link TestDescriptor} of the engine and any {@link DiscoveryIssue
+ * DiscoveryIssues} that were encountered.
+ *
+ * <p>For <em>execution</em>, {@link EngineExecutionResults} provides a fluent
+ * API to verify the expected results.
  *
  * @since 1.4
  * @see #engine(String)
  * @see #engine(TestEngine)
+ * @see #discover(String, LauncherDiscoveryRequest)
+ * @see #discover(TestEngine, LauncherDiscoveryRequest)
  * @see #execute(String, LauncherDiscoveryRequest)
  * @see #execute(TestEngine, LauncherDiscoveryRequest)
+ * @see EngineDiscoveryResults
  * @see EngineExecutionResults
  */
 @API(status = MAINTAINED, since = "1.7")
@@ -119,6 +135,65 @@ public final class EngineTestKit {
 	public static Builder engine(TestEngine testEngine) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		return new Builder(testEngine);
+	}
+
+	/**
+	 * Discover tests for the given {@link LauncherDiscoveryRequest} using the
+	 * {@link TestEngine} with the supplied ID.
+	 *
+	 * <p>The {@code TestEngine} will be loaded via Java's {@link ServiceLoader}
+	 * mechanism, analogous to the manner in which test engines are loaded in
+	 * the JUnit Platform Launcher API.
+	 *
+	 * <p>{@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+	 * provides a convenient way to build an appropriate discovery request to
+	 * supply to this method. As an alternative, consider using
+	 * {@link #engine(TestEngine)} for a more fluent API.
+	 *
+	 * @param engineId the ID of the {@code TestEngine} to use; must not be
+	 * {@code null} or <em>blank</em>
+	 * @param discoveryRequest the {@code LauncherDiscoveryRequest} to use
+	 * @return the results of the discovery
+	 * @throws PreconditionViolationException for invalid arguments or if the
+	 * {@code TestEngine} with the supplied ID cannot be loaded
+	 * @since 1.13
+	 * @see #discover(TestEngine, LauncherDiscoveryRequest)
+	 * @see #engine(String)
+	 * @see #engine(TestEngine)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public static EngineDiscoveryResults discover(String engineId, LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notBlank(engineId, "TestEngine ID must not be null or blank");
+		return discover(loadTestEngine(engineId.trim()), discoveryRequest);
+	}
+
+	/**
+	 * Discover tests for the given {@link LauncherDiscoveryRequest} using the
+	 * supplied {@link TestEngine}.
+	 *
+	 * <p>{@link org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder}
+	 * provides a convenient way to build an appropriate discovery request to
+	 * supply to this method. As an alternative, consider using
+	 * {@link #engine(TestEngine)} for a more fluent API.
+	 *
+	 * @param testEngine the {@code TestEngine} to use; must not be {@code null}
+	 * @param discoveryRequest the {@code EngineDiscoveryResults} to use; must
+	 * not be {@code null}
+	 * @return the recorded {@code EngineExecutionResults}
+	 * @throws PreconditionViolationException for invalid arguments
+	 * @since 1.13
+	 * @see #discover(String, LauncherDiscoveryRequest)
+	 * @see #engine(String)
+	 * @see #engine(TestEngine)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public static EngineDiscoveryResults discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
+		Preconditions.notNull(testEngine, "TestEngine must not be null");
+		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
+		LauncherDiscoveryResult discoveryResult = discover(testEngine, discoveryRequest, DISCOVERY);
+		TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
+		List<DiscoveryIssue> discoveryIssues = discoveryResult.getDiscoveryIssues(testEngine);
+		return new EngineDiscoveryResults(engineDescriptor, discoveryIssues);
 	}
 
 	/**
@@ -253,18 +328,36 @@ public final class EngineTestKit {
 			EngineExecutionListener listener) {
 		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
 		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider());
-		testEngine.execute(request);
+		withRequestLevelStore(store -> {
+			ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
+				discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), store);
+			testEngine.execute(request);
+		});
 	}
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
-		LauncherDiscoveryResult discoveryResult = new EngineDiscoveryOrchestrator(singleton(testEngine),
-			emptySet()).discover(discoveryRequest, EXECUTION);
+		LauncherDiscoveryResult discoveryResult = discover(testEngine, discoveryRequest, EXECUTION);
 		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
-		new EngineExecutionOrchestrator().execute(discoveryResult, listener);
+		withRequestLevelStore(store -> new EngineExecutionOrchestrator().execute(discoveryResult, listener, store));
+	}
+
+	private static void withRequestLevelStore(Consumer<NamespacedHierarchicalStore<Namespace>> action) {
+		try (NamespacedHierarchicalStore<Namespace> sessionLevelStore = newStore(null);
+				NamespacedHierarchicalStore<Namespace> requestLevelStore = newStore(sessionLevelStore)) {
+			action.accept(requestLevelStore);
+		}
+	}
+
+	private static NamespacedHierarchicalStore<Namespace> newStore(NamespacedHierarchicalStore<Namespace> parentStore) {
+		return new NamespacedHierarchicalStore<>(parentStore, closeAutoCloseables());
+	}
+
+	private static LauncherDiscoveryResult discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest,
+			EngineDiscoveryOrchestrator.Phase phase) {
+		return new EngineDiscoveryOrchestrator(singleton(testEngine), emptySet()) //
+				.discover(discoveryRequest, phase);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -444,6 +537,25 @@ public final class EngineTestKit {
 		public Builder outputDirectoryProvider(OutputDirectoryProvider outputDirectoryProvider) {
 			this.requestBuilder.outputDirectoryProvider(outputDirectoryProvider);
 			return this;
+		}
+
+		/**
+		 * Discover tests for the configured {@link TestEngine},
+		 * {@linkplain DiscoverySelector discovery selectors},
+		 * {@linkplain DiscoveryFilter discovery filters}, and
+		 * <em>configuration parameters</em>.
+		 *
+		 * @return the recorded {@code EngineDiscoveryResults}
+		 * @since 1.13
+		 * @see #selectors(DiscoverySelector...)
+		 * @see #filters(Filter...)
+		 * @see #configurationParameter(String, String)
+		 * @see #configurationParameters(Map)
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		public EngineDiscoveryResults discover() {
+			LauncherDiscoveryRequest request = this.requestBuilder.build();
+			return EngineTestKit.discover(this.testEngine, request);
 		}
 
 		/**

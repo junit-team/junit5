@@ -14,13 +14,13 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @MethodSource} is a {@linkplain Repeatable repeatable}
@@ -30,13 +30,14 @@ import org.junit.jupiter.params.ParameterizedTest;
  * by <em>fully qualified method name</em>.
  *
  * <p>Each factory method must generate a <em>stream</em> of <em>arguments</em>,
- * and each set of "arguments" within the "stream" will be provided as the physical
- * arguments for individual invocations of the annotated
- * {@link ParameterizedTest @ParameterizedTest} method. Generally speaking this
- * translates to a {@link java.util.stream.Stream Stream} of {@link Arguments}
- * (i.e., {@code Stream<Arguments>}); however, the actual concrete return type
- * can take on many forms. In this context, a "stream" is anything that JUnit
- * can reliably convert into a {@code Stream}, such as
+ * and each set of "arguments" within the "stream" will be provided as the
+ * physical arguments for individual invocations of the annotated
+ * {@code org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
+ * Generally speaking this translates to a {@link java.util.stream.Stream Stream}
+ * of {@link Arguments} (i.e., {@code Stream<Arguments>}); however, the actual
+ * concrete return type can take on many forms. In this context, a "stream" is
+ * anything that JUnit can reliably convert into a {@code Stream}, such as
  * {@link java.util.stream.Stream Stream},
  * {@link java.util.stream.DoubleStream DoubleStream},
  * {@link java.util.stream.LongStream LongStream},
@@ -49,6 +50,12 @@ import org.junit.jupiter.params.ParameterizedTest;
  * "stream" can be supplied as an instance of {@link Arguments}, an array of
  * objects (e.g., {@code Object[]}, {@code String[]}, etc.), or a single
  * <em>value</em> if the parameterized test method accepts a single argument.
+ *
+ * <p>If the return type is {@code Stream} or
+ * one of the primitive streams, JUnit will properly close it by calling
+ * {@link java.util.stream.BaseStream#close() BaseStream.close()},
+ * making it safe to use a resource such as
+ * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
  *
  * <p>Please note that a one-dimensional array of objects supplied as a set of
  * "arguments" will be handled differently than other types of arguments.
@@ -93,19 +100,29 @@ import org.junit.jupiter.params.ParameterizedTest;
  * test instance lifecycle mode is used; whereas, factory methods in external
  * classes must always be {@code static}.
  *
+ * <p>This behavior and the above examples also apply to parameters of a
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass},
+ * regardless whether field or constructor injection is used.
+ *
  * <p>Factory methods can declare parameters, which will be provided by registered
  * implementations of {@link org.junit.jupiter.api.extension.ParameterResolver}.
+ *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
  *
  * @since 5.0
  * @see FieldSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedTest
+ * @see org.junit.jupiter.params.ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(MethodSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(MethodArgumentsProvider.class)
@@ -132,7 +149,9 @@ public @interface MethodSource {
 	 *
 	 * <p>If no factory method names are declared, a method within the test class
 	 * that has the same name as the test method will be used as the factory
-	 * method by default.
+	 * method by default in case this annotation is applied to a
+	 * {@code @ParameterizedTest} method. For a {@code @ParameterizedClass}, at
+	 * least one method name must be declared explicitly.
 	 *
 	 * <p>For further information, see the {@linkplain MethodSource class-level Javadoc}.
 	 */

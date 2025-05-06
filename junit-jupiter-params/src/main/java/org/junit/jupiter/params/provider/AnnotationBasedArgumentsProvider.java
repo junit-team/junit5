@@ -20,6 +20,8 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
+import org.junit.jupiter.params.support.ParameterDeclarations;
+import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -28,6 +30,7 @@ import org.junit.platform.commons.util.Preconditions;
  * annotation in order to provide the arguments.
  *
  * @since 5.10
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.provider.ArgumentsSource
  * @see org.junit.jupiter.params.provider.Arguments
@@ -50,8 +53,8 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	}
 
 	@Override
-	public final Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-		return annotations.stream().flatMap(annotation -> provideArguments(context, annotation));
+	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {
+		return annotations.stream().flatMap(annotation -> provideArguments(parameters, context, annotation));
 	}
 
 	/**
@@ -61,7 +64,28 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 * @param context the current extension context; never {@code null}
 	 * @param annotation the annotation to process; never {@code null}
 	 * @return a stream of arguments; never {@code null}
+	 * @deprecated Please implement
+	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext, Annotation)}
+	 * instead.
 	 */
-	protected abstract Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation);
+	@Deprecated
+	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
+		throw new JUnitException(String.format(
+			"AnnotationBasedArgumentsProvider does not override the provideArguments(ParameterDeclarations, ExtensionContext, Annotation) method. "
+					+ "Please report this issue to the maintainers of %s.",
+			getClass().getName()));
+	}
+
+	/**
+	 * The returned {@code Stream} will be {@link Stream#close() properly closed}
+	 * by the default implementation of
+	 * {@link #provideArguments(ParameterDeclarations, ExtensionContext)},
+	 * making it safe to use a resource such as
+	 * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
+	 */
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			A annotation) {
+		return provideArguments(context, annotation);
+	}
 
 }

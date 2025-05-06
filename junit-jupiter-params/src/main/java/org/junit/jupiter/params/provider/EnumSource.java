@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -34,22 +35,28 @@ import org.junit.platform.commons.util.Preconditions;
  * {@link ArgumentsSource} for constants of an {@link Enum}.
  *
  * <p>The enum constants will be provided as arguments to the annotated
- * {@code @ParameterizedTest} method.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest}.
  *
  * <p>The enum type can be specified explicitly using the {@link #value}
  * attribute. Otherwise, the declared type of the first parameter of the
- * {@code @ParameterizedTest} method is used.
+ * {@code @ParameterizedClass} or {@code @ParameterizedTest} is used.
  *
  * <p>The set of enum constants can be restricted via the {@link #names},
  * {@link #from}, {@link #to} and {@link #mode} attributes.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.0
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(EnumSources.class)
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(EnumArgumentsProvider.class)

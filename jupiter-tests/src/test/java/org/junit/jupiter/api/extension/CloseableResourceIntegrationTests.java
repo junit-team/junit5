@@ -46,8 +46,7 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 			store.put("baz", reportEntryOnClose(extensionContext, "3"));
 		}
 
-		private ExtensionContext.Store.CloseableResource reportEntryOnClose(ExtensionContext extensionContext,
-				String key) {
+		private AutoCloseable reportEntryOnClose(ExtensionContext extensionContext, String key) {
 			return () -> extensionContext.publishReportEntry(Map.of(key, "closed"));
 		}
 	}
@@ -80,9 +79,16 @@ public class CloseableResourceIntegrationTests extends AbstractJupiterTestEngine
 
 		@Override
 		public void beforeEach(ExtensionContext context) {
-			context.getStore(GLOBAL).put("throwingResource", (ExtensionContext.Store.CloseableResource) () -> {
-				throw new RuntimeException("Exception in onClose");
-			});
+			context.getStore(GLOBAL).put("throwingResource", new ThrowingResource());
+		}
+	}
+
+	@SuppressWarnings({ "deprecation", "try" })
+	static class ThrowingResource implements ExtensionContext.Store.CloseableResource, AutoCloseable {
+
+		@Override
+		public void close() throws Exception {
+			throw new RuntimeException("Exception in onClose");
 		}
 	}
 

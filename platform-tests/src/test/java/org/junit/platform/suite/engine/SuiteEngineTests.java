@@ -25,6 +25,9 @@ import static org.junit.platform.testkit.engine.EventConditions.finishedWithFail
 import static org.junit.platform.testkit.engine.EventConditions.test;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.instanceOf;
 import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 import java.nio.file.Path;
 
@@ -33,14 +36,27 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.engine.descriptor.ClassTestDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.EngineExecutionListener;
+import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.UniqueId;
+import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.store.Namespace;
+import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.PostDiscoveryFilter;
+import org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders;
 import org.junit.platform.suite.api.SelectClasses;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.ConfigurationSensitiveTestCase;
 import org.junit.platform.suite.engine.testcases.DynamicTestsTestCase;
+import org.junit.platform.suite.engine.testcases.ErroneousTestCase;
 import org.junit.platform.suite.engine.testcases.JUnit4TestsTestCase;
 import org.junit.platform.suite.engine.testcases.MultipleTestsTestCase;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
@@ -54,6 +70,8 @@ import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyDynamicTestWithFailIfNoTestFalseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseSuite;
 import org.junit.platform.suite.engine.testsuites.EmptyTestCaseWithFailIfNoTestFalseSuite;
+import org.junit.platform.suite.engine.testsuites.ErroneousTestSuite;
+import org.junit.platform.suite.engine.testsuites.InheritedSuite;
 import org.junit.platform.suite.engine.testsuites.MultiEngineSuite;
 import org.junit.platform.suite.engine.testsuites.MultipleSuite;
 import org.junit.platform.suite.engine.testsuites.NestedSuite;
@@ -62,6 +80,7 @@ import org.junit.platform.suite.engine.testsuites.SelectClassesSuite;
 import org.junit.platform.suite.engine.testsuites.SelectMethodsSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteDisplayNameSuite;
 import org.junit.platform.suite.engine.testsuites.SuiteSuite;
+import org.junit.platform.suite.engine.testsuites.SuiteWithErroneousTestSuite;
 import org.junit.platform.suite.engine.testsuites.ThreePartCyclicSuite;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
@@ -73,16 +92,22 @@ class SuiteEngineTests {
 	@TempDir
 	private Path outputDir;
 
-	@Test
-	void selectClasses() {
+	@ParameterizedTest
+	@ValueSource(classes = { SelectClassesSuite.class, InheritedSuite.class })
+	void selectClasses(Class<?> suiteClass) {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(SelectClassesSuite.class))
-				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(suiteClass))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
-				.haveExactly(1, event(test(SelectClassesSuite.class.getName()), finishedSuccessfully()))
+				.haveExactly(1, event(test(suiteClass.getName()), finishedSuccessfully()))
 				.haveExactly(1, event(test(SingleTestTestCase.class.getName()), finishedSuccessfully()));
 		// @formatter:on
 	}
@@ -90,8 +115,13 @@ class SuiteEngineTests {
 	@Test
 	void selectMethods() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(SelectMethodsSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SelectMethodsSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -115,8 +145,13 @@ class SuiteEngineTests {
 	@Test
 	void abstractSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(AbstractSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(AbstractSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -127,8 +162,18 @@ class SuiteEngineTests {
 	@Test
 	void privateSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(PrivateSuite.class))
+		var message = "@Suite class '%s' must not be private. It will not be executed."
+				.formatted(PrivateSuite.class.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(PrivateSuite.class))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(PrivateSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -137,10 +182,86 @@ class SuiteEngineTests {
 	}
 
 	@Test
-	void innerSuiteIsNotExecuted() {
+	void abstractPrivateSuiteIsNotExecuted() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
-				.selectors(selectClass(InnerSuite.class))
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(AbstractPrivateSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@ParameterizedTest
+	@ValueSource(classes = { InnerSuite.class, AbstractInnerSuite.class })
+	void innerSuiteIsNotExecuted(Class<?> suiteClass) {
+		// @formatter:off
+		var message = "@Suite class '%s' must not be an inner class. Did you forget to declare it static? It will not be executed."
+				.formatted(suiteClass.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(suiteClass))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(suiteClass));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void localSuiteIsNotExecuted() {
+
+		@Suite
+		@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
+		class LocalSuite {
+		}
+
+		// @formatter:off
+		var message = "@Suite class '%s' must not be a local class. It will not be executed."
+				.formatted(LocalSuite.class.getName());
+		var issue = DiscoveryIssue.builder(Severity.WARNING, message)
+				.source(ClassSource.from(LocalSuite.class))
+				.build();
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(LocalSuite.class));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@Test
+	void anonymousSuiteIsNotExecuted() {
+		var object = new Object() {
+		};
+
+		// @formatter:off
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(object.getClass()));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.isEmpty();
+
+		testKit
 				.execute()
 				.testEvents()
 				.assertThatEvents()
@@ -401,9 +522,24 @@ class SuiteEngineTests {
 	@Test
 	void cyclicSuite() {
 		// @formatter:off
-		EngineTestKit.engine(ENGINE_ID)
+		var expectedUniqueId = UniqueId.forEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName())
+				.appendEngine(ENGINE_ID)
+				.append(SuiteTestDescriptor.SEGMENT_TYPE, CyclicSuite.class.getName());
+		var message = "The suite configuration of [%s] resulted in a cycle [%s] and will not be discovered a second time."
+				.formatted(CyclicSuite.class.getName(), expectedUniqueId);
+		var issue = DiscoveryIssue.builder(Severity.INFO, message)
+				.source(ClassSource.from(CyclicSuite.class))
+				.build();
+
+		var testKit = EngineTestKit.engine(ENGINE_ID)
 				.selectors(selectClass(CyclicSuite.class))
-				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir))
+				.outputDirectoryProvider(hierarchicalOutputDirectoryProvider(outputDir));
+
+		assertThat(testKit.discover().getDiscoveryIssues())
+				.containsExactly(issue);
+
+		testKit
 				.execute()
 				.allEvents()
 				.assertThatEvents()
@@ -467,6 +603,56 @@ class SuiteEngineTests {
 		assertThat(outputDir).isDirectoryRecursivelyContaining("glob:**/test.txt");
 	}
 
+	@Test
+	void discoveryIssueOfNestedTestEnginesAreReported() throws Exception {
+		// @formatter:off
+		var testKit = EngineTestKit.engine(ENGINE_ID)
+				.selectors(selectClass(SuiteWithErroneousTestSuite.class));
+
+		var discoveryIssues = testKit.discover().getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+
+		var issue = discoveryIssues.getFirst();
+		assertThat(issue.message()) //
+				.startsWith("[junit-jupiter] @BeforeAll method") //
+				.endsWith(" (via @Suite %s > %s).".formatted(SuiteWithErroneousTestSuite.class.getName(),
+						ErroneousTestSuite.class.getName()));
+
+		var method = ErroneousTestCase.class.getDeclaredMethod("nonStaticLifecycleMethod");
+		assertThat(issue.source()).contains(MethodSource.from(method));
+
+		testKit
+				.execute()
+				.testEvents()
+				.assertThatEvents()
+				.isEmpty();
+		// @formatter:on
+	}
+
+	@Suite
+	@SelectClasses(SingleTestTestCase.class)
+	abstract private static class AbstractPrivateSuite {
+	}
+
+	@Test
+	void suiteEnginePassesRequestLevelStoreToSuiteTestDescriptors() {
+		UniqueId engineId = UniqueId.forEngine(SuiteEngineDescriptor.ENGINE_ID);
+		SuiteEngineDescriptor engineDescriptor = new SuiteEngineDescriptor(engineId);
+
+		SuiteTestDescriptor mockDescriptor = mock(SuiteTestDescriptor.class);
+		engineDescriptor.addChild(mockDescriptor);
+
+		EngineExecutionListener listener = mock(EngineExecutionListener.class);
+		NamespacedHierarchicalStore<Namespace> requestLevelStore = NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore();
+
+		ExecutionRequest request = ExecutionRequest.create(engineDescriptor, listener,
+			mock(ConfigurationParameters.class), mock(OutputDirectoryProvider.class), requestLevelStore);
+
+		new SuiteTestEngine().execute(request);
+
+		verify(mockDescriptor).execute(same(listener), same(requestLevelStore));
+	}
+
 	@Suite
 	@SelectClasses(SingleTestTestCase.class)
 	private static class PrivateSuite {
@@ -474,7 +660,12 @@ class SuiteEngineTests {
 
 	@Suite
 	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
-	private class InnerSuite {
+	abstract class AbstractInnerSuite {
+	}
+
+	@Suite
+	@SelectClasses(names = "org.junit.platform.suite.engine.testcases.SingleTestTestCase")
+	class InnerSuite {
 	}
 
 }

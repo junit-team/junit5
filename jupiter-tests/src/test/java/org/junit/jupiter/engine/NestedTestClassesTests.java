@@ -11,14 +11,17 @@
 package org.junit.jupiter.engine;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.util.Throwables.getRootCause;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
+import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
+import static org.junit.platform.testkit.engine.TestExecutionResultConditions.message;
+
+import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -28,8 +31,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedSiblingClass;
-import org.junit.platform.commons.JUnitException;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
@@ -45,7 +49,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void nestedTestsAreCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithNesting.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(5, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -66,7 +70,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void doublyNestedTestsAreCorrectlyDiscovered() {
 		LauncherDiscoveryRequest request = request().selectors(selectClass(TestCaseWithDoubleNesting.class)).build();
-		TestDescriptor engineDescriptor = discoverTests(request);
+		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(8, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
@@ -97,7 +101,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void inheritedNestedTestsAreExecuted() {
-		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithInheritedNested.class);
+		var discoveryIssues = discoverTestsForClass(TestCaseWithInheritedNested.class).getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().source()) //
+				.contains(ClassSource.from(InterfaceWithNestedClass.NestedInInterface.class));
+
+		var executionResults = executeTests(request -> request //
+				.selectors(selectClass(TestCaseWithInheritedNested.class)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.ERROR.name()));
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -111,8 +122,14 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void extendedNestedTestsAreExecuted() {
-		EngineExecutionResults executionResults = executeTestsForClass(TestCaseWithExtendedNested.class);
-		executionResults.allEvents().debug();
+		var discoveryIssues = discoverTestsForClass(TestCaseWithExtendedNested.class).getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().source()) //
+				.contains(ClassSource.from(InterfaceWithNestedClass.NestedInInterface.class));
+
+		var executionResults = executeTests(request -> request //
+				.selectors(selectClass(TestCaseWithExtendedNested.class)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.ERROR.name()));
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -126,11 +143,21 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void deeplyNestedInheritedMethodsAreExecutedWhenSelectedViaUniqueId() {
-		EngineExecutionResults executionResults = executeTests(selectUniqueId(
-			"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner1]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"),
+		var selectors = List.of( //
+			selectUniqueId(
+				"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner1]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"),
 			selectUniqueId(
 				"[engine:junit-jupiter]/[class:org.junit.jupiter.engine.NestedTestClassesTests$TestCaseWithExtendedNested]/[nested-class:ConcreteInner2]/[nested-class:NestedInAbstractClass]/[nested-class:SecondLevelInherited]/[method:test()]"));
-		executionResults.allEvents().debug();
+
+		var discoveryIssues = discoverTests(request -> request.selectors(selectors)).getDiscoveryIssues();
+		assertThat(discoveryIssues).hasSize(1);
+		assertThat(discoveryIssues.getFirst().source()) //
+				.contains(ClassSource.from(InterfaceWithNestedClass.NestedInInterface.class));
+
+		var executionResults = executeTests(request -> request //
+				.selectors(selectors) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.ERROR.name()));
+
 		Events containers = executionResults.containerEvents();
 		Events tests = executionResults.testEvents();
 
@@ -180,12 +207,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
-		assertThatExceptionOfType(JUnitException.class)//
-				.isThrownBy(() -> executeTestsForClass(start))//
-				.withCauseExactlyInstanceOf(JUnitException.class)//
-				.satisfies(ex -> assertThat(getRootCause(ex)).hasMessageMatching(
-					String.format("Detected cycle in inner class hierarchy between .+%s and .+%s", from.getSimpleName(),
-						to.getSimpleName())));
+		var results = executeTestsForClass(start);
+		var expectedMessage = String.format(
+			"Cause: org.junit.platform.commons.JUnitException: Detected cycle in inner class hierarchy between %s and %s",
+			from.getName(), to.getName());
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1, finishedWithFailure(message(it -> it.contains(expectedMessage))));
 	}
 
 	// -------------------------------------------------------------------
@@ -285,7 +312,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	interface InterfaceWithNestedClass {
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@SuppressWarnings({ "JUnitMalformedDeclaration", "NewClassNamingConvention" })
 		@Nested
 		class NestedInInterface {
 
@@ -337,7 +364,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 	static class AbstractOuterClass {
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
+	@SuppressWarnings({ "JUnitMalformedDeclaration", "NewClassNamingConvention" })
 	static class OuterClass extends AbstractOuterClass {
 
 		@Test

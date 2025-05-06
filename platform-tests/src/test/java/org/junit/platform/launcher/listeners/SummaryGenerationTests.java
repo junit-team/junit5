@@ -40,7 +40,7 @@ import org.junit.platform.launcher.TestPlan;
 class SummaryGenerationTests {
 
 	private final SummaryGeneratingListener listener = new SummaryGeneratingListener();
-	private final TestPlan testPlan = TestPlan.from(List.of(), mock(), dummyOutputDirectoryProvider());
+	private final TestPlan testPlan = TestPlan.from(true, List.of(), mock(), dummyOutputDirectoryProvider());
 
 	@Test
 	void emptyReport() {
@@ -149,8 +149,8 @@ class SummaryGenerationTests {
 		listener.testPlanExecutionFinished(testPlan);
 		final var failures = listener.getSummary().getFailures();
 		assertThat(failures).hasSize(1);
-		assertThat(failures.get(0).getException()).isEqualTo(failedException);
-		assertThat(failures.get(0).getTestIdentifier()).isEqualTo(failingTest);
+		assertThat(failures.getFirst().getException()).isEqualTo(failedException);
+		assertThat(failures.getFirst().getTestIdentifier()).isEqualTo(failingTest);
 	}
 
 	@Test

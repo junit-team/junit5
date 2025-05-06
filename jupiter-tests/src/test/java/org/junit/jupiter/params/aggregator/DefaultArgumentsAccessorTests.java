@@ -17,15 +17,12 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.PreconditionViolationException;
-import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Unit tests for {@link DefaultArgumentsAccessor}.
@@ -169,14 +166,9 @@ class DefaultArgumentsAccessorTests {
 	}
 
 	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex, Object... arguments) {
-		return new DefaultArgumentsAccessor(parameterContext(), invocationIndex, arguments);
-	}
-
-	private static ParameterContext parameterContext() {
-		Method declaringExecutable = ReflectionSupport.findMethod(DefaultArgumentsAccessorTests.class, "foo").get();
-		ParameterContext parameterContext = mock();
-		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
-		return parameterContext;
+		var context = mock(ExtensionContext.class);
+		var classLoader = DefaultArgumentsAccessorTests.class.getClassLoader();
+		return DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);
 	}
 
 	@SuppressWarnings("unused")

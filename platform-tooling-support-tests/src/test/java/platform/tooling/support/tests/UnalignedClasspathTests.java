@@ -12,7 +12,6 @@ package platform.tooling.support.tests;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import static platform.tooling.support.ProcessStarters.currentJdkHome;
 import static platform.tooling.support.tests.Projects.copyToWorkspace;
@@ -60,7 +59,7 @@ class UnalignedClasspathTests {
 
 		assertEquals(1, result.exitCode());
 		assertEquals("", result.stdErr());
-		assertTrue(result.stdOutLines().contains("[INFO] BUILD FAILURE"));
+		assertThat(result.stdOutLines()).contains("[INFO] BUILD FAILURE");
 		assertThat(result.stdOut()) //
 				.contains("The wrapped NoClassDefFoundError is likely caused by the versions of JUnit jars "
 						+ "on the classpath/module path not being properly aligned");
@@ -68,7 +67,7 @@ class UnalignedClasspathTests {
 
 	static Stream<Arguments> javaVersions() {
 		return Stream.concat( //
-			Helper.getJavaHome("8").map(path -> Arguments.of(JRE.JAVA_8, path)).stream(), //
+			Helper.getJavaHome(8).map(path -> Arguments.of(JRE.JAVA_8, path)).stream(), //
 			Stream.of(Arguments.of(JRE.currentJre(), currentJdkHome())) //
 		);
 	}

@@ -10,8 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Collections.emptyList;
+
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.TestInstance;
@@ -26,8 +29,8 @@ class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDe
 
 	DynamicExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			DynamicNodeTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry) {
-		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry);
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade) {
+		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 	}
 
 	@Override
@@ -38,6 +41,11 @@ class DynamicExtensionContext extends AbstractExtensionContext<DynamicNodeTestDe
 	@Override
 	public Optional<Class<?>> getTestClass() {
 		return Optional.empty();
+	}
+
+	@Override
+	public List<Class<?>> getEnclosingTestClasses() {
+		return emptyList();
 	}
 
 	@Override

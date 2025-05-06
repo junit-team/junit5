@@ -14,13 +14,13 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.params.ParameterizedTest;
 
 /**
  * {@code @FieldSource} is a {@linkplain Repeatable repeatable}
@@ -32,7 +32,8 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <p>Each field must be able to supply a <em>stream</em> of <em>arguments</em>,
  * and each set of "arguments" within the "stream" will be provided as the physical
  * arguments for individual invocations of the annotated
- * {@link ParameterizedTest @ParameterizedTest} method.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * <p>In this context, a "stream" is anything that JUnit can reliably convert to
  * a {@link java.util.stream.Stream Stream}; however, the actual concrete field
@@ -49,7 +50,7 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@code kotlin.sequences.Sequence}). Each set of "arguments" within the
  * "stream" can be supplied as an instance of {@link Arguments}, an array of
  * objects (for example, {@code Object[]}, {@code String[]}, etc.), or a single
- * <em>value</em> if the parameterized test method accepts a single argument.
+ * <em>value</em> if the parameterized class or test accepts a single argument.
  *
  * <p>In contrast to the supported return types for {@link MethodSource @MethodSource}
  * factory methods, the value of a {@code @FieldSource} field cannot be an instance of
@@ -61,6 +62,12 @@ import org.junit.jupiter.params.ParameterizedTest;
  * <em>consumed</em> the first time they are processed. However, if you wish to
  * use one of these types, you can wrap it in a {@code Supplier} &mdash; for
  * example, {@code Supplier<IntStream>}.
+ *
+ * <p>If the {@code Supplier} return type is {@code Stream} or
+ * one of the primitive streams, JUnit will properly close it by calling
+ * {@link java.util.stream.BaseStream#close() BaseStream.close()},
+ * making it safe to use a resource such as
+ * {@link java.nio.file.Files#lines(java.nio.file.Path) Files.lines()}.
  *
  * <p>Please note that a one-dimensional array of objects supplied as a set of
  * "arguments" will be handled differently than other types of arguments.
@@ -106,16 +113,26 @@ import org.junit.jupiter.params.ParameterizedTest;
  * test instance lifecycle mode is used; whereas, fields in external classes must
  * always be {@code static}.
  *
+ * <p>This behavior and the above examples also apply to parameters of a
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass},
+ * regardless whether field or constructor injection is used.
+ *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.11
  * @see MethodSource
  * @see Arguments
  * @see ArgumentsSource
- * @see ParameterizedTest
+ * @see org.junit.jupiter.params.ParameterizedClass
+ * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.api.TestInstance
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @Repeatable(FieldSources.class)
 @API(status = EXPERIMENTAL, since = "5.11")
 @ArgumentsSource(FieldArgumentsProvider.class)
@@ -133,7 +150,10 @@ public @interface FieldSource {
 	 * static nested class.
 	 *
 	 * <p>If no field names are declared, a field within the test class that has
-	 * the same name as the test method will be used as the field by default.
+	 * the same name as the test method will be used as the field by default in
+	 * case this annotation is applied to a {@code @ParameterizedTest} method.
+	 * For a {@code @ParameterizedClass}, at least one field name must be
+	 * declared explicitly.
 	 *
 	 * <p>For further information, see the {@linkplain FieldSource class-level Javadoc}.
 	 */

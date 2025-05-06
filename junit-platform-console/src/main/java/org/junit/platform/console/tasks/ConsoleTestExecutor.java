@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.console.tasks.DiscoveryRequestCreator.toDiscoveryRequestBuilder;
 import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -49,29 +50,46 @@ public class ConsoleTestExecutor {
 	private final TestDiscoveryOptions discoveryOptions;
 	private final TestConsoleOutputOptions outputOptions;
 	private final Supplier<Launcher> launcherSupplier;
+	private final CustomClassLoaderCloseStrategy classLoaderCloseStrategy;
 
 	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions) {
-		this(discoveryOptions, outputOptions, LauncherFactory::create);
+		this(discoveryOptions, outputOptions, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER);
+	}
+
+	public ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
+			CustomClassLoaderCloseStrategy classLoaderCloseStrategy) {
+		this(discoveryOptions, outputOptions, classLoaderCloseStrategy, LauncherFactory::create);
 	}
 
 	// for tests only
 	ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
 			Supplier<Launcher> launcherSupplier) {
+		this(discoveryOptions, outputOptions, CustomClassLoaderCloseStrategy.CLOSE_AFTER_CALLING_LAUNCHER,
+			launcherSupplier);
+	}
+
+	private ConsoleTestExecutor(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions,
+			CustomClassLoaderCloseStrategy classLoaderCloseStrategy, Supplier<Launcher> launcherSupplier) {
 		this.discoveryOptions = discoveryOptions;
 		this.outputOptions = outputOptions;
 		this.launcherSupplier = launcherSupplier;
+		this.classLoaderCloseStrategy = classLoaderCloseStrategy;
 	}
 
 	public void discover(PrintWriter out) {
-		new CustomContextClassLoaderExecutor(createCustomClassLoader()).invoke(() -> {
+		createCustomContextClassLoaderExecutor().invoke(() -> {
 			discoverTests(out);
 			return null;
 		});
 	}
 
 	public TestExecutionSummary execute(PrintWriter out, Optional<Path> reportsDir) {
-		return new CustomContextClassLoaderExecutor(createCustomClassLoader()) //
+		return createCustomContextClassLoaderExecutor() //
 				.invoke(() -> executeTests(out, reportsDir));
+	}
+
+	private CustomContextClassLoaderExecutor createCustomContextClassLoaderExecutor() {
+		return new CustomContextClassLoaderExecutor(createCustomClassLoader(), classLoaderCloseStrategy);
 	}
 
 	private void discoverTests(PrintWriter out) {
@@ -101,10 +119,17 @@ public class ConsoleTestExecutor {
 		Launcher launcher = launcherSupplier.get();
 		SummaryGeneratingListener summaryListener = registerListeners(out, reportsDir, launcher);
 
-		LauncherDiscoveryRequestBuilder discoveryRequestBuilder = toDiscoveryRequestBuilder(discoveryOptions);
-		reportsDir.ifPresent(dir -> discoveryRequestBuilder.configurationParameter(OUTPUT_DIR_PROPERTY_NAME,
-			dir.toAbsolutePath().toString()));
-		launcher.execute(discoveryRequestBuilder.build());
+		PrintStream originalOut = System.out;
+		PrintStream originalErr = System.err;
+		try (StandardStreamsHandler standardStreamsHandler = new StandardStreamsHandler()) {
+			standardStreamsHandler.redirectStandardStreams(outputOptions.getStdoutPath(),
+				outputOptions.getStderrPath());
+			launchTests(launcher, reportsDir);
+		}
+		finally {
+			System.setOut(originalOut);
+			System.setErr(originalErr);
+		}
 
 		TestExecutionSummary summary = summaryListener.getSummary();
 		if (summary.getTotalFailureCount() > 0 || outputOptions.getDetails() != Details.NONE) {
@@ -112,6 +137,13 @@ public class ConsoleTestExecutor {
 		}
 
 		return summary;
+	}
+
+	private void launchTests(Launcher launcher, Optional<Path> reportsDir) {
+		LauncherDiscoveryRequestBuilder discoveryRequestBuilder = toDiscoveryRequestBuilder(discoveryOptions);
+		reportsDir.ifPresent(dir -> discoveryRequestBuilder.configurationParameter(OUTPUT_DIR_PROPERTY_NAME,
+			dir.toAbsolutePath().toString()));
+		launcher.execute(discoveryRequestBuilder.build());
 	}
 
 	private Optional<ClassLoader> createCustomClassLoader() {
@@ -194,4 +226,5 @@ public class ConsoleTestExecutor {
 	public interface Factory {
 		ConsoleTestExecutor create(TestDiscoveryOptions discoveryOptions, TestConsoleOutputOptions outputOptions);
 	}
+
 }

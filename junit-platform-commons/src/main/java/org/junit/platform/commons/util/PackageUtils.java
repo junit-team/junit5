@@ -95,17 +95,17 @@ public final class PackageUtils {
 				return Optional.ofNullable(mainAttributes.getValue(name));
 			}
 		}
-		catch (Exception e) {
+		catch (Exception ex) {
 			return Optional.empty();
 		}
 	}
 
 	/**
 	 * Get the module or implementation version for the supplied {@code type}.
-	 * <p>
-	 * The former is only available if the type is part of a versioned module on
-	 * the module path; the latter only if the type is part of a JAR file with a
-	 * manifest that contains an {@code Implementation-Version} attribute.
+	 *
+	 * <p>The former is only available if the type is part of a versioned module
+	 * on the module path; the latter only if the type is part of a JAR file with
+	 * a manifest that contains an {@code Implementation-Version} attribute.
 	 *
 	 * @since 1.11
 	 */
@@ -117,4 +117,5 @@ public final class PackageUtils {
 		}
 		return getAttribute(type, Package::getImplementationVersion);
 	}
+
 }

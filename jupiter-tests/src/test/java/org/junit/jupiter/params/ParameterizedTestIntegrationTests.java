@@ -14,7 +14,6 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.within;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -23,15 +22,14 @@ import static org.junit.jupiter.api.Named.named;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendTestTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
 import static org.junit.platform.testkit.engine.EventConditions.displayName;
-import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
@@ -83,17 +81,20 @@ import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.TestReporter;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.JupiterTestEngine;
 import org.junit.jupiter.params.ParameterizedTestIntegrationTests.RepeatableSourcesTestCase.Action;
 import org.junit.jupiter.params.aggregator.AggregateWith;
 import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
 import org.junit.jupiter.params.aggregator.ArgumentsAggregationException;
-import org.junit.jupiter.params.aggregator.ArgumentsAggregator;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ArgumentConversionException;
 import org.junit.jupiter.params.converter.ArgumentConverter;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -109,10 +110,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ClassUtils;
-import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 import org.junit.platform.testkit.engine.Event;
@@ -122,13 +124,14 @@ import org.opentest4j.TestAbortedException;
 /**
  * @since 5.0
  */
-class ParameterizedTestIntegrationTests {
+class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 	private final Locale originalLocale = Locale.getDefault(Locale.Category.FORMAT);
 
 	@AfterEach
-	void restoreLocale() {
+	void reset() {
 		Locale.setDefault(Locale.Category.FORMAT, originalLocale);
+		AutoCloseableArgument.closeCounter = 0;
 	}
 
 	@ParameterizedTest
@@ -393,7 +396,7 @@ class ParameterizedTestIntegrationTests {
 		LifecycleTestCase.lifecycleEvents.clear();
 		LifecycleTestCase.testMethods.clear();
 
-		var results = execute(selectClass(LifecycleTestCase.class));
+		var results = executeTestsForClass(LifecycleTestCase.class);
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1,
 					event(test("test1"), displayName("[1] argument=foo"), finishedWithFailure(message("foo")))) //
@@ -430,7 +433,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void truncatesArgumentsThatExceedMaxLength() {
 		var results = EngineTestKit.engine(new JupiterTestEngine()) //
-				.configurationParameter(ParameterizedTestExtension.ARGUMENT_MAX_LENGTH_KEY, "2") //
+				.configurationParameter(ParameterizedInvocationNameFormatter.ARGUMENT_MAX_LENGTH_KEY, "2") //
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //
@@ -441,7 +444,7 @@ class ParameterizedTestIntegrationTests {
 	@Test
 	void displayNamePatternFromConfiguration() {
 		var results = EngineTestKit.engine(new JupiterTestEngine()) //
-				.configurationParameter(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY, "{index}") //
+				.configurationParameter(ParameterizedInvocationNameFormatter.DISPLAY_NAME_PATTERN_KEY, "{index}") //
 				.selectors(selectMethod(TestCase.class, "testWithCsvSource", String.class.getName())) //
 				.execute();
 		results.testEvents().assertThatEvents() //
@@ -450,42 +453,85 @@ class ParameterizedTestIntegrationTests {
 	}
 
 	@Test
-	void failsWhenArgumentsRequiredButNoneProvided() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatRequiresArguments", String.class);
-		result.containerEvents().assertThatEvents().haveExactly(1, event(finishedWithFailure(message(
-			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
+	void failsWhenInvocationIsRequiredButNoArgumentSetsAreProvided() {
+		var results = execute(ZeroInvocationsTestCase.class, "testThatRequiresInvocations", String.class);
+
+		results.containerEvents().assertThatEvents() //
+				.haveExactly(1,
+					event(finishedWithFailure(instanceOf(TemplateInvocationValidationException.class), message(
+						"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest"))));
 	}
 
 	@Test
-	void doesNotFailWhenArgumentsAreNotRequiredAndNoneProvided() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatDoesNotRequireArguments", String.class);
-		result.allEvents().assertEventsMatchExactly( //
-			event(engine(), started()), event(container(ZeroArgumentsTestCase.class), started()),
-			event(container("testThatDoesNotRequireArguments"), started()),
-			event(container("testThatDoesNotRequireArguments"), finishedSuccessfully()),
-			event(container(ZeroArgumentsTestCase.class), finishedSuccessfully()),
-			event(engine(), finishedSuccessfully()));
+	void doesNotFailWhenInvocationIsNotRequiredAndNoArgumentSetsAreProvided() {
+		var results = execute(ZeroInvocationsTestCase.class, "testThatDoesNotRequireInvocations", String.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(3).succeeded(3));
 	}
 
 	@Test
 	void failsWhenNoArgumentsSourceIsDeclared() {
-		var result = execute(ZeroArgumentsTestCase.class, "testThatHasNoArgumentsSource", String.class);
-		result.containerEvents().assertThatEvents() //
+		var results = execute(ZeroInvocationsTestCase.class, "testThatHasNoArgumentsSource", String.class);
+
+		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, //
 					event(displayName("testThatHasNoArgumentsSource(String)"), finishedWithFailure(message(
 						"Configuration error: You must configure at least one arguments source for this @ParameterizedTest"))));
 	}
 
-	private EngineExecutionResults execute(DiscoverySelector... selectors) {
-		return EngineTestKit.engine(new JupiterTestEngine()).selectors(selectors).execute();
+	@Test
+	void executesWithDefaultLocaleConversionFormat() {
+		var results = execute(LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
 	}
 
-	private EngineExecutionResults execute(Class<?> testClass, String methodName, Class<?>... methodParameterTypes) {
-		return execute(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes)));
+	@Test
+	void executesWithBcp47LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "bcp_47"),
+			LocaleConversionTestCase.class, "testWithBcp47", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void executesWithIso639LocaleConversionFormat() {
+		var results = execute(Map.of(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME, "iso_639"),
+			LocaleConversionTestCase.class, "testWithIso639", Locale.class);
+
+		results.allEvents().assertStatistics(stats -> stats.started(4).succeeded(4));
+	}
+
+	@Test
+	void reportsExceptionInStaticInitializersWithoutInvocationCountValidation() {
+		var results = executeTestsForClass(ExceptionInStaticInitializerTestCase.class);
+
+		var failure = results.containerEvents().stream() //
+				.filter(finishedWithFailure()::matches) //
+				.findAny() //
+				.orElseThrow();
+
+		var throwable = failure.getRequiredPayload(TestExecutionResult.class).getThrowable().orElseThrow();
+
+		assertThat(throwable) //
+				.isInstanceOf(ExceptionInInitializerError.class) //
+				.hasNoSuppressedExceptions();
+	}
+
+	private EngineExecutionResults execute(Map<String, String> configurationParameters, Class<?> testClass,
+			String methodName, Class<?>... methodParameterTypes) {
+		return EngineTestKit.engine(new JupiterTestEngine()) //
+				.selectors(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes))) //
+				.configurationParameters(configurationParameters) //
+				.execute();
 	}
 
 	private EngineExecutionResults execute(String methodName, Class<?>... methodParameterTypes) {
 		return execute(TestCase.class, methodName, methodParameterTypes);
+	}
+
+	private EngineExecutionResults execute(Class<?> testClass, String methodName, Class<?>... methodParameterTypes) {
+		return executeTests(selectMethod(testClass, methodName, ClassUtils.nullSafeToString(methodParameterTypes)));
 	}
 
 	/**
@@ -523,7 +569,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches(
-							"@NullSource cannot provide a null argument to method .+: the method does not declare any formal parameters.")))));
+							"@NullSource cannot provide a null argument to method .+: no formal parameters declared.")))));
 		}
 
 		@Test
@@ -663,7 +709,7 @@ class ParameterizedTestIntegrationTests {
 					finishedWithFailure(//
 						instanceOf(PreconditionViolationException.class), //
 						message(msg -> msg.matches(
-							"@EmptySource cannot provide an empty argument to method .+: the method does not declare any formal parameters.")))));
+							"@EmptySource cannot provide an empty argument to method .+: no formal parameters declared.")))));
 		}
 
 		@ParameterizedTest(name = "{1}")
@@ -915,7 +961,7 @@ class ParameterizedTestIntegrationTests {
 			// other words, we're not really testing the support for @RepeatedTest
 			// and @TestFactory, but their presence also contributes to the bug
 			// reported in #3001.
-			ParameterizedTestIntegrationTests.this.execute(selectClass(DuplicateMethodNamesMethodSourceTestCase.class))//
+			executeTestsForClass(DuplicateMethodNamesMethodSourceTestCase.class)//
 					.testEvents()//
 					.assertStatistics(stats -> stats.started(8).failed(0).finished(8));
 		}
@@ -1129,8 +1175,8 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
 		}
 
 		@Test
@@ -1138,8 +1184,8 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
 		}
 
 		@Test
@@ -1147,8 +1193,8 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
 				"testWithStrictArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
 		}
 
 		@Test
@@ -1156,8 +1202,8 @@ class ParameterizedTestIntegrationTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithCsvSourceContainingDifferentNumbersOfArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(EventConditions.finishedWithFailure(message(String.format(
-						"Configuration error: the @ParameterizedTest has 1 argument(s) but there were 2 argument(s) provided.%nNote: the provided arguments are [foo, unused1]"))))) //
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]"))))) //
 					.haveExactly(1,
 						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
@@ -1178,6 +1224,17 @@ class ParameterizedTestIntegrationTests {
 			results.allEvents().assertThatEvents() //
 					.haveExactly(1, event(test(), displayName("[1] argument=a"), finishedWithFailure(message("a")))) //
 					.haveExactly(1, event(test(), displayName("[2] argument=b"), finishedWithFailure(message("b"))));
+		}
+
+		@Test
+		void evaluatesArgumentsAtMostOnce() {
+			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
+				"testWithEvaluationReportingArgumentsProvider", String.class);
+			results.allEvents().assertThatEvents() //
+					.haveExactly(1, event(finishedWithFailure(message(String.format(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
+			results.allEvents().reportingEntryPublished().assertThatEvents() //
+					.haveExactly(1, event(EventConditions.reportEntry(Map.of("evaluated", "true"))));
 		}
 
 		private EngineExecutionResults execute(ArgumentCountValidationMode configurationValue, Class<?> javaClass,
@@ -1299,13 +1356,31 @@ class ParameterizedTestIntegrationTests {
 		results.allEvents().assertThatEvents() //
 				.haveExactly(1, event(test(), finishedSuccessfully()));
 
-		assertTrue(AutoCloseableArgument.isClosed);
+		assertEquals(2, AutoCloseableArgument.closeCounter);
+	}
+
+	@Test
+	void doNotCloseAutoCloseableArgumentsAfterTestWhenDisabled() {
+		var results = execute("testWithAutoCloseableArgumentButDisabledCleanup", AutoCloseableArgument.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedSuccessfully()));
+
+		assertEquals(0, AutoCloseableArgument.closeCounter);
+	}
+
+	@Test
+	void closeAutoCloseableArgumentsAfterTestDespiteEarlyFailure() {
+		var results = execute(FailureInBeforeEachTestCase.class, "test", AutoCloseableArgument.class);
+		results.allEvents().assertThatEvents() //
+				.haveExactly(1, event(test(), finishedWithFailure(message("beforeEach"))));
+
+		assertEquals(2, AutoCloseableArgument.closeCounter);
 	}
 
 	@Test
 	void executesTwoIterationsBasedOnIterationAndUniqueIdSelector() {
 		var methodId = uniqueIdForTestTemplateMethod(TestCase.class, "testWithThreeIterations(int)");
-		var results = execute(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
+		var results = executeTests(selectUniqueId(appendTestTemplateInvocationSegment(methodId, 3)),
 			selectIteration(selectMethod(TestCase.class, "testWithThreeIterations", "int"), 1));
 
 		results.allEvents().assertThatEvents() //
@@ -1430,7 +1505,13 @@ class ParameterizedTestIntegrationTests {
 		@ParameterizedTest
 		@ArgumentsSource(AutoCloseableArgumentProvider.class)
 		void testWithAutoCloseableArgument(AutoCloseableArgument autoCloseable) {
-			assertFalse(AutoCloseableArgument.isClosed);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
+		}
+
+		@ParameterizedTest(autoCloseArguments = false)
+		@ArgumentsSource(AutoCloseableArgumentProvider.class)
+		void testWithAutoCloseableArgumentButDisabledCleanup(AutoCloseableArgument autoCloseable) {
+			assertEquals(0, AutoCloseableArgument.closeCounter);
 		}
 
 		@ParameterizedTest
@@ -2123,6 +2204,24 @@ class ParameterizedTestIntegrationTests {
 		void testWithCsvSourceContainingDifferentNumbersOfArguments(String argument) {
 			fail(argument);
 		}
+
+		@ParameterizedTest
+		@ArgumentsSource(EvaluationReportingArgumentsProvider.class)
+		void testWithEvaluationReportingArgumentsProvider(String argument) {
+			fail(argument);
+		}
+
+		private static class EvaluationReportingArgumentsProvider implements ArgumentsProvider {
+
+			@Override
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) {
+				return Stream.of(() -> {
+					context.publishReportEntry("evaluated", "true");
+					return List.of("foo", "unused").toArray();
+				});
+			}
+		}
 	}
 
 	static class LifecycleTestCase {
@@ -2400,7 +2499,8 @@ class ParameterizedTestIntegrationTests {
 		record ArgumentsProviderWithConstructorParameter(String value) implements ArgumentsProvider {
 
 			@Override
-			public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) {
 				return Stream.of(arguments(value));
 			}
 		}
@@ -2413,27 +2513,33 @@ class ParameterizedTestIntegrationTests {
 			}
 		}
 
-		record ArgumentsAggregatorWithConstructorParameter(String value) implements ArgumentsAggregator {
+		static class ArgumentsAggregatorWithConstructorParameter extends SimpleArgumentsAggregator {
+
+			private final String value;
+
+			public ArgumentsAggregatorWithConstructorParameter(String value) {
+				this.value = value;
+			}
 
 			@Override
-			public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-					throws ArgumentsAggregationException {
-				return value;
+			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+					AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
+				return this.value;
 			}
 		}
 	}
 
-	static class ZeroArgumentsTestCase {
+	static class ZeroInvocationsTestCase {
 
 		@ParameterizedTest
 		@MethodSource("zeroArgumentsProvider")
-		void testThatRequiresArguments(String argument) {
+		void testThatRequiresInvocations(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
 		}
 
 		@ParameterizedTest(allowZeroInvocations = true)
 		@MethodSource("zeroArgumentsProvider")
-		void testThatDoesNotRequireArguments(String argument) {
+		void testThatDoesNotRequireInvocations(String argument) {
 			fail("This test should not be executed, because no arguments are provided.");
 		}
 
@@ -2448,10 +2554,29 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
+	static class LocaleConversionTestCase {
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithBcp47(Locale locale) {
+			assertEquals("en", locale.getLanguage());
+			assertEquals("US", locale.getCountry());
+		}
+
+		@ParameterizedTest
+		@ValueSource(strings = "en-US")
+		void testWithIso639(Locale locale) {
+			assertEquals("en-us", locale.getLanguage());
+			assertEquals("", locale.getCountry());
+		}
+
+	}
+
 	private static class TwoSingleStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(arguments("foo"), arguments("bar"));
 		}
 	}
@@ -2459,7 +2584,8 @@ class ParameterizedTestIntegrationTests {
 	private static class TwoUnusedStringArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.of(arguments("foo", "unused1"), arguments("bar", "unused2"));
 		}
 	}
@@ -2472,11 +2598,11 @@ class ParameterizedTestIntegrationTests {
 		}
 	}
 
-	private static class StringAggregator implements ArgumentsAggregator {
+	private static class StringAggregator extends SimpleArgumentsAggregator {
 
 		@Override
-		public Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
-				throws ArgumentsAggregationException {
+		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 			return accessor.getString(0) + accessor.getString(1);
 		}
 	}
@@ -2492,18 +2618,19 @@ class ParameterizedTestIntegrationTests {
 	private static class AutoCloseableArgumentProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
-			return Stream.of(arguments(new AutoCloseableArgument()));
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
+			return Stream.of(arguments(new AutoCloseableArgument(), Named.of("unused", new AutoCloseableArgument())));
 		}
 	}
 
 	static class AutoCloseableArgument implements AutoCloseable {
 
-		static boolean isClosed = false;
+		static int closeCounter = 0;
 
 		@Override
 		public void close() {
-			isClosed = true;
+			closeCounter++;
 		}
 	}
 
@@ -2518,6 +2645,41 @@ class ParameterizedTestIntegrationTests {
 		static Book factory(String title) {
 			return new Book(title);
 		}
+	}
+
+	static class FailureInBeforeEachTestCase {
+
+		@BeforeEach
+		void beforeEach() {
+			fail("beforeEach");
+		}
+
+		@ParameterizedTest
+		@ArgumentsSource(AutoCloseableArgumentProvider.class)
+		void test(AutoCloseableArgument autoCloseable) {
+			assertNotNull(autoCloseable);
+			assertEquals(0, AutoCloseableArgument.closeCounter);
+		}
+	}
+
+	static class ExceptionInStaticInitializerTestCase {
+
+		static {
+			//noinspection ConstantValue
+			if (true)
+				throw new RuntimeException("boom");
+		}
+
+		private static Stream<String> getArguments() {
+			return Stream.of("foo", "bar");
+		}
+
+		@ParameterizedTest
+		@MethodSource("getArguments")
+		void test(String value) {
+			fail("should not be called: " + value);
+		}
+
 	}
 
 }

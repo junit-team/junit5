@@ -12,8 +12,12 @@ package org.junit.jupiter.params.converter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.LocaleConversionFormat.BCP_47;
+import static org.junit.jupiter.params.converter.DefaultArgumentConverter.LocaleConversionFormat.ISO_639;
 import static org.junit.platform.commons.util.ClassLoaderUtils.getClassLoader;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -22,15 +26,17 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.conversion.ConversionException;
 import org.junit.platform.commons.test.TestClassLoader;
+import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
  * Unit tests for {@link DefaultArgumentConverter}.
@@ -39,7 +45,8 @@ import org.junit.platform.commons.test.TestClassLoader;
  */
 class DefaultArgumentConverterTests {
 
-	private final DefaultArgumentConverter underTest = spy(DefaultArgumentConverter.INSTANCE);
+	private final ExtensionContext context = mock();
+	private final DefaultArgumentConverter underTest = spy(new DefaultArgumentConverter(context));
 
 	@Test
 	void isAwareOfNull() {
@@ -105,6 +112,36 @@ class DefaultArgumentConverterTests {
 	}
 
 	@Test
+	void convertsLocaleWithDefaultFormat() {
+		when(context.getConfigurationParameter(eq(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME), any())) //
+				.thenReturn(Optional.empty());
+
+		assertConverts("en", Locale.class, Locale.ENGLISH);
+		assertConverts("en-US", Locale.class, Locale.US);
+	}
+
+	@Test
+	void convertsLocaleWithExplicitBcp47Format() {
+		when(context.getConfigurationParameter(eq(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME), any())) //
+				.thenReturn(Optional.of(BCP_47));
+
+		assertConverts("en", Locale.class, Locale.ENGLISH);
+		assertConverts("en-US", Locale.class, Locale.US);
+	}
+
+	@Test
+	void delegatesLocaleConversionWithExplicitIso639Format() {
+		when(context.getConfigurationParameter(eq(DEFAULT_LOCALE_CONVERSION_FORMAT_PROPERTY_NAME), any())) //
+				.thenReturn(Optional.of(ISO_639));
+
+		doReturn(null).when(underTest).convert(any(), any(), any(ClassLoader.class));
+
+		convert("en", Locale.class);
+
+		verify(underTest).convert("en", Locale.class, getClassLoader(DefaultArgumentConverterTests.class));
+	}
+
+	@Test
 	void throwsExceptionForDelegatedConversionFailure() {
 		ConversionException exception = new ConversionException("fail");
 		doThrow(exception).when(underTest).convert(any(), any(), any(ClassLoader.class));
@@ -124,12 +161,12 @@ class DefaultArgumentConverterTests {
 			var customType = testClassLoader.loadClass(customTypeName);
 			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
-			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
+			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").orElseThrow();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			doReturn(customType).when(underTest).convert(any(), any(), any(ClassLoader.class));
 
-			var clazz = (Class<?>) convert(customTypeName, Class.class, parameterContext(declaringExecutable));
+			var clazz = (Class<?>) convert(customTypeName, Class.class, testClassLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
@@ -151,22 +188,11 @@ class DefaultArgumentConverterTests {
 	}
 
 	private Object convert(Object input, Class<?> targetClass) {
-		return convert(input, targetClass, parameterContext());
+		return convert(input, targetClass, ClassLoaderUtils.getClassLoader(getClass()));
 	}
 
-	private Object convert(Object input, Class<?> targetClass, ParameterContext parameterContext) {
-		return underTest.convert(input, targetClass, parameterContext);
-	}
-
-	private static ParameterContext parameterContext() {
-		Method declaringExecutable = ReflectionSupport.findMethod(DefaultArgumentConverterTests.class, "foo").get();
-		return parameterContext(declaringExecutable);
-	}
-
-	private static ParameterContext parameterContext(Method declaringExecutable) {
-		ParameterContext parameterContext = mock();
-		when(parameterContext.getDeclaringExecutable()).thenReturn(declaringExecutable);
-		return parameterContext;
+	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+		return underTest.convert(input, targetClass, classLoader);
 	}
 
 	@SuppressWarnings("unused")

@@ -18,7 +18,7 @@ import java.nio.CharBuffer;
  */
 class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String MARKDOWN_FORMAT = "%-52s | %-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
+	private static final String MARKDOWN_FORMAT = "%-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
 
 	MarkdownApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
@@ -35,6 +35,16 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
+	protected String h4(String header) {
+		return "#### " + header;
+	}
+
+	@Override
+	protected String h5(String header) {
+		return "##### " + header;
+	}
+
+	@Override
 	protected String code(String element) {
 		return "`" + element + "`";
 	}
@@ -46,8 +56,8 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
-		out.printf(MARKDOWN_FORMAT, "Package Name", "Name", "Since");
-		out.printf(MARKDOWN_FORMAT, dashes(52), dashes(NAME_COLUMN_WIDTH), dashes(12));
+		out.printf(MARKDOWN_FORMAT, "Name", "Since");
+		out.printf(MARKDOWN_FORMAT, dashes(NAME_COLUMN_WIDTH), dashes(12));
 	}
 
 	private String dashes(int length) {
@@ -57,7 +67,6 @@ class MarkdownApiReportWriter extends AbstractApiReportWriter {
 	@Override
 	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(MARKDOWN_FORMAT, //
-			code(declaration.packageName()), //
 			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
 			code(declaration.since()) //
 		);

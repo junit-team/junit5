@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.support;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.lang.reflect.Member;
@@ -140,6 +141,32 @@ public final class ModifierSupport {
 	 */
 	public static boolean isAbstract(Member member) {
 		return ReflectionUtils.isAbstract(member);
+	}
+
+	/**
+	 * Determine if the supplied class is not {@code abstract}.
+	 *
+	 * @param clazz the class to check; never {@code null}
+	 * @return {@code true} if the class is not {@code abstract}
+	 * @since 1.13
+	 * @see java.lang.reflect.Modifier#isAbstract(int)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public static boolean isNotAbstract(Class<?> clazz) {
+		return ReflectionUtils.isNotAbstract(clazz);
+	}
+
+	/**
+	 * Determine if the supplied member is not {@code abstract}.
+	 *
+	 * @param member the class to check; never {@code null}
+	 * @return {@code true} if the member is not {@code abstract}
+	 * @since 1.13
+	 * @see java.lang.reflect.Modifier#isAbstract(int)
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public static boolean isNotAbstract(Member member) {
+		return ReflectionUtils.isNotAbstract(member);
 	}
 
 	/**

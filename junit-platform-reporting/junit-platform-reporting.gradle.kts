@@ -1,6 +1,5 @@
 plugins {
 	id("junitbuild.java-library-conventions")
-	id("junitbuild.native-image-properties")
 	id("junitbuild.shadow-conventions")
 	`java-test-fixtures`
 }

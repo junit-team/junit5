@@ -25,22 +25,26 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -55,8 +59,6 @@ import org.junit.platform.engine.support.hierarchical.Node;
 @API(status = INTERNAL, since = "5.0")
 public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 		implements Node<JupiterEngineExecutionContext> {
-
-	private static final Logger logger = LoggerFactory.getLogger(JupiterTestDescriptor.class);
 
 	private static final ConditionEvaluator conditionEvaluator = new ConditionEvaluator();
 
@@ -75,27 +77,27 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	// --- TestDescriptor ------------------------------------------------------
 
-	static Set<TestTag> getTags(AnnotatedElement element) {
-		// @formatter:off
-		return findRepeatableAnnotations(element, Tag.class).stream()
-				.map(Tag::value)
+	static Set<TestTag> getTags(AnnotatedElement element, Supplier<String> elementDescription,
+			Supplier<TestSource> sourceProvider, Consumer<DiscoveryIssue> issueCollector) {
+		AtomicReference<TestSource> source = new AtomicReference<>();
+		return findRepeatableAnnotations(element, Tag.class).stream() //
+				.map(Tag::value) //
 				.filter(tag -> {
 					boolean isValid = TestTag.isValid(tag);
 					if (!isValid) {
-						// TODO [#242] Replace logging with precondition check once we have a proper mechanism for
-						// handling validation exceptions during the TestEngine discovery phase.
-						//
-						// As an alternative to a precondition check here, we could catch any
-						// PreconditionViolationException thrown by TestTag::create.
-						logger.warn(() -> String.format(
-							"Configuration error: invalid tag syntax in @Tag(\"%s\") declaration on [%s]. Tag will be ignored.",
-							tag, element));
+						String message = String.format(
+							"Invalid tag syntax in @Tag(\"%s\") declaration on %s. Tag will be ignored.", tag,
+							elementDescription.get());
+						if (source.get() == null) {
+							source.set(sourceProvider.get());
+						}
+						issueCollector.accept(
+							DiscoveryIssue.builder(Severity.WARNING, message).source(source.get()).build());
 					}
 					return isValid;
-				})
-				.map(TestTag::create)
+				}) //
+				.map(TestTag::create) //
 				.collect(collectingAndThen(toCollection(LinkedHashSet::new), Collections::unmodifiableSet));
-		// @formatter:on
 	}
 
 	/**
@@ -187,7 +189,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	@Override
-	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) throws Exception {
+	public SkipResult shouldBeSkipped(JupiterEngineExecutionContext context) {
 		context.getThrowableCollector().assertEmpty();
 		ConditionEvaluationResult evaluationResult = conditionEvaluator.evaluate(context.getExtensionRegistry(),
 			context.getConfiguration(), context.getExtensionContext());
@@ -202,7 +204,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	/**
-	 * Must be overridden and return a new context so cleanUp() does not accidentally close the parent context.
+	 * Must be overridden and return a new context with a new {@link ExtensionContext}
+	 * so cleanUp() does not accidentally close the parent context.
 	 */
 	@Override
 	public abstract JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) throws Exception;
@@ -211,6 +214,23 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	public void cleanUp(JupiterEngineExecutionContext context) throws Exception {
 		context.close();
 	}
+
+	/**
+	 * {@return a deep copy (with copies of children) of this descriptor with the supplied unique ID}
+	 */
+	protected JupiterTestDescriptor copyIncludingDescendants(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		JupiterTestDescriptor result = withUniqueId(uniqueIdTransformer);
+		getChildren().forEach(oldChild -> {
+			TestDescriptor newChild = ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer);
+			result.addChild(newChild);
+		});
+		return result;
+	}
+
+	/**
+	 * {@return shallow copy (without children) of this descriptor with the supplied unique ID}
+	 */
+	protected abstract JupiterTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer);
 
 	/**
 	 * @since 5.5

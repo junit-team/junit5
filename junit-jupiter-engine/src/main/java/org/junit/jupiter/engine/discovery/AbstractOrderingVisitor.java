@@ -18,33 +18,37 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor;
-import org.junit.platform.commons.logging.Logger;
-import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Abstract base class for {@linkplain TestDescriptor.Visitor visitors} that
  * order children nodes.
  *
- * @param <PARENT> the parent container type to search in for matching children
- * @param <CHILD> the type of children (containers or tests) to order
- * @param <WRAPPER> the wrapper type for the children to order
  * @since 5.8
  */
-abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>>
-		implements TestDescriptor.Visitor {
+abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractOrderingVisitor.class);
+	private final DiscoveryIssueReporter issueReporter;
 
+	AbstractOrderingVisitor(DiscoveryIssueReporter issueReporter) {
+		this.issueReporter = issueReporter;
+	}
+
+	/**
+	 * @param <PARENT> the parent container type to search in for matching children
+	 */
 	@SuppressWarnings("unchecked")
-	protected void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType, TestDescriptor testDescriptor,
-			Consumer<PARENT> action, Function<PARENT, String> errorMessageBuilder) {
+	protected <PARENT extends TestDescriptor> void doWithMatchingDescriptor(Class<PARENT> parentTestDescriptorType,
+			TestDescriptor testDescriptor, Consumer<PARENT> action, Function<PARENT, String> errorMessageBuilder) {
 
 		if (parentTestDescriptorType.isInstance(testDescriptor)) {
 			PARENT parentTestDescriptor = (PARENT) testDescriptor;
@@ -53,18 +57,37 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			}
 			catch (Throwable t) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(t);
-				logger.error(t, () -> errorMessageBuilder.apply(parentTestDescriptor));
+				String message = errorMessageBuilder.apply(parentTestDescriptor);
+				this.issueReporter.reportIssue(DiscoveryIssue.builder(Severity.ERROR, message) //
+						.source(parentTestDescriptor.getSource()) //
+						.cause(t));
 			}
 		}
 	}
 
-	protected void orderChildrenTestDescriptors(TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
-			Function<CHILD, WRAPPER> descriptorWrapperFactory, DescriptorWrapperOrderer descriptorWrapperOrderer) {
+	/**
+	 * @param <CHILD> the type of children (containers or tests) to order
+	 */
+	protected <CHILD extends TestDescriptor, WRAPPER extends AbstractAnnotatedDescriptorWrapper<?>> void orderChildrenTestDescriptors(
+			TestDescriptor parentTestDescriptor, Class<CHILD> matchingChildrenType,
+			Optional<Consumer<CHILD>> validationAction, Function<CHILD, WRAPPER> descriptorWrapperFactory,
+			DescriptorWrapperOrderer<?, WRAPPER> descriptorWrapperOrderer) {
 
-		List<WRAPPER> matchingDescriptorWrappers = parentTestDescriptor.getChildren()//
+		Stream<CHILD> matchingChildren = parentTestDescriptor.getChildren()//
 				.stream()//
 				.filter(matchingChildrenType::isInstance)//
-				.map(matchingChildrenType::cast)//
+				.map(matchingChildrenType::cast);
+
+		if (!descriptorWrapperOrderer.canOrderWrappers()) {
+			validationAction.ifPresent(matchingChildren::forEach);
+			return;
+		}
+
+		if (validationAction.isPresent()) {
+			matchingChildren = matchingChildren.peek(validationAction.get());
+		}
+
+		List<WRAPPER> matchingDescriptorWrappers = matchingChildren//
 				.map(descriptorWrapperFactory)//
 				.collect(toCollection(ArrayList::new));
 
@@ -73,83 +96,71 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return;
 		}
 
-		if (descriptorWrapperOrderer.canOrderWrappers()) {
-			parentTestDescriptor.orderChildren(children -> {
-				Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
-						.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
+		parentTestDescriptor.orderChildren(children -> {
+			Stream<TestDescriptor> nonMatchingTestDescriptors = children.stream()//
+					.filter(childTestDescriptor -> !matchingChildrenType.isInstance(childTestDescriptor));
 
-				descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers);
+			descriptorWrapperOrderer.orderWrappers(matchingDescriptorWrappers,
+				message -> reportWarning(parentTestDescriptor, message));
 
-				Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
-						.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
+			Stream<TestDescriptor> orderedTestDescriptors = matchingDescriptorWrappers.stream()//
+					.map(AbstractAnnotatedDescriptorWrapper::getTestDescriptor);
 
-				// If we are ordering children of type ClassBasedTestDescriptor, that means we
-				// are ordering top-level classes or @Nested test classes. Thus, the
-				// nonMatchingTestDescriptors list is either empty (for top-level classes) or
-				// contains only local test methods (for @Nested classes) which must be executed
-				// before tests in @Nested test classes. So we add the test methods before adding
-				// the @Nested test classes.
-				if (matchingChildrenType == ClassBasedTestDescriptor.class) {
-					return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
-							.collect(toList());
-				}
-				// Otherwise, we add the ordered descriptors before the non-matching descriptors,
-				// which is the case when we are ordering test methods. In other words, local
-				// test methods always get added before @Nested test classes.
-				else {
-					return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
-							.collect(toList());
-				}
-			});
-		}
-
-		// Recurse through the children in order to support ordering for @Nested test classes.
-		matchingDescriptorWrappers.forEach(descriptorWrapper -> {
-			TestDescriptor newParentTestDescriptor = descriptorWrapper.getTestDescriptor();
-			DescriptorWrapperOrderer newDescriptorWrapperOrderer = getDescriptorWrapperOrderer(descriptorWrapperOrderer,
-				descriptorWrapper);
-
-			orderChildrenTestDescriptors(newParentTestDescriptor, matchingChildrenType, descriptorWrapperFactory,
-				newDescriptorWrapperOrderer);
+			if (shouldNonMatchingDescriptorsComeBeforeOrderedOnes()) {
+				return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
+						.collect(toList());
+			}
+			else {
+				return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
+						.collect(toList());
+			}
 		});
 	}
 
-	/**
-	 * Get the {@link DescriptorWrapperOrderer} for the supplied {@link AbstractAnnotatedDescriptorWrapper}.
-	 *
-	 * <p>The default implementation returns the supplied {@code DescriptorWrapperOrderer}.
-	 *
-	 * @return a new {@code DescriptorWrapperOrderer} or the one supplied as an argument
-	 */
-	protected DescriptorWrapperOrderer getDescriptorWrapperOrderer(
-			DescriptorWrapperOrderer inheritedDescriptorWrapperOrderer,
-			AbstractAnnotatedDescriptorWrapper<?> descriptorWrapper) {
-
-		return inheritedDescriptorWrapperOrderer;
+	private void reportWarning(TestDescriptor parentTestDescriptor, String message) {
+		issueReporter.reportIssue(DiscoveryIssue.builder(Severity.WARNING, message) //
+				.source(parentTestDescriptor.getSource()));
 	}
 
-	protected class DescriptorWrapperOrderer {
+	protected abstract boolean shouldNonMatchingDescriptorsComeBeforeOrderedOnes();
 
+	/**
+	 * @param <WRAPPER> the wrapper type for the children to order
+	 */
+	protected static class DescriptorWrapperOrderer<ORDERER, WRAPPER> {
+
+		private static final DescriptorWrapperOrderer<?, ?> NOOP = new DescriptorWrapperOrderer<>(null, null, __ -> "",
+			___ -> "");
+
+		@SuppressWarnings("unchecked")
+		protected static <ORDERER, WRAPPER> DescriptorWrapperOrderer<ORDERER, WRAPPER> noop() {
+			return (DescriptorWrapperOrderer<ORDERER, WRAPPER>) NOOP;
+		}
+
+		private final ORDERER orderer;
 		private final Consumer<List<WRAPPER>> orderingAction;
-
 		private final MessageGenerator descriptorsAddedMessageGenerator;
-
 		private final MessageGenerator descriptorsRemovedMessageGenerator;
 
-		DescriptorWrapperOrderer(Consumer<List<WRAPPER>> orderingAction,
+		DescriptorWrapperOrderer(ORDERER orderer, Consumer<List<WRAPPER>> orderingAction,
 				MessageGenerator descriptorsAddedMessageGenerator,
 				MessageGenerator descriptorsRemovedMessageGenerator) {
 
+			this.orderer = orderer;
 			this.orderingAction = orderingAction;
 			this.descriptorsAddedMessageGenerator = descriptorsAddedMessageGenerator;
 			this.descriptorsRemovedMessageGenerator = descriptorsRemovedMessageGenerator;
+		}
+
+		ORDERER getOrderer() {
+			return orderer;
 		}
 
 		private boolean canOrderWrappers() {
 			return this.orderingAction != null;
 		}
 
-		private void orderWrappers(List<WRAPPER> wrappers) {
+		private void orderWrappers(List<WRAPPER> wrappers, Consumer<String> errorHandler) {
 			List<WRAPPER> orderedWrappers = new ArrayList<>(wrappers);
 			this.orderingAction.accept(orderedWrappers);
 			Map<Object, Integer> distinctWrappersToIndex = distinctWrappersToIndex(orderedWrappers);
@@ -157,10 +168,10 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			int difference = orderedWrappers.size() - wrappers.size();
 			int distinctDifference = distinctWrappersToIndex.size() - wrappers.size();
 			if (difference > 0) { // difference >= distinctDifference
-				logDescriptorsAddedWarning(difference);
+				reportDescriptorsAddedWarning(difference, errorHandler);
 			}
 			if (distinctDifference < 0) { // distinctDifference <= difference
-				logDescriptorsRemovedWarning(distinctDifference);
+				reportDescriptorsRemovedWarning(distinctDifference, errorHandler);
 			}
 
 			wrappers.sort(comparing(wrapper -> distinctWrappersToIndex.getOrDefault(wrapper, -1)));
@@ -178,12 +189,12 @@ abstract class AbstractOrderingVisitor<PARENT extends TestDescriptor, CHILD exte
 			return toIndex;
 		}
 
-		private void logDescriptorsAddedWarning(int number) {
-			logger.warn(() -> this.descriptorsAddedMessageGenerator.generateMessage(number));
+		private void reportDescriptorsAddedWarning(int number, Consumer<String> errorHandler) {
+			errorHandler.accept(this.descriptorsAddedMessageGenerator.generateMessage(number));
 		}
 
-		private void logDescriptorsRemovedWarning(int number) {
-			logger.warn(() -> this.descriptorsRemovedMessageGenerator.generateMessage(Math.abs(number)));
+		private void reportDescriptorsRemovedWarning(int number, Consumer<String> errorHandler) {
+			errorHandler.accept(this.descriptorsRemovedMessageGenerator.generateMessage(Math.abs(number)));
 		}
 
 	}

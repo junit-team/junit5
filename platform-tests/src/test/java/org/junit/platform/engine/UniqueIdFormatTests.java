@@ -121,7 +121,7 @@ class UniqueIdFormatTests {
 		@Test
 		default void parseEngineUid() {
 			var parsedId = getFormat().parse(getEngineUid());
-			assertSegment(parsedId.getSegments().get(0), "engine", "junit-jupiter");
+			assertSegment(parsedId.getSegments().getFirst(), "engine", "junit-jupiter");
 			assertEquals(getEngineUid(), getFormat().format(parsedId));
 			assertEquals(getEngineUid(), parsedId.toString());
 		}

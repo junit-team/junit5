@@ -12,6 +12,7 @@ package org.junit.platform.suite.engine;
 
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.TestDescriptor;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.discovery.EngineDiscoveryRequestResolver;
 
 /**
@@ -21,12 +22,14 @@ final class DiscoverySelectorResolver {
 
 	// @formatter:off
 	private static final EngineDiscoveryRequestResolver<SuiteEngineDescriptor> resolver = EngineDiscoveryRequestResolver.<SuiteEngineDescriptor>builder()
-			.addClassContainerSelectorResolver(new IsSuiteClass())
+			.addClassContainerSelectorResolverWithContext(context -> new IsSuiteClass(context.getIssueReporter()))
 			.addSelectorResolver(context -> new ClassSelectorResolver(
 					context.getClassNameFilter(),
 					context.getEngineDescriptor(),
 					context.getDiscoveryRequest().getConfigurationParameters(),
-					context.getDiscoveryRequest().getOutputDirectoryProvider()))
+					context.getDiscoveryRequest().getOutputDirectoryProvider(),
+					context.getDiscoveryRequest().getDiscoveryListener(),
+					context.getIssueReporter()))
 			.build();
 	// @formatter:on
 
@@ -39,7 +42,9 @@ final class DiscoverySelectorResolver {
 	}
 
 	void resolveSelectors(EngineDiscoveryRequest request, SuiteEngineDescriptor engineDescriptor) {
-		resolver.resolve(request, engineDescriptor);
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.deduplicating(
+			DiscoveryIssueReporter.forwarding(request.getDiscoveryListener(), engineDescriptor.getUniqueId()));
+		resolver.resolve(request, engineDescriptor, issueReporter);
 		discoverSuites(engineDescriptor);
 		engineDescriptor.accept(TestDescriptor::prune);
 	}

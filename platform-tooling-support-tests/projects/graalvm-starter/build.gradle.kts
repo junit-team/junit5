@@ -34,11 +34,29 @@ tasks.test {
 	}
 }
 
+// These will be part of the next version of native-build-tools
+// see https://github.com/graalvm/native-build-tools/pull/693
+val initializeAtBuildTime = listOf(
+	"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$ClassInfo",
+	"org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor\$LifecycleMethods",
+	"org.junit.jupiter.engine.descriptor.ClassTemplateInvocationTestDescriptor",
+	"org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor",
+	"org.junit.jupiter.engine.descriptor.DynamicDescendantFilter\$Mode",
+	"org.junit.jupiter.engine.descriptor.ExclusiveResourceCollector\$1",
+	"org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor\$MethodInfo",
+	"org.junit.jupiter.engine.discovery.ClassSelectorResolver\$DummyClassTemplateInvocationContext",
+	"org.junit.platform.launcher.core.DiscoveryIssueNotifier",
+	"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
+	"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo",
+	"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods",
+)
+
 graalvmNative {
 	binaries {
 		named("test") {
 			buildArgs.add("--strict-image-heap")
 			buildArgs.add("-H:+ReportExceptionStackTraces")
+			buildArgs.add("--initialize-at-build-time=${initializeAtBuildTime.joinToString(",")}")
 		}
 	}
 }

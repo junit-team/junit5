@@ -1,5 +1,0 @@
-org.junit.vintage.engine.VintageTestEngine
-org.junit.vintage.engine.descriptor.RunnerTestDescriptor
-org.junit.vintage.engine.descriptor.VintageEngineDescriptor
-org.junit.vintage.engine.support.UniqueIdReader
-org.junit.vintage.engine.support.UniqueIdStringifier

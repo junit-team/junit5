@@ -16,9 +16,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 
 import org.apiguardian.api.API;
-import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.converter.DefaultArgumentConverter;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -36,17 +37,25 @@ import org.junit.platform.commons.util.Preconditions;
 @API(status = INTERNAL, since = "5.2")
 public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
-	private final ParameterContext parameterContext;
 	private final int invocationIndex;
 	private final Object[] arguments;
+	private final BiFunction<Object, Class<?>, Object> converter;
 
-	public DefaultArgumentsAccessor(ParameterContext parameterContext, int invocationIndex, Object... arguments) {
-		Preconditions.notNull(parameterContext, "ParameterContext must not be null");
-		Preconditions.condition(invocationIndex >= 1, () -> "invocation index must be >= 1");
-		Preconditions.notNull(arguments, "Arguments array must not be null");
-		this.parameterContext = parameterContext;
+	public static DefaultArgumentsAccessor create(ExtensionContext context, int invocationIndex,
+			ClassLoader classLoader, Object[] arguments) {
+		Preconditions.notNull(classLoader, "ClassLoader must not be null");
+
+		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> new DefaultArgumentConverter(context) //
+				.convert(source, targetType, classLoader);
+		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
+	}
+
+	private DefaultArgumentsAccessor(BiFunction<Object, Class<?>, Object> converter, int invocationIndex,
+			Object... arguments) {
+		Preconditions.condition(invocationIndex >= 1, () -> "Invocation index must be >= 1");
+		this.converter = Preconditions.notNull(converter, "Converter must not be null");
 		this.invocationIndex = invocationIndex;
-		this.arguments = arguments;
+		this.arguments = Preconditions.notNull(arguments, "Arguments array must not be null");
 	}
 
 	@Override
@@ -61,8 +70,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		Object value = get(index);
 		try {
-			Object convertedValue = DefaultArgumentConverter.INSTANCE.convert(value, requiredType,
-				this.parameterContext);
+			Object convertedValue = converter.apply(value, requiredType);
 			return requiredType.cast(convertedValue);
 		}
 		catch (Exception ex) {

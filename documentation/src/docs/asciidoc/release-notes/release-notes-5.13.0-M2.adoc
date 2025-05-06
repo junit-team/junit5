@@ -1,0 +1,33 @@
+[[release-notes-5.13.0-M2]]
+== 5.13.0-M2
+
+*Date of Release:* March 24, 2025
+
+*Scope:* Fix regression in 5.13.0-M1
+
+For a complete list of all _closed_ issues and pull requests for this release, consult the
+link:{junit5-repo}+/milestone/92?closed=1+[5.13.0-M2] milestone page in the JUnit
+repository on GitHub.
+
+
+[[release-notes-5.13.0-M2-junit-platform]]
+=== JUnit Platform
+
+No changes.
+
+
+[[release-notes-5.13.0-M2-junit-jupiter]]
+=== JUnit Jupiter
+
+[[release-notes-5.13.0-M2-junit-jupiter-bug-fixes]]
+==== Bug Fixes
+
+* Fix regression when executing `@Nested` classes compiled without `-parameters` in
+  versions of Java prior to 21.
+
+
+[[release-notes-5.13.0-M2-junit-vintage]]
+=== JUnit Vintage
+
+
+No changes.

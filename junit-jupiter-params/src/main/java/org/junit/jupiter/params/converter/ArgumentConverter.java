@@ -10,11 +10,14 @@
 
 package org.junit.jupiter.params.converter;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
+import org.junit.jupiter.params.support.FieldContext;
+import org.junit.platform.commons.JUnitException;
 
 /**
  * {@code ArgumentConverter} is an abstraction that allows an input object to
@@ -40,7 +43,6 @@ import org.junit.jupiter.api.extension.ParameterResolver;
  * the {@link ParameterContext} to perform the conversion.
  *
  * @since 5.0
- * @see SimpleArgumentConverter
  * @see org.junit.jupiter.params.ParameterizedTest
  * @see org.junit.jupiter.params.converter.ConvertWith
  * @see org.junit.jupiter.params.support.AnnotationConsumer
@@ -56,7 +58,7 @@ public interface ArgumentConverter {
 	 *
 	 * @param source the source object to convert; may be {@code null}
 	 * @param context the parameter context where the converted object will be
-	 * used; never {@code null}
+	 * supplied; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ArgumentConversionException if an error occurs during the
@@ -64,4 +66,24 @@ public interface ArgumentConverter {
 	 */
 	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
 
+	/**
+	 * Convert the supplied {@code source} object according to the supplied
+	 * {@code context}.
+	 *
+	 * @param source the source object to convert; may be {@code null}
+	 * @param context the field context where the converted object will be
+	 * injected; never {@code null}
+	 * @return the converted object; may be {@code null} but only if the target
+	 * type is a reference type
+	 * @throws ArgumentConversionException if an error occurs during the
+	 * conversion
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+		throw new JUnitException(
+			String.format("ArgumentConverter does not override the convert(Object, FieldContext) method. "
+					+ "Please report this issue to the maintainers of %s.",
+				getClass().getName()));
+	}
 }

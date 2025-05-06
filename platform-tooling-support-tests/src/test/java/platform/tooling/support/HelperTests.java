@@ -61,13 +61,13 @@ class HelperTests {
 
 	@Test
 	void nonExistingJdkVersionYieldsAnEmptyOptional() {
-		assertEquals(Optional.empty(), Helper.getJavaHome("does not exist"));
+		assertEquals(Optional.empty(), Helper.getJavaHome(-1));
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = 8)
 	void checkJavaHome(int version) {
-		var home = Helper.getJavaHome(String.valueOf(version));
+		var home = Helper.getJavaHome(version);
 		assumeTrue(home.isPresent(), "No 'jdk' element found in Maven toolchain for: " + version);
 		assertTrue(Files.isDirectory(home.get()));
 	}

@@ -10,11 +10,14 @@
 
 package com.example.project;
 
+import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledInNativeImage;
 
 @EnabledInNativeImage
+@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
 class ClassLevelAnnotationTests {
 	@Nested
 	class Inner {

@@ -165,7 +165,7 @@ class AssumptionsTests {
 		List<String> list = new ArrayList<>();
 		assumingThat(true, () -> list.add("test"));
 		assertEquals(1, list.size());
-		assertEquals("test", list.get(0));
+		assertEquals("test", list.getFirst());
 	}
 
 	@Test
@@ -173,7 +173,7 @@ class AssumptionsTests {
 		List<String> list = new ArrayList<>();
 		assumingThat(() -> true, () -> list.add("test"));
 		assertEquals(1, list.size());
-		assertEquals("test", list.get(0));
+		assertEquals("test", list.getFirst());
 	}
 
 	@Test

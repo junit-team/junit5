@@ -22,34 +22,29 @@ jobs:
       fail-fast: false
       matrix:
         jdk:
-        - version: 23
+        - version: 24
           type: ga
-        - version: 24
-          type: ea
-        - version: 24
-          type: ea
-          release: leyden
         - version: 25
           type: ea
     name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }})"
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 1
       - name: Set up Test JDK
         uses: ./.github/actions/setup-test-jdk
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || 'ea' }})"
         if: matrix.jdk.type == 'ea'
-        uses: oracle-actions/setup-java@2e744f723b003fdd759727d0ff654c8717024845 # v1.4.0
+        uses: oracle-actions/setup-java@8fb9d7717810ccde9f8d4bef1e6f43d180f506b5 # v1.4.1
         with:
           website: jdk.java.net
           release: ${{ matrix.jdk.release || matrix.jdk.version }}
           version: latest
       - name: "Set up JDK ${{ matrix.jdk.version }} (${{ matrix.jdk.distribution || 'temurin' }})"
         if: matrix.jdk.type == 'ga'
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           distribution: ${{ matrix.jdk.distribution || 'temurin' }}
           java-version: ${{ matrix.jdk.version }}
@@ -67,7 +62,7 @@ jobs:
             -Dscan.tag.JDK_${{ matrix.jdk.version }} \
             build \
             --no-configuration-cache #Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
-      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
         with:
           name: Open Test Reports (${{ github.job }} ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }}))
@@ -81,7 +76,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 1
       - name: Set up Test JDK
@@ -89,7 +84,7 @@ jobs:
         with:
           distribution: semeru
       - name: 'Set up JDK ${{ matrix.jdk }}'
-        uses: actions/setup-java@3a4f6e1af504cf6a31855fa899c6aa5355ba6c12 # v4
+        uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
           distribution: semeru
           java-version: ${{ matrix.jdk }}
@@ -109,7 +104,7 @@ jobs:
             -Dscan.tag.OpenJ9 \
             build \
             --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
-      - uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         if: ${{ always() }}
         with:
           name: Open Test Reports (${{ github.job }})

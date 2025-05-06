@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -33,9 +34,9 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	private boolean beforeAllCallbacksExecuted = false;
 	private boolean beforeAllMethodsExecuted = false;
 
-	public JupiterEngineExecutionContext(EngineExecutionListener executionListener,
-			JupiterConfiguration configuration) {
-		this(new State(executionListener, configuration));
+	public JupiterEngineExecutionContext(EngineExecutionListener executionListener, JupiterConfiguration configuration,
+			LauncherStoreFacade launcherStoreFacade) {
+		this(new State(executionListener, configuration, launcherStoreFacade));
 	}
 
 	private JupiterEngineExecutionContext(State state) {
@@ -60,6 +61,10 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	public JupiterConfiguration getConfiguration() {
 		return this.state.configuration;
+	}
+
+	public LauncherStoreFacade getLauncherStoreFacade() {
+		return this.state.launcherStoreFacade;
 	}
 
 	public TestInstancesProvider getTestInstancesProvider() {
@@ -119,14 +124,17 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 		final EngineExecutionListener executionListener;
 		final JupiterConfiguration configuration;
+		final LauncherStoreFacade launcherStoreFacade;
 		TestInstancesProvider testInstancesProvider;
 		MutableExtensionRegistry extensionRegistry;
 		ExtensionContext extensionContext;
 		ThrowableCollector throwableCollector;
 
-		State(EngineExecutionListener executionListener, JupiterConfiguration configuration) {
+		State(EngineExecutionListener executionListener, JupiterConfiguration configuration,
+				LauncherStoreFacade launcherStoreFacade) {
 			this.executionListener = executionListener;
 			this.configuration = configuration;
+			this.launcherStoreFacade = launcherStoreFacade;
 		}
 
 		@Override

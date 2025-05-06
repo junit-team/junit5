@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
@@ -51,6 +52,19 @@ public interface EngineDiscoveryListener {
 	 * @see SelectorResolutionResult
 	 */
 	default void selectorProcessed(UniqueId engineId, DiscoverySelector selector, SelectorResolutionResult result) {
+	}
+
+	/**
+	 * Called when the engine with the supplied {@code engineId} encountered an
+	 * issue during test discovery.
+	 *
+	 * @param engineId the unique ID of the engine descriptor
+	 * @param issue the encountered issue
+	 * @since 1.13
+	 * @see DiscoveryIssue
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	default void issueEncountered(UniqueId engineId, DiscoveryIssue issue) {
 	}
 
 }

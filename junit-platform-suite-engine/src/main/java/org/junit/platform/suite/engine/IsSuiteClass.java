@@ -10,9 +10,18 @@
 
 package org.junit.platform.suite.engine;
 
+import static org.junit.platform.commons.support.ModifierSupport.isAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isNotAbstract;
+import static org.junit.platform.commons.support.ModifierSupport.isNotPrivate;
+
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.support.AnnotationSupport;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.support.descriptor.ClassSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition;
 import org.junit.platform.suite.api.Suite;
 
 /**
@@ -20,15 +29,47 @@ import org.junit.platform.suite.api.Suite;
  */
 final class IsSuiteClass implements Predicate<Class<?>> {
 
-	private static final IsPotentialTestContainer isPotentialTestContainer = new IsPotentialTestContainer();
+	private final Condition<Class<?>> condition;
+
+	IsSuiteClass(DiscoveryIssueReporter issueReporter) {
+		this.condition = isNotPrivateUnlessAbstract(issueReporter) //
+				.and(isNotLocal(issueReporter)) //
+				.and(isNotInner(issueReporter));
+	}
 
 	@Override
 	public boolean test(Class<?> testClass) {
-		return isPotentialTestContainer.test(testClass) && hasSuiteAnnotation(testClass);
+		return hasSuiteAnnotation(testClass) //
+				&& condition.check(testClass) //
+				&& isNotAbstract(testClass);
 	}
 
 	private boolean hasSuiteAnnotation(Class<?> testClass) {
 		return AnnotationSupport.isAnnotated(testClass, Suite.class);
+	}
+
+	private static Condition<Class<?>> isNotPrivateUnlessAbstract(DiscoveryIssueReporter issueReporter) {
+		// Allow abstract test classes to be private because @Suite is inherited and subclasses may widen access.
+		return issueReporter.createReportingCondition(testClass -> isNotPrivate(testClass) || isAbstract(testClass),
+			testClass -> createIssue(testClass, "must not be private."));
+	}
+
+	private static Condition<Class<?>> isNotLocal(DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(testClass -> !testClass.isLocalClass(),
+			testClass -> createIssue(testClass, "must not be a local class."));
+	}
+
+	private static Condition<Class<?>> isNotInner(DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(testClass -> !ReflectionUtils.isInnerClass(testClass),
+			testClass -> createIssue(testClass, "must not be an inner class. Did you forget to declare it static?"));
+	}
+
+	private static DiscoveryIssue createIssue(Class<?> testClass, String detailMessage) {
+		String message = String.format("@Suite class '%s' %s It will not be executed.", testClass.getName(),
+			detailMessage);
+		return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message) //
+				.source(ClassSource.from(testClass)) //
+				.build();
 	}
 
 }

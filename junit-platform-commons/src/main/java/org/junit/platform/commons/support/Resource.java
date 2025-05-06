@@ -20,7 +20,8 @@ import java.util.function.Predicate;
 import org.apiguardian.api.API;
 
 /**
- * Represents a resource on the classpath.
+ * {@code Resource} represents a resource on the classpath.
+ *
  * @since 1.11
  * @see ReflectionSupport#findAllResourcesInClasspathRoot(URI, Predicate)
  * @see ReflectionSupport#findAllResourcesInPackage(String, Predicate)
@@ -33,24 +34,27 @@ import org.apiguardian.api.API;
 public interface Resource {
 
 	/**
-	 * Get the resource name.
-	 * <p>
-	 * The resource name is a {@code /}-separated path. The path is relative to
-	 * the classpath root in which the resource is located.
+	 * Get the name of this resource.
+	 *
+	 * <p>The resource name is a {@code /}-separated path. The path is relative
+	 * to the classpath root in which the resource is located.
 	 *
 	 * @return the resource name; never {@code null}
 	 */
 	String getName();
 
 	/**
-	 * Get URI to a resource.
+	 * Get the URI of this resource.
 	 *
 	 * @return the uri of the resource; never {@code null}
 	 */
 	URI getUri();
 
 	/**
-	 * Returns an input stream for reading this resource.
+	 * Get an {@link InputStream} for reading this resource.
+	 *
+	 * <p>The default implementation delegates to {@link java.net.URL#openStream()}
+	 * for this resource's {@link #getUri() URI}.
 	 *
 	 * @return an input stream for this resource; never {@code null}
 	 * @throws IOException if an I/O exception occurs
@@ -58,4 +62,5 @@ public interface Resource {
 	default InputStream getInputStream() throws IOException {
 		return getUri().toURL().openStream();
 	}
+
 }

@@ -11,19 +11,31 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
-import static org.junit.platform.commons.util.ReflectionUtils.returnsPrimitiveVoid;
+import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
+import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.alwaysSatisfied;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.platform.commons.JUnitException;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
+import org.junit.platform.commons.util.ReflectionUtils;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition;
 
 /**
  * Collection of utilities for working with test lifecycle methods.
@@ -36,70 +48,156 @@ final class LifecycleMethodUtils {
 		/* no-op */
 	}
 
-	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, BeforeAll.class,
-			HierarchyTraversalMode.TOP_DOWN);
+	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic,
+			DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN,
+			issueReporter);
 	}
 
-	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic) {
-		return findMethodsAndAssertStaticAndNonPrivate(testClass, requireStatic, AfterAll.class,
-			HierarchyTraversalMode.BOTTOM_UP);
+	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic,
+			DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP,
+			issueReporter);
 	}
 
-	static List<Method> findBeforeEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN);
+	static List<Method> findBeforeEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN,
+			issueReporter);
 	}
 
-	static List<Method> findAfterEachMethods(Class<?> testClass) {
-		return findMethodsAndAssertNonStaticAndNonPrivate(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP);
+	static List<Method> findAfterEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
+		return findMethodsAndCheckNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP,
+			issueReporter);
 	}
 
-	private static List<Method> findMethodsAndAssertStaticAndNonPrivate(Class<?> testClass, boolean requireStatic,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+	static void validateNoClassTemplateInvocationLifecycleMethodsAreDeclared(Class<?> testClass,
+			DiscoveryIssueReporter issueReporter) {
 
-		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		if (requireStatic) {
-			methods.forEach(method -> assertStatic(annotationType, method));
-		}
-		return methods;
+		findAllClassTemplateInvocationLifecycleMethods(testClass) //
+				.forEach(method -> findClassTemplateInvocationLifecycleMethodAnnotation(method) //
+						.ifPresent(annotation -> {
+							String message = String.format(
+								"@%s method '%s' must not be declared in test class '%s' because it is not annotated with @%s.",
+								annotation.lifecycleMethodAnnotation().getSimpleName(), method.toGenericString(),
+								testClass.getName(), annotation.classTemplateAnnotation().getSimpleName());
+							issueReporter.reportIssue(createIssue(Severity.ERROR, message, method));
+						}));
 	}
 
-	private static List<Method> findMethodsAndAssertNonStaticAndNonPrivate(Class<?> testClass,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+	static void validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(Class<?> testClass,
+			boolean requireStatic, DiscoveryIssueReporter issueReporter) {
 
-		List<Method> methods = findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertNonStatic(annotationType, method));
-		return methods;
+		findAllClassTemplateInvocationLifecycleMethods(testClass) //
+				.forEach(isNotPrivateError(issueReporter) //
+						.and(returnsPrimitiveVoid(issueReporter,
+							LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)) //
+						.and(requireStatic
+								? isStatic(issueReporter,
+									LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)
+								: alwaysSatisfied()) //
+						.toConsumer());
+	}
+
+	private static Stream<Method> findAllClassTemplateInvocationLifecycleMethods(Class<?> testClass) {
+		Stream<Method> allMethods = Stream.concat( //
+			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
+				HierarchyTraversalMode.TOP_DOWN).stream(), //
+			findAnnotatedMethods(testClass, ClassTemplateInvocationLifecycleMethod.class,
+				HierarchyTraversalMode.BOTTOM_UP).stream() //
+		);
+		return allMethods.distinct();
+	}
+
+	private static List<Method> findMethodsAndCheckStatic(Class<?> testClass, boolean requireStatic,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
+			DiscoveryIssueReporter issueReporter) {
+
+		Condition<Method> additionalCondition = requireStatic
+				? isStatic(issueReporter, __ -> annotationType.getSimpleName())
+				: alwaysSatisfied();
+		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
+			additionalCondition);
+	}
+
+	private static List<Method> findMethodsAndCheckNonStatic(Class<?> testClass,
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
+			DiscoveryIssueReporter issueReporter) {
+
+		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
+			isNotStatic(issueReporter, __ -> annotationType.getSimpleName()));
 	}
 
 	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
-			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode) {
+			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
+			DiscoveryIssueReporter issueReporter, Condition<? super Method> additionalCondition) {
 
-		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
-		methods.forEach(method -> assertVoid(annotationType, method));
-		return methods;
+		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
+				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName).toConsumer()) //
+				.filter(returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(
+					additionalCondition).toPredicate()) //
+				.collect(toUnmodifiableList());
 	}
 
-	private static void assertStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ModifierSupport.isNotStatic(method)) {
-			throw new JUnitException(String.format(
+	private static Condition<Method> isStatic(DiscoveryIssueReporter issueReporter,
+			Function<Method, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(ModifierSupport::isStatic, method -> {
+			String message = String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+				annotationNameProvider.apply(method), method.toGenericString());
+			return createIssue(Severity.ERROR, message, method);
+		});
 	}
 
-	private static void assertNonStatic(Class<? extends Annotation> annotationType, Method method) {
-		if (ModifierSupport.isStatic(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must not be static.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+	private static Condition<Method> isNotStatic(DiscoveryIssueReporter issueReporter,
+			Function<Method, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotStatic, method -> {
+			String message = String.format("@%s method '%s' must not be static.", annotationNameProvider.apply(method),
+				method.toGenericString());
+			return createIssue(Severity.ERROR, message, method);
+		});
 	}
 
-	private static void assertVoid(Class<? extends Annotation> annotationType, Method method) {
-		if (!returnsPrimitiveVoid(method)) {
-			throw new JUnitException(String.format("@%s method '%s' must not return a value.",
-				annotationType.getSimpleName(), method.toGenericString()));
-		}
+	private static Condition<Method> isNotPrivateError(DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
+			String message = String.format("@%s method '%s' must not be private.",
+				classTemplateInvocationLifecycleMethodAnnotationName(method), method.toGenericString());
+			return createIssue(Severity.ERROR, message, method);
+		});
+	}
+
+	private static Condition<Method> isNotPrivateWarning(DiscoveryIssueReporter issueReporter,
+			Supplier<String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
+			String message = String.format(
+				"@%s method '%s' should not be private. This will be disallowed in a future release.",
+				annotationNameProvider.get(), method.toGenericString());
+			return createIssue(Severity.WARNING, message, method);
+		});
+	}
+
+	private static Condition<Method> returnsPrimitiveVoid(DiscoveryIssueReporter issueReporter,
+			Function<Method, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid, method -> {
+			String message = String.format("@%s method '%s' must not return a value.",
+				annotationNameProvider.apply(method), method.toGenericString());
+			return createIssue(Severity.ERROR, message, method);
+		});
+	}
+
+	private static String classTemplateInvocationLifecycleMethodAnnotationName(Method method) {
+		return findClassTemplateInvocationLifecycleMethodAnnotation(method) //
+				.map(ClassTemplateInvocationLifecycleMethod::lifecycleMethodAnnotation) //
+				.map(Class::getSimpleName) //
+				.orElseGet(ClassTemplateInvocationLifecycleMethod.class::getSimpleName);
+	}
+
+	private static Optional<ClassTemplateInvocationLifecycleMethod> findClassTemplateInvocationLifecycleMethodAnnotation(
+			Method method) {
+		return findAnnotation(method, ClassTemplateInvocationLifecycleMethod.class);
+	}
+
+	private static DiscoveryIssue createIssue(Severity severity, String message, Method method) {
+		return DiscoveryIssue.builder(severity, message).source(MethodSource.from(method)).build();
 	}
 
 }

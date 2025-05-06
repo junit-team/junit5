@@ -14,12 +14,14 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.params.ParameterizedInvocationConstants;
 
 /**
  * {@code @CsvSource} is a {@linkplain Repeatable repeatable}
@@ -28,7 +30,8 @@ import org.apiguardian.api.API;
  * {@link #textBlock} attribute.
  *
  * <p>The supplied values will be provided as arguments to the annotated
- * {@code @ParameterizedTest} method.
+ * {@link org.junit.jupiter.params.ParameterizedClass @ParameterizedClass} or
+ * {@link org.junit.jupiter.params.ParameterizedTest @ParameterizedTest}.
  *
  * <p>The column delimiter (which defaults to a comma ({@code ,})) can be customized
  * via either {@link #delimiter} or {@link #delimiterString}.
@@ -59,15 +62,21 @@ import org.apiguardian.api.API;
  * physical line within the text block. Thus, if a CSV column wraps across a
  * new line in a text block, the column must be a quoted string.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.0
  * @see CsvFileSource
  * @see org.junit.jupiter.params.provider.ArgumentsSource
+ * @see org.junit.jupiter.params.ParameterizedClass
  * @see org.junit.jupiter.params.ParameterizedTest
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Repeatable(CsvSources.class)
 @Documented
+@Inherited
 @API(status = STABLE, since = "5.7")
 @ArgumentsSource(CsvArgumentsProvider.class)
 @SuppressWarnings("exports")
@@ -163,11 +172,12 @@ public @interface CsvSource {
 	 * for columns.
 	 *
 	 * <p>When set to {@code true}, the header names will be used in the
-	 * generated display name for each {@code @ParameterizedTest} method
-	 * invocation. When using this feature, you must ensure that the display name
-	 * pattern for {@code @ParameterizedTest} includes
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_PLACEHOLDER} instead of
-	 * {@value org.junit.jupiter.params.ParameterizedTest#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
+	 * generated display name for each {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} invocation. When using this feature, you must
+	 * ensure that the display name pattern for {@code @ParameterizedClass} or
+	 * {@code @ParameterizedTest} includes
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_PLACEHOLDER} instead of
+	 * {@value ParameterizedInvocationConstants#ARGUMENTS_WITH_NAMES_PLACEHOLDER}
 	 * as demonstrated in the example below.
 	 *
 	 * <p>Defaults to {@code false}.

@@ -10,11 +10,10 @@
 
 package example;
 
-// tag::user_guide[]
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
+import org.junit.jupiter.api.DisplayNameGenerator.IndicativeSentences.SentenceFragment;
 import org.junit.jupiter.api.DisplayNameGenerator.ReplaceUnderscores;
 import org.junit.jupiter.api.IndicativeSentencesGeneration;
 import org.junit.jupiter.api.Nested;
@@ -25,6 +24,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 class DisplayNameGeneratorDemo {
 
 	@Nested
+	// tag::user_guide_replace_underscores[]
 	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	class A_year_is_not_supported {
 
@@ -39,8 +39,10 @@ class DisplayNameGeneratorDemo {
 		}
 
 	}
+	// end::user_guide_replace_underscores[]
 
 	@Nested
+	// tag::user_guide_indicative_sentences[]
 	@IndicativeSentencesGeneration(separator = " -> ", generator = ReplaceUnderscores.class)
 	class A_year_is_a_leap_year {
 
@@ -54,6 +56,26 @@ class DisplayNameGeneratorDemo {
 		}
 
 	}
+	// end::user_guide_indicative_sentences[]
+
+	@Nested
+	// tag::user_guide_custom_sentence_fragments[]
+	@SentenceFragment("A year is a leap year")
+	@IndicativeSentencesGeneration
+	class LeapYearTests {
+
+		@SentenceFragment("if it is divisible by 4 but not by 100")
+		@Test
+		void divisibleBy4ButNotBy100() {
+		}
+
+		@SentenceFragment("if it is one of the following years")
+		@ParameterizedTest(name = "{0}")
+		@ValueSource(ints = { 2016, 2020, 2048 })
+		void validLeapYear(int year) {
+		}
+
+	}
+	// end::user_guide_custom_sentence_fragments[]
 
 }
-// end::user_guide[]

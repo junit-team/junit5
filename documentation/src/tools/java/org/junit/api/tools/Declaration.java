@@ -24,6 +24,8 @@ import org.apiguardian.api.API.Status;
 
 sealed interface Declaration extends Comparable<Declaration> {
 
+	String moduleName();
+
 	String packageName();
 
 	String fullName();
@@ -44,6 +46,11 @@ sealed interface Declaration extends Comparable<Declaration> {
 	record Type(ClassInfo classInfo) implements Declaration {
 
 		@Override
+		public String moduleName() {
+			return classInfo.getModuleRef().getName();
+		}
+
+		@Override
 		public String packageName() {
 			return classInfo.getPackageName();
 		}
@@ -55,7 +62,8 @@ sealed interface Declaration extends Comparable<Declaration> {
 
 		@Override
 		public String name() {
-			return getShortClassName(classInfo);
+			var shortClassName = getShortClassName(classInfo);
+			return classInfo.isAnnotation() ? "@" + shortClassName : shortClassName;
 		}
 
 		@Override
@@ -87,6 +95,11 @@ sealed interface Declaration extends Comparable<Declaration> {
 	record Method(MethodInfo methodInfo) implements Declaration {
 
 		@Override
+		public String moduleName() {
+			return classInfo().getModuleRef().getName();
+		}
+
+		@Override
 		public String packageName() {
 			return classInfo().getPackageName();
 		}
@@ -98,14 +111,23 @@ sealed interface Declaration extends Comparable<Declaration> {
 
 		@Override
 		public String name() {
+			if (classInfo().isAnnotation()) {
+				return "@%s(%s=...)".formatted(getShortClassName(classInfo()), methodInfo.getName());
+			}
+			if (methodInfo.isConstructor()) {
+				return "%s%s".formatted(getShortClassName(classInfo()), methodParameters());
+			}
 			return "%s.%s".formatted(getShortClassName(classInfo()), methodSignature());
 		}
 
 		private String methodSignature() {
-			var parameters = Arrays.stream(methodInfo.getParameterInfo()) //
+			return methodInfo.getName() + methodParameters();
+		}
+
+		private String methodParameters() {
+			return Arrays.stream(methodInfo.getParameterInfo()) //
 					.map(parameterInfo -> parameterInfo.getTypeSignatureOrTypeDescriptor().toStringWithSimpleNames()) //
 					.collect(joining(", ", "(", ")"));
-			return methodInfo.getName() + parameters;
 		}
 
 		@Override
@@ -152,6 +174,6 @@ sealed interface Declaration extends Comparable<Declaration> {
 		if (typeName.startsWith(packageName + '.')) {
 			typeName = typeName.substring(packageName.length() + 1);
 		}
-		return typeName;
+		return typeName.replace('$', '.');
 	}
 }

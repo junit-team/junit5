@@ -15,8 +15,10 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
 import java.util.Set;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -51,6 +53,16 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 		this.index = index;
 	}
 
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new TestTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(),
+			getTestMethod(), this.invocationContext, this.index, this.configuration);
+	}
+
+	// --- TestDescriptor ------------------------------------------------------
+
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
 		// Resources are already collected and returned by the enclosing container
@@ -65,15 +77,20 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	@Override
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = super.populateNewExtensionRegistry(context);
-		invocationContext.getAdditionalExtensions().forEach(
+		this.invocationContext.getAdditionalExtensions().forEach(
 			extension -> registry.registerExtension(extension, invocationContext));
 		return registry;
 	}
 
 	@Override
+	protected void prepareExtensionContext(ExtensionContext extensionContext) {
+		this.invocationContext.prepareInvocation(extensionContext);
+	}
+
+	@Override
 	public void after(JupiterEngineExecutionContext context) {
 		// forget invocationContext so it can be garbage collected
-		invocationContext = null;
+		this.invocationContext = null;
 	}
 
 }

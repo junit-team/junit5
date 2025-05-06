@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -27,7 +28,8 @@ import org.junit.platform.commons.util.Preconditions;
 class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSource> {
 
 	@Override
-	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, ValueSource valueSource) {
+	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
+			ValueSource valueSource) {
 		Object[] arguments = getArgumentsFromSource(valueSource);
 		return Arrays.stream(arguments).map(Arguments::of);
 	}

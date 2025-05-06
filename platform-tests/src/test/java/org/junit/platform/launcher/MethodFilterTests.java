@@ -145,11 +145,12 @@ class MethodFilterTests {
 
 	private static TestDescriptor methodTestDescriptor(String uniqueId, Class<?> testClass, String methodName) {
 		var method = ReflectionUtils.findMethod(testClass, methodName, new Class<?>[0]).orElseThrow();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", uniqueId), testClass, method);
+		return new DemoMethodTestDescriptor(UniqueId.root("method", uniqueId), method);
 	}
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class Class1 {
 		@Test
 		void test1() {
@@ -160,6 +161,7 @@ class MethodFilterTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	private static class Class2 {
 		@Test
 		void test1() {

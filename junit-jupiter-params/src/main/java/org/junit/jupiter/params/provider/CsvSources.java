@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
+import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -28,13 +29,18 @@ import org.apiguardian.api.API;
  * optional since {@code @CsvSource} is a {@linkplain java.lang.annotation.Repeatable
  * repeatable} annotation.
  *
+ * <h2>Inheritance</h2>
+ *
+ * <p>This annotation is inherited to subclasses.
+ *
  * @since 5.11
  * @see CsvSource
  * @see java.lang.annotation.Repeatable
  */
-@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD })
+@Target({ ElementType.ANNOTATION_TYPE, ElementType.METHOD, ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
+@Inherited
 @API(status = STABLE, since = "5.11")
 public @interface CsvSources {
 
@@ -43,4 +49,5 @@ public @interface CsvSources {
 	 * annotations.
 	 */
 	CsvSource[] value();
+
 }

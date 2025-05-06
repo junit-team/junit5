@@ -15,14 +15,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.params.ParameterizedTestExtension.METHOD_CONTEXT_KEY;
-import static org.junit.jupiter.params.ParameterizedTestExtension.arguments;
+import static org.junit.jupiter.params.ParameterizedInvocationContextProvider.arguments;
+import static org.junit.jupiter.params.ParameterizedTestExtension.DECLARATION_CONTEXT_KEY;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -35,6 +36,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.MediaType;
+import org.junit.jupiter.api.extension.TemplateInvocationValidationException;
 import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -42,6 +44,7 @@ import org.junit.jupiter.engine.execution.NamespaceAwareStore;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
@@ -105,7 +108,7 @@ class ParameterizedTestExtensionTests {
 	void defaultDisplayNameWithEmptyStringInConfigurationIsIllegal() {
 		AtomicInteger invocations = new AtomicInteger();
 		Function<String, Optional<String>> configurationSupplier = key -> {
-			if (key.equals(ParameterizedTestExtension.DISPLAY_NAME_PATTERN_KEY)) {
+			if (key.equals(ParameterizedInvocationNameFormatter.DISPLAY_NAME_PATTERN_KEY)) {
 				invocations.incrementAndGet();
 				return Optional.of("");
 			}
@@ -122,11 +125,15 @@ class ParameterizedTestExtensionTests {
 
 	@Test
 	void argumentsRethrowsOriginalExceptionFromProviderAsUncheckedException() {
-		ArgumentsProvider failingProvider = (context) -> {
-			throw new FileNotFoundException("a message");
+		ArgumentsProvider failingProvider = new ArgumentsProvider() {
+			@Override
+			public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+					ExtensionContext context) throws Exception {
+				throw new FileNotFoundException("a message");
+			}
 		};
 
-		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null));
+		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null, null));
 		assertEquals("a message", exception.getMessage());
 	}
 
@@ -139,7 +146,7 @@ class ParameterizedTestExtensionTests {
 			extensionContextWithAnnotatedTestMethod);
 		// cause the stream to be evaluated
 		stream.toArray();
-		var exception = assertThrows(JUnitException.class, stream::close);
+		var exception = assertThrows(TemplateInvocationValidationException.class, stream::close);
 
 		assertThat(exception).hasMessage(
 			"Configuration error: You must configure at least one set of arguments for this @ParameterizedTest");
@@ -204,12 +211,13 @@ class ParameterizedTestExtensionTests {
 	private ExtensionContext getExtensionContextReturningSingleMethod(Object testCase,
 			Function<String, Optional<String>> configurationSupplier) {
 
-		var method = ReflectionUtils.findMethods(testCase.getClass(),
-			it -> "method".equals(it.getName())).stream().findFirst();
+		Class<?> testClass = testCase.getClass();
+		var method = ReflectionUtils.findMethods(testClass, it -> "method".equals(it.getName())).stream().findFirst();
 
 		return new ExtensionContext() {
 
-			private final NamespacedHierarchicalStore<Namespace> store = new NamespacedHierarchicalStore<>(null);
+			private final NamespacedHierarchicalStore<org.junit.platform.engine.support.store.Namespace> store = new NamespacedHierarchicalStore<>(
+				null);
 
 			@Override
 			public Optional<Method> getTestMethod() {
@@ -248,7 +256,12 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Optional<Class<?>> getTestClass() {
-				return Optional.empty();
+				return Optional.of(testClass);
+			}
+
+			@Override
+			public List<Class<?>> getEnclosingTestClasses() {
+				return List.of();
 			}
 
 			@Override
@@ -257,7 +270,7 @@ class ParameterizedTestExtensionTests {
 			}
 
 			@Override
-			public java.util.Optional<Object> getTestInstance() {
+			public Optional<Object> getTestInstance() {
 				return Optional.empty();
 			}
 
@@ -295,11 +308,18 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public Store getStore(Namespace namespace) {
-				var store = new NamespaceAwareStore(this.store, namespace);
+				var store = new NamespaceAwareStore(this.store,
+					org.junit.platform.engine.support.store.Namespace.create(namespace.getParts()));
 				method //
-						.map(it -> new ParameterizedTestMethodContext(it, it.getAnnotation(ParameterizedTest.class))) //
-						.ifPresent(ctx -> store.put(METHOD_CONTEXT_KEY, ctx));
+						.map(it -> new ParameterizedTestContext(testClass, it,
+							it.getAnnotation(ParameterizedTest.class))) //
+						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
+			}
+
+			@Override
+			public Store getStore(StoreScope scope, Namespace namespace) {
+				return getStore(namespace);
 			}
 
 			@Override
@@ -360,7 +380,8 @@ class ParameterizedTestExtensionTests {
 	static class ZeroArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return Stream.empty();
 		}
 	}
@@ -376,7 +397,8 @@ class ParameterizedTestExtensionTests {
 	static class ArgumentsProviderWithCloseHandler implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			var argumentsStream = Stream.of("foo", "bar").map(Arguments::of);
 			return argumentsStream.onClose(() -> streamWasClosed = true);
 		}
@@ -393,7 +415,8 @@ class ParameterizedTestExtensionTests {
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}
@@ -431,7 +454,8 @@ class ParameterizedTestExtensionTests {
 		}
 
 		@Override
-		public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
+		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
+				ExtensionContext context) {
 			return null;
 		}
 	}

@@ -31,6 +31,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * <p>{@code @Nested} test classes may be ordered via
  * {@link TestClassOrder @TestClassOrder} or a global {@link ClassOrderer}.
  *
+ * <p>{@code @Nested} may be combined with {@link ClassTemplate @ClassTemplate}.
+ *
  * <h2>Test Instance Lifecycle</h2>
  *
  * <ul>
@@ -42,6 +44,7 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
  * </ul>
  *
  * @since 5.0
+ * @see ClassTemplate
  * @see Test
  * @see TestInstance
  * @see TestClassOrder

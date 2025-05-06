@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -48,6 +49,15 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 
 	@Override
 	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		return convert(source, context.getParameter().getType());
+	}
+
+	@Override
+	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+		return convert(source, context.getField().getType());
+	}
+
+	private T convert(Object source, Class<?> actualTargetType) {
 		if (source == null) {
 			return convert(null);
 		}
@@ -57,9 +67,9 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 				getClass().getSimpleName(), source.getClass().getName(), this.sourceType.getName());
 			throw new ArgumentConversionException(message);
 		}
-		if (!ReflectionUtils.isAssignableTo(this.targetType, context.getParameter().getType())) {
+		if (!ReflectionUtils.isAssignableTo(this.targetType, actualTargetType)) {
 			String message = String.format("%s cannot convert to type [%s]. Only target type [%s] is supported.",
-				getClass().getSimpleName(), context.getParameter().getType().getName(), this.targetType.getName());
+				getClass().getSimpleName(), actualTargetType.getName(), this.targetType.getName());
 			throw new ArgumentConversionException(message);
 		}
 		return convert(this.sourceType.cast(source));

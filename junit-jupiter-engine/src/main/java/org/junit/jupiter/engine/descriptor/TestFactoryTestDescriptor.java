@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -34,7 +35,6 @@ import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
@@ -61,11 +61,26 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
-	private final DynamicDescendantFilter dynamicDescendantFilter = new DynamicDescendantFilter();
+	private final DynamicDescendantFilter dynamicDescendantFilter;
 
 	public TestFactoryTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
+		this.dynamicDescendantFilter = new DynamicDescendantFilter();
+	}
+
+	private TestFactoryTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+			JupiterConfiguration configuration, DynamicDescendantFilter dynamicDescendantFilter) {
+		super(uniqueId, displayName, testClass, testMethod, configuration);
+		this.dynamicDescendantFilter = dynamicDescendantFilter;
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected TestFactoryTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new TestFactoryTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getDisplayName(), getTestClass(),
+			getTestMethod(), this.configuration, this.dynamicDescendantFilter.copy(uniqueIdTransformer));
 	}
 
 	// --- Filterable ----------------------------------------------------------
@@ -122,17 +137,11 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		if (testFactoryMethodResult instanceof DynamicNode) {
 			return Stream.of((DynamicNode) testFactoryMethodResult);
 		}
-		try {
-			return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
-		}
-		catch (PreconditionViolationException ex) {
-			throw invalidReturnTypeException(ex);
-		}
+		return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
 	}
 
 	private JUnitException invalidReturnTypeException(Throwable cause) {
-		String message = String.format(
-			"@TestFactory method [%s] must return a single %2$s or a Stream, Collection, Iterable, Iterator, Iterator-source or array of %2$s.",
+		String message = String.format("Objects produced by @TestFactory method '%s' must be of type %s.",
 			getTestMethod().toGenericString(), DynamicNode.class.getName());
 		return new JUnitException(message, cause);
 	}

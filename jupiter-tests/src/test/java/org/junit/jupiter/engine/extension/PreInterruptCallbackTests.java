@@ -14,9 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 import static org.junit.jupiter.api.parallel.Resources.SYSTEM_OUT;
-import static org.junit.jupiter.api.parallel.Resources.SYSTEM_PROPERTIES;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedWithFailure;
 import static org.junit.platform.testkit.engine.EventConditions.test;
@@ -32,7 +33,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.UnaryOperator;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,6 +48,8 @@ import org.junit.jupiter.api.parallel.Isolated;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.Constants;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.Events;
 
 /**
@@ -52,9 +57,9 @@ import org.junit.platform.testkit.engine.Events;
  */
 @Isolated
 class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
+
 	private static final String TC = "test";
 	private static final String TIMEOUT_ERROR_MSG = TC + "() timed out after 1 microsecond";
-	private static final String DEFAULT_ENABLE_PROPERTY = Constants.EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME;
 	private static final AtomicBoolean interruptedTest = new AtomicBoolean();
 	private static final CompletableFuture<Void> testThreadExecutionDone = new CompletableFuture<>();
 	private static final AtomicReference<Thread> interruptedTestThread = new AtomicReference<>();
@@ -75,32 +80,26 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	@ResourceLock(value = SYSTEM_PROPERTIES, mode = READ_WRITE)
 	@ResourceLock(value = SYSTEM_OUT, mode = READ_WRITE)
 	void testCaseWithDefaultInterruptCallbackEnabled() {
-		String orgValue = System.getProperty(DEFAULT_ENABLE_PROPERTY);
-		System.setProperty(DEFAULT_ENABLE_PROPERTY, Boolean.TRUE.toString());
 		PrintStream orgOutStream = System.out;
-		Events tests;
+		EngineExecutionResults results;
 		String output;
 		try {
 			ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-			PrintStream outStream = new PrintStream(buffer);
+			PrintStream outStream = new PrintStream(buffer, false, StandardCharsets.UTF_8);
 			System.setOut(outStream);
-			tests = executeTestsForClass(DefaultPreInterruptCallbackTimeoutOnMethodTestCase.class).testEvents();
+			// Use larger timeout to increase likelihood of the test being started when the timeout is reached
+			var timeout = WINDOWS.isCurrentOs() ? "1 s" : "100 ms";
+			results = executeDefaultPreInterruptCallbackTimeoutOnMethodTestCase(timeout, request -> request //
+					.configurationParameter(Constants.EXTENSIONS_TIMEOUT_THREAD_DUMP_ENABLED_PROPERTY_NAME, "true"));
 			output = buffer.toString(StandardCharsets.UTF_8);
 		}
 		finally {
 			System.setOut(orgOutStream);
-			if (orgValue != null) {
-				System.setProperty(DEFAULT_ENABLE_PROPERTY, orgValue);
-			}
-			else {
-				System.clearProperty(DEFAULT_ENABLE_PROPERTY);
-			}
 		}
 
-		assertTestHasTimedOut(tests);
+		assertTestHasTimedOut(results.testEvents(), message(it -> it.startsWith(TC + "() timed out after")));
 		assertTrue(interruptedTest.get());
 		Thread thread = Thread.currentThread();
 
@@ -109,19 +108,28 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 					"Thread \"%s\" prio=%d Id=%d %s will be interrupted.".formatted(thread.getName(),
 						thread.getPriority(), thread.threadId(), Thread.State.TIMED_WAITING), //
 					"java.lang.Thread.sleep", //
-					"org.junit.jupiter.engine.extension.PreInterruptCallbackTests$DefaultPreInterruptCallbackTimeoutOnMethodTestCase.test(PreInterruptCallbackTests.java");
+					"%s.test(PreInterruptCallbackTests.java".formatted(
+						DefaultPreInterruptCallbackTimeoutOnMethodTestCase.class.getName()));
 
 		assertThat(output) //
 				.containsSubsequence( //
 					"junit-jupiter-timeout-watcher", //
-					"org.junit.jupiter.engine.extension.PreInterruptThreadDumpPrinter.beforeThreadInterrupt");
+					"%s.beforeThreadInterrupt".formatted(PreInterruptThreadDumpPrinter.class.getName()));
 	}
 
 	@Test
 	void testCaseWithNoInterruptCallbackEnabled() {
-		Events tests = executeTestsForClass(DefaultPreInterruptCallbackTimeoutOnMethodTestCase.class).testEvents();
+		Events tests = executeDefaultPreInterruptCallbackTimeoutOnMethodTestCase("1 μs", UnaryOperator.identity()) //
+				.testEvents();
 		assertTestHasTimedOut(tests);
 		assertTrue(interruptedTest.get());
+	}
+
+	private EngineExecutionResults executeDefaultPreInterruptCallbackTimeoutOnMethodTestCase(String timeout,
+			UnaryOperator<LauncherDiscoveryRequestBuilder> configurer) {
+		return executeTests(request -> configurer.apply(request //
+				.selectors(selectClass(DefaultPreInterruptCallbackTimeoutOnMethodTestCase.class)) //
+				.configurationParameter(Constants.DEFAULT_TEST_METHOD_TIMEOUT_PROPERTY_NAME, timeout)));
 	}
 
 	@Test
@@ -169,9 +177,13 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private static void assertTestHasTimedOut(Events tests) {
+		assertTestHasTimedOut(tests, message(TIMEOUT_ERROR_MSG));
+	}
+
+	private static void assertTestHasTimedOut(Events tests, Condition<Throwable> messageCondition) {
 		assertOneFailedTest(tests);
 		tests.failed().assertEventsMatchExactly(
-			event(test(TC), finishedWithFailure(instanceOf(TimeoutException.class), message(TIMEOUT_ERROR_MSG), //
+			event(test(TC), finishedWithFailure(instanceOf(TimeoutException.class), messageCondition, //
 				suppressed(0, instanceOf(InterruptedException.class))//
 			)));
 	}
@@ -193,12 +205,12 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class DefaultPreInterruptCallbackTimeoutOnMethodTestCase {
 		@Test
-		@Timeout(value = 1, unit = TimeUnit.MICROSECONDS)
 		void test() throws InterruptedException {
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(5_000);
 			}
 			catch (InterruptedException ex) {
 				interruptedTest.set(true);
@@ -208,6 +220,7 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(TestPreInterruptCallback.class)
 	static class DefaultPreInterruptCallbackWithExplicitCallbackTestCase {
 		@Test
@@ -224,6 +237,7 @@ class PreInterruptCallbackTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(TestPreInterruptCallback.class)
 	static class DefaultPreInterruptCallbackWithExplicitCallbackWithSeparateThreadTestCase {
 		@Test

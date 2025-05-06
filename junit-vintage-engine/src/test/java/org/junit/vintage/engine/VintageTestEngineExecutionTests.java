@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
+import static org.junit.platform.launcher.core.NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 import static org.junit.platform.testkit.engine.EventConditions.abortedWithReason;
 import static org.junit.platform.testkit.engine.EventConditions.container;
@@ -182,7 +183,7 @@ class VintageTestEngineExecutionTests {
 		String commonNestedClassPrefix = EnclosedWithParameterizedChildrenJUnit4TestCase.class.getName()
 				+ "$NestedTestCase";
 
-		execute(testClass).allEvents().debug().assertEventsMatchExactly( //
+		execute(testClass).allEvents().assertEventsMatchExactly( //
 			event(engine(), started()), //
 			event(container(testClass), started()), //
 			event(container(commonNestedClassPrefix), started()), //
@@ -498,7 +499,7 @@ class VintageTestEngineExecutionTests {
 
 		Class<?> testClass = ParameterizedTimingTestCase.class;
 
-		var events = execute(testClass).allEvents().debug();
+		var events = execute(testClass).allEvents();
 
 		var firstParamStartedEvent = events.filter(event(container("[foo]"), started())::matches).findFirst() //
 				.orElseThrow(() -> new AssertionError("No start event for [foo]"));
@@ -639,7 +640,7 @@ class VintageTestEngineExecutionTests {
 
 		@Override
 		public void run(RunNotifier notifier) {
-			var staticDescription = getDescription().getChildren().get(0);
+			var staticDescription = getDescription().getChildren().getFirst();
 			notifier.fireTestStarted(staticDescription);
 			notifier.fireTestFinished(staticDescription);
 			var dynamicDescription = createTestDescription(testClass, "dynamicTest");
@@ -924,8 +925,9 @@ class VintageTestEngineExecutionTests {
 		TestEngine testEngine = new VintageTestEngine();
 		var discoveryRequest = request(testClass);
 		var engineTestDescriptor = testEngine.discover(discoveryRequest, UniqueId.forEngine(testEngine.getId()));
-		testEngine.execute(ExecutionRequest.create(engineTestDescriptor, listener,
-			discoveryRequest.getConfigurationParameters(), dummyOutputDirectoryProvider()));
+		testEngine.execute(
+			ExecutionRequest.create(engineTestDescriptor, listener, discoveryRequest.getConfigurationParameters(),
+				dummyOutputDirectoryProvider(), dummyNamespacedHierarchicalStore()));
 	}
 
 	private static LauncherDiscoveryRequest request(Class<?> testClass) {

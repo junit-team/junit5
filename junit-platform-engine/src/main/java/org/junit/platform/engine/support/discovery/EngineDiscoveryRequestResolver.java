@@ -65,7 +65,9 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 
 	/**
 	 * Resolve the supplied {@link EngineDiscoveryRequest} and collect the
-	 * results into the supplied {@link TestDescriptor}.
+	 * results into the supplied {@link TestDescriptor} while forwarding
+	 * encountered discovery issues to the {@link EngineDiscoveryRequest}'s
+	 * {@link org.junit.platform.engine.EngineDiscoveryListener}.
 	 *
 	 * <p>The algorithm works as follows:
 	 *
@@ -110,7 +112,37 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 	public void resolve(EngineDiscoveryRequest request, T engineDescriptor) {
 		Preconditions.notNull(request, "request must not be null");
 		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
-		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor);
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.forwarding(request.getDiscoveryListener(),
+			engineDescriptor.getUniqueId());
+		resolve(request, engineDescriptor, issueReporter);
+	}
+
+	/**
+	 * Resolve the supplied {@link EngineDiscoveryRequest} and collect the
+	 * results into the supplied {@link TestDescriptor} using the supplied
+	 * {@link DiscoveryIssueReporter} to report issues encountered during
+	 * resolution.
+	 *
+	 * <p>The algorithm works as described in
+	 * {@link #resolve(EngineDiscoveryRequest, TestDescriptor)}.
+	 *
+	 * @param request the request to be resolved; never {@code null}
+	 * @param engineDescriptor the engine's {@code TestDescriptor} to be used
+	 * for adding direct children
+	 * @param issueReporter the {@link DiscoveryIssueReporter} to report issues
+	 * encountered during resolution
+	 * @since 1.13
+	 * @see #resolve(EngineDiscoveryRequest, TestDescriptor)
+	 * @see SelectorResolver
+	 * @see TestDescriptor.Visitor
+	 */
+	@API(status = EXPERIMENTAL, since = "1.13")
+	public void resolve(EngineDiscoveryRequest request, T engineDescriptor, DiscoveryIssueReporter issueReporter) {
+		Preconditions.notNull(request, "request must not be null");
+		Preconditions.notNull(engineDescriptor, "engineDescriptor must not be null");
+		Preconditions.notNull(issueReporter, "issueReporter must not be null");
+		InitializationContext<T> initializationContext = new DefaultInitializationContext<>(request, engineDescriptor,
+			issueReporter);
 		List<SelectorResolver> resolvers = instantiate(resolverCreators, initializationContext);
 		List<TestDescriptor.Visitor> visitors = instantiate(visitorCreators, initializationContext);
 		new EngineDiscoveryRequestResolution(request, engineDescriptor, resolvers, visitors).run();
@@ -159,8 +191,28 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		 */
 		public Builder<T> addClassContainerSelectorResolver(Predicate<Class<?>> classFilter) {
 			Preconditions.notNull(classFilter, "classFilter must not be null");
-			return addSelectorResolver(
-				context -> new ClassContainerSelectorResolver(classFilter, context.getClassNameFilter()));
+			return addClassContainerSelectorResolverWithContext(__ -> classFilter);
+		}
+
+		/**
+		 * Add a predefined resolver that resolves {@link ClasspathRootSelector
+		 * ClasspathRootSelectors}, {@link ModuleSelector ModuleSelectors}, and
+		 * {@link PackageSelector PackageSelectors} into {@link ClassSelector
+		 * ClassSelectors} by scanning for classes that satisfy the predicate
+		 * created by the supplied {@code Function} in the respective class
+		 * containers to this builder.
+		 *
+		 * @param classFilterCreator the function that will be called to create
+		 * the predicate the resolved classes must satisfy; never
+		 * {@code null}
+		 * @return this builder for method chaining
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		public Builder<T> addClassContainerSelectorResolverWithContext(
+				Function<InitializationContext<T>, Predicate<Class<?>>> classFilterCreator) {
+			Preconditions.notNull(classFilterCreator, "classFilterCreator must not be null");
+			return addSelectorResolver(context -> new ClassContainerSelectorResolver(classFilterCreator.apply(context),
+				context.getClassNameFilter()));
 		}
 
 		/**
@@ -209,6 +261,12 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		/**
 		 * Add a context sensitive {@link TestDescriptor.Visitor} to this
 		 * builder.
+		 *
+		 * <p>If multiple {@linkplain TestDescriptor.Visitor visitors} are registered,
+		 * they will iterate over the test tree separately. To avoid the overhead of
+		 * multiple iterations, consider combining multiple visitors into a single
+		 * visitor using
+		 * {@link TestDescriptor.Visitor#composite(TestDescriptor.Visitor...)}.
 		 *
 		 * @param visitorCreator the function that will be called to create the
 		 * {@link TestDescriptor.Visitor} to be added.
@@ -281,6 +339,14 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@API(status = EXPERIMENTAL, since = "1.12")
 		Predicate<String> getPackageFilter();
 
+		/**
+		 * {@return the {@link DiscoveryIssueReporter} for the current
+		 * resolution}
+		 *
+		 * @since 1.13
+		 */
+		@API(status = EXPERIMENTAL, since = "1.13")
+		DiscoveryIssueReporter getIssueReporter();
 	}
 
 	private static class DefaultInitializationContext<T extends TestDescriptor> implements InitializationContext<T> {
@@ -289,12 +355,15 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		private final T engineDescriptor;
 		private final Predicate<String> classNameFilter;
 		private final Predicate<String> packageFilter;
+		private final DiscoveryIssueReporter issueReporter;
 
-		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor) {
+		DefaultInitializationContext(EngineDiscoveryRequest request, T engineDescriptor,
+				DiscoveryIssueReporter issueReporter) {
 			this.request = request;
 			this.engineDescriptor = engineDescriptor;
 			this.classNameFilter = buildClassNamePredicate(request);
 			this.packageFilter = buildPackagePredicate(request);
+			this.issueReporter = issueReporter;
 		}
 
 		/**
@@ -334,6 +403,11 @@ public class EngineDiscoveryRequestResolver<T extends TestDescriptor> {
 		@Override
 		public Predicate<String> getPackageFilter() {
 			return packageFilter;
+		}
+
+		@Override
+		public DiscoveryIssueReporter getIssueReporter() {
+			return issueReporter;
 		}
 	}
 

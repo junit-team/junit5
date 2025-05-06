@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -51,13 +52,28 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 		super(uniqueId, testClass, createDisplayNameSupplierForClass(testClass, configuration), configuration);
 	}
 
+	private ClassTestDescriptor(UniqueId uniqueId, Class<?> testClass, String displayName,
+			JupiterConfiguration configuration) {
+		super(uniqueId, testClass, displayName, configuration);
+	}
+
+	// --- JupiterTestDescriptor -----------------------------------------------
+
+	@Override
+	protected ClassTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
+		return new ClassTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(), getDisplayName(),
+			configuration);
+	}
+
 	// --- TestDescriptor ------------------------------------------------------
 
 	@Override
 	public Set<TestTag> getTags() {
 		// return modifiable copy
-		return new LinkedHashSet<>(this.tags);
+		return new LinkedHashSet<>(this.classInfo.tags);
 	}
+
+	// --- TestClassAware ------------------------------------------------------
 
 	@Override
 	public List<Class<?>> getEnclosingTestClasses() {
@@ -72,12 +88,16 @@ public class ClassTestDescriptor extends ClassBasedTestDescriptor {
 			() -> JupiterTestDescriptor.toExecutionMode(configuration.getDefaultClassesExecutionMode()));
 	}
 
+	// --- ClassBasedTestDescriptor --------------------------------------------
+
 	@Override
 	protected TestInstances instantiateTestClass(JupiterEngineExecutionContext parentExecutionContext,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry registry,
 			JupiterEngineExecutionContext context) {
 		return instantiateTestClass(Optional.empty(), registry, extensionContext);
 	}
+
+	// --- ResourceLockAware ---------------------------------------------------
 
 	@Override
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {

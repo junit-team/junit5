@@ -10,16 +10,26 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static java.util.Comparator.comparing;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
+import org.junit.platform.engine.support.descriptor.MethodSource;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Unit tests for {@link IsTestMethod}.
@@ -28,7 +38,8 @@ import org.junit.platform.commons.support.ReflectionSupport;
  */
 class IsTestMethodTests {
 
-	private static final Predicate<Method> isTestMethod = new IsTestMethod();
+	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
+	final Predicate<Method> isTestMethod = new IsTestMethod(DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@Test
 	void publicTestMethod() {
@@ -58,75 +69,136 @@ class IsTestMethodTests {
 
 	@Test
 	void bogusAbstractTestMethod() {
-		assertThat(isTestMethod).rejects(abstractMethod("bogusAbstractTestMethod"));
+		var method = abstractMethod("bogusAbstractTestMethod");
+
+		assertThat(isTestMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be abstract. It will not be executed.",
+			method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
+	}
+
+	@Test
+	void bogusAbstractNonVoidTestMethod() {
+		var method = abstractMethod("bogusAbstractNonVoidTestMethod");
+
+		assertThat(isTestMethod).rejects(method);
+
+		assertThat(discoveryIssues).hasSize(2);
+		discoveryIssues.sort(comparing(DiscoveryIssue::message));
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo("@Test method '%s' must not be abstract. It will not be executed.",
+					method.toGenericString());
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("@Test method '%s' must not return a value. It will not be executed.",
+					method.toGenericString());
 	}
 
 	@Test
 	void bogusStaticTestMethod() {
-		assertThat(isTestMethod).rejects(method("bogusStaticTestMethod"));
+		var method = method("bogusStaticTestMethod");
+
+		assertThat(isTestMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be static. It will not be executed.",
+			method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
 
 	@Test
 	void bogusPrivateTestMethod() {
-		assertThat(isTestMethod).rejects(method("bogusPrivateTestMethod"));
+		var method = method("bogusPrivateTestMethod");
+
+		assertThat(isTestMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be private. It will not be executed.",
+			method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "bogusTestMethodReturningObject", "bogusTestMethodReturningVoidReference",
+			"bogusTestMethodReturningPrimitive" })
+	void bogusNonVoidTestMethods(String methodName) {
+		var method = method(methodName);
+
+		assertThat(isTestMethod).rejects(method);
+
+		var issue = getOnlyElement(discoveryIssues);
+		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
+		assertThat(issue.message()).isEqualTo("@Test method '%s' must not return a value. It will not be executed.",
+			method.toGenericString());
+		assertThat(issue.source()).contains(MethodSource.from(method));
 	}
 
 	@Test
-	void bogusTestMethodReturningObject() {
-		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningObject"));
-	}
+	void bogusStaticPrivateNonVoidTestMethod() {
+		var method = method("bogusStaticPrivateNonVoidTestMethod");
 
-	@Test
-	void bogusTestMethodReturningVoidReference() {
-		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningVoidReference"));
-	}
+		assertThat(isTestMethod).rejects(method);
 
-	@Test
-	void bogusTestMethodReturningPrimitive() {
-		assertThat(isTestMethod).rejects(method("bogusTestMethodReturningPrimitive"));
+		assertThat(discoveryIssues).hasSize(3);
+		discoveryIssues.sort(comparing(DiscoveryIssue::message));
+		assertThat(discoveryIssues.getFirst().message()) //
+				.isEqualTo("@Test method '%s' must not be private. It will not be executed.", method.toGenericString());
+		assertThat(discoveryIssues.get(1).message()) //
+				.isEqualTo("@Test method '%s' must not be static. It will not be executed.", method.toGenericString());
+		assertThat(discoveryIssues.getLast().message()) //
+				.isEqualTo("@Test method '%s' must not return a value. It will not be executed.",
+					method.toGenericString());
 	}
 
 	private static Method method(String name, Class<?>... parameterTypes) {
-		return ReflectionSupport.findMethod(ClassWithTestMethods.class, name, parameterTypes).get();
+		return ReflectionSupport.findMethod(ClassWithTestMethods.class, name, parameterTypes).orElseThrow();
 	}
 
 	private Method abstractMethod(String name) {
-		return ReflectionSupport.findMethod(AbstractClassWithAbstractTestMethod.class, name).get();
+		return ReflectionSupport.findMethod(AbstractClassWithAbstractTestMethod.class, name).orElseThrow();
 	}
 
+	@SuppressWarnings({ "JUnitMalformedDeclaration", "unused" })
 	private static abstract class AbstractClassWithAbstractTestMethod {
 
 		@Test
 		abstract void bogusAbstractTestMethod();
 
+		@Test
+		abstract int bogusAbstractNonVoidTestMethod();
+
 	}
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
+	@SuppressWarnings({ "JUnitMalformedDeclaration", "unused" })
 	private static class ClassWithTestMethods {
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		static void bogusStaticTestMethod() {
 		}
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		private void bogusPrivateTestMethod() {
 		}
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
+		@Test
+		private static int bogusStaticPrivateNonVoidTestMethod() {
+			return 42;
+		}
+
 		@Test
 		String bogusTestMethodReturningObject() {
 			return "";
 		}
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		Void bogusTestMethodReturningVoidReference() {
 			return null;
 		}
 
-		@SuppressWarnings("JUnitMalformedDeclaration")
 		@Test
 		int bogusTestMethodReturningPrimitive() {
 			return 0;

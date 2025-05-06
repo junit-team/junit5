@@ -13,6 +13,7 @@ package org.junit.platform.suite.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -28,6 +29,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.launcher.core.OutputDirectoryProviders;
 import org.junit.platform.suite.api.Suite;
 import org.junit.platform.suite.engine.testcases.SingleTestTestCase;
@@ -48,8 +50,9 @@ class SuiteTestDescriptorTests {
 
 	final ConfigurationParameters configurationParameters = new EmptyConfigurationParameters();
 	final OutputDirectoryProvider outputDirectoryProvider = OutputDirectoryProviders.dummyOutputDirectoryProvider();
+	final DiscoveryIssueReporter discoveryIssueReporter = DiscoveryIssueReporter.forwarding(mock(), engineId);
 	final SuiteTestDescriptor suite = new SuiteTestDescriptor(suiteId, TestSuite.class, configurationParameters,
-		outputDirectoryProvider);
+		outputDirectoryProvider, mock(), discoveryIssueReporter);
 
 	@Test
 	void suiteIsEmptyBeforeDiscovery() {
@@ -68,7 +71,7 @@ class SuiteTestDescriptorTests {
 	}
 
 	@Test
-	void suitDiscoversTestsFromUniqueId() {
+	void suiteDiscoversTestsFromUniqueId() {
 		suite.addDiscoveryRequestFrom(methodId);
 		suite.discover();
 

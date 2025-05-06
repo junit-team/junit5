@@ -11,18 +11,21 @@
 package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.singleton;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.DisplayNameGenerator.getDisplayNameGenerator;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_CONTAINER_SEGMENT_TYPE;
 import static org.junit.jupiter.engine.descriptor.TestFactoryTestDescriptor.DYNAMIC_TEST_SEGMENT_TYPE;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.appendClassTemplateInvocationSegment;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.engineId;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForMethod;
+import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForStaticClass;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestFactoryMethod;
 import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTestTemplateMethod;
-import static org.junit.jupiter.engine.discovery.JupiterUniqueIdBuilder.uniqueIdForTopLevelClass;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.FAILED;
 import static org.junit.platform.engine.SelectorResolutionResult.Status.RESOLVED;
@@ -47,12 +50,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
@@ -60,10 +64,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
+import org.junit.jupiter.engine.descriptor.ClassTemplateTestDescriptor;
 import org.junit.jupiter.engine.descriptor.DynamicDescendantFilter;
 import org.junit.jupiter.engine.descriptor.Filterable;
-import org.junit.jupiter.engine.descriptor.JupiterEngineDescriptor;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.TestTemplateInvocationTestDescriptor;
 import org.junit.jupiter.engine.descriptor.subpackage.Class1WithTestCases;
@@ -73,6 +78,7 @@ import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoverySelector;
+import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.SelectorResolutionResult;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
@@ -82,21 +88,23 @@ import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageSelector;
 import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
+import org.junit.platform.launcher.PostDiscoveryFilter;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 import org.mockito.ArgumentCaptor;
 
 /**
  * @since 5.0
  */
-class DiscoverySelectorResolverTests {
+class DiscoverySelectorResolverTests extends AbstractJupiterTestEngineTests {
 
 	private final JupiterConfiguration configuration = mock();
 	private final LauncherDiscoveryListener discoveryListener = mock();
-	private final JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(engineId(), configuration);
+	private TestDescriptor engineDescriptor;
 
 	@BeforeEach
 	void setUp() {
-		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
+		when(configuration.getDefaultDisplayNameGenerator()) //
+				.thenReturn(getDisplayNameGenerator(DisplayNameGenerator.Standard.class));
 		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
 	}
 
@@ -143,7 +151,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get()).hasMessageContaining("Could not load class with name");
+		assertThat(result.getThrowable().orElseThrow()).hasMessageContaining("Could not load class with name");
 	}
 
 	@Test
@@ -193,6 +201,55 @@ class DiscoverySelectorResolverTests {
 	}
 
 	@Test
+	void classResolutionOfClassTemplate() {
+		var selector = selectClass(ClassTemplateTestCase.class);
+
+		AtomicBoolean verified = new AtomicBoolean();
+		PostDiscoveryFilter filter = descriptor -> {
+			if (descriptor instanceof ClassTemplateTestDescriptor) {
+				assertThat(descriptor.mayRegisterTests()).isFalse();
+				assertThat(descriptor.getDescendants()).hasSize(1);
+				verified.set(true);
+			}
+			return FilterResult.included("included");
+		};
+
+		resolve(request().selectors(selector).filters(filter));
+
+		assertThat(verified.get()).describedAs("filter can see descendants").isTrue();
+
+		TestDescriptor classTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
+
+		var classTemplateSegment = classTemplateDescriptor.getUniqueId().getLastSegment();
+		assertThat(classTemplateSegment.getType()).isEqualTo("class-template");
+		assertThat(classTemplateSegment.getValue()).isEqualTo(ClassTemplateTestCase.class.getName());
+	}
+
+	@Test
+	void uniqueIdResolutionOfClassTemplateInvocation() {
+		var selector = selectUniqueId(
+			appendClassTemplateInvocationSegment(uniqueIdForClass(ClassTemplateTestCase.class), 1));
+
+		resolve(request().selectors(selector));
+
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+
+		TestDescriptor classTemplateDescriptor = getOnlyElement(engineDescriptor.getChildren());
+
+		classTemplateDescriptor.prune();
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
+
+		classTemplateDescriptor.prune();
+		assertThat(engineDescriptor.getChildren()).hasSize(1);
+		assertThat(classTemplateDescriptor.mayRegisterTests()).isTrue();
+		assertThat(classTemplateDescriptor.getDescendants()).isEmpty();
+	}
+
+	@Test
 	void methodResolution() throws NoSuchMethodException {
 		Method test1 = MyTestClass.class.getDeclaredMethod("test1");
 		MethodSelector selector = selectMethod(test1.getDeclaringClass(), test1);
@@ -238,7 +295,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get())//
+		assertThat(result.getThrowable().orElseThrow())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Could not load class with name: " + className);
 	}
@@ -252,7 +309,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selector);
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get()).hasMessageContaining("Could not find method");
+		assertThat(result.getThrowable().orElseThrow()).hasMessageContaining("Could not find method");
 	}
 
 	@Test
@@ -322,7 +379,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get())//
+		assertThat(result.getThrowable().orElseThrow())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [()] does not match pattern");
 	}
@@ -336,7 +393,7 @@ class DiscoverySelectorResolverTests {
 		assertThat(engineDescriptor.getDescendants()).isEmpty();
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get())//
+		assertThat(result.getThrowable().orElseThrow())//
 				.isInstanceOf(PreconditionViolationException.class)//
 				.hasMessageStartingWith("Method [methodName] does not match pattern");
 	}
@@ -350,7 +407,7 @@ class DiscoverySelectorResolverTests {
 		assertTrue(engineDescriptor.getDescendants().isEmpty());
 		var result = verifySelectorProcessed(selectUniqueId(uniqueId));
 		assertThat(result.getStatus()).isEqualTo(FAILED);
-		assertThat(result.getThrowable().get())//
+		assertThat(result.getThrowable().orElseThrow())//
 				.isInstanceOf(JUnitException.class)//
 				.hasMessage("Failed to load parameter type [%s] for method [%s] in class [%s].", "junit.foo.Enigma",
 					"methodName", getClass().getName());
@@ -420,9 +477,9 @@ class DiscoverySelectorResolverTests {
 		assertThat(uniqueIds).contains(uniqueIdForMethod(MyTestClass.class, "test2()"));
 
 		TestDescriptor classFromMethod1 = descriptorByUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test1()")).getParent().get();
+			uniqueIdForMethod(MyTestClass.class, "test1()")).getParent().orElseThrow();
 		TestDescriptor classFromMethod2 = descriptorByUniqueId(
-			uniqueIdForMethod(MyTestClass.class, "test2()")).getParent().get();
+			uniqueIdForMethod(MyTestClass.class, "test2()")).getParent().orElseThrow();
 
 		assertEquals(classFromMethod1, classFromMethod2);
 		assertSame(classFromMethod1, classFromMethod2);
@@ -491,7 +548,7 @@ class DiscoverySelectorResolverTests {
 
 	@Test
 	void classpathResolutionForJarFiles() throws Exception {
-		URL jarUrl = getClass().getResource("/jupiter-testjar.jar");
+		URL jarUrl = requireNonNull(getClass().getResource("/jupiter-testjar.jar"));
 		Path path = Paths.get(jarUrl.toURI());
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(path));
 
@@ -502,8 +559,8 @@ class DiscoverySelectorResolverTests {
 			resolve(request().selectors(selectors));
 
 			assertThat(uniqueIds()) //
-					.contains(uniqueIdForTopLevelClass("com.example.project.FirstTest")) //
-					.contains(uniqueIdForTopLevelClass("com.example.project.SecondTest"));
+					.contains(uniqueIdForStaticClass("com.example.project.FirstTest")) //
+					.contains(uniqueIdForStaticClass("com.example.project.SecondTest"));
 		}
 		finally {
 			Thread.currentThread().setContextClassLoader(originalClassLoader);
@@ -749,12 +806,12 @@ class DiscoverySelectorResolverTests {
 	}
 
 	private void resolve(LauncherDiscoveryRequestBuilder builder) {
-		new DiscoverySelectorResolver().resolveSelectors(builder.build(), engineDescriptor);
+		engineDescriptor = discoverTests(builder.build()).getEngineDescriptor();
 	}
 
 	private TestDescriptor descriptorByUniqueId(UniqueId uniqueId) {
 		return engineDescriptor.getDescendants().stream().filter(
-			d -> d.getUniqueId().equals(uniqueId)).findFirst().get();
+			d -> d.getUniqueId().equals(uniqueId)).findFirst().orElseThrow();
 	}
 
 	private List<UniqueId> uniqueIds() {
@@ -797,11 +854,13 @@ class NonTestClass {
 
 abstract class AbstractTestClass {
 
+	@SuppressWarnings("unused")
 	@Test
 	void test() {
 	}
 }
 
+@SuppressWarnings("NewClassNamingConvention")
 class MyTestClass {
 
 	@Test
@@ -817,10 +876,11 @@ class MyTestClass {
 
 	@TestFactory
 	Stream<DynamicTest> dynamicTest() {
-		return new ArrayList<DynamicTest>().stream();
+		return Stream.empty();
 	}
 }
 
+@SuppressWarnings("NewClassNamingConvention")
 class YourTestClass {
 
 	@Test
@@ -832,17 +892,18 @@ class YourTestClass {
 	}
 }
 
+@SuppressWarnings("NewClassNamingConvention")
 class HerTestClass extends MyTestClass {
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@Test
-	void test7(String param) {
+	void test7(@SuppressWarnings("unused") String param) {
 	}
 }
 
 class OtherTestClass {
 
-	@SuppressWarnings("JUnitMalformedDeclaration")
+	@SuppressWarnings({ "JUnitMalformedDeclaration", "NewClassNamingConvention" })
 	static class NestedTestClass {
 
 		@Test
@@ -885,6 +946,7 @@ class TestClassWithTemplate {
 	}
 }
 
+@SuppressWarnings("NewClassNamingConvention")
 class MatchingClass {
 	@Nested
 	class NestedClass {
@@ -894,7 +956,15 @@ class MatchingClass {
 	}
 }
 
+@SuppressWarnings("NewClassNamingConvention")
 class OtherClass {
+	@Test
+	void test() {
+	}
+}
+
+@ClassTemplate
+class ClassTemplateTestCase {
 	@Test
 	void test() {
 	}

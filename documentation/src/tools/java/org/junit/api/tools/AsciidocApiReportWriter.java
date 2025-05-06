@@ -17,7 +17,7 @@ import java.io.PrintWriter;
  */
 class AsciidocApiReportWriter extends AbstractApiReportWriter {
 
-	private static final String ASCIIDOC_FORMAT = "| %-52s | %-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
+	private static final String ASCIIDOC_FORMAT = "|%-" + NAME_COLUMN_WIDTH + "s | %-12s%n";
 
 	AsciidocApiReportWriter(ApiReport apiReport) {
 		super(apiReport);
@@ -34,6 +34,16 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 	}
 
 	@Override
+	protected String h4(String header) {
+		return "[discrete]%n==== %s".formatted(header);
+	}
+
+	@Override
+	protected String h5(String header) {
+		return "[discrete]%n===== %s".formatted(header);
+	}
+
+	@Override
 	protected String code(String element) {
 		return "`" + element + "`";
 	}
@@ -45,16 +55,16 @@ class AsciidocApiReportWriter extends AbstractApiReportWriter {
 
 	@Override
 	protected void printDeclarationTableHeader(PrintWriter out) {
+		out.println("[cols=\"99,1\"]");
 		out.println("|===");
-		out.printf(ASCIIDOC_FORMAT, "Package Name", "Name", "Since");
+		out.printf(ASCIIDOC_FORMAT, "Name", "Since");
 		out.println();
 	}
 
 	@Override
 	protected void printDeclarationTableRow(Declaration declaration, PrintWriter out) {
 		out.printf(ASCIIDOC_FORMAT, //
-			code(declaration.packageName()), //
-			code(declaration.name()) + " " + italic("(" + declaration.kind() + ")"), //
+			code(declaration.name().replace(".", ".&ZeroWidthSpace;")) + " " + italic("(" + declaration.kind() + ")"), //
 			code(declaration.since()) //
 		);
 	}

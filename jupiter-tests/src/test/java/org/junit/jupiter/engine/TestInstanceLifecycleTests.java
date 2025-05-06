@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,12 +31,14 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
@@ -46,6 +49,8 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
+import org.junit.jupiter.api.extension.ClassTemplateInvocationContextProvider;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,6 +61,8 @@ import org.junit.jupiter.api.extension.TestInstances;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
 /**
@@ -106,7 +113,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
 		String testTemplateKey = testTemplateKey(testClass, "singletonTest");
-		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.getFirst());
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
 		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
@@ -188,7 +195,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String preDestroyCallbackTestInstanceKey = preDestroyCallbackTestInstanceKey(testClass);
 		String beforeAllCallbackKey = beforeAllCallbackKey(testClass);
 		String afterAllCallbackKey = afterAllCallbackKey(testClass);
-		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.get(0));
+		String testExecutionConditionKey1 = executionConditionKey(testClass, testsInvoked.getFirst());
 		String beforeEachCallbackKey1 = beforeEachCallbackKey(testClass, testsInvoked.get(0));
 		String afterEachCallbackKey1 = afterEachCallbackKey(testClass, testsInvoked.get(0));
 		String testExecutionConditionKey2 = executionConditionKey(testClass, testsInvoked.get(1));
@@ -267,7 +274,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
@@ -389,7 +396,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
@@ -509,7 +516,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		String afterEachCallbackKey = afterEachCallbackKey(testClass, "outerTest");
 		String nestedBeforeAllCallbackKey = beforeAllCallbackKey(nestedTestClass);
 		String nestedAfterAllCallbackKey = afterAllCallbackKey(nestedTestClass);
-		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.get(0));
+		String nestedExecutionConditionKey1 = executionConditionKey(nestedTestClass, testsInvoked.getFirst());
 		String nestedBeforeEachCallbackKey1 = beforeEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedAfterEachCallbackKey1 = afterEachCallbackKey(nestedTestClass, testsInvoked.get(0));
 		String nestedExecutionConditionKey2 = executionConditionKey(nestedTestClass, testsInvoked.get(1));
@@ -601,6 +608,44 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
+	@ParameterizedTest
+	@EnumSource(Lifecycle.class)
+	void classTemplate(Lifecycle lifecycle) {
+		var classTemplate = ClassTemplateWithDefaultLifecycleTestCase.class;
+
+		var results = executeTests(r -> r //
+				.selectors(selectClass(classTemplate)) //
+				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, lifecycle.name()));
+
+		results.allEvents().assertStatistics(stats -> stats.failed(0));
+		results.testEvents().assertStatistics(stats -> stats.succeeded(4));
+
+		assertThat(instanceCount).containsExactly(entry(classTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4));
+		assertThat(lifecyclesMap.keySet()).containsExactly(classTemplate);
+		assertThat(lifecyclesMap.get(classTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
+	}
+
+	@ParameterizedTest
+	@EnumSource(Lifecycle.class)
+	void classTemplateWithNestedClass(Lifecycle lifecycle) {
+		var classTemplate = ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.class;
+		var nestedClass = ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.InnerTestCase.class;
+
+		var results = executeTests(r -> r //
+				.selectors(selectClass(classTemplate)) //
+				.configurationParameter(Constants.DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME, lifecycle.name()));
+
+		results.allEvents().assertStatistics(stats -> stats.failed(0));
+		results.testEvents().assertStatistics(stats -> stats.succeeded(4));
+
+		assertThat(instanceCount).containsExactly( //
+			entry(classTemplate, lifecycle == Lifecycle.PER_CLASS ? 1 : 4), //
+			entry(nestedClass, lifecycle == Lifecycle.PER_CLASS ? 2 : 4));
+		assertThat(lifecyclesMap.keySet()).containsExactlyInAnyOrder(classTemplate, nestedClass);
+		assertThat(lifecyclesMap.get(classTemplate)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
+		assertThat(lifecyclesMap.get(nestedClass)).filteredOn(Objects::nonNull).containsOnly(lifecycle);
+	}
+
 	private void performAssertions(Class<?> testClass, int numContainers, int numTests,
 			Map.Entry<Class<?>, Integer>[] instanceCountEntries, int allMethods, int eachMethods) {
 
@@ -623,7 +668,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 
 	@SafeVarargs
 	@SuppressWarnings("varargs")
-	private final Map.Entry<Class<?>, Integer>[] instanceCounts(Map.Entry<Class<?>, Integer>... entries) {
+	private Map.Entry<Class<?>, Integer>[] instanceCounts(Map.Entry<Class<?>, Integer>... entries) {
 		return entries;
 	}
 
@@ -983,7 +1028,9 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			String testMethod = context.getTestMethod().map(Method::getName).orElse(null);
 			if (testMethod == null) {
 				assertThat(context.getTestInstance()).isNotPresent();
-				assertThat(instanceCount.getOrDefault(context.getRequiredTestClass(), 0)).isEqualTo(0);
+				if (!isAnnotated(context.getRequiredTestClass().getEnclosingClass(), ClassTemplate.class)) {
+					assertThat(instanceCount.getOrDefault(context.getRequiredTestClass(), 0)).isEqualTo(0);
+				}
 			}
 			instanceMap.put(executionConditionKey(context.getRequiredTestClass(), testMethod),
 				context.getTestInstances().orElse(null));
@@ -1065,6 +1112,67 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 	@Retention(RetentionPolicy.RUNTIME)
 	@TestTemplate
 	@interface SingletonTest {
+	}
+
+	@SuppressWarnings("JUnitMalformedDeclaration")
+	@ClassTemplate
+	@ExtendWith(Twice.class)
+	@ExtendWith(InstanceTrackingExtension.class)
+	static class ClassTemplateWithDefaultLifecycleTestCase {
+
+		ClassTemplateWithDefaultLifecycleTestCase() {
+			incrementInstanceCount(ClassTemplateWithDefaultLifecycleTestCase.class);
+		}
+
+		@Test
+		void test1() {
+		}
+
+		@Test
+		void test2() {
+		}
+	}
+
+	@ClassTemplate
+	@ExtendWith(Twice.class)
+	@ExtendWith(InstanceTrackingExtension.class)
+	static class ClassTemplateWithDefaultLifecycleAndNestedClassTestCase {
+
+		ClassTemplateWithDefaultLifecycleAndNestedClassTestCase() {
+			incrementInstanceCount(ClassTemplateWithDefaultLifecycleAndNestedClassTestCase.class);
+		}
+
+		@Nested
+		class InnerTestCase {
+
+			public InnerTestCase() {
+				incrementInstanceCount(InnerTestCase.class);
+			}
+
+			@Test
+			void test1() {
+			}
+
+			@Test
+			void test2() {
+			}
+		}
+	}
+
+	private static class Twice implements ClassTemplateInvocationContextProvider {
+
+		@Override
+		public boolean supportsClassTemplate(ExtensionContext context) {
+			return true;
+		}
+
+		@Override
+		public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext context) {
+			return Stream.of(new Ctx(), new Ctx());
+		}
+
+		private record Ctx() implements ClassTemplateInvocationContext {
+		}
 	}
 
 }

@@ -207,13 +207,13 @@ class CompositeTestExecutionListenerTests {
 	}
 
 	private static TestPlan anyTestPlan() {
-		return TestPlan.from(Set.of(anyTestDescriptor()), mock(), dummyOutputDirectoryProvider());
+		return TestPlan.from(true, Set.of(anyTestDescriptor()), mock(), dummyOutputDirectoryProvider());
 	}
 
 	private static DemoMethodTestDescriptor anyTestDescriptor() {
 		var testClass = CompositeTestExecutionListenerTests.class;
 		var method = ReflectionUtils.findMethod(testClass, "anyTestDescriptor", new Class<?>[0]).orElseThrow();
-		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), testClass, method);
+		return new DemoMethodTestDescriptor(UniqueId.root("method", "unique_id"), method);
 	}
 
 	private static class ThrowingEagerTestExecutionListener extends ThrowingTestExecutionListener

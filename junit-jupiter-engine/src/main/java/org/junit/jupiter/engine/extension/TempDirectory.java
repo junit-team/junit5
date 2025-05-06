@@ -53,7 +53,7 @@ import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
-import org.junit.jupiter.api.extension.ExtensionContext.Store.CloseableResource;
+import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.io.CleanupMode;
@@ -129,12 +129,13 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static void installFailureTracker(ExtensionContext context) {
-		context.getStore(NAMESPACE).put(FAILURE_TRACKER, (CloseableResource) () -> context.getParent() //
-				.ifPresent(parentContext -> {
-					if (selfOrChildFailed(context)) {
-						parentContext.getStore(NAMESPACE).put(CHILD_FAILED, true);
-					}
-				}));
+		context.getParent() //
+				.filter(parentContext -> !context.getRoot().equals(parentContext)) //
+				.ifPresent(parentContext -> installFailureTracker(context, parentContext));
+	}
+
+	private static void installFailureTracker(ExtensionContext context, ExtensionContext parentContext) {
+		context.getStore(NAMESPACE).put(FAILURE_TRACKER, new FailureTracker(context, parentContext));
 	}
 
 	private void injectStaticFields(ExtensionContext context, Class<?> testClass) {
@@ -286,10 +287,15 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	private static boolean selfOrChildFailed(ExtensionContext context) {
 		return context.getExecutionException().isPresent() //
-				|| context.getStore(NAMESPACE).getOrDefault(CHILD_FAILED, Boolean.class, false);
+				|| getContextSpecificStore(context).getOrDefault(CHILD_FAILED, Boolean.class, false);
 	}
 
-	static class CloseablePath implements CloseableResource {
+	private static ExtensionContext.Store getContextSpecificStore(ExtensionContext context) {
+		return context.getStore(NAMESPACE.append(context));
+	}
+
+	@SuppressWarnings("deprecation")
+	static class CloseablePath implements Store.CloseableResource, AutoCloseable {
 
 		private static final Logger LOGGER = LoggerFactory.getLogger(CloseablePath.class);
 
@@ -602,6 +608,25 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			// @formatter:on
 		}
 
+	}
+
+	@SuppressWarnings("deprecation")
+	private static class FailureTracker implements Store.CloseableResource, AutoCloseable {
+
+		private final ExtensionContext context;
+		private final ExtensionContext parentContext;
+
+		private FailureTracker(ExtensionContext context, ExtensionContext parentContext) {
+			this.context = context;
+			this.parentContext = parentContext;
+		}
+
+		@Override
+		public void close() {
+			if (selfOrChildFailed(context)) {
+				getContextSpecificStore(parentContext).put(CHILD_FAILED, true);
+			}
+		}
 	}
 
 }

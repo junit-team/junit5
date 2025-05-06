@@ -165,7 +165,7 @@ public final class AnnotationSupport {
 	 * @since 1.8
 	 * @see SearchOption
 	 * @see #findAnnotation(AnnotatedElement, Class)
-	 * @deprecated Use {@link #findAnnotation(Class, Class, List)}
+	 * @deprecated Use {@link #findAnnotation(AnnotatedElement, Class)}
 	 * (for {@code SearchOption.DEFAULT}) or
 	 * {@link #findAnnotation(Class, Class, List)} (for
 	 * {@code SearchOption.INCLUDE_ENCLOSING_CLASSES}) instead

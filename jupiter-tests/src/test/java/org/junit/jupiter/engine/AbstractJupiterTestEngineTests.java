@@ -13,16 +13,19 @@ package org.junit.jupiter.engine;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
+import static org.junit.platform.launcher.LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME;
+import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 import static org.junit.platform.launcher.core.OutputDirectoryProviders.dummyOutputDirectoryProvider;
 
-import java.util.Set;
+import java.util.function.Consumer;
 
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
@@ -40,7 +43,13 @@ public abstract class AbstractJupiterTestEngineTests {
 	}
 
 	protected EngineExecutionResults executeTests(DiscoverySelector... selectors) {
-		return executeTests(request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()));
+		return executeTests(request -> request.selectors(selectors));
+	}
+
+	protected EngineExecutionResults executeTests(Consumer<LauncherDiscoveryRequestBuilder> configurer) {
+		var builder = defaultRequest();
+		configurer.accept(builder);
+		return executeTests(builder);
 	}
 
 	protected EngineExecutionResults executeTests(LauncherDiscoveryRequestBuilder builder) {
@@ -51,20 +60,42 @@ public abstract class AbstractJupiterTestEngineTests {
 		return EngineTestKit.execute(this.engine, request);
 	}
 
-	protected TestDescriptor discoverTests(DiscoverySelector... selectors) {
-		return discoverTests(
-			request().selectors(selectors).outputDirectoryProvider(dummyOutputDirectoryProvider()).build());
+	protected EngineDiscoveryResults discoverTestsForClass(Class<?> testClass) {
+		return discoverTests(selectClass(testClass));
 	}
 
-	protected TestDescriptor discoverTests(LauncherDiscoveryRequest request) {
-		return engine.discover(request, UniqueId.forEngine(engine.getId()));
+	protected EngineDiscoveryResults discoverTests(Consumer<LauncherDiscoveryRequestBuilder> configurer) {
+		var builder = defaultRequest();
+		configurer.accept(builder);
+		return discoverTests(builder);
+	}
+
+	protected EngineDiscoveryResults discoverTests(DiscoverySelector... selectors) {
+		return discoverTests(request -> request.selectors(selectors));
+	}
+
+	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequestBuilder builder) {
+		return discoverTests(builder.build());
+	}
+
+	protected EngineDiscoveryResults discoverTests(LauncherDiscoveryRequest request) {
+		return EngineTestKit.discover(this.engine, request);
+	}
+
+	private static LauncherDiscoveryRequestBuilder defaultRequest() {
+		return request() //
+				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
+				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false)) //
+				.configurationParameter(CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME, Severity.INFO.name()) //
+				.enableImplicitConfigurationParameters(false);
 	}
 
 	protected UniqueId discoverUniqueId(Class<?> clazz, String methodName) {
-		TestDescriptor engineDescriptor = discoverTests(selectMethod(clazz, methodName));
-		Set<? extends TestDescriptor> descendants = engineDescriptor.getDescendants();
+		var results = discoverTests(selectMethod(clazz, methodName));
+		var engineDescriptor = results.getEngineDescriptor();
+		var descendants = engineDescriptor.getDescendants();
 		// @formatter:off
-		TestDescriptor testDescriptor = descendants.stream()
+		var testDescriptor = descendants.stream()
 				.skip(descendants.size() - 1)
 				.findFirst()
 				.orElseGet(() -> fail("no descendants"));

@@ -4,7 +4,7 @@ plugins {
 }
 
 val jacocoRootReport by reporting.reports.creating(JacocoCoverageReport::class) {
-	testType = TestSuiteType.UNIT_TEST
+	testSuiteName = "test"
 }
 
 val classesView = configurations["aggregateCodeCoverageReportResults"].incoming.artifactView {

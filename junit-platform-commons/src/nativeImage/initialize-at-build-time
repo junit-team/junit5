@@ -1,5 +1,0 @@
-org.junit.platform.commons.util.StringUtils
-org.junit.platform.commons.logging.LoggerFactory$DelegatingLogger
-org.junit.platform.commons.logging.LoggerFactory
-org.junit.platform.commons.util.ReflectionUtils
-org.junit.platform.commons.util.LruCache

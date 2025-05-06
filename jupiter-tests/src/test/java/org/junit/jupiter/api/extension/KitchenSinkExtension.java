@@ -35,11 +35,13 @@ public class KitchenSinkExtension implements
 
 	// Lifecycle Callbacks
 	BeforeAllCallback,
-		BeforeEachCallback,
-			BeforeTestExecutionCallback,
-				TestExecutionExceptionHandler,
-			AfterTestExecutionCallback,
-		AfterEachCallback,
+		BeforeClassTemplateInvocationCallback,
+			BeforeEachCallback,
+				BeforeTestExecutionCallback,
+					TestExecutionExceptionHandler,
+				AfterTestExecutionCallback,
+			AfterEachCallback,
+		AfterClassTemplateInvocationCallback,
 	AfterAllCallback,
 
 	// Lifecycle methods exception handling
@@ -55,8 +57,9 @@ public class KitchenSinkExtension implements
 	// Conditional Test Execution
 	ExecutionCondition,
 
-	// @TestTemplate
+	// @TestTemplate and @ClassTemplate
 	TestTemplateInvocationContextProvider,
+	ClassTemplateInvocationContextProvider,
 
 	// Miscellaneous
 	TestWatcher,
@@ -80,6 +83,10 @@ public class KitchenSinkExtension implements
 	}
 
 	@Override
+	public void beforeClassTemplateInvocation(ExtensionContext context) {
+	}
+
+	@Override
 	public void beforeEach(ExtensionContext context) {
 	}
 
@@ -97,6 +104,10 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public void afterEach(ExtensionContext context) {
+	}
+
+	@Override
+	public void afterClassTemplateInvocation(ExtensionContext context) {
 	}
 
 	@Override
@@ -171,6 +182,23 @@ public class KitchenSinkExtension implements
 
 	@Override
 	public boolean mayReturnZeroTestTemplateInvocationContexts(ExtensionContext context) {
+		return false;
+	}
+
+	// --- @ClassTemplate -------------------------------------------------------
+
+	@Override
+	public boolean supportsClassTemplate(ExtensionContext context) {
+		return false;
+	}
+
+	@Override
+	public Stream<ClassTemplateInvocationContext> provideClassTemplateInvocationContexts(ExtensionContext context) {
+		return null;
+	}
+
+	@Override
+	public boolean mayReturnZeroClassTemplateInvocationContexts(ExtensionContext context) {
 		return false;
 	}
 
