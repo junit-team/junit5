@@ -43,11 +43,13 @@ import org.junit.jupiter.params.ParameterizedTest;
  * {@link java.util.stream.DoubleStream DoubleStream},
  * {@link java.util.stream.LongStream LongStream}, or
  * {@link java.util.stream.IntStream IntStream}), a {@code Supplier} of an
- * {@link java.util.Iterator Iterator}, an array of objects, or an array of
- * primitives. Each set of "arguments" within the "stream" can be supplied as an
- * instance of {@link Arguments}, an array of objects (for example, {@code Object[]},
- * {@code String[]}, etc.), or a single <em>value</em> if the parameterized test
- * method accepts a single argument.
+ * {@link java.util.Iterator Iterator}, an array of objects or primitives, or
+ * any type that provides an {@link java.util.Iterator Iterator}-returning
+ * {@code iterator()} method (such as, for example, a
+ * {@code kotlin.sequences.Sequence}). Each set of "arguments" within the
+ * "stream" can be supplied as an instance of {@link Arguments}, an array of
+ * objects (for example, {@code Object[]}, {@code String[]}, etc.), or a single
+ * <em>value</em> if the parameterized test method accepts a single argument.
  *
  * <p>In contrast to the supported return types for {@link MethodSource @MethodSource}
  * factory methods, the value of a {@code @FieldSource} field cannot be an instance of
