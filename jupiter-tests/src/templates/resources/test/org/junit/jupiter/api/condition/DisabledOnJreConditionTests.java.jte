@@ -74,10 +74,10 @@ class DisabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	 * @see DisabledOnJreIntegrationTests#version7()
 	 */
 	@Test
-	void version7() {
+	void version16() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("Version [7] in @DisabledOnJre must be greater than or equal to 8");
+				.withMessage("Version [16] in @DisabledOnJre must be greater than or equal to 17");
 	}
 
 	/**

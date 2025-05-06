@@ -85,7 +85,7 @@ public enum JRE {
 
 	static final int UNDEFINED_VERSION = -1;
 
-	static final int MINIMUM_VERSION = ${jres.getFirst().getVersion()};
+	static final int MINIMUM_VERSION = ${minRuntimeVersion};
 
 	private static final int CURRENT_VERSION = Runtime.version().feature();
 

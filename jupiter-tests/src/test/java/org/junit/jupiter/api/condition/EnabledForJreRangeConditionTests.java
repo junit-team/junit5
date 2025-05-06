@@ -86,18 +86,18 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#min8()
+	 * @see EnabledForJreRangeIntegrationTests#min17()
 	 */
 	@Test
-	void min8() {
+	void min17() {
 		defaultValues();
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#minVersion8()
+	 * @see EnabledForJreRangeIntegrationTests#minVersion17()
 	 */
 	@Test
-	void minVersion8() {
+	void minVersion17() {
 		defaultValues();
 	}
 
@@ -118,23 +118,23 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#minVersion7()
+	 * @see EnabledForJreRangeIntegrationTests#minVersion16()
 	 */
 	@Test
-	void minVersion7() {
+	void minVersion16() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("@EnabledForJreRange's minVersion [7] must be greater than or equal to 8");
+				.withMessage("@EnabledForJreRange's minVersion [16] must be greater than or equal to 17");
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#maxVersion7()
+	 * @see EnabledForJreRangeIntegrationTests#maxVersion16()
 	 */
 	@Test
-	void maxVersion7() {
+	void maxVersion16() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("@EnabledForJreRange's maxVersion [7] must be greater than or equal to 8");
+				.withMessage("@EnabledForJreRange's maxVersion [16] must be greater than or equal to 17");
 	}
 
 	/**
@@ -303,10 +303,10 @@ class EnabledForJreRangeConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledForJreRangeIntegrationTests#minVersion17MaxVersionMaxInteger()
+	 * @see EnabledForJreRangeIntegrationTests#minVersion21MaxVersionMaxInteger()
 	 */
 	@Test
-	void minVersion17MaxVersionMaxInteger() {
+	void minVersion21MaxVersionMaxInteger() {
 		evaluateCondition();
 		assertEnabledOnCurrentJreIf(onJava17() || onJava18() || onJava19() || onJava20() || onJava21() || onJava22()
 				|| onJava23() || onJava24() || onJava25());

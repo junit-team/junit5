@@ -58,7 +58,7 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 		// Now that we have checked the basic preconditions, we need to ensure that we are
 		// using valid JRE enum constants.
 		if (!minJreSet) {
-			minJre = minJre();
+			minJre = JRE.JAVA_17;
 		}
 		if (!maxJreSet) {
 			maxJre = JRE.OTHER;
@@ -75,11 +75,6 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 				this.annotationName, min, max));
 
 		return JRE.isCurrentVersionWithinRange(min, max);
-	}
-
-	@SuppressWarnings("removal")
-	private static JRE minJre() {
-		return JRE.JAVA_8;
 	}
 
 }

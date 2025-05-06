@@ -94,6 +94,10 @@ repository on GitHub.
   supported.
 * The `JRE` enum constants for `JAVA_8` to `JAVA_16` have been deprecated because they can
   no longer be used at runtime since `JAVA_17` is the new baseline.
+* `@EnabledForJreRange` and `@DisabledForJreRange` now use `JAVA_17` as their default
+  `min` value.
+* `@EnabledOnJre`, `@DisabledOnJre`, `@EnabledForJreRange`, and `@DisabledForJreRange` now
+  fail if a JRE version less than 17 is specified.
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements

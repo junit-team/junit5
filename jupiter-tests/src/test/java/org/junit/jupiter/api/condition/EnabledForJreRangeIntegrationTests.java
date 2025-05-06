@@ -51,33 +51,31 @@ class EnabledForJreRangeIntegrationTests {
 		fail("should result in a configuration exception");
 	}
 
-	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JRE.JAVA_8, max = OTHER)
+	@EnabledForJreRange(min = JAVA_17, max = OTHER)
 	void effectiveJreDefaultValues() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 8, maxVersion = Integer.MAX_VALUE)
+	@EnabledForJreRange(minVersion = 17, maxVersion = Integer.MAX_VALUE)
 	void effectiveVersionDefaultValues() {
 		fail("should result in a configuration exception");
 	}
 
-	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JRE.JAVA_8)
-	void min8() {
+	@EnabledForJreRange(min = JAVA_17)
+	void min17() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 8)
-	void minVersion8() {
+	@EnabledForJreRange(minVersion = 17)
+	void minVersion17() {
 		fail("should result in a configuration exception");
 	}
 
@@ -97,15 +95,15 @@ class EnabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 7)
-	void minVersion7() {
+	@EnabledForJreRange(minVersion = 16)
+	void minVersion16() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(maxVersion = 7)
-	void maxVersion7() {
+	@EnabledForJreRange(maxVersion = 16)
+	void maxVersion16() {
 		fail("should result in a configuration exception");
 	}
 
@@ -241,8 +239,8 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@EnabledForJreRange(minVersion = 17, maxVersion = Integer.MAX_VALUE)
-	void minVersion17MaxVersionMaxInteger() {
+	@EnabledForJreRange(minVersion = 21, maxVersion = Integer.MAX_VALUE)
+	void minVersion21MaxVersionMaxInteger() {
 		assertTrue(onKnownVersion());
 		assertTrue(JRE.currentVersionNumber() >= 17);
 	}

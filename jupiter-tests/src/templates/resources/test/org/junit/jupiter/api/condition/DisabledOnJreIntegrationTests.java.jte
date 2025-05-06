@@ -50,8 +50,8 @@ class DisabledOnJreIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledOnJre(value = JAVA_17, versions = { 21, 7 })
-	void version7() {
+	@DisabledOnJre(value = JAVA_17, versions = { 21, 16 })
+	void version16() {
 	}
 
 	@Test

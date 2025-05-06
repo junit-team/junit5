@@ -47,14 +47,14 @@ class DisabledForJreRangeIntegrationTests {
 	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JRE.JAVA_8, max = OTHER)
+	@DisabledForJreRange(min = JRE.JAVA_17, max = OTHER)
 	void effectiveJreDefaultValues() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(minVersion = 8, maxVersion = Integer.MAX_VALUE)
+	@DisabledForJreRange(minVersion = 17, maxVersion = Integer.MAX_VALUE)
 	void effectiveVersionDefaultValues() {
 		fail("should result in a configuration exception");
 	}
@@ -62,15 +62,15 @@ class DisabledForJreRangeIntegrationTests {
 	@SuppressWarnings("removal")
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(min = JRE.JAVA_8)
-	void min8() {
+	@DisabledForJreRange(min = JAVA_17)
+	void min17() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(minVersion = 8)
-	void minVersion8() {
+	@DisabledForJreRange(minVersion = 17)
+	void minVersion17() {
 		fail("should result in a configuration exception");
 	}
 
@@ -90,15 +90,15 @@ class DisabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(minVersion = 7)
-	void minVersion7() {
+	@DisabledForJreRange(minVersion = 16)
+	void minVersion16() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledForJreRange(maxVersion = 7)
-	void maxVersion7() {
+	@DisabledForJreRange(maxVersion = 16)
+	void maxVersion16() {
 		fail("should result in a configuration exception");
 	}
 
