@@ -45,7 +45,8 @@ repository on GitHub.
 [[release-notes-5.13.0-RC1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Add support for Kotlin `Sequence` to `@MethodSource`, `@FieldSource`, and
+  `@TestFactory`.
 
 
 [[release-notes-5.13.0-RC1-junit-vintage]]
