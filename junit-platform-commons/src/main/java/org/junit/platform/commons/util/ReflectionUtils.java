@@ -390,8 +390,7 @@ public final class ReflectionUtils {
 	 */
 	@API(status = INTERNAL, since = "1.12")
 	public static boolean isRecordClass(Class<?> clazz) {
-		Class<?> superclass = clazz.getSuperclass();
-		return superclass != null && "java.lang.Record".equals(superclass.getName());
+		return clazz.isRecord();
 	}
 
 	/**
