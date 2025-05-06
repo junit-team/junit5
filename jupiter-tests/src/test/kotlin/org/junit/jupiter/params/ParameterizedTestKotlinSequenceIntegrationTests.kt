@@ -7,21 +7,21 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
-package org.junit.jupiter.params.aggregator
+package org.junit.jupiter.params
 
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.FieldSource
 import org.junit.jupiter.params.provider.MethodSource
 import java.time.Month
 
 /**
- * Tests for ParameterizedTest kotlin compatibility
+ * Tests for Kotlin compatibility of ParameterizedTest
  */
-object KotlinParameterizedTests {
+object ParameterizedTestKotlinSequenceIntegrationTests {
     @ParameterizedTest
-    @MethodSource("dataProvidedByKotlinSequence")
-    fun `a method source can be supplied by a Sequence returning method`(
+    @MethodSource("dataProvidedByKotlinSequenceMethod")
+    fun `a method source can be supplied by a Sequence-returning method`(
         value: Int,
         month: Month
     ) {
@@ -29,7 +29,10 @@ object KotlinParameterizedTests {
     }
 
     @JvmStatic
-    private fun dataProvidedByKotlinSequence() =
+    private fun dataProvidedByKotlinSequenceMethod() = dataProvidedByKotlinSequenceField
+
+    @JvmStatic
+    val dataProvidedByKotlinSequenceField =
         sequenceOf(
             arguments(1, Month.JANUARY),
             arguments(3, Month.MARCH),
@@ -37,4 +40,13 @@ object KotlinParameterizedTests {
             arguments(5, Month.MAY),
             arguments(12, Month.DECEMBER)
         )
+
+    @ParameterizedTest
+    @FieldSource("dataProvidedByKotlinSequenceField")
+    fun `a field source can be supplied by a Sequence-typed field`(
+        value: Int,
+        month: Month
+    ) {
+        assertEquals(value, month.value)
+    }
 }
