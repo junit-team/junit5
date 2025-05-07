@@ -19,10 +19,7 @@ import org.apiguardian.api.API;
  *
  * <p>If the current JRE version can be detected but is not one of the predefined
  * constants in this enum, {@link #OTHER} will be considered to be the
- * {@linkplain #isCurrentVersion current JRE version}. If the current JRE version
- * cannot be detected &mdash; for example, if the {@code java.version} JVM system
- * property is undefined &mdash; {@link #UNDEFINED} will be considered to be the
- * current JRE version.
+ * {@linkplain #isCurrentVersion current JRE version}.
  *
  * @since 5.1
 @for(JRE jre : jres)<%--
@@ -118,7 +115,7 @@ public enum JRE {
 	/**
 	 * @return {@code true} if <em>this</em> {@code JRE} is known to be the
 	 * Java Runtime Environment version for the currently executing JVM or if
-	 * the version is {@link #OTHER} or {@link #UNDEFINED}
+	 * the version is {@link #OTHER}
 	 *
 	 * @see #currentJre()
 	 * @see #currentVersionNumber()
@@ -129,7 +126,7 @@ public enum JRE {
 
 	/**
 	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER} or {@link #UNDEFINED}
+	 * {@link #OTHER}
 	 *
 	 * @since 5.7
 	 * @see #currentVersionNumber()
@@ -143,15 +140,14 @@ public enum JRE {
 
 	/**
 	 * @return the {@link JRE} for the currently executing JVM, potentially
-	 * {@link #OTHER} or {@link #UNDEFINED}
+	 * {@link #OTHER}
 	 *
 	 * @since 5.12
 	 * @see #currentVersionNumber()
 	 */
 	@API(status = STABLE, since = "5.12")
 	public static JRE currentJre() {
-		return switch (CURRENT_VERSION) {
-			case UNDEFINED_VERSION -> UNDEFINED;<%--
+		return switch (CURRENT_VERSION) {<%--
 				--%>@for(var jre : jres)
 			case ${jre.getVersion()} -> JAVA_${jre.getVersion()};<%--
 				--%>@endfor
