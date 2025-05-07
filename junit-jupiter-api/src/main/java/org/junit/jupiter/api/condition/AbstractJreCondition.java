@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.api.condition;
 
+import static java.util.function.Predicate.isEqual;
+
 import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -42,18 +44,15 @@ abstract class AbstractJreCondition<A extends Annotation> extends BooleanExecuti
 		Preconditions.condition(jres.length > 0 || versions.length > 0,
 			() -> "You must declare at least one JRE or version in @" + this.annotationName);
 
+		Preconditions.condition(Arrays.stream(jres).noneMatch(isEqual(JRE.UNDEFINED)),
+			() -> "JRE.UNDEFINED is not supported in @" + this.annotationName);
+		Arrays.stream(versions).min().ifPresent(version -> Preconditions.condition(version >= JRE.MINIMUM_VERSION,
+			() -> String.format("Version [%d] in @%s must be greater than or equal to %d", version, this.annotationName,
+				JRE.MINIMUM_VERSION)));
+
 		return IntStream.concat(//
-			Arrays.stream(jres).mapToInt(jre -> {
-				Preconditions.condition(jre != JRE.UNDEFINED,
-					() -> "JRE.UNDEFINED is not supported in @" + this.annotationName);
-				return jre.version();
-			}), //
-			Arrays.stream(versions).map(version -> {
-				Preconditions.condition(version >= JRE.MINIMUM_VERSION,
-					() -> String.format("Version [%d] in @%s must be greater than or equal to %d", version,
-						this.annotationName, JRE.MINIMUM_VERSION));
-				return version;
-			})//
+			Arrays.stream(jres).mapToInt(JRE::version), //
+			Arrays.stream(versions) //
 		).distinct();
 	}
 
