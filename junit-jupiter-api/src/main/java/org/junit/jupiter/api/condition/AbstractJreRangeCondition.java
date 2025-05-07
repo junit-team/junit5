@@ -70,9 +70,6 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 		// Finally, we need to validate the effective minimum and maximum values.
 		Preconditions.condition((min != JRE.MINIMUM_VERSION || max != Integer.MAX_VALUE),
 			() -> "You must declare a non-default value for the minimum or maximum value in @" + this.annotationName);
-		Preconditions.condition(min >= JRE.MINIMUM_VERSION,
-			() -> String.format("@%s's minimum value [%d] must greater than or equal to %d", this.annotationName, min,
-				JRE.MINIMUM_VERSION));
 		Preconditions.condition(min <= max,
 			() -> String.format("@%s's minimum value [%d] must be less than or equal to its maximum value [%d]",
 				this.annotationName, min, max));
