@@ -26,7 +26,7 @@ repository on GitHub.
 [[release-notes-5.13.0-RC1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* Added `@BooleansSource` annotation for `@ParameterizedTest` (#4507)
 
 
 [[release-notes-5.13.0-RC1-junit-jupiter]]

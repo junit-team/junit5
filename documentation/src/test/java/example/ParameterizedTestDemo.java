@@ -64,6 +64,7 @@ import org.junit.jupiter.params.converter.TypedArgumentConverter;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.junit.jupiter.params.provider.ArgumentsSource;
+import org.junit.jupiter.params.provider.BooleansSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
@@ -641,4 +642,12 @@ class ParameterizedTestDemo {
 		assertTrue(number > 0);
 	}
 	// end::argument_count_validation[]
+
+	// tag::BooleanSource_example[]
+	@ParameterizedTest
+	@BooleansSource
+	void testWithBooleanSource(boolean flag) {
+		assertTrue(flag || !flag);
+	}
+	// end::BooleanSource_example[]
 }
