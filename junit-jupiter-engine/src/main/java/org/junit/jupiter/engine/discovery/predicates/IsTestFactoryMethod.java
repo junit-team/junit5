@@ -40,7 +40,7 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 public class IsTestFactoryMethod extends IsTestableMethod {
 
 	private static final String EXPECTED_RETURN_TYPE_MESSAGE = String.format(
-		"must return a single %1$s or a Stream, Collection, Iterable, Iterator, or array of %1$s",
+		"must return a single %1$s or a Stream, Collection, Iterable, Iterator, Iterator provider, or array of %1$s",
 		DynamicNode.class.getName());
 
 	public IsTestFactoryMethod(DiscoveryIssueReporter issueReporter) {

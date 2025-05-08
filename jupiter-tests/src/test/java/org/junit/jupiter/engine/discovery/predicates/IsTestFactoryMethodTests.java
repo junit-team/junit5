@@ -66,7 +66,8 @@ class IsTestFactoryMethodTests {
 		var issue = getOnlyElement(discoveryIssues);
 		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
 		assertThat(issue.message()).isEqualTo(
-			"@TestFactory method '%s' must return a single org.junit.jupiter.api.DynamicNode or a Stream, Collection, Iterable, Iterator, or array of org.junit.jupiter.api.DynamicNode. "
+			"@TestFactory method '%s' must return a single org.junit.jupiter.api.DynamicNode or a "
+					+ "Stream, Collection, Iterable, Iterator, Iterator provider, or array of org.junit.jupiter.api.DynamicNode. "
 					+ "It will not be executed.",
 			method.toGenericString());
 		assertThat(issue.source()).contains(MethodSource.from(method));
@@ -83,7 +84,8 @@ class IsTestFactoryMethodTests {
 		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.INFO);
 		assertThat(issue.message()).isEqualTo(
 			"The declared return type of @TestFactory method '%s' does not support static validation. "
-					+ "It must return a single org.junit.jupiter.api.DynamicNode or a Stream, Collection, Iterable, Iterator, or array of org.junit.jupiter.api.DynamicNode.",
+					+ "It must return a single org.junit.jupiter.api.DynamicNode or a "
+					+ "Stream, Collection, Iterable, Iterator, Iterator provider, or array of org.junit.jupiter.api.DynamicNode.",
 			method.toGenericString());
 		assertThat(issue.source()).contains(MethodSource.from(method));
 	}

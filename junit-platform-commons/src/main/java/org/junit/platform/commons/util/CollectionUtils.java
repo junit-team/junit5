@@ -16,8 +16,10 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +38,7 @@ import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.ReflectionSupport;
 
 /**
  * Collection of utilities for working with {@link Collection Collections}.
@@ -122,7 +125,7 @@ public final class CollectionUtils {
 	 * returned, so if more control over the returned list is required,
 	 * consider creating a new {@code Collector} implementation like the
 	 * following:
-	 *
+	 * <p>
 	 * <pre class="code">
 	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
 	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
@@ -161,7 +164,8 @@ public final class CollectionUtils {
 				|| Iterable.class.isAssignableFrom(type)//
 				|| Iterator.class.isAssignableFrom(type)//
 				|| Object[].class.isAssignableFrom(type)//
-				|| (type.isArray() && type.getComponentType().isPrimitive()));
+				|| (type.isArray() && type.getComponentType().isPrimitive())//
+				|| findIteratorMethod(type).isPresent());
 	}
 
 	/**
@@ -177,6 +181,9 @@ public final class CollectionUtils {
 	 * <li>{@link Iterator}</li>
 	 * <li>{@link Object} array</li>
 	 * <li>primitive array</li>
+	 * <li>any type that provides an
+	 * {@link java.util.Iterator Iterator}-returning {@code iterator()} method
+	 * (such as, for example, a {@code kotlin.sequences.Sequence})</li>
 	 * </ul>
 	 *
 	 * @param object the object to convert into a stream; never {@code null}
@@ -223,8 +230,21 @@ public final class CollectionUtils {
 		if (object.getClass().isArray() && object.getClass().getComponentType().isPrimitive()) {
 			return IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i));
 		}
-		throw new PreconditionViolationException(
-			"Cannot convert instance of " + object.getClass().getName() + " into a Stream: " + object);
+		return tryConvertToStreamByReflection(object);
+	}
+
+	private static Stream<?> tryConvertToStreamByReflection(Object object) {
+		return findIteratorMethod(object.getClass()) //
+				.map(method -> (Iterator<?>) invokeMethod(method, object)) //
+				.map(iterator -> spliteratorUnknownSize(iterator, ORDERED)) //
+				.map(spliterator -> stream(spliterator, false)) //
+				.orElseThrow(() -> new PreconditionViolationException(String.format(
+					"Cannot convert instance of %s into a Stream: %s", object.getClass().getName(), object)));
+	}
+
+	private static Optional<Method> findIteratorMethod(Class<?> type) {
+		return ReflectionSupport.findMethod(type, "iterator") //
+				.filter(method -> method.getReturnType() == Iterator.class);
 	}
 
 	/**

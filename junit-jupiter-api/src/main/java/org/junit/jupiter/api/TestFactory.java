@@ -30,7 +30,9 @@ import org.junit.platform.commons.annotation.Testable;
  *
  * <p>{@code @TestFactory} methods must not be {@code private} or {@code static}
  * and must return a {@code Stream}, {@code Collection}, {@code Iterable},
- * {@code Iterator}, or array of {@link DynamicNode} instances. Supported
+ * {@code Iterator}, array of {@link DynamicNode} instances, or any type that
+ * provides an {@link java.util.Iterator Iterator}-returning {@code iterator()}
+ * method (such as, for example, a {@code kotlin.sequences.Sequence}). Supported
  * subclasses of {@code DynamicNode} include {@link DynamicContainer} and
  * {@link DynamicTest}. <em>Dynamic tests</em> will be executed lazily,
  * enabling dynamic and even non-deterministic generation of test cases.
