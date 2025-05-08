@@ -62,7 +62,6 @@ dependencies {
 
 	testImplementation(projects.junitJupiterMigrationsupport)
 	testImplementation(projects.junitPlatformConsole)
-	testImplementation(projects.junitPlatformRunner)
 	testImplementation(projects.junitPlatformSuite)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(projects.junitVintageEngine)

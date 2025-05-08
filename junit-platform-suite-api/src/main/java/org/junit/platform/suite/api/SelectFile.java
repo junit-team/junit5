@@ -29,7 +29,6 @@ import org.apiguardian.api.API;
  *
  * @since 1.8
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectFile(String, org.junit.platform.engine.discovery.FilePosition)
  */
 @Retention(RetentionPolicy.RUNTIME)

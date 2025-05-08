@@ -23,7 +23,6 @@ package org.junit.platform {
     [junit-platform-jfr] as jfr
     [junit-platform-launcher] as launcher
     [junit-platform-reporting] as reporting
-    [junit-platform-runner] as runner
     [junit-platform-suite] as suite
     [junit-platform-suite-api] as suite_api
     [junit-platform-suite-commons] as suite_commons
@@ -82,9 +81,6 @@ engine ..> commons
 
 reporting ..> launcher
 reporting ......> otr_tooling_spi
-
-runner ..> suite_commons
-runner ...> junit4
 
 suite ..> suite_api
 suite ..> suite_engine

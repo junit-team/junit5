@@ -24,7 +24,6 @@ val platformProjects by extra(listOf(
 		projects.junitPlatformJfr,
 		projects.junitPlatformLauncher,
 		projects.junitPlatformReporting,
-		projects.junitPlatformRunner,
 		projects.junitPlatformSuite,
 		projects.junitPlatformSuiteApi,
 		projects.junitPlatformSuiteCommons,

@@ -55,7 +55,6 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.launcher.TagFilter#includeTags
  */
 @Retention(RetentionPolicy.RUNTIME)

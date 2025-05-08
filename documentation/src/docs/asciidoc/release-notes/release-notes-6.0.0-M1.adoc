@@ -45,6 +45,8 @@ repository on GitHub.
   subcommand.
 * Remove support for deprecated non-conventional `ConsoleLauncher` options such as
   `--h` (rather than `-h`) or `-help` (rather than `--help`).
+* The `junit-platform-runner` module that provided the `JUnitPlatform` runner has been
+  discontinued.
 * The following deprecated APIs have been removed:
   - `ReflectionSupport.loadClass(String)` method
   - `ReflectionUtils.readFieldValue(...)` methods

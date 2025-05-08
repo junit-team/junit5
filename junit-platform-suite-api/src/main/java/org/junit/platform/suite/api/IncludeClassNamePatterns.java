@@ -32,7 +32,6 @@ import org.apiguardian.api.API;
  *
  * @since 1.0
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.engine.discovery.ClassNameFilter#STANDARD_INCLUDE_PATTERN
  * @see org.junit.platform.engine.discovery.ClassNameFilter#includeClassNamePatterns
  */

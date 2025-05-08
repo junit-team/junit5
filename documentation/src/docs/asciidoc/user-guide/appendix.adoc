@@ -70,9 +70,6 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
   `junit-platform-reporting`::
     `TestExecutionListener` implementations that generate test reports -- typically used
     by IDEs and build tools. See <<junit-platform-reporting>> for details.
-  `junit-platform-runner`::
-    Runner for executing tests and test suites on the JUnit Platform in a JUnit 4
-    environment. See <<running-tests-junit-platform-runner>> for details.
   `junit-platform-suite`::
     JUnit Platform Suite artifact that transitively pulls in dependencies on
     `junit-platform-suite-api` and `junit-platform-suite-engine` for simplified dependency

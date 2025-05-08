@@ -32,7 +32,6 @@ import org.apiguardian.api.API;
  * @see ConfigurationParameter
  * @see DisableParentConfigurationParameters
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder#configurationParametersResources(String...)
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -17,7 +17,7 @@ dependencies {
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)
-	testFixturesImplementation(projects.junitPlatformRunner)
+	testFixturesImplementation(projects.junitPlatformSuiteApi)
 
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
