@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
@@ -1395,29 +1394,6 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		return findMethod(clazz, predicate).isPresent();
-	}
-
-	/**
-	 * Get the {@link Method} in the specified class with the specified name
-	 * and parameter types.
-	 *
-	 * <p>This method delegates to {@link Class#getMethod(String, Class...)} but
-	 * swallows any exception thrown.
-	 *
-	 * @param clazz the class in which to search for the method; never {@code null}
-	 * @param methodName the name of the method to get; never {@code null} or blank
-	 * @param parameterTypes the parameter types of the method; may be {@code null}
-	 * or empty
-	 * @return an {@code Optional} containing the method; never {@code null} but
-	 * empty if the invocation of {@code Class#getMethod()} throws a
-	 * {@link NoSuchMethodException}
-	 * @deprecated Please use {@link #tryToGetMethod(Class, String, Class[])}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-		return tryToGetMethod(clazz, methodName, parameterTypes).toOptional();
 	}
 
 	/**

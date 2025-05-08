@@ -48,6 +48,7 @@ repository on GitHub.
 * The following deprecated APIs have been removed:
   - `ReflectionSupport.loadClass(String)` method
   - `ReflectionUtils.readFieldValue(...)` methods
+  - `ReflectionUtils.getMethod(...)` method
   - `BlacklistedExceptions` class
   - `PreconditionViolationException` class (from `org.junit.platform.commons.util`)
 
