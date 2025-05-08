@@ -57,6 +57,7 @@ repository on GitHub.
   - `NestedMethodSelector.getMethodParameterTypes()` method
   - `ReportEntry()` constructor
   - `SingleTestExecutor` class
+  - `LauncherDiscoveryRequestBuilder()` constructor
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
