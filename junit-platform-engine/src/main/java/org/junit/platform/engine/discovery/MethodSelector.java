@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.discovery;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -143,23 +142,6 @@ public class MethodSelector implements DiscoverySelector {
 	 */
 	public String getMethodName() {
 		return this.methodName;
-	}
-
-	/**
-	 * Get the names of parameter types for the selected method.
-	 *
-	 * <p>See {@link #getParameterTypeNames()} for details.
-	 *
-	 * @return the names of parameter types
-	 * @since 1.0
-	 * @see #getParameterTypeNames()
-	 * @see #getParameterTypes()
-	 * @deprecated since 1.10 in favor of {@link #getParameterTypeNames()}
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.10")
-	public String getMethodParameterTypes() {
-		return getParameterTypeNames();
 	}
 
 	/**
