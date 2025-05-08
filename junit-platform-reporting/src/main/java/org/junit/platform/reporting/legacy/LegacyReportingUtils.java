@@ -13,6 +13,7 @@ package org.junit.platform.reporting.legacy;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
@@ -49,9 +50,37 @@ public final class LegacyReportingUtils {
 	 * never {@code null}
 	 * @see TestIdentifier#getLegacyReportingName
 	 */
-	@SuppressWarnings("deprecation")
 	public static String getClassName(TestPlan testPlan, TestIdentifier testIdentifier) {
-		return org.junit.platform.launcher.listeners.LegacyReportingUtils.getClassName(testPlan, testIdentifier);
+		Preconditions.notNull(testPlan, "testPlan must not be null");
+		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
+		for (TestIdentifier current = testIdentifier; current != null; current = getParent(testPlan, current)) {
+			ClassSource source = getClassSource(current);
+			if (source != null) {
+				return source.getClassName();
+			}
+		}
+		return getParentLegacyReportingName(testPlan, testIdentifier);
+	}
+
+	private static TestIdentifier getParent(TestPlan testPlan, TestIdentifier testIdentifier) {
+		return testPlan.getParent(testIdentifier).orElse(null);
+	}
+
+	private static ClassSource getClassSource(TestIdentifier current) {
+		// @formatter:off
+		return current.getSource()
+				.filter(ClassSource.class::isInstance)
+				.map(ClassSource.class::cast)
+				.orElse(null);
+		// @formatter:on
+	}
+
+	private static String getParentLegacyReportingName(TestPlan testPlan, TestIdentifier testIdentifier) {
+		// @formatter:off
+		return testPlan.getParent(testIdentifier)
+				.map(TestIdentifier::getLegacyReportingName)
+				.orElse("<unrooted>");
+		// @formatter:on
 	}
 
 }
