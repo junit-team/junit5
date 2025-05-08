@@ -63,6 +63,7 @@ repository on GitHub.
   - `LegacyReportingUtils` class
   - `TestPlan.add(TestIdentifier)`, `TestPlan.getChildren(String)`, and
     `TestPlan.getTestIdentifier(String)` methods
+  - `TestPlan.add(TestIdentifier)` and `TestPlan.getChildren(String)` methods
   - `@UseTechnicalNames` annotation
   - `EngineTestKit.execute(String, EngineDiscoveryRequest)`,
     `EngineTestKit.execute(TestEngine, EngineDiscoveryRequest)`, and
