@@ -1949,10 +1949,11 @@ of the annotated `@ParameterizedClass` or `@ParameterizedTest`. Generally speaki
 translates to a `Stream` of `Arguments` (i.e., `Stream<Arguments>`); however, the actual
 concrete return type can take on many forms. In this context, a "stream" is anything that
 JUnit can reliably convert into a `Stream`, such as `Stream`, `DoubleStream`,
-`LongStream`, `IntStream`, `Collection`, `Iterator`, `Iterable`, an array of objects, or
-an array of primitives. The "arguments" within the stream can be supplied as an instance
-of `Arguments`, an array of objects (e.g., `Object[]`), or a single value if the
-parameterized class or test method accepts a single argument.
+`LongStream`, `IntStream`, `Collection`, `Iterator`, `Iterable`, an array of objects or
+primitives, or any type that provides an `iterator(): Iterator` method (such as, for
+example, a `kotlin.sequences.Sequence`). The "arguments" within the stream can be supplied
+as an instance of `Arguments`, an array of objects (e.g., `Object[]`), or a single value
+if the parameterized class or test method accepts a single argument.
 
 If the return type is `Stream` or one of the primitive streams,
 JUnit will properly close it by calling `BaseStream.close()`,
@@ -2038,10 +2039,11 @@ In this context, a "stream" is anything that JUnit can reliably convert to a `St
 however, the actual concrete field type can take on many forms. Generally speaking this
 translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
 `DoubleStream`, `LongStream`, or `IntStream`), a `Supplier` of an `Iterator`, an array of
-objects, or an array of primitives. Each set of "arguments" within the "stream" can be
-supplied as an instance of `Arguments`, an array of objects (for example, `Object[]`,
-`String[]`, etc.), or a single value if the parameterized class or test method accepts a
-single argument.
+objects or primitives, or any type that provides an `iterator(): Iterator` method (such
+as, for example, a `kotlin.sequences.Sequence`). Each set of "arguments" within the
+"stream" can be supplied as an instance of `Arguments`, an array of objects (for example,
+`Object[]`, `String[]`, etc.), or a single value if the parameterized class ortest method accepts
+a single argument.
 
 [WARNING]
 ====
@@ -2870,7 +2872,11 @@ generated at runtime by a factory method that is annotated with `@TestFactory`.
 In contrast to `@Test` methods, a `@TestFactory` method is not itself a test case but
 rather a factory for test cases. Thus, a dynamic test is the product of a factory.
 Technically speaking, a `@TestFactory` method must return a single `DynamicNode` or a
-`Stream`, `Collection`, `Iterable`, `Iterator`, or array of `DynamicNode` instances.
+_stream_ of `DynamicNode` instances or any of its subclasses. In this context, a "stream"
+is anything that JUnit can reliably convert into a `Stream`, such as `Stream`,
+`Collection`, `Iterator`, `Iterable`, an array of objects, or any type that provides an
+`iterator(): Iterator` method (such as, for example, a `kotlin.sequences.Sequence`).
+
 Instantiable subclasses of `DynamicNode` are `DynamicContainer` and `DynamicTest`.
 `DynamicContainer` instances are composed of a _display name_ and a list of dynamic child
 nodes, enabling the creation of arbitrarily nested hierarchies of dynamic nodes.

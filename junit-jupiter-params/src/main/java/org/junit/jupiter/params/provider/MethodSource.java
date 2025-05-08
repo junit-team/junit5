@@ -43,12 +43,13 @@ import org.apiguardian.api.API;
  * {@link java.util.stream.LongStream LongStream},
  * {@link java.util.stream.IntStream IntStream},
  * {@link java.util.Collection Collection},
- * {@link java.util.Iterator Iterator},
- * {@link Iterable}, an array of objects, or an array of primitives. Each set of
- * "arguments" within the "stream" can be supplied as an instance of
- * {@link Arguments}, an array of objects (e.g., {@code Object[]},
- * {@code String[]}, etc.), or a single <em>value</em> if the parameterized test
- * method accepts a single argument.
+ * {@link java.util.Iterator Iterator}, an array of objects or primitives, or
+ * any type that provides an {@link java.util.Iterator Iterator}-returning
+ * {@code iterator()} method (such as, for example, a
+ * {@code kotlin.sequences.Sequence}). Each set of "arguments" within the
+ * "stream" can be supplied as an instance of {@link Arguments}, an array of
+ * objects (e.g., {@code Object[]}, {@code String[]}, etc.), or a single
+ * <em>value</em> if the parameterized test method accepts a single argument.
  *
  * <p>If the return type is {@code Stream} or
  * one of the primitive streams, JUnit will properly close it by calling

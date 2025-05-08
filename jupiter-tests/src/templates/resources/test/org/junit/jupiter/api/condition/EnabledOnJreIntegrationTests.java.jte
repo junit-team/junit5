@@ -49,7 +49,7 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledOnJre(versions = 7)
+	@EnabledOnJre(value = JAVA_17, versions = { 21, 7 })
 	void version7() {
 	}
 
