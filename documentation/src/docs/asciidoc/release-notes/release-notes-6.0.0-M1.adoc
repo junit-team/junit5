@@ -65,6 +65,7 @@ repository on GitHub.
 
 * The following deprecated APIs have been removed:
   - `MethodOrderer.Alphanumeric` class
+  - `InvocationInterceptor.interceptDynamicTest(Invocation, ExtensionContext)` method
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
