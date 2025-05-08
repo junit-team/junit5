@@ -614,27 +614,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible or nonexistent field.
-	 *
-	 * <p>If the field does not exist or the value of the field is {@code null},
-	 * an empty {@link Optional} will be returned.
-	 *
-	 * @param clazz the class where the field is declared; never {@code null}
-	 * @param fieldName the name of the field; never {@code null} or empty
-	 * @param instance the instance from where the value is to be read; may
-	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Field, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Class, String, Object)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
-		return tryToReadFieldValue(clazz, fieldName, instance).toOptional();
-	}
-
-	/**
 	 * Try to read the value of a potentially inaccessible or nonexistent field.
 	 *
 	 * <p>If the field does not exist or an exception occurs while reading it, a
@@ -660,25 +639,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of the supplied static field, making it accessible if
-	 * necessary and {@linkplain ExceptionUtils#throwAsUncheckedException masking}
-	 * any checked exception as an unchecked exception.
-	 *
-	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
-	 * will be returned.
-	 *
-	 * @param field the field to read; never {@code null}
-	 * @see #readFieldValue(Field, Object)
-	 * @see #readFieldValue(Class, String, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Field)} instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Object> readFieldValue(Field field) {
-		return tryToReadFieldValue(field).toOptional();
-	}
-
-	/**
 	 * Try to read the value of a potentially inaccessible static field.
 	 *
 	 * <p>If an exception occurs while reading the field, a failed {@link Try}
@@ -692,28 +652,6 @@ public final class ReflectionUtils {
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field) {
 		return tryToReadFieldValue(field, null);
-	}
-
-	/**
-	 * Read the value of the supplied field, making it accessible if necessary
-	 * and {@linkplain ExceptionUtils#throwAsUncheckedException masking} any
-	 * checked exception as an unchecked exception.
-	 *
-	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
-	 * will be returned.
-	 *
-	 * @param field the field to read; never {@code null}
-	 * @param instance the instance from which the value is to be read; may
-	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Class, String, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Field, Object)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Object> readFieldValue(Field field, Object instance) {
-		return tryToReadFieldValue(field, instance).toOptional();
 	}
 
 	/**

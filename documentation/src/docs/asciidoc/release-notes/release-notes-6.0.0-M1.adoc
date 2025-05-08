@@ -47,6 +47,7 @@ repository on GitHub.
   `--h` (rather than `-h`) or `-help` (rather than `--help`).
 * The following deprecated APIs have been removed:
   - `ReflectionSupport.loadClass(String)` method
+  - `ReflectionUtils.readFieldValue(...)` methods
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
