@@ -24,5 +24,5 @@ class BooleansSourceTests {
 	void shouldRunWithTrueAndFalse(boolean flag) {
 		assertTrue(flag || !flag);
 	}
-	
+
 }
