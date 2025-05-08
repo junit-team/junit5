@@ -1272,9 +1272,8 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   method, respectively. This allows them to be viewed in IDEs or included in reports.
 +
 In JUnit Jupiter you should use `TestReporter` where you used to print information to
-`stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will output all
-reported entries to `stdout`. In addition, some IDEs print report entries to `stdout` or
-display them in the user interface for test results.
+`stdout` or `stderr` in JUnit 4. Some IDEs print report entries to `stdout` or display
+them in the user interface for test results.
 
 [source,java,indent=0]
 ----

@@ -106,7 +106,6 @@ class ArchUnitTests {
 				.that(are(not(name("org.junit.platform.console.ConsoleLauncher")))) //
 				.that(are(not(name("org.junit.platform.console.tasks.ConsoleTestExecutor")))) //
 				.that(are(not(name("org.junit.platform.launcher.core.StreamInterceptor")))) //
-				.that(are(not(name("org.junit.platform.runner.JUnitPlatformRunnerListener")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Events")))) //
 				.that(are(not(name("org.junit.platform.testkit.engine.Executions")))) //
 				//The PreInterruptThreadDumpPrinter writes to StdOut by contract to dump threads

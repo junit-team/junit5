@@ -21,6 +21,5 @@ module org.junit.platform.suite.commons {
 	requires transitive org.junit.platform.launcher;
 
 	exports org.junit.platform.suite.commons to
-			org.junit.platform.suite.engine,
-			org.junit.platform.runner;
+			org.junit.platform.suite.engine;
 }

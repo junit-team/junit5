@@ -39,7 +39,6 @@ dependencies {
 	testImplementation(projects.junitPlatformSuiteEngine)
 
 	// --- Things we are testing with ---------------------------------------------
-	testImplementation(projects.junitPlatformRunner)
 	testImplementation(projects.junitPlatformTestkit)
 	testImplementation(testFixtures(projects.junitPlatformCommons))
 	testImplementation(testFixtures(projects.junitPlatformEngine))

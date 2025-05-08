@@ -42,7 +42,6 @@ class HelperTests {
 			"junit-platform-jfr", //
 			"junit-platform-launcher", //
 			"junit-platform-reporting", //
-			"junit-platform-runner", //
 			"junit-platform-suite", //
 			"junit-platform-suite-api", //
 			"junit-platform-suite-commons", //
