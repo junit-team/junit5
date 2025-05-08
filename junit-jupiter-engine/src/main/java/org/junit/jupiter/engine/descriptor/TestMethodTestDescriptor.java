@@ -43,6 +43,7 @@ import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.Reflecti
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestExecutionResult;
@@ -77,18 +78,18 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	private final ReflectiveInterceptorCall<Method, Void> interceptorCall;
 
-	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
+	public TestMethodTestDescriptor(UniqueId uniqueId, Class<?> testClass, MethodAdapter testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, testMethod, enclosingInstanceTypes, configuration);
 		this.interceptorCall = defaultInterceptorCall;
 	}
 
-	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, MethodAdapter testMethod,
 			JupiterConfiguration configuration) {
 		this(uniqueId, displayName, testClass, testMethod, configuration, defaultInterceptorCall);
 	}
 
-	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+	TestMethodTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, MethodAdapter testMethod,
 			JupiterConfiguration configuration, ReflectiveInterceptorCall<Method, Void> interceptorCall) {
 		super(uniqueId, displayName, testClass, testMethod, configuration);
 		this.interceptorCall = interceptorCall;
@@ -139,8 +140,8 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
-			context.getExtensionRegistry(), getTestMethod());
-		registerExtensionsFromExecutableParameters(registry, getTestMethod());
+			context.getExtensionRegistry(), getTestMethod().getMethod());
+		registerExtensionsFromExecutableParameters(registry, getTestMethod().getMethod());
 		return registry;
 	}
 
@@ -216,7 +217,7 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 		throwableCollector.execute(() -> {
 			try {
-				Method testMethod = getTestMethod();
+				MethodAdapter testMethod = getTestMethod();
 				Object instance = extensionContext.getRequiredTestInstance();
 				executableInvoker.invoke(testMethod, instance, extensionContext, context.getExtensionRegistry(),
 					interceptorCall);

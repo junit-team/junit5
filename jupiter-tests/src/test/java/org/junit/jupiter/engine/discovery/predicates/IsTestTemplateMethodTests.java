@@ -13,12 +13,12 @@ package org.junit.jupiter.engine.discovery.predicates;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -37,12 +37,12 @@ class IsTestTemplateMethodTests {
 
 	@Test
 	void testTemplateMethodReturningVoid() {
-		assertThat(isTestTemplateMethod).accepts(method("templateReturningVoid"));
+		assertThat(isTestTemplateMethod).accepts(methodAdapter("templateReturningVoid"));
 	}
 
 	@Test
 	void bogusTestTemplateMethodReturningObject() {
-		var method = method("bogusTemplateReturningObject");
+		var method = methodAdapter("bogusTemplateReturningObject");
 
 		assertThat(isTestTemplateMethod).rejects(method);
 
@@ -50,11 +50,12 @@ class IsTestTemplateMethodTests {
 		assertThat(issue.severity()).isEqualTo(DiscoveryIssue.Severity.WARNING);
 		assertThat(issue.message()).isEqualTo(
 			"@TestTemplate method '%s' must not return a value. It will not be executed.", method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
-	private static Method method(String name) {
-		return ReflectionSupport.findMethod(ClassWithTestTemplateMethods.class, name).orElseThrow();
+	private static MethodAdapter methodAdapter(String name) {
+		return ReflectionSupport.findMethod(ClassWithTestTemplateMethods.class, name).map(
+			MethodAdapter::createDefault).orElseThrow();
 	}
 
 	@SuppressWarnings("unused")

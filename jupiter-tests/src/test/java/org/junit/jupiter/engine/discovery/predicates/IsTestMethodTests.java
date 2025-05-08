@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ModifierSupport;
@@ -39,32 +39,32 @@ import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 class IsTestMethodTests {
 
 	final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
-	final Predicate<Method> isTestMethod = new IsTestMethod(DiscoveryIssueReporter.collecting(discoveryIssues));
+	final Predicate<MethodAdapter> isTestMethod = new IsTestMethod(DiscoveryIssueReporter.collecting(discoveryIssues));
 
 	@Test
 	void publicTestMethod() {
-		Method method = method("publicTestMethod");
+		var method = methodAdapter("publicTestMethod");
 		// Ensure that somebody doesn't accidentally delete the public modifier again.
-		assertTrue(ModifierSupport.isPublic(method));
+		assertTrue(ModifierSupport.isPublic(method.getMethod()));
 		assertThat(isTestMethod).accepts(method);
 	}
 
 	@Test
 	void publicTestMethodWithArgument() {
-		Method method = method("publicTestMethodWithArgument", TestInfo.class);
+		var method = methodAdapter("publicTestMethodWithArgument", TestInfo.class);
 		// Ensure that somebody doesn't accidentally delete the public modifier again.
-		assertTrue(ModifierSupport.isPublic(method));
+		assertTrue(ModifierSupport.isPublic(method.getMethod()));
 		assertThat(isTestMethod).accepts(method);
 	}
 
 	@Test
 	void protectedTestMethod() {
-		assertThat(isTestMethod).accepts(method("protectedTestMethod"));
+		assertThat(isTestMethod).accepts(methodAdapter("protectedTestMethod"));
 	}
 
 	@Test
 	void packageVisibleTestMethod() {
-		assertThat(isTestMethod).accepts(method("packageVisibleTestMethod"));
+		assertThat(isTestMethod).accepts(methodAdapter("packageVisibleTestMethod"));
 	}
 
 	@Test
@@ -77,7 +77,7 @@ class IsTestMethodTests {
 		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
 		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be abstract. It will not be executed.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class IsTestMethodTests {
 
 	@Test
 	void bogusStaticTestMethod() {
-		var method = method("bogusStaticTestMethod");
+		var method = methodAdapter("bogusStaticTestMethod");
 
 		assertThat(isTestMethod).rejects(method);
 
@@ -106,12 +106,12 @@ class IsTestMethodTests {
 		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
 		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be static. It will not be executed.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
 	@Test
 	void bogusPrivateTestMethod() {
-		var method = method("bogusPrivateTestMethod");
+		var method = methodAdapter("bogusPrivateTestMethod");
 
 		assertThat(isTestMethod).rejects(method);
 
@@ -119,14 +119,14 @@ class IsTestMethodTests {
 		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
 		assertThat(issue.message()).isEqualTo("@Test method '%s' must not be private. It will not be executed.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = { "bogusTestMethodReturningObject", "bogusTestMethodReturningVoidReference",
 			"bogusTestMethodReturningPrimitive" })
 	void bogusNonVoidTestMethods(String methodName) {
-		var method = method(methodName);
+		var method = methodAdapter(methodName);
 
 		assertThat(isTestMethod).rejects(method);
 
@@ -134,12 +134,12 @@ class IsTestMethodTests {
 		assertThat(issue.severity()).isEqualTo(Severity.WARNING);
 		assertThat(issue.message()).isEqualTo("@Test method '%s' must not return a value. It will not be executed.",
 			method.toGenericString());
-		assertThat(issue.source()).contains(MethodSource.from(method));
+		assertThat(issue.source()).contains(MethodSource.from(method.getMethod()));
 	}
 
 	@Test
 	void bogusStaticPrivateNonVoidTestMethod() {
-		var method = method("bogusStaticPrivateNonVoidTestMethod");
+		var method = methodAdapter("bogusStaticPrivateNonVoidTestMethod");
 
 		assertThat(isTestMethod).rejects(method);
 
@@ -154,12 +154,14 @@ class IsTestMethodTests {
 					method.toGenericString());
 	}
 
-	private static Method method(String name, Class<?>... parameterTypes) {
-		return ReflectionSupport.findMethod(ClassWithTestMethods.class, name, parameterTypes).orElseThrow();
+	private static MethodAdapter methodAdapter(String name, Class<?>... parameterTypes) {
+		return ReflectionSupport.findMethod(ClassWithTestMethods.class, name, parameterTypes).map(
+			MethodAdapter::createDefault).orElseThrow();
 	}
 
-	private Method abstractMethod(String name) {
-		return ReflectionSupport.findMethod(AbstractClassWithAbstractTestMethod.class, name).orElseThrow();
+	private MethodAdapter abstractMethod(String name) {
+		return ReflectionSupport.findMethod(AbstractClassWithAbstractTestMethod.class, name).map(
+			MethodAdapter::createDefault).orElseThrow();
 	}
 
 	@SuppressWarnings({ "JUnitMalformedDeclaration", "unused" })

@@ -27,9 +27,12 @@ module org.junit.jupiter.engine {
 	// exports org.junit.jupiter.engine; // Constants...
 
 	uses org.junit.jupiter.api.extension.Extension;
+	uses org.junit.jupiter.engine.support.MethodAdapterFactory;
 
 	provides org.junit.platform.engine.TestEngine
 			with org.junit.jupiter.engine.JupiterTestEngine;
 
 	opens org.junit.jupiter.engine.extension to org.junit.platform.commons;
+
+	exports org.junit.jupiter.engine.support to org.junit.jupiter.kotlin;
 }

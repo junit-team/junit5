@@ -18,7 +18,6 @@ import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBefor
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeEachMethods;
 import static org.junit.platform.commons.util.FunctionUtils.where;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +28,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -46,7 +46,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findNonVoidBeforeAllMethodsWithStandardLifecycle() throws Exception {
-		var methods = findBeforeAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, issueReporter);
+		var methods = findBeforeAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("cc"));
@@ -67,7 +68,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findNonVoidAfterAllMethodsWithStandardLifecycle() throws Exception {
-		var methods = findAfterAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, issueReporter);
+		var methods = findAfterAllMethods(TestCaseWithInvalidLifecycleMethods.class, true, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("dd"));
@@ -88,7 +90,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findNonVoidBeforeEachMethodsWithStandardLifecycle() throws Exception {
-		var methods = findBeforeEachMethods(TestCaseWithInvalidLifecycleMethods.class, issueReporter);
+		var methods = findBeforeEachMethods(TestCaseWithInvalidLifecycleMethods.class, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("aa"));
@@ -105,7 +108,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findNonVoidAfterEachMethodsWithStandardLifecycle() throws Exception {
-		var methods = findAfterEachMethods(TestCaseWithInvalidLifecycleMethods.class, issueReporter);
+		var methods = findAfterEachMethods(TestCaseWithInvalidLifecycleMethods.class, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		var methodSource = MethodSource.from(TestCaseWithInvalidLifecycleMethods.class.getDeclaredMethod("bb"));
@@ -122,7 +126,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findBeforeEachMethodsWithStandardLifecycle() {
-		List<Method> methods = findBeforeEachMethods(TestCaseWithStandardLifecycle.class, issueReporter);
+		var methods = findBeforeEachMethods(TestCaseWithStandardLifecycle.class, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactlyInAnyOrder("nine", "ten");
 		assertThat(discoveryIssues).isEmpty();
@@ -130,14 +135,16 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findAfterEachMethodsWithStandardLifecycle() {
-		List<Method> methods = findAfterEachMethods(TestCaseWithStandardLifecycle.class, issueReporter);
+		var methods = findAfterEachMethods(TestCaseWithStandardLifecycle.class, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactlyInAnyOrder("eleven", "twelve");
 	}
 
 	@Test
 	void findBeforeAllMethodsWithStandardLifecycleAndWithoutRequiringStatic() {
-		List<Method> methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, false, issueReporter);
+		var methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, false, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactly("one");
 		assertThat(discoveryIssues).isEmpty();
@@ -145,7 +152,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findBeforeAllMethodsWithStandardLifecycleAndRequiringStatic() throws Exception {
-		var methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, true, issueReporter);
+		var methods = findBeforeAllMethods(TestCaseWithStandardLifecycle.class, true, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		var expectedIssue = DiscoveryIssue.builder(Severity.ERROR,
@@ -157,7 +165,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findBeforeAllMethodsWithLifeCyclePerClassAndRequiringStatic() {
-		List<Method> methods = findBeforeAllMethods(TestCaseWithLifecyclePerClass.class, false, issueReporter);
+		var methods = findBeforeAllMethods(TestCaseWithLifecyclePerClass.class, false, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactlyInAnyOrder("three", "four");
 		assertThat(discoveryIssues).isEmpty();
@@ -165,7 +174,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findAfterAllMethodsWithStandardLifecycleAndWithoutRequiringStatic() {
-		List<Method> methods = findAfterAllMethods(TestCaseWithStandardLifecycle.class, false, issueReporter);
+		var methods = findAfterAllMethods(TestCaseWithStandardLifecycle.class, false, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactlyInAnyOrder("five", "six");
 		assertThat(discoveryIssues).isEmpty();
@@ -173,7 +183,8 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findAfterAllMethodsWithStandardLifecycleAndRequiringStatic() {
-		var methods = findAfterAllMethods(TestCaseWithStandardLifecycle.class, true, issueReporter);
+		var methods = findAfterAllMethods(TestCaseWithStandardLifecycle.class, true, issueReporter,
+			MethodAdapter::createDefault);
 		assertThat(methods).isEmpty();
 
 		assertThat(discoveryIssues) //
@@ -183,13 +194,14 @@ class LifecycleMethodUtilsTests {
 
 	@Test
 	void findAfterAllMethodsWithLifeCyclePerClassAndRequiringStatic() {
-		List<Method> methods = findAfterAllMethods(TestCaseWithLifecyclePerClass.class, false, issueReporter);
+		var methods = findAfterAllMethods(TestCaseWithLifecyclePerClass.class, false, issueReporter,
+			MethodAdapter::createDefault);
 
 		assertThat(namesOf(methods)).containsExactlyInAnyOrder("seven", "eight");
 	}
 
-	private static List<String> namesOf(List<Method> methods) {
-		return methods.stream().map(Method::getName).toList();
+	private static List<String> namesOf(List<MethodAdapter> methods) {
+		return methods.stream().map(MethodAdapter::getName).toList();
 	}
 
 }

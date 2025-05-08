@@ -24,6 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -195,7 +196,15 @@ public interface DisplayNameGenerator {
 	 */
 	static String parameterTypesAsString(Method method) {
 		Preconditions.notNull(method, "Method must not be null");
-		return '(' + ClassUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()) + ')';
+		if (method.getParameterCount() == 0) {
+			return "()";
+		}
+		var parameterTypes = method.getParameterTypes();
+		if (parameterTypes[parameterTypes.length - 1].getName().equals("kotlin.coroutines.Continuation")) {
+			// Kotlin suspend functions have a Continuation parameter at the end that should not be included
+			parameterTypes = Arrays.copyOf(parameterTypes, parameterTypes.length - 1);
+		}
+		return '(' + ClassUtils.nullSafeToString(Class::getSimpleName, parameterTypes) + ')';
 	}
 
 	/**
@@ -226,6 +235,7 @@ public interface DisplayNameGenerator {
 		@Override
 		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
 				Method testMethod) {
+
 			return testMethod.getName() + parameterTypesAsString(testMethod);
 		}
 	}
@@ -252,14 +262,11 @@ public interface DisplayNameGenerator {
 		public String generateDisplayNameForMethod(List<Class<?>> enclosingInstanceTypes, Class<?> testClass,
 				Method testMethod) {
 			String displayName = testMethod.getName();
-			if (hasParameters(testMethod)) {
-				displayName += ' ' + parameterTypesAsString(testMethod);
+			var parameters = parameterTypesAsString(testMethod);
+			if ("()".equals(parameters)) {
+				return displayName;
 			}
-			return displayName;
-		}
-
-		private static boolean hasParameters(Method method) {
-			return method.getParameterCount() > 0;
+			return displayName + ' ' + parameters;
 		}
 
 	}

@@ -35,6 +35,7 @@ class ClasspathAlignmentChecker {
 	static final List<String> WELL_KNOWN_PACKAGES = unmodifiableList(Arrays.asList( //
 		"org.junit.jupiter.api", //
 		"org.junit.jupiter.engine", //
+		"org.junit.jupiter.kotlin", //
 		"org.junit.jupiter.migrationsupport", //
 		"org.junit.jupiter.params", //
 		"org.junit.platform.commons", //

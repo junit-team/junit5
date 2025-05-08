@@ -30,6 +30,7 @@ import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
 /**
@@ -88,4 +89,6 @@ public interface JupiterConfiguration {
 	ExtensionContextScope getDefaultTestInstantiationExtensionContextScope();
 
 	OutputDirectoryProvider getOutputDirectoryProvider();
+
+	MethodAdapterFactory getMethodAdapterFactory();
 }

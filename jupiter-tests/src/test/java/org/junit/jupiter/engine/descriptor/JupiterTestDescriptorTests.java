@@ -19,7 +19,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptorTests.StaticTestCase.StaticTestCaseLevel2;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
 import org.junit.platform.engine.UniqueId;
@@ -58,6 +58,7 @@ class JupiterTestDescriptorTests {
 	void setUp() {
 		when(configuration.getDefaultDisplayNameGenerator()).thenReturn(new DisplayNameGenerator.Standard());
 		when(configuration.getDefaultExecutionMode()).thenReturn(ExecutionMode.SAME_THREAD);
+		when(configuration.getMethodAdapterFactory()).thenReturn(MethodAdapter::createDefault);
 	}
 
 	@Test
@@ -112,7 +113,7 @@ class JupiterTestDescriptorTests {
 	@Test
 	void constructFromMethod() throws Exception {
 		Class<?> testClass = TestCase.class;
-		Method testMethod = testClass.getDeclaredMethod("test");
+		var testMethod = MethodAdapter.createDefault(testClass.getDeclaredMethod("test"));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, testClass, testMethod, List::of,
 			configuration);
 
@@ -125,7 +126,7 @@ class JupiterTestDescriptorTests {
 	@Test
 	void constructFromMethodWithAnnotations() throws Exception {
 		JupiterTestDescriptor classDescriptor = new ClassTestDescriptor(uniqueId, TestCase.class, configuration);
-		Method testMethod = TestCase.class.getDeclaredMethod("foo");
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("foo"));
 		TestMethodTestDescriptor methodDescriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 		classDescriptor.addChild(methodDescriptor);
@@ -141,7 +142,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithCustomTestAnnotation() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("customTestAnnotation");
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("customTestAnnotation"));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -153,7 +154,8 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithParameters() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class);
+		var testMethod = MethodAdapter.createDefault(
+			TestCase.class.getDeclaredMethod("test", String.class, BigDecimal.class));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -164,7 +166,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithPrimitiveArrayParameter() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("test", int[].class);
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("test", int[].class));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -175,7 +177,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithObjectArrayParameter() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("test", String[].class);
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("test", String[].class));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -186,7 +188,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithMultidimensionalPrimitiveArrayParameter() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("test", int[][][][][].class);
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("test", int[][][][][].class));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -197,7 +199,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromMethodWithMultidimensionalObjectArrayParameter() throws Exception {
-		Method testMethod = TestCase.class.getDeclaredMethod("test", String[][][][][].class);
+		var testMethod = MethodAdapter.createDefault(TestCase.class.getDeclaredMethod("test", String[][][][][].class));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, TestCase.class, testMethod,
 			List::of, configuration);
 
@@ -208,7 +210,7 @@ class JupiterTestDescriptorTests {
 
 	@Test
 	void constructFromInheritedMethod() throws Exception {
-		Method testMethod = ConcreteTestCase.class.getMethod("theTest");
+		var testMethod = MethodAdapter.createDefault(ConcreteTestCase.class.getMethod("theTest"));
 		TestMethodTestDescriptor descriptor = new TestMethodTestDescriptor(uniqueId, ConcreteTestCase.class, testMethod,
 			List::of, configuration);
 

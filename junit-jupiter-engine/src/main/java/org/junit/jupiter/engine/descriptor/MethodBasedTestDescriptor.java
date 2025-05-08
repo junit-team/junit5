@@ -16,7 +16,6 @@ import static org.junit.jupiter.engine.descriptor.DisplayNameUtils.determineDisp
 import static org.junit.jupiter.engine.descriptor.ResourceLockAware.enclosingInstanceTypesDependentResourceLocksProviderEvaluator;
 import static org.junit.platform.commons.util.CollectionUtils.forEachInReverseOrder;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -33,6 +32,7 @@ import org.junit.jupiter.api.extension.TestWatcher;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -60,19 +60,20 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 
 	private final MethodInfo methodInfo;
 
-	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method testMethod,
+	MethodBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, MethodAdapter testMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
-		this(uniqueId, determineDisplayNameForMethod(enclosingInstanceTypes, testClass, testMethod, configuration),
+		this(uniqueId,
+			determineDisplayNameForMethod(enclosingInstanceTypes, testClass, testMethod.getMethod(), configuration),
 			testClass, testMethod, configuration);
 	}
 
-	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method testMethod,
+	MethodBasedTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, MethodAdapter testMethod,
 			JupiterConfiguration configuration) {
-		super(uniqueId, displayName, MethodSource.from(testClass, testMethod), configuration);
+		super(uniqueId, displayName, MethodSource.from(testClass, testMethod.getMethod()), configuration);
 		this.methodInfo = new MethodInfo(testClass, testMethod);
 	}
 
-	public final Method getTestMethod() {
+	public final MethodAdapter getTestMethod() {
 		return this.methodInfo.testMethod;
 	}
 
@@ -113,10 +114,10 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public void validate(DiscoveryIssueReporter reporter) {
 		Validatable.reportAndClear(this.methodInfo.discoveryIssues, reporter);
-		DisplayNameUtils.validateAnnotation(getTestMethod(), //
+		DisplayNameUtils.validateAnnotation(getTestMethod().getMethod(), //
 			() -> String.format("method '%s'", getTestMethod().toGenericString()), //
 			// Use _declaring_ class here because that's where the `@DisplayName` annotation is declared
-			() -> MethodSource.from(getTestMethod()), //
+			() -> MethodSource.from(getTestMethod().getMethod()), //
 			reporter);
 	}
 
@@ -125,11 +126,11 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public ExclusiveResourceCollector getExclusiveResourceCollector() {
 		// There's no need to cache this as this method should only be called once
-		ExclusiveResourceCollector collector = ExclusiveResourceCollector.from(getTestMethod());
+		ExclusiveResourceCollector collector = ExclusiveResourceCollector.from(getTestMethod().getMethod());
 
 		if (collector.getStaticResourcesFor(CHILDREN).findAny().isPresent()) {
 			String message = "'ResourceLockTarget.CHILDREN' is not supported for methods." + //
-					" Invalid method: " + getTestMethod();
+					" Invalid method: " + getTestMethod().toGenericString();
 			throw new JUnitException(message);
 		}
 
@@ -140,12 +141,12 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	public Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> getResourceLocksProviderEvaluator() {
 		return enclosingInstanceTypesDependentResourceLocksProviderEvaluator(this::getEnclosingTestClasses,
 			(provider, enclosingInstanceTypes) -> provider.provideForMethod(enclosingInstanceTypes, getTestClass(),
-				getTestMethod()));
+				getTestMethod().getMethod()));
 	}
 
 	@Override
 	protected Optional<ExecutionMode> getExplicitExecutionMode() {
-		return getExecutionModeFromAnnotation(getTestMethod());
+		return getExecutionModeFromAnnotation(getTestMethod().getMethod());
 	}
 
 	/**
@@ -198,20 +199,20 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 		private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
 
 		private final Class<?> testClass;
-		private final Method testMethod;
+		private final MethodAdapter testMethod;
 
 		/**
 		 * Set of method-level tags; does not contain tags from parent.
 		 */
 		private final Set<TestTag> tags;
 
-		MethodInfo(Class<?> testClass, Method testMethod) {
+		MethodInfo(Class<?> testClass, MethodAdapter testMethod) {
 			this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 			this.testMethod = testMethod;
-			this.tags = getTags(testMethod, //
+			this.tags = getTags(testMethod.getMethod(), //
 				() -> String.format("method '%s'", testMethod.toGenericString()), //
 				// Use _declaring_ class here because that's where the `@Tag` annotation is declared
-				() -> MethodSource.from(testMethod.getDeclaringClass(), testMethod), //
+				() -> MethodSource.from(testMethod.getMethod().getDeclaringClass(), testMethod.getMethod()), //
 				discoveryIssues::add);
 		}
 	}

@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.descriptor;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.ExtensionUtils.populateNewExtensionRegistryFromExtendWithAnnotation;
 
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -28,6 +27,7 @@ import org.junit.jupiter.api.extension.TestTemplateInvocationContextProvider;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 
@@ -43,14 +43,15 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	public static final String SEGMENT_TYPE = "test-template";
 	private final DynamicDescendantFilter dynamicDescendantFilter;
 
-	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
+	public TestTemplateTestDescriptor(UniqueId uniqueId, Class<?> testClass, MethodAdapter templateMethod,
 			Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration) {
 		super(uniqueId, testClass, templateMethod, enclosingInstanceTypes, configuration);
 		this.dynamicDescendantFilter = new DynamicDescendantFilter();
 	}
 
-	private TestTemplateTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass, Method templateMethod,
-			JupiterConfiguration configuration, DynamicDescendantFilter dynamicDescendantFilter) {
+	private TestTemplateTestDescriptor(UniqueId uniqueId, String displayName, Class<?> testClass,
+			MethodAdapter templateMethod, JupiterConfiguration configuration,
+			DynamicDescendantFilter dynamicDescendantFilter) {
 		super(uniqueId, displayName, testClass, templateMethod, configuration);
 		this.dynamicDescendantFilter = dynamicDescendantFilter;
 	}
@@ -88,7 +89,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = populateNewExtensionRegistryFromExtendWithAnnotation(
-			context.getExtensionRegistry(), getTestMethod());
+			context.getExtensionRegistry(), getTestMethod().getMethod());
 
 		// The test instance should be properly maintained by the enclosing class's ExtensionContext.
 		TestInstances testInstances = context.getExtensionContext().getTestInstances().orElse(null);

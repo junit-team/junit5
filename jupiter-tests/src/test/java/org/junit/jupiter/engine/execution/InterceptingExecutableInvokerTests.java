@@ -15,6 +15,7 @@ import java.lang.reflect.Executable;
 import java.util.Optional;
 
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
+import org.junit.jupiter.engine.support.MethodAdapter;
 
 /**
  * Unit tests for {@link InterceptingExecutableInvoker}.
@@ -25,8 +26,8 @@ class InterceptingExecutableInvokerTests extends AbstractExecutableInvokerTests 
 
 	@Override
 	void invokeMethod() {
-		newInvoker().invoke(this.method, this.instance, this.extensionContext, this.extensionRegistry,
-			passthroughInterceptor());
+		newInvoker().invoke(MethodAdapter.createDefault(this.method), this.instance, this.extensionContext,
+			this.extensionRegistry, passthroughInterceptor());
 	}
 
 	@Override

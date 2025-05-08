@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.discovery.predicates;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
@@ -23,10 +22,12 @@ import java.util.stream.Stream;
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
 import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition;
 
 /**
  * Test if a method is a JUnit Jupiter {@link TestFactory @TestFactory} method.
@@ -47,13 +48,13 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 		super(TestFactory.class, IsTestFactoryMethod::hasCompatibleReturnType, issueReporter);
 	}
 
-	private static DiscoveryIssueReporter.Condition<Method> hasCompatibleReturnType(
-			Class<? extends Annotation> annotationType, DiscoveryIssueReporter issueReporter) {
+	private static Condition<MethodAdapter> hasCompatibleReturnType(Class<? extends Annotation> annotationType,
+			DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(method -> isCompatible(method, issueReporter),
 			method -> createIssue(annotationType, method, EXPECTED_RETURN_TYPE_MESSAGE));
 	}
 
-	private static boolean isCompatible(Method method, DiscoveryIssueReporter issueReporter) {
+	private static boolean isCompatible(MethodAdapter method, DiscoveryIssueReporter issueReporter) {
 		Class<?> returnType = method.getReturnType();
 		if (DynamicNode.class.isAssignableFrom(returnType) || DynamicNode[].class.isAssignableFrom(returnType)) {
 			return true;
@@ -68,7 +69,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 		return validContainerType && isCompatibleContainerType(method, issueReporter);
 	}
 
-	private static boolean isCompatibleContainerType(Method method, DiscoveryIssueReporter issueReporter) {
+	private static boolean isCompatibleContainerType(MethodAdapter method, DiscoveryIssueReporter issueReporter) {
 		Type genericReturnType = method.getGenericReturnType();
 
 		if (genericReturnType instanceof ParameterizedType) {
@@ -102,13 +103,13 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 		return true;
 	}
 
-	private static DiscoveryIssue.Builder createTooGenericReturnTypeIssue(Method method) {
+	private static DiscoveryIssue.Builder createTooGenericReturnTypeIssue(MethodAdapter method) {
 		String message = String.format(
 			"The declared return type of @TestFactory method '%s' does not support static validation. It "
 					+ EXPECTED_RETURN_TYPE_MESSAGE + ".",
 			method.toGenericString());
 		return DiscoveryIssue.builder(Severity.INFO, message) //
-				.source(MethodSource.from(method));
+				.source(MethodSource.from(method.getMethod()));
 	}
 
 }

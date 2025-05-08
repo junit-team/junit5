@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -31,10 +32,13 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 
 	private final ExtensionContext extensionContext;
 	private final ExtensionRegistry extensionRegistry;
+	private final MethodAdapterFactory methodAdapterFactory;
 
-	public DefaultExecutableInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
+	public DefaultExecutableInvoker(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry,
+			MethodAdapterFactory methodAdapterFactory) {
 		this.extensionContext = extensionContext;
 		this.extensionRegistry = extensionRegistry;
+		this.methodAdapterFactory = methodAdapterFactory;
 	}
 
 	@Override
@@ -46,9 +50,10 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 
 	@Override
 	public Object invoke(Method method, Object target) {
-		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
+		var adapter = methodAdapterFactory.adapt(method);
+		Object[] arguments = resolveParameters(adapter, Optional.ofNullable(target), extensionContext,
 			extensionRegistry);
-		return ReflectionUtils.invokeMethod(method, target, arguments);
+		return adapter.invoke(target, arguments);
 	}
 
 }

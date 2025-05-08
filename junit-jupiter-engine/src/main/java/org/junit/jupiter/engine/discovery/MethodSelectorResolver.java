@@ -40,6 +40,7 @@ import org.junit.jupiter.engine.discovery.predicates.IsTestFactoryMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestMethod;
 import org.junit.jupiter.engine.discovery.predicates.IsTestTemplateMethod;
 import org.junit.jupiter.engine.discovery.predicates.TestClassPredicates;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -71,7 +72,8 @@ class MethodSelectorResolver implements SelectorResolver {
 		this.configuration = configuration;
 		this.issueReporter = issueReporter;
 		this.methodTypes = MethodType.allPossibilities(issueReporter);
-		this.testClassPredicate = new TestClassPredicates(issueReporter).looksLikeNestedOrStandaloneTestClass;
+		this.testClassPredicate = new TestClassPredicates(issueReporter,
+			configuration.getMethodAdapterFactory()).looksLikeNestedOrStandaloneTestClass;
 	}
 
 	@Override
@@ -92,9 +94,10 @@ class MethodSelectorResolver implements SelectorResolver {
 			return unresolved();
 		}
 		Method method = methodSupplier.get();
+		var adapter = this.configuration.getMethodAdapterFactory().adapt(method);
 		// @formatter:off
 		Set<Match> matches = methodTypes.stream()
-				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))
+				.map(methodType -> methodType.resolve(enclosingClasses, testClass, adapter, context, configuration))
 				.filter(Optional::isPresent)
 				.map(Optional::get)
 				.map(testDescriptor -> matchFactory.apply(testDescriptor, expansionCallback(testDescriptor)))
@@ -179,12 +182,12 @@ class MethodSelectorResolver implements SelectorResolver {
 			);
 		}
 
-		private final Predicate<Method> methodPredicate;
+		private final Predicate<MethodAdapter> methodPredicate;
 		private final TestDescriptorFactory testDescriptorFactory;
 		private final String segmentType;
 		private final Set<String> dynamicDescendantSegmentTypes;
 
-		private MethodType(Predicate<Method> methodPredicate, TestDescriptorFactory testDescriptorFactory,
+		private MethodType(Predicate<MethodAdapter> methodPredicate, TestDescriptorFactory testDescriptorFactory,
 				String segmentType, String... dynamicDescendantSegmentTypes) {
 			this.methodPredicate = methodPredicate;
 			this.testDescriptorFactory = testDescriptorFactory;
@@ -192,7 +195,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			this.dynamicDescendantSegmentTypes = new LinkedHashSet<>(Arrays.asList(dynamicDescendantSegmentTypes));
 		}
 
-		Optional<TestDescriptor> resolve(List<Class<?>> enclosingClasses, Class<?> testClass, Method method,
+		Optional<TestDescriptor> resolve(List<Class<?>> enclosingClasses, Class<?> testClass, MethodAdapter method,
 				Context context, JupiterConfiguration configuration) {
 			if (!methodPredicate.test(method)) {
 				return Optional.empty();
@@ -217,6 +220,7 @@ class MethodSelectorResolver implements SelectorResolver {
 					Class<?> testClass = ((TestClassAware) parent).getTestClass();
 					// @formatter:off
 					return methodFinder.findMethod(methodSpecPart, testClass)
+							.map(configuration.getMethodAdapterFactory()::adapt)
 							.filter(methodPredicate)
 							.map(method -> createTestDescriptor(parent, testClass, method, configuration));
 					// @formatter:on
@@ -228,21 +232,21 @@ class MethodSelectorResolver implements SelectorResolver {
 			return Optional.empty();
 		}
 
-		private TestDescriptor createTestDescriptor(TestDescriptor parent, Class<?> testClass, Method method,
+		private TestDescriptor createTestDescriptor(TestDescriptor parent, Class<?> testClass, MethodAdapter method,
 				JupiterConfiguration configuration) {
 			UniqueId uniqueId = createUniqueId(method, parent);
 			return testDescriptorFactory.create(uniqueId, testClass, method,
 				((TestClassAware) parent)::getEnclosingTestClasses, configuration);
 		}
 
-		private UniqueId createUniqueId(Method method, TestDescriptor parent) {
+		private UniqueId createUniqueId(MethodAdapter method, TestDescriptor parent) {
 			String methodId = String.format("%s(%s)", method.getName(),
 				ClassUtils.nullSafeToString(method.getParameterTypes()));
 			return parent.getUniqueId().append(segmentType, methodId);
 		}
 
 		interface TestDescriptorFactory {
-			TestDescriptor create(UniqueId uniqueId, Class<?> testClass, Method method,
+			TestDescriptor create(UniqueId uniqueId, Class<?> testClass, MethodAdapter methodAdapter,
 					Supplier<List<Class<?>>> enclosingInstanceTypes, JupiterConfiguration configuration);
 		}
 

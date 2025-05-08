@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Extension
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 
 /**
@@ -155,5 +156,11 @@ public class CachingJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return delegate.getOutputDirectoryProvider();
+	}
+
+	@Override
+	public MethodAdapterFactory getMethodAdapterFactory() {
+		return (MethodAdapterFactory) cache.computeIfAbsent(MethodAdapterFactory.class.getName(),
+			__ -> delegate.getMethodAdapterFactory());
 	}
 }

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
@@ -34,7 +35,7 @@ public class TestClassPredicatesTests {
 
 	private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
 	private final TestClassPredicates predicates = new TestClassPredicates(
-		DiscoveryIssueReporter.collecting(discoveryIssues));
+		DiscoveryIssueReporter.collecting(discoveryIssues), MethodAdapter::createDefault);
 
 	@Nested
 	class StandaloneTestClasses {

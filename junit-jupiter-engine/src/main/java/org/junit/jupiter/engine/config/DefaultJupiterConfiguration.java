@@ -31,6 +31,8 @@ import org.junit.jupiter.api.extension.TestInstantiationAwareExtension.Extension
 import org.junit.jupiter.api.io.CleanupMode;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.api.parallel.ExecutionMode;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
+import org.junit.jupiter.engine.support.MethodAdapterRegistry;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -189,5 +191,10 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	@Override
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return outputDirectoryProvider;
+	}
+
+	@Override
+	public MethodAdapterFactory getMethodAdapterFactory() {
+		return new MethodAdapterRegistry();
 	}
 }

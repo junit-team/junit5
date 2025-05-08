@@ -10,6 +10,7 @@ plugins {
 
 dependencies {
 	testImplementation(projects.junitJupiter)
+	testImplementation(projects.junitJupiterKotlin)
 	testImplementation(projects.junitJupiterMigrationsupport)
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)

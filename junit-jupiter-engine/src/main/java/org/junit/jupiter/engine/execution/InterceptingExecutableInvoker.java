@@ -25,6 +25,7 @@ import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 
 /**
  * {@code InterceptingExecutableInvoker} encapsulates the invocation of a
@@ -76,7 +77,7 @@ public class InterceptingExecutableInvoker {
 	 * @param interceptorCall the call for intercepting this method invocation
 	 * via all registered {@linkplain InvocationInterceptor interceptors}
 	 */
-	public <T> T invoke(Method method, Object target, ExtensionContext extensionContext,
+	public <T> T invoke(MethodAdapter method, Object target, ExtensionContext extensionContext,
 			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<Method, T> interceptorCall) {
 
 		@SuppressWarnings("unchecked")

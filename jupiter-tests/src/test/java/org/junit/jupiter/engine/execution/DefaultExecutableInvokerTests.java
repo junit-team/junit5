@@ -12,6 +12,8 @@ package org.junit.jupiter.engine.execution;
 
 import java.lang.reflect.Constructor;
 
+import org.junit.jupiter.engine.support.MethodAdapter;
+
 /**
  * Unit tests for {@link DefaultExecutableInvoker}.
  *
@@ -30,7 +32,8 @@ class DefaultExecutableInvokerTests extends AbstractExecutableInvokerTests {
 	}
 
 	private DefaultExecutableInvoker newInvoker() {
-		return new DefaultExecutableInvoker(this.extensionContext, this.extensionRegistry);
+		return new DefaultExecutableInvoker(this.extensionContext, this.extensionRegistry,
+			MethodAdapter::createDefault);
 	}
 
 }

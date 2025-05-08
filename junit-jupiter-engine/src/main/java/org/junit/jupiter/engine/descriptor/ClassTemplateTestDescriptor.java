@@ -87,7 +87,8 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	@Override
 	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
 		boolean requireStatic = this.classInfo.lifecycle == PER_METHOD;
-		validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(getTestClass(), requireStatic, reporter);
+		validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(getTestClass(), requireStatic, reporter,
+			this.configuration.getMethodAdapterFactory());
 	}
 
 	// --- Filterable ----------------------------------------------------------

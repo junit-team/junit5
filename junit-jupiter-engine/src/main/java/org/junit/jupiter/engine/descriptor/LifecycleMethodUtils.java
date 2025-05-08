@@ -28,9 +28,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod;
+import org.junit.jupiter.engine.support.MethodAdapter;
+import org.junit.jupiter.engine.support.MethodAdapterFactory;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
-import org.junit.platform.commons.support.ModifierSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -48,26 +48,28 @@ final class LifecycleMethodUtils {
 		/* no-op */
 	}
 
-	static List<Method> findBeforeAllMethods(Class<?> testClass, boolean requireStatic,
-			DiscoveryIssueReporter issueReporter) {
+	static List<MethodAdapter> findBeforeAllMethods(Class<?> testClass, boolean requireStatic,
+			DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 		return findMethodsAndCheckStatic(testClass, requireStatic, BeforeAll.class, HierarchyTraversalMode.TOP_DOWN,
-			issueReporter);
+			issueReporter, methodAdapterFactory);
 	}
 
-	static List<Method> findAfterAllMethods(Class<?> testClass, boolean requireStatic,
-			DiscoveryIssueReporter issueReporter) {
+	static List<MethodAdapter> findAfterAllMethods(Class<?> testClass, boolean requireStatic,
+			DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 		return findMethodsAndCheckStatic(testClass, requireStatic, AfterAll.class, HierarchyTraversalMode.BOTTOM_UP,
-			issueReporter);
+			issueReporter, methodAdapterFactory);
 	}
 
-	static List<Method> findBeforeEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
-		return findMethodsAndCheckNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN,
-			issueReporter);
+	static List<MethodAdapter> findBeforeEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter,
+			MethodAdapterFactory methodAdapterFactory) {
+		return findMethodsAndCheckNonStatic(testClass, BeforeEach.class, HierarchyTraversalMode.TOP_DOWN, issueReporter,
+			methodAdapterFactory);
 	}
 
-	static List<Method> findAfterEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter) {
-		return findMethodsAndCheckNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP,
-			issueReporter);
+	static List<MethodAdapter> findAfterEachMethods(Class<?> testClass, DiscoveryIssueReporter issueReporter,
+			MethodAdapterFactory methodAdapterFactory) {
+		return findMethodsAndCheckNonStatic(testClass, AfterEach.class, HierarchyTraversalMode.BOTTOM_UP, issueReporter,
+			methodAdapterFactory);
 	}
 
 	static void validateNoClassTemplateInvocationLifecycleMethodsAreDeclared(Class<?> testClass,
@@ -85,9 +87,10 @@ final class LifecycleMethodUtils {
 	}
 
 	static void validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly(Class<?> testClass,
-			boolean requireStatic, DiscoveryIssueReporter issueReporter) {
+			boolean requireStatic, DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 
 		findAllClassTemplateInvocationLifecycleMethods(testClass) //
+				.map(methodAdapterFactory::adapt) //
 				.forEach(isNotPrivateError(issueReporter) //
 						.and(returnsPrimitiveVoid(issueReporter,
 							LifecycleMethodUtils::classTemplateInvocationLifecycleMethodAnnotationName)) //
@@ -108,84 +111,86 @@ final class LifecycleMethodUtils {
 		return allMethods.distinct();
 	}
 
-	private static List<Method> findMethodsAndCheckStatic(Class<?> testClass, boolean requireStatic,
+	private static List<MethodAdapter> findMethodsAndCheckStatic(Class<?> testClass, boolean requireStatic,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
-			DiscoveryIssueReporter issueReporter) {
+			DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 
-		Condition<Method> additionalCondition = requireStatic
+		Condition<MethodAdapter> additionalCondition = requireStatic
 				? isStatic(issueReporter, __ -> annotationType.getSimpleName())
 				: alwaysSatisfied();
 		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
-			additionalCondition);
+			additionalCondition, methodAdapterFactory);
 	}
 
-	private static List<Method> findMethodsAndCheckNonStatic(Class<?> testClass,
+	private static List<MethodAdapter> findMethodsAndCheckNonStatic(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
-			DiscoveryIssueReporter issueReporter) {
+			DiscoveryIssueReporter issueReporter, MethodAdapterFactory methodAdapterFactory) {
 
 		return findMethodsAndCheckVoidReturnType(testClass, annotationType, traversalMode, issueReporter,
-			isNotStatic(issueReporter, __ -> annotationType.getSimpleName()));
+			isNotStatic(issueReporter, __ -> annotationType.getSimpleName()), methodAdapterFactory);
 	}
 
-	private static List<Method> findMethodsAndCheckVoidReturnType(Class<?> testClass,
+	private static List<MethodAdapter> findMethodsAndCheckVoidReturnType(Class<?> testClass,
 			Class<? extends Annotation> annotationType, HierarchyTraversalMode traversalMode,
-			DiscoveryIssueReporter issueReporter, Condition<? super Method> additionalCondition) {
+			DiscoveryIssueReporter issueReporter, Condition<? super MethodAdapter> additionalCondition,
+			MethodAdapterFactory methodAdapterFactory) {
 
 		return findAnnotatedMethods(testClass, annotationType, traversalMode).stream() //
+				.map(methodAdapterFactory::adapt) //
 				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName).toConsumer()) //
 				.filter(returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(
 					additionalCondition).toPredicate()) //
 				.collect(toUnmodifiableList());
 	}
 
-	private static Condition<Method> isStatic(DiscoveryIssueReporter issueReporter,
-			Function<Method, String> annotationNameProvider) {
-		return issueReporter.createReportingCondition(ModifierSupport::isStatic, method -> {
+	private static Condition<MethodAdapter> isStatic(DiscoveryIssueReporter issueReporter,
+			Function<MethodAdapter, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(MethodAdapter::isStatic, method -> {
 			String message = String.format(
 				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
 				annotationNameProvider.apply(method), method.toGenericString());
-			return createIssue(Severity.ERROR, message, method);
+			return createIssue(Severity.ERROR, message, method.getMethod());
 		});
 	}
 
-	private static Condition<Method> isNotStatic(DiscoveryIssueReporter issueReporter,
-			Function<Method, String> annotationNameProvider) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotStatic, method -> {
+	private static Condition<MethodAdapter> isNotStatic(DiscoveryIssueReporter issueReporter,
+			Function<MethodAdapter, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(MethodAdapter::isNotStatic, method -> {
 			String message = String.format("@%s method '%s' must not be static.", annotationNameProvider.apply(method),
 				method.toGenericString());
-			return createIssue(Severity.ERROR, message, method);
+			return createIssue(Severity.ERROR, message, method.getMethod());
 		});
 	}
 
-	private static Condition<Method> isNotPrivateError(DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
+	private static Condition<MethodAdapter> isNotPrivateError(DiscoveryIssueReporter issueReporter) {
+		return issueReporter.createReportingCondition(MethodAdapter::isNotPrivate, method -> {
 			String message = String.format("@%s method '%s' must not be private.",
 				classTemplateInvocationLifecycleMethodAnnotationName(method), method.toGenericString());
-			return createIssue(Severity.ERROR, message, method);
+			return createIssue(Severity.ERROR, message, method.getMethod());
 		});
 	}
 
-	private static Condition<Method> isNotPrivateWarning(DiscoveryIssueReporter issueReporter,
+	private static Condition<MethodAdapter> isNotPrivateWarning(DiscoveryIssueReporter issueReporter,
 			Supplier<String> annotationNameProvider) {
-		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
+		return issueReporter.createReportingCondition(MethodAdapter::isNotPrivate, method -> {
 			String message = String.format(
 				"@%s method '%s' should not be private. This will be disallowed in a future release.",
 				annotationNameProvider.get(), method.toGenericString());
-			return createIssue(Severity.WARNING, message, method);
+			return createIssue(Severity.WARNING, message, method.getMethod());
 		});
 	}
 
-	private static Condition<Method> returnsPrimitiveVoid(DiscoveryIssueReporter issueReporter,
-			Function<Method, String> annotationNameProvider) {
-		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid, method -> {
+	private static Condition<MethodAdapter> returnsPrimitiveVoid(DiscoveryIssueReporter issueReporter,
+			Function<MethodAdapter, String> annotationNameProvider) {
+		return issueReporter.createReportingCondition(method -> method.getReturnType() == void.class, method -> {
 			String message = String.format("@%s method '%s' must not return a value.",
 				annotationNameProvider.apply(method), method.toGenericString());
-			return createIssue(Severity.ERROR, message, method);
+			return createIssue(Severity.ERROR, message, method.getMethod());
 		});
 	}
 
-	private static String classTemplateInvocationLifecycleMethodAnnotationName(Method method) {
-		return findClassTemplateInvocationLifecycleMethodAnnotation(method) //
+	private static String classTemplateInvocationLifecycleMethodAnnotationName(MethodAdapter method) {
+		return findClassTemplateInvocationLifecycleMethodAnnotation(method.getMethod()) //
 				.map(ClassTemplateInvocationLifecycleMethod::lifecycleMethodAnnotation) //
 				.map(Class::getSimpleName) //
 				.orElseGet(ClassTemplateInvocationLifecycleMethod.class::getSimpleName);

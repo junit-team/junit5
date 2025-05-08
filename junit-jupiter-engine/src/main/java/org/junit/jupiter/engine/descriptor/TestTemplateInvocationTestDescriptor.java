@@ -25,6 +25,7 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.MutableExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodAdapter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
@@ -45,7 +46,7 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	private TestTemplateInvocationContext invocationContext;
 	private final int index;
 
-	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
+	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, MethodAdapter templateMethod,
 			TestTemplateInvocationContext invocationContext, int index, JupiterConfiguration configuration) {
 		super(uniqueId, invocationContext.getDisplayName(index), testClass, templateMethod, configuration,
 			interceptorCall);
