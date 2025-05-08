@@ -1,6 +1,7 @@
 @import java.util.List
 @import junitbuild.generator.model.JRE
 
+@param List<JRE> allJres
 @param List<JRE> supportedJres
 @param List<JRE> supportedJresSortedByStringValue
 @param String licenseHeader
@@ -9,11 +10,6 @@ package org.junit.jupiter.api.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-@for(var jre : supportedJresSortedByStringValue)<%--
---%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
-@endfor<%--
---%>import static org.junit.jupiter.api.condition.JRE.OTHER;
-import static org.junit.jupiter.api.condition.JRE.UNDEFINED;
 @for(var jre : supportedJresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
@@ -43,28 +39,29 @@ class EnabledOnJreIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledOnJre(UNDEFINED)
+	@EnabledOnJre(JRE.UNDEFINED)
 	void jreUndefined() {
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledOnJre(value = JAVA_17, versions = { 21, 16 })
-	void version16() {
+	@EnabledOnJre(value = JRE.JAVA_17, versions = { 21, 7 })
+	void version7() {
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	@EnabledOnJre({ //
-@for(var jre : supportedJres)<%--
---%>			JAVA_${jre.getVersion()}, //
+@for(var jre : allJres)<%--
+--%>			JRE.JAVA_${jre.getVersion()}, //
 @endfor<%--
---%>			OTHER //
+--%>			JRE.OTHER //
 	})
 	void enabledOnAllJavaVersions() {
 	}
 @for(var jre : supportedJres)
 	@Test
-	@EnabledOnJre(JAVA_${jre.getVersion()})
+	@EnabledOnJre(JRE.JAVA_${jre.getVersion()})
 	void jre${jre.getVersion()}() {
 		assertTrue(onJava${jre.getVersion()}());
 	}
@@ -77,7 +74,7 @@ class EnabledOnJreIntegrationTests {
 	}
 @endfor
 	@Test
-	@EnabledOnJre(value = OTHER, disabledReason = "Disabled on almost every JRE")
+	@EnabledOnJre(value = JRE.OTHER, disabledReason = "Disabled on almost every JRE")
 	void other() {
 		assertFalse(onKnownVersion());
 	}

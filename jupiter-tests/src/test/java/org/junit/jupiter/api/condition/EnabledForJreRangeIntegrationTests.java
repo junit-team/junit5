@@ -95,8 +95,8 @@ class EnabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 16)
-	void minVersion16() {
+	@EnabledForJreRange(minVersion = 7)
+	void minVersion7() {
 		fail("should result in a configuration exception");
 	}
 

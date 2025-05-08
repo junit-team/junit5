@@ -26,6 +26,9 @@ import org.junit.platform.commons.util.Preconditions;
  */
 abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanExecutionCondition<A> {
 
+	private static final JRE DEFAULT_MINIMUM_JRE = JRE.JAVA_17;
+	private static final JRE DEFAULT_MAXIMUM_JRE = JRE.OTHER;
+
 	private final String annotationName;
 
 	AbstractJreRangeCondition(Class<A> annotationType, Function<A, String> customDisabledReason) {
@@ -58,17 +61,17 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 		// Now that we have checked the basic preconditions, we need to ensure that we are
 		// using valid JRE enum constants.
 		if (!minJreSet) {
-			minJre = JRE.JAVA_17;
+			minJre = DEFAULT_MINIMUM_JRE;
 		}
 		if (!maxJreSet) {
-			maxJre = JRE.OTHER;
+			maxJre = DEFAULT_MAXIMUM_JRE;
 		}
 
 		int min = (minVersionSet ? minVersion : minJre.version());
 		int max = (maxVersionSet ? maxVersion : maxJre.version());
 
 		// Finally, we need to validate the effective minimum and maximum values.
-		Preconditions.condition((min != JRE.MINIMUM_VERSION || max != Integer.MAX_VALUE),
+		Preconditions.condition((min != DEFAULT_MINIMUM_JRE.version() || max != DEFAULT_MAXIMUM_JRE.version()),
 			() -> "You must declare a non-default value for the minimum or maximum value in @" + this.annotationName);
 		Preconditions.condition(min <= max,
 			() -> String.format("@%s's minimum value [%d] must be less than or equal to its maximum value [%d]",

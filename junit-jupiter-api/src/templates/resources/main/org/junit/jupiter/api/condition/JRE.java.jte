@@ -3,7 +3,7 @@
 @import junitbuild.generator.model.JRE
 
 @param int minRuntimeVersion
-@param List<JRE> jres
+@param List<JRE> allJres
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
@@ -22,7 +22,7 @@ import org.apiguardian.api.API;
  * {@linkplain #isCurrentVersion current JRE version}.
  *
  * @since 5.1
-@for(JRE jre : jres)<%--
+@for(JRE jre : allJres)<%--
 --%> * @see #JAVA_${jre.getVersion()}
 @endfor<%--
 --%> * @see #OTHER
@@ -46,7 +46,7 @@ public enum JRE {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.12")
 	UNDEFINED(-1),
-@for(var jre : jres)
+@for(var jre : allJres)
 	/**
 	 * Java ${jre.getVersion()}.
 	@if(jre.getSince() != null || jre.getVersion() < minRuntimeVersion)<%--
@@ -69,7 +69,7 @@ public enum JRE {
 @endfor
 	/**
 	 * A JRE version other than <%--
---%>@for(var jre : ForSupport.of(jres))<%--
+--%>@for(var jre : ForSupport.of(allJres))<%--
 	--%>@if(jre.isLast())or @endif<%--
 	--%>{@link #JAVA_${jre.get().getVersion()}}<%--
 	--%>@if(jre.isLast()).@else,@endif<%--
@@ -85,7 +85,7 @@ public enum JRE {
 
 	static final int UNDEFINED_VERSION = -1;
 
-	static final int MINIMUM_VERSION = ${minRuntimeVersion};
+	static final int MINIMUM_VERSION = ${allJres.getFirst().getVersion()};
 
 	private static final int CURRENT_VERSION = Runtime.version().feature();
 
@@ -148,7 +148,7 @@ public enum JRE {
 	@API(status = STABLE, since = "5.12")
 	public static JRE currentJre() {
 		return switch (CURRENT_VERSION) {<%--
-				--%>@for(var jre : jres)
+				--%>@for(var jre : allJres)
 			case ${jre.getVersion()} -> JAVA_${jre.getVersion()};<%--
 				--%>@endfor
 			default -> OTHER;

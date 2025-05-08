@@ -61,7 +61,7 @@ abstract class GenerateJreRelatedSourceCode : DefaultTask() {
             val supportedJres = jres.filter { it.version >= minRuntimeVersion }
             val params = mapOf(
                 "minRuntimeVersion" to minRuntimeVersion,
-                "jres" to jres,
+                "allJres" to jres,
                 "supportedJres" to supportedJres,
                 "supportedJresSortedByStringValue" to supportedJres.sortedBy { it.version.toString() },
                 "licenseHeader" to licenseHeaderFile.asFile.get().readText()

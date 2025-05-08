@@ -71,13 +71,13 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 	}
 
 	/**
-	 * @see EnabledOnJreIntegrationTests#version16()
+	 * @see EnabledOnJreIntegrationTests#version7()
 	 */
 	@Test
-	void version16() {
+	void version7() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("Version [16] in @EnabledOnJre must be greater than or equal to 17");
+				.withMessage("Version [7] in @EnabledOnJre must be greater than or equal to 8");
 	}
 
 	/**

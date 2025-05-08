@@ -112,13 +112,13 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#minVersion16()
+	 * @see DisabledForJreRangeIntegrationTests#minVersion7()
 	 */
 	@Test
-	void minVersion16() {
+	void minVersion7() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("@DisabledForJreRange's minVersion [16] must be greater than or equal to 17");
+				.withMessage("@DisabledForJreRange's minVersion [7] must be greater than or equal to 8");
 	}
 
 	/**
@@ -128,7 +128,8 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	void maxVersion16() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("@DisabledForJreRange's maxVersion [16] must be greater than or equal to 17");
+				.withMessage(
+					"@DisabledForJreRange's minimum value [17] must be less than or equal to its maximum value [16]");
 	}
 
 	/**
