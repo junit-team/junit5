@@ -28,7 +28,6 @@ module org.junit.platform.engine {
 	exports org.junit.platform.engine.support.config;
 	exports org.junit.platform.engine.support.descriptor;
 	exports org.junit.platform.engine.support.discovery;
-	exports org.junit.platform.engine.support.filter;
 	exports org.junit.platform.engine.support.hierarchical;
 	exports org.junit.platform.engine.support.store;
 
