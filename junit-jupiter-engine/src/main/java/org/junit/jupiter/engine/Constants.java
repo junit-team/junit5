@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.hierarchical.DefaultParallelExecutionConfigurationStrategy.CONFIG_CUSTOM_CLASS_PROPERTY_NAME;
@@ -433,17 +432,6 @@ public final class Constants {
 	 */
 	@API(status = STABLE, since = "5.9")
 	public static final String DEFAULT_TEST_CLASS_ORDER_PROPERTY_NAME = ClassOrderer.DEFAULT_ORDER_PROPERTY_NAME;
-
-	/**
-	 * Property name used to set the scope of temporary directories created via
-	 * the {@link TempDir @TempDir} annotation: {@value}
-	 *
-	 * @see TempDir#SCOPE_PROPERTY_NAME
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "5.8")
-	@SuppressWarnings("deprecation")
-	public static final String TEMP_DIR_SCOPE_PROPERTY_NAME = TempDir.SCOPE_PROPERTY_NAME;
 
 	/**
 	 * Property name used to set the default timeout thread mode.

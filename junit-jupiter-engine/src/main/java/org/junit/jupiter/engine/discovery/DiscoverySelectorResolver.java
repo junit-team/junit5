@@ -57,9 +57,8 @@ public class DiscoverySelectorResolver {
 		return context.getEngineDescriptor().getConfiguration();
 	}
 
-	public void resolveSelectors(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor) {
-		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.deduplicating(
-			DiscoveryIssueReporter.forwarding(request.getDiscoveryListener(), engineDescriptor.getUniqueId()));
+	public static void resolveSelectors(EngineDiscoveryRequest request, JupiterEngineDescriptor engineDescriptor,
+			DiscoveryIssueReporter issueReporter) {
 		resolver.resolve(request, engineDescriptor, issueReporter);
 	}
 
