@@ -82,6 +82,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 
@@ -92,7 +94,7 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  * @since 5.8
  */
 @DisplayName("TempDirectory extension (per declaration)")
-class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
+class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 	private EngineExecutionResults executeTestsForClassWithDefaultFactory(Class<?> testClass,
 			Class<? extends TempDirFactory> factoryClass) {
@@ -254,6 +256,17 @@ class TempDirectoryPerDeclarationTests extends AbstractJupiterTestEngineTests {
 				suppressed(1, instanceOf(IOException.class), message("Simulated failure")) //
 			) //
 		);
+	}
+
+	@Test
+	void usingTheRemovedScopeConfigurationParameterProducesWarning() {
+		var results = discoverTests(request() //
+				.selectors(selectClass(AllPossibleDeclarationLocationsTestCase.class)) //
+				.configurationParameter("junit.jupiter.tempdir.scope", "per_context"));
+
+		assertThat(results.getDiscoveryIssues()) //
+				.contains(DiscoveryIssue.create(Severity.WARNING,
+					"The 'junit.jupiter.tempdir.scope' configuration parameter is no longer supported: per_context. Please remove it from your configuration."));
 	}
 
 	@Nested

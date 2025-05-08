@@ -431,7 +431,7 @@ public class ExtensionContextTests {
 	@MethodSource("extensionContextFactories")
 	void configurationParameter(Function<JupiterConfiguration, ? extends ExtensionContext> extensionContextFactory) {
 		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(),
-			dummyOutputDirectoryProvider());
+			dummyOutputDirectoryProvider(), mock());
 		var key = "123";
 		var expected = Optional.of(key);
 

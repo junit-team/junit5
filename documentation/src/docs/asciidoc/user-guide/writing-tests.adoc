@@ -3521,11 +3521,6 @@ You can inject multiple temporary directories by specifying multiple annotated p
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
 
-WARNING: To revert to the old behavior of using a single temporary directory for the
-entire test class or method (depending on which level the annotation is used), you can set
-the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
-please note that this option is deprecated and will be removed in a future release.
-
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of
 the test class. For better isolation, you should use an instance field or constructor

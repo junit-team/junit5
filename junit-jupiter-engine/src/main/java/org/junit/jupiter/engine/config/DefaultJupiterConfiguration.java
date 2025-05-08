@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.io.CleanupMode.ALWAYS;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_CLEANUP_MODE_PROPERTY_NAME;
 import static org.junit.jupiter.api.io.TempDir.DEFAULT_FACTORY_PROPERTY_NAME;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -34,7 +35,10 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.platform.commons.util.ClassNamePatternFilterUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
+import org.junit.platform.engine.DiscoveryIssue;
+import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 
 /**
  * Default implementation of the {@link JupiterConfiguration} API.
@@ -43,6 +47,8 @@ import org.junit.platform.engine.reporting.OutputDirectoryProvider;
  */
 @API(status = INTERNAL, since = "5.4")
 public class DefaultJupiterConfiguration implements JupiterConfiguration {
+
+	private final List<String> UNSUPPORTED_CONFIGURATION_PARAMETERS = List.of("junit.jupiter.tempdir.scope");
 
 	private static final EnumConfigurationParameterConverter<ExecutionMode> executionModeConverter = //
 		new EnumConfigurationParameterConverter<>(ExecutionMode.class, "parallel execution mode");
@@ -72,10 +78,21 @@ public class DefaultJupiterConfiguration implements JupiterConfiguration {
 	private final OutputDirectoryProvider outputDirectoryProvider;
 
 	public DefaultJupiterConfiguration(ConfigurationParameters configurationParameters,
-			OutputDirectoryProvider outputDirectoryProvider) {
+			OutputDirectoryProvider outputDirectoryProvider, DiscoveryIssueReporter issueReporter) {
 		this.configurationParameters = Preconditions.notNull(configurationParameters,
 			"ConfigurationParameters must not be null");
 		this.outputDirectoryProvider = outputDirectoryProvider;
+		validateConfigurationParameters(issueReporter);
+	}
+
+	private void validateConfigurationParameters(DiscoveryIssueReporter issueReporter) {
+		UNSUPPORTED_CONFIGURATION_PARAMETERS.forEach(key -> configurationParameters.get(key) //
+				.ifPresent(value -> {
+					var warning = DiscoveryIssue.create(Severity.WARNING,
+						"The '%s' configuration parameter is no longer supported: %s. Please remove it from your configuration.".formatted(
+							key, value));
+					issueReporter.reportIssue(warning);
+				}));
 	}
 
 	@Override
