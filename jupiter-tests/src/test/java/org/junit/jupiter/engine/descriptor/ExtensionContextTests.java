@@ -543,12 +543,6 @@ public class ExtensionContextTests {
 			throw new UnsupportedOperationException("getBoolean(String) should not be called");
 		}
 
-		@SuppressWarnings({ "deprecation", "RedundantSuppression" })
-		@Override
-		public int size() {
-			throw new UnsupportedOperationException("size() should not be called");
-		}
-
 		@Override
 		public Set<String> keySet() {
 			throw new UnsupportedOperationException("keySet() should not be called");

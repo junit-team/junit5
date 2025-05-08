@@ -76,15 +76,4 @@ class PrefixedConfigurationParametersTests {
 		verify(delegate).get("foo.bar.qux", transformer);
 	}
 
-	@Test
-	@SuppressWarnings("deprecation")
-	void delegatesSizeCalls() {
-		when(delegate.size()).thenReturn(42);
-		var parameters = new PrefixedConfigurationParameters(delegate, "foo.bar.");
-
-		assertThat(parameters.size()).isEqualTo(42);
-
-		verify(delegate).size();
-	}
-
 }

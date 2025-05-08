@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Optional;
@@ -130,15 +129,6 @@ public interface ConfigurationParameters {
 			}
 		});
 	}
-
-	/**
-	 * Get the number of configuration parameters stored directly in this
-	 * {@code ConfigurationParameters}.
-	 * @deprecated as of JUnit Platform 1.9 in favor of {@link #keySet()}
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.9")
-	int size();
 
 	/**
 	 * Get the keys of all configuration parameters stored in this

@@ -420,7 +420,6 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -429,11 +428,9 @@ class DefaultLauncherTests {
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key")).isNotPresent();
-		assertThat(configurationParameters.size()).isEqualTo(0);
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -441,13 +438,11 @@ class DefaultLauncherTests {
 		launcher.execute(request().configurationParameter("key", "value").build());
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
-		assertThat(configurationParameters.size()).isEqualTo(1);
 		assertThat(configurationParameters.get("key")).isPresent();
 		assertThat(configurationParameters.get("key")).contains("value");
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LookupFallsBackToSystemProperty() {
 		System.setProperty(FOO, BAR);
 
@@ -458,7 +453,6 @@ class DefaultLauncherTests {
 			launcher.execute(request().build());
 
 			var configurationParameters = engine.requestForExecution.getConfigurationParameters();
-			assertThat(configurationParameters.size()).isEqualTo(0);
 			var optionalFoo = configurationParameters.get(FOO);
 			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
 			assertEquals(BAR, optionalFoo.get(), "foo property");

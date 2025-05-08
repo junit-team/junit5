@@ -66,12 +66,6 @@ public class PrefixedConfigurationParameters implements ConfigurationParameters 
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public int size() {
-		return delegate.size();
-	}
-
-	@Override
 	public Set<String> keySet() {
 		return delegate.keySet();
 	}

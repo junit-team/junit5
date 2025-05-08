@@ -114,12 +114,6 @@ class SuiteTestDescriptorTests {
 		}
 
 		@Override
-		@SuppressWarnings("deprecation")
-		public int size() {
-			return 0;
-		}
-
-		@Override
 		public Set<String> keySet() {
 			return Collections.emptySet();
 		}

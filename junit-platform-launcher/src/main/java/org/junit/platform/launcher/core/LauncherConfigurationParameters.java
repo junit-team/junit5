@@ -65,14 +65,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public int size() {
-		return providers.stream() //
-				.mapToInt(ParameterProvider::size) //
-				.sum();
-	}
-
-	@Override
 	public Set<String> keySet() {
 		return providers.stream().map(ParameterProvider::keySet).flatMap(Collection::stream).collect(
 			Collectors.toSet());
@@ -243,12 +235,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				@Override
 				public String getValue(String key) {
 					return configParams.get(key).orElse(null);
-				}
-
-				@Override
-				@SuppressWarnings("deprecation")
-				public int size() {
-					return configParams.size();
 				}
 
 				@Override
