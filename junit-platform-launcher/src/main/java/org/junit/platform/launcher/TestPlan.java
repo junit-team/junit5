@@ -13,7 +13,6 @@ package org.junit.platform.launcher;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.synchronizedSet;
 import static java.util.Collections.unmodifiableSet;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
@@ -28,7 +27,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -105,21 +103,6 @@ public class TestPlan {
 		this.outputDirectoryProvider = outputDirectoryProvider;
 	}
 
-	/**
-	 * Add the supplied {@link TestIdentifier} to this test plan.
-	 *
-	 * @param testIdentifier the identifier to add; never {@code null}
-	 * @deprecated Calling this method is no longer supported and will throw an
-	 * exception.
-	 * @throws JUnitException always
-	 */
-	@Deprecated
-	@API(status = DEPRECATED, since = "1.4")
-	public void add(@SuppressWarnings("unused") TestIdentifier testIdentifier) {
-		throw new JUnitException("Unsupported attempt to modify the TestPlan was detected. "
-				+ "Please contact your IDE/tool vendor and request a fix or downgrade to JUnit 5.7.x (see https://github.com/junit-team/junit5/issues/1732 for details).");
-	}
-
 	@API(status = INTERNAL, since = "1.8")
 	public void addInternal(TestIdentifier testIdentifier) {
 		Preconditions.notNull(testIdentifier, "testIdentifier must not be null");
@@ -180,22 +163,6 @@ public class TestPlan {
 	 * Get the children of the supplied unique ID.
 	 *
 	 * @param parentId the unique ID to look up the children for; never
-	 * {@code null} or blank
-	 * @return an unmodifiable set of the parent's children, potentially empty
-	 * @see #getChildren(TestIdentifier)
-	 * @deprecated Use {@link #getChildren(UniqueId)}
-	 */
-	@API(status = DEPRECATED, since = "1.10")
-	@Deprecated
-	public Set<TestIdentifier> getChildren(String parentId) {
-		Preconditions.notBlank(parentId, "parent ID must not be null or blank");
-		return getChildren(UniqueId.parse(parentId));
-	}
-
-	/**
-	 * Get the children of the supplied unique ID.
-	 *
-	 * @param parentId the unique ID to look up the children for; never
 	 * {@code null}
 	 * @return an unmodifiable set of the parent's children, potentially empty
 	 * @see #getChildren(TestIdentifier)
@@ -203,23 +170,6 @@ public class TestPlan {
 	@API(status = MAINTAINED, since = "1.10")
 	public Set<TestIdentifier> getChildren(UniqueId parentId) {
 		return children.containsKey(parentId) ? unmodifiableSet(children.get(parentId)) : emptySet();
-	}
-
-	/**
-	 * Get the {@link TestIdentifier} with the supplied unique ID.
-	 *
-	 * @param uniqueId the unique ID to look up the identifier for; never
-	 * {@code null} or blank
-	 * @return the identifier with the supplied unique ID; never {@code null}
-	 * @throws PreconditionViolationException if no {@code TestIdentifier}
-	 * with the supplied unique ID is present in this test plan
-	 * @deprecated Use {@link #getTestIdentifier(UniqueId)}
-	 */
-	@API(status = DEPRECATED, since = "1.10")
-	@Deprecated
-	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
-		Preconditions.notBlank(uniqueId, "unique ID must not be null or blank");
-		return getTestIdentifier(UniqueId.parse(uniqueId));
 	}
 
 	/**
