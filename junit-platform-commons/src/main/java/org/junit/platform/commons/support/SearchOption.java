@@ -43,7 +43,8 @@ public enum SearchOption {
 	 * @deprecated because it is preferable to inspect the runtime enclosing
 	 * types of a class rather than where they are declared.
 	 */
-	@Deprecated @API(status = DEPRECATED, since = "1.12")
+	@Deprecated //
+	@API(status = DEPRECATED, since = "1.12")
 	INCLUDE_ENCLOSING_CLASSES
 
 }

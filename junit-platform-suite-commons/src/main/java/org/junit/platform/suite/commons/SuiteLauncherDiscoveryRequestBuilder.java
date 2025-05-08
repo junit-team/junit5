@@ -11,6 +11,7 @@
 package org.junit.platform.suite.commons;
 
 import static java.util.stream.Collectors.toList;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
@@ -286,6 +287,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	 * {@link #applySelectorsAndFiltersFromSuite}
 	 */
 	@Deprecated
+	@API(status = DEPRECATED, since = "1.11")
 	public SuiteLauncherDiscoveryRequestBuilder suite(Class<?> suiteClass) {
 		Preconditions.notNull(suiteClass, "Suite class must not be null");
 		applyConfigurationParametersFromSuite(suiteClass);

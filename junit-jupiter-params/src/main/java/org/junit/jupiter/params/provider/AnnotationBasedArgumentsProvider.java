@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Annotation;
@@ -69,6 +70,7 @@ public abstract class AnnotationBasedArgumentsProvider<A extends Annotation>
 	 * instead.
 	 */
 	@Deprecated
+	@API(status = DEPRECATED, since = "5.13")
 	protected Stream<? extends Arguments> provideArguments(ExtensionContext context, A annotation) {
 		throw new JUnitException(String.format(
 			"AnnotationBasedArgumentsProvider does not override the provideArguments(ParameterDeclarations, ExtensionContext, Annotation) method. "
