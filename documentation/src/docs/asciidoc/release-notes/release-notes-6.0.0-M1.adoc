@@ -58,6 +58,7 @@ repository on GitHub.
   - `ReportEntry()` constructor
   - `SingleTestExecutor` class
   - `LauncherDiscoveryRequestBuilder()` constructor
+  - `LegacyReportingUtils` class
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
