@@ -53,6 +53,7 @@ repository on GitHub.
   - `PreconditionViolationException` class (from `org.junit.platform.commons.util`)
   - `ClasspathScanningSupport` class
   - `ConfigurationParameters.size()` method
+  - `MethodSelector.getMethodParameterTypes()` method
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
