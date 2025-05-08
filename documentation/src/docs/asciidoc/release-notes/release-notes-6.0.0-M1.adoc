@@ -45,6 +45,8 @@ repository on GitHub.
   subcommand.
 * Remove support for deprecated non-conventional `ConsoleLauncher` options such as
   `--h` (rather than `-h`) or `-help` (rather than `--help`).
+* The following deprecated APIs have been removed:
+  - `ReflectionSupport.loadClass(String)` method
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements

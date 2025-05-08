@@ -786,12 +786,6 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
-		@SuppressWarnings("deprecation")
-		void loadClassWhenClassNotFoundException() {
-			assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
-		}
-
-		@Test
 		void tryToLoadClassWhenClassNotFoundException() {
 			assertThrows(ClassNotFoundException.class,
 				() -> ReflectionUtils.tryToLoadClass("foo.bar.EnigmaClassThatDoesNotExist").get());
@@ -809,13 +803,6 @@ class ReflectionUtilsTests {
 			// test to pass on CI servers with limited resources.
 			assertTimeoutPreemptively(ofMillis(500), () -> assertThrows(ClassNotFoundException.class,
 				() -> ReflectionUtils.tryToLoadClass(className).get()));
-		}
-
-		@Test
-		@SuppressWarnings("deprecation")
-		void loadClass() {
-			var optional = ReflectionUtils.loadClass(Integer.class.getName());
-			assertThat(optional).contains(Integer.class);
 		}
 
 		@Test

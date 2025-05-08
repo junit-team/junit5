@@ -789,41 +789,12 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#loadClass(String)
-	 * @deprecated Please use {@link #tryToLoadClass(String)} instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Class<?>> loadClass(String name) {
-		return tryToLoadClass(name).toOptional();
-	}
-
-	/**
 	 * @since 1.4
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Class<?>> tryToLoadClass(String name) {
 		return tryToLoadClass(name, ClassLoaderUtils.getDefaultClassLoader());
-	}
-
-	/**
-	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
-	 * using the supplied {@link ClassLoader}.
-	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#loadClass(String)}
-	 * for details on support for class names for arrays.
-	 *
-	 * @param name the name of the class to load; never {@code null} or blank
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @see #loadClass(String)
-	 * @deprecated Please use {@link #tryToLoadClass(String, ClassLoader)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
-		return tryToLoadClass(name, classLoader).toOptional();
 	}
 
 	/**
