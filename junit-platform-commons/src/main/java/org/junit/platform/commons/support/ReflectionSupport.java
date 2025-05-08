@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.support;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
@@ -49,28 +48,6 @@ public final class ReflectionSupport {
 
 	private ReflectionSupport() {
 		/* no-op */
-	}
-
-	/**
-	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
-	 * using the default {@link ClassLoader}.
-	 *
-	 * <p>Class names for arrays may be specified using either the JVM's internal
-	 * String representation (e.g., {@code [[I} for {@code int[][]},
-	 * {@code [Ljava.lang.String;} for {@code java.lang.String[]}, etc.) or
-	 * <em>source code syntax</em> (e.g., {@code int[][]}, {@code java.lang.String[]},
-	 * etc.).
-	 *
-	 * @param name the name of the class to load; never {@code null} or blank
-	 * @return an {@code Optional} containing the loaded class; never {@code null}
-	 * but potentially empty if no such class could be loaded
-	 * @deprecated Please use {@link #tryToLoadClass(String)} instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	@SuppressWarnings("deprecation")
-	public static Optional<Class<?>> loadClass(String name) {
-		return ReflectionUtils.loadClass(name);
 	}
 
 	/**
