@@ -11,7 +11,6 @@
 package org.junit.jupiter.api;
 
 import static java.util.Comparator.comparingInt;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.lang.reflect.Method;
@@ -124,26 +123,6 @@ public interface MethodOrderer {
 	 */
 	default Optional<ExecutionMode> getDefaultExecutionMode() {
 		return Optional.of(ExecutionMode.SAME_THREAD);
-	}
-
-	/**
-	 * {@code MethodOrderer} that sorts methods alphanumerically based on their
-	 * names using {@link String#compareTo(String)}.
-	 *
-	 * <p>If two methods have the same name, {@code String} representations of
-	 * their formal parameter lists will be used as a fallback for comparing the
-	 * methods.
-	 *
-	 * @since 5.4
-	 * @deprecated as of JUnit Jupiter 5.7 in favor of {@link MethodOrderer.MethodName};
-	 * to be removed in 6.0
-	 */
-	@API(status = DEPRECATED, since = "5.7")
-	@Deprecated
-	class Alphanumeric extends MethodName {
-
-		public Alphanumeric() {
-		}
 	}
 
 	/**

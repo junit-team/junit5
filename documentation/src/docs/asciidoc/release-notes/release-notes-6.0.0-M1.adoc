@@ -63,7 +63,8 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The following deprecated APIs have been removed:
+  - `MethodOrderer.Alphanumeric` class
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
