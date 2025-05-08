@@ -974,9 +974,6 @@ following built-in `MethodOrderer` implementations.
   specified via the `{Order}` annotation
 * `{MethodOrderer_Random}`: orders test methods _pseudo-randomly_ and supports
   configuration of a custom _seed_
-* `{MethodOrderer_Alphanumeric}`: sorts test methods _alphanumerically_ based on their
-  names and formal parameter lists; **deprecated in favor of `{MethodOrderer_MethodName}`,
-  to be removed in 6.0**
 
 NOTE: See also: <<extensions-execution-order-wrapping-behavior>>
 
