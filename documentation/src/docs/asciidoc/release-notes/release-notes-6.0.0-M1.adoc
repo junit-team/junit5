@@ -63,6 +63,7 @@ repository on GitHub.
   - `LegacyReportingUtils` class
   - `TestPlan.add(TestIdentifier)`, `TestPlan.getChildren(String)`, and
     `TestPlan.getTestIdentifier(String)` methods
+  - `@UseTechnicalNames` annotation
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
