@@ -18,9 +18,8 @@ import static platform.tooling.support.tests.Projects.copyToWorkspace;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.platform.tests.process.OutputFiles;
 import org.opentest4j.TestAbortedException;
 
@@ -33,23 +32,19 @@ import platform.tooling.support.ProcessStarters;
  */
 class MavenSurefireCompatibilityTests {
 
+	static final String MINIMUM_SUPPORTED_SUREFIRE_VERSION = "3.0.0";
+
 	@ManagedResource
 	LocalMavenRepo localMavenRepo;
 
-	@ParameterizedTest
-	@CsvSource(delimiter = '|', nullValues = "<none>", textBlock = """
-			2.22.2   | --activate-profiles=manual-platform-dependency
-			3.0.0-M4 | <none>
-			""")
-	void testMavenSurefireCompatibilityProject(String surefireVersion, String extraArg, @TempDir Path workspace,
-			@FilePrefix("maven") OutputFiles outputFiles) throws Exception {
-		var extraArgs = extraArg == null ? new String[0] : new String[] { extraArg };
+	@Test
+	void testMavenSurefireCompatibilityProject(@TempDir Path workspace, @FilePrefix("maven") OutputFiles outputFiles)
+			throws Exception {
 		var result = ProcessStarters.maven(Helper.getJavaHome(17).orElseThrow(TestAbortedException::new)) //
 				.workingDir(copyToWorkspace(Projects.MAVEN_SUREFIRE_COMPATIBILITY, workspace)) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
-				.addArguments("-Dsurefire.version=" + surefireVersion) //
+				.addArguments("-Dsurefire.version=" + MINIMUM_SUPPORTED_SUREFIRE_VERSION) //
 				.addArguments("--update-snapshots", "--batch-mode", "test") //
-				.addArguments(extraArgs) //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 
