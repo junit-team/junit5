@@ -47,6 +47,7 @@ repository on GitHub.
   `--h` (rather than `-h`) or `-help` (rather than `--help`).
 * The `junit-platform-runner` module that provided the `JUnitPlatform` runner has been
   discontinued.
+* Support for Maven Surefire/Failsafe versions < 3.0.0 has been dropped.
 * The following deprecated APIs have been removed:
   - `ReflectionSupport.loadClass(String)` method
   - `ReflectionUtils.readFieldValue(...)` methods

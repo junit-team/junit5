@@ -318,27 +318,9 @@ for executing tests on the JUnit Platform. The `pom.xml` file in the
 and can serve as a starting point for configuring your Maven build.
 
 [WARNING]
-.Use recent version of Maven Surefire/Failsafe to avoid interoperability issues
+.Minimum required version of Maven Surefire/Failsafe
 ====
-To avoid interoperability issues, it is recommended to use a recent version of Maven
-Surefire/Failsafe (3.0.0 or later) because it automatically aligns the version of the
-JUnit Platform Launcher that is used with the JUnit Platform version found on the test
-runtime classpath.
-
-If you are using a version older than 3.0.0-M4, you can work around the missing alignment
-by adding a test dependency on the matching version of the JUnit Platform Launcher to your
-Maven build as follows.
-
-[source,xml]
-[subs=attributes+]
-----
-<dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-launcher</artifactId>
-    <version>{version}</version>
-    <scope>test</scope>
-</dependency>
-----
+As of JUnit 6.0, the minimum required version of Maven Surefire/Failsafe is 3.0.0.
 ====
 
 [[running-tests-build-maven-bom]]
