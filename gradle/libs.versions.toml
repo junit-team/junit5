@@ -95,6 +95,7 @@ bnd = { id = "biz.aQute.bnd", version.ref = "bnd" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.2.1" }
 develocity = { id = "com.gradle.develocity", version = "4.0.1" }
+extraJavaModuleInfo = { id = "org.gradlex.extra-java-module-info", version = "1.12" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.10.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
@@ -106,4 +107,3 @@ plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.3" }
 versions = { id = "com.github.ben-manes.versions", version = "0.52.0" }
-extraJavaModuleInfo = { id = "org.gradlex.extra-java-module-info", version = "1.12" }
