@@ -18,7 +18,7 @@ dependencies {
 
 tasks {
 	compileJava {
-		options.compilerArgs.add("-Xlint:-requires-automatic,-requires-transitive-automatic")
+		options.compilerArgs.add("-Xlint:-requires-automatic,-requires-transitive-automatic") // JUnit 4
 	}
 	jar {
 		bundle {

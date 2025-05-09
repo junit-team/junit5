@@ -31,7 +31,7 @@ dependencies {
 
 tasks {
 	compileJava {
-		options.compilerArgs.add("-Xlint:-requires-automatic")
+		options.compilerArgs.add("-Xlint:-requires-automatic") // JUnit 4
 	}
 	compileTestFixturesGroovy {
 		javaLauncher = project.javaToolchains.launcherFor {
