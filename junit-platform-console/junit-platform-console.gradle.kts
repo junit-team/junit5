@@ -23,13 +23,17 @@ dependencies {
 }
 
 tasks {
-	compileModule {
+	compileJava {
 		options.compilerArgs.addAll(listOf(
-			"--add-modules", "org.opentest4j.reporting.events",
-			"--add-reads", "${project.projects.junitPlatformReporting.javaModuleName}=org.opentest4j.reporting.events",
 			"--add-modules", "info.picocli",
 			"--add-reads", "${javaModuleName}=info.picocli"
 		))
+	}
+	javadoc {
+		(options as StandardJavadocDocletOptions).apply {
+			addStringOption("-add-modules", "info.picocli")
+			addStringOption("-add-reads", "${javaModuleName}=info.picocli")
+		}
 	}
 	shadowJar {
 		exclude("META-INF/versions/9/module-info.class")

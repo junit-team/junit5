@@ -1,7 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import junitbuild.java.ModuleCompileOptions
-import junitbuild.java.ModulePathArgumentProvider
-import junitbuild.java.PatchModuleArgumentProvider
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
 import org.gradle.plugins.ide.eclipse.model.ProjectDependency
@@ -27,16 +24,11 @@ dependencies {
 }
 
 val mavenizedProjects: List<Project> by rootProject.extra
-val modularProjects: List<Project> by rootProject.extra
 val buildDate: String by rootProject.extra
 val buildTime: String by rootProject.extra
 val buildRevision: Any by rootProject.extra
 
 val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
-
-val moduleSourceDir = layout.projectDirectory.dir("src/module/$javaModuleName")
-val combinedModuleSourceDir = layout.buildDirectory.dir("module")
-val moduleOutputDir = layout.buildDirectory.dir("classes/java/module")
 
 eclipse {
 	jdt {
@@ -61,7 +53,7 @@ eclipse {
 }
 
 java {
-	modularity.inferModulePath = false
+	modularity.inferModulePath = true
 }
 
 if (project in mavenizedProjects) {
@@ -102,9 +94,6 @@ if (project in mavenizedProjects) {
 	}
 
 	tasks.named<Jar>("sourcesJar").configure {
-		from(moduleSourceDir) {
-			include("module-info.java")
-		}
 		duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 	}
 
@@ -178,49 +167,6 @@ normalization {
 	}
 }
 
-val allMainClasses by tasks.registering {
-	dependsOn(tasks.classes)
-}
-
-val prepareModuleSourceDir by tasks.registering(Sync::class) {
-	from(moduleSourceDir)
-	from(sourceSets.named { it.startsWith("main") }.map { it.allJava })
-	into(combinedModuleSourceDir.map { it.dir(javaModuleName) })
-	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-}
-
-val compileModule by tasks.registering(JavaCompile::class) {
-	dependsOn(allMainClasses)
-	enabled = project in modularProjects
-	source = fileTree(combinedModuleSourceDir).builtBy(prepareModuleSourceDir)
-	destinationDirectory = moduleOutputDir
-	classpath = files()
-	options.release = 17
-	options.compilerArgs.addAll(listOf(
-			// Suppress warnings for automatic modules: org.apiguardian.api, org.opentest4j
-			"-Xlint:all,-requires-automatic,-requires-transitive-automatic",
-			"-Werror", // Terminates compilation when warnings occur.
-			"--module-version", "${project.version}",
-	))
-
-	val moduleOptions = objects.newInstance(ModuleCompileOptions::class)
-	extensions.add("moduleOptions", moduleOptions)
-	moduleOptions.modulePath.from(configurations.compileClasspath)
-
-	options.compilerArgumentProviders.add(objects.newInstance(ModulePathArgumentProvider::class, project, combinedModuleSourceDir, modularProjects).apply {
-		modulePath.from(moduleOptions.modulePath)
-	})
-	options.compilerArgumentProviders.addAll(modularProjects.map { objects.newInstance(PatchModuleArgumentProvider::class, project, it) })
-
-	modularity.inferModulePath = false
-
-	doFirst {
-		options.allCompilerArgs.forEach {
-			logger.info(it)
-		}
-	}
-}
-
 tasks.withType<Jar>().configureEach {
 	from(rootDir) {
 		include("LICENSE.md")
@@ -235,10 +181,7 @@ tasks.withType<Jar>().configureEach {
 	}
 	val suffix = archiveClassifier.getOrElse("")
 	if (suffix.isBlank() || this is ShadowJar) {
-		dependsOn(allMainClasses, compileModule)
-		from(moduleOutputDir.map { it.dir(javaModuleName) }) {
-			include("module-info.class")
-		}
+		dependsOn(tasks.classes)
 	}
 }
 
@@ -274,6 +217,7 @@ tasks.compileJava {
 			"-Xlint:all", // Enables all recommended warnings.
 			"-Werror", // Terminates compilation when warnings occur.
 			"-parameters", // Generates metadata for reflection on method parameters.
+			"--module-version", "${project.version}"
 	))
 }
 
