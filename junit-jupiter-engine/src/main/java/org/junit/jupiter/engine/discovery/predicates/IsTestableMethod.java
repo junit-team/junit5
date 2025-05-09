@@ -11,6 +11,8 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionReturnType;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -18,7 +20,6 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 import org.junit.platform.commons.support.ModifierSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -71,8 +72,14 @@ abstract class IsTestableMethod implements Predicate<Method> {
 
 	protected static Condition<Method> hasVoidReturnType(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
-		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid,
+		return issueReporter.createReportingCondition(method -> getReturnType(method) == void.class,
 			method -> createIssue(annotationType, method, "must not return a value"));
+	}
+
+	protected static Class<?> getReturnType(Method method) {
+		return isKotlinSuspendingFunction(method) //
+				? getKotlinSuspendingFunctionReturnType(method) //
+				: method.getReturnType();
 	}
 
 	protected static DiscoveryIssue createIssue(Class<? extends Annotation> annotationType, Method method,

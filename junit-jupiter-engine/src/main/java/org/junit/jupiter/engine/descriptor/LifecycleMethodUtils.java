@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionReturnType;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.alwaysSatisfied;
 
 import java.lang.annotation.Annotation;
@@ -30,7 +32,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ClassTemplateInvocationLifecycleMethod;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
 import org.junit.platform.commons.support.ModifierSupport;
-import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.support.descriptor.MethodSource;
@@ -177,11 +178,17 @@ final class LifecycleMethodUtils {
 
 	private static Condition<Method> returnsPrimitiveVoid(DiscoveryIssueReporter issueReporter,
 			Function<Method, String> annotationNameProvider) {
-		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid, method -> {
+		return issueReporter.createReportingCondition(method -> getReturnType(method) == void.class, method -> {
 			String message = String.format("@%s method '%s' must not return a value.",
 				annotationNameProvider.apply(method), method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
+	}
+
+	private static Class<?> getReturnType(Method method) {
+		return isKotlinSuspendingFunction(method) //
+				? getKotlinSuspendingFunctionReturnType(method) //
+				: method.getReturnType();
 	}
 
 	private static String classTemplateInvocationLifecycleMethodAnnotationName(Method method) {

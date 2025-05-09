@@ -53,7 +53,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 	}
 
 	private static boolean isCompatible(Method method, DiscoveryIssueReporter issueReporter) {
-		Class<?> returnType = method.getReturnType();
+		Class<?> returnType = getReturnType(method);
 		if (DynamicNode.class.isAssignableFrom(returnType) || DynamicNode[].class.isAssignableFrom(returnType)) {
 			return true;
 		}

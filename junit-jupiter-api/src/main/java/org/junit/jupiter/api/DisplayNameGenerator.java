@@ -17,6 +17,8 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.ModifierSupport.isStatic;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameterTypes;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -195,7 +197,10 @@ public interface DisplayNameGenerator {
 	 */
 	static String parameterTypesAsString(Method method) {
 		Preconditions.notNull(method, "Method must not be null");
-		return '(' + ClassUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()) + ')';
+		var parameterTypes = isKotlinSuspendingFunction(method) //
+				? getKotlinSuspendingFunctionParameterTypes(method) //
+				: method.getParameterTypes();
+		return '(' + ClassUtils.nullSafeToString(Class::getSimpleName, parameterTypes) + ')';
 	}
 
 	/**

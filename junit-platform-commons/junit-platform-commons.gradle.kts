@@ -1,5 +1,5 @@
 plugins {
-	id("junitbuild.java-library-conventions")
+	id("junitbuild.kotlin-library-conventions")
 	`java-test-fixtures`
 }
 
@@ -9,6 +9,10 @@ dependencies {
 	api(platform(projects.junitBom))
 
 	compileOnlyApi(libs.apiguardian)
+
+	compileOnly(kotlin("stdlib"))
+	compileOnly(kotlin("reflect"))
+	compileOnly(libs.kotlinx.coroutines)
 }
 
 tasks.compileJava {
