@@ -94,6 +94,13 @@ class GradleModuleFileTests {
 			"      },", //
 			"      \"dependencies\": [", //
 			"        {", //
+			"          \"group\": \"org.junit.jupiter\",", //
+			"          \"module\": \"junit-jupiter-engine\",", //
+			"          \"version\": {", //
+			">> VERSION >>", //
+			"          }", //
+			"        },", //
+			"        {", //
 			"          \"group\": \"org.junit\",", //
 			"          \"module\": \"junit-bom\",", //
 			"          \"version\": {", //
@@ -114,13 +121,6 @@ class GradleModuleFileTests {
 			"        {", //
 			"          \"group\": \"org.junit.jupiter\",", //
 			"          \"module\": \"junit-jupiter-params\",", //
-			"          \"version\": {", //
-			">> VERSION >>", //
-			"          }", //
-			"        },", //
-			"        {", //
-			"          \"group\": \"org.junit.jupiter\",", //
-			"          \"module\": \"junit-jupiter-engine\",", //
 			"          \"version\": {", //
 			">> VERSION >>", //
 			"          }", //
