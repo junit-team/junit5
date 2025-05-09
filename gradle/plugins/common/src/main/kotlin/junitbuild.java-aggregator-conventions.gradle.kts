@@ -1,5 +1,3 @@
-import org.gradle.kotlin.dsl.kotlin
-
 plugins {
 	id("junitbuild.java-library-conventions")
 }
