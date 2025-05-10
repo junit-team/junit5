@@ -1,14 +1,14 @@
 @import java.util.List
 @import junitbuild.generator.model.JRE
 
-@param List<JRE> jres
-@param List<JRE> jresSortedByStringValue
+@param List<JRE> supportedJres
+@param List<JRE> supportedJresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-@for(var jre : jresSortedByStringValue)<%--
+@for(var jre : supportedJresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -88,7 +88,7 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 		evaluateCondition();
 		assertEnabledOnCurrentJreIf(true);
 	}
-@for(var jre : jres)
+@for(var jre : supportedJres)
 	/**
 	 * @see EnabledOnJreIntegrationTests#jre${jre.getVersion()}()
 	 */
@@ -98,7 +98,7 @@ class EnabledOnJreConditionTests extends AbstractExecutionConditionTests {
 		assertEnabledOnCurrentJreIf(onJava${jre.getVersion()}());
 	}
 @endfor<%--
---%>@for(var jre : jres)
+--%>@for(var jre : supportedJres)
 	/**
 	 * @see EnabledOnJreIntegrationTests#version${jre.getVersion()}()
 	 */

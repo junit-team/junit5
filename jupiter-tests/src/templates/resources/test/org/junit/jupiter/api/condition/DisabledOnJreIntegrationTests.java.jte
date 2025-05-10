@@ -1,8 +1,9 @@
 @import java.util.List
 @import junitbuild.generator.model.JRE
 
-@param List<JRE> jres
-@param List<JRE> jresSortedByStringValue
+@param List<JRE> allJres
+@param List<JRE> supportedJres
+@param List<JRE> supportedJresSortedByStringValue
 @param String licenseHeader
 ${licenseHeader}
 package org.junit.jupiter.api.condition;
@@ -10,12 +11,7 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-@for(var jre : jresSortedByStringValue)<%--
---%>import static org.junit.jupiter.api.condition.JRE.JAVA_${jre.getVersion()};
-@endfor<%--
---%>import static org.junit.jupiter.api.condition.JRE.OTHER;
-import static org.junit.jupiter.api.condition.JRE.UNDEFINED;
-@for(var jre : jresSortedByStringValue)<%--
+@for(var jre : supportedJresSortedByStringValue)<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava${jre.getVersion()};
 @endfor<%--
 --%>import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
@@ -38,40 +34,41 @@ class DisabledOnJreIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledOnJre({})
+	@DisabledOnJre
 	void missingVersionDeclaration() {
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledOnJre(UNDEFINED)
+	@DisabledOnJre(JRE.UNDEFINED)
 	void jreUndefined() {
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@DisabledOnJre(value = JAVA_17, versions = { 21, 7 })
+	@DisabledOnJre(value = JRE.JAVA_17, versions = { 21, 7 })
 	void version7() {
 	}
 
+	@SuppressWarnings("removal")
 	@Test
 	@DisabledOnJre(disabledReason = "Disabled on every JRE", value = { //
-@for(var jre : jres)<%--
---%>			JAVA_${jre.getVersion()}, //
+@for(var jre : allJres)<%--
+--%>			JRE.JAVA_${jre.getVersion()}, //
 @endfor<%--
---%>			OTHER //
+--%>			JRE.OTHER //
 	})
 	void disabledOnAllJavaVersions() {
 		fail("should be disabled");
 	}
-@for(var jre : jres)
+@for(var jre : supportedJres)
 	@Test
-	@DisabledOnJre(JAVA_${jre.getVersion()})
+	@DisabledOnJre(JRE.JAVA_${jre.getVersion()})
 	void jre${jre.getVersion()}() {
 		assertFalse(onJava${jre.getVersion()}());
 	}
 @endfor<%--
---%>@for(var jre : jres)
+--%>@for(var jre : supportedJres)
 	@Test
 	@DisabledOnJre(versions = ${jre.getVersion()})
 	void version${jre.getVersion()}() {
@@ -79,7 +76,7 @@ class DisabledOnJreIntegrationTests {
 	}
 @endfor
 	@Test
-	@DisabledOnJre(OTHER)
+	@DisabledOnJre(JRE.OTHER)
 	void other() {
 		assertTrue(onKnownVersion());
 	}

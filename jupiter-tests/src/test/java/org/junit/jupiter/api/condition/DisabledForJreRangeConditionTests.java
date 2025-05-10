@@ -11,18 +11,9 @@
 package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Test;
@@ -89,18 +80,18 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#min8()
+	 * @see DisabledForJreRangeIntegrationTests#min17()
 	 */
 	@Test
-	void min8() {
+	void min17() {
 		defaultValues();
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#minVersion8()
+	 * @see DisabledForJreRangeIntegrationTests#minVersion17()
 	 */
 	@Test
-	void minVersion8() {
+	void minVersion17() {
 		defaultValues();
 	}
 
@@ -131,13 +122,14 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	}
 
 	/**
-	 * @see DisabledForJreRangeIntegrationTests#maxVersion7()
+	 * @see DisabledForJreRangeIntegrationTests#maxVersion16()
 	 */
 	@Test
-	void maxVersion7() {
+	void maxVersion16() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
-				.withMessage("@DisabledForJreRange's maxVersion [7] must be greater than or equal to 8");
+				.withMessage(
+					"@DisabledForJreRange's minimum value [17] must be less than or equal to its maximum value [16]");
 	}
 
 	/**
@@ -170,7 +162,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(this::evaluateCondition)//
 				.withMessage(
-					"@DisabledForJreRange's minimum value [21] must be less than or equal to its maximum value [11]");
+					"@DisabledForJreRange's minimum value [21] must be less than or equal to its maximum value [17]");
 	}
 
 	/**
@@ -220,8 +212,7 @@ class DisabledForJreRangeConditionTests extends AbstractExecutionConditionTests 
 	@Test
 	void max18() {
 		evaluateCondition();
-		assertDisabledOnCurrentJreIf(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13()
-				|| onJava14() || onJava15() || onJava16() || onJava17() || onJava18());
+		assertDisabledOnCurrentJreIf(onJava17() || onJava18());
 	}
 
 	/**

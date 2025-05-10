@@ -96,7 +96,7 @@ public @interface EnabledForJreRange {
 	 * {@link #minVersion() minVersion} instead.
 	 *
 	 * <p>Defaults to {@link JRE#UNDEFINED UNDEFINED}, which will be interpreted
-	 * as {@link JRE#JAVA_8 JAVA_8} if the {@link #minVersion() minVersion} is
+	 * as {@link JRE#JAVA_17 JAVA_17} if the {@link #minVersion() minVersion} is
 	 * not set.
 	 *
 	 * @see JRE

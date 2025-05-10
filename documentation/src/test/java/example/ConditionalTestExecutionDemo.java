@@ -10,10 +10,11 @@
 
 package example;
 
-import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
+import static org.junit.jupiter.api.condition.JRE.JAVA_18;
+import static org.junit.jupiter.api.condition.JRE.JAVA_19;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
-import static org.junit.jupiter.api.condition.JRE.JAVA_9;
+import static org.junit.jupiter.api.condition.JRE.JAVA_25;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.junit.jupiter.api.condition.OS.MAC;
 import static org.junit.jupiter.api.condition.OS.WINDOWS;
@@ -113,44 +114,44 @@ class ConditionalTestExecutionDemo {
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_9, max = JAVA_11)
-	void fromJava9To11() {
+	@EnabledForJreRange(min = JAVA_21, max = JAVA_25)
+	void fromJava21To25() {
 		// ...
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_9)
-	void onJava9AndHigher() {
+	@EnabledForJreRange(min = JAVA_21)
+	void onJava21ndHigher() {
 		// ...
 	}
 
 	@Test
-	@EnabledForJreRange(max = JAVA_11)
-	void fromJava8To11() {
+	@EnabledForJreRange(max = JAVA_18)
+	void fromJava17To18() {
 		// ...
 	}
 
 	@Test
-	@DisabledOnJre(JAVA_9)
-	void notOnJava9() {
+	@DisabledOnJre(JAVA_19)
+	void notOnJava19() {
 		// ...
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_9, max = JAVA_11)
-	void notFromJava9To11() {
+	@DisabledForJreRange(min = JAVA_17, max = JAVA_17)
+	void notFromJava17To19() {
 		// ...
 	}
 
 	@Test
-	@DisabledForJreRange(min = JAVA_9)
-	void notOnJava9AndHigher() {
+	@DisabledForJreRange(min = JAVA_19)
+	void notOnJava19AndHigher() {
 		// ...
 	}
 
 	@Test
-	@DisabledForJreRange(max = JAVA_11)
-	void notFromJava8To11() {
+	@DisabledForJreRange(max = JAVA_18)
+	void notFromJava17To18() {
 		// ...
 	}
 	// end::user_guide_jre[]
