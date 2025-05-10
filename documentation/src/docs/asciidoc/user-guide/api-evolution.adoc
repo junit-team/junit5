@@ -1,12 +1,13 @@
 [[api-evolution]]
 == API Evolution
 
-One of the major goals of JUnit 5 is to improve maintainers' capabilities to evolve JUnit
-despite its being used in many projects. With JUnit 4 a lot of stuff that was originally
-added as an internal construct only got used by external extension writers and tool
-builders. That made changing JUnit 4 especially difficult and sometimes impossible.
+One of the major goals of the JUnit Platform architecture is to improve maintainers'
+capabilities to evolve JUnit despite its being used in many projects. With JUnit 4 a lot
+of stuff that was originally added as an internal construct only got used by external
+extension writers and tool builders. That made changing JUnit 4 especially difficult and
+sometimes impossible.
 
-That's why JUnit 5 introduces a defined lifecycle for all publicly available interfaces,
+That's why JUnit now uses a defined lifecycle for all publicly available interfaces,
 classes, and methods.
 
 [[api-evolution-version-and-status]]

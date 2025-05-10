@@ -33,7 +33,7 @@ import org.junit.platform.launcher.tagexpression.TagExpression;
  * <p>Tag expressions are boolean expressions with the following allowed
  * operators: {@code !} (not), {@code &} (and), and {@code |} (or). Parentheses
  * can be used to adjust for operator precedence. Please refer to the
- * <a href="https://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit 5 User Guide</a>
+ * <a href="https://junit.org/junit5/docs/current/user-guide/#running-tests-tag-expressions">JUnit User Guide</a>
  * for usage examples.
  *
  * <p>Please note that a tag name is a valid tag expression. Thus, wherever a tag

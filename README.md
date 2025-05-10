@@ -1,6 +1,6 @@
-# <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit 5
+# <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit
 
-This repository is the home of _JUnit 5_.
+This repository is the home of JUnit Platform, Jupiter, and Vintage.
 
 ## Sponsors
 
@@ -24,7 +24,7 @@ This repository is the home of _JUnit 5_.
 
 ## Contributing
 
-Contributions to JUnit 5 are both welcomed and appreciated. For specific guidelines
+Contributions to JUnit are both welcomed and appreciated. For specific guidelines
 regarding contributions, please see [CONTRIBUTING.md] in the root directory of the
 project. Those willing to use milestone or SNAPSHOT releases are encouraged
 to file feature requests and bug reports using the project's
@@ -34,15 +34,15 @@ label are specifically targeted for community contributions.
 
 ## Getting Help
 
-Ask JUnit 5 related questions on [StackOverflow] or chat with the community on [Gitter].
+Ask JUnit-related questions on [StackOverflow] or chat with the community on [Gitter].
 
 ## Continuous Integration Builds
 
 [![CI Status](https://github.com/junit-team/junit5/workflows/CI/badge.svg)](https://github.com/junit-team/junit5/actions) [![Cross-Version Status](https://github.com/junit-team/junit5/workflows/Cross-Version/badge.svg)](https://github.com/junit-team/junit5/actions)
 
-Official CI build server for JUnit 5. Used to perform quick checks on submitted pull
-requests and for build matrices including the latest released OpenJDK and early access
-builds of the next OpenJDK.
+Official CI build server used to perform quick checks on submitted pull requests and for
+build matrices including the latest released OpenJDK and early access builds of the next
+OpenJDK.
 
 ## Code Coverage
 
@@ -56,7 +56,7 @@ in `build/reports/jacoco/jacocoRootReport/html/index.html`.
 
 [![Revved up by Develocity](https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A)](https://ge.junit.org/scans)
 
-JUnit 5 utilizes [Develocity](https://gradle.com/) for [Build Scans](https://scans.gradle.com/),
+JUnit utilizes [Develocity](https://gradle.com/) for [Build Scans](https://scans.gradle.com/),
 [Build Cache](https://docs.gradle.org/current/userguide/build_cache.html), and
 [Predictive Test Selection](https://docs.gradle.com/enterprise/predictive-test-selection/).
 
@@ -70,7 +70,7 @@ task outputs from previous CI builds.
 
 ## Building from Source
 
-You need [JDK 21] to build JUnit 5. [Gradle toolchains] are used to detect and
+You need [JDK 21] to build JUnit. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
 All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command.
