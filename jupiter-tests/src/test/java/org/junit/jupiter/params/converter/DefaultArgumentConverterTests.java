@@ -89,26 +89,16 @@ class DefaultArgumentConverterTests {
 				.isThrownBy(() -> convert(null, type)) //
 				.withMessage("Cannot convert null to primitive value of type " + type.getCanonicalName());
 
-		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
-	}
-
-	@Test
-	void throwsExceptionForNonStringsConversion() {
-		assertThatExceptionOfType(ArgumentConversionException.class) //
-				.isThrownBy(() -> convert(new Enigma(), String.class)) //
-				.withMessage("No built-in converter for source type %s and target type java.lang.String",
-					Enigma.class.getName());
-
-		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
+		verify(underTest, never()).delegateConversion(any(), any(), any(ClassLoader.class));
 	}
 
 	@Test
 	void delegatesStringsConversion() {
-		doReturn(null).when(underTest).convert(any(), any(), any(ClassLoader.class));
+		doReturn(null).when(underTest).delegateConversion(any(), any(), any(ClassLoader.class));
 
 		convert("value", int.class);
 
-		verify(underTest).convert("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).delegateConversion("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
@@ -144,14 +134,14 @@ class DefaultArgumentConverterTests {
 	@Test
 	void throwsExceptionForDelegatedConversionFailure() {
 		ConversionException exception = new ConversionException("fail");
-		doThrow(exception).when(underTest).convert(any(), any(), any(ClassLoader.class));
+		doThrow(exception).when(underTest).delegateConversion(any(), any(), any(ClassLoader.class));
 
 		assertThatExceptionOfType(ArgumentConversionException.class) //
 				.isThrownBy(() -> convert("value", int.class)) //
 				.withCause(exception) //
 				.withMessage(exception.getMessage());
 
-		verify(underTest).convert("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).delegateConversion("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
@@ -164,14 +154,14 @@ class DefaultArgumentConverterTests {
 			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").orElseThrow();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
-			doReturn(customType).when(underTest).convert(any(), any(), any(ClassLoader.class));
+			doReturn(customType).when(underTest).delegateConversion(any(), any(), any(ClassLoader.class));
 
 			var clazz = (Class<?>) convert(customTypeName, Class.class, testClassLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 
-			verify(underTest).convert(customTypeName, Class.class, testClassLoader);
+			verify(underTest).delegateConversion(customTypeName, Class.class, testClassLoader);
 		}
 	}
 
@@ -184,7 +174,7 @@ class DefaultArgumentConverterTests {
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
 
-		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
+		verify(underTest, never()).delegateConversion(any(), any(), any(ClassLoader.class));
 	}
 
 	private Object convert(Object input, Class<?> targetClass) {

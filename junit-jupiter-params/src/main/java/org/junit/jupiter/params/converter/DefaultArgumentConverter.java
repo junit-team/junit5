@@ -42,7 +42,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * {@link File}, {@link BigDecimal}, {@link BigInteger}, {@link Currency},
  * {@link Locale}, {@link URI}, {@link URL}, {@link UUID}, etc.
  *
- * <p>If the source and target types are identical the source object will not
+ * <p>If the source and target types are identical, the source object will not
  * be modified.
  *
  * @since 5.0
@@ -106,22 +106,18 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 			return source;
 		}
 
-		if (source instanceof String) {
-			if (targetType == Locale.class && getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
-				return Locale.forLanguageTag((String) source);
-			}
-
-			try {
-				return convert((String) source, targetType, classLoader);
-			}
-			catch (ConversionException ex) {
-				throw new ArgumentConversionException(ex.getMessage(), ex);
-			}
+		if (source instanceof String //
+				&& targetType == Locale.class //
+				&& getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
+			return Locale.forLanguageTag((String) source);
 		}
 
-		throw new ArgumentConversionException(
-			String.format("No built-in converter for source type %s and target type %s",
-				source.getClass().getTypeName(), targetType.getTypeName()));
+		try {
+			return delegateConversion(source, targetType, classLoader);
+		}
+		catch (ConversionException ex) {
+			throw new ArgumentConversionException(ex.getMessage(), ex);
+		}
 	}
 
 	private LocaleConversionFormat getLocaleConversionFormat() {
@@ -129,7 +125,7 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 				.orElse(LocaleConversionFormat.BCP_47);
 	}
 
-	Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
+	Object delegateConversion(Object source, Class<?> targetType, ClassLoader classLoader) {
 		return ConversionSupport.convert(source, targetType, classLoader);
 	}
 
