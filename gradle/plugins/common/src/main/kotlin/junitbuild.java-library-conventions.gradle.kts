@@ -179,10 +179,6 @@ tasks.withType<Jar>().configureEach {
 		}
 		into("META-INF")
 	}
-	val suffix = archiveClassifier.getOrElse("")
-	if (suffix.isBlank() || this is ShadowJar) {
-		dependsOn(tasks.classes)
-	}
 }
 
 tasks.jar {
