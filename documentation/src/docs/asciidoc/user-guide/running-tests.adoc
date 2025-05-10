@@ -13,7 +13,7 @@ however, that it is recommended to use IDEA 2017.3 or newer since more recent ve
 IDEA download the following JARs automatically based on the API version used in the
 project: `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-In order to use a different JUnit 5 version (e.g., {version}), you may need to
+In order to use a different JUnit version (e.g., {version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine` JARs in the classpath.
 
@@ -68,8 +68,8 @@ testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 Eclipse IDE offers support for the JUnit Platform since the Eclipse Oxygen.1a (4.7.1a)
 release.
 
-For more information on using JUnit 5 in Eclipse consult the official _Eclipse support
-for JUnit 5_ section of the
+For more information on using JUnit Platform in Eclipse consult the official _Eclipse
+support for JUnit 5_ section of the
 https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a
 (4.7.1a) - New and Noteworthy] documentation.
 
@@ -151,7 +151,7 @@ of JUnit used in your Spring Boot application.
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
 recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
-versions of all JUnit 5 artifacts.
+versions of all JUnit artifacts.
 
 [source,groovy,indent=0]
 [subs=attributes+]
@@ -171,7 +171,7 @@ Since all JUnit artifacts declare a
 https://docs.gradle.org/current/userguide/platforms.html[platform] dependency on the BOM,
 you usually don't need to declare an explicit dependency on it yourself. Instead, it's
 sufficient to declare _one_ regular dependency that includes a version number. Gradle will
-then pull in the BOM automatically so you can omit the version for all other JUnit 5
+then pull in the BOM automatically so you can omit the version for all other JUnit
 artifacts.
 
 [source,groovy,indent=0]
@@ -328,7 +328,7 @@ As of JUnit 6.0, the minimum required version of Maven Surefire/Failsafe is 3.0.
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
 recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
-versions of all JUnit 5 artifacts.
+versions of all JUnit artifacts.
 
 [source,xml,indent=0]
 [subs=attributes+]

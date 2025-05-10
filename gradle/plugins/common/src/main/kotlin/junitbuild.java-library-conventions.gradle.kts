@@ -124,7 +124,7 @@ if (project in mavenizedProjects) {
 					}
 				}
 				pom {
-					description = provider { "Module \"${project.name}\" of JUnit 5." }
+					description = provider { "Module \"${project.name}\" of JUnit" }
 				}
 			}
 		}

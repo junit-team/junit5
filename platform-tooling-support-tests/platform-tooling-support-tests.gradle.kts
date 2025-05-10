@@ -114,7 +114,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 val archUnit by testing.suites.registering(JvmTestSuite::class) {
 	dependencies {
 		implementation(libs.archunit) {
-			because("checking the architecture of JUnit 5")
+			because("checking the architecture")
 		}
 		implementation(libs.apiguardian) {
 			because("we validate that public classes are annotated")

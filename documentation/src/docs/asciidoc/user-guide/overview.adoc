@@ -12,12 +12,12 @@ endif::linkToPdf[]
 endif::backend-html5[]
 
 [[overview-what-is-junit-5]]
-=== What is JUnit 5?
+=== What is JUnit?
 
-Unlike previous versions of JUnit, JUnit 5 is composed of several different modules from
-three different sub-projects.
+Unlike previous versions of JUnit, JUnit 5 and later is composed of several different
+modules from three different sub-projects.
 
-**JUnit 5 = _JUnit Platform_ + _JUnit Jupiter_ + _JUnit Vintage_**
+**JUnit {version} = _JUnit Platform_ + _JUnit Jupiter_ + _JUnit Vintage_**
 
 The **JUnit Platform** serves as a foundation for <<launcher-api,launching testing
 frameworks>> on the JVM. It also defines the `{TestEngine}` API for developing a testing
@@ -31,7 +31,7 @@ exists in popular IDEs (see <<running-tests-ide-intellij-idea>>,
 <<running-tests-build-maven>>, and <<running-tests-build-ant>>).
 
 **JUnit Jupiter** is the combination of the <<writing-tests,programming model>> and
-<<extensions,extension model>> for writing tests and extensions in JUnit 5. The Jupiter
+<<extensions,extension model>> for writing JUnit tests and extensions. The Jupiter
 sub-project provides a `TestEngine` for running Jupiter based tests on the platform.
 
 **JUnit Vintage** provides a `TestEngine` for running JUnit 3 and JUnit 4 based tests on
@@ -41,13 +41,13 @@ path.
 [[overview-java-versions]]
 === Supported Java Versions
 
-JUnit 5 requires Java 8 (or higher) at runtime. However, you can still test code that
+JUnit requires Java 17 (or higher) at runtime. However, you can still test code that
 has been compiled with previous versions of the JDK.
 
 [[overview-getting-help]]
 === Getting Help
 
-Ask JUnit 5 related questions on {StackOverflow} or chat with the community on {Gitter}.
+Ask JUnit-related questions on {StackOverflow} or chat with the community on {Gitter}.
 
 [[overview-getting-started]]
 === Getting Started
@@ -60,9 +60,9 @@ to <<dependency-metadata>>. To set up dependency management for your build, refe
 <<running-tests-build>> and the <<overview-getting-started-example-projects>>.
 
 [[overview-getting-started-features]]
-==== JUnit 5 Features
+==== JUnit Features
 
-To find out what features are available in JUnit 5 and how to use them, read the
+To find out what features are available in JUnit {version} and how to use them, read the
 corresponding sections of this User Guide, organized by topic.
 
 * <<writing-tests, Writing Tests in JUnit Jupiter>>
