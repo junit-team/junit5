@@ -1,6 +1,6 @@
 # <img src="https://junit.org/junit5/assets/img/junit5-logo.png" align="right" width="100">JUnit
 
-This repository is the home of _JUnit_.
+This repository is the home of JUnit Platform, Jupiter, and Vintage.
 
 ## Sponsors
 
