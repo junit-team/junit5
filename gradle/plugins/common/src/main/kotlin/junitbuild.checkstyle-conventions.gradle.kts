@@ -1,3 +1,5 @@
+import junitbuild.extensions.requiredVersionFromLibs
+
 plugins {
 	base
 	checkstyle

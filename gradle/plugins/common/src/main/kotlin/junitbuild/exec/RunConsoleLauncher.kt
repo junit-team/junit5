@@ -20,7 +20,7 @@ import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.the
 import org.gradle.process.CommandLineArgumentProvider
 import org.gradle.process.ExecOperations
-import trackOperationSystemAsInput
+import junitbuild.extensions.trackOperationSystemAsInput
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 

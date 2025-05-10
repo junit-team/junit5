@@ -1,5 +1,5 @@
-
 import junitbuild.extensions.capitalized
+import junitbuild.extensions.dependencyProject
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
 

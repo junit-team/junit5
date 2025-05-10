@@ -1,3 +1,6 @@
+import junitbuild.extensions.dependencyFromLibs
+import junitbuild.extensions.requiredVersionFromLibs
+
 plugins {
 	id("junitbuild.checkstyle-conventions")
 }

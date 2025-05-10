@@ -1,3 +1,11 @@
+pluginManagement {
+	includeBuild("../base")
+}
+
+plugins {
+	id("junitbuild.dsl-extensions") apply false
+}
+
 dependencyResolutionManagement {
 	versionCatalogs {
 		create("libs") {
@@ -11,10 +19,9 @@ dependencyResolutionManagement {
 
 rootProject.name = "plugins"
 
-includeBuild("../base")
-
 include("build-parameters")
 include("common")
 include("code-generator")
+include("publishing")
 
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

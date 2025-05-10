@@ -1,3 +1,5 @@
+import junitbuild.extensions.requiredVersionFromLibs
+
 plugins {
 	id("com.diffplug.spotless")
 }

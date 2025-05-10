@@ -1,3 +1,5 @@
+import junitbuild.extensions.dependencyFromLibs
+
 plugins {
 	`java-library`
 }

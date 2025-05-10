@@ -1,3 +1,4 @@
+import junitbuild.extensions.dependencyFromLibs
 import junitbuild.generator.GenerateJreRelatedSourceCode
 
 plugins {

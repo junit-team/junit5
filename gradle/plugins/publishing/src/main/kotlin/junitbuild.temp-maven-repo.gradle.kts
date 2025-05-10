@@ -13,7 +13,10 @@ val clearTempRepoDir by tasks.registering {
 	}
 }
 
-val verifyArtifactsInStagingRepositoryAreReproducible by tasks.registering(VerifyBinaryArtifactsAreIdentical::class) {
+val publishAllSubprojectsToTempRepository by tasks.registering
+
+tasks.register<VerifyBinaryArtifactsAreIdentical>("verifyArtifactsInStagingRepositoryAreReproducible") {
+	dependsOn(publishAllSubprojectsToTempRepository)
 	localRepoDir.set(tempRepoDir)
 }
 
@@ -32,7 +35,7 @@ subprojects {
 		publishingTasks.configureEach {
 			dependsOn(clearTempRepoDir)
 		}
-		verifyArtifactsInStagingRepositoryAreReproducible {
+		publishAllSubprojectsToTempRepository {
 			dependsOn(publishingTasks)
 		}
 	}

@@ -1,6 +1,8 @@
-
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
+import junitbuild.extensions.trackOperationSystemAsInput
+import junitbuild.extensions.dependencyFromLibs
+import junitbuild.extensions.bundleFromLibs
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED

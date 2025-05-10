@@ -1,8 +1,11 @@
+import junitbuild.extensions.markerCoordinates
+
 plugins {
 	`kotlin-dsl`
 }
 
 dependencies {
+	implementation("junitbuild.base:dsl-extensions")
 	implementation(projects.buildParameters)
 	implementation(libs.plugins.kotlin.markerCoordinates)
 	implementation(libs.plugins.bnd.markerCoordinates)
@@ -10,11 +13,8 @@ dependencies {
 	implementation(libs.plugins.develocity.markerCoordinates)
 	implementation(libs.plugins.foojayResolver.markerCoordinates)
 	implementation(libs.plugins.jmh.markerCoordinates)
+	implementation(libs.plugins.jreleaser.markerCoordinates)
 	implementation(libs.plugins.shadow.markerCoordinates)
 	implementation(libs.plugins.spotless.markerCoordinates)
 	implementation(libs.plugins.versions.markerCoordinates)
 }
-
-// see https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_markers
-val Provider<PluginDependency>.markerCoordinates: Provider<String>
-	get() = map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }
