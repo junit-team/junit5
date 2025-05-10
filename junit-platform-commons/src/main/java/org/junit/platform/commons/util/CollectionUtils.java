@@ -125,7 +125,7 @@ public final class CollectionUtils {
 	 * returned, so if more control over the returned list is required,
 	 * consider creating a new {@code Collector} implementation like the
 	 * following:
-	 * <p>
+	 *
 	 * <pre class="code">
 	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
 	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
