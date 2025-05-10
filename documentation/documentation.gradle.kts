@@ -6,7 +6,6 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
-import java.nio.file.Path
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -442,15 +441,19 @@ tasks {
 
 			addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
 			addOption(ModuleSpecificJavadocFileOption("-module-source-path", modularProjects.associate { project ->
-				project.javaModuleName to files(
-					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs.filter { it.exists() || it.toPath().contains(Path.of("generated")) } }
-				).asPath
+				project.javaModuleName to provider {
+					files(
+						project.sourceSets.named { it.startsWith("main") }.map {
+							it.allJava.srcDirs.filter { it.exists() }
+						}
+					).asPath
+				}
 			}))
 			addStringOption("-add-modules", "info.picocli,org.opentest4j.reporting.events")
 			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
-					"org.junit.platform.console" to "info.picocli",
-					"org.junit.platform.reporting" to "org.opentest4j.reporting.events",
-					"org.junit.jupiter.params" to "univocity.parsers"
+					"org.junit.platform.console" to provider { "info.picocli" },
+					"org.junit.platform.reporting" to provider { "org.opentest4j.reporting.events" },
+					"org.junit.jupiter.params" to provider { "univocity.parsers" }
 			)))
 		}
 
