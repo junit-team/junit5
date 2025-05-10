@@ -351,7 +351,7 @@ inline fun <reified T : Throwable> assertThrows(
 @API(status = STABLE, since = "5.11")
 inline fun <R> assertDoesNotThrow(executable: () -> R): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
     }
 
     return Assertions.assertDoesNotThrow(evaluateAndWrap(executable))
@@ -374,7 +374,7 @@ inline fun <R> assertDoesNotThrow(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
     }
 
     return assertDoesNotThrow({ message }, executable)
@@ -397,7 +397,7 @@ inline fun <R> assertDoesNotThrow(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
         callsInPlace(message, AT_MOST_ONCE)
     }
 
@@ -411,7 +411,7 @@ inline fun <R> assertDoesNotThrow(
 @PublishedApi
 internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
     }
 
     return try {
@@ -439,7 +439,7 @@ fun <R> assertTimeout(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
     }
 
     return Assertions.assertTimeout(timeout, executable)
@@ -463,7 +463,7 @@ fun <R> assertTimeout(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
     }
 
     return Assertions.assertTimeout(timeout, executable, message)
@@ -487,7 +487,7 @@ fun <R> assertTimeout(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, EXACTLY_ONCE)
+        callsInPlace(executable, AT_MOST_ONCE)
         callsInPlace(message, AT_MOST_ONCE)
     }
 
