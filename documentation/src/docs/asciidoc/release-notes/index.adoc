@@ -9,7 +9,7 @@ Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juli
 :last-update-label!:
 //
 
-This document contains the _change log_ for all JUnit 5 releases since 5.11 GA.
+This document contains the _change log_ for all JUnit 5 releases since 5.12 GA.
 
 Please refer to the <<../user-guide/index.adoc#user-guide,User Guide>> for comprehensive
 reference documentation for programmers writing tests, extension authors, and engine
