@@ -1,5 +1,5 @@
 plugins {
-	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-aggregator-conventions")
 }
 
 description = "JUnit Jupiter (Aggregator)"
@@ -9,7 +9,7 @@ dependencies {
 	api(projects.junitJupiterApi)
 	api(projects.junitJupiterParams)
 
-	runtimeOnly(projects.junitJupiterEngine)
+	implementation(projects.junitJupiterEngine)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)

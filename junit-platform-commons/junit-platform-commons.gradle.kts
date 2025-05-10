@@ -10,3 +10,7 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 }
+
+tasks.compileJava {
+	options.compilerArgs.add("-Xlint:-module") // due to qualified exports
+}

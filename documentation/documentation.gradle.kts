@@ -440,19 +440,20 @@ tasks {
 			noTimestamp(true)
 
 			addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
-			val moduleSourcePathOption = addPathOption("-module-source-path")
-			moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
-			moduleSourcePathOption.value.forEach { inputs.dir(it) }
-			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate { project ->
-				project.javaModuleName to files(
-					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs }
-				).asPath
+			addOption(ModuleSpecificJavadocFileOption("-module-source-path", modularProjects.associate { project ->
+				project.javaModuleName to provider {
+					files(
+						project.sourceSets.named { it.startsWith("main") }.map {
+							it.allJava.srcDirs.filter { it.exists() }
+						}
+					).asPath
+				}
 			}))
 			addStringOption("-add-modules", "info.picocli,org.opentest4j.reporting.events")
 			addOption(ModuleSpecificJavadocFileOption("-add-reads", mapOf(
-					"org.junit.platform.console" to "info.picocli",
-					"org.junit.platform.reporting" to "org.opentest4j.reporting.events",
-					"org.junit.jupiter.params" to "univocity.parsers"
+					"org.junit.platform.console" to provider { "info.picocli" },
+					"org.junit.platform.reporting" to provider { "org.opentest4j.reporting.events" },
+					"org.junit.jupiter.params" to provider { "univocity.parsers" }
 			)))
 		}
 
@@ -463,10 +464,6 @@ tasks {
 
 		setMaxMemory("1024m")
 		options.destinationDirectory = layout.buildDirectory.dir("docs/javadoc").get().asFile
-
-		doFirst {
-			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
-		}
 	}
 
 	val fixJavadoc by registering(Copy::class) {

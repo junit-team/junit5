@@ -30,6 +30,9 @@ dependencies {
 }
 
 tasks {
+	compileJava {
+		options.compilerArgs.add("-Xlint:-requires-automatic") // JUnit 4
+	}
 	compileTestFixturesGroovy {
 		javaLauncher = project.javaToolchains.launcherFor {
 			// Groovy 2.x (used for Spock tests) does not support current JDKs

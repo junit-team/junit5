@@ -1,5 +1,5 @@
 plugins {
-	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-aggregator-conventions")
 }
 
 description = "JUnit Platform Suite (Aggregator)"

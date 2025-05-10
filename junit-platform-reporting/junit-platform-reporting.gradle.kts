@@ -33,10 +33,16 @@ tasks {
 			into("META-INF")
 		}
 	}
-	compileModule {
+	compileJava {
 		options.compilerArgs.addAll(listOf(
 			"--add-modules", "org.opentest4j.reporting.events",
 			"--add-reads", "${javaModuleName}=org.opentest4j.reporting.events"
 		))
+	}
+	javadoc {
+		(options as StandardJavadocDocletOptions).apply {
+			addStringOption("-add-modules", "org.opentest4j.reporting.events")
+			addStringOption("-add-reads", "${javaModuleName}=org.opentest4j.reporting.events")
+		}
 	}
 }

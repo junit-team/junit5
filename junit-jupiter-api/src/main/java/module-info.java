@@ -18,6 +18,8 @@ module org.junit.jupiter.api {
 	requires transitive org.junit.platform.commons;
 	requires transitive org.opentest4j;
 
+	requires static kotlin.stdlib;
+
 	exports org.junit.jupiter.api;
 	exports org.junit.jupiter.api.condition;
 	exports org.junit.jupiter.api.extension;
