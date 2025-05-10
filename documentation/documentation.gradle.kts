@@ -6,6 +6,7 @@ import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import java.nio.file.Path
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -440,12 +441,9 @@ tasks {
 			noTimestamp(true)
 
 			addStringsOption("-module", ",").value = modularProjects.map { it.javaModuleName }
-			val moduleSourcePathOption = addPathOption("-module-source-path")
-			moduleSourcePathOption.value = modularProjects.map { it.file("src/module") }
-			moduleSourcePathOption.value.forEach { inputs.dir(it) }
-			addOption(ModuleSpecificJavadocFileOption("-patch-module", modularProjects.associate { project ->
+			addOption(ModuleSpecificJavadocFileOption("-module-source-path", modularProjects.associate { project ->
 				project.javaModuleName to files(
-					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs }
+					project.sourceSets.named { it.startsWith("main") }.map { it.allJava.srcDirs.filter { it.exists() || it.toPath().contains(Path.of("generated")) } }
 				).asPath
 			}))
 			addStringOption("-add-modules", "info.picocli,org.opentest4j.reporting.events")
@@ -463,10 +461,6 @@ tasks {
 
 		setMaxMemory("1024m")
 		options.destinationDirectory = layout.buildDirectory.dir("docs/javadoc").get().asFile
-
-		doFirst {
-			(options as CoreJavadocOptions).modulePath = classpath.files.toList()
-		}
 	}
 
 	val fixJavadoc by registering(Copy::class) {
