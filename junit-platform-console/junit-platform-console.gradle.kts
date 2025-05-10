@@ -13,8 +13,6 @@ dependencies {
 
 	compileOnlyApi(libs.apiguardian)
 
-	compileOnly(libs.openTestReporting.events)
-
 	shadowed(libs.picocli)
 
 	osgiVerification(projects.junitJupiterEngine)
