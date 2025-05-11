@@ -13,7 +13,6 @@ package org.junit.platform.commons.support.conversion;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -90,7 +89,7 @@ public class DefaultConverter implements Converter {
 		}
 
 		return stringToObjectConverters.stream().anyMatch(
-			candidate -> candidate.canConvertTo(toWrapperType(targetType.getType())));
+			candidate -> candidate.canConvert(targetType.getWrapperType()));
 	}
 
 	/**
@@ -157,9 +156,9 @@ public class DefaultConverter implements Converter {
 			return source;
 		}
 
-		Class<?> targetTypeToUse = toWrapperType(targetType.getType());
+		Class<?> targetTypeToUse = targetType.getWrapperType();
 		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-			candidate -> candidate.canConvertTo(targetTypeToUse)).findFirst();
+			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
 			try {
 				return converter.get().convert((String) source, targetTypeToUse, classLoader);
@@ -177,11 +176,6 @@ public class DefaultConverter implements Converter {
 
 		throw new ConversionException("No built-in converter for source type java.lang.String and target type "
 				+ targetType.getType().getTypeName());
-	}
-
-	private static Class<?> toWrapperType(Class<?> targetType) {
-		Class<?> wrapperType = getWrapperType(targetType);
-		return wrapperType != null ? wrapperType : targetType;
 	}
 
 }

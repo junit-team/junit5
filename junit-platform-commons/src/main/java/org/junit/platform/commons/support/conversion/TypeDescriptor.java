@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  *
@@ -45,6 +46,11 @@ public final class TypeDescriptor {
 
 	public Class<?> getType() {
 		return type;
+	}
+
+	public Class<?> getWrapperType() {
+		Class<?> wrapperType = ReflectionUtils.getWrapperType(type);
+		return wrapperType != null ? wrapperType : type;
 	}
 
 	public boolean isPrimitive() {

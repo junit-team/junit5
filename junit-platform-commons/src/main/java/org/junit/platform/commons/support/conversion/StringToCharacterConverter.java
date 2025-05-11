@@ -12,15 +12,15 @@ package org.junit.platform.commons.support.conversion;
 
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToCharacterConverter implements StringToObjectConverter {
+class StringToCharacterConverter extends StringToObjectConverter {
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return targetType == Character.class;
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) {
+	public Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		Preconditions.condition(source.length() == 1, () -> "String must have length of 1: " + source);
 		return source.charAt(0);
 	}

@@ -12,15 +12,15 @@ package org.junit.platform.commons.support.conversion;
 
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToBooleanConverter implements StringToObjectConverter {
+class StringToBooleanConverter extends StringToObjectConverter {
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return targetType == Boolean.class;
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) {
+	public Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		boolean isTrue = "true".equalsIgnoreCase(source);
 		Preconditions.condition(isTrue || "false".equalsIgnoreCase(source),
 			() -> "String must be 'true' or 'false' (ignoring case): " + source);
