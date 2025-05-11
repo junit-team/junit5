@@ -77,7 +77,7 @@ public class DefaultConverter implements Converter {
 	 * @return {@code true} if the supplied source can be converted
 	 */
 	@Override
-	public boolean canConvert(Object source, Class<?> targetType, ClassLoader classLoader) {
+	public boolean canConvert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
 		if (source == null) {
 			return !targetType.isPrimitive();
 		}
@@ -86,12 +86,12 @@ public class DefaultConverter implements Converter {
 			return false;
 		}
 
-		if (String.class.equals(targetType)) {
+		if (String.class.equals(targetType.getType())) {
 			return true;
 		}
 
 		return stringToObjectConverters.stream().anyMatch(
-			candidate -> candidate.canConvertTo(toWrapperType(targetType)));
+			candidate -> candidate.canConvertTo(toWrapperType(targetType.getType())));
 	}
 
 	/**
@@ -145,20 +145,20 @@ public class DefaultConverter implements Converter {
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Override
-	public Object convert(Object source, Class<?> targetType, ClassLoader classLoader) {
+	public Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(
-					"Cannot convert null to primitive value of type " + targetType.getTypeName());
+					"Cannot convert null to primitive value of type " + targetType.getType().getTypeName());
 			}
 			return null;
 		}
 
-		if (String.class.equals(targetType)) {
+		if (String.class.equals(targetType.getType())) {
 			return source;
 		}
 
-		Class<?> targetTypeToUse = toWrapperType(targetType);
+		Class<?> targetTypeToUse = toWrapperType(targetType.getType());
 		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
 			candidate -> candidate.canConvertTo(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
@@ -171,13 +171,13 @@ public class DefaultConverter implements Converter {
 					throw (ConversionException) ex;
 				}
 				// else
-				throw new ConversionException(
-					String.format("Failed to convert String \"%s\" to type %s", source, targetType.getTypeName()), ex);
+				throw new ConversionException(String.format("Failed to convert String \"%s\" to type %s", source,
+					targetType.getType().getTypeName()), ex);
 			}
 		}
 
-		throw new ConversionException(
-			"No built-in converter for source type java.lang.String and target type " + targetType.getTypeName());
+		throw new ConversionException("No built-in converter for source type java.lang.String and target type "
+				+ targetType.getType().getTypeName());
 	}
 
 	private static Class<?> toWrapperType(Class<?> targetType) {

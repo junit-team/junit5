@@ -35,6 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.support.conversion.ConversionException;
+import org.junit.platform.commons.support.conversion.TypeDescriptor;
 import org.junit.platform.commons.test.TestClassLoader;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
@@ -98,7 +99,8 @@ class DefaultArgumentConverterTests {
 
 		convert("value", int.class);
 
-		verify(underTest).delegateConversion("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).delegateConversion("value", TypeDescriptor.forType(int.class),
+			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
@@ -128,7 +130,8 @@ class DefaultArgumentConverterTests {
 
 		convert("en", Locale.class);
 
-		verify(underTest).convert("en", Locale.class, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).convert("en", TypeDescriptor.forType(Locale.class),
+			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
@@ -141,7 +144,8 @@ class DefaultArgumentConverterTests {
 				.withCause(exception) //
 				.withMessage(exception.getMessage());
 
-		verify(underTest).delegateConversion("value", int.class, getClassLoader(DefaultArgumentConverterTests.class));
+		verify(underTest).delegateConversion("value", TypeDescriptor.forType(int.class),
+			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
 	@Test
@@ -161,7 +165,7 @@ class DefaultArgumentConverterTests {
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 
-			verify(underTest).delegateConversion(customTypeName, Class.class, testClassLoader);
+			verify(underTest).delegateConversion(customTypeName, TypeDescriptor.forType(Class.class), testClassLoader);
 		}
 	}
 
@@ -182,7 +186,7 @@ class DefaultArgumentConverterTests {
 	}
 
 	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
-		return underTest.convert(input, targetClass, classLoader);
+		return underTest.convert(input, TypeDescriptor.forType(targetClass), classLoader);
 	}
 
 	@SuppressWarnings("unused")

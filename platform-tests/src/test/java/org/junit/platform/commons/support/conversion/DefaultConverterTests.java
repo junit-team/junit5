@@ -105,9 +105,11 @@ class DefaultConverterTests {
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
 			double.class, void.class })
 	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
-		assertThat(canConvert(null, type)).isFalse();
+		TypeDescriptor typeDescriptor = TypeDescriptor.forType(type);
+
+		assertThat(canConvert(null, typeDescriptor)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert(null, type)) //
+				.isThrownBy(() -> convert(null, typeDescriptor)) //
 				.withMessage("Cannot convert null to primitive value of type %s", type.getCanonicalName());
 	}
 
@@ -115,43 +117,49 @@ class DefaultConverterTests {
 	@ValueSource(classes = { Boolean.class, Character.class, Short.class, Byte.class, Integer.class, Long.class,
 			Float.class, Double.class })
 	void throwsExceptionWhenConvertingTheWordNullToPrimitiveWrapperType(Class<?> type) {
-		assertThat(canConvert("null", type)).isTrue();
+		TypeDescriptor typeDescriptor = TypeDescriptor.forType(type);
+
+		assertThat(canConvert("null", typeDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("null", type)) //
+				.isThrownBy(() -> convert("null", typeDescriptor)) //
 				.withMessage("Failed to convert String \"null\" to type " + type.getCanonicalName());
 
-		assertThat(canConvert("NULL", type)).isTrue();
+		assertThat(canConvert("NULL", typeDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("NULL", type)) //
+				.isThrownBy(() -> convert("NULL", typeDescriptor)) //
 				.withMessage("Failed to convert String \"NULL\" to type " + type.getCanonicalName());
 	}
 
 	@Test
 	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
-		assertThat(canConvert("ab", char.class)).isTrue();
+		TypeDescriptor charDescriptor = TypeDescriptor.forType(char.class);
+
+		assertThat(canConvert("ab", charDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("ab", char.class)) //
+				.isThrownBy(() -> convert("ab", charDescriptor)) //
 				.withMessage("Failed to convert String \"ab\" to type char") //
 				.havingCause() //
 				.withMessage("String must have length of 1: ab");
 
-		assertThat(canConvert("tru", boolean.class)).isTrue();
+		TypeDescriptor booleanDescriptor = TypeDescriptor.forType(boolean.class);
+
+		assertThat(canConvert("tru", booleanDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("tru", boolean.class)) //
+				.isThrownBy(() -> convert("tru", booleanDescriptor)) //
 				.withMessage("Failed to convert String \"tru\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): tru");
 
-		assertThat(canConvert("null", boolean.class)).isTrue();
+		assertThat(canConvert("null", booleanDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("null", boolean.class)) //
+				.isThrownBy(() -> convert("null", booleanDescriptor)) //
 				.withMessage("Failed to convert String \"null\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): null");
 
-		assertThat(canConvert("NULL", boolean.class)).isTrue();
+		assertThat(canConvert("NULL", booleanDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("NULL", boolean.class)) //
+				.isThrownBy(() -> convert("NULL", booleanDescriptor)) //
 				.withMessage("Failed to convert String \"NULL\" to type boolean") //
 				.havingCause() //
 				.withMessage("String must be 'true' or 'false' (ignoring case): NULL");
@@ -159,9 +167,11 @@ class DefaultConverterTests {
 
 	@Test
 	void throwsExceptionWhenImplicitConversionIsUnsupported() {
-		assertThat(canConvert("foo", Enigma.class)).isFalse();
+		TypeDescriptor typeDescriptor = TypeDescriptor.forType(Enigma.class);
+
+		assertThat(canConvert("foo", typeDescriptor)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
-				.isThrownBy(() -> convert("foo", Enigma.class)) //
+				.isThrownBy(() -> convert("foo", typeDescriptor)) //
 				.withMessage("No built-in converter for source type java.lang.String and target type %s",
 					Enigma.class.getName());
 	}
@@ -241,10 +251,11 @@ class DefaultConverterTests {
 			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
+			var typeDescriptor = TypeDescriptor.forType(Class.class);
 			var classLoader = classLoader(declaringExecutable);
-			assertThat(canConvert(customTypeName, Class.class, classLoader)).isTrue();
+			assertThat(canConvert(customTypeName, typeDescriptor, classLoader)).isTrue();
 
-			var clazz = (Class<?>) convert(customTypeName, Class.class, classLoader);
+			var clazz = (Class<?>) convert(customTypeName, typeDescriptor, classLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
@@ -322,28 +333,30 @@ class DefaultConverterTests {
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		assertThat(canConvert(input, targetClass)).isTrue();
+		TypeDescriptor typeDescriptor = TypeDescriptor.forType(targetClass);
 
-		var result = convert(input, targetClass);
+		assertThat(canConvert(input, typeDescriptor)).isTrue();
+
+		var result = convert(input, typeDescriptor);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetClass.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
 	}
 
-	private boolean canConvert(Object input, Class<?> targetClass) {
+	private boolean canConvert(Object input, TypeDescriptor targetClass) {
 		return canConvert(input, targetClass, classLoader());
 	}
 
-	private Object convert(Object input, Class<?> targetClass) {
+	private Object convert(Object input, TypeDescriptor targetClass) {
 		return convert(input, targetClass, classLoader());
 	}
 
-	private boolean canConvert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+	private boolean canConvert(Object input, TypeDescriptor targetClass, ClassLoader classLoader) {
 		return DefaultConverter.INSTANCE.canConvert(input, targetClass, classLoader);
 	}
 
-	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+	private Object convert(Object input, TypeDescriptor targetClass, ClassLoader classLoader) {
 		return DefaultConverter.INSTANCE.convert(input, targetClass, classLoader);
 	}
 

@@ -41,12 +41,12 @@ public interface Converter {
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type
-	 * @param targetType the target type the source should be converted into;
+	 * @param targetType the descriptor of the type the source should be converted into;
 	 * never {@code null}
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
-	boolean canConvert(Object source, Class<?> targetType, ClassLoader classLoader);
+	boolean canConvert(Object source, TypeDescriptor targetType, ClassLoader classLoader);
 
 	/**
 	 * Convert the supplied source object into an instance of the specified
@@ -54,13 +54,13 @@ public interface Converter {
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type
-	 * @param targetType the target type the source should be converted into;
+	 * @param targetType the descriptor of the type the source should be converted into;
 	 * never {@code null}
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
-	Object convert(Object source, Class<?> targetType, ClassLoader classLoader) throws ConversionException;
+	Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) throws ConversionException;
 
 }

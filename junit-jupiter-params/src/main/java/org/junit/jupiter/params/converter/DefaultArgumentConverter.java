@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.support.conversion.ConversionException;
 import org.junit.platform.commons.support.conversion.ConversionSupport;
+import org.junit.platform.commons.support.conversion.TypeDescriptor;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -81,33 +82,31 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 
 	@Override
 	public final Object convert(Object source, ParameterContext context) {
-		Class<?> targetType = context.getParameter().getType();
 		ClassLoader classLoader = getClassLoader(context.getDeclaringExecutable().getDeclaringClass());
-		return convert(source, targetType, classLoader);
+		return convert(source, TypeDescriptor.forParameter(context.getParameter()), classLoader);
 	}
 
 	@Override
 	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
-		Class<?> targetType = context.getField().getType();
 		ClassLoader classLoader = getClassLoader(context.getField().getDeclaringClass());
-		return convert(source, targetType, classLoader);
+		return convert(source, TypeDescriptor.forField(context.getField()), classLoader);
 	}
 
-	public final Object convert(Object source, Class<?> targetType, ClassLoader classLoader) {
+	public final Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
-					"Cannot convert null to primitive value of type " + targetType.getTypeName());
+					"Cannot convert null to primitive value of type " + targetType.getType().getTypeName());
 			}
 			return null;
 		}
 
-		if (ReflectionUtils.isAssignableTo(source, targetType)) {
+		if (ReflectionUtils.isAssignableTo(source, targetType.getType())) {
 			return source;
 		}
 
 		if (source instanceof String //
-				&& targetType == Locale.class //
+				&& targetType.getType() == Locale.class //
 				&& getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
 			return Locale.forLanguageTag((String) source);
 		}
@@ -125,7 +124,7 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 				.orElse(LocaleConversionFormat.BCP_47);
 	}
 
-	Object delegateConversion(Object source, Class<?> targetType, ClassLoader classLoader) {
+	Object delegateConversion(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
 		return ConversionSupport.convert(source, targetType, classLoader);
 	}
 

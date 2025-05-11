@@ -49,13 +49,12 @@ public final class ConversionSupport {
 	 *
 	 * @since 1.11
 	 * @see DefaultConverter
-	 * @deprecated Use {@link #convert(Object, Class, ClassLoader)} instead.
+	 * @deprecated Use {@link #convert(Object, TypeDescriptor, ClassLoader)} instead.
 	 */
-	@SuppressWarnings("unchecked")
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.13")
 	public static <T> T convert(String source, Class<T> targetType, ClassLoader classLoader) {
-		return (T) DefaultConverter.INSTANCE.convert(source, targetType, getClassLoader(classLoader));
+		return convert(source, TypeDescriptor.forType(targetType), getClassLoader(classLoader));
 	}
 
 	/**
@@ -76,7 +75,7 @@ public final class ConversionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.13")
 	@SuppressWarnings("unchecked")
-	public static <T> T convert(Object source, Class<T> targetType, ClassLoader classLoader) {
+	public static <T> T convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
 		ClassLoader classLoaderToUse = getClassLoader(classLoader);
 		ServiceLoader<Converter> serviceLoader = ServiceLoader.load(Converter.class, classLoaderToUse);
 
@@ -86,7 +85,7 @@ public final class ConversionSupport {
 				.filter(candidate -> candidate.canConvert(source, targetType, classLoader)) //
 				.findFirst() //
 				.orElseThrow(() -> new ConversionException("No registered or built-in converter for source '" + source
-						+ "' and target type " + targetType.getTypeName()));
+						+ "' and target type " + targetType.getType().getTypeName()));
 
 		return (T) converter.convert(source, targetType, classLoaderToUse);
 	}
