@@ -82,7 +82,7 @@ public final class ConversionSupport {
 		Converter converter = Stream.concat( //
 			StreamSupport.stream(serviceLoader.spliterator(), false), //
 			Stream.of(DefaultConverter.INSTANCE)) //
-				.filter(candidate -> candidate.canConvert(source, targetType, classLoader)) //
+				.filter(candidate -> candidate.canConvert(source, targetType)) //
 				.findFirst() //
 				.orElseThrow(() -> new ConversionException("No registered or built-in converter for source '" + source
 						+ "' and target type " + targetType.getType().getTypeName()));

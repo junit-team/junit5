@@ -43,14 +43,16 @@ public interface Converter {
 	 * if the target type is a reference type
 	 * @param targetType the descriptor of the type the source should be converted into;
 	 * never {@code null}
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
-	boolean canConvert(Object source, TypeDescriptor targetType, ClassLoader classLoader);
+	boolean canConvert(Object source, TypeDescriptor targetType);
 
 	/**
 	 * Convert the supplied source object into an instance of the specified
 	 * target type.
+	 *
+	 * <p>This method will only be invoked if {@link #canConvert(Object, TypeDescriptor)}
+	 * returned {@code true} for the same target type.
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type

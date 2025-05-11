@@ -252,10 +252,9 @@ class DefaultConverterTests {
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			var typeDescriptor = TypeDescriptor.forType(Class.class);
-			var classLoader = classLoader(declaringExecutable);
-			assertThat(canConvert(customTypeName, typeDescriptor, classLoader)).isTrue();
+			assertThat(canConvert(customTypeName, typeDescriptor)).isTrue();
 
-			var clazz = (Class<?>) convert(customTypeName, typeDescriptor, classLoader);
+			var clazz = (Class<?>) convert(customTypeName, typeDescriptor, classLoader(declaringExecutable));
 			assertThat(clazz).isNotEqualTo(Enigma.class);
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
@@ -345,15 +344,11 @@ class DefaultConverterTests {
 	}
 
 	private boolean canConvert(Object input, TypeDescriptor targetClass) {
-		return canConvert(input, targetClass, classLoader());
+		return DefaultConverter.INSTANCE.canConvert(input, targetClass);
 	}
 
 	private Object convert(Object input, TypeDescriptor targetClass) {
 		return convert(input, targetClass, classLoader());
-	}
-
-	private boolean canConvert(Object input, TypeDescriptor targetClass, ClassLoader classLoader) {
-		return DefaultConverter.INSTANCE.canConvert(input, targetClass, classLoader);
 	}
 
 	private Object convert(Object input, TypeDescriptor targetClass, ClassLoader classLoader) {

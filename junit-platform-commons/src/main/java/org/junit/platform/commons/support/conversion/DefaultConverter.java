@@ -73,11 +73,10 @@ public class DefaultConverter implements Converter {
 	 * if the target type is a reference type
 	 * @param targetType the target type the source should be converted into;
 	 * never {@code null}
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
 	@Override
-	public boolean canConvert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
+	public boolean canConvert(Object source, TypeDescriptor targetType) {
 		if (source == null) {
 			return !targetType.isPrimitive();
 		}
