@@ -3195,6 +3195,28 @@ execution order. Thus, in both cases, test methods in such test classes are only
 concurrently if the `@Execution(CONCURRENT)` annotation is present on the test class or
 method.
 
+==== Using @Execution Annotation
+
+You can use the `@Execution` annotation to explicitly configure concurrent execution for a test class or method:
+
+[source,java]
+----
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
+
+@Execution(ExecutionMode.CONCURRENT)
+class MyParallelTests {
+
+    @Test
+    void testA() { ... }
+
+    @Test
+    void testB() { ... }
+}
+----
+
+This allows test classes or methods to opt-in to parallel execution even when the default is `same_thread`.
+
 When parallel execution is enabled and a default `{ClassOrderer}` is registered (see
 <<writing-tests-test-execution-order-classes>> for details), top-level test classes will
 initially be sorted accordingly and scheduled in that order. However, they are not
@@ -3283,6 +3305,36 @@ used instead.
 
 [[writing-tests-parallel-execution-config]]
 ==== Configuration
+
+[cols="3,6,2,1", options="header"]
+|===
+| Property | Description | Possible Values | Default
+
+| junit.jupiter.execution.parallel.enabled
+| Enables parallel test execution
+| true, false
+| false
+
+| junit.jupiter.execution.parallel.mode.default
+| Execution mode for test elements
+| same_thread, concurrent
+| same_thread
+
+| junit.jupiter.execution.parallel.mode.classes.default
+| Execution mode for test classes
+| same_thread, concurrent
+| same_thread
+
+| junit.jupiter.execution.parallel.config.strategy
+| Strategy for configuring thread pool
+| dynamic, fixed, custom
+| dynamic
+
+| junit.jupiter.execution.parallel.config.fixed.parallelism
+| Thread count for fixed strategy
+| Integer (e.g., 4)
+| none
+|===
 
 Properties such as the desired parallelism and the maximum pool size can be configured
 using a `{ParallelExecutionConfigurationStrategy}`. The JUnit Platform provides two
