@@ -3,6 +3,7 @@ plugins {
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.jmh-conventions")
 	`java-test-fixtures`
+	alias(libs.plugins.extraJavaModuleInfo)
 }
 
 description = "JUnit Jupiter Params"
@@ -21,6 +22,11 @@ dependencies {
 	osgiVerification(projects.junitPlatformLauncher)
 }
 
+extraJavaModuleInfo {
+	automaticModule(libs.univocity.parsers, "univocity.parsers")
+	failOnMissingModuleInfo = false
+}
+
 tasks {
 	jar {
 		bundle {
@@ -33,9 +39,6 @@ tasks {
 			""")
 		}
 	}
-}
-
-tasks {
 	shadowJar {
 		relocate("com.univocity", "org.junit.jupiter.params.shadow.com.univocity")
 		from(projectDir) {
@@ -43,10 +46,16 @@ tasks {
 			into("META-INF")
 		}
 	}
-	compileModule {
+	compileJava {
 		options.compilerArgs.addAll(listOf(
 			"--add-modules", "univocity.parsers",
 			"--add-reads", "${javaModuleName}=univocity.parsers"
 		))
+	}
+	javadoc {
+		(options as StandardJavadocDocletOptions).apply {
+			addStringOption("-add-modules", "univocity.parsers")
+			addStringOption("-add-reads", "${javaModuleName}=univocity.parsers")
+		}
 	}
 }
