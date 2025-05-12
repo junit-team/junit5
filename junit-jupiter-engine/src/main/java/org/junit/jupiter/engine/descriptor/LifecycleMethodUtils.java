@@ -10,11 +10,10 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionReturnType;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.alwaysSatisfied;
 
 import java.lang.annotation.Annotation;
@@ -183,12 +182,6 @@ final class LifecycleMethodUtils {
 				annotationNameProvider.apply(method), method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
-	}
-
-	private static Class<?> getReturnType(Method method) {
-		return isKotlinSuspendingFunction(method) //
-				? getKotlinSuspendingFunctionReturnType(method) //
-				: method.getReturnType();
 	}
 
 	private static String classTemplateInvocationLifecycleMethodAnnotationName(Method method) {

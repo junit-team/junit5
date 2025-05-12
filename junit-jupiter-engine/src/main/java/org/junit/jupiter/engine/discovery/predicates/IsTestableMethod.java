@@ -10,9 +10,8 @@
 
 package org.junit.jupiter.engine.discovery.predicates;
 
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionReturnType;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -74,12 +73,6 @@ abstract class IsTestableMethod implements Predicate<Method> {
 			DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(method -> getReturnType(method) == void.class,
 			method -> createIssue(annotationType, method, "must not return a value"));
-	}
-
-	protected static Class<?> getReturnType(Method method) {
-		return isKotlinSuspendingFunction(method) //
-				? getKotlinSuspendingFunctionReturnType(method) //
-				: method.getReturnType();
 	}
 
 	protected static DiscoveryIssue createIssue(Class<? extends Annotation> annotationType, Method method,

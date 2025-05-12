@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
 import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.annotation.Annotation;

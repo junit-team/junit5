@@ -63,11 +63,10 @@ public class ParameterResolutionUtils {
 	public static Object[] resolveParameters(Method method, Optional<Object> target, ExtensionContext extensionContext,
 			ExtensionRegistry extensionRegistry) {
 
-		var parameters = isKotlinSuspendingFunction(method) //
-				? getSuspendingFunctionParameters(method) //
-				: method.getParameters();
 		return resolveParameters(method, target, Optional.empty(), __ -> extensionContext, extensionRegistry,
-			parameters);
+			isKotlinSuspendingFunction(method) //
+					? getSuspendingFunctionParameters(method) //
+					: method.getParameters());
 	}
 
 	/**
