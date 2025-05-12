@@ -17,4 +17,7 @@ dependencies {
 
 tasks.compileJava {
 	options.compilerArgs.add("-Xlint:-module") // due to qualified exports
+	options.compilerArgumentProviders.add(CommandLineArgumentProvider {
+		listOf("--patch-module", "${javaModuleName}=${sourceSets.main.get().output.asPath}")
+	})
 }
