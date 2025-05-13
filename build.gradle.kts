@@ -8,7 +8,7 @@ plugins {
 	id("junitbuild.temp-maven-repo")
 }
 
-description = "JUnit 5"
+description = "JUnit"
 
 val license by extra(License(
 	name = "Eclipse Public License v2.0",

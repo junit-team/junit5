@@ -29,7 +29,7 @@ import org.junit.rules.Verifier;
  * can be left unchanged including the JUnit 4 rule import statements.
  *
  * <p>However, if you intend to develop a <em>new</em> extension for
- * JUnit 5 please use the new extension model of JUnit Jupiter instead
+ * JUnit please use the new extension model of JUnit Jupiter instead
  * of the rule-based model of JUnit 4.
  *
  * @since 5.0
