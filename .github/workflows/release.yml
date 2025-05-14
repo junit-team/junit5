@@ -9,6 +9,11 @@ on:
       deploymentId:
         description: ID of the Maven Central Publish Portal deployment
         required: true
+      dryRun:
+        type: boolean
+        description: Enable dry-run mode
+        required: false
+        default: false
 
 permissions: read-all
 
@@ -57,6 +62,7 @@ jobs:
             :verifyArtifactsInStagingRepositoryAreReproducible \
             --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
+        if: ${{ inputs.dryRun == 'false' }}
         uses: actions/attest-build-provenance@db473fddc028af60658334401dc6fa3ffd8669fd # v2.3.0
         with:
           subject-path: build/repo/**/*.jar
@@ -113,6 +119,7 @@ jobs:
       issues: write
     steps:
       - name: Close GitHub milestone
+        if: ${{ inputs.dryRun == 'false' }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           result-encoding: string
@@ -150,6 +157,7 @@ jobs:
           fetch-depth: 1
           ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Release staging repository
+        if: ${{ inputs.dryRun == 'false' }}
         uses: ./.github/actions/run-gradle
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
@@ -179,7 +187,18 @@ jobs:
         run: |
           git config --global user.name "JUnit Team"
           git config --global user.email "team@junit.org"
-      - name: Build and publish documentation
+      - name: Build documentation
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --no-build-cache \
+            --no-configuration-cache \
+            clean \
+            gitPublishCopy \
+            -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
+      - name: Publish documentation
+        if: ${{ inputs.dryRun == 'false' }}
         uses: ./.github/actions/run-gradle
         env:
           GIT_USERNAME: git
@@ -189,10 +208,10 @@ jobs:
           arguments: |
             --no-build-cache \
             --no-configuration-cache \
-            clean \
             gitPublishPush \
             -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
       - name: Wait for deployment to GitHub Pages
+        if: ${{ inputs.dryRun == 'false' }}
         id: pagesDeployment
         timeout-minutes: 20
         run: |
@@ -200,6 +219,7 @@ jobs:
           ./.github/scripts/waitForUrl.sh "$URL"
           echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
       - name: Verify integrity of PDF version of User Guide
+        if: ${{ inputs.dryRun == 'false' }}
         run: |
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           pdfinfo /tmp/junit-user-guide.pdf
@@ -220,6 +240,7 @@ jobs:
           name: local-maven-repository
           path: build/repo
       - name: Wait for sync to Maven Central
+        if: ${{ inputs.dryRun == 'false' }}
         timeout-minutes: 30
         run: |
           find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
@@ -252,9 +273,12 @@ jobs:
           git switch -c "${{ env.RELEASE_TAG }}"
           git status
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
+      - name: Push release branch
+        if: ${{ inputs.dryRun == 'false' }}
+        run: |
           git push origin "${{ env.RELEASE_TAG }}"
       - name: Update main branch (only for GA releases)
-        if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
+        if: ${{ inputs.dryRun == 'false' && !contains(github.event.inputs.releaseVersion, '-') }}
         run: |
           git switch main
           git merge --ff-only "${{ env.RELEASE_TAG }}"
@@ -262,6 +286,7 @@ jobs:
 
   create_github_release:
     name: Create GitHub release
+    if: ${{ inputs.dryRun == 'false' }}
     needs: wait_for_maven_central
     runs-on: ubuntu-latest
     permissions:
