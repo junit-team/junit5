@@ -752,6 +752,7 @@ class AssertEqualsAssertionsTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("overrides")
 	private static class EqualsThrowsException {
 
 		@Override

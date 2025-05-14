@@ -757,6 +757,7 @@ class AssertNotEqualsAssertionsTests {
 
 	// -------------------------------------------------------------------------
 
+	@SuppressWarnings("overrides")
 	private static class EqualsThrowsExceptionClass {
 
 		@Override

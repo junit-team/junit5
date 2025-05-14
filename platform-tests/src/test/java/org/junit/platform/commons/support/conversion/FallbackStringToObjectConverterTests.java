@@ -167,6 +167,11 @@ class FallbackStringToObjectConverterTests {
 			return Objects.equals(this.title, that.title);
 		}
 
+		@Override
+		public int hashCode() {
+			return Objects.hash(title);
+		}
+
 	}
 
 	static class Journal {
@@ -186,6 +191,11 @@ class FallbackStringToObjectConverterTests {
 				return false;
 			}
 			return Objects.equals(this.title, that.title);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(title);
 		}
 
 	}
@@ -215,6 +225,11 @@ class FallbackStringToObjectConverterTests {
 				return false;
 			}
 			return Objects.equals(this.title, that.title);
+		}
+
+		@Override
+		public int hashCode() {
+			return Objects.hash(title);
 		}
 
 	}
