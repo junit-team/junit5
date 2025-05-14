@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.ReflectionUtils.tryToLoadClass;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -30,19 +31,27 @@ public class KotlinReflectionUtils {
 
 	private static final Class<? extends Annotation> kotlinMetadata;
 	private static final Class<?> kotlinCoroutineContinuation;
+	private static final boolean kotlinReflectPresent;
+	private static final boolean kotlinxCoroutinesPresent;
 
 	static {
 		var metadata = tryToLoadKotlinMetadataClass();
 		kotlinMetadata = metadata.toOptional().orElse(null);
 		kotlinCoroutineContinuation = metadata //
-				.andThen(__ -> ReflectionUtils.tryToLoadClass("kotlin.coroutines.Continuation")) //
+				.andThen(__ -> tryToLoadClass("kotlin.coroutines.Continuation")) //
 				.toOptional() //
 				.orElse(null);
+		kotlinReflectPresent = metadata.andThen(__ -> tryToLoadClass("kotlin.reflect.jvm.ReflectJvmMapping")) //
+				.toOptional() //
+				.isPresent();
+		kotlinxCoroutinesPresent = metadata.andThen(__ -> tryToLoadClass("kotlinx.coroutines.BuildersKt")) //
+				.toOptional() //
+				.isPresent();
 	}
 
 	@SuppressWarnings("unchecked")
 	private static Try<Class<? extends Annotation>> tryToLoadKotlinMetadataClass() {
-		return ReflectionUtils.tryToLoadClass("kotlin.Metadata") //
+		return tryToLoadClass("kotlin.Metadata") //
 				.andThenTry(it -> (Class<? extends Annotation>) it);
 	}
 
@@ -61,23 +70,44 @@ public class KotlinReflectionUtils {
 	}
 
 	public static Class<?> getKotlinSuspendingFunctionReturnType(Method method) {
+		requireKotlinReflect(method);
 		return KotlinReflectionUtilsKt.getReturnType(method);
 	}
 
 	public static Type getKotlinSuspendingFunctionGenericReturnType(Method method) {
+		requireKotlinReflect(method);
 		return KotlinReflectionUtilsKt.getGenericReturnType(method);
 	}
 
 	public static Parameter[] getKotlinSuspendingFunctionParameters(Method method) {
+		requireKotlinReflect(method);
 		return KotlinReflectionUtilsKt.getParameters(method);
 	}
 
 	public static Class<?>[] getKotlinSuspendingFunctionParameterTypes(Method method) {
+		requireKotlinReflect(method);
 		return KotlinReflectionUtilsKt.getParameterTypes(method);
 	}
 
 	public static Object invokeKotlinSuspendingFunction(Method method, Object target, Object[] args) {
+		requireKotlinReflect(method);
+		requireKotlinxCoroutines(method);
 		return KotlinReflectionUtilsKt.invoke(method, target, args);
+	}
+
+	private static void requireKotlinReflect(Method method) {
+		requireDependency(method, kotlinReflectPresent, "org.jetbrains.kotlin:kotlin-reflect");
+	}
+
+	private static void requireKotlinxCoroutines(Method method) {
+		requireDependency(method, kotlinxCoroutinesPresent, "org.jetbrains.kotlinx:kotlinx-coroutines-core");
+	}
+
+	private static void requireDependency(Method method, boolean condition, String dependencyNotation) {
+		Preconditions.condition(condition,
+			() -> ("Kotlin suspending function [%s] requires %s to be on the classpath or module path. "
+					+ "Please add a corresponding dependency.").formatted(method.toGenericString(),
+						dependencyNotation));
 	}
 
 }
