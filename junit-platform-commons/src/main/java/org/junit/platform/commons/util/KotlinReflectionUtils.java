@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 
 import org.junit.platform.commons.function.Try;
 
@@ -51,19 +52,23 @@ public class KotlinReflectionUtils {
 	}
 
 	public static Class<?> getKotlinSuspendingFunctionReturnType(Method method) {
-		return KotlinReflectionKt.getReturnType(method);
+		return KotlinReflectionUtilsKt.getReturnType(method);
 	}
 
-	public static Parameter[] getSuspendingFunctionParameters(Method method) {
-		return KotlinReflectionKt.getParameters(method);
+	public static Type getKotlinSuspendingFunctionGenericReturnType(Method method) {
+		return KotlinReflectionUtilsKt.getGenericReturnType(method);
+	}
+
+	public static Parameter[] getKotlinSuspendingFunctionParameters(Method method) {
+		return KotlinReflectionUtilsKt.getParameters(method);
 	}
 
 	public static Class<?>[] getKotlinSuspendingFunctionParameterTypes(Method method) {
-		return KotlinReflectionKt.getParameterTypes(method);
+		return KotlinReflectionUtilsKt.getParameterTypes(method);
 	}
 
 	public static Object invokeKotlinSuspendingFunction(Method method, Object target, Object[] args) {
-		return KotlinReflectionKt.invoke(method, target, args);
+		return KotlinReflectionUtilsKt.invoke(method, target, args);
 	}
 
 }

@@ -11,10 +11,12 @@
 package org.junit.jupiter.engine.support;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionGenericReturnType;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionReturnType;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 import org.apiguardian.api.API;
 
@@ -25,6 +27,12 @@ public class MethodReflectionUtils {
 		return isKotlinSuspendingFunction(method) //
 				? getKotlinSuspendingFunctionReturnType(method) //
 				: method.getReturnType();
+	}
+
+	public static Type getGenericReturnType(Method method) {
+		return isKotlinSuspendingFunction(method) //
+				? getKotlinSuspendingFunctionGenericReturnType(method) //
+				: method.getGenericReturnType();
 	}
 
 }

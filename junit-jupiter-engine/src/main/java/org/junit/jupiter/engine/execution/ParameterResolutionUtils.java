@@ -13,7 +13,7 @@ package org.junit.jupiter.engine.execution;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.getSuspendingFunctionParameters;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameters;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
@@ -65,7 +65,7 @@ public class ParameterResolutionUtils {
 
 		return resolveParameters(method, target, Optional.empty(), __ -> extensionContext, extensionRegistry,
 			isKotlinSuspendingFunction(method) //
-					? getSuspendingFunctionParameters(method) //
+					? getKotlinSuspendingFunctionParameters(method) //
 					: method.getParameters());
 	}
 

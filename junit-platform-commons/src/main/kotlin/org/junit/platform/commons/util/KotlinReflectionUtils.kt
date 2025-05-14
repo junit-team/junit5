@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Method
 import kotlin.reflect.full.callSuspend
 import kotlin.reflect.full.valueParameters
+import kotlin.reflect.jvm.javaType
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.jvm.kotlinFunction
 
@@ -25,6 +26,8 @@ internal fun getReturnType(method: Method): Class<out Any> =
             java
         }
     }
+
+internal fun getGenericReturnType(method: Method) = method.kotlinFunction!!.returnType.javaType
 
 internal fun getParameterTypes(method: Method) =
     method.kotlinFunction!!

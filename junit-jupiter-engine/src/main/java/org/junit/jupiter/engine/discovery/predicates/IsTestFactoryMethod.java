@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getGenericReturnType;
 import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
 import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
@@ -67,7 +68,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 	}
 
 	private static boolean isCompatibleContainerType(Method method, DiscoveryIssueReporter issueReporter) {
-		Type genericReturnType = method.getGenericReturnType();
+		Type genericReturnType = getGenericReturnType(method);
 
 		if (genericReturnType instanceof ParameterizedType) {
 			Type[] typeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();

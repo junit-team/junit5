@@ -12,7 +12,6 @@ package org.junit.jupiter.params;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
-import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.HierarchyTraversalMode;
-import org.junit.platform.commons.support.ModifierSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 class ParameterizedClassContext implements ParameterizedDeclarationContext<ClassTemplateInvocationContext> {
@@ -155,9 +153,6 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 		List<Method> methods = findAnnotatedMethods(testClass, annotationType, traversalMode);
 
 		return methods.stream() //
-				.filter(ModifierSupport::isNotPrivate) //
-				.filter(testInstanceLifecycle == PER_METHOD ? ModifierSupport::isStatic : __ -> true) //
-				.filter(ReflectionUtils::returnsPrimitiveVoid) //
 				.map(method -> {
 					A annotation = getAnnotation(method, annotationType);
 					if (injectArgumentsPredicate.test(annotation)) {
