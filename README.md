@@ -94,7 +94,7 @@ Consult the [Dependency Metadata] section of the [User Guide] for a list of all 
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
 See also <https://repo1.maven.org/maven2/org/junit/> for releases and
-<https://oss.sonatype.org/content/repositories/snapshots/org/junit/> for snapshots.
+<https://central.sonatype.com/repository/maven-snapshots/org/junit/> for snapshots.
 
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5

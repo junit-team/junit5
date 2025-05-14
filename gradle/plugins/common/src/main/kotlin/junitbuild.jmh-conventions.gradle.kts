@@ -1,3 +1,6 @@
+import junitbuild.extensions.requiredVersionFromLibs
+import junitbuild.extensions.dependencyFromLibs
+
 plugins {
 	id("me.champeau.jmh")
 }

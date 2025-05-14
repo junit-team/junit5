@@ -1,3 +1,4 @@
+import junitbuild.extensions.dependencyProject
 import junitbuild.java.WriteArtifactsFile
 
 plugins {

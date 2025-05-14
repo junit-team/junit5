@@ -1,3 +1,4 @@
+import junitbuild.extensions.javaModuleName
 import junitbuild.java.UpdateJarAction
 
 plugins {

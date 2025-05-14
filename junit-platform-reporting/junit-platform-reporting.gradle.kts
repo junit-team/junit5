@@ -1,3 +1,5 @@
+import junitbuild.extensions.javaModuleName
+
 plugins {
 	id("junitbuild.java-library-conventions")
 	id("junitbuild.shadow-conventions")
