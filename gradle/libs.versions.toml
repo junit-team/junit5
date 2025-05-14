@@ -99,7 +99,7 @@ extraJavaModuleInfo = { id = "org.gradlex.extra-java-module-info", version = "1.
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "0.10.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
-jreleaser = { id = "org.jreleaser", version = "1.17.0" }
+jreleaser = { id = "org.jreleaser", version = "1.18.0" }
 # check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
 openrewrite = { id = "org.openrewrite.rewrite", version = "7.6.1" }
