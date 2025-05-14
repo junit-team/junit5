@@ -6,15 +6,20 @@ on:
       releaseVersion:
         description: Version to be released (e.g. "5.12.0-M1")
         required: true
-      stagingRepoId:
-        description: ID of the Nexus staging repository (e.g. "orgjunit-1159")
+      deploymentId:
+        description: ID of the Maven Central Publish Portal deployment
         required: true
+      dryRun:
+        type: boolean
+        description: Enable dry-run mode
+        required: false
+        default: false
 
 permissions: read-all
 
 env:
   DEVELOCITY_ACCESS_KEY: ${{ secrets.DEVELOCITY_ACCESS_KEY }}
-  STAGING_REPO_URL: https://oss.sonatype.org/service/local/repositories/${{ github.event.inputs.stagingRepoId }}/content
+  STAGING_REPO_URL: https://central.sonatype.com/api/v1/publisher/deployment/${{ github.event.inputs.deploymentId }}/download
   RELEASE_TAG: r${{ github.event.inputs.releaseVersion }}
 
 jobs:
@@ -31,10 +36,16 @@ jobs:
         with:
           fetch-depth: 1
           ref: "refs/tags/${{ env.RELEASE_TAG }}"
+      - name: Prepare Maven Central user token
+        uses: ./.github/actions/maven-central-user-token
+        with:
+          username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       - name: Download reference JAR from staging repository
         id: referenceJar
         run: |
           curl --silent --fail --location --output /tmp/reference.jar \
+            --header "Authorization: Bearer $MAVEN_CENTRAL_USER_TOKEN" \
             "${{ env.STAGING_REPO_URL }}/org/junit/jupiter/junit-jupiter-api/${{ github.event.inputs.releaseVersion }}/junit-jupiter-api-${{ github.event.inputs.releaseVersion }}.jar"
           sudo apt-get update && sudo apt-get install --yes jc
           unzip -c /tmp/reference.jar META-INF/MANIFEST.MF | jc --jar-manifest | jq '.[0]' > /tmp/manifest.json
@@ -51,6 +62,7 @@ jobs:
             :verifyArtifactsInStagingRepositoryAreReproducible \
             --remote-repo-url=${{ env.STAGING_REPO_URL }}
       - name: Generate build provenance attestations
+        if: ${{ inputs.dryRun == 'false' }}
         uses: actions/attest-build-provenance@db473fddc028af60658334401dc6fa3ffd8669fd # v2.3.0
         with:
           subject-path: build/repo/**/*.jar
@@ -64,12 +76,19 @@ jobs:
     name: Verify consumability
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 1
+          ref: "refs/tags/${{ env.RELEASE_TAG }}"
+          path: junit5
       - name: Check out samples repository
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           repository: ${{ github.repository_owner }}/junit5-samples
           token: ${{ secrets.GH_TOKEN }}
           fetch-depth: 1
+          path: junit5-samples
       - name: Set up JDK
         uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
         with:
@@ -78,10 +97,20 @@ jobs:
       - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
+        working-directory: junit5-samples
+      - name: Prepare Maven Central user token
+        uses: junit5/.github/actions/maven-central-user-token
+        with:
+          username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       - name: Inject staging repository URL
         run: java src/StagingRepoInjector.java ${{ env.STAGING_REPO_URL }}
+        working-directory: junit5-samples
       - name: Build samples
-        run: java src/Builder.java
+        run: java src/Builder.java --exclude=junit5-jupiter-starter-bazel,junit5-jupiter-starter-sbt
+        working-directory: junit5-samples
+        env:
+          MAVEN_ARGS: --settings src/central-staging-maven-settings.xml --activate-profiles central-staging
 
   close_github_milestone:
     name: Close GitHub milestone
@@ -90,6 +119,7 @@ jobs:
       issues: write
     steps:
       - name: Close GitHub milestone
+        if: ${{ inputs.dryRun == 'false' }}
         uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
         with:
           result-encoding: string
@@ -116,8 +146,8 @@ jobs:
             console.log(requestBody);
             await github.rest.issues.updateMilestone(requestBody);
 
-  release_staging_repo:
-    name: Release staging repo
+  publish_deployment:
+    name: Publish to Maven Central
     needs: [ verify_reproducibility, verify_consumability, close_github_milestone ]
     runs-on: ubuntu-latest
     steps:
@@ -127,19 +157,21 @@ jobs:
           fetch-depth: 1
           ref: "refs/tags/${{ env.RELEASE_TAG }}"
       - name: Release staging repository
+        if: ${{ inputs.dryRun == 'false' }}
         uses: ./.github/actions/run-gradle
         env:
-          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
-          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
           arguments: |
-            releaseSonatypeStagingRepository \
-            --staging-repository-id=${{ github.event.inputs.stagingRepoId }}
+            jreleaserDeploy \
+            -Pjreleaser.mavencentral.stage=PUBLISH \
+            -Pjreleaser.mavencentral.deployment.id=${{ github.event.inputs.deploymentId }}
 
   publish_documentation:
     name: Publish documentation
-    needs: release_staging_repo
+    needs: publish_deployment
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -155,7 +187,18 @@ jobs:
         run: |
           git config --global user.name "JUnit Team"
           git config --global user.email "team@junit.org"
-      - name: Build and publish documentation
+      - name: Build documentation
+        uses: ./.github/actions/run-gradle
+        with:
+          encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
+          arguments: |
+            --no-build-cache \
+            --no-configuration-cache \
+            clean \
+            gitPublishCopy \
+            -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
+      - name: Publish documentation
+        if: ${{ inputs.dryRun == 'false' }}
         uses: ./.github/actions/run-gradle
         env:
           GIT_USERNAME: git
@@ -165,10 +208,10 @@ jobs:
           arguments: |
             --no-build-cache \
             --no-configuration-cache \
-            clean \
             gitPublishPush \
             -Pdocumentation.replaceCurrentDocs=${{ contains(github.event.inputs.releaseVersion, '-') && 'false' || 'true' }}
       - name: Wait for deployment to GitHub Pages
+        if: ${{ inputs.dryRun == 'false' }}
         id: pagesDeployment
         timeout-minutes: 20
         run: |
@@ -176,13 +219,14 @@ jobs:
           ./.github/scripts/waitForUrl.sh "$URL"
           echo "pdfUrl=$URL" >> "$GITHUB_OUTPUT"
       - name: Verify integrity of PDF version of User Guide
+        if: ${{ inputs.dryRun == 'false' }}
         run: |
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           pdfinfo /tmp/junit-user-guide.pdf
 
   wait_for_maven_central:
     name: Wait for Maven Central
-    needs: release_staging_repo
+    needs: publish_deployment
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -196,6 +240,7 @@ jobs:
           name: local-maven-repository
           path: build/repo
       - name: Wait for sync to Maven Central
+        if: ${{ inputs.dryRun == 'false' }}
         timeout-minutes: 30
         run: |
           find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
@@ -228,9 +273,12 @@ jobs:
           git switch -c "${{ env.RELEASE_TAG }}"
           git status
           git commit -a -m "Use ${{ github.event.inputs.releaseVersion }}"
+      - name: Push release branch
+        if: ${{ inputs.dryRun == 'false' }}
+        run: |
           git push origin "${{ env.RELEASE_TAG }}"
       - name: Update main branch (only for GA releases)
-        if: ${{ !contains(github.event.inputs.releaseVersion, '-') }}
+        if: ${{ inputs.dryRun == 'false' && !contains(github.event.inputs.releaseVersion, '-') }}
         run: |
           git switch main
           git merge --ff-only "${{ env.RELEASE_TAG }}"
@@ -238,6 +286,7 @@ jobs:
 
   create_github_release:
     name: Create GitHub release
+    if: ${{ inputs.dryRun == 'false' }}
     needs: wait_for_maven_central
     runs-on: ubuntu-latest
     permissions:

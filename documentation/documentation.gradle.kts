@@ -2,10 +2,14 @@ import junitbuild.exec.CaptureJavaExecOutput
 import junitbuild.exec.ClasspathSystemPropertyProvider
 import junitbuild.exec.GenerateStandaloneConsoleLauncherShadowedArtifactsFile
 import junitbuild.exec.RunConsoleLauncher
+import junitbuild.extensions.dependencyProject
+import junitbuild.extensions.isSnapshot
+import junitbuild.extensions.javaModuleName
 import junitbuild.javadoc.ModuleSpecificJavadocFileOption
 import org.asciidoctor.gradle.base.AsciidoctorAttributeProvider
 import org.asciidoctor.gradle.jvm.AbstractAsciidoctorTask
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.ysb33r.grolifant.api.core.jvm.ExecutionMode.JAVA_EXEC
 
 plugins {
 	alias(libs.plugins.asciidoctorConvert)
@@ -378,6 +382,7 @@ tasks {
 	}
 
 	asciidoctorPdf {
+		setExecutionMode(JAVA_EXEC) // Avoid classpath conflicts with other Gradle plugins (e.g. JReleaser)
 		sources {
 			include("user-guide/index.adoc")
 		}
