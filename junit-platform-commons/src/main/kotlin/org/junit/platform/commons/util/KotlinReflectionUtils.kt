@@ -7,6 +7,8 @@
  *
  * https://www.eclipse.org/legal/epl-v20.html
  */
+@file:JvmName("KotlinReflectionUtilsKt")
+
 package org.junit.platform.commons.util
 
 import kotlinx.coroutines.runBlocking

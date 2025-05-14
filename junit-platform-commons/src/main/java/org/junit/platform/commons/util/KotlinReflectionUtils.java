@@ -10,13 +10,22 @@
 
 package org.junit.platform.commons.util;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
+import org.apiguardian.api.API;
 import org.junit.platform.commons.function.Try;
 
+/**
+ * Internal Kotlin-specific reflection utilities
+ *
+ * @since 6.0
+ */
+@API(status = INTERNAL, since = "6.0")
 public class KotlinReflectionUtils {
 
 	private static final Class<? extends Annotation> kotlinMetadata;

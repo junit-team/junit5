@@ -21,3 +21,16 @@ tasks.compileJava {
 		listOf("--patch-module", "${javaModuleName}=${sourceSets.main.get().output.asPath}")
 	})
 }
+
+tasks.jar {
+	bundle {
+		val importAPIGuardian: String by extra
+		bnd("""
+			Import-Package: \
+				$importAPIGuardian,\
+				kotlin.*;resolution:="optional",\
+				kotlinx.*;resolution:="optional",\
+				*
+		""")
+	}
+}
