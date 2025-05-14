@@ -12,8 +12,6 @@ package org.junit.jupiter.engine.execution;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.execution.ParameterResolutionUtils.resolveParameters;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.invokeKotlinSuspendingFunction;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -23,7 +21,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.jupiter.engine.support.MethodReflectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -51,10 +49,7 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 	public Object invoke(Method method, Object target) {
 		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
 			extensionRegistry);
-		if (isKotlinSuspendingFunction(method)) {
-			return invokeKotlinSuspendingFunction(method, target, arguments);
-		}
-		return ReflectionSupport.invokeMethod(method, target, arguments);
+		return MethodReflectionUtils.invoke(method, target, arguments);
 	}
 
 }

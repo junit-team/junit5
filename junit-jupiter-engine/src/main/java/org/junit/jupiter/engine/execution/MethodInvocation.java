@@ -11,8 +11,6 @@
 package org.junit.jupiter.engine.execution;
 
 import static java.util.Collections.unmodifiableList;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.invokeKotlinSuspendingFunction;
-import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -21,7 +19,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.jupiter.engine.support.MethodReflectionUtils;
 
 class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<Method> {
 
@@ -60,10 +58,7 @@ class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<
 	@SuppressWarnings("unchecked")
 	public T proceed() {
 		var actualTarget = this.target.orElse(null);
-		if (isKotlinSuspendingFunction(method)) {
-			return (T) invokeKotlinSuspendingFunction(this.method, actualTarget, this.arguments);
-		}
-		return (T) ReflectionSupport.invokeMethod(this.method, actualTarget, this.arguments);
+		return (T) MethodReflectionUtils.invoke(this.method, actualTarget, this.arguments);
 	}
 
 }
