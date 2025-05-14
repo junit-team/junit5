@@ -294,6 +294,13 @@ keyword for testing code using coroutines.
 include::{kotlinTestDir}/example/KotlinCoroutinesDemo.kt[tags=user_guide]
 ----
 
+NOTE: Using suspending functions as test or lifecycle methods requires
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-stdlib[`kotlin-stdlib`],
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-reflect[`kotlin-reflect`],
+and
+https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core[`kotlinx-coroutines-core`]
+to be present on the classpath or module path.
+
 [[writing-tests-display-names]]
 === Display Names
 
