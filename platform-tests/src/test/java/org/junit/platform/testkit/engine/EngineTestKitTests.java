@@ -68,6 +68,7 @@ class EngineTestKitTests {
 		when(testEngine.getId()).thenReturn("test-engine");
 
 		LauncherDiscoveryRequest request = mock(LauncherDiscoveryRequest.class);
+		when(request.getConfigurationParameters()).thenReturn(mock());
 		when(request.getDiscoveryListener()).thenReturn(LauncherDiscoveryListener.NOOP);
 
 		try (MockedConstruction<EngineExecutionOrchestrator> mockedConstruction = mockConstruction(

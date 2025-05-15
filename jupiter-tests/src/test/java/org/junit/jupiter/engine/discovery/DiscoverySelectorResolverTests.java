@@ -819,7 +819,7 @@ class DiscoverySelectorResolverTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private LauncherDiscoveryRequestBuilder request() {
-		return LauncherDiscoveryRequestBuilder.request() //
+		return defaultRequest() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.listeners(discoveryListener);
 	}
