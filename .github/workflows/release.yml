@@ -265,6 +265,7 @@ jobs:
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Build samples
+        if: ${{ inputs.dryRun == 'false' }}
         run: java src/Builder.java
       - name: Create release branch
         run: |
