@@ -11,14 +11,13 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DynamicNode;
@@ -62,9 +61,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 			issueReporter.reportIssue(createTooGenericReturnTypeIssue(method));
 			return true;
 		}
-		boolean validContainerType = Stream.class.isAssignableFrom(returnType) //
-				|| Iterable.class.isAssignableFrom(returnType) //
-				|| Iterator.class.isAssignableFrom(returnType);
+		boolean validContainerType = !returnType.isArray() && isConvertibleToStream(returnType);
 		return validContainerType && isCompatibleContainerType(method, issueReporter);
 	}
 
