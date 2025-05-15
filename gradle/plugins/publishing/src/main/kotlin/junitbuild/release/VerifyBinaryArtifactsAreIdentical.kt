@@ -16,8 +16,9 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse.BodyHandlers
+import javax.inject.Inject
 
-abstract class VerifyBinaryArtifactsAreIdentical(providers: ProviderFactory) : DefaultTask() {
+abstract class VerifyBinaryArtifactsAreIdentical @Inject constructor(providers: ProviderFactory): DefaultTask() {
 
     @get:InputDirectory
     @get:PathSensitive(PathSensitivity.RELATIVE)
