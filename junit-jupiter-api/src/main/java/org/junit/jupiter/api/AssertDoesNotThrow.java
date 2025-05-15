@@ -10,10 +10,12 @@
 
 package org.junit.jupiter.api;
 
+import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
+import org.apiguardian.api.API;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.util.StringUtils;
@@ -76,7 +78,8 @@ class AssertDoesNotThrow {
 		}
 	}
 
-	private static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
+	@API(status = INTERNAL, since = "6.0")
+	public static AssertionFailedError createAssertionFailedError(Object messageOrSupplier, Throwable t) {
 		return assertionFailure() //
 				.message(messageOrSupplier) //
 				.reason("Unexpected exception thrown: " + t.getClass().getName() + buildSuffix(t.getMessage())) //
