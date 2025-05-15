@@ -39,7 +39,7 @@ buildParameters {
 			group("predictiveTestSelection") {
 				bool("enabled") {
 					description = "Whether or not to use Predictive Test Selection for selecting tests to execute"
-					defaultValue = false
+					defaultValue = true
 				}
 				bool("selectRemainingTests") {
 					// see https://docs.gradle.com/develocity/predictive-test-selection/#gradle-selection-mode
