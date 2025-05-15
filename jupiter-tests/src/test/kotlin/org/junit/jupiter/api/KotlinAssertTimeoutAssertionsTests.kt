@@ -157,11 +157,12 @@ internal class KotlinAssertTimeoutAssertionsTests {
 
     @Test
     fun `assertTimeout with value assignment in lambda`() {
-        var value = 0
+        val value: Int
 
-        assertTimeout(ofMillis(500)) { value = 10 }
-
-        assertEquals(10, value)
+        assertTimeout(ofMillis(500)) {
+            value = 10 // Val can be assigned in the message supplier lambda.
+            assertEquals(10, value)
+        }
     }
 
     @Test
