@@ -99,7 +99,7 @@ jobs:
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
         working-directory: junit5-samples
       - name: Prepare Maven Central user token
-        uses: junit5/.github/actions/maven-central-user-token
+        uses: ./junit5/.github/actions/maven-central-user-token
         with:
           username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
