@@ -13,6 +13,7 @@ package org.junit.platform.launcher.core;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.Filter.composeFilters;
+import static org.junit.platform.launcher.core.DiscoveryIssueNotifier.handleDiscoveryIssuesInDiscoveryPhase;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -109,14 +110,35 @@ public class EngineDiscoveryOrchestrator {
 			}
 		};
 		listener.launcherDiscoveryStarted(request);
+		LauncherDiscoveryResult discoveryResult;
 		try {
 			Map<TestEngine, EngineResultInfo> testEngineResults = discoverSafely(delegatingRequest, phase,
 				issueCollector, uniqueIdCreator);
-			return new LauncherDiscoveryResult(testEngineResults, request.getConfigurationParameters(),
+			discoveryResult = new LauncherDiscoveryResult(testEngineResults, request.getConfigurationParameters(),
 				request.getOutputDirectoryProvider());
 		}
 		finally {
 			listener.launcherDiscoveryFinished(request);
+		}
+		if (handleDiscoveryIssuesInDiscoveryPhase(request.getConfigurationParameters())) {
+			handleDiscoveryIssues(discoveryResult);
+		}
+		return discoveryResult;
+	}
+
+	private static void handleDiscoveryIssues(LauncherDiscoveryResult discoveryResult) {
+		DiscoveryIssueException exception = null;
+		for (TestEngine testEngine : discoveryResult.getTestEngines()) {
+			EngineResultInfo engineResult = discoveryResult.getEngineResult(testEngine);
+			DiscoveryIssueNotifier discoveryIssueNotifier = engineResult.getDiscoveryIssueNotifier();
+			discoveryIssueNotifier.logCriticalIssues(testEngine);
+			discoveryIssueNotifier.logNonCriticalIssues(testEngine);
+			if (exception == null) {
+				exception = discoveryIssueNotifier.createExceptionForCriticalIssues(testEngine);
+			}
+		}
+		if (exception != null) {
+			throw exception;
 		}
 	}
 

@@ -39,6 +39,7 @@ public class LoggingLauncherDiscoveryListenerTests {
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
+				.enableImplicitConfigurationParameters(false) //
 				.build();
 		var launcher = createLauncher(engine);
 
@@ -56,6 +57,7 @@ public class LoggingLauncherDiscoveryListenerTests {
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine("some-other-engine"))) //
+				.enableImplicitConfigurationParameters(false) //
 				.build();
 		var launcher = createLauncher(engine);
 
@@ -74,6 +76,7 @@ public class LoggingLauncherDiscoveryListenerTests {
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectClass(Object.class)) //
+				.enableImplicitConfigurationParameters(false) //
 				.build();
 		var launcher = createLauncher(engine);
 
@@ -97,6 +100,7 @@ public class LoggingLauncherDiscoveryListenerTests {
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
+				.enableImplicitConfigurationParameters(false) //
 				.build();
 		var launcher = createLauncher(engine);
 
@@ -113,6 +117,7 @@ public class LoggingLauncherDiscoveryListenerTests {
 		var request = request() //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging") //
 				.selectors(selectUniqueId(UniqueId.forEngine(engine.getId()))) //
+				.enableImplicitConfigurationParameters(false) //
 				.build();
 		var launcher = createLauncher(engine);
 

@@ -25,7 +25,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNeste
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectNestedMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
-import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -62,21 +61,21 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(LocalTestCase.class)).build();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(LocalTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(7, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void doNotDiscoverAbstractTestClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectClass(AbstractTestCase.class)).build();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectClass(AbstractTestCase.class)).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(0, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void discoverMethodByUniqueId() {
-		LauncherDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test1()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
@@ -84,7 +83,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverMethodByUniqueIdForOverloadedMethod() {
-		LauncherDiscoveryRequest request = request().selectors(
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test4()"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
@@ -92,8 +91,9 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverMethodByUniqueIdForOverloadedMethodVariantThatAcceptsArguments() {
-		LauncherDiscoveryRequest request = request().selectors(selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(
-			LocalTestCase.class, "test4(" + TestInfo.class.getName() + ")"))).build();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class,
+				"test4(" + TestInfo.class.getName() + ")"))).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
@@ -102,14 +102,15 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	void discoverMethodByMethodReference() throws NoSuchMethodException {
 		Method testMethod = LocalTestCase.class.getDeclaredMethod("test3");
 
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, testMethod)).build();
+		LauncherDiscoveryRequest request = defaultRequest().selectors(
+			selectMethod(LocalTestCase.class, testMethod)).build();
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
 		assertEquals(2, engineDescriptor.getDescendants().size(), "# resolved test descriptors");
 	}
 
 	@Test
 	void discoverMultipleMethodsOfSameClass() {
-		LauncherDiscoveryRequest request = request().selectors(selectMethod(LocalTestCase.class, "test1"),
+		LauncherDiscoveryRequest request = defaultRequest().selectors(selectMethod(LocalTestCase.class, "test1"),
 			selectMethod(LocalTestCase.class, "test2")).build();
 
 		TestDescriptor engineDescriptor = discoverTests(request).getEngineDescriptor();
@@ -121,7 +122,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverCompositeSpec() {
-		LauncherDiscoveryRequest spec = request().selectors(
+		LauncherDiscoveryRequest spec = defaultRequest().selectors(
 			selectUniqueId(JupiterUniqueIdBuilder.uniqueIdForMethod(LocalTestCase.class, "test2()")),
 			selectClass(LocalTestCase.class)).build();
 
@@ -131,7 +132,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverTestTemplateMethodByUniqueId() {
-		LauncherDiscoveryRequest spec = request().selectors(
+		LauncherDiscoveryRequest spec = defaultRequest().selectors(
 			selectUniqueId(uniqueIdForTestTemplateMethod(TestTemplateClass.class, "testTemplate()"))).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec).getEngineDescriptor();
@@ -140,7 +141,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void discoverTestTemplateMethodByMethodSelector() {
-		LauncherDiscoveryRequest spec = request().selectors(
+		LauncherDiscoveryRequest spec = defaultRequest().selectors(
 			selectMethod(TestTemplateClass.class, "testTemplate")).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec).getEngineDescriptor();
@@ -153,7 +154,7 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 			List.of(TestCaseWithExtendedNested.class, TestCaseWithExtendedNested.ConcreteInner1.class),
 			AbstractSuperClass.NestedInAbstractClass.class,
 			AbstractSuperClass.NestedInAbstractClass.class.getDeclaredMethod("test"));
-		LauncherDiscoveryRequest spec = request().selectors(selector).build();
+		LauncherDiscoveryRequest spec = defaultRequest().selectors(selector).build();
 
 		TestDescriptor engineDescriptor = discoverTests(spec).getEngineDescriptor();
 
@@ -198,12 +199,12 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidTestMethod() {
 		return List.of( //
 			named("directly selected",
-				request().selectors(selectClass(InvalidTestCases.InvalidTestMethodTestCase.class)).build()), //
-			named("indirectly selected", request() //
+				defaultRequest().selectors(selectClass(InvalidTestCases.InvalidTestMethodTestCase.class)).build()), //
+			named("indirectly selected", defaultRequest() //
 					.selectors(selectPackage(InvalidTestCases.InvalidTestMethodTestCase.class.getPackageName())) //
 					.filters(includeClassNamePatterns(
 						Pattern.quote(InvalidTestCases.InvalidTestMethodTestCase.class.getName()))).build()), //
-			named("subclasses", request() //
+			named("subclasses", defaultRequest() //
 					.selectors(selectClass(InvalidTestCases.InvalidTestMethodSubclass1TestCase.class),
 						selectClass(InvalidTestCases.InvalidTestMethodSubclass2TestCase.class)) //
 					.build()) //
@@ -229,14 +230,14 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	static List<Arguments> requestsForTestClassWithInvalidStandaloneTestClass() {
 		return List.of( //
 			argumentSet("directly selected",
-				request().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.class)).build(),
+				defaultRequest().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.class)).build(),
 				InvalidTestCases.InvalidTestClassTestCase.class), //
-			argumentSet("indirectly selected", request() //
+			argumentSet("indirectly selected", defaultRequest() //
 					.selectors(selectPackage(InvalidTestCases.InvalidTestClassTestCase.class.getPackageName())) //
 					.filters(includeClassNamePatterns(
 						Pattern.quote(InvalidTestCases.InvalidTestClassTestCase.class.getName()))).build(), //
 				InvalidTestCases.InvalidTestClassTestCase.class), //
-			argumentSet("subclass", request() //
+			argumentSet("subclass", defaultRequest() //
 					.selectors(selectClass(InvalidTestCases.InvalidTestClassSubclassTestCase.class)) //
 					.build(), //
 				InvalidTestCases.InvalidTestClassSubclassTestCase.class) //
@@ -262,8 +263,8 @@ class DiscoveryTests extends AbstractJupiterTestEngineTests {
 	static List<Named<LauncherDiscoveryRequest>> requestsForTestClassWithInvalidNestedTestClass() {
 		return List.of( //
 			named("directly selected",
-				request().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.Inner.class)).build()), //
-			named("subclass", request() //
+				defaultRequest().selectors(selectClass(InvalidTestCases.InvalidTestClassTestCase.Inner.class)).build()), //
+			named("subclass", defaultRequest() //
 					.selectors(selectNestedClass(List.of(InvalidTestCases.InvalidTestClassSubclassTestCase.class),
 						InvalidTestCases.InvalidTestClassTestCase.Inner.class)) //
 					.build()) //

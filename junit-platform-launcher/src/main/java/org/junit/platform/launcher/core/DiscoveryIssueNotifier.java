@@ -14,16 +14,19 @@ import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.partitioningBy;
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
+import static org.junit.platform.launcher.LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
+import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoveryIssue.Severity;
 import org.junit.platform.engine.TestEngine;
@@ -139,5 +142,10 @@ class DiscoveryIssueNotifier {
 
 	private static void appendIdeCompatibleLink(StringBuilder message, String className, String methodName) {
 		message.append("\n            at ").append(className).append(".").append(methodName).append("(SourceFile:0)");
+	}
+
+	static boolean handleDiscoveryIssuesInDiscoveryPhase(ConfigurationParameters configurationParameters) {
+		Optional<String> phase = configurationParameters.get(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME);
+		return "discovery".equalsIgnoreCase(phase.orElse(null));
 	}
 }

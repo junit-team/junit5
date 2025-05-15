@@ -27,6 +27,7 @@ import org.junit.platform.engine.TestEngine;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.fakes.TestEngineStub;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
 
 @ParameterizedClass
 @EnumSource
@@ -70,12 +71,16 @@ record EngineDiscoveryResultsIntegrationTests(TestKitApi testKit) {
 		STATIC_METHOD {
 			@Override
 			EngineDiscoveryResults discover(String engineId, DiscoverySelector selector) {
-				return EngineTestKit.discover(engineId, request().selectors(selector).build());
+				return EngineTestKit.discover(engineId, newRequest().selectors(selector).build());
 			}
 
 			@Override
 			EngineDiscoveryResults discover(TestEngine testEngine) {
-				return EngineTestKit.discover(testEngine, request().build());
+				return EngineTestKit.discover(testEngine, newRequest().build());
+			}
+
+			private static LauncherDiscoveryRequestBuilder newRequest() {
+				return request().enableImplicitConfigurationParameters(false);
 			}
 		},
 
