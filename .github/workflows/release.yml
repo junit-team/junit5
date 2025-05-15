@@ -110,7 +110,7 @@ jobs:
         run: java src/Builder.java --exclude=junit5-jupiter-starter-bazel,junit5-jupiter-starter-sbt
         working-directory: junit5-samples
         env:
-          MAVEN_ARGS: --settings src/central-staging-maven-settings.xml --activate-profiles central-staging
+          MAVEN_ARGS: --settings ${{ github.workspace }}/junit5-samples/src/central-staging-maven-settings.xml --activate-profiles central-staging
 
   close_github_milestone:
     name: Close GitHub milestone
