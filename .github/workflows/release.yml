@@ -99,7 +99,7 @@ jobs:
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
         working-directory: junit5-samples
       - name: Prepare Maven Central user token
-        uses: junit5/.github/actions/maven-central-user-token
+        uses: ./junit5/.github/actions/maven-central-user-token
         with:
           username: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           password: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
@@ -110,7 +110,7 @@ jobs:
         run: java src/Builder.java --exclude=junit5-jupiter-starter-bazel,junit5-jupiter-starter-sbt
         working-directory: junit5-samples
         env:
-          MAVEN_ARGS: --settings src/central-staging-maven-settings.xml --activate-profiles central-staging
+          MAVEN_ARGS: --settings ${{ github.workspace }}/junit5-samples/src/central-staging-maven-settings.xml --activate-profiles central-staging
 
   close_github_milestone:
     name: Close GitHub milestone
@@ -265,6 +265,7 @@ jobs:
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ github.event.inputs.releaseVersion }}
       - name: Build samples
+        if: ${{ inputs.dryRun == 'false' }}
         run: java src/Builder.java
       - name: Create release branch
         run: |

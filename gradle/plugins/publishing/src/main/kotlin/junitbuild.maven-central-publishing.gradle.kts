@@ -41,6 +41,7 @@ jreleaser {
 					applyMavenCentralRules = true
 					sign = false
 					checksums = false
+					verifyPom = false
 					namespace = "org.junit"
 					stage = providers.gradleProperty("jreleaser.mavencentral.stage")
 						.map(Stage::of)
