@@ -92,6 +92,13 @@ repository on GitHub.
   - `InvocationInterceptor.interceptDynamicTest(Invocation, ExtensionContext)` method
 * The deprecated `junit.jupiter.tempdir.scope` configuration parameter is no longer
   supported.
+* The `JRE` enum constants for `JAVA_8` to `JAVA_16` have been deprecated because they can
+  no longer be used at runtime since `JAVA_17` is the new baseline. Please also check for
+  values less than 17 used with the `minVersion` and `maxVersion` attributes of
+  `@EnabledForJreRange` nad `@DisabledForJreRange` or the `versions` attribute of
+  `@EnabledOnJre` and `@DisabledOnJre`.
+* `@EnabledForJreRange` and `@DisabledForJreRange` now use `JAVA_17` as their default
+  `min` value.
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements

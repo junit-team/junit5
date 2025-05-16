@@ -13,20 +13,11 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.junit.jupiter.api.condition.JRE.JAVA_11;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 import static org.junit.jupiter.api.condition.JRE.JAVA_18;
 import static org.junit.jupiter.api.condition.JRE.JAVA_20;
 import static org.junit.jupiter.api.condition.JRE.JAVA_21;
-import static org.junit.jupiter.api.condition.JRE.JAVA_8;
 import static org.junit.jupiter.api.condition.JRE.OTHER;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava10;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava11;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava12;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava13;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava14;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava15;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava16;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava17;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava18;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava19;
@@ -34,8 +25,6 @@ import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava20;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava21;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava22;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava23;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava8;
-import static org.junit.jupiter.api.condition.JavaVersionPredicates.onJava9;
 import static org.junit.jupiter.api.condition.JavaVersionPredicates.onKnownVersion;
 
 import org.junit.jupiter.api.Disabled;
@@ -64,29 +53,29 @@ class EnabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JAVA_8, max = OTHER)
+	@EnabledForJreRange(min = JAVA_17, max = OTHER)
 	void effectiveJreDefaultValues() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 8, maxVersion = Integer.MAX_VALUE)
+	@EnabledForJreRange(minVersion = 17, maxVersion = Integer.MAX_VALUE)
 	void effectiveVersionDefaultValues() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JAVA_8)
-	void min8() {
+	@EnabledForJreRange(min = JAVA_17)
+	void min17() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 8)
-	void minVersion8() {
+	@EnabledForJreRange(minVersion = 17)
+	void minVersion17() {
 		fail("should result in a configuration exception");
 	}
 
@@ -113,8 +102,8 @@ class EnabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(maxVersion = 7)
-	void maxVersion7() {
+	@EnabledForJreRange(maxVersion = 16)
+	void maxVersion16() {
 		fail("should result in a configuration exception");
 	}
 
@@ -134,28 +123,28 @@ class EnabledForJreRangeIntegrationTests {
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JAVA_21, max = JAVA_11)
+	@EnabledForJreRange(min = JAVA_21, max = JAVA_17)
 	void minGreaterThanMax() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(min = JAVA_21, maxVersion = 11)
+	@EnabledForJreRange(min = JAVA_21, maxVersion = 17)
 	void minGreaterThanMaxVersion() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 21, maxVersion = 11)
+	@EnabledForJreRange(minVersion = 21, maxVersion = 17)
 	void minVersionGreaterThanMaxVersion() {
 		fail("should result in a configuration exception");
 	}
 
 	@Test
 	@Disabled("Only used in a unit test via reflection")
-	@EnabledForJreRange(minVersion = 21, max = JAVA_11)
+	@EnabledForJreRange(minVersion = 21, max = JAVA_17)
 	void minVersionGreaterThanMax() {
 		fail("should result in a configuration exception");
 	}
@@ -184,8 +173,7 @@ class EnabledForJreRangeIntegrationTests {
 		assertTrue(CURRENT_JRE.compareTo(JAVA_21) <= 0);
 		assertTrue(CURRENT_JRE.version() <= 21);
 
-		assertTrue(onJava8() || onJava9() || onJava10() || onJava11() || onJava12() || onJava13() || onJava14()
-				|| onJava15() || onJava16() || onJava17() || onJava18() || onJava19() || onJava20() || onJava21());
+		assertTrue(onJava17() || onJava18() || onJava19() || onJava20() || onJava21());
 		assertFalse(onJava22());
 	}
 
@@ -196,8 +184,8 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@EnabledForJreRange(min = JAVA_8, max = JAVA_21)
-	void min8Max21() {
+	@EnabledForJreRange(min = JAVA_17, max = JAVA_21)
+	void min17Max21() {
 		max21();
 	}
 
@@ -251,8 +239,8 @@ class EnabledForJreRangeIntegrationTests {
 	}
 
 	@Test
-	@EnabledForJreRange(minVersion = 17, maxVersion = Integer.MAX_VALUE)
-	void minVersion17MaxVersionMaxInteger() {
+	@EnabledForJreRange(minVersion = 21, maxVersion = Integer.MAX_VALUE)
+	void minVersion21MaxVersionMaxInteger() {
 		assertTrue(onKnownVersion());
 		assertTrue(JRE.currentVersionNumber() >= 17);
 	}
