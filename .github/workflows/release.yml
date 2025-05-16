@@ -162,12 +162,11 @@ jobs:
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          JRELEASER_MAVENCENTRAL_STAGE: PUBLISH
+          JRELEASER_MAVENCENTRAL_DEPLOYMENT_ID: ${{ inputs.deploymentId }}
         with:
           encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
-          arguments: |
-            jreleaserDeploy \
-            -Pjreleaser.mavencentral.stage=PUBLISH \
-            -Pjreleaser.mavencentral.deployment.id=${{ github.event.inputs.deploymentId }}
+          arguments: jreleaserDeploy
 
   publish_documentation:
     name: Publish documentation
