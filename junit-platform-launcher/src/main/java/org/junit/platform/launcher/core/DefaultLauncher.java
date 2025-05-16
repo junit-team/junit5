@@ -12,8 +12,8 @@ package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableCollection;
 import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
-import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
-import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
+import static org.junit.platform.launcher.core.LauncherPhase.DISCOVERY;
+import static org.junit.platform.launcher.core.LauncherPhase.EXECUTION;
 
 import java.util.Collection;
 
@@ -100,8 +100,7 @@ class DefaultLauncher implements Launcher {
 		execute((InternalTestPlan) testPlan, listeners);
 	}
 
-	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest,
-			EngineDiscoveryOrchestrator.Phase phase) {
+	private LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest, LauncherPhase phase) {
 		return discoveryOrchestrator.discover(discoveryRequest, phase);
 	}
 

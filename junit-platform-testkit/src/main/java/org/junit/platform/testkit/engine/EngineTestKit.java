@@ -17,8 +17,6 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction.closeAutoCloseables;
-import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.DISCOVERY;
-import static org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase.EXECUTION;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -190,7 +188,7 @@ public final class EngineTestKit {
 	public static EngineDiscoveryResults discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest) {
 		Preconditions.notNull(testEngine, "TestEngine must not be null");
 		Preconditions.notNull(discoveryRequest, "EngineDiscoveryRequest must not be null");
-		LauncherDiscoveryResult discoveryResult = discover(testEngine, discoveryRequest, DISCOVERY);
+		LauncherDiscoveryResult discoveryResult = discoverUsingOrchestrator(testEngine, discoveryRequest);
 		TestDescriptor engineDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		List<DiscoveryIssue> discoveryIssues = discoveryResult.getDiscoveryIssues(testEngine);
 		return new EngineDiscoveryResults(engineDescriptor, discoveryIssues);
@@ -337,7 +335,7 @@ public final class EngineTestKit {
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,
 			LauncherDiscoveryRequest discoveryRequest, EngineExecutionListener listener) {
-		LauncherDiscoveryResult discoveryResult = discover(testEngine, discoveryRequest, EXECUTION);
+		LauncherDiscoveryResult discoveryResult = discoverUsingOrchestrator(testEngine, discoveryRequest);
 		TestDescriptor engineTestDescriptor = discoveryResult.getEngineTestDescriptor(testEngine);
 		Preconditions.notNull(engineTestDescriptor, "TestEngine did not yield a TestDescriptor");
 		withRequestLevelStore(store -> new EngineExecutionOrchestrator().execute(discoveryResult, listener, store));
@@ -354,10 +352,10 @@ public final class EngineTestKit {
 		return new NamespacedHierarchicalStore<>(parentStore, closeAutoCloseables());
 	}
 
-	private static LauncherDiscoveryResult discover(TestEngine testEngine, LauncherDiscoveryRequest discoveryRequest,
-			EngineDiscoveryOrchestrator.Phase phase) {
+	private static LauncherDiscoveryResult discoverUsingOrchestrator(TestEngine testEngine,
+			LauncherDiscoveryRequest discoveryRequest) {
 		return new EngineDiscoveryOrchestrator(singleton(testEngine), emptySet()) //
-				.discover(discoveryRequest, phase);
+				.discover(discoveryRequest);
 	}
 
 	@SuppressWarnings("unchecked")
