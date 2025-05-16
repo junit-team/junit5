@@ -18,6 +18,10 @@ module org.junit.platform.commons {
 	requires java.management; // needed by RuntimeUtils to determine input arguments
 	requires static transitive org.apiguardian.api;
 
+	requires static kotlin.stdlib;
+	requires static kotlin.reflect;
+	requires static kotlinx.coroutines.core;
+
 	exports org.junit.platform.commons;
 	exports org.junit.platform.commons.annotation;
 	exports org.junit.platform.commons.function;

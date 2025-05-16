@@ -21,6 +21,7 @@ import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
+import org.junit.jupiter.engine.support.MethodReflectionUtils;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -48,7 +49,7 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 	public Object invoke(Method method, Object target) {
 		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
 			extensionRegistry);
-		return ReflectionUtils.invokeMethod(method, target, arguments);
+		return MethodReflectionUtils.invoke(method, target, arguments);
 	}
 
 }

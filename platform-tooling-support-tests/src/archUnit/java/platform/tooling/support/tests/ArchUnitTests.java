@@ -17,6 +17,7 @@ import static com.tngtech.archunit.core.domain.JavaClass.Predicates.TOP_LEVEL_CL
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
+import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleNameEndingWith;
 import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
 import static com.tngtech.archunit.core.domain.properties.HasModifiers.Predicates.modifier;
 import static com.tngtech.archunit.core.domain.properties.HasName.Predicates.name;
@@ -61,6 +62,8 @@ class ArchUnitTests {
 			.and(TOP_LEVEL_CLASSES) //
 			.and(not(ANONYMOUS_CLASSES)) //
 			.and(not(describe("are Kotlin SAM type implementations", simpleName("")))) //
+			.and(not(describe("are Kotlin-generated classes that contain only top-level functions",
+				simpleNameEndingWith("Kt")))) //
 			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
 

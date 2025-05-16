@@ -13,6 +13,8 @@ package org.junit.jupiter.engine.execution;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameters;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.lang.reflect.Constructor;
@@ -61,7 +63,10 @@ public class ParameterResolutionUtils {
 	public static Object[] resolveParameters(Method method, Optional<Object> target, ExtensionContext extensionContext,
 			ExtensionRegistry extensionRegistry) {
 
-		return resolveParameters(method, target, Optional.empty(), extensionContext, extensionRegistry);
+		return resolveParameters(method, target, Optional.empty(), __ -> extensionContext, extensionRegistry,
+			isKotlinSuspendingFunction(method) //
+					? getKotlinSuspendingFunctionParameters(method) //
+					: method.getParameters());
 	}
 
 	/**
@@ -90,9 +95,16 @@ public class ParameterResolutionUtils {
 			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
 			ExtensionRegistry extensionRegistry) {
 
+		return resolveParameters(executable, target, outerInstance, extensionContext, extensionRegistry,
+			executable.getParameters());
+	}
+
+	private static Object[] resolveParameters(Executable executable, Optional<Object> target,
+			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
+			ExtensionRegistry extensionRegistry, Parameter[] parameters) {
+
 		Preconditions.notNull(target, "target must not be null");
 
-		Parameter[] parameters = executable.getParameters();
 		Object[] values = new Object[parameters.length];
 		int start = 0;
 

@@ -1,0 +1,113 @@
+/*
+ * Copyright 2015-2025 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.platform.commons.util;
+
+import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.platform.commons.util.ReflectionUtils.tryToLoadClass;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
+
+import org.apiguardian.api.API;
+import org.junit.platform.commons.function.Try;
+
+/**
+ * Internal Kotlin-specific reflection utilities
+ *
+ * @since 6.0
+ */
+@API(status = INTERNAL, since = "6.0")
+public class KotlinReflectionUtils {
+
+	private static final Class<? extends Annotation> kotlinMetadata;
+	private static final Class<?> kotlinCoroutineContinuation;
+	private static final boolean kotlinReflectPresent;
+	private static final boolean kotlinxCoroutinesPresent;
+
+	static {
+		var metadata = tryToLoadKotlinMetadataClass();
+		kotlinMetadata = metadata.toOptional().orElse(null);
+		kotlinCoroutineContinuation = metadata //
+				.andThen(__ -> tryToLoadClass("kotlin.coroutines.Continuation")) //
+				.toOptional() //
+				.orElse(null);
+		kotlinReflectPresent = metadata.andThen(__ -> tryToLoadClass("kotlin.reflect.jvm.ReflectJvmMapping")) //
+				.toOptional() //
+				.isPresent();
+		kotlinxCoroutinesPresent = metadata.andThen(__ -> tryToLoadClass("kotlinx.coroutines.BuildersKt")) //
+				.toOptional() //
+				.isPresent();
+	}
+
+	@SuppressWarnings("unchecked")
+	private static Try<Class<? extends Annotation>> tryToLoadKotlinMetadataClass() {
+		return tryToLoadClass("kotlin.Metadata") //
+				.andThenTry(it -> (Class<? extends Annotation>) it);
+	}
+
+	public static boolean isKotlinSuspendingFunction(Method method) {
+		if (kotlinCoroutineContinuation != null && isKotlinType(method.getDeclaringClass())) {
+			int parameterCount = method.getParameterCount();
+			return parameterCount > 0 //
+					&& method.getParameterTypes()[parameterCount - 1] == kotlinCoroutineContinuation;
+		}
+		return false;
+	}
+
+	private static boolean isKotlinType(Class<?> clazz) {
+		return kotlinMetadata != null //
+				&& clazz.getDeclaredAnnotation(kotlinMetadata) != null;
+	}
+
+	public static Class<?> getKotlinSuspendingFunctionReturnType(Method method) {
+		requireKotlinReflect(method);
+		return KotlinReflectionUtilsKt.getReturnType(method);
+	}
+
+	public static Type getKotlinSuspendingFunctionGenericReturnType(Method method) {
+		requireKotlinReflect(method);
+		return KotlinReflectionUtilsKt.getGenericReturnType(method);
+	}
+
+	public static Parameter[] getKotlinSuspendingFunctionParameters(Method method) {
+		requireKotlinReflect(method);
+		return KotlinReflectionUtilsKt.getParameters(method);
+	}
+
+	public static Class<?>[] getKotlinSuspendingFunctionParameterTypes(Method method) {
+		requireKotlinReflect(method);
+		return KotlinReflectionUtilsKt.getParameterTypes(method);
+	}
+
+	public static Object invokeKotlinSuspendingFunction(Method method, Object target, Object[] args) {
+		requireKotlinReflect(method);
+		requireKotlinxCoroutines(method);
+		return KotlinReflectionUtilsKt.invoke(method, target, args);
+	}
+
+	private static void requireKotlinReflect(Method method) {
+		requireDependency(method, kotlinReflectPresent, "org.jetbrains.kotlin:kotlin-reflect");
+	}
+
+	private static void requireKotlinxCoroutines(Method method) {
+		requireDependency(method, kotlinxCoroutinesPresent, "org.jetbrains.kotlinx:kotlinx-coroutines-core");
+	}
+
+	private static void requireDependency(Method method, boolean condition, String dependencyNotation) {
+		Preconditions.condition(condition,
+			() -> ("Kotlin suspending function [%s] requires %s to be on the classpath or module path. "
+					+ "Please add a corresponding dependency.").formatted(method.toGenericString(),
+						dependencyNotation));
+	}
+
+}
