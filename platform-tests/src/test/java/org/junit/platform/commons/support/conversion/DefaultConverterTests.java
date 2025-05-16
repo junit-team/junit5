@@ -105,7 +105,7 @@ class DefaultConverterTests {
 	@ValueSource(classes = { char.class, boolean.class, short.class, byte.class, int.class, long.class, float.class,
 			double.class, void.class })
 	void throwsExceptionForNullToPrimitiveTypeConversion(Class<?> type) {
-		TypeDescriptor typeDescriptor = TypeDescriptor.forType(type);
+		TypeDescriptor typeDescriptor = TypeDescriptor.forClass(type);
 
 		assertThat(canConvert(null, typeDescriptor)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
@@ -117,7 +117,7 @@ class DefaultConverterTests {
 	@ValueSource(classes = { Boolean.class, Character.class, Short.class, Byte.class, Integer.class, Long.class,
 			Float.class, Double.class })
 	void throwsExceptionWhenConvertingTheWordNullToPrimitiveWrapperType(Class<?> type) {
-		TypeDescriptor typeDescriptor = TypeDescriptor.forType(type);
+		TypeDescriptor typeDescriptor = TypeDescriptor.forClass(type);
 
 		assertThat(canConvert("null", typeDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
@@ -132,7 +132,7 @@ class DefaultConverterTests {
 
 	@Test
 	void throwsExceptionOnInvalidStringForPrimitiveTypes() {
-		TypeDescriptor charDescriptor = TypeDescriptor.forType(char.class);
+		TypeDescriptor charDescriptor = TypeDescriptor.forClass(char.class);
 
 		assertThat(canConvert("ab", charDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
@@ -141,7 +141,7 @@ class DefaultConverterTests {
 				.havingCause() //
 				.withMessage("String must have length of 1: ab");
 
-		TypeDescriptor booleanDescriptor = TypeDescriptor.forType(boolean.class);
+		TypeDescriptor booleanDescriptor = TypeDescriptor.forClass(boolean.class);
 
 		assertThat(canConvert("tru", booleanDescriptor)).isTrue();
 		assertThatExceptionOfType(ConversionException.class) //
@@ -167,7 +167,7 @@ class DefaultConverterTests {
 
 	@Test
 	void throwsExceptionWhenImplicitConversionIsUnsupported() {
-		TypeDescriptor typeDescriptor = TypeDescriptor.forType(Enigma.class);
+		TypeDescriptor typeDescriptor = TypeDescriptor.forClass(Enigma.class);
 
 		assertThat(canConvert("foo", typeDescriptor)).isFalse();
 		assertThatExceptionOfType(ConversionException.class) //
@@ -251,7 +251,7 @@ class DefaultConverterTests {
 			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
-			var typeDescriptor = TypeDescriptor.forType(Class.class);
+			var typeDescriptor = TypeDescriptor.forClass(Class.class);
 			assertThat(canConvert(customTypeName, typeDescriptor)).isTrue();
 
 			var clazz = (Class<?>) convert(customTypeName, typeDescriptor, classLoader(declaringExecutable));
@@ -332,7 +332,7 @@ class DefaultConverterTests {
 	// -------------------------------------------------------------------------
 
 	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
-		TypeDescriptor typeDescriptor = TypeDescriptor.forType(targetClass);
+		TypeDescriptor typeDescriptor = TypeDescriptor.forClass(targetClass);
 
 		assertThat(canConvert(input, typeDescriptor)).isTrue();
 
@@ -344,7 +344,7 @@ class DefaultConverterTests {
 	}
 
 	private boolean canConvert(Object input, TypeDescriptor targetClass) {
-		return DefaultConverter.INSTANCE.canConvert(input, targetClass);
+		return DefaultConverter.INSTANCE.canConvert(input, TypeDescriptor.forInstance(input), targetClass);
 	}
 
 	private Object convert(Object input, TypeDescriptor targetClass) {
@@ -352,7 +352,7 @@ class DefaultConverterTests {
 	}
 
 	private Object convert(Object input, TypeDescriptor targetClass, ClassLoader classLoader) {
-		return DefaultConverter.INSTANCE.convert(input, targetClass, classLoader);
+		return DefaultConverter.INSTANCE.convert(input, TypeDescriptor.forInstance(input), targetClass, classLoader);
 	}
 
 	private static ClassLoader classLoader() {

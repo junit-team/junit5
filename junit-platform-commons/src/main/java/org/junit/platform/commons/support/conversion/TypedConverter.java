@@ -44,13 +44,14 @@ public abstract class TypedConverter<S, T> implements Converter {
 	}
 
 	@Override
-	public final boolean canConvert(Object source, TypeDescriptor targetType) {
+	public final boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		return this.sourceType.isInstance(source)
 				&& ReflectionUtils.isAssignableTo(this.targetType, targetType.getType());
 	}
 
 	@Override
-	public final Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
+	public final Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) {
 		return source == null ? convert(null) : convert(this.sourceType.cast(source));
 	}
 

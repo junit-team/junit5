@@ -47,7 +47,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 		Preconditions.notNull(classLoader, "ClassLoader must not be null");
 
 		BiFunction<Object, Class<?>, Object> converter = (source, targetType) -> new DefaultArgumentConverter(context) //
-				.convert(source, TypeDescriptor.forType(targetType), classLoader);
+				.convert(source, TypeDescriptor.forClass(targetType), classLoader);
 		return new DefaultArgumentsAccessor(converter, invocationIndex, arguments);
 	}
 

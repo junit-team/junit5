@@ -70,12 +70,13 @@ public class DefaultConverter implements Converter {
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type
+	 * @param sourceType the descriptor of the source type; never {@code null}
 	 * @param targetType the target type the source should be converted into;
 	 * never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
 	@Override
-	public boolean canConvert(Object source, TypeDescriptor targetType) {
+	public boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		if (source == null) {
 			return !targetType.isPrimitive();
 		}
@@ -95,14 +96,11 @@ public class DefaultConverter implements Converter {
 	/**
 	 * Convert the supplied source object into an instance of the specified
 	 * target type.
-	 *
 	 * <p>If the target type is {@code String}, the source {@code String} will not
 	 * be modified.
-	 *
 	 * <p>Some forms of conversion require a {@link ClassLoader}. If none is
 	 * provided, the {@linkplain ClassLoaderUtils#getDefaultClassLoader() default
 	 * ClassLoader} will be used.
-	 *
 	 * <p>This method is able to convert strings into primitive types and their
 	 * corresponding wrapper types ({@link Boolean}, {@link Character}, {@link Byte},
 	 * {@link Short}, {@link Integer}, {@link Long}, {@link Float}, and
@@ -112,15 +110,12 @@ public class DefaultConverter implements Converter {
 	 * {@link java.math.BigDecimal}, {@link java.math.BigInteger},
 	 * {@link java.util.Currency}, {@link java.util.Locale}, {@link java.util.UUID},
 	 * {@link java.net.URI}, and {@link java.net.URL}.
-	 *
 	 * <p>If the target type is not covered by any of the above, a convention-based
 	 * conversion strategy will be used to convert the source {@code String} into the
 	 * given target type by invoking a static factory method or factory constructor
 	 * defined in the target type. The search algorithm used in this strategy is
 	 * outlined below.
-	 *
 	 * <h4>Search Algorithm</h4>
-	 *
 	 * <ol>
 	 * <li>Search for a single, non-private static factory method in the target
 	 * type that converts from a String to the target type. Use the factory method
@@ -128,13 +123,13 @@ public class DefaultConverter implements Converter {
 	 * <li>Search for a single, non-private constructor in the target type that
 	 * accepts a String. Use the constructor if present.</li>
 	 * </ol>
-	 *
 	 * <p>If multiple suitable factory methods are discovered, they will be ignored.
 	 * If neither a single factory method nor a single constructor is found, the
 	 * convention-based conversion strategy will not apply.
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type
+	 * @param sourceType the descriptor of the source type; never {@code null}
 	 * @param targetType the target type the source should be converted into;
 	 * never {@code null}
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
@@ -143,7 +138,8 @@ public class DefaultConverter implements Converter {
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Override
-	public Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
+	public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(

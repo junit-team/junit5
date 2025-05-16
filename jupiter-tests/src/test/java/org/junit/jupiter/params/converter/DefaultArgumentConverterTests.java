@@ -99,7 +99,7 @@ class DefaultArgumentConverterTests {
 
 		convert("value", int.class);
 
-		verify(underTest).delegateConversion("value", TypeDescriptor.forType(int.class),
+		verify(underTest).delegateConversion("value", TypeDescriptor.forClass(int.class),
 			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
@@ -130,7 +130,7 @@ class DefaultArgumentConverterTests {
 
 		convert("en", Locale.class);
 
-		verify(underTest).convert("en", TypeDescriptor.forType(Locale.class),
+		verify(underTest).convert("en", TypeDescriptor.forClass(Locale.class),
 			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
@@ -144,7 +144,7 @@ class DefaultArgumentConverterTests {
 				.withCause(exception) //
 				.withMessage(exception.getMessage());
 
-		verify(underTest).delegateConversion("value", TypeDescriptor.forType(int.class),
+		verify(underTest).delegateConversion("value", TypeDescriptor.forClass(int.class),
 			getClassLoader(DefaultArgumentConverterTests.class));
 	}
 
@@ -165,7 +165,7 @@ class DefaultArgumentConverterTests {
 			assertThat(clazz).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 
-			verify(underTest).delegateConversion(customTypeName, TypeDescriptor.forType(Class.class), testClassLoader);
+			verify(underTest).delegateConversion(customTypeName, TypeDescriptor.forClass(Class.class), testClassLoader);
 		}
 	}
 
@@ -186,7 +186,7 @@ class DefaultArgumentConverterTests {
 	}
 
 	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
-		return underTest.convert(input, TypeDescriptor.forType(targetClass), classLoader);
+		return underTest.convert(input, TypeDescriptor.forClass(targetClass), classLoader);
 	}
 
 	@SuppressWarnings("unused")

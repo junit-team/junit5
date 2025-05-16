@@ -17,7 +17,7 @@ package org.junit.platform.commons.support.conversion;
 abstract class StringToObjectConverter implements Converter {
 
 	@Override
-	public final boolean canConvert(Object source, TypeDescriptor targetType) {
+	public final boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		return canConvert(targetType.getType());
 	}
 
@@ -29,7 +29,8 @@ abstract class StringToObjectConverter implements Converter {
 	abstract boolean canConvert(Class<?> targetType);
 
 	@Override
-	public final Object convert(Object source, TypeDescriptor targetType, ClassLoader classLoader) {
+	public final Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) {
 		return convert((String) source, targetType.getType(), classLoader);
 	}
 

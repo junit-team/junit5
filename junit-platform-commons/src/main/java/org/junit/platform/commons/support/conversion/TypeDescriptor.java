@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
+import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
@@ -28,15 +29,21 @@ public final class TypeDescriptor {
 
 	private final Class<?> type;
 
-	public static TypeDescriptor forType(Class<?> type) {
-		return new TypeDescriptor(type);
+	public static TypeDescriptor forClass(Class<?> clazz) {
+		return new TypeDescriptor(clazz);
+	}
+
+	public static TypeDescriptor forInstance(Object instance) {
+		return new TypeDescriptor(instance != null ? instance.getClass() : null);
 	}
 
 	public static TypeDescriptor forField(Field field) {
+		Preconditions.notNull(field, "field must not be null");
 		return new TypeDescriptor(field.getType());
 	}
 
 	public static TypeDescriptor forParameter(Parameter parameter) {
+		Preconditions.notNull(parameter, "parameter must not be null");
 		return new TypeDescriptor(parameter.getType());
 	}
 
