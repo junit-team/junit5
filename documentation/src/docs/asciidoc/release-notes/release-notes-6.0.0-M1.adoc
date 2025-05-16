@@ -93,7 +93,10 @@ repository on GitHub.
 * The deprecated `junit.jupiter.tempdir.scope` configuration parameter is no longer
   supported.
 * The `JRE` enum constants for `JAVA_8` to `JAVA_16` have been deprecated because they can
-  no longer be used at runtime since `JAVA_17` is the new baseline.
+  no longer be used at runtime since `JAVA_17` is the new baseline. Please also check for
+  values less than 17 used with the `minVersion` and `maxVersion` attributes of
+  `@EnabledForJreRange` nad `@DisabledForJreRange` or the `versions` attribute of
+  `@EnabledOnJre` and `@DisabledOnJre`.
 * `@EnabledForJreRange` and `@DisabledForJreRange` now use `JAVA_17` as their default
   `min` value.
 
