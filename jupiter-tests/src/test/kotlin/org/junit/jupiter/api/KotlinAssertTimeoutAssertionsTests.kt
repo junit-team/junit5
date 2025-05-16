@@ -156,17 +156,18 @@ internal class KotlinAssertTimeoutAssertionsTests {
     }
 
     @Test
-    fun `assertTimeout with value initialization in lambda`() {
+    fun `assertTimeout with value assignment in lambda`() {
         val value: Int
 
-        assertTimeout(ofMillis(500)) { value = 10 }
-
-        assertEquals(10, value)
+        assertTimeout(ofMillis(500)) {
+            value = 10 // Val can be assigned in the message supplier lambda.
+            assertEquals(10, value)
+        }
     }
 
     @Test
-    fun `assertTimeout with message and value initialization in lambda`() {
-        val value: Int
+    fun `assertTimeout with message and value assignment in lambda`() {
+        var value = 0
 
         assertTimeout(ofMillis(500), "message") { value = 10 }
 
@@ -174,8 +175,8 @@ internal class KotlinAssertTimeoutAssertionsTests {
     }
 
     @Test
-    fun `assertTimeout with message supplier and value initialization in lambda`() {
-        val value: Int
+    fun `assertTimeout with message supplier and value assignment in lambda`() {
+        var value = 0
 
         @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
         val valueInMessageSupplier: Int
