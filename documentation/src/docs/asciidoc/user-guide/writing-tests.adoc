@@ -1818,6 +1818,20 @@ the values `1`, `2`, and `3` respectively.
 include::{testDir}/example/ParameterizedTestDemo.java[tags=ValueSource_example]
 ----
 
+[[writing-tests-parameterized-tests-argument-sources-BooleansSource]]
+===== @BooleansSource
+
+`@BooleansSource` is a composed annotation that provides a convenient way to specify
+boolean values (`true` and `false`) as arguments for a `@ParameterizedTest` method.
+
+For example, the following `@ParameterizedTest` method will be invoked twice,
+with the values `true` and `false` respectively.
+
+[source,java,indent=0]
+----
+include::{testDir}/example/ParameterizedTestDemo.java[tags=BooleanSource_example]
+----
+
 [[writing-tests-parameterized-tests-sources-null-and-empty]]
 ===== Null and Empty Sources
 
