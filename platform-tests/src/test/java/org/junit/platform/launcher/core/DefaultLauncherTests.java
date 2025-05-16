@@ -25,6 +25,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatCannotResolveAnything;
 import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatFailsToResolveAnything;
+import static org.junit.platform.launcher.LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -923,6 +924,55 @@ class DefaultLauncherTests {
 					LauncherConstants.CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME);
 	}
 
+	@Test
+	void failsDuringDiscoveryIfConfigurationParameterIsSetAccordingly() {
+
+		var engine = new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.ERROR, "error"));
+				return new EngineDescriptor(uniqueId, "Engine");
+			}
+		};
+
+		var exception = assertThrows(DiscoveryIssueException.class, () -> execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, "discovery")));
+
+		assertThat(exception) //
+				.isInstanceOf(DiscoveryIssueException.class) //
+				.hasMessageStartingWith(
+					"TestEngine with ID 'engine-id' encountered a critical issue during test discovery") //
+				.hasMessageContaining("(1) [ERROR] error");
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = { "discovery", "execution" })
+	void logsNonCriticalIssuesOnlyOnce(String phase, @TrackLogRecords LogRecordListener listener) {
+
+		var engine = new TestEngineStub("engine-id") {
+			@Override
+			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
+				var listener = discoveryRequest.getDiscoveryListener();
+				listener.issueEncountered(uniqueId, DiscoveryIssue.create(Severity.WARNING, "warning"));
+				return new EngineDescriptor(uniqueId, "Engine");
+			}
+
+			@Override
+			public void execute(ExecutionRequest request) {
+				var executionListener = request.getEngineExecutionListener();
+				var engineDescriptor = request.getRootTestDescriptor();
+				executionListener.executionStarted(engineDescriptor);
+				executionListener.executionFinished(engineDescriptor, successful());
+			}
+		};
+
+		execute(engine, request -> request //
+				.configurationParameter(LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, phase));
+
+		assertThat(listener.stream(DiscoveryIssueNotifier.class, Level.WARNING)).hasSize(1);
+	}
+
 	private static ReportedData execute(TestEngine engine) {
 		return execute(engine, identity());
 	}
@@ -944,6 +994,7 @@ class DefaultLauncherTests {
 
 		var builder = request() //
 				.enableImplicitConfigurationParameters(false) //
+				.configurationParameter(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, "execution") //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging");
 		var request = configurer.apply(builder).build();
 		var launcher = createLauncher(engine);

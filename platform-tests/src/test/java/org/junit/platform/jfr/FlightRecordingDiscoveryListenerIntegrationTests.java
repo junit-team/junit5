@@ -57,6 +57,7 @@ public class FlightRecordingDiscoveryListenerIntegrationTests {
 		EngineTestKit.discover(testEngine, request() //
 				.selectors(selectClass(FlightRecordingDiscoveryListenerIntegrationTests.class)) //
 				.listeners(new FlightRecordingDiscoveryListener()) //
+				.enableImplicitConfigurationParameters(false) //
 				.build());
 
 		jfrEvents.awaitEvents();

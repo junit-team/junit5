@@ -89,7 +89,7 @@ public abstract class AbstractJupiterTestEngineTests {
 		return EngineTestKit.discover(this.engine, request);
 	}
 
-	private static LauncherDiscoveryRequestBuilder defaultRequest() {
+	protected static LauncherDiscoveryRequestBuilder defaultRequest() {
 		return request() //
 				.outputDirectoryProvider(dummyOutputDirectoryProvider()) //
 				.configurationParameter(STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME, String.valueOf(false)) //
