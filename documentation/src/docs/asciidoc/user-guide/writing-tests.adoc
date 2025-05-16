@@ -271,7 +271,7 @@ lifecycle methods. For further information on runtime semantics, see
 <<extensions-execution-order-wrapping-behavior>>.
 
 [source,java,indent=0]
-.A standard test class
+.A standard Java test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
@@ -284,6 +284,22 @@ following example.
 ----
 include::{testRelease21Dir}/example/MyFirstJUnitJupiterRecordTests.java[tags=user_guide]
 ----
+
+Test and lifecycle methods may be written in Kotlin and may optionally use the `suspend`
+keyword for testing code using coroutines.
+
+[source,kotlin]
+.A test class written in Kotlin
+----
+include::{kotlinTestDir}/example/KotlinCoroutinesDemo.kt[tags=user_guide]
+----
+
+NOTE: Using suspending functions as test or lifecycle methods requires
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-stdlib[`kotlin-stdlib`],
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-reflect[`kotlin-reflect`],
+and
+https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core[`kotlinx-coroutines-core`]
+to be present on the classpath or module path.
 
 [[writing-tests-display-names]]
 === Display Names

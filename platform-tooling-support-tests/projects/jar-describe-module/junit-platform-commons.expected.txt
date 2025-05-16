@@ -8,6 +8,9 @@ exports org.junit.platform.commons.support.scanning
 requires java.base mandated
 requires java.logging
 requires java.management
+requires kotlin.reflect static
+requires kotlin.stdlib static
+requires kotlinx.coroutines.core static
 requires org.apiguardian.api static transitive
 uses org.junit.platform.commons.support.scanning.ClasspathScanner
 qualified exports org.junit.platform.commons.logging to org.junit.jupiter.api org.junit.jupiter.engine org.junit.jupiter.migrationsupport org.junit.jupiter.params org.junit.platform.console org.junit.platform.engine org.junit.platform.launcher org.junit.platform.reporting org.junit.platform.suite.api org.junit.platform.suite.engine org.junit.platform.testkit org.junit.vintage.engine

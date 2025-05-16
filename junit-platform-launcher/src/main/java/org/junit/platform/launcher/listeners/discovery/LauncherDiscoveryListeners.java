@@ -21,9 +21,7 @@ import java.util.function.Supplier;
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.engine.SelectorResolutionResult.Status;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.launcher.LauncherDiscoveryListener;
 
 /**
@@ -45,13 +43,6 @@ public class LauncherDiscoveryListeners {
 	 * <p>The following events are considered failures:
 	 *
 	 * <ul>
-	 *     <li>
-	 *         a {@linkplain Status#FAILED failed} resolution result.
-	 *     </li>
-	 *     <li>
-	 *         an {@linkplain Status#FAILED unresolved} resolution result for a
-	 *         {@link UniqueIdSelector} that starts with the engine's unique ID.
-	 *     </li>
 	 *     <li>
 	 *         any recoverable {@link Throwable} thrown by
 	 *         {@link TestEngine#discover}.

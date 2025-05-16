@@ -1,6 +1,6 @@
-
 import com.gradle.develocity.agent.gradle.internal.test.TestDistributionConfigurationInternal
 import junitbuild.extensions.capitalized
+import junitbuild.extensions.dependencyProject
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.kotlin.dsl.support.listFilesOrdered
 import java.time.Duration
@@ -114,7 +114,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 val archUnit by testing.suites.registering(JvmTestSuite::class) {
 	dependencies {
 		implementation(libs.archunit) {
-			because("checking the architecture of JUnit 5")
+			because("checking the architecture")
 		}
 		implementation(libs.apiguardian) {
 			because("we validate that public classes are annotated")

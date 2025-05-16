@@ -1,0 +1,17 @@
+name: Prepare Maven Central user token
+description: Compute the Maven Central user token from username and password
+inputs:
+  username:
+    required: true
+    description: Maven Central username
+  password:
+    required: true
+    description: Maven Central password
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        USER_TOKEN=$(printf "${{ inputs.username }}:${{ inputs.password }}" | base64)
+        echo "::add-mask::$USER_TOKEN"
+        echo "MAVEN_CENTRAL_USER_TOKEN=$USER_TOKEN" >> $GITHUB_ENV

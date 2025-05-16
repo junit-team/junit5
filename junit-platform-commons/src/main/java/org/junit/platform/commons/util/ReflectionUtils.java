@@ -94,7 +94,7 @@ public final class ReflectionUtils {
 	 * <p>When set to {@code false} (either explicitly or implicitly), field and
 	 * method searches will adhere to Java semantics regarding whether a given
 	 * field or method is visible or overridden, where the latter only applies
-	 * to methods. When set to {@code true}, the semantics used in JUnit 5 prior
+	 * to methods. When set to {@code true}, the semantics used in versions prior
 	 * to JUnit 5.11 (JUnit Platform 1.11) will be used, which means that fields
 	 * and methods can hide, shadow, or supersede fields and methods in supertypes
 	 * based solely on the field's name or the method's signature, disregarding

@@ -1,3 +1,4 @@
+import junitbuild.extensions.dependencyProject
 import junitbuild.java.WriteArtifactsFile
 
 plugins {
@@ -58,6 +59,7 @@ tasks {
 				Import-Package: \
 					$importAPIGuardian,\
 					kotlin.*;resolution:="optional",\
+					kotlinx.*;resolution:="optional",\
 					*
 				# Disable the APIGuardian plugin since everything was already
 				# processed, again because this is an aggregate jar

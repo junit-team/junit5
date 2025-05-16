@@ -25,6 +25,8 @@ dependencies {
 	testImplementation(testFixtures(projects.junitJupiterEngine))
 	testImplementation(testFixtures(projects.junitPlatformLauncher))
 	testImplementation(testFixtures(projects.junitPlatformReporting))
+
+	testRuntimeOnly(kotlin("reflect"))
 }
 
 tasks {

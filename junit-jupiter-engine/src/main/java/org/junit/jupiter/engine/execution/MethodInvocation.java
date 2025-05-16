@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.extension.InvocationInterceptor.Invocation;
 import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
-import org.junit.platform.commons.support.ReflectionSupport;
+import org.junit.jupiter.engine.support.MethodReflectionUtils;
 
 class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<Method> {
 
@@ -57,7 +57,8 @@ class MethodInvocation<T> implements Invocation<T>, ReflectiveInvocationContext<
 	@Override
 	@SuppressWarnings("unchecked")
 	public T proceed() {
-		return (T) ReflectionSupport.invokeMethod(this.method, this.target.orElse(null), this.arguments);
+		var actualTarget = this.target.orElse(null);
+		return (T) MethodReflectionUtils.invoke(this.method, actualTarget, this.arguments);
 	}
 
 }

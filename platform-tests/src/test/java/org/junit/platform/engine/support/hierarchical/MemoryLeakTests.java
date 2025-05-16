@@ -29,7 +29,7 @@ class MemoryLeakTests {
 	// Allocate 500 MB of memory per test method.
 	//
 	// If the test instance is garbage collected, this should not cause any
-	// problems for the JUnit 5 build; however, if the instances of this test
+	// problems for the JUnit build; however, if the instances of this test
 	// class are NOT garbage collected, we should run out of memory pretty
 	// quickly since the instances of this test class would consume 5GB of
 	// heap space.

@@ -18,6 +18,8 @@ import static java.util.stream.Collectors.toMap;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameters;
+import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
@@ -107,6 +109,9 @@ class ResolverFacade {
 	}
 
 	static ResolverFacade create(Method method, Annotation annotation) {
+		if (isKotlinSuspendingFunction(method)) {
+			return create(method, annotation, 0, getKotlinSuspendingFunctionParameters(method));
+		}
 		return create(method, annotation, 0);
 	}
 
@@ -124,9 +129,13 @@ class ResolverFacade {
 	 * </ol>
 	 */
 	private static ResolverFacade create(Executable executable, Annotation annotation, int indexOffset) {
+		return create(executable, annotation, indexOffset, executable.getParameters());
+	}
+
+	private static ResolverFacade create(Executable executable, Annotation annotation, int indexOffset,
+			java.lang.reflect.Parameter[] parameters) {
 		NavigableMap<Integer, ExecutableParameterDeclaration> indexedParameters = new TreeMap<>();
 		NavigableMap<Integer, ExecutableParameterDeclaration> aggregatorParameters = new TreeMap<>();
-		java.lang.reflect.Parameter[] parameters = executable.getParameters();
 		for (int index = indexOffset; index < parameters.length; index++) {
 			ExecutableParameterDeclaration declaration = new ExecutableParameterDeclaration(parameters[index], index,
 				indexOffset);

@@ -1,5 +1,5 @@
 [[user-guide]]
-= JUnit 5 User Guide
+= JUnit User Guide
 Stefan Bechtold; Sam Brannen; Johannes Link; Matthias Merdes; Marc Philipp; Juliette de Rancourt; Christian Stein
 :basedir: {includedir}/user-guide
 :pdf-fontsdir: GEM_FONTS_DIR;{includedir}/resources/fonts

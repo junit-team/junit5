@@ -1,3 +1,5 @@
+import junitbuild.extensions.requiredVersionFromLibs
+
 plugins {
 	id("com.diffplug.spotless")
 }
@@ -27,6 +29,7 @@ spotless {
 		val javaFormatterConfigFile = configDir.file("junit-eclipse-formatter-settings.xml")
 
 		java {
+			targetExclude("**/module-info.java")
 			licenseHeaderFile(license.headerFile, "(package|import) ")
 			importOrderFile(importOrderConfigFile)
 			val fullVersion = requiredVersionFromLibs("eclipse")
@@ -38,8 +41,8 @@ spotless {
 		}
 
 		format("moduleDescriptor") {
-			target(fileTree(layout.projectDirectory.dir("src/module")) {
-				include("**/module-info.java")
+			target(fileTree(layout.projectDirectory.dir("src/main/java")) {
+				include("module-info.java")
 			})
 			licenseHeaderFile(license.headerFile, "^$")
 			trimTrailingWhitespace()

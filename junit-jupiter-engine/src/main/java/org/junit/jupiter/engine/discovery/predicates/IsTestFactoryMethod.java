@@ -11,14 +11,15 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getGenericReturnType;
+import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
+import static org.junit.platform.commons.util.CollectionUtils.isConvertibleToStream;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.WildcardType;
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.DynamicNode;
@@ -54,7 +55,7 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 	}
 
 	private static boolean isCompatible(Method method, DiscoveryIssueReporter issueReporter) {
-		Class<?> returnType = method.getReturnType();
+		Class<?> returnType = getReturnType(method);
 		if (DynamicNode.class.isAssignableFrom(returnType) || DynamicNode[].class.isAssignableFrom(returnType)) {
 			return true;
 		}
@@ -62,14 +63,12 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 			issueReporter.reportIssue(createTooGenericReturnTypeIssue(method));
 			return true;
 		}
-		boolean validContainerType = Stream.class.isAssignableFrom(returnType) //
-				|| Iterable.class.isAssignableFrom(returnType) //
-				|| Iterator.class.isAssignableFrom(returnType);
+		boolean validContainerType = !returnType.isArray() && isConvertibleToStream(returnType);
 		return validContainerType && isCompatibleContainerType(method, issueReporter);
 	}
 
 	private static boolean isCompatibleContainerType(Method method, DiscoveryIssueReporter issueReporter) {
-		Type genericReturnType = method.getGenericReturnType();
+		Type genericReturnType = getGenericReturnType(method);
 
 		if (genericReturnType instanceof ParameterizedType) {
 			Type[] typeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();

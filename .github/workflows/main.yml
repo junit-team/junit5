@@ -42,7 +42,7 @@ jobs:
           jacocoRootReport \
           --no-configuration-cache # Disable configuration cache due to https://github.com/diffplug/spotless/issues/2318
     - name: Upload to Codecov.io
-      uses: codecov/codecov-action@ad3126e916f78f00edff4ed0317cf185271ccc2d # v5.4.2
+      uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
 
@@ -86,8 +86,8 @@ jobs:
     - name: Publish
       uses: ./.github/actions/run-gradle
       env:
-        ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
-        ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+        ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+        ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
       with:
         encryptionKey: ${{ secrets.GRADLE_ENCRYPTION_KEY }}
         arguments: |
