@@ -23,7 +23,6 @@ import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator;
-import org.junit.platform.launcher.core.EngineDiscoveryOrchestrator.Phase;
 import org.junit.platform.launcher.core.EngineExecutionOrchestrator;
 import org.junit.platform.launcher.core.LauncherDiscoveryResult;
 import org.junit.platform.launcher.core.ServiceLoaderTestEngineRegistry;
@@ -56,7 +55,7 @@ class SuiteLauncher {
 	}
 
 	LauncherDiscoveryResult discover(LauncherDiscoveryRequest discoveryRequest, UniqueId parentId) {
-		return discoveryOrchestrator.discover(discoveryRequest, Phase.DISCOVERY, parentId);
+		return discoveryOrchestrator.discover(discoveryRequest, parentId);
 	}
 
 	TestExecutionSummary execute(LauncherDiscoveryResult discoveryResult,

@@ -253,7 +253,12 @@ public class LauncherConstants {
 	 *
 	 * <p>Supported values are "discovery" or "execution".
 	 *
-	 * <p>If not specified, the default is "execution".
+	 * <p>If not specified, the {@code Launcher} will report discovery issues
+	 * during the discovery phase if
+	 * {@link Launcher#discover(LauncherDiscoveryRequest)} is called, and during
+	 * the execution phase if
+	 * {@link Launcher#execute(LauncherDiscoveryRequest, TestExecutionListener...)}
+	 * is called.
 	 *
 	 * @since 1.13
 	 * @see #CRITICAL_DISCOVERY_ISSUE_SEVERITY_PROPERTY_NAME

@@ -25,6 +25,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatCannotResolveAnything;
 import static org.junit.platform.fakes.FaultyTestEngines.createEngineThatFailsToResolveAnything;
+import static org.junit.platform.launcher.LauncherConstants.DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
@@ -1018,6 +1019,7 @@ class DefaultLauncherTests {
 
 		var builder = request() //
 				.enableImplicitConfigurationParameters(false) //
+				.configurationParameter(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, "execution") //
 				.configurationParameter(DEFAULT_DISCOVERY_LISTENER_CONFIGURATION_PROPERTY_NAME, "logging");
 		var request = configurer.apply(builder).build();
 		var launcher = createLauncher(engine);

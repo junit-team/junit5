@@ -13,7 +13,7 @@ package org.junit.platform.launcher.core;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.launcher.LauncherConstants.DRY_RUN_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.STACKTRACE_PRUNING_ENABLED_PROPERTY_NAME;
-import static org.junit.platform.launcher.core.DiscoveryIssueNotifier.handleDiscoveryIssuesInDiscoveryPhase;
+import static org.junit.platform.launcher.core.LauncherPhase.getDiscoveryIssueFailurePhase;
 import static org.junit.platform.launcher.core.ListenerRegistry.forEngineExecutionListeners;
 
 import java.util.Optional;
@@ -186,10 +186,9 @@ public class EngineExecutionOrchestrator {
 	private void failOrExecuteEngine(LauncherDiscoveryResult discoveryResult, EngineExecutionListener listener,
 			TestEngine testEngine, NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		EngineResultInfo engineDiscoveryResult = discoveryResult.getEngineResult(testEngine);
-		DiscoveryIssueNotifier discoveryIssueNotifier = handleDiscoveryIssuesInDiscoveryPhase(
-			discoveryResult.getConfigurationParameters()) //
-					? DiscoveryIssueNotifier.NO_ISSUES //
-					: engineDiscoveryResult.getDiscoveryIssueNotifier();
+		DiscoveryIssueNotifier discoveryIssueNotifier = shouldReportDiscoveryIssues(discoveryResult) //
+				? engineDiscoveryResult.getDiscoveryIssueNotifier() //
+				: DiscoveryIssueNotifier.NO_ISSUES;
 		TestDescriptor engineDescriptor = engineDiscoveryResult.getRootDescriptor();
 		Throwable failure = engineDiscoveryResult.getCause() //
 				.orElseGet(() -> discoveryIssueNotifier.createExceptionForCriticalIssues(testEngine));
@@ -205,6 +204,12 @@ public class EngineExecutionOrchestrator {
 			executeEngine(engineDescriptor, listener, discoveryResult.getConfigurationParameters(), testEngine,
 				discoveryResult.getOutputDirectoryProvider(), discoveryIssueNotifier, requestLevelStore);
 		}
+	}
+
+	private static boolean shouldReportDiscoveryIssues(LauncherDiscoveryResult discoveryResult) {
+		ConfigurationParameters configurationParameters = discoveryResult.getConfigurationParameters();
+		return getDiscoveryIssueFailurePhase(configurationParameters).orElse(
+			LauncherPhase.EXECUTION) == LauncherPhase.EXECUTION;
 	}
 
 	private ListenerRegistry<TestExecutionListener> buildListenerRegistryForExecution(
