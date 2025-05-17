@@ -58,27 +58,6 @@ repository on GitHub.
 [[release-notes-5.13.0-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* New `ConsoleLauncher` options `--redirect-stdout` and `--redirect-stderr` for
-  redirecting `stdout` and `stderr` output streams to files.
-* Add `TestDescriptor.Visitor.composite(List)` factory method for creating a composite
-  visitor that delegates to the given visitors in order.
-* Introduce test _discovery_ support in `EngineTestKit` to ease testing for discovery
-  issues produced by a `TestEngine`. Please refer to the
-  <<../user-guide/index.adoc#testkit-engine, User Guide>> for details.
-* This milestone contains preliminary APIs for reporting issues encountered by test
-  engines during test discovery. However, these are still under active development and not
-  yet ready for general use. If you're a maintainer of a test engine, please wait for the
-  next milestone before adopting these new APIs. If you're interested, you can follow
-  along our progress in link:{junit5-repo}/issues/242[#242].
-* Introduce resource management mechanism that allows preparing and sharing state across
-  executions or test engines via stores that are scoped to a `LauncherSession` or
-  `ExecutionRequest`. The Jupiter API uses these stores as ancestors to the `Store`
-  instances accessible via `ExtensionContext` and provides a new method to access them
-  directly. Please refer to the User Guide for examples of managing
-  <<../user-guide/index.adoc#launcher-api-launcher-session-listeners-tool-example-usage, session-scoped>>
-  and
-  <<../user-guide/index.adoc#launcher-api-managing-state-across-test-engines, request-scoped>>
-  resources.
 * Introduce a mechanism for `TestEngine` implementations to report issues encountered
   during test discovery. If an engine reports a `DiscoveryIssue` with a `Severity` equal
   to or higher than a configurable critical severity, its tests will not be executed.
@@ -96,6 +75,22 @@ to start reporting discovery issues.
   - Invalid `@BeforeSuite`/`@AfterSuite` method declarations (for example, when not
     `static`)
   - Cyclic dependencies between `@Suite` classes
+* Introduce resource management mechanism that allows preparing and sharing state across
+  executions or test engines via stores that are scoped to a `LauncherSession` or
+  `ExecutionRequest`. The Jupiter API uses these stores as ancestors to the `Store`
+  instances accessible via `ExtensionContext` and provides a new method to access them
+  directly. Please refer to the User Guide for examples of managing
+  <<../user-guide/index.adoc#launcher-api-launcher-session-listeners-tool-example-usage, session-scoped>>
+  and
+  <<../user-guide/index.adoc#launcher-api-managing-state-across-test-engines, request-scoped>>
+  resources.
+* New `ConsoleLauncher` options `--redirect-stdout` and `--redirect-stderr` for
+  redirecting `stdout` and `stderr` output streams to files.
+* Add `TestDescriptor.Visitor.composite(List)` factory method for creating a composite
+  visitor that delegates to the given visitors in order.
+* Introduce test _discovery_ support in `EngineTestKit` to ease testing for discovery
+  issues produced by a `TestEngine`. Please refer to the
+  <<../user-guide/index.adoc#testkit-engine, User Guide>> for details.
 * Make validation of including `EngineFilters` more strict to avoid misconfiguration, for
   example, due to typos. Prior to this release, an exception was only thrown when _none_
   of a filter's included IDs matched any engine. Now, an exception is thrown if at least
