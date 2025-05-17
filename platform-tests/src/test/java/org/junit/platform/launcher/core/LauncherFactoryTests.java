@@ -19,13 +19,10 @@ import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS
 import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.LogRecord;
 
+import org.junit.jupiter.api.ClasspathRunner;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -434,18 +431,7 @@ class LauncherFactoryTests {
 	}
 
 	private static void withTestServices(Runnable runnable) {
-		var current = Thread.currentThread().getContextClassLoader();
-		var url = LauncherFactoryTests.class.getClassLoader().getResource("testservices/");
-		try (var classLoader = new URLClassLoader(new URL[] { url }, current)) {
-			Thread.currentThread().setContextClassLoader(classLoader);
-			runnable.run();
-		}
-		catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-		finally {
-			Thread.currentThread().setContextClassLoader(current);
-		}
+		ClasspathRunner.withClasspath("testservices/", runnable);
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
