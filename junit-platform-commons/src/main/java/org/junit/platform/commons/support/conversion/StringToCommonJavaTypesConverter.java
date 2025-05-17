@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-class StringToCommonJavaTypesConverter implements StringToObjectConverter {
+class StringToCommonJavaTypesConverter extends StringToObjectConverter {
 
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 
@@ -49,12 +49,12 @@ class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) throws Exception {
+	public Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		return CONVERTERS.get(targetType).apply(source);
 	}
 

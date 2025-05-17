@@ -51,7 +51,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 1.11
  * @see ConversionSupport
  */
-class FallbackStringToObjectConverter implements StringToObjectConverter {
+class FallbackStringToObjectConverter extends StringToObjectConverter {
 
 	/**
 	 * Implementation of the NULL Object Pattern.
@@ -70,12 +70,12 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		= new ConcurrentHashMap<>(64);
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return findFactoryExecutable(targetType) != NULL_EXECUTABLE;
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) throws Exception {
+	public Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		Function<String, Object> executable = findFactoryExecutable(targetType);
 		Preconditions.condition(executable != NULL_EXECUTABLE,
 			"Illegal state: convert() must not be called if canConvert() returned false");

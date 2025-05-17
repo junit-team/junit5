@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-class StringToJavaTimeConverter implements StringToObjectConverter {
+class StringToJavaTimeConverter extends StringToObjectConverter {
 
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
 	static {
@@ -53,12 +53,12 @@ class StringToJavaTimeConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) throws Exception {
+	public Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
 		return CONVERTERS.get(targetType).apply(source);
 	}
 
