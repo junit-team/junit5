@@ -66,11 +66,6 @@ jobs:
         uses: actions/attest-build-provenance@db473fddc028af60658334401dc6fa3ffd8669fd # v2.3.0
         with:
           subject-path: build/repo/**/*.jar
-      - name: Upload local repository for later jobs
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-        with:
-          name: local-maven-repository
-          path: build/repo
 
   verify_consumability:
     name: Verify consumability
@@ -223,30 +218,9 @@ jobs:
           curl --silent --fail --location --output /tmp/junit-user-guide.pdf "${{ steps.pagesDeployment.outputs.pdfUrl }}"
           pdfinfo /tmp/junit-user-guide.pdf
 
-  wait_for_maven_central:
-    name: Wait for Maven Central
-    needs: publish_deployment
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-        with:
-          fetch-depth: 1
-          ref: "refs/tags/${{ env.RELEASE_TAG }}"
-      - name: Download local Maven repository
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
-        with:
-          name: local-maven-repository
-          path: build/repo
-      - name: Wait for sync to Maven Central
-        if: ${{ inputs.dryRun == false }}
-        timeout-minutes: 30
-        run: |
-          find build/repo -name '*.pom' -printf './.github/scripts/waitForMavenCentralSync.sh %P\n' | sh
-
   update_samples:
     name: Update samples
-    needs: wait_for_maven_central
+    needs: publish_deployment
     runs-on: ubuntu-latest
     steps:
       - name: Check out samples repository
@@ -287,7 +261,7 @@ jobs:
   create_github_release:
     name: Create GitHub release
     if: ${{ inputs.dryRun == false }}
-    needs: wait_for_maven_central
+    needs: [ publish_documentation, update_samples ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
