@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.TemporaryClasspathExecutor.withAdditionalClasspathRoot;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.launcher.LauncherConstants.DEACTIVATE_LISTENERS_PATTERN_PROPERTY_NAME;
 import static org.junit.platform.launcher.LauncherConstants.ENABLE_LAUNCHER_INTERCEPTORS;
@@ -22,7 +23,6 @@ import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.r
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.LogRecord;
 
-import org.junit.jupiter.api.ClasspathRunner;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -431,7 +431,7 @@ class LauncherFactoryTests {
 	}
 
 	private static void withTestServices(Runnable runnable) {
-		ClasspathRunner.withClasspath("testservices/", runnable);
+		withAdditionalClasspathRoot("testservices/", runnable);
 	}
 
 	private LauncherDiscoveryRequest createLauncherDiscoveryRequestForBothStandardEngineExampleClasses() {
