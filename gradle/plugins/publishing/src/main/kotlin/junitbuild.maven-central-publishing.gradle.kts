@@ -38,11 +38,14 @@ jreleaser {
 					username = mavenCentralUsername
 					password = mavenCentralPassword
 					stagingRepository(tempRepoDir.absolutePath)
-					applyMavenCentralRules = true
+					applyMavenCentralRules = false
+					sourceJar = false
+					javadocJar = false
 					sign = false
 					checksums = false
+					verifyPom = false
 					namespace = "org.junit"
-					stage = providers.gradleProperty("jreleaser.mavencentral.stage")
+					stage = providers.environmentVariable("JRELEASER_MAVENCENTRAL_STAGE")
 						.map(Stage::of)
 						.orElse(Stage.UPLOAD)
 				}
