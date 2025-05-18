@@ -19,13 +19,7 @@ include::{includedir}/link-attributes.adoc[]
 
 include::{basedir}/release-notes-6.0.0-M1.adoc[]
 
-include::{basedir}/release-notes-5.13.0-RC1.adoc[]
-
-include::{basedir}/release-notes-5.13.0-M3.adoc[]
-
-include::{basedir}/release-notes-5.13.0-M2.adoc[]
-
-include::{basedir}/release-notes-5.13.0-M1.adoc[]
+include::{basedir}/release-notes-5.13.0.adoc[]
 
 include::{basedir}/release-notes-5.12.2.adoc[]
 
