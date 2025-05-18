@@ -119,12 +119,12 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const openMilestones = await github.rest.issues.listMilestones({
+            const milestones = await github.rest.issues.listMilestones({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                state: 'open'
+                state: 'all'
             });
-            const [milestone] = openMilestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
+            const [milestone] = milestones.data.filter(x => x.title === "${{ github.event.inputs.releaseVersion }}")
             if (!milestone) {
                 throw new Error('Milestone "${{ github.event.inputs.releaseVersion }}" not found');
             }
