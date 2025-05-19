@@ -181,7 +181,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				logger.debug(throwable,
-					() -> String.format("Failed to invoke nodeSkipped() on Node %s", testDescriptor.getUniqueId()));
+					() -> "Failed to invoke nodeSkipped() on Node %s".formatted(testDescriptor.getUniqueId()));
 			}
 			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
@@ -196,7 +196,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			logger.debug(throwable,
-				() -> String.format("Failed to invoke nodeFinished() on Node %s", testDescriptor.getUniqueId()));
+				() -> "Failed to invoke nodeFinished() on Node %s".formatted(testDescriptor.getUniqueId()));
 		}
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		throwableCollector = null;

@@ -98,7 +98,7 @@ public class OutputDir {
 	}
 
 	public Path createFile(String prefix, String extension) throws UncheckedIOException {
-		String filename = String.format("%s-%d.%s", prefix, Math.abs(random.nextLong()), extension);
+		String filename = "%s-%d.%s".formatted(prefix, Math.abs(random.nextLong()), extension);
 		Path outputFile = path.resolve(filename);
 
 		try {

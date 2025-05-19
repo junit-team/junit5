@@ -38,7 +38,7 @@ class RepeatedTestsDemo {
 		int currentRepetition = repetitionInfo.getCurrentRepetition();
 		int totalRepetitions = repetitionInfo.getTotalRepetitions();
 		String methodName = testInfo.getTestMethod().get().getName();
-		logger.info(String.format("About to execute repetition %d of %d for %s", //
+		logger.info("About to execute repetition %d of %d for %s".formatted( //
 			currentRepetition, totalRepetitions, methodName));
 	}
 

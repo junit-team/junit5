@@ -10,7 +10,6 @@
 
 package org.junit.platform.console;
 
-import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -214,7 +213,7 @@ class ConsoleDetailsTests {
 					Files.createDirectories(temp);
 					var path = Files.writeString(temp.resolve(outName), result.out);
 					throw new TestAbortedException(
-						format("resource `%s` not found\nwrote console stdout to: %s/%s", dirName, outName, path));
+						"resource `%s` not found\nwrote console stdout to: %s/%s".formatted(dirName, outName, path));
 				}
 				fail("could not load resource named `" + dirName + "/" + outName + "`");
 			}

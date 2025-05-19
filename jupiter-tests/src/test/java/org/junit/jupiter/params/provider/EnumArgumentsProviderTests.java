@@ -212,8 +212,8 @@ class EnumArgumentsProviderTests {
 		when(annotation.mode()).thenReturn(mode);
 		when(annotation.names()).thenReturn(names);
 		when(annotation.toString()).thenReturn(
-			String.format("@EnumSource(value=%s.class, from=%s, to=%s, mode=%s, names=%s)", enumClass.getSimpleName(),
-				from, to, mode, Arrays.toString(names)));
+			"@EnumSource(value=%s.class, from=%s, to=%s, mode=%s, names=%s)".formatted(enumClass.getSimpleName(), from,
+				to, mode, Arrays.toString(names)));
 
 		var provider = new EnumArgumentsProvider();
 		provider.accept(annotation);

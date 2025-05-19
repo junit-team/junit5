@@ -43,7 +43,7 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 
 	protected Object executeMethod(String methodName, Class<?>[] parameterTypes, Object... arguments) {
 		Method method = findMethod(this.target.getClass(), methodName, parameterTypes).orElseThrow(
-			() -> new JUnitException(String.format("Failed to find method %s(%s) in class %s", methodName,
+			() -> new JUnitException("Failed to find method %s(%s) in class %s".formatted(methodName,
 				ClassUtils.nullSafeToString(parameterTypes), this.target.getClass().getName())));
 
 		return invokeMethod(method, this.target, arguments);

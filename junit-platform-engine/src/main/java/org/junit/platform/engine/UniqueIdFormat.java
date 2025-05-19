@@ -70,7 +70,7 @@ class UniqueIdFormat implements Serializable {
 		this.closeSegment = closeSegment;
 		this.segmentDelimiter = segmentDelimiter;
 		this.segmentPattern = Pattern.compile(
-			String.format("%s(.+)%s(.+)%s", quote(openSegment), quote(typeValueSeparator), quote(closeSegment)),
+			"%s(.+)%s(.+)%s".formatted(quote(openSegment), quote(typeValueSeparator), quote(closeSegment)),
 			Pattern.DOTALL);
 
 		// Compute "forbidden" character encoding map.
@@ -99,7 +99,7 @@ class UniqueIdFormat implements Serializable {
 	private Segment createSegment(String segmentString) throws JUnitException {
 		Matcher segmentMatcher = this.segmentPattern.matcher(segmentString);
 		if (!segmentMatcher.matches()) {
-			throw new JUnitException(String.format("'%s' is not a well-formed UniqueId segment", segmentString));
+			throw new JUnitException("'%s' is not a well-formed UniqueId segment".formatted(segmentString));
 		}
 		String type = decode(checkAllowed(segmentMatcher.group(1)));
 		String value = decode(checkAllowed(segmentMatcher.group(2)));
@@ -116,7 +116,7 @@ class UniqueIdFormat implements Serializable {
 
 	private void checkDoesNotContain(String typeOrValue, char forbiddenCharacter) {
 		Preconditions.condition(typeOrValue.indexOf(forbiddenCharacter) < 0,
-			() -> String.format("type or value '%s' must not contain '%s'", typeOrValue, forbiddenCharacter));
+			() -> "type or value '%s' must not contain '%s'".formatted(typeOrValue, forbiddenCharacter));
 	}
 
 	/**

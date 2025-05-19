@@ -42,17 +42,16 @@ class ExcludeMethodFilter extends AbstractMethodFilter {
 	}
 
 	private String formatInclusionReason(String methodName) {
-		return String.format("Method name [%s] does not match any excluded pattern: %s", methodName,
-			patternDescription);
+		return "Method name [%s] does not match any excluded pattern: %s".formatted(methodName, patternDescription);
 	}
 
 	private String formatExclusionReason(String methodName, Pattern pattern) {
-		return String.format("Method name [%s] matches excluded pattern: '%s'", methodName, pattern);
+		return "Method name [%s] matches excluded pattern: '%s'".formatted(methodName, pattern);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s that excludes method names that match one of the following regular expressions: %s",
+		return "%s that excludes method names that match one of the following regular expressions: %s".formatted(
 			getClass().getSimpleName(), patternDescription);
 	}
 }

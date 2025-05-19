@@ -75,7 +75,7 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 
 		Object fieldValue = ReflectionSupport.tryToReadFieldValue(field, testInstance).get();
 		if (fieldValue == null) {
-			logger.warn(() -> String.format("Cannot @AutoClose field %s because it is null.", getQualifiedName(field)));
+			logger.warn(() -> "Cannot @AutoClose field %s because it is null.".formatted(getQualifiedName(field)));
 		}
 		else {
 			invokeCloseMethod(field, fieldValue, methodName.trim());
@@ -92,15 +92,15 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 		Class<?> targetType = target.getClass();
 		Method closeMethod = ReflectionSupport.findMethod(targetType, methodName).orElseThrow(
 			() -> new ExtensionConfigurationException(
-				String.format("Cannot @AutoClose field %s because %s does not define method %s().",
-					getQualifiedName(field), targetType.getName(), methodName)));
+				"Cannot @AutoClose field %s because %s does not define method %s().".formatted(getQualifiedName(field),
+					targetType.getName(), methodName)));
 
 		closeMethod = ReflectionUtils.getInterfaceMethodIfPossible(closeMethod, targetType);
 		ReflectionSupport.invokeMethod(closeMethod, target);
 	}
 
 	private static void checkCondition(boolean condition, String messageFormat, Field field) {
-		Preconditions.condition(condition, () -> String.format(messageFormat, getQualifiedName(field)));
+		Preconditions.condition(condition, () -> messageFormat.formatted(getQualifiedName(field)));
 	}
 
 	private static String getQualifiedName(Field field) {

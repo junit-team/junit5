@@ -82,7 +82,7 @@ class Assertions {
 	}
 
 	private static String formatValues(long expected, long actual) {
-		return String.format("expected: <%d> but was: <%d>", expected, actual);
+		return "expected: <%d> but was: <%d>".formatted(expected, actual);
 	}
 
 }

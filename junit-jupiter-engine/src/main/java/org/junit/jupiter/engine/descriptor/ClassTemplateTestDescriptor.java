@@ -221,7 +221,7 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 
 		@Override
 		protected String getNoRegisteredProviderErrorMessage() {
-			return String.format("You must register at least one %s that supports @%s class [%s]",
+			return "You must register at least one %s that supports @%s class [%s]".formatted(
 				ClassTemplateInvocationContextProvider.class.getSimpleName(), ClassTemplate.class.getSimpleName(),
 				getTestClass().getName());
 		}

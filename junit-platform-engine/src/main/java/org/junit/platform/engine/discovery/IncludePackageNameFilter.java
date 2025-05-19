@@ -51,11 +51,11 @@ class IncludePackageNameFilter implements PackageNameFilter {
 	}
 
 	private String formatInclusionReason(String packageName, String matchedName) {
-		return String.format("Package name [%s] matches included name: '%s'", packageName, matchedName);
+		return "Package name [%s] matches included name: '%s'".formatted(packageName, matchedName);
 	}
 
 	private String formatExclusionReason(String packageName) {
-		return String.format("Package name [%s] does not match any included names: %s", packageName,
+		return "Package name [%s] does not match any included names: %s".formatted(packageName,
 			this.patternDescription);
 	}
 
@@ -71,8 +71,7 @@ class IncludePackageNameFilter implements PackageNameFilter {
 
 	@Override
 	public String toString() {
-		return String.format(
-			"%s that includes packages whose names are either equal to or start with one of the following: %s",
+		return "%s that includes packages whose names are either equal to or start with one of the following: %s".formatted(
 			getClass().getSimpleName(), this.patternDescription);
 	}
 

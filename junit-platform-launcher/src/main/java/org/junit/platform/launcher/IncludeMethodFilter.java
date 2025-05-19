@@ -42,17 +42,16 @@ class IncludeMethodFilter extends AbstractMethodFilter {
 	}
 
 	private String formatInclusionReason(String methodName, Pattern pattern) {
-		return String.format("Method name [%s] matches included pattern: '%s'", methodName, pattern);
+		return "Method name [%s] matches included pattern: '%s'".formatted(methodName, pattern);
 	}
 
 	private String formatExclusionReason(String methodName) {
-		return String.format("Method name [%s] does not match any included pattern: %s", methodName,
-			patternDescription);
+		return "Method name [%s] does not match any included pattern: %s".formatted(methodName, patternDescription);
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s that includes method names that match one of the following regular expressions: %s",
+		return "%s that includes method names that match one of the following regular expressions: %s".formatted(
 			getClass().getSimpleName(), patternDescription);
 	}
 }

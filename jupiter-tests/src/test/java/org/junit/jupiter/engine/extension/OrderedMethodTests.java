@@ -402,7 +402,7 @@ class OrderedMethodTests {
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
 			var method = testInfo.getTestMethod().orElseThrow(AssertionError::new);
-			var signature = String.format("%s(%s)", method.getName(),
+			var signature = "%s(%s)".formatted(method.getName(),
 				ClassUtils.nullSafeToString(method.getParameterTypes()));
 
 			callSequence.add(signature);

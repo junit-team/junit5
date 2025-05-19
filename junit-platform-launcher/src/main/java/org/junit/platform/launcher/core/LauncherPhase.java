@@ -37,7 +37,7 @@ enum LauncherPhase {
 			}
 			catch (Exception e) {
 				logger.warn(
-					() -> String.format("Ignoring invalid LauncherPhase '%s' set via the '%s' configuration parameter.",
+					() -> "Ignoring invalid LauncherPhase '%s' set via the '%s' configuration parameter.".formatted(
 						value, DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME));
 				return null;
 			}

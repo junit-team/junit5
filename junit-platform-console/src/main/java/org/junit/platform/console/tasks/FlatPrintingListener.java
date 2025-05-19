@@ -93,7 +93,7 @@ class FlatPrintingListener implements DetailsPrintingListener {
 	}
 
 	private void println(Style style, String format, Object... args) {
-		this.out.println(colorPalette.paint(style, String.format(format, args)));
+		this.out.println(colorPalette.paint(style, format.formatted(args)));
 	}
 
 	/**

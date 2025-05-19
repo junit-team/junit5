@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static java.lang.String.format;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
 
 import java.lang.annotation.Annotation;
@@ -66,7 +65,7 @@ abstract class AbstractRepeatableAnnotationCondition<A extends Annotation> imple
 	protected abstract ConditionEvaluationResult getNoDisabledConditionsEncounteredResult();
 
 	private void logResult(A annotation, AnnotatedElement annotatedElement, ConditionEvaluationResult result) {
-		logger.trace(() -> format("Evaluation of %s on [%s] resulted in: %s", annotation, annotatedElement, result));
+		logger.trace(() -> "Evaluation of %s on [%s] resulted in: %s".formatted(annotation, annotatedElement, result));
 	}
 
 }

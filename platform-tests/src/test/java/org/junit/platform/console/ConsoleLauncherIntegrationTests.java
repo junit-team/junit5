@@ -97,7 +97,7 @@ class ConsoleLauncherIntegrationTests {
 			throws IOException {
 
 		var outputFile = tempDir.resolve("output.txt");
-		var line = String.format("execute -e junit-jupiter --select-class %s %s %s", StdStreamTestCase.class.getName(),
+		var line = "execute -e junit-jupiter --select-class %s %s %s".formatted(StdStreamTestCase.class.getName(),
 			redirectedStream, outputFile);
 		var args = line.split(" ");
 		new ConsoleLauncherWrapper().execute(args);
@@ -113,7 +113,7 @@ class ConsoleLauncherIntegrationTests {
 	@Test
 	void executeWithRedirectedStdStreamsToSameFile(@TempDir Path tempDir) throws IOException {
 		var outputFile = tempDir.resolve("output.txt");
-		var line = String.format("execute -e junit-jupiter --select-class %s --redirect-stdout %s --redirect-stderr %s",
+		var line = "execute -e junit-jupiter --select-class %s --redirect-stdout %s --redirect-stderr %s".formatted(
 			StdStreamTestCase.class.getName(), outputFile, outputFile);
 		var args = line.split(" ");
 		new ConsoleLauncherWrapper().execute(args);

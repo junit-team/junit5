@@ -105,7 +105,7 @@ class TimeoutConfiguration {
 			}
 			catch (Exception e) {
 				logger.warn(e,
-					() -> String.format("Ignored invalid timeout '%s' set via the '%s' configuration parameter.", value,
+					() -> "Ignored invalid timeout '%s' set via the '%s' configuration parameter.".formatted(value,
 						key));
 				return null;
 			}
@@ -128,17 +128,17 @@ class TimeoutConfiguration {
 			try {
 				ThreadMode threadMode = ThreadMode.valueOf(value.toUpperCase());
 				if (threadMode == ThreadMode.INFERRED) {
-					logger.warn(() -> String.format(
-						"Invalid timeout thread mode '%s', only %s and %s can be used as configuration parameter for %s.",
-						value, SAME_THREAD, SEPARATE_THREAD, DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME));
+					logger.warn(
+						() -> "Invalid timeout thread mode '%s', only %s and %s can be used as configuration parameter for %s.".formatted(
+							value, SAME_THREAD, SEPARATE_THREAD, DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME));
 					return null;
 				}
 				return threadMode;
 			}
 			catch (Exception e) {
 				logger.warn(e,
-					() -> String.format("Invalid timeout thread mode '%s' set via the '%s' configuration parameter.",
-						value, DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME));
+					() -> "Invalid timeout thread mode '%s' set via the '%s' configuration parameter.".formatted(value,
+						DEFAULT_TIMEOUT_THREAD_MODE_PROPERTY_NAME));
 				return null;
 			}
 		});

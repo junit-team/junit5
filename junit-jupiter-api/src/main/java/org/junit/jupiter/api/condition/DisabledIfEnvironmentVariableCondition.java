@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 
@@ -49,16 +48,16 @@ class DisabledIfEnvironmentVariableCondition
 
 		// Nothing to match against?
 		if (actual == null) {
-			return enabled(format("Environment variable [%s] does not exist", name));
+			return enabled("Environment variable [%s] does not exist".formatted(name));
 		}
 
 		if (actual.matches(regex)) {
-			return disabled(format("Environment variable [%s] with value [%s] matches regular expression [%s]", name,
+			return disabled("Environment variable [%s] with value [%s] matches regular expression [%s]".formatted(name,
 				actual, regex), annotation.disabledReason());
 		}
 		// else
-		return enabled(format("Environment variable [%s] with value [%s] does not match regular expression [%s]", name,
-			actual, regex));
+		return enabled("Environment variable [%s] with value [%s] does not match regular expression [%s]".formatted(
+			name, actual, regex));
 	}
 
 	/**

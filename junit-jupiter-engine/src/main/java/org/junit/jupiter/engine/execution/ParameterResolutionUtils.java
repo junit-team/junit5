@@ -135,7 +135,7 @@ public class ParameterResolutionUtils {
 
 			if (matchingResolvers.isEmpty()) {
 				throw new ParameterResolutionException(
-					String.format("No ParameterResolver registered for parameter [%s] in %s [%s].",
+					"No ParameterResolver registered for parameter [%s] in %s [%s].".formatted(
 						parameterContext.getParameter(), asLabel(executable), executable.toGenericString()));
 			}
 
@@ -146,7 +146,7 @@ public class ParameterResolutionUtils {
 						.collect(joining(", "));
 				// @formatter:on
 				throw new ParameterResolutionException(
-					String.format("Discovered multiple competing ParameterResolvers for parameter [%s] in %s [%s]: %s",
+					"Discovered multiple competing ParameterResolvers for parameter [%s] in %s [%s]: %s".formatted(
 						parameterContext.getParameter(), asLabel(executable), executable.toGenericString(), resolvers));
 			}
 
@@ -154,10 +154,10 @@ public class ParameterResolutionUtils {
 			Object value = resolver.resolveParameter(parameterContext, extensionContext.get(resolver));
 			validateResolvedType(parameterContext.getParameter(), value, executable, resolver);
 
-			logger.trace(() -> String.format(
-				"ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in %s [%s].",
-				resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
-				parameterContext.getParameter(), asLabel(executable), executable.toGenericString()));
+			logger.trace(
+				() -> "ParameterResolver [%s] resolved a value of type [%s] for parameter [%s] in %s [%s].".formatted(
+					resolver.getClass().getName(), (value != null ? value.getClass().getName() : null),
+					parameterContext.getParameter(), asLabel(executable), executable.toGenericString()));
 
 			return value;
 		}
@@ -167,8 +167,8 @@ public class ParameterResolutionUtils {
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 
-			String message = String.format("Failed to resolve parameter [%s] in %s [%s]",
-				parameterContext.getParameter(), asLabel(executable), executable.toGenericString());
+			String message = "Failed to resolve parameter [%s] in %s [%s]".formatted(parameterContext.getParameter(),
+				asLabel(executable), executable.toGenericString());
 
 			if (StringUtils.isNotBlank(throwable.getMessage())) {
 				message += ": " + throwable.getMessage();

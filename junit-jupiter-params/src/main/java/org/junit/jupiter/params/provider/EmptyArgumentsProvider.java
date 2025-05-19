@@ -45,7 +45,7 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 		Optional<ParameterDeclaration> firstParameter = parameters.getFirst();
 
 		Preconditions.condition(firstParameter.isPresent(),
-			() -> String.format("@EmptySource cannot provide an empty argument to %s: no formal parameters declared.",
+			() -> "@EmptySource cannot provide an empty argument to %s: no formal parameters declared.".formatted(
 				parameters.getSourceElementDescription()));
 
 		Class<?> parameterType = firstParameter.get().getParameterType();
@@ -89,7 +89,7 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 		}
 		// else
 		throw new PreconditionViolationException(
-			String.format("@EmptySource cannot provide an empty argument to %s: [%s] is not a supported type.",
+			"@EmptySource cannot provide an empty argument to %s: [%s] is not a supported type.".formatted(
 				parameters.getSourceElementDescription(), parameterType.getName()));
 	}
 

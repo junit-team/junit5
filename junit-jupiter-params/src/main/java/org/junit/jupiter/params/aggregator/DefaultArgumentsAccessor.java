@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params.aggregator;
 
-import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -61,7 +60,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	@Override
 	public Object get(int index) {
 		Preconditions.condition(index >= 0 && index < this.arguments.length,
-			() -> format("index must be >= 0 and < %d", this.arguments.length));
+			() -> "index must be >= 0 and < %d".formatted(this.arguments.length));
 		return this.arguments[index];
 	}
 
@@ -74,8 +73,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 			return requiredType.cast(convertedValue);
 		}
 		catch (Exception ex) {
-			String message = format(
-				"Argument at index [%d] with value [%s] and type [%s] could not be converted or cast to type [%s].",
+			String message = "Argument at index [%d] with value [%s] and type [%s] could not be converted or cast to type [%s].".formatted(
 				index, value, ClassUtils.nullSafeToString(value == null ? null : value.getClass()),
 				requiredType.getName());
 			throw new ArgumentAccessException(message, ex);

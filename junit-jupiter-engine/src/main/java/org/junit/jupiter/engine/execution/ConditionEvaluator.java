@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.engine.execution;
 
-import static java.lang.String.format;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
@@ -71,14 +70,14 @@ public class ConditionEvaluator {
 	}
 
 	private void logResult(Class<?> conditionType, ConditionEvaluationResult result, ExtensionContext context) {
-		logger.trace(() -> format("Evaluation of condition [%s] on [%s] resulted in: %s", conditionType.getName(),
+		logger.trace(() -> "Evaluation of condition [%s] on [%s] resulted in: %s".formatted(conditionType.getName(),
 			context.getElement().orElse(null), result));
 	}
 
 	private ConditionEvaluationException evaluationException(Class<?> conditionType, Exception ex) {
 		String cause = StringUtils.isNotBlank(ex.getMessage()) ? ": " + ex.getMessage() : "";
 		return new ConditionEvaluationException(
-			format("Failed to evaluate condition [%s]%s", conditionType.getName(), cause), ex);
+			"Failed to evaluate condition [%s]%s".formatted(conditionType.getName(), cause), ex);
 	}
 
 }

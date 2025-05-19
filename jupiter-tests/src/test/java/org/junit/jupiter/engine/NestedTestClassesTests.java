@@ -208,8 +208,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 
 	private void assertNestedCycle(Class<?> start, Class<?> from, Class<?> to) {
 		var results = executeTestsForClass(start);
-		var expectedMessage = String.format(
-			"Cause: org.junit.platform.commons.JUnitException: Detected cycle in inner class hierarchy between %s and %s",
+		var expectedMessage = "Cause: org.junit.platform.commons.JUnitException: Detected cycle in inner class hierarchy between %s and %s".formatted(
 			from.getName(), to.getName());
 		results.containerEvents().assertThatEvents() //
 				.haveExactly(1, finishedWithFailure(message(it -> it.contains(expectedMessage))));

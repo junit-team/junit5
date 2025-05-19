@@ -163,13 +163,13 @@ public class EngineDiscoveryOrchestrator {
 			boolean engineIsExcluded = engineFilterer.isExcluded(testEngine);
 
 			if (engineIsExcluded) {
-				logger.debug(() -> String.format("Test discovery for engine '%s' was skipped due to an EngineFilter%s.",
-					testEngine.getId(), phase.map(it -> String.format(" in %s phase", it)).orElse("")));
+				logger.debug(() -> "Test discovery for engine '%s' was skipped due to an EngineFilter%s.".formatted(
+					testEngine.getId(), phase.map(it -> " in %s phase".formatted(it)).orElse("")));
 				continue;
 			}
 
-			logger.debug(() -> String.format("Discovering tests%s in engine '%s'.",
-				phase.map(it -> String.format(" during Launcher %s phase", it)).orElse(""), testEngine.getId()));
+			logger.debug(() -> "Discovering tests%s in engine '%s'.".formatted(
+				phase.map(it -> " during Launcher %s phase".formatted(it)).orElse(""), testEngine.getId()));
 
 			EngineResultInfo engineResult = discoverEngineRoot(testEngine, request, issueCollector, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, engineResult);
@@ -204,7 +204,7 @@ public class EngineDiscoveryOrchestrator {
 				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
 			}
 			if (cause == null) {
-				String message = String.format("TestEngine with ID '%s' failed to discover tests", testEngine.getId());
+				String message = "TestEngine with ID '%s' failed to discover tests".formatted(testEngine.getId());
 				cause = new JUnitException(message, throwable);
 			}
 			listener.engineDiscoveryFinished(uniqueEngineId, EngineDiscoveryResult.failed(cause));
@@ -247,10 +247,10 @@ public class EngineDiscoveryOrchestrator {
 			String displayNames = testDescriptors.stream().map(TestDescriptor::getDisplayName).collect(joining(", "));
 			long containerCount = testDescriptors.stream().filter(TestDescriptor::isContainer).count();
 			long methodCount = testDescriptors.stream().filter(TestDescriptor::isTest).count();
-			logger.config(() -> String.format("%d containers and %d tests were %s", containerCount, methodCount,
-				exclusionReason));
+			logger.config(
+				() -> "%d containers and %d tests were %s".formatted(containerCount, methodCount, exclusionReason));
 			logger.debug(
-				() -> String.format("The following containers and tests were %s: %s", exclusionReason, displayNames));
+				() -> "The following containers and tests were %s: %s".formatted(exclusionReason, displayNames));
 		});
 	}
 

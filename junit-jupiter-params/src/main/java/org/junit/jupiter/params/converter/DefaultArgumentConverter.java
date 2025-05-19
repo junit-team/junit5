@@ -119,9 +119,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 			}
 		}
 
-		throw new ArgumentConversionException(
-			String.format("No built-in converter for source type %s and target type %s",
-				source.getClass().getTypeName(), targetType.getTypeName()));
+		throw new ArgumentConversionException("No built-in converter for source type %s and target type %s".formatted(
+			source.getClass().getTypeName(), targetType.getTypeName()));
 	}
 
 	private LocaleConversionFormat getLocaleConversionFormat() {

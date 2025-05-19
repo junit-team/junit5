@@ -239,7 +239,7 @@ public class EngineExecutionOrchestrator {
 				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
 			}
 			if (cause == null) {
-				String message = String.format("TestEngine with ID '%s' failed to execute tests", testEngine.getId());
+				String message = "TestEngine with ID '%s' failed to execute tests".formatted(testEngine.getId());
 				cause = new JUnitException(message, throwable);
 			}
 			delayingListener.reportEngineStartIfNecessary();

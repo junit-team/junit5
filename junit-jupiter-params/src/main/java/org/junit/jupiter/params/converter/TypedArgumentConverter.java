@@ -62,13 +62,12 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 			return convert(null);
 		}
 		if (!this.sourceType.isInstance(source)) {
-			String message = String.format(
-				"%s cannot convert objects of type [%s]. Only source objects of type [%s] are supported.",
+			String message = "%s cannot convert objects of type [%s]. Only source objects of type [%s] are supported.".formatted(
 				getClass().getSimpleName(), source.getClass().getName(), this.sourceType.getName());
 			throw new ArgumentConversionException(message);
 		}
 		if (!ReflectionUtils.isAssignableTo(this.targetType, actualTargetType)) {
-			String message = String.format("%s cannot convert to type [%s]. Only target type [%s] is supported.",
+			String message = "%s cannot convert to type [%s]. Only target type [%s] is supported.".formatted(
 				getClass().getSimpleName(), actualTargetType.getName(), this.targetType.getName());
 			throw new ArgumentConversionException(message);
 		}

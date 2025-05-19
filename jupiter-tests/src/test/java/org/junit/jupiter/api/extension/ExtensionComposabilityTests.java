@@ -150,7 +150,7 @@ class ExtensionComposabilityTests {
 	}
 
 	private String methodSignature(Method method) {
-		return String.format("%s(%s)", method.getName(),
+		return "%s(%s)".formatted(method.getName(),
 			ClassUtils.nullSafeToString(Class::getSimpleName, method.getParameterTypes()));
 	}
 

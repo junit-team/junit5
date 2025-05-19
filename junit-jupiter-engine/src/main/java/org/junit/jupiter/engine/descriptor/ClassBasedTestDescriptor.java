@@ -142,7 +142,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 	private void validateDisplayNameAnnotation(DiscoveryIssueReporter reporter) {
 		DisplayNameUtils.validateAnnotation(getTestClass(), //
-			() -> String.format("class '%s'", getTestClass().getName()), //
+			() -> "class '%s'".formatted(getTestClass().getName()), //
 			() -> getSource().orElse(null), //
 			reporter);
 	}
@@ -300,8 +300,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 					.map(factory -> factory.getClass().getName())//
 					.collect(joining(", "));
 
-			String errorMessage = String.format(
-				"The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s",
+			String errorMessage = "The following TestInstanceFactory extensions were registered for test class [%s], but only one is permitted: %s".formatted(
 				getTestClass().getName(), factoryNames);
 
 			throw new ExtensionConfigurationException(errorMessage);
@@ -370,7 +369,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 				throw (TestInstantiationException) throwable;
 			}
 
-			String message = String.format("TestInstanceFactory [%s] failed to instantiate test class [%s]",
+			String message = "TestInstanceFactory [%s] failed to instantiate test class [%s]".formatted(
 				this.testInstanceFactory.getClass().getName(), getTestClass().getName());
 			if (StringUtils.isNotBlank(throwable.getMessage())) {
 				message += ": " + throwable.getMessage();
@@ -390,8 +389,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 				testClassName += "@" + Integer.toHexString(System.identityHashCode(getTestClass()));
 				instanceClassName += "@" + Integer.toHexString(System.identityHashCode(instanceClass));
 			}
-			String message = String.format(
-				"TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].",
+			String message = "TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].".formatted(
 				this.testInstanceFactory.getClass().getName(), testClassName, instanceClassName);
 
 			throw new TestInstantiationException(message);
@@ -561,7 +559,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		ClassInfo(Class<?> testClass, JupiterConfiguration configuration) {
 			this.testClass = testClass;
 			this.tags = getTags(testClass, //
-				() -> String.format("class '%s'", testClass.getName()), //
+				() -> "class '%s'".formatted(testClass.getName()), //
 				() -> ClassSource.from(testClass), //
 				discoveryIssues::add);
 			this.lifecycle = getTestInstanceLifecycle(testClass, configuration);

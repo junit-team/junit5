@@ -34,7 +34,7 @@ class UniqueIdPrefixTransformer implements UnaryOperator<UniqueId> {
 	@Override
 	public UniqueId apply(UniqueId uniqueId) {
 		Preconditions.condition(uniqueId.hasPrefix(oldPrefix),
-			() -> String.format("Unique ID %s does not have the expected prefix %s", uniqueId, oldPrefix));
+			() -> "Unique ID %s does not have the expected prefix %s".formatted(uniqueId, oldPrefix));
 		List<UniqueId.Segment> oldSegments = uniqueId.getSegments();
 		List<UniqueId.Segment> suffix = oldSegments.subList(oldPrefixLength, oldSegments.size());
 		UniqueId newValue = newPrefix;

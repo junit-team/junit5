@@ -86,7 +86,7 @@ class ClasspathAlignmentChecker {
 			packagesByVersions.values().stream() //
 					.flatMap(List::stream) //
 					.sorted(comparing(Package::getName)) //
-					.map(pkg -> String.format("- %s: %s%n", pkg.getName(), pkg.getImplementationVersion())) //
+					.map(pkg -> "- %s: %s%n".formatted(pkg.getName(), pkg.getImplementationVersion())) //
 					.forEach(message::append);
 			return Optional.of(new JUnitException(message.toString(), error));
 		}

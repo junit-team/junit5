@@ -177,7 +177,7 @@ public final class DiscoverySelectors {
 	public static FileSelector selectFile(File file, FilePosition position) {
 		Preconditions.notNull(file, "File must not be null");
 		Preconditions.condition(file.isFile(),
-			() -> String.format("The supplied java.io.File [%s] must represent an existing file", file));
+			() -> "The supplied java.io.File [%s] must represent an existing file".formatted(file));
 		try {
 			return new FileSelector(file.getCanonicalPath(), position);
 		}
@@ -219,7 +219,7 @@ public final class DiscoverySelectors {
 	public static DirectorySelector selectDirectory(File directory) {
 		Preconditions.notNull(directory, "Directory must not be null");
 		Preconditions.condition(directory.isDirectory(),
-			() -> String.format("The supplied java.io.File [%s] must represent an existing directory", directory));
+			() -> "The supplied java.io.File [%s] must represent an existing directory".formatted(directory));
 		try {
 			return new DirectorySelector(directory.getCanonicalPath());
 		}

@@ -48,7 +48,7 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 	abstract boolean isEnabled(A annotation);
 
 	private ConditionEvaluationResult enabledByDefault() {
-		String reason = String.format("@%s is not present", this.annotationType.getSimpleName());
+		String reason = "@%s is not present".formatted(this.annotationType.getSimpleName());
 		return enabled(reason);
 	}
 

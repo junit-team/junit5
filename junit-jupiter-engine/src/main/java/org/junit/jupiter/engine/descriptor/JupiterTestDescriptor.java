@@ -85,9 +85,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 				.filter(tag -> {
 					boolean isValid = TestTag.isValid(tag);
 					if (!isValid) {
-						String message = String.format(
-							"Invalid tag syntax in @Tag(\"%s\") declaration on %s. Tag will be ignored.", tag,
-							elementDescription.get());
+						String message = "Invalid tag syntax in @Tag(\"%s\") declaration on %s. Tag will be ignored.".formatted(
+							tag, elementDescription.get());
 						if (source.get() == null) {
 							source.set(sourceProvider.get());
 						}

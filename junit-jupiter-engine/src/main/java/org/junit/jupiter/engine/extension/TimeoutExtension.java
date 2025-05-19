@@ -202,7 +202,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		Method method = invocationContext.getExecutable();
 		Optional<Class<?>> testClass = extensionContext.getTestClass();
 		if (testClass.isPresent() && invocationContext.getTargetClass().equals(testClass.get())) {
-			return String.format("%s(%s)", method.getName(), ClassUtils.nullSafeToString(method.getParameterTypes()));
+			return "%s(%s)".formatted(method.getName(), ClassUtils.nullSafeToString(method.getParameterTypes()));
 		}
 		return ReflectionUtils.getFullyQualifiedMethodName(invocationContext.getTargetClass(), method);
 	}

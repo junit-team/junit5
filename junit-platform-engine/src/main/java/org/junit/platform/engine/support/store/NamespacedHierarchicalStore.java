@@ -308,7 +308,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 		// else
 		throw new NamespacedHierarchicalStoreException(
-			String.format("Object stored under key [%s] is not of required type [%s], but was [%s]: %s", key,
+			"Object stored under key [%s] is not of required type [%s], but was [%s]: %s".formatted(key,
 				requiredType.getName(), value.getClass().getName(), value));
 	}
 

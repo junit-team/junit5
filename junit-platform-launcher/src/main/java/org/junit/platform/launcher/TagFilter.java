@@ -140,12 +140,11 @@ public final class TagFilter {
 	}
 
 	private static String inclusionReasonExpressionSatisfy(List<String> tagExpressions) {
-		return String.format("included because tags match expression(s): [%s]", formatToString(tagExpressions));
+		return "included because tags match expression(s): [%s]".formatted(formatToString(tagExpressions));
 	}
 
 	private static String exclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
-		return String.format("excluded because tags do not match tag expression(s): [%s]",
-			formatToString(tagExpressions));
+		return "excluded because tags do not match tag expression(s): [%s]".formatted(formatToString(tagExpressions));
 	}
 
 	private static PostDiscoveryFilter excludeMatching(List<String> tagExpressions) {
@@ -161,11 +160,11 @@ public final class TagFilter {
 	}
 
 	private static String inclusionReasonExpressionNotSatisfy(List<String> tagExpressions) {
-		return String.format("included because tags do not match expression(s): [%s]", formatToString(tagExpressions));
+		return "included because tags do not match expression(s): [%s]".formatted(formatToString(tagExpressions));
 	}
 
 	private static String exclusionReasonExpressionSatisfy(List<String> tagExpressions) {
-		return String.format("excluded because tags match tag expression(s): [%s]", formatToString(tagExpressions));
+		return "excluded because tags match tag expression(s): [%s]".formatted(formatToString(tagExpressions));
 	}
 
 	private static String formatToString(List<String> tagExpressions) {

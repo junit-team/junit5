@@ -1135,7 +1135,7 @@ class ReflectionUtilsTests {
 			assertThatExceptionOfType(JUnitException.class)//
 					.as("expected cycle from %s to %s", from.getSimpleName(), to.getSimpleName())//
 					.isThrownBy(() -> findNestedClasses(start))//
-					.withMessageMatching(String.format("Detected cycle in inner class hierarchy between .+%s and .+%s",
+					.withMessageMatching("Detected cycle in inner class hierarchy between .+%s and .+%s".formatted(
 						from.getSimpleName(), to.getSimpleName()));
 		}
 
@@ -1785,7 +1785,7 @@ class ReflectionUtilsTests {
 		private static List<String> signaturesOf(List<Method> methods) {
 			// @formatter:off
 			return methods.stream()
-					.map(m -> String.format("%s(%s)", m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
+					.map(m -> "%s(%s)".formatted(m.getName(), ClassUtils.nullSafeToString(m.getParameterTypes())))
 					.toList();
 			// @formatter:on
 		}

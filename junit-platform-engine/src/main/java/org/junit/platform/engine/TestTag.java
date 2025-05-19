@@ -118,7 +118,7 @@ public final class TestTag implements Serializable {
 
 	private TestTag(String name) {
 		Preconditions.condition(TestTag.isValid(name),
-			() -> String.format("Tag name [%s] must be syntactically valid", name));
+			() -> "Tag name [%s] must be syntactically valid".formatted(name));
 		this.name = name.trim();
 	}
 

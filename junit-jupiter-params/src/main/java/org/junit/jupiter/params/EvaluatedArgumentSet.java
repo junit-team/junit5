@@ -86,7 +86,7 @@ class EvaluatedArgumentSet {
 
 	private static Object[] dropSurplus(Object[] arguments, int newLength) {
 		Preconditions.condition(newLength <= arguments.length,
-			() -> String.format("New length %d must be less than or equal to the total length %d", newLength,
+			() -> "New length %d must be less than or equal to the total length %d".formatted(newLength,
 				arguments.length));
 		return arguments.length > newLength ? Arrays.copyOf(arguments, newLength) : arguments;
 	}

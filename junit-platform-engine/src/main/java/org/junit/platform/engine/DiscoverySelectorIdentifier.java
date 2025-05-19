@@ -108,7 +108,7 @@ public final class DiscoverySelectorIdentifier {
 	 */
 	@Override
 	public String toString() {
-		return String.format("%s:%s", this.prefix, this.value);
+		return "%s:%s".formatted(this.prefix, this.value);
 	}
 
 }

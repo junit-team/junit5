@@ -76,8 +76,7 @@ final class LifecycleMethodUtils {
 		findAllClassTemplateInvocationLifecycleMethods(testClass) //
 				.forEach(method -> findClassTemplateInvocationLifecycleMethodAnnotation(method) //
 						.ifPresent(annotation -> {
-							String message = String.format(
-								"@%s method '%s' must not be declared in test class '%s' because it is not annotated with @%s.",
+							String message = "@%s method '%s' must not be declared in test class '%s' because it is not annotated with @%s.".formatted(
 								annotation.lifecycleMethodAnnotation().getSimpleName(), method.toGenericString(),
 								testClass.getName(), annotation.classTemplateAnnotation().getSimpleName());
 							issueReporter.reportIssue(createIssue(Severity.ERROR, message, method));
@@ -141,8 +140,7 @@ final class LifecycleMethodUtils {
 	private static Condition<Method> isStatic(DiscoveryIssueReporter issueReporter,
 			Function<Method, String> annotationNameProvider) {
 		return issueReporter.createReportingCondition(ModifierSupport::isStatic, method -> {
-			String message = String.format(
-				"@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).",
+			String message = "@%s method '%s' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).".formatted(
 				annotationNameProvider.apply(method), method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
@@ -151,7 +149,7 @@ final class LifecycleMethodUtils {
 	private static Condition<Method> isNotStatic(DiscoveryIssueReporter issueReporter,
 			Function<Method, String> annotationNameProvider) {
 		return issueReporter.createReportingCondition(ModifierSupport::isNotStatic, method -> {
-			String message = String.format("@%s method '%s' must not be static.", annotationNameProvider.apply(method),
+			String message = "@%s method '%s' must not be static.".formatted(annotationNameProvider.apply(method),
 				method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
@@ -159,7 +157,7 @@ final class LifecycleMethodUtils {
 
 	private static Condition<Method> isNotPrivateError(DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
-			String message = String.format("@%s method '%s' must not be private.",
+			String message = "@%s method '%s' must not be private.".formatted(
 				classTemplateInvocationLifecycleMethodAnnotationName(method), method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
@@ -168,8 +166,7 @@ final class LifecycleMethodUtils {
 	private static Condition<Method> isNotPrivateWarning(DiscoveryIssueReporter issueReporter,
 			Supplier<String> annotationNameProvider) {
 		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
-			String message = String.format(
-				"@%s method '%s' should not be private. This will be disallowed in a future release.",
+			String message = "@%s method '%s' should not be private. This will be disallowed in a future release.".formatted(
 				annotationNameProvider.get(), method.toGenericString());
 			return createIssue(Severity.WARNING, message, method);
 		});
@@ -178,8 +175,8 @@ final class LifecycleMethodUtils {
 	private static Condition<Method> returnsPrimitiveVoid(DiscoveryIssueReporter issueReporter,
 			Function<Method, String> annotationNameProvider) {
 		return issueReporter.createReportingCondition(method -> getReturnType(method) == void.class, method -> {
-			String message = String.format("@%s method '%s' must not return a value.",
-				annotationNameProvider.apply(method), method.toGenericString());
+			String message = "@%s method '%s' must not return a value.".formatted(annotationNameProvider.apply(method),
+				method.toGenericString());
 			return createIssue(Severity.ERROR, message, method);
 		});
 	}

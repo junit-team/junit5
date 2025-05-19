@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -69,7 +68,7 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 		String methodName = methodParts[1];
 		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(testClass);
 		Class<?> clazz = ReflectionSupport.tryToLoadClass(className, classLoader).getOrThrow(
-			cause -> new JUnitException(format("Could not load class [%s]", className), cause));
+			cause -> new JUnitException("Could not load class [%s]".formatted(className), cause));
 		return findMethod(clazz, methodName);
 	}
 
@@ -80,9 +79,9 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 
 	private boolean invokeConditionMethod(Method method, ExtensionContext context) {
 		Preconditions.condition(method.getReturnType() == boolean.class,
-			() -> format("Method [%s] must return a boolean", method));
+			() -> "Method [%s] must return a boolean".formatted(method));
 		Preconditions.condition(acceptsExtensionContextOrNoArguments(method),
-			() -> format("Method [%s] must accept either an ExtensionContext or no arguments", method));
+			() -> "Method [%s] must accept either an ExtensionContext or no arguments".formatted(method));
 
 		Object testInstance = context.getTestInstance().orElse(null);
 		if (method.getParameterCount() == 0) {
@@ -97,7 +96,7 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 	}
 
 	private ConditionEvaluationResult buildConditionEvaluationResult(boolean methodResult, A annotation) {
-		Supplier<String> defaultReason = () -> format("@%s(\"%s\") evaluated to %s",
+		Supplier<String> defaultReason = () -> "@%s(\"%s\") evaluated to %s".formatted(
 			this.annotationType.getSimpleName(), this.methodName.apply(annotation), methodResult);
 		if (isEnabled(methodResult)) {
 			return enabled(defaultReason.get());
@@ -109,7 +108,7 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 	protected abstract boolean isEnabled(boolean methodResult);
 
 	private ConditionEvaluationResult enabledByDefault() {
-		return enabled(format("@%s is not present", this.annotationType.getSimpleName()));
+		return enabled("@%s is not present".formatted(this.annotationType.getSimpleName()));
 	}
 
 }

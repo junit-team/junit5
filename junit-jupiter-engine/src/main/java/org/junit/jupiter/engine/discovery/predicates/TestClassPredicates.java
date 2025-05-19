@@ -126,7 +126,7 @@ public class TestClassPredicates {
 	}
 
 	private static DiscoveryIssue createIssue(String prefix, Class<?> testClass, String detailMessage) {
-		String message = String.format("%s class '%s' %s. It will not be executed.", prefix, testClass.getName(),
+		String message = "%s class '%s' %s. It will not be executed.".formatted(prefix, testClass.getName(),
 			detailMessage);
 		return DiscoveryIssue.builder(DiscoveryIssue.Severity.WARNING, message) //
 				.source(ClassSource.from(testClass)) //

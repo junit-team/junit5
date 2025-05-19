@@ -113,7 +113,7 @@ class MethodSelectorResolver implements SelectorResolver {
 
 			@Override
 			public String describe() {
-				return String.format("Method %s", desiredDescription.getDisplayName());
+				return "Method %s".formatted(desiredDescription.getDisplayName());
 			}
 		};
 	}

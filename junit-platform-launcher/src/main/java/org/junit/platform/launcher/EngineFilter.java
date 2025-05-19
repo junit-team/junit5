@@ -128,20 +128,19 @@ public class EngineFilter implements Filter<TestEngine> {
 
 		if (this.type == Type.INCLUDE) {
 			return includedIf(this.engineIds.stream().anyMatch(engineId::equals), //
-				() -> String.format("Engine ID [%s] is in included list [%s]", engineId, this.engineIds), //
-				() -> String.format("Engine ID [%s] is not in included list [%s]", engineId, this.engineIds));
+				() -> "Engine ID [%s] is in included list [%s]".formatted(engineId, this.engineIds), //
+				() -> "Engine ID [%s] is not in included list [%s]".formatted(engineId, this.engineIds));
 		}
 		else {
 			return includedIf(this.engineIds.stream().noneMatch(engineId::equals), //
-				() -> String.format("Engine ID [%s] is not in excluded list [%s]", engineId, this.engineIds), //
-				() -> String.format("Engine ID [%s] is in excluded list [%s]", engineId, this.engineIds));
+				() -> "Engine ID [%s] is not in excluded list [%s]".formatted(engineId, this.engineIds), //
+				() -> "Engine ID [%s] is in excluded list [%s]".formatted(engineId, this.engineIds));
 		}
 	}
 
 	@Override
 	public String toString() {
-		return String.format("%s that %s engines with IDs %s", getClass().getSimpleName(), this.type.verb,
-			this.engineIds);
+		return "%s that %s engines with IDs %s".formatted(getClass().getSimpleName(), this.type.verb, this.engineIds);
 	}
 
 	private static List<String> validateAndTrim(List<String> engineIds) {

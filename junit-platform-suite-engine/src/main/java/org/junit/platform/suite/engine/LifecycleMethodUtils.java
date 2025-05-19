@@ -65,7 +65,7 @@ final class LifecycleMethodUtils {
 	private static DiscoveryIssueReporter.Condition<Method> isStatic(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(ModifierSupport::isStatic, method -> {
-			String message = String.format("@%s method '%s' must be static.", annotationType.getSimpleName(),
+			String message = "@%s method '%s' must be static.".formatted(annotationType.getSimpleName(),
 				method.toGenericString());
 			return createError(message, method);
 		});
@@ -74,7 +74,7 @@ final class LifecycleMethodUtils {
 	private static DiscoveryIssueReporter.Condition<Method> isNotPrivate(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(ModifierSupport::isNotPrivate, method -> {
-			String message = String.format("@%s method '%s' must not be private.", annotationType.getSimpleName(),
+			String message = "@%s method '%s' must not be private.".formatted(annotationType.getSimpleName(),
 				method.toGenericString());
 			return createError(message, method);
 		});
@@ -83,7 +83,7 @@ final class LifecycleMethodUtils {
 	private static DiscoveryIssueReporter.Condition<Method> returnsPrimitiveVoid(
 			Class<? extends Annotation> annotationType, DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(ReflectionUtils::returnsPrimitiveVoid, method -> {
-			String message = String.format("@%s method '%s' must not return a value.", annotationType.getSimpleName(),
+			String message = "@%s method '%s' must not return a value.".formatted(annotationType.getSimpleName(),
 				method.toGenericString());
 			return createError(message, method);
 		});
@@ -92,8 +92,8 @@ final class LifecycleMethodUtils {
 	private static DiscoveryIssueReporter.Condition<Method> hasNoParameters(Class<? extends Annotation> annotationType,
 			DiscoveryIssueReporter issueReporter) {
 		return issueReporter.createReportingCondition(method -> method.getParameterCount() == 0, method -> {
-			String message = String.format("@%s method '%s' must not accept parameters.",
-				annotationType.getSimpleName(), method.toGenericString());
+			String message = "@%s method '%s' must not accept parameters.".formatted(annotationType.getSimpleName(),
+				method.toGenericString());
 			return createError(message, method);
 		});
 	}

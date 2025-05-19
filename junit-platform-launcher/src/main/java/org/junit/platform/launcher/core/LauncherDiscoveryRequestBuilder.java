@@ -315,7 +315,7 @@ public final class LauncherDiscoveryRequestBuilder {
 		}
 		else {
 			throw new PreconditionViolationException(
-				String.format("Filter [%s] must implement %s, %s, or %s.", filter, EngineFilter.class.getSimpleName(),
+				"Filter [%s] must implement %s, %s, or %s.".formatted(filter, EngineFilter.class.getSimpleName(),
 					PostDiscoveryFilter.class.getSimpleName(), DiscoveryFilter.class.getSimpleName()));
 		}
 	}

@@ -45,8 +45,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 		this.configuration = configuration;
 		this.noOrderAnnotation = issueReporter.createReportingCondition(
 			testDescriptor -> !isAnnotated(testDescriptor.getTestMethod(), Order.class), testDescriptor -> {
-				String message = String.format(
-					"Ineffective @Order annotation on method '%s'. It will not be applied because MethodOrderer.OrderAnnotation is not in use.",
+				String message = "Ineffective @Order annotation on method '%s'. It will not be applied because MethodOrderer.OrderAnnotation is not in use.".formatted(
 					testDescriptor.getTestMethod().toGenericString());
 				return DiscoveryIssue.builder(Severity.INFO, message) //
 						.source(MethodSource.from(testDescriptor.getTestMethod())) //
@@ -112,11 +111,9 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 		Consumer<List<DefaultMethodDescriptor>> orderingAction = methodDescriptors -> methodOrderer.orderMethods(
 			new DefaultMethodOrdererContext(testClass, methodDescriptors, this.configuration));
 
-		MessageGenerator descriptorsAddedMessageGenerator = number -> String.format(
-			"MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.",
+		MessageGenerator descriptorsAddedMessageGenerator = number -> "MethodOrderer [%s] added %s MethodDescriptor(s) for test class [%s] which will be ignored.".formatted(
 			methodOrderer.getClass().getName(), number, testClass.getName());
-		MessageGenerator descriptorsRemovedMessageGenerator = number -> String.format(
-			"MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.",
+		MessageGenerator descriptorsRemovedMessageGenerator = number -> "MethodOrderer [%s] removed %s MethodDescriptor(s) for test class [%s] which will be retained with arbitrary ordering.".formatted(
 			methodOrderer.getClass().getName(), number, testClass.getName());
 
 		return new DescriptorWrapperOrderer<>(methodOrderer, orderingAction, descriptorsAddedMessageGenerator,

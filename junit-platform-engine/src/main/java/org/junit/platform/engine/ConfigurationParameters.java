@@ -123,8 +123,8 @@ public interface ConfigurationParameters {
 				return transformer.apply(input);
 			}
 			catch (Exception ex) {
-				String message = String.format(
-					"Failed to transform configuration parameter with key '%s' and initial value '%s'", key, input);
+				String message = "Failed to transform configuration parameter with key '%s' and initial value '%s'".formatted(
+					key, input);
 				throw new JUnitException(message, ex);
 			}
 		});

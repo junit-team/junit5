@@ -238,8 +238,8 @@ public final class CollectionUtils {
 				.map(method -> (Iterator<?>) invokeMethod(method, object)) //
 				.map(iterator -> spliteratorUnknownSize(iterator, ORDERED)) //
 				.map(spliterator -> stream(spliterator, false)) //
-				.orElseThrow(() -> new PreconditionViolationException(String.format(
-					"Cannot convert instance of %s into a Stream: %s", object.getClass().getName(), object)));
+				.orElseThrow(() -> new PreconditionViolationException(
+					"Cannot convert instance of %s into a Stream: %s".formatted(object.getClass().getName(), object)));
 	}
 
 	private static Optional<Method> findIteratorMethod(Class<?> type) {

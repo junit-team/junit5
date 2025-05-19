@@ -171,10 +171,10 @@ public class AssertionFailureBuilder {
 		String expectedString = toString(expected);
 		String actualString = toString(actual);
 		if (expectedString.equals(actualString)) {
-			return String.format("expected: %s but was: %s", formatClassAndValue(expected, expectedString),
+			return "expected: %s but was: %s".formatted(formatClassAndValue(expected, expectedString),
 				formatClassAndValue(actual, actualString));
 		}
-		return String.format("expected: <%s> but was: <%s>", expectedString, actualString);
+		return "expected: <%s> but was: <%s>".formatted(expectedString, actualString);
 	}
 
 	private static String formatClassAndValue(Object value, String valueString) {

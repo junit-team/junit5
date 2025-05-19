@@ -240,7 +240,7 @@ class TestDiscoveryOptionsMixin {
 			String existing = configurationParameters.get(key);
 			if (existing != null && !existing.equals(newValue)) {
 				throw new CommandLine.ParameterException(spec.commandLine(),
-					String.format("Duplicate key '%s' for values '%s' and '%s'.", key, existing, newValue));
+					"Duplicate key '%s' for values '%s' and '%s'.".formatted(key, existing, newValue));
 			}
 		}
 

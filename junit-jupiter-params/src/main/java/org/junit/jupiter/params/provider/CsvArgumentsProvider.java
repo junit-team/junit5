@@ -125,8 +125,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		}
 
 		Preconditions.condition(!useHeadersInDisplayName || (csvRecord.length <= headers.length),
-			() -> String.format(
-				"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s",
+			() -> "The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s".formatted(
 				csvRecord.length, headers.length, Arrays.toString(csvRecord)));
 
 		Object[] arguments = new Object[csvRecord.length];
