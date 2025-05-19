@@ -592,14 +592,14 @@ class ResolverFacade {
 		}
 
 		static String describe(AnnotatedElement sourceElement) {
-			if (sourceElement instanceof Method) {
-				return String.format("method [%s]", ((Method) sourceElement).toGenericString());
+			if (sourceElement instanceof Method method) {
+				return "method [%s]".formatted(method.toGenericString());
 			}
-			if (sourceElement instanceof Constructor) {
-				return String.format("constructor [%s]", ((Constructor<?>) sourceElement).toGenericString());
+			if (sourceElement instanceof Constructor<?> constructor) {
+				return "constructor [%s]".formatted(constructor.toGenericString());
 			}
-			if (sourceElement instanceof Class) {
-				return String.format("class [%s]", ((Class<?>) sourceElement).getName());
+			if (sourceElement instanceof Class<?> clazz) {
+				return "class [%s]".formatted(clazz.getName());
 			}
 			return sourceElement.toString();
 		}

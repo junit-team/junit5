@@ -465,8 +465,8 @@ class ParameterizedTestDemo {
 		@Override
 		protected Object convert(Object source, Class<?> targetType) {
 			assertEquals(String.class, targetType, "Can only convert to String");
-			if (source instanceof Enum<?>) {
-				return ((Enum<?>) source).name();
+			if (source instanceof Enum<?> constant) {
+				return constant.name();
 			}
 			return String.valueOf(source);
 		}

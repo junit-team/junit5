@@ -159,8 +159,7 @@ public final class AnnotationUtils {
 			return directMetaAnnotation;
 		}
 
-		if (element instanceof Class) {
-			Class<?> clazz = (Class<?>) element;
+		if (element instanceof Class<?> clazz) {
 
 			// Search on interfaces
 			for (Class<?> ifc : clazz.getInterfaces()) {
@@ -297,8 +296,7 @@ public final class AnnotationUtils {
 			Class<A> annotationType, Class<? extends Annotation> containerType, boolean inherited, Set<A> found,
 			Set<Annotation> visited) {
 
-		if (element instanceof Class) {
-			Class<?> clazz = (Class<?>) element;
+		if (element instanceof Class<?> clazz) {
 
 			// Recurse first in order to support top-down semantics for inherited, repeatable annotations.
 			if (inherited) {

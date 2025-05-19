@@ -84,8 +84,8 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 
 	private static void invokeCloseMethod(Field field, Object target, String methodName) throws Exception {
 		// Avoid reflection if we can directly invoke close() via AutoCloseable.
-		if (target instanceof AutoCloseable && "close".equals(methodName)) {
-			((AutoCloseable) target).close();
+		if (target instanceof AutoCloseable closeable && "close".equals(methodName)) {
+			closeable.close();
 			return;
 		}
 

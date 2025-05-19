@@ -92,8 +92,8 @@ class EvaluatedArgumentSet {
 	}
 
 	private static Optional<String> determineName(Arguments arguments) {
-		if (arguments instanceof ArgumentSet) {
-			return Optional.of(((ArgumentSet) arguments).getName());
+		if (arguments instanceof ArgumentSet set) {
+			return Optional.of(set.getName());
 		}
 		return Optional.empty();
 	}
@@ -105,7 +105,7 @@ class EvaluatedArgumentSet {
 	}
 
 	private static Object extractFromNamed(Object argument, Function<Named<?>, Object> mapper) {
-		return argument instanceof Named ? mapper.apply((Named<?>) argument) : argument;
+		return argument instanceof Named<?> named ? mapper.apply(named) : argument;
 	}
 
 }

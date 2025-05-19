@@ -69,8 +69,8 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 					.source(toSource(selector)) //
 					.build());
 		}
-		else if (result.getStatus() == UNRESOLVED && selector instanceof UniqueIdSelector) {
-			UniqueId uniqueId = ((UniqueIdSelector) selector).getUniqueId();
+		else if (result.getStatus() == UNRESOLVED && selector instanceof UniqueIdSelector uniqueIdSelector) {
+			UniqueId uniqueId = uniqueIdSelector.getUniqueId();
 			if (uniqueId.hasPrefix(engineId)) {
 				this.issues.add(DiscoveryIssue.create(Severity.ERROR, selector + " could not be resolved"));
 			}
@@ -78,37 +78,34 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 	}
 
 	static TestSource toSource(DiscoverySelector selector) {
-		if (selector instanceof ClassSelector) {
-			return ClassSource.from(((ClassSelector) selector).getClassName());
+		if (selector instanceof ClassSelector classSelector) {
+			return ClassSource.from(classSelector.getClassName());
 		}
-		if (selector instanceof MethodSelector) {
-			MethodSelector methodSelector = (MethodSelector) selector;
+		if (selector instanceof MethodSelector methodSelector) {
 			return MethodSource.from(methodSelector.getClassName(), methodSelector.getMethodName(),
 				methodSelector.getParameterTypeNames());
 		}
-		if (selector instanceof ClasspathResourceSelector) {
-			ClasspathResourceSelector resourceSelector = (ClasspathResourceSelector) selector;
+		if (selector instanceof ClasspathResourceSelector resourceSelector) {
 			String resourceName = resourceSelector.getClasspathResourceName();
 			return resourceSelector.getPosition() //
 					.map(DiscoveryIssueCollector::convert) //
 					.map(position -> ClasspathResourceSource.from(resourceName, position)) //
 					.orElseGet(() -> ClasspathResourceSource.from(resourceName));
 		}
-		if (selector instanceof PackageSelector) {
-			return PackageSource.from(((PackageSelector) selector).getPackageName());
+		if (selector instanceof PackageSelector packageSelector) {
+			return PackageSource.from(packageSelector.getPackageName());
 		}
-		if (selector instanceof FileSelector) {
-			FileSelector fileSelector = (FileSelector) selector;
+		if (selector instanceof FileSelector fileSelector) {
 			return fileSelector.getPosition() //
 					.map(DiscoveryIssueCollector::convert) //
 					.map(position -> FileSource.from(fileSelector.getFile(), position)) //
 					.orElseGet(() -> FileSource.from(fileSelector.getFile()));
 		}
-		if (selector instanceof DirectorySelector) {
-			return DirectorySource.from(((DirectorySelector) selector).getDirectory());
+		if (selector instanceof DirectorySelector directorySelector) {
+			return DirectorySource.from(directorySelector.getDirectory());
 		}
-		if (selector instanceof UriSelector) {
-			return UriSource.from(((UriSelector) selector).getUri());
+		if (selector instanceof UriSelector uriSelector) {
+			return UriSource.from(uriSelector.getUri());
 		}
 		return null;
 	}

@@ -156,8 +156,8 @@ public class AssertionFailureBuilder {
 		if (messageOrSupplier == null) {
 			return null;
 		}
-		if (messageOrSupplier instanceof Supplier) {
-			Object message = ((Supplier<?>) messageOrSupplier).get();
+		if (messageOrSupplier instanceof Supplier<?> supplier) {
+			Object message = supplier.get();
 			return StringUtils.nullSafeToString(message);
 		}
 		return StringUtils.nullSafeToString(messageOrSupplier);
@@ -188,8 +188,8 @@ public class AssertionFailureBuilder {
 	}
 
 	private static String toString(Object obj) {
-		if (obj instanceof Class) {
-			return getCanonicalName((Class<?>) obj);
+		if (obj instanceof Class<?> clazz) {
+			return getCanonicalName(clazz);
 		}
 		return StringUtils.nullSafeToString(obj);
 	}
@@ -200,7 +200,7 @@ public class AssertionFailureBuilder {
 
 	private static String getClassName(Object obj) {
 		return (obj == null ? "null"
-				: obj instanceof Class ? getCanonicalName((Class<?>) obj) : obj.getClass().getName());
+				: obj instanceof Class<?> clazz ? getCanonicalName(clazz) : obj.getClass().getName());
 	}
 
 }

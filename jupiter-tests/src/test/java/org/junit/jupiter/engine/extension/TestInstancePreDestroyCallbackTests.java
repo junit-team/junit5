@@ -187,8 +187,8 @@ class TestInstancePreDestroyCallbackTests extends AbstractJupiterTestEngineTests
 		public void preDestroyTestInstance(ExtensionContext context) {
 			assertThat(context.getTestInstance()).isPresent();
 			Object testInstance = context.getTestInstance().get();
-			if (testInstance instanceof Destroyable) {
-				((Destroyable) testInstance).setDestroyed();
+			if (testInstance instanceof Destroyable destroyable) {
+				destroyable.setDestroyed();
 			}
 			callSequence.add(name + "PreDestroyCallbackTestInstance:" + testInstance.getClass().getSimpleName());
 		}

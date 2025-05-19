@@ -351,32 +351,32 @@ class AssertArrayEquals {
 	private static void assertArrayElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
 			Object messageOrSupplier) {
 
-		if (expected instanceof Object[] && actual instanceof Object[]) {
-			assertArrayEquals((Object[]) expected, (Object[]) actual, indexes, messageOrSupplier);
+		if (expected instanceof Object[] expectedArray && actual instanceof Object[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof byte[] && actual instanceof byte[]) {
-			assertArrayEquals((byte[]) expected, (byte[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof byte[] expectedArray && actual instanceof byte[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof short[] && actual instanceof short[]) {
-			assertArrayEquals((short[]) expected, (short[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof short[] expectedArray && actual instanceof short[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof int[] && actual instanceof int[]) {
-			assertArrayEquals((int[]) expected, (int[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof int[] expectedArray && actual instanceof int[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof long[] && actual instanceof long[]) {
-			assertArrayEquals((long[]) expected, (long[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof long[] expectedArray && actual instanceof long[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof char[] && actual instanceof char[]) {
-			assertArrayEquals((char[]) expected, (char[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof char[] expectedArray && actual instanceof char[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof float[] && actual instanceof float[]) {
-			assertArrayEquals((float[]) expected, (float[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof float[] expectedArray && actual instanceof float[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof double[] && actual instanceof double[]) {
-			assertArrayEquals((double[]) expected, (double[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof double[] expectedArray && actual instanceof double[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
-		else if (expected instanceof boolean[] && actual instanceof boolean[]) {
-			assertArrayEquals((boolean[]) expected, (boolean[]) actual, indexes, messageOrSupplier);
+		else if (expected instanceof boolean[] expectedArray && actual instanceof boolean[] actualArray) {
+			assertArrayEquals(expectedArray, actualArray, indexes, messageOrSupplier);
 		}
 		else if (!Objects.equals(expected, actual)) {
 			if (expected == null && isArray(actual)) {

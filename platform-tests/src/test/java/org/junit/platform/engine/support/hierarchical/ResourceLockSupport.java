@@ -19,8 +19,8 @@ class ResourceLockSupport {
 		if (resourceLock instanceof NopLock) {
 			return List.of();
 		}
-		if (resourceLock instanceof SingleLock) {
-			return List.of(((SingleLock) resourceLock).getLock());
+		if (resourceLock instanceof SingleLock lock) {
+			return List.of(lock.getLock());
 		}
 		return ((CompositeLock) resourceLock).getLocks();
 	}

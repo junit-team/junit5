@@ -167,8 +167,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		this.lateInitExtensions = new LinkedHashMap<>();
 		registeredExtensions.forEach(entry -> {
 			Entry newEntry = entry;
-			if (entry instanceof LateInitEntry) {
-				LateInitEntry lateInitEntry = (LateInitEntry) entry;
+			if (entry instanceof LateInitEntry lateInitEntry) {
 				newEntry = lateInitEntry.getExtension() //
 						.map(Entry::of) //
 						.orElseGet(() -> getLateInitExtensions(lateInitEntry.getTestClass()).add(lateInitEntry.copy()));
@@ -271,8 +270,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		if (source == null) {
 			return "";
 		}
-		if (source instanceof Member) {
-			Member member = (Member) source;
+		if (source instanceof Member member) {
 			Object type = (member instanceof Method ? "method" : "field");
 			source = "%s %s.%s".formatted(type, member.getDeclaringClass().getName(), member.getName());
 		}

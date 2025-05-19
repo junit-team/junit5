@@ -121,8 +121,7 @@ class MethodSelectorResolver implements SelectorResolver {
 				.flatMap(Optional::stream)
 				.map(testDescriptor -> {
 					boolean exactMatch = uniqueId.equals(testDescriptor.getUniqueId());
-					if (testDescriptor instanceof Filterable) {
-						Filterable filterable = (Filterable) testDescriptor;
+					if (testDescriptor instanceof Filterable filterable) {
 						if (exactMatch) {
 							filterable.getDynamicDescendantFilter().allowAll();
 						}
@@ -143,8 +142,7 @@ class MethodSelectorResolver implements SelectorResolver {
 			MethodSelector methodSelector = (MethodSelector) selector.getParentSelector();
 			return resolve(context, emptyList(), methodSelector.getJavaClass(), methodSelector::getJavaMethod,
 				(testDescriptor, childSelectorsSupplier) -> {
-					if (testDescriptor instanceof Filterable) {
-						Filterable filterable = (Filterable) testDescriptor;
+					if (testDescriptor instanceof Filterable filterable) {
 						filterable.getDynamicDescendantFilter().allowIndex(selector.getIterationIndices());
 					}
 					return Match.partial(testDescriptor, childSelectorsSupplier);
@@ -155,8 +153,7 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	private Supplier<Set<? extends DiscoverySelector>> expansionCallback(TestDescriptor testDescriptor) {
 		return () -> {
-			if (testDescriptor instanceof Filterable) {
-				Filterable filterable = (Filterable) testDescriptor;
+			if (testDescriptor instanceof Filterable filterable) {
 				filterable.getDynamicDescendantFilter().allowAll();
 			}
 			return emptySet();

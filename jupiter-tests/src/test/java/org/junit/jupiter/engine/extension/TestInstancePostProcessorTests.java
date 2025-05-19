@@ -189,8 +189,8 @@ class TestInstancePostProcessorTests extends AbstractJupiterTestEngineTests {
 
 		@Override
 		public void postProcessTestInstance(Object testInstance, ExtensionContext context) {
-			if (testInstance instanceof Named) {
-				((Named) testInstance).setName(name, context.getRequiredTestClass().getSimpleName());
+			if (testInstance instanceof Named named) {
+				named.setName(name, context.getRequiredTestClass().getSimpleName());
 			}
 			String instanceType = testInstance.getClass().getSimpleName();
 			callSequence.add(name + ":" + instanceType);

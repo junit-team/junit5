@@ -137,15 +137,15 @@ class DiscoveryRequestCreator {
 		Stream<String> patternStreams = Stream.concat( //
 			options.getIncludedClassNamePatterns().stream(), //
 			selectors.stream() //
-					.map(selector -> selector instanceof IterationSelector
-							? ((IterationSelector) selector).getParentSelector()
+					.map(selector -> selector instanceof IterationSelector iterationSelector
+							? iterationSelector.getParentSelector()
 							: selector) //
 					.map(selector -> {
-						if (selector instanceof ClassSelector) {
-							return ((ClassSelector) selector).getClassName();
+						if (selector instanceof ClassSelector classSelector) {
+							return classSelector.getClassName();
 						}
-						if (selector instanceof MethodSelector) {
-							return ((MethodSelector) selector).getClassName();
+						if (selector instanceof MethodSelector methodSelector) {
+							return methodSelector.getClassName();
 						}
 						return null;
 					}) //

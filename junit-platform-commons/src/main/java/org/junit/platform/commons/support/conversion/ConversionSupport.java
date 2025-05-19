@@ -122,9 +122,9 @@ public final class ConversionSupport {
 				return (T) converter.get().convert(source, targetTypeToUse, classLoaderToUse);
 			}
 			catch (Exception ex) {
-				if (ex instanceof ConversionException) {
+				if (ex instanceof ConversionException conversionException) {
 					// simply rethrow it
-					throw (ConversionException) ex;
+					throw conversionException;
 				}
 				// else
 				throw new ConversionException(

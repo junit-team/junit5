@@ -135,8 +135,7 @@ public final class TestTag implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof TestTag) {
-			TestTag that = (TestTag) obj;
+		if (obj instanceof TestTag that) {
 			return Objects.equals(this.name, that.name);
 		}
 		return false;

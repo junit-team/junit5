@@ -69,10 +69,10 @@ public abstract class TypeBasedParameterResolver<T> implements ParameterResolver
 		}
 
 		Type genericSuperclass = clazz.getGenericSuperclass();
-		if (genericSuperclass instanceof ParameterizedType) {
-			Type rawType = ((ParameterizedType) genericSuperclass).getRawType();
+		if (genericSuperclass instanceof ParameterizedType type) {
+			Type rawType = type.getRawType();
 			if (rawType == TypeBasedParameterResolver.class) {
-				return (ParameterizedType) genericSuperclass;
+				return type;
 			}
 		}
 		return findTypeBasedParameterResolverSuperclass(superclass);

@@ -194,38 +194,38 @@ public final class CollectionUtils {
 	 */
 	public static Stream<?> toStream(Object object) {
 		Preconditions.notNull(object, "Object must not be null");
-		if (object instanceof Stream) {
-			return (Stream<?>) object;
+		if (object instanceof Stream<?> stream) {
+			return stream;
 		}
-		if (object instanceof DoubleStream) {
-			return ((DoubleStream) object).boxed();
+		if (object instanceof DoubleStream stream) {
+			return stream.boxed();
 		}
-		if (object instanceof IntStream) {
-			return ((IntStream) object).boxed();
+		if (object instanceof IntStream stream) {
+			return stream.boxed();
 		}
-		if (object instanceof LongStream) {
-			return ((LongStream) object).boxed();
+		if (object instanceof LongStream stream) {
+			return stream.boxed();
 		}
-		if (object instanceof Collection) {
-			return ((Collection<?>) object).stream();
+		if (object instanceof Collection<?> collection) {
+			return collection.stream();
 		}
-		if (object instanceof Iterable) {
-			return stream(((Iterable<?>) object).spliterator(), false);
+		if (object instanceof Iterable<?> iterable) {
+			return stream(iterable.spliterator(), false);
 		}
-		if (object instanceof Iterator) {
-			return stream(spliteratorUnknownSize((Iterator<?>) object, ORDERED), false);
+		if (object instanceof Iterator<?> iterator) {
+			return stream(spliteratorUnknownSize(iterator, ORDERED), false);
 		}
-		if (object instanceof Object[]) {
-			return Arrays.stream((Object[]) object);
+		if (object instanceof Object[] array) {
+			return Arrays.stream(array);
 		}
-		if (object instanceof double[]) {
-			return DoubleStream.of((double[]) object).boxed();
+		if (object instanceof double[] array) {
+			return DoubleStream.of(array).boxed();
 		}
-		if (object instanceof int[]) {
-			return IntStream.of((int[]) object).boxed();
+		if (object instanceof int[] array) {
+			return IntStream.of(array).boxed();
 		}
-		if (object instanceof long[]) {
-			return LongStream.of((long[]) object).boxed();
+		if (object instanceof long[] array) {
+			return LongStream.of(array).boxed();
 		}
 		if (object.getClass().isArray() && object.getClass().getComponentType().isPrimitive()) {
 			return IntStream.range(0, Array.getLength(object)).mapToObj(i -> Array.get(object, i));

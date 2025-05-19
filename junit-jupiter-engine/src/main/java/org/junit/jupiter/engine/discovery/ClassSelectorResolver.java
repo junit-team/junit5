@@ -155,12 +155,12 @@ class ClassSelectorResolver implements SelectorResolver {
 	@Override
 	public Resolution resolve(IterationSelector selector, Context context) {
 		DiscoverySelector parentSelector = selector.getParentSelector();
-		if (parentSelector instanceof ClassSelector
-				&& this.predicates.isAnnotatedWithClassTemplate.test(((ClassSelector) parentSelector).getJavaClass())) {
+		if (parentSelector instanceof ClassSelector classSelector
+				&& this.predicates.isAnnotatedWithClassTemplate.test(classSelector.getJavaClass())) {
 			return resolveIterations(selector, context);
 		}
-		if (parentSelector instanceof NestedClassSelector && this.predicates.isAnnotatedWithClassTemplate.test(
-			((NestedClassSelector) parentSelector).getNestedClass())) {
+		if (parentSelector instanceof NestedClassSelector nestedClassSelector
+				&& this.predicates.isAnnotatedWithClassTemplate.test(nestedClassSelector.getNestedClass())) {
 			return resolveIterations(selector, context);
 		}
 		return unresolved();
@@ -283,8 +283,7 @@ class ClassSelectorResolver implements SelectorResolver {
 	private Supplier<Set<? extends DiscoverySelector>> expansionCallback(TestDescriptor testDescriptor,
 			Supplier<List<Class<?>>> testClassesSupplier) {
 		return () -> {
-			if (testDescriptor instanceof Filterable) {
-				Filterable filterable = (Filterable) testDescriptor;
+			if (testDescriptor instanceof Filterable filterable) {
 				filterable.getDynamicDescendantFilter().allowAll();
 			}
 			List<Class<?>> testClasses = testClassesSupplier.get();

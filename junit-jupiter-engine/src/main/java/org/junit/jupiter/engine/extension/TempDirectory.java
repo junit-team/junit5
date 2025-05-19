@@ -344,12 +344,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		 * @since 5.12
 		 */
 		private static String descriptionFor(AnnotatedElement annotatedElement) {
-			if (annotatedElement instanceof Field) {
-				Field field = (Field) annotatedElement;
+			if (annotatedElement instanceof Field field) {
 				return "field " + field.getDeclaringClass().getSimpleName() + "." + field.getName();
 			}
-			if (annotatedElement instanceof Parameter) {
-				Parameter parameter = (Parameter) annotatedElement;
+			if (annotatedElement instanceof Parameter parameter) {
 				Executable executable = parameter.getDeclaringExecutable();
 				return "parameter '" + parameter.getName() + "' in " + descriptionFor(executable);
 			}
