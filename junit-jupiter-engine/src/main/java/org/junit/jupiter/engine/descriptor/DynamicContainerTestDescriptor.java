@@ -69,8 +69,7 @@ class DynamicContainerTestDescriptor extends DynamicNodeTestDescriptor {
 						Preconditions.notNull(child, "individual dynamic node must not be null");
 						return toDynamicDescriptor(index.getAndIncrement(), child);
 					})
-					.filter(Optional::isPresent)
-					.map(Optional::get)
+					.flatMap(Optional::stream)
 					.forEachOrdered(dynamicTestExecutor::execute);
 			// @formatter:on
 		}

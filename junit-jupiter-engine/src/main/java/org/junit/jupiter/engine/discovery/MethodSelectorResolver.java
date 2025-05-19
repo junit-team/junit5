@@ -95,8 +95,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		// @formatter:off
 		Set<Match> matches = methodTypes.stream()
 				.map(methodType -> methodType.resolve(enclosingClasses, testClass, method, context, configuration))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatMap(Optional::stream)
 				.map(testDescriptor -> matchFactory.apply(testDescriptor, expansionCallback(testDescriptor)))
 				.collect(toSet());
 		// @formatter:on
@@ -119,8 +118,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		// @formatter:off
 		return methodTypes.stream()
 				.map(methodType -> methodType.resolveUniqueIdIntoTestDescriptor(uniqueId, context, configuration))
-				.filter(Optional::isPresent)
-				.map(Optional::get)
+				.flatMap(Optional::stream)
 				.map(testDescriptor -> {
 					boolean exactMatch = uniqueId.equals(testDescriptor.getUniqueId());
 					if (testDescriptor instanceof Filterable) {
