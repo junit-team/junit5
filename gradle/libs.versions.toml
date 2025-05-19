@@ -102,7 +102,7 @@ jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 jreleaser = { id = "org.jreleaser", version = "1.18.0" }
 # check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
-openrewrite = { id = "org.openrewrite.rewrite", version = "7.6.1" }
+openrewrite = { id = "org.openrewrite.rewrite", version = "7.6.2" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
 spotless = { id = "com.diffplug.spotless", version = "7.0.3" }
