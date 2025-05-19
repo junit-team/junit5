@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.io.Serial;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Thrown if a <em>precondition</em> is violated.
@@ -31,7 +32,7 @@ public class PreconditionViolationException extends JUnitException {
 		super(message);
 	}
 
-	public PreconditionViolationException(String message, Throwable cause) {
+	public PreconditionViolationException(String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
