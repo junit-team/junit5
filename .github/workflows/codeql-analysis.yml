@@ -5,13 +5,11 @@ on:
     branches:
       - main
       - 'releases/**'
-      - 'develop/**'
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
       - main
       - 'releases/**'
-      - 'develop/**'
   schedule:
     - cron: '0 19 * * 3'
 
