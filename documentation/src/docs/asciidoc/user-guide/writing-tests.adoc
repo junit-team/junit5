@@ -3203,7 +3203,8 @@ test class or method:
 include::{testDir}/example/ExplicitExecutionModeDemo.java[]
 ----
 
-This allows test classes or methods to opt-in to parallel execution even when the default is `same_thread`.
+This allows test classes or methods to opt in or out of parallel execution regardless of
+the globally configured default.
 
 When parallel execution is enabled and a default `{ClassOrderer}` is registered (see
 <<writing-tests-test-execution-order-classes>> for details), top-level test classes will
