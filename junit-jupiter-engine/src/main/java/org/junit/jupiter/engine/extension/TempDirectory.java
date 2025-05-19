@@ -311,7 +311,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			try {
 				if (this.cleanupMode == NEVER
 						|| (this.cleanupMode == ON_SUCCESS && selfOrChildFailed(this.extensionContext))) {
-					LOGGER.info(() -> String.format("Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.",
+					LOGGER.info(() -> "Skipping cleanup of temp dir %s for %s due to CleanupMode.%s.".formatted(
 						this.dir, descriptionFor(this.annotatedElement), this.cleanupMode.name()));
 					return;
 				}
@@ -364,7 +364,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 			boolean isConstructor = executable instanceof Constructor<?>;
 			String type = isConstructor ? "constructor" : "method";
 			String name = isConstructor ? executable.getDeclaringClass().getSimpleName() : executable.getName();
-			return String.format("%s %s(%s)", type, name,
+			return "%s %s(%s)".formatted(type, name,
 				ClassUtils.nullSafeToString(Class::getSimpleName, executable.getParameterTypes()));
 		}
 

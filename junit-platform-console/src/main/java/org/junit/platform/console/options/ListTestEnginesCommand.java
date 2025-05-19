@@ -46,7 +46,7 @@ class ListTestEnginesCommand extends BaseCommand<Void> {
 		engine.getGroupId().ifPresent(details::add);
 		engine.getArtifactId().ifPresent(details::add);
 		engine.getVersion().ifPresent(details::add);
-		out.println(getColorScheme().string(String.format("@|bold %s|@%s", engine.getId(), details)));
+		out.println(getColorScheme().string("@|bold %s|@%s".formatted(engine.getId(), details)));
 	}
 
 }

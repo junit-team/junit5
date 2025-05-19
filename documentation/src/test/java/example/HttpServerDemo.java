@@ -37,7 +37,7 @@ public class HttpServerDemo {
 	void httpCall(HttpServer server) throws Exception {
 		String hostName = server.getAddress().getHostName();
 		int port = server.getAddress().getPort();
-		String rawUrl = String.format("http://%s:%d/example", hostName, port);
+		String rawUrl = "http://%s:%d/example".formatted(hostName, port);
 		URL requestUrl = URI.create(rawUrl).toURL();
 
 		String responseBody = sendRequest(requestUrl);

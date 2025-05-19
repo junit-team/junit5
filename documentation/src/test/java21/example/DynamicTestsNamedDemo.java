@@ -64,7 +64,7 @@ public class DynamicTestsNamedDemo {
 
 		@Override
 		public String getName() {
-			return String.format("'%s' is a palindrome", text);
+			return "'%s' is a palindrome".formatted(text);
 		}
 
 		@Override

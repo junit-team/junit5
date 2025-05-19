@@ -111,7 +111,7 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 			}
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-				logger.warn(throwable, () -> String.format("TestExecutionListener [%s] threw exception for method: %s",
+				logger.warn(throwable, () -> "TestExecutionListener [%s] threw exception for method: %s".formatted(
 					listener.getClass().getName(), description.get()));
 			}
 		});

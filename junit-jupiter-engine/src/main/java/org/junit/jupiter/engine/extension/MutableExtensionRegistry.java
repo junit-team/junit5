@@ -124,8 +124,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 					.map(Class::getName)
 					.collect(Collectors.toList());
 			// @formatter:on
-			logger.config(() -> String.format(
-				"Excluded auto-detected extensions due to configured includes/excludes: %s", excludeExtensionNames));
+			logger.config(() -> "Excluded auto-detected extensions due to configured includes/excludes: %s".formatted(
+				excludeExtensionNames));
 		}
 	}
 
@@ -218,8 +218,8 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		Preconditions.notNull(source, "source must not be null");
 		Preconditions.notNull(initializer, "initializer must not be null");
 
-		logger.trace(() -> String.format("Registering local extension (late-init) for [%s]%s",
-			source.getType().getName(), buildSourceInfo(source)));
+		logger.trace(() -> "Registering local extension (late-init) for [%s]%s".formatted(source.getType().getName(),
+			buildSourceInfo(source)));
 
 		LateInitEntry entry = getLateInitExtensions(testClass) //
 				.add(new LateInitEntry(testClass, initializer));
@@ -261,8 +261,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		Preconditions.notBlank(category, "category must not be null or blank");
 		Preconditions.notNull(extension, "extension must not be null");
 
-		logger.trace(
-			() -> String.format("Registering %s extension [%s]%s", category, extension, buildSourceInfo(source)));
+		logger.trace(() -> "Registering %s extension [%s]%s".formatted(category, extension, buildSourceInfo(source)));
 
 		this.registeredExtensions.add(Entry.of(extension));
 		this.registeredExtensionTypes.add(extension.getClass());
@@ -275,7 +274,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		if (source instanceof Member) {
 			Member member = (Member) source;
 			Object type = (member instanceof Method ? "method" : "field");
-			source = String.format("%s %s.%s", type, member.getDeclaringClass().getName(), member.getName());
+			source = "%s %s.%s".formatted(type, member.getDeclaringClass().getName(), member.getName());
 		}
 		return " from source [" + source + "]";
 	}

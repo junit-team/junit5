@@ -242,7 +242,7 @@ class ResolverFacade {
 					() -> new DefaultArgumentSetLifecycleMethodParameterResolver(originalResolverFacade,
 						lifecycleMethodResolverFacade, parameterDeclarationMapping))) //
 				.getOrThrow(cause -> new ExtensionConfigurationException(
-					String.format("Invalid @%s lifecycle method declaration: %s",
+					"Invalid @%s lifecycle method declaration: %s".formatted(
 						annotation.annotationType().getSimpleName(), method.toGenericString()),
 					cause));
 	}
@@ -347,13 +347,13 @@ class ResolverFacade {
 				break;
 			}
 			if (!actualDeclaration.getParameterType().equals(originalDeclaration.getParameterType())) {
-				errors.add(String.format(
-					"parameter%s with index %d is incompatible with the parameter declared on the parameterized class: expected type '%s' but found '%s'",
-					parameterName(actualDeclaration), parameterIndex, originalDeclaration.getParameterType(),
-					actualDeclaration.getParameterType()));
+				errors.add(
+					"parameter%s with index %d is incompatible with the parameter declared on the parameterized class: expected type '%s' but found '%s'".formatted(
+						parameterName(actualDeclaration), parameterIndex, originalDeclaration.getParameterType(),
+						actualDeclaration.getParameterType()));
 			}
 			else if (findAnnotation(actualDeclaration.getAnnotatedElement(), ConvertWith.class).isPresent()) {
-				errors.add(String.format("parameter%s with index %d must not be annotated with @ConvertWith",
+				errors.add("parameter%s with index %d must not be annotated with @ConvertWith".formatted(
 					parameterName(actualDeclaration), parameterIndex));
 			}
 			else if (errors.isEmpty()) {
@@ -375,7 +375,7 @@ class ResolverFacade {
 			throw new PreconditionViolationException("Configuration error: " + errors.get(0) + ".");
 		}
 		else {
-			throw new PreconditionViolationException(String.format("%d configuration errors:%n%s", errors.size(),
+			throw new PreconditionViolationException("%d configuration errors:%n%s".formatted(errors.size(),
 				errors.stream().collect(joining(lineSeparator() + "- ", "- ", ""))));
 		}
 	}
@@ -392,7 +392,7 @@ class ResolverFacade {
 
 		for (int index = 0; index <= indexedParameters.lastKey(); index++) {
 			if (!indexedParameters.containsKey(index)) {
-				errors.add(String.format("no field annotated with @Parameter(%d) declared", index));
+				errors.add("no field annotated with @Parameter(%d) declared".formatted(index));
 			}
 		}
 	}
@@ -402,18 +402,17 @@ class ResolverFacade {
 		List<Field> fields = declarations.stream().map(FieldParameterDeclaration::getField).collect(toList());
 		if (index < 0) {
 			declarations.stream() //
-					.map(declaration -> String.format(
-						"index must be greater than or equal to zero in @Parameter(%d) annotation on field [%s]", index,
-						declaration.getField())) //
+					.map(
+						declaration -> "index must be greater than or equal to zero in @Parameter(%d) annotation on field [%s]".formatted(
+							index, declaration.getField())) //
 					.forEach(errors::add);
 		}
 		else if (declarations.size() > 1) {
-			errors.add(
-				String.format("duplicate index declared in @Parameter(%d) annotation on fields %s", index, fields));
+			errors.add("duplicate index declared in @Parameter(%d) annotation on fields %s".formatted(index, fields));
 		}
 		fields.stream() //
 				.filter(ModifierSupport::isFinal) //
-				.map(field -> String.format("@Parameter field [%s] must not be declared as final", field)) //
+				.map(field -> "@Parameter field [%s] must not be declared as final".formatted(field)) //
 				.forEach(errors::add);
 	}
 
@@ -421,9 +420,9 @@ class ResolverFacade {
 			List<String> errors) {
 		aggregatorParameters.stream() //
 				.filter(declaration -> declaration.getParameterIndex() != Parameter.UNSET_INDEX) //
-				.map(declaration -> String.format(
-					"no index may be declared in @Parameter(%d) annotation on aggregator field [%s]",
-					declaration.getParameterIndex(), declaration.getField())) //
+				.map(
+					declaration -> "no index may be declared in @Parameter(%d) annotation on aggregator field [%s]".formatted(
+						declaration.getParameterIndex(), declaration.getField())) //
 				.forEach(errors::add);
 	}
 

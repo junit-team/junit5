@@ -67,7 +67,7 @@ class InstantiatingConfigurationParameterConverter<T> {
 	}
 
 	private void logSuccessMessage(String className, String key) {
-		logger.config(() -> String.format("Using default %s '%s' set via the '%s' configuration parameter.", this.name,
+		logger.config(() -> "Using default %s '%s' set via the '%s' configuration parameter.".formatted(this.name,
 			className, key));
 	}
 

@@ -43,20 +43,20 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 		boolean maxVersionSet = maxVersion != JRE.UNDEFINED_VERSION;
 
 		// Users must choose between JRE enum constants and version numbers.
-		Preconditions.condition(!minJreSet || !minVersionSet, () -> String.format(
-			"@%s's minimum value must be configured with either a JRE enum constant or numeric version, but not both",
-			this.annotationName));
-		Preconditions.condition(!maxJreSet || !maxVersionSet, () -> String.format(
-			"@%s's maximum value must be configured with either a JRE enum constant or numeric version, but not both",
-			this.annotationName));
+		Preconditions.condition(!minJreSet || !minVersionSet,
+			() -> "@%s's minimum value must be configured with either a JRE enum constant or numeric version, but not both".formatted(
+				this.annotationName));
+		Preconditions.condition(!maxJreSet || !maxVersionSet,
+			() -> "@%s's maximum value must be configured with either a JRE enum constant or numeric version, but not both".formatted(
+				this.annotationName));
 
 		// Users must supply valid values for minVersion and maxVersion.
 		Preconditions.condition(!minVersionSet || (minVersion >= JRE.MINIMUM_VERSION),
-			() -> String.format("@%s's minVersion [%d] must be greater than or equal to %d", this.annotationName,
-				minVersion, JRE.MINIMUM_VERSION));
+			() -> "@%s's minVersion [%d] must be greater than or equal to %d".formatted(this.annotationName, minVersion,
+				JRE.MINIMUM_VERSION));
 		Preconditions.condition(!maxVersionSet || (maxVersion >= JRE.MINIMUM_VERSION),
-			() -> String.format("@%s's maxVersion [%d] must be greater than or equal to %d", this.annotationName,
-				maxVersion, JRE.MINIMUM_VERSION));
+			() -> "@%s's maxVersion [%d] must be greater than or equal to %d".formatted(this.annotationName, maxVersion,
+				JRE.MINIMUM_VERSION));
 
 		// Now that we have checked the basic preconditions, we need to ensure that we are
 		// using valid JRE enum constants.
@@ -74,7 +74,7 @@ abstract class AbstractJreRangeCondition<A extends Annotation> extends BooleanEx
 		Preconditions.condition((min != DEFAULT_MINIMUM_JRE.version() || max != DEFAULT_MAXIMUM_JRE.version()),
 			() -> "You must declare a non-default value for the minimum or maximum value in @" + this.annotationName);
 		Preconditions.condition(min <= max,
-			() -> String.format("@%s's minimum value [%d] must be less than or equal to its maximum value [%d]",
+			() -> "@%s's minimum value [%d] must be less than or equal to its maximum value [%d]".formatted(
 				this.annotationName, min, max));
 
 		return JRE.isCurrentVersionWithinRange(min, max);

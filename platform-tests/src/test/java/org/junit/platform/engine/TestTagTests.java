@@ -89,11 +89,11 @@ class TestTagTests {
 	}
 
 	private static void yep(String tag) {
-		assertTrue(TestTag.isValid(tag), () -> String.format("'%s' should be a valid tag", tag));
+		assertTrue(TestTag.isValid(tag), () -> "'%s' should be a valid tag".formatted(tag));
 	}
 
 	private static void nope(String tag) {
-		assertFalse(TestTag.isValid(tag), () -> String.format("'%s' should not be a valid tag", tag));
+		assertFalse(TestTag.isValid(tag), () -> "'%s' should not be a valid tag".formatted(tag));
 	}
 
 	private void assertSyntaxViolation(String tag) {

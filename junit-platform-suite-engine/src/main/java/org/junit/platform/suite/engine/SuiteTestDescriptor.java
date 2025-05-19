@@ -90,7 +90,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		// @formatter:off
 		return findAnnotation(suiteClass, Suite.class)
 				.map(Suite::failIfNoTests)
-				.orElseThrow(() -> new JUnitException(String.format("Suite [%s] was not annotated with @Suite", suiteClass.getName())));
+				.orElseThrow(() -> new JUnitException("Suite [%s] was not annotated with @Suite".formatted(suiteClass.getName())));
 		// @formatter:on
 	}
 
@@ -246,7 +246,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 					if (message.endsWith(".")) {
 						message = message.substring(0, message.length() - 1);
 					}
-					return String.format("[%s] %s (via @Suite %s).", engineId, message, suitePath);
+					return "[%s] %s (via @Suite %s).".formatted(engineId, message, suitePath);
 				}));
 		}
 

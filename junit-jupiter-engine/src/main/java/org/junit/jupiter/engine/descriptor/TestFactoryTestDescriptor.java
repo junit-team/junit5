@@ -141,7 +141,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	}
 
 	private JUnitException invalidReturnTypeException(Throwable cause) {
-		String message = String.format("Objects produced by @TestFactory method '%s' must be of type %s.",
+		String message = "Objects produced by @TestFactory method '%s' must be of type %s.".formatted(
 			getTestMethod().toGenericString(), DynamicNode.class.getName());
 		return new JUnitException(message, cause);
 	}

@@ -824,7 +824,7 @@ class DiscoverySelectorsTests {
 			var className = "org.example.CalculatorSpec";
 			var methodName = "#a plus #b equals #c";
 			var methodParameters = "int, int, int";
-			var fqmn = String.format("%s#%s(%s)", className, methodName, methodParameters);
+			var fqmn = "%s#%s(%s)".formatted(className, methodName, methodParameters);
 
 			var selector = selectMethod(fqmn);
 			assertEquals(className, selector.getClassName());
@@ -875,7 +875,7 @@ class DiscoverySelectorsTests {
 			var className = "org.example.KotlinTestCase";
 			var methodName = "test name ends with parentheses()";
 			var methodParameters = "int, int, int";
-			var fqmn = String.format("%s#%s(%s)", className, methodName, methodParameters);
+			var fqmn = "%s#%s(%s)".formatted(className, methodName, methodParameters);
 
 			var selector = selectMethod(fqmn);
 
@@ -1440,7 +1440,7 @@ class DiscoverySelectorsTests {
 	}
 
 	private static String fqmnWithParamNames(String... params) {
-		return String.format("%s#%s(%s)", DiscoverySelectorsTests.class.getName(), "myTest", join(", ", params));
+		return "%s#%s(%s)".formatted(DiscoverySelectorsTests.class.getName(), "myTest", join(", ", params));
 	}
 
 	interface TestInterface {

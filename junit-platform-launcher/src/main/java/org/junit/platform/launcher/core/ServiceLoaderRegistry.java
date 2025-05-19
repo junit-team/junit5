@@ -48,9 +48,9 @@ class ServiceLoaderRegistry {
 	private static <T> String logLoadedInstances(Class<T> type, List<T> instances, List<String> exclusions) {
 		String typeName = type.getSimpleName();
 		if (exclusions == null) {
-			return String.format("Loaded %s instances: %s", typeName, instances);
+			return "Loaded %s instances: %s".formatted(typeName, instances);
 		}
-		return String.format("Loaded %s instances: %s (excluded classes: %s)", typeName, instances, exclusions);
+		return "Loaded %s instances: %s (excluded classes: %s)".formatted(typeName, instances, exclusions);
 	}
 
 	private static <T> List<T> load(Class<T> type, Predicate<String> classNameFilter,

@@ -124,7 +124,7 @@ public class LoggingListener implements TestExecutionListener {
 	}
 
 	private void logWithThrowable(String message, Throwable t, Object... args) {
-		this.logger.accept(t, () -> String.format(message, args));
+		this.logger.accept(t, () -> message.formatted(args));
 	}
 
 }

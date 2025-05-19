@@ -23,7 +23,7 @@ class TimeoutExceptionFactory {
 	}
 
 	static TimeoutException create(String methodSignature, TimeoutDuration timeoutDuration, Throwable failure) {
-		String message = String.format("%s timed out after %s",
+		String message = "%s timed out after %s".formatted(
 			Preconditions.notNull(methodSignature, "method signature must not be null"),
 			Preconditions.notNull(timeoutDuration, "timeout duration must not be null"));
 		TimeoutException timeoutException = new TimeoutException(message);

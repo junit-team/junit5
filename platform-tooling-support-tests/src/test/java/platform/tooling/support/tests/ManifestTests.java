@@ -86,6 +86,6 @@ class ManifestTests {
 	private static void assertValue(Attributes attributes, String name, String expected) {
 		var actual = attributes.getValue(name);
 		assertEquals(expected, actual,
-			String.format("Manifest attribute %s expected to be %s, but is: %s", name, expected, actual));
+			"Manifest attribute %s expected to be %s, but is: %s".formatted(name, expected, actual));
 	}
 }

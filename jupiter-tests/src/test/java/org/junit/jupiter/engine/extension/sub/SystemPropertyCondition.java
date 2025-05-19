@@ -56,7 +56,7 @@ public class SystemPropertyCondition implements ExecutionCondition {
 
 			if (!Objects.equals(expected, actual)) {
 				return ConditionEvaluationResult.disabled(
-					String.format("System property [%s] has a value of [%s] instead of [%s]", key, actual, expected));
+					"System property [%s] has a value of [%s] instead of [%s]".formatted(key, actual, expected));
 			}
 		}
 

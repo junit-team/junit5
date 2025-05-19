@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static java.lang.String.format;
 import static java.lang.String.join;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.Preconditions.condition;
@@ -196,7 +195,7 @@ class AssertLinesMatch {
 			String newLine = System.lineSeparator();
 			assertionFailure() //
 					.message(messageOrSupplier) //
-					.reason(format(format, args)) //
+					.reason(format.formatted(args)) //
 					.expected(join(newLine, expectedLines)) //
 					.actual(join(newLine, actualLines)) //
 					.includeValuesInMessage(false) //
@@ -214,7 +213,7 @@ class AssertLinesMatch {
 		String text = fastForwardLine.substring(2, fastForwardLine.length() - 2).trim();
 		try {
 			int limit = Integer.parseInt(text);
-			condition(limit > 0, () -> format("fast-forward(%d) limit must be greater than zero", limit));
+			condition(limit > 0, () -> "fast-forward(%d) limit must be greater than zero".formatted(limit));
 			return limit;
 		}
 		catch (NumberFormatException e) {

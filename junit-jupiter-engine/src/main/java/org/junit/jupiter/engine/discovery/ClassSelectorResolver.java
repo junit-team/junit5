@@ -113,8 +113,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			}
 		}
 		else if (isInnerClass(nestedClass) && predicates.looksLikeIntendedTestClass(nestedClass)) {
-			String message = String.format(
-				"Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.",
+			String message = "Inner class '%s' looks like it was intended to be a test class but will not be executed. It must be static or annotated with @Nested.".formatted(
 				nestedClass.getName());
 			issueReporter.reportIssue(DiscoveryIssue.builder(Severity.WARNING, message) //
 					.source(ClassSource.from(nestedClass)));

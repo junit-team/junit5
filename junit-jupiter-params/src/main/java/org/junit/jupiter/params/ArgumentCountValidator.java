@@ -45,12 +45,12 @@ class ArgumentCountValidator {
 				int consumedCount = this.declarationContext.getResolverFacade().determineConsumedArgumentCount(
 					this.arguments);
 				int totalCount = this.arguments.getTotalLength();
-				Preconditions.condition(consumedCount == totalCount, () -> String.format(
-					"Configuration error: @%s consumes %s %s but there %s %s %s provided.%nNote: the provided arguments were %s",
-					this.declarationContext.getAnnotationName(), consumedCount,
-					pluralize(consumedCount, "parameter", "parameters"), pluralize(totalCount, "was", "were"),
-					totalCount, pluralize(totalCount, "argument", "arguments"),
-					Arrays.toString(this.arguments.getAllPayloads())));
+				Preconditions.condition(consumedCount == totalCount,
+					() -> "Configuration error: @%s consumes %s %s but there %s %s %s provided.%nNote: the provided arguments were %s".formatted(
+						this.declarationContext.getAnnotationName(), consumedCount,
+						pluralize(consumedCount, "parameter", "parameters"), pluralize(totalCount, "was", "were"),
+						totalCount, pluralize(totalCount, "argument", "arguments"),
+						Arrays.toString(this.arguments.getAllPayloads())));
 				break;
 			default:
 				throw new ExtensionConfigurationException(
@@ -80,9 +80,9 @@ class ArgumentCountValidator {
 					ArgumentCountValidationMode.values()).filter(
 						mode -> mode.name().equalsIgnoreCase(configValue)).findFirst();
 				if (enumValue.isPresent()) {
-					logger.config(() -> String.format(
-						"Using ArgumentCountValidationMode '%s' set via the '%s' configuration parameter.",
-						enumValue.get().name(), key));
+					logger.config(
+						() -> "Using ArgumentCountValidationMode '%s' set via the '%s' configuration parameter.".formatted(
+							enumValue.get().name(), key));
 					return enumValue.get();
 				}
 				else {

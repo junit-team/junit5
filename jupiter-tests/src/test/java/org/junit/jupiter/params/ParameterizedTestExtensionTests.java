@@ -182,9 +182,9 @@ class ParameterizedTestExtensionTests {
 		var exception = assertThrows(JUnitException.class, stream::toArray);
 
 		assertThat(exception) //
-				.hasMessage(String.format(
-					"The ArgumentsProvider [%s] must be either a top-level class or a static nested class",
-					NonStaticArgumentsProvider.class.getName()));
+				.hasMessage(
+					"The ArgumentsProvider [%s] must be either a top-level class or a static nested class".formatted(
+						NonStaticArgumentsProvider.class.getName()));
 	}
 
 	@Test

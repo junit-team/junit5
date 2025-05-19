@@ -853,7 +853,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 			String name = declaringExecutable instanceof Constructor
 					? declaringExecutable.getDeclaringClass().getSimpleName()
 					: declaringExecutable.getName();
-			return String.format("%s-%d-%s", name, parameterContext.getIndex(), text);
+			return "%s-%d-%s".formatted(name, parameterContext.getIndex(), text);
 		}
 	}
 }

@@ -17,7 +17,7 @@ class NoTestsDiscoveredException extends JUnitException {
 	private static final long serialVersionUID = 1L;
 
 	NoTestsDiscoveredException(Class<?> suiteClass) {
-		super(String.format("Suite [%s] did not discover any tests", suiteClass.getName()));
+		super("Suite [%s] did not discover any tests".formatted(suiteClass.getName()));
 	}
 
 }

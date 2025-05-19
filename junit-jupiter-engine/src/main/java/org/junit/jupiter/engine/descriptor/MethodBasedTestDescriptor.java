@@ -88,7 +88,7 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 
 	@Override
 	public String getLegacyReportingName() {
-		return String.format("%s(%s)", getTestMethod().getName(),
+		return "%s(%s)".formatted(getTestMethod().getName(),
 			ClassUtils.nullSafeToString(Class::getSimpleName, getTestMethod().getParameterTypes()));
 	}
 
@@ -114,7 +114,7 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	public void validate(DiscoveryIssueReporter reporter) {
 		Validatable.reportAndClear(this.methodInfo.discoveryIssues, reporter);
 		DisplayNameUtils.validateAnnotation(getTestMethod(), //
-			() -> String.format("method '%s'", getTestMethod().toGenericString()), //
+			() -> "method '%s'".formatted(getTestMethod().toGenericString()), //
 			// Use _declaring_ class here because that's where the `@DisplayName` annotation is declared
 			() -> MethodSource.from(getTestMethod()), //
 			reporter);
@@ -178,7 +178,7 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 				ExtensionContext extensionContext = context.getExtensionContext();
 				logger.warn(throwable,
-					() -> String.format("Failed to invoke TestWatcher [%s] for method [%s] with display name [%s]",
+					() -> "Failed to invoke TestWatcher [%s] for method [%s] with display name [%s]".formatted(
 						watcher.getClass().getName(),
 						ReflectionUtils.getFullyQualifiedMethodName(extensionContext.getRequiredTestClass(),
 							extensionContext.getRequiredTestMethod()),
@@ -209,7 +209,7 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 			this.testClass = Preconditions.notNull(testClass, "Class must not be null");
 			this.testMethod = testMethod;
 			this.tags = getTags(testMethod, //
-				() -> String.format("method '%s'", testMethod.toGenericString()), //
+				() -> "method '%s'".formatted(testMethod.toGenericString()), //
 				// Use _declaring_ class here because that's where the `@Tag` annotation is declared
 				() -> MethodSource.from(testMethod.getDeclaringClass(), testMethod), //
 				discoveryIssues::add);

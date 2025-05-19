@@ -106,7 +106,7 @@ public class IterationSelector implements DiscoverySelector {
 	public Optional<DiscoverySelectorIdentifier> toIdentifier() {
 		return this.parentSelector.toIdentifier().map(parentSelectorString -> DiscoverySelectorIdentifier.create( //
 			IdentifierParser.PREFIX, //
-			String.format("%s[%s]", parentSelectorString, formatIterationIndicesAsRanges())) //
+			"%s[%s]".formatted(parentSelectorString, formatIterationIndicesAsRanges())) //
 		);
 	}
 

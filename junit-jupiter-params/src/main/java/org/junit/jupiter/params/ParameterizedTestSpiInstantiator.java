@@ -49,7 +49,7 @@ class ParameterizedTestSpiInstantiator {
 			Class<? extends T> implementationClass) {
 
 		Preconditions.condition(!ReflectionUtils.isInnerClass(implementationClass),
-			() -> String.format("The %s [%s] must be either a top-level class or a static nested class",
+			() -> "The %s [%s] must be either a top-level class or a static nested class".formatted(
 				spiInterface.getSimpleName(), implementationClass.getName()));
 
 		Constructor<?>[] constructors = implementationClass.getDeclaredConstructors();

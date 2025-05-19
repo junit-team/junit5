@@ -133,8 +133,7 @@ final class ClassSelectorResolver implements SelectorResolver {
 	}
 
 	private static String createConfigContainsCycleMessage(Class<?> suiteClass, UniqueId suiteId) {
-		return String.format(
-			"The suite configuration of [%s] resulted in a cycle [%s] and will not be discovered a second time.",
+		return "The suite configuration of [%s] resulted in a cycle [%s] and will not be discovered a second time.".formatted(
 			suiteClass.getName(), suiteId);
 	}
 

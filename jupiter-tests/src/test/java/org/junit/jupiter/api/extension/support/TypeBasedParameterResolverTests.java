@@ -119,7 +119,7 @@ class TypeBasedParameterResolverTests {
 		public String resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
 			Class<?> parameterAnnotation = parameterContext.getParameter().getAnnotations()[0].annotationType();
-			return String.format("%s %s", extensionContext.getDisplayName(), parameterAnnotation.getSimpleName());
+			return "%s %s".formatted(extensionContext.getDisplayName(), parameterAnnotation.getSimpleName());
 		}
 	}
 

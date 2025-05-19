@@ -41,12 +41,11 @@ class IncludeClassNameFilter extends AbstractClassNameFilter {
 	}
 
 	private String formatInclusionReason(String className, Pattern pattern) {
-		return String.format("Class name [%s] matches included pattern: '%s'", className, pattern);
+		return "Class name [%s] matches included pattern: '%s'".formatted(className, pattern);
 	}
 
 	private String formatExclusionReason(String className) {
-		return String.format("Class name [%s] does not match any included pattern: %s", className,
-			this.patternDescription);
+		return "Class name [%s] does not match any included pattern: %s".formatted(className, this.patternDescription);
 	}
 
 	@Override
@@ -56,7 +55,7 @@ class IncludeClassNameFilter extends AbstractClassNameFilter {
 
 	@Override
 	public String toString() {
-		return String.format("%s that includes class names that match one of the following regular expressions: %s",
+		return "%s that includes class names that match one of the following regular expressions: %s".formatted(
 			getClass().getSimpleName(), this.patternDescription);
 	}
 

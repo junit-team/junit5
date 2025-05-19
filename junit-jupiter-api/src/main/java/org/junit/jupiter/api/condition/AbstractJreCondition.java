@@ -47,7 +47,7 @@ abstract class AbstractJreCondition<A extends Annotation> extends BooleanExecuti
 		Preconditions.condition(Arrays.stream(jres).noneMatch(isEqual(JRE.UNDEFINED)),
 			() -> "JRE.UNDEFINED is not supported in @" + this.annotationName);
 		Arrays.stream(versions).min().ifPresent(version -> Preconditions.condition(version >= JRE.MINIMUM_VERSION,
-			() -> String.format("Version [%d] in @%s must be greater than or equal to %d", version, this.annotationName,
+			() -> "Version [%d] in @%s must be greater than or equal to %d".formatted(version, this.annotationName,
 				JRE.MINIMUM_VERSION)));
 
 		return IntStream.concat(//

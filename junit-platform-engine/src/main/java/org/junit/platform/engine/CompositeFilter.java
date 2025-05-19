@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine;
 
-import static java.lang.String.format;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.engine.FilterResult.included;
 
@@ -82,7 +81,7 @@ class CompositeFilter<T> implements Filter<T> {
 		// @formatter:off
 		return filters.stream()
 				.map(Object::toString)
-				.map(value -> format("(%s)", value))
+				.map(value -> "(%s)".formatted(value))
 				.collect(joining(" and "));
 		// @formatter:on
 	}

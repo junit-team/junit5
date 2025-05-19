@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
 
@@ -70,7 +69,7 @@ class AssertThrowsExactly {
 
 		throw assertionFailure() //
 				.message(messageOrSupplier) //
-				.reason(format("Expected %s to be thrown, but nothing was thrown.", getCanonicalName(expectedType))) //
+				.reason("Expected %s to be thrown, but nothing was thrown.".formatted(getCanonicalName(expectedType))) //
 				.build();
 	}
 

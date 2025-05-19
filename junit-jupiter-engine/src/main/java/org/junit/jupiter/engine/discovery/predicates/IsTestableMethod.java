@@ -77,7 +77,7 @@ abstract class IsTestableMethod implements Predicate<Method> {
 
 	protected static DiscoveryIssue createIssue(Class<? extends Annotation> annotationType, Method method,
 			String condition) {
-		String message = String.format("@%s method '%s' %s. It will not be executed.", annotationType.getSimpleName(),
+		String message = "@%s method '%s' %s. It will not be executed.".formatted(annotationType.getSimpleName(),
 			method.toGenericString(), condition);
 		return DiscoveryIssue.builder(Severity.WARNING, message) //
 				.source(MethodSource.from(method)) //

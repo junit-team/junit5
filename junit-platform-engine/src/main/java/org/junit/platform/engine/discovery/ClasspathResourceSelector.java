@@ -159,7 +159,7 @@ public class ClasspathResourceSelector implements DiscoverySelector {
 		}
 		else {
 			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-				String.format("%s?%s", this.classpathResourceName, this.position.toQueryPart())));
+				"%s?%s".formatted(this.classpathResourceName, this.position.toQueryPart())));
 		}
 	}
 

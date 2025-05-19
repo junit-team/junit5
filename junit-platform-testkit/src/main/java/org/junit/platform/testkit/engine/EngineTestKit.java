@@ -293,7 +293,7 @@ public final class EngineTestKit {
 				.filter((TestEngine engine) -> engineId.equals(engine.getId()))//
 				.findFirst()//
 				.orElseThrow(() -> new PreconditionViolationException(
-					String.format("Failed to load TestEngine with ID [%s]", engineId)));
+					"Failed to load TestEngine with ID [%s]".formatted(engineId)));
 	}
 
 	private EngineTestKit() {

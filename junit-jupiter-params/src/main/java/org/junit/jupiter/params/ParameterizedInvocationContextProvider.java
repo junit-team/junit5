@@ -55,8 +55,7 @@ class ParameterizedInvocationContextProvider<T> {
 	private static <T> void validateInvokedAtLeastOnce(long invocationCount,
 			ParameterizedDeclarationContext<T> declarationContext) {
 		if (invocationCount == 0 && !declarationContext.isAllowingZeroInvocations()) {
-			String message = String.format(
-				"Configuration error: You must configure at least one set of arguments for this @%s",
+			String message = "Configuration error: You must configure at least one set of arguments for this @%s".formatted(
 				declarationContext.getAnnotationName());
 			throw new TemplateInvocationValidationException(message);
 		}
@@ -67,7 +66,7 @@ class ParameterizedInvocationContextProvider<T> {
 			ArgumentsSource.class);
 
 		Preconditions.notEmpty(argumentsSources,
-			() -> String.format("Configuration error: You must configure at least one arguments source for this @%s",
+			() -> "Configuration error: You must configure at least one arguments source for this @%s".formatted(
 				declarationContext.getAnnotationName()));
 
 		return argumentsSources;

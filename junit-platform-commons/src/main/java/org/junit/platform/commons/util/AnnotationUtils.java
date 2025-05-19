@@ -342,9 +342,10 @@ public final class AnnotationUtils {
 					// a 'value' attribute that returns an array of the contained annotation type.
 					// See https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.6.3
 					Method method = ReflectionUtils.tryToGetMethod(containerType, "value").getOrThrow(
-						cause -> new JUnitException(String.format(
-							"Container annotation type '%s' must declare a 'value' attribute of type %s[].",
-							containerType, annotationType), cause));
+						cause -> new JUnitException(
+							"Container annotation type '%s' must declare a 'value' attribute of type %s[].".formatted(
+								containerType, annotationType),
+							cause));
 
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 					found.addAll((Collection<? extends A>) asList(containedAnnotations));

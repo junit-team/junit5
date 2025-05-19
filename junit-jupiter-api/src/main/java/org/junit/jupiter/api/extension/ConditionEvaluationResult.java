@@ -60,7 +60,7 @@ public class ConditionEvaluationResult {
 		if (StringUtils.isBlank(customReason)) {
 			return disabled(reason);
 		}
-		return disabled(String.format("%s ==> %s", reason, customReason));
+		return disabled("%s ==> %s".formatted(reason, customReason));
 	}
 
 	private final boolean enabled;

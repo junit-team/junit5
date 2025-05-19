@@ -33,7 +33,7 @@ class TestEngineFormatter {
 
 	private static String format(String title, Stream<TestEngine> testEngines) {
 		String details = testEngines //
-				.map(engine -> String.format("- %s (%s)", engine.getId(), join(", ", computeAttributes(engine)))) //
+				.map(engine -> "- %s (%s)".formatted(engine.getId(), join(", ", computeAttributes(engine)))) //
 				.collect(joining("\n"));
 		return title + ":" + (details.isEmpty() ? " <none>" : "\n" + details);
 	}

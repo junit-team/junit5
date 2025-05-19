@@ -36,7 +36,7 @@ class RandomOrdererUtils {
 			Logger logger) {
 		return configurationParameterLookup.apply(RANDOM_SEED_PROPERTY_NAME).map(configurationParameter -> {
 			try {
-				logger.config(() -> String.format("Using custom seed for configuration parameter [%s] with value [%s].",
+				logger.config(() -> "Using custom seed for configuration parameter [%s] with value [%s].".formatted(
 					RANDOM_SEED_PROPERTY_NAME, configurationParameter));
 				return Long.valueOf(configurationParameter);
 			}

@@ -59,10 +59,10 @@ class ParameterizedInvocationNameFormatter {
 				? extensionContext.getConfigurationParameter(DISPLAY_NAME_PATTERN_KEY) //
 						.orElse(DEFAULT_DISPLAY_NAME_PATTERN)
 				: name;
-		pattern = Preconditions.notBlank(pattern.trim(), () -> String.format(
-			"Configuration error: @%s on %s must be declared with a non-empty name.",
-			declarationContext.getAnnotationName(),
-			declarationContext.getResolverFacade().getIndexedParameterDeclarations().getSourceElementDescription()));
+		pattern = Preconditions.notBlank(pattern.trim(),
+			() -> "Configuration error: @%s on %s must be declared with a non-empty name.".formatted(
+				declarationContext.getAnnotationName(),
+				declarationContext.getResolverFacade().getIndexedParameterDeclarations().getSourceElementDescription()));
 
 		int argumentMaxLength = extensionContext.getConfigurationParameter(ARGUMENT_MAX_LENGTH_KEY, Integer::parseInt) //
 				.orElse(512);
@@ -243,9 +243,9 @@ class ParameterizedInvocationNameFormatter {
 				result.append(context.argumentSetName.get());
 				return;
 			}
-			throw new ExtensionConfigurationException(String.format(
-				"When the display name pattern for a @%s contains %s, the arguments must be supplied as an ArgumentSet.",
-				this.annotationName, ARGUMENT_SET_NAME_PLACEHOLDER));
+			throw new ExtensionConfigurationException(
+				"When the display name pattern for a @%s contains %s, the arguments must be supplied as an ArgumentSet.".formatted(
+					this.annotationName, ARGUMENT_SET_NAME_PLACEHOLDER));
 		}
 	}
 

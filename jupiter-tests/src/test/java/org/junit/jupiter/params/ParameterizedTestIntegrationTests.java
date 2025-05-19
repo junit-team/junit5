@@ -1175,8 +1175,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithTwoUnusedStringArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(String.format(
-						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]".formatted()))));
 		}
 
 		@Test
@@ -1184,8 +1184,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithMethodSourceProvidingUnusedArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(String.format(
-						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]".formatted()))));
 		}
 
 		@Test
@@ -1193,8 +1193,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.NONE, UnusedArgumentsTestCase.class,
 				"testWithStrictArgumentCountValidation", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(String.format(
-						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]")))));
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]".formatted()))));
 		}
 
 		@Test
@@ -1202,8 +1202,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithCsvSourceContainingDifferentNumbersOfArguments", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(String.format(
-						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]"))))) //
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused1]".formatted())))) //
 					.haveExactly(1,
 						event(test(), displayName("[2] argument=bar"), finishedWithFailure(message("bar"))));
 		}
@@ -1231,8 +1231,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 			var results = execute(ArgumentCountValidationMode.STRICT, UnusedArgumentsTestCase.class,
 				"testWithEvaluationReportingArgumentsProvider", String.class);
 			results.allEvents().assertThatEvents() //
-					.haveExactly(1, event(finishedWithFailure(message(String.format(
-						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]")))));
+					.haveExactly(1, event(finishedWithFailure(message(
+						"Configuration error: @ParameterizedTest consumes 1 parameter but there were 2 arguments provided.%nNote: the provided arguments were [foo, unused]".formatted()))));
 			results.allEvents().reportingEntryPublished().assertThatEvents() //
 					.haveExactly(1, event(EventConditions.reportEntry(Map.of("evaluated", "true"))));
 		}

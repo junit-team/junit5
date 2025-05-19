@@ -90,8 +90,8 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 				.findFirst()//
 				.orElse(null);
 
-		Preconditions.notNull(field,
-			() -> format("Could not find field named [%s] in class [%s]", resolvedFieldName, resolvedClass.getName()));
+		Preconditions.notNull(field, () -> "Could not find field named [%s] in class [%s]".formatted(resolvedFieldName,
+			resolvedClass.getName()));
 		return field;
 	}
 
@@ -106,22 +106,22 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 
 	private static Object readField(Field field, Object testInstance) {
 		Object value = ReflectionSupport.tryToReadFieldValue(field, testInstance).getOrThrow(
-			cause -> new JUnitException(format("Could not read field [%s]", field.getName()), cause));
+			cause -> new JUnitException("Could not read field [%s]".formatted(field.getName()), cause));
 
 		String fieldName = field.getName();
 		String declaringClass = field.getDeclaringClass().getName();
 
 		Preconditions.notNull(value,
-			() -> format("The value of field [%s] in class [%s] must not be null", fieldName, declaringClass));
+			() -> "The value of field [%s] in class [%s] must not be null".formatted(fieldName, declaringClass));
 
 		Preconditions.condition(!(value instanceof BaseStream),
-			() -> format("The value of field [%s] in class [%s] must not be a stream", fieldName, declaringClass));
+			() -> "The value of field [%s] in class [%s] must not be a stream".formatted(fieldName, declaringClass));
 
 		Preconditions.condition(!(value instanceof Iterator),
-			() -> format("The value of field [%s] in class [%s] must not be an Iterator", fieldName, declaringClass));
+			() -> "The value of field [%s] in class [%s] must not be an Iterator".formatted(fieldName, declaringClass));
 
 		Preconditions.condition(isConvertibleToStream(field, value),
-			() -> format("The value of field [%s] in class [%s] must be convertible to a Stream", fieldName,
+			() -> "The value of field [%s] in class [%s] must be convertible to a Stream".formatted(fieldName,
 				declaringClass));
 
 		return value;

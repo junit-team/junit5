@@ -236,7 +236,7 @@ class MethodSelectorResolver implements SelectorResolver {
 		}
 
 		private UniqueId createUniqueId(Method method, TestDescriptor parent) {
-			String methodId = String.format("%s(%s)", method.getName(),
+			String methodId = "%s(%s)".formatted(method.getName(),
 				ClassUtils.nullSafeToString(method.getParameterTypes()));
 			return parent.getUniqueId().append(segmentType, methodId);
 		}

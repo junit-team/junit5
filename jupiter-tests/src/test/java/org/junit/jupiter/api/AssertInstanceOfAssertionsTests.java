@@ -93,7 +93,7 @@ class AssertInstanceOfAssertionsTests {
 
 	private void assertInstanceOfFails(Class<?> expectedType, Object actualValue, String unexpectedSort) {
 		String valueType = actualValue == null ? "null" : actualValue.getClass().getCanonicalName();
-		String expectedMessage = String.format("Unexpected %s, expected: <%s> but was: <%s>", unexpectedSort,
+		String expectedMessage = "Unexpected %s, expected: <%s> but was: <%s>".formatted(unexpectedSort,
 			expectedType.getCanonicalName(), valueType);
 
 		assertThrowsWithMessage(expectedMessage, () -> assertInstanceOf(expectedType, actualValue));

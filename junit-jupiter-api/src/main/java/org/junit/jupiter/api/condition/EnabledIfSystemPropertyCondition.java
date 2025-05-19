@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.condition;
 
-import static java.lang.String.format;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 
@@ -49,15 +48,14 @@ class EnabledIfSystemPropertyCondition extends AbstractRepeatableAnnotationCondi
 
 		// Nothing to match against?
 		if (actual == null) {
-			return disabled(format("System property [%s] does not exist", name), annotation.disabledReason());
+			return disabled("System property [%s] does not exist".formatted(name), annotation.disabledReason());
 		}
 		if (actual.matches(regex)) {
 			return enabled(
-				format("System property [%s] with value [%s] matches regular expression [%s]", name, actual, regex));
+				"System property [%s] with value [%s] matches regular expression [%s]".formatted(name, actual, regex));
 		}
-		return disabled(
-			format("System property [%s] with value [%s] does not match regular expression [%s]", name, actual, regex),
-			annotation.disabledReason());
+		return disabled("System property [%s] with value [%s] does not match regular expression [%s]".formatted(name,
+			actual, regex), annotation.disabledReason());
 	}
 
 }

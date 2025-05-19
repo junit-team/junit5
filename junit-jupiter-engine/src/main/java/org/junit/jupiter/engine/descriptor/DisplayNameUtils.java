@@ -87,7 +87,7 @@ final class DisplayNameUtils {
 				.map(DisplayName::value) //
 				.filter(StringUtils::isBlank) //
 				.ifPresent(__ -> {
-					String message = String.format("@DisplayName on %s must be declared with a non-blank value.",
+					String message = "@DisplayName on %s must be declared with a non-blank value.".formatted(
 						elementDescription.get());
 					reporter.reportIssue(
 						DiscoveryIssue.builder(Severity.WARNING, message).source(sourceProvider.get()).build());

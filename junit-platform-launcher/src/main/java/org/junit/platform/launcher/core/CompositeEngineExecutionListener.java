@@ -83,9 +83,8 @@ class CompositeEngineExecutionListener implements EngineExecutionListener {
 			}
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-				logger.warn(throwable,
-					() -> String.format("EngineExecutionListener [%s] threw exception for method: %s",
-						listener.getClass().getName(), description.get()));
+				logger.warn(throwable, () -> "EngineExecutionListener [%s] threw exception for method: %s".formatted(
+					listener.getClass().getName(), description.get()));
 			}
 		});
 	}

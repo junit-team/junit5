@@ -127,7 +127,7 @@ public class FileSelector implements DiscoverySelector {
 		}
 		else {
 			return Optional.of(DiscoverySelectorIdentifier.create(IdentifierParser.PREFIX,
-				String.format("%s?%s", this.path, this.position.toQueryPart())));
+				"%s?%s".formatted(this.path, this.position.toQueryPart())));
 		}
 	}
 

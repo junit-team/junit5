@@ -463,7 +463,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private static Stream<ClassSelector> toClassSelectors(Class<?> suiteClass, SelectClasses annotation) {
 		Preconditions.condition(annotation.value().length > 0 || annotation.names().length > 0,
-			() -> String.format("@SelectClasses on class [%s] must declare at least one class reference or name",
+			() -> "@SelectClasses on class [%s] must declare at least one class reference or name".formatted(
 				suiteClass.getName()));
 		return Stream.concat(//
 			AdditionalDiscoverySelectors.selectClasses(annotation.value()), //
@@ -535,7 +535,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	}
 
 	private static String prefixErrorMessageForInvalidSelectMethodUsage(Class<?> suiteClass, String detailMessage) {
-		return String.format("@SelectMethod on class [%s]: %s", suiteClass.getName(), detailMessage);
+		return "@SelectMethod on class [%s]: %s".formatted(suiteClass.getName(), detailMessage);
 	}
 
 	private ClassNameFilter createIncludeClassNameFilter(String... patterns) {

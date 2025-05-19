@@ -56,8 +56,7 @@ class EnumArgumentsProvider extends AnnotationBasedArgumentsProvider<EnumSource>
 		E from = enumSource.from().isEmpty() ? constants[0] : Enum.valueOf(enumClass, enumSource.from());
 		E to = enumSource.to().isEmpty() ? constants[constants.length - 1] : Enum.valueOf(enumClass, enumSource.to());
 		Preconditions.condition(from.compareTo(to) <= 0,
-			() -> String.format(
-				"Invalid enum range: 'from' (%s) must come before 'to' (%s) in the natural order of enum constants.",
+			() -> "Invalid enum range: 'from' (%s) must come before 'to' (%s) in the natural order of enum constants.".formatted(
 				from, to));
 		return EnumSet.range(from, to);
 	}

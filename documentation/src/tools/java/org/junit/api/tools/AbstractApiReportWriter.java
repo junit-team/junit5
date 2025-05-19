@@ -39,7 +39,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 		out.println(h1("@API Declarations"));
 		out.println();
 		out.println(paragraph(
-			format("Discovered %d types with %s declarations.", this.apiReport.types().size(), code("@API"))));
+			"Discovered %d types with %s declarations.".formatted(this.apiReport.types().size(), code("@API"))));
 		out.println();
 	}
 
@@ -76,7 +76,7 @@ abstract class AbstractApiReportWriter implements ApiReportWriter {
 			// omit section header when only a single status is printed
 			return;
 		}
-		out.println(h2(format("@API(%s)", status)));
+		out.println(h2("@API(%s)".formatted(status)));
 		out.println();
 		out.println(
 			paragraph(format("Discovered %d " + code("@API(%s)") + " declarations.", declarations.size(), status)));

@@ -127,7 +127,7 @@ public class TestTemplateTestDescriptor extends MethodBasedTestDescriptor implem
 
 		@Override
 		protected String getNoRegisteredProviderErrorMessage() {
-			return String.format("You must register at least one %s that supports @%s method [%s]",
+			return "You must register at least one %s that supports @%s method [%s]".formatted(
 				TestTemplateInvocationContextProvider.class.getSimpleName(), TestTemplate.class.getSimpleName(),
 				getTestMethod());
 		}

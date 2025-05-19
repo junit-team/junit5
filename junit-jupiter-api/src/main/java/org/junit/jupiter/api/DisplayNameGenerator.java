@@ -505,8 +505,8 @@ public interface DisplayNameGenerator {
 			return findAnnotation(element, SentenceFragment.class) //
 					.map(SentenceFragment::value) //
 					.map(sentenceFragment -> {
-						Preconditions.notBlank(sentenceFragment, String.format(
-							"@SentenceFragment on [%s] must be declared with a non-blank value.", element));
+						Preconditions.notBlank(sentenceFragment,
+							"@SentenceFragment on [%s] must be declared with a non-blank value.".formatted(element));
 						return sentenceFragment.trim();
 					}) //
 					.orElse(null);

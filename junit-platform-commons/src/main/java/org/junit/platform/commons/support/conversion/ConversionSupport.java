@@ -128,7 +128,7 @@ public final class ConversionSupport {
 				}
 				// else
 				throw new ConversionException(
-					String.format("Failed to convert String \"%s\" to type %s", source, targetType.getTypeName()), ex);
+					"Failed to convert String \"%s\" to type %s".formatted(source, targetType.getTypeName()), ex);
 			}
 		}
 

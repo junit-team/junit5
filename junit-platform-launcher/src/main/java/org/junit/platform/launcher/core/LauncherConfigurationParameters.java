@@ -270,14 +270,14 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 							Stream.of(configFileUrl + " (*)"), //
 							resources.stream().skip(1).map(URL::toString) //
 						).collect(joining("\n- ", "\n- ", ""));
-						return String.format(
-							"Discovered %d '%s' configuration files on the classpath (see below); only the first (*) will be used.%s",
+						return "Discovered %d '%s' configuration files on the classpath (see below); only the first (*) will be used.%s".formatted(
 							resources.size(), configFileName, formattedResourceList);
 					});
 				}
 
-				logger.config(() -> String.format(
-					"Loading JUnit Platform configuration parameters from classpath resource [%s].", configFileUrl));
+				logger.config(
+					() -> "Loading JUnit Platform configuration parameters from classpath resource [%s].".formatted(
+						configFileUrl));
 				URLConnection urlConnection = configFileUrl.openConnection();
 				urlConnection.setUseCaches(false);
 				try (InputStream inputStream = urlConnection.getInputStream()) {
@@ -287,8 +287,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		}
 		catch (Exception ex) {
 			logger.warn(ex,
-				() -> String.format(
-					"Failed to load JUnit Platform configuration parameters from classpath resource [%s].",
+				() -> "Failed to load JUnit Platform configuration parameters from classpath resource [%s].".formatted(
 					configFileName));
 		}
 

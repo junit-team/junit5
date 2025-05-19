@@ -25,8 +25,7 @@ class ManifestVersionProvider implements CommandLine.IVersionProvider {
 	@Override
 	public String[] getVersion() {
 		return new String[] { //
-				String.format("@|bold JUnit Platform Console Launcher %s|@",
-					getImplementationVersion().orElse("<unknown>")), //
+				"@|bold JUnit Platform Console Launcher %s|@".formatted(getImplementationVersion().orElse("<unknown>")), //
 				"JVM: ${java.version} (${java.vendor} ${java.vm.name} ${java.vm.version})", //
 				"OS: ${os.name} ${os.version} ${os.arch}" //
 		};

@@ -150,27 +150,26 @@ class StringUtilsTests {
 	}
 
 	private void shouldContainWhitespace(String str) {
-		assertTrue(containsWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
-		assertFalse(doesNotContainWhitespace(str), () -> String.format("'%s' should contain whitespace", str));
+		assertTrue(containsWhitespace(str), () -> "'%s' should contain whitespace".formatted(str));
+		assertFalse(doesNotContainWhitespace(str), () -> "'%s' should contain whitespace".formatted(str));
 	}
 
 	private void shouldNotContainWhitespace(String str) {
-		assertTrue(doesNotContainWhitespace(str), () -> String.format("'%s' should not contain whitespace", str));
-		assertFalse(containsWhitespace(str), () -> String.format("'%s' should not contain whitespace", str));
+		assertTrue(doesNotContainWhitespace(str), () -> "'%s' should not contain whitespace".formatted(str));
+		assertFalse(containsWhitespace(str), () -> "'%s' should not contain whitespace".formatted(str));
 	}
 
 	private void shouldContainIsoControlCharacter(String str) {
-		assertTrue(containsIsoControlCharacter(str),
-			() -> String.format("'%s' should contain ISO control character", str));
+		assertTrue(containsIsoControlCharacter(str), () -> "'%s' should contain ISO control character".formatted(str));
 		assertFalse(doesNotContainIsoControlCharacter(str),
-			() -> String.format("'%s' should contain ISO control character", str));
+			() -> "'%s' should contain ISO control character".formatted(str));
 	}
 
 	private void shouldNotContainIsoControlCharacter(String str) {
 		assertTrue(doesNotContainIsoControlCharacter(str),
-			() -> String.format("'%s' should not contain ISO control character", str));
+			() -> "'%s' should not contain ISO control character".formatted(str));
 		assertFalse(containsIsoControlCharacter(str),
-			() -> String.format("'%s' should not contain ISO control character", str));
+			() -> "'%s' should not contain ISO control character".formatted(str));
 	}
 
 	private static class ToStringReturnsNull {

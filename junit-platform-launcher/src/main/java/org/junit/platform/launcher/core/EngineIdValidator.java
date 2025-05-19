@@ -32,15 +32,15 @@ class EngineIdValidator {
 		for (TestEngine testEngine : testEngines) {
 			// check usage of reserved ID prefix
 			if (!validateReservedIds(testEngine)) {
-				getLogger().warn(() -> String.format(
-					"Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '%s'",
-					testEngine.getId()));
+				getLogger().warn(
+					() -> "Third-party TestEngine implementations are forbidden to use the reserved 'junit-' prefix for their ID: '%s'".formatted(
+						testEngine.getId()));
 			}
 
 			// check uniqueness
 			if (!ids.add(testEngine.getId())) {
-				throw new JUnitException(String.format(
-					"Cannot create Launcher for multiple engines with the same ID '%s'.", testEngine.getId()));
+				throw new JUnitException(
+					"Cannot create Launcher for multiple engines with the same ID '%s'.".formatted(testEngine.getId()));
 			}
 		}
 		return testEngines;
@@ -54,7 +54,7 @@ class EngineIdValidator {
 	// https://github.com/junit-team/junit5/issues/1557
 	private static boolean validateReservedIds(TestEngine testEngine) {
 		String engineId = Preconditions.notBlank(testEngine.getId(),
-			() -> String.format("ID for TestEngine [%s] must not be null or blank", testEngine.getClass().getName()));
+			() -> "ID for TestEngine [%s] must not be null or blank".formatted(testEngine.getClass().getName()));
 		if (!engineId.startsWith("junit-")) {
 			return true;
 		}
@@ -82,7 +82,7 @@ class EngineIdValidator {
 			return;
 		}
 		throw new JUnitException(
-			String.format("Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.",
+			"Third-party TestEngine '%s' is forbidden to use the reserved '%s' TestEngine ID.".formatted(
 				actualClassName, testEngine.getId()));
 	}
 

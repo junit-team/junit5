@@ -234,33 +234,33 @@ class EnabledOnOsConditionTests extends AbstractExecutionConditionTests {
 	private void assertEnabledOnCurrentOsIf(boolean condition) {
 		if (condition) {
 			assertEnabled();
-			assertReasonContains(String.format("Enabled on operating system: %s", OS_NAME));
+			assertReasonContains("Enabled on operating system: %s".formatted(OS_NAME));
 		}
 		else {
 			assertDisabled();
-			assertReasonContains(String.format("Disabled on operating system: %s", OS_NAME));
+			assertReasonContains("Disabled on operating system: %s".formatted(OS_NAME));
 		}
 	}
 
 	private void assertEnabledOnCurrentArchitectureIf(boolean condition) {
 		if (condition) {
 			assertEnabled();
-			assertReasonContains(String.format("Enabled on architecture: %s", ARCH));
+			assertReasonContains("Enabled on architecture: %s".formatted(ARCH));
 		}
 		else {
 			assertDisabled();
-			assertReasonContains(String.format("Disabled on architecture: %s", ARCH));
+			assertReasonContains("Disabled on architecture: %s".formatted(ARCH));
 		}
 	}
 
 	private void assertEnabledOnCurrentOsAndArchitectureIf(boolean condition) {
 		if (condition) {
 			assertEnabled();
-			assertReasonContains(String.format("Enabled on operating system: %s (%s)", OS_NAME, ARCH));
+			assertReasonContains("Enabled on operating system: %s (%s)".formatted(OS_NAME, ARCH));
 		}
 		else {
 			assertDisabled();
-			assertReasonContains(String.format("Disabled on operating system: %s (%s)", OS_NAME, ARCH));
+			assertReasonContains("Disabled on operating system: %s (%s)".formatted(OS_NAME, ARCH));
 		}
 	}
 

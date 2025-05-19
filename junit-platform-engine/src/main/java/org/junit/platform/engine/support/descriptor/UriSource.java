@@ -68,8 +68,9 @@ public interface UriSource extends TestSource {
 			}
 		}
 		catch (RuntimeException ex) {
-			LoggerFactory.getLogger(UriSource.class).debug(ex, () -> String.format(
-				"The supplied URI [%s] is not path-based. Falling back to default UriSource implementation.", uri));
+			LoggerFactory.getLogger(UriSource.class).debug(ex,
+				() -> "The supplied URI [%s] is not path-based. Falling back to default UriSource implementation.".formatted(
+					uri));
 		}
 
 		// Store supplied URI as-is

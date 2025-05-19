@@ -39,13 +39,13 @@ interface TestLifecycleLogger {
 
 	@BeforeEach
 	default void beforeEachTest(TestInfo testInfo) {
-		logger.info(() -> String.format("About to execute [%s]",
+		logger.info(() -> "About to execute [%s]".formatted(
 			testInfo.getDisplayName()));
 	}
 
 	@AfterEach
 	default void afterEachTest(TestInfo testInfo) {
-		logger.info(() -> String.format("Finished executing [%s]",
+		logger.info(() -> "Finished executing [%s]".formatted(
 			testInfo.getDisplayName()));
 	}
 

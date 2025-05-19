@@ -122,7 +122,7 @@ class ColorPalette {
 	}
 
 	private String getAnsiFormatter(Style style) {
-		return String.format("\u001B[%sm", this.colorsToAnsiSequences.get(style));
+		return "\u001B[%sm".formatted(this.colorsToAnsiSequences.get(style));
 	}
 
 }

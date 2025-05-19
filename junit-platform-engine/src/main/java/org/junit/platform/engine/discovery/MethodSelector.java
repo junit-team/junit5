@@ -234,14 +234,14 @@ public class MethodSelector implements DiscoverySelector {
 			if (this.parameterTypes.length > 0) {
 				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName,
 					this.parameterTypes).orElseThrow(
-						() -> new PreconditionViolationException(String.format(
-							"Could not find method with name [%s] and parameter types [%s] in class [%s].",
-							this.methodName, this.parameterTypeNames, this.javaClass.getName())));
+						() -> new PreconditionViolationException(
+							"Could not find method with name [%s] and parameter types [%s] in class [%s].".formatted(
+								this.methodName, this.parameterTypeNames, this.javaClass.getName())));
 			}
 			else {
 				this.javaMethod = ReflectionSupport.findMethod(this.javaClass, this.methodName).orElseThrow(
 					() -> new PreconditionViolationException(
-						String.format("Could not find method with name [%s] in class [%s].", this.methodName,
+						"Could not find method with name [%s] in class [%s].".formatted(this.methodName,
 							this.javaClass.getName())));
 			}
 		}
