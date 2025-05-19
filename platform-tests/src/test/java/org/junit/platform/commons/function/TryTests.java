@@ -27,7 +27,9 @@ public class TryTests {
 		var success = Try.success("foo");
 
 		assertThat(success.get()).isEqualTo("foo");
+		assertThat(success.getNonNull()).isEqualTo("foo");
 		assertThat(success.getOrThrow(RuntimeException::new)).isEqualTo("foo");
+		assertThat(success.getNonNullOrThrow(RuntimeException::new)).isEqualTo("foo");
 		assertThat(success.toOptional()).contains("foo");
 
 		assertThat(success.andThen(v -> {
@@ -74,7 +76,9 @@ public class TryTests {
 	void successfulTriesCanStoreNull() throws Exception {
 		var success = Try.success(null);
 		assertThat(success.get()).isNull();
+		assertThrows(JUnitException.class, success::getNonNull);
 		assertThat(success.getOrThrow(RuntimeException::new)).isNull();
+		assertThrows(RuntimeException.class, () -> success.getNonNullOrThrow(RuntimeException::new));
 		assertThat(success.toOptional()).isEmpty();
 	}
 
