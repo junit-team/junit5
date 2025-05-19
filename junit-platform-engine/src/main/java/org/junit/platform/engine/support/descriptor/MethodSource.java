@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.descriptor;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.ClassUtils.nullSafeToString;
 
+import java.io.Serial;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
@@ -36,6 +37,7 @@ import org.junit.platform.engine.TestSource;
 @API(status = STABLE, since = "1.0")
 public class MethodSource implements TestSource {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

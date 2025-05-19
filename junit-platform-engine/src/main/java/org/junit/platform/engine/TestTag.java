@@ -12,6 +12,7 @@ package org.junit.platform.engine;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collections;
@@ -35,6 +36,7 @@ import org.junit.platform.commons.util.StringUtils;
 @API(status = STABLE, since = "1.0")
 public final class TestTag implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final String name;

@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.descriptor;
 import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.junit.platform.engine.TestSource;
 @API(status = STABLE, since = "1.0")
 public class CompositeTestSource implements TestSource {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

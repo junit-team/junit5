@@ -12,6 +12,8 @@ package org.junit.platform.commons;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
+
 import org.apiguardian.api.API;
 
 /**
@@ -22,6 +24,7 @@ import org.apiguardian.api.API;
 @API(status = STABLE, since = "1.5")
 public class PreconditionViolationException extends JUnitException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public PreconditionViolationException(String message) {

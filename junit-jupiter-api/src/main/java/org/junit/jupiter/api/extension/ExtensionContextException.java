@@ -13,6 +13,8 @@ package org.junit.jupiter.api.extension;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
+
 import org.apiguardian.api.API;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.JUnitException;
@@ -26,6 +28,7 @@ import org.junit.platform.commons.JUnitException;
 @API(status = STABLE, since = "5.0")
 public class ExtensionContextException extends JUnitException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unused")
