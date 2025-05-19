@@ -35,6 +35,7 @@ bndlib = { module = "biz.aQute.bnd:biz.aQute.bndlib", version.ref = "bnd" }
 checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checkstyle" }
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.179" }
 commons-io = { module = "commons-io:commons-io", version = "2.19.0" }
+errorProne-core = { module = "com.google.errorprone:error_prone_core", version = "2.38.0" }
 groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.26" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.23" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
@@ -46,6 +47,7 @@ jimfs = { module = "com.google.jimfs:jimfs", version = "1.3.0" }
 jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
 jmh-generator-annprocess = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
 joox = { module = "org.jooq:joox", version = "2.0.1" }
+jspecify = { module = "org.jspecify:jspecify", version = "1.0.0" }
 jte = { module = "gg.jte:jte", version = "3.2.1" }
 junit4 = { module = "junit:junit", version = { require = "[4.12,)", prefer = "4.13.2" } }
 kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.10.2" }
@@ -58,6 +60,7 @@ mockito-bom = { module = "org.mockito:mockito-bom", version = "5.18.0" }
 mockito-core = { module = "org.mockito:mockito-core" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter" }
 nohttp-checkstyle = { module = "io.spring.nohttp:nohttp-checkstyle", version = "0.0.11" }
+nullaway = { module = "com.uber.nullaway:nullaway", version = "0.12.7" }
 opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
 openTestReporting-cli = { module = "org.opentest4j.reporting:open-test-reporting-cli", version.ref = "openTestReporting" }
 openTestReporting-events = { module = "org.opentest4j.reporting:open-test-reporting-events", version.ref = "openTestReporting" }
@@ -95,6 +98,7 @@ bnd = { id = "biz.aQute.bnd", version.ref = "bnd" }
 buildParameters = { id = "org.gradlex.build-parameters", version = "1.4.4" }
 commonCustomUserData = { id = "com.gradle.common-custom-user-data-gradle-plugin", version = "2.2.1" }
 develocity = { id = "com.gradle.develocity", version = "4.0.1" }
+errorProne = { id = "net.ltgt.errorprone", version = "4.2.0" }
 extraJavaModuleInfo = { id = "org.gradlex.extra-java-module-info", version = "1.12" }
 foojayResolver = { id = "org.gradle.toolchains.foojay-resolver", version = "1.0.0" }
 gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
@@ -102,6 +106,7 @@ jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 jreleaser = { id = "org.jreleaser", version = "1.18.0" }
 # check if workaround in gradle.properties can be removed when updating
 kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
+nullaway = { id = "net.ltgt.nullaway", version = "2.2.0" }
 openrewrite = { id = "org.openrewrite.rewrite", version = "7.6.2" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
 shadow = { id = "com.gradleup.shadow", version = "8.3.6" }
