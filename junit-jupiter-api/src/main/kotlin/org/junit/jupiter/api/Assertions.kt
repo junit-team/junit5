@@ -379,7 +379,7 @@ inline fun <R> assertDoesNotThrow(
     executable: () -> R
 ): R {
     contract {
-        callsInPlace(executable, AT_MOST_ONCE)
+        callsInPlace(executable, EXACTLY_ONCE)
     }
 
     return assertDoesNotThrow({ message }, executable)
