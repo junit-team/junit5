@@ -185,7 +185,7 @@ class CsvArgumentsProviderTests {
 	}
 
 	@Test
-	void understandsEscapeCharactersWithCutomQuoteCharacter() {
+	void understandsEscapeCharactersWithCustomQuoteCharacter() {
 		var annotation = csvSource().quoteCharacter('~').lines("~foo or ~~bar~~~, baz").build();
 
 		var arguments = provideArguments(annotation);
