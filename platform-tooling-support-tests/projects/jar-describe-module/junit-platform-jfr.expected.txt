@@ -1,4 +1,4 @@
-org.junit.platform.jfr@${platformVersion} jar:file:.+/junit-platform-jfr-\d.+\.jar..module-info\.class
+org.junit.platform.jfr@${version} jar:file:.+/junit-platform-jfr-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires jdk.jfr
 requires org.apiguardian.api static

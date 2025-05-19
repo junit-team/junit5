@@ -271,16 +271,13 @@ jobs:
         with:
           script: |
             const releaseVersion = "${{ inputs.releaseVersion }}";
-            const jupiterVersion = releaseVersion;
-            const vintageVersion = releaseVersion;
-            const platformVersion = "1." + releaseVersion.substring(2);
             const requestBody = {
               owner: context.repo.owner,
               repo: context.repo.repo,
               tag_name: `r${releaseVersion}`,
               name: `JUnit ${releaseVersion}`,
               generate_release_notes: true,
-              body: `JUnit ${jupiterVersion} = Platform ${platformVersion} + Jupiter ${jupiterVersion} + Vintage ${vintageVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
+              body: `JUnit ${releaseVersion} = Platform ${releaseVersion} + Jupiter ${releaseVersion} + Vintage ${releaseVersion}\n\nSee [Release Notes](https://junit.org/junit5/docs/${releaseVersion}/release-notes/).`,
               prerelease: releaseVersion.includes("-"),
             };
             console.log(requestBody);

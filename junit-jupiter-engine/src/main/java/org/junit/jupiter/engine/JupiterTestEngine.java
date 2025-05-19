@@ -28,6 +28,7 @@ import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.config.PrefixedConfigurationParameters;
+import org.junit.platform.engine.support.discovery.DiscoveryIssueReporter;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine;
 import org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutorService;
@@ -64,10 +65,13 @@ public final class JupiterTestEngine extends HierarchicalTestEngine<JupiterEngin
 
 	@Override
 	public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
-		JupiterConfiguration configuration = new CachingJupiterConfiguration(new DefaultJupiterConfiguration(
-			discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider()));
+		DiscoveryIssueReporter issueReporter = DiscoveryIssueReporter.deduplicating(
+			DiscoveryIssueReporter.forwarding(discoveryRequest.getDiscoveryListener(), uniqueId));
+		JupiterConfiguration configuration = new CachingJupiterConfiguration(
+			new DefaultJupiterConfiguration(discoveryRequest.getConfigurationParameters(),
+				discoveryRequest.getOutputDirectoryProvider(), issueReporter));
 		JupiterEngineDescriptor engineDescriptor = new JupiterEngineDescriptor(uniqueId, configuration);
-		new DiscoverySelectorResolver().resolveSelectors(discoveryRequest, engineDescriptor);
+		DiscoverySelectorResolver.resolveSelectors(discoveryRequest, engineDescriptor, issueReporter);
 		return engineDescriptor;
 	}
 

@@ -21,11 +21,11 @@ object DisplayNameTests {
     @JvmStatic
     fun data() =
         arrayOf(
-            arrayOf("A", 1),
-            arrayOf("B", 2),
-            arrayOf("C", 3),
-            arrayOf("", 4), // empty is okay
-            arrayOf(null, 5) // null was the problem
+            arrayOf<Any>("A", 1),
+            arrayOf<Any>("B", 2),
+            arrayOf<Any>("C", 3),
+            arrayOf<Any>("", 4), // empty is okay
+            arrayOf<Any?>(null, 5) // null was the problem
         )
 
     @ParameterizedTest

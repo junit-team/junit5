@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.io;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -63,21 +62,6 @@ import org.junit.jupiter.api.extension.ParameterResolutionException;
  * {@code static} field or on a parameter of a
  * {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
  *
- * <h3>Old behavior</h3>
- *
- * <p>You can revert to the old behavior of using a single temporary directory
- * by setting the {@value #SCOPE_PROPERTY_NAME} configuration parameter to
- * {@code per_context}. In that case, the scope of the temporary directory
- * depends on where the first {@code @TempDir} annotation is encountered when
- * executing a test class. The temporary directory will be shared by all tests
- * in a class when the annotation is present on a {@code static} field or on a
- * parameter of a {@link org.junit.jupiter.api.BeforeAll @BeforeAll} method.
- * Otherwise &mdash; for example, when {@code @TempDir} is only used on instance
- * fields or on parameters in test,
- * {@link org.junit.jupiter.api.BeforeEach @BeforeEach}, or
- * {@link org.junit.jupiter.api.AfterEach @AfterEach} methods &mdash; each test
- * will use its own temporary directory.
- *
  * <h2>Clean Up</h2>
  *
  * <p>By default, when the end of the scope of a temporary directory is reached,
@@ -126,9 +110,6 @@ public @interface TempDir {
 	/**
 	 * Factory for the temporary directory.
 	 *
-	 * <p>If the {@value #SCOPE_PROPERTY_NAME} configuration parameter is set to
-	 * {@code per_context}, no custom factory is allowed.
-	 *
 	 * <p>Defaults to {@link TempDirFactory.Standard}.
 	 *
 	 * <p>As an alternative to setting this attribute, a global
@@ -144,28 +125,6 @@ public @interface TempDir {
 	 */
 	@API(status = EXPERIMENTAL, since = "5.10")
 	Class<? extends TempDirFactory> factory() default TempDirFactory.class;
-
-	/**
-	 * Property name used to set the scope of temporary directories created via
-	 * the {@link TempDir @TempDir} annotation: {@value}
-	 *
-	 * <h4>Supported Values</h4>
-	 * <ul>
-	 * <li>{@code per_context}: creates a single temporary directory for the
-	 * entire test class or method, depending on where {@code @TempDir} is first
-	 * declared</li>
-	 * <li>{@code per_declaration}: creates separate temporary directories for
-	 * each declaration site of the {@code @TempDir} annotation</li>
-	 * </ul>
-	 *
-	 * <p>If not specified, the default is {@code per_declaration}.
-	 *
-	 * @since 5.8
-	 */
-	@SuppressWarnings("DeprecatedIsStillUsed")
-	@Deprecated
-	@API(status = DEPRECATED, since = "5.9")
-	String SCOPE_PROPERTY_NAME = "junit.jupiter.tempdir.scope";
 
 	/**
 	 * The name of the configuration parameter that is used to configure the

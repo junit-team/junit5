@@ -17,7 +17,6 @@ import org.apiguardian.api.API.Status.STABLE
 import org.junit.jupiter.api.function.Executable
 import org.junit.jupiter.api.function.ThrowingSupplier
 import java.time.Duration
-import java.util.function.Supplier
 import java.util.stream.Stream
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.InvocationKind.AT_MOST_ONCE
@@ -43,7 +42,7 @@ fun fail(message: () -> String): Nothing {
         callsInPlace(message, EXACTLY_ONCE)
     }
 
-    return Assertions.fail(message)
+    return Assertions.fail(message())
 }
 
 /**
@@ -334,7 +333,7 @@ inline fun <reified T : Throwable> assertThrows(
                 throw throwable
             }
         },
-        Supplier(message)
+        message
     )
 }
 
@@ -404,18 +403,24 @@ inline fun <R> assertDoesNotThrow(
 
     return Assertions.assertDoesNotThrow(
         evaluateAndWrap(executable),
-        Supplier(message)
+        message
     )
 }
 
+@OptIn(ExperimentalContracts::class)
 @PublishedApi
-internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> =
-    try {
+internal inline fun <R> evaluateAndWrap(executable: () -> R): ThrowingSupplier<R> {
+    contract {
+        callsInPlace(executable, EXACTLY_ONCE)
+    }
+
+    return try {
         val result = executable()
         ThrowingSupplier { result }
     } catch (throwable: Throwable) {
         ThrowingSupplier { throw throwable }
     }
+}
 
 /**
  * Example usage:

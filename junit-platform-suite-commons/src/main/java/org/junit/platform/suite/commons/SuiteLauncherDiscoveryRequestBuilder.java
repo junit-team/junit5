@@ -113,7 +113,7 @@ import org.junit.platform.suite.api.SelectUris;
  * @see org.junit.platform.launcher.EngineFilter
  * @see org.junit.platform.launcher.TagFilter
  */
-@API(status = INTERNAL, since = "1.8", consumers = { "org.junit.platform.suite.engine", "org.junit.platform.runner" })
+@API(status = INTERNAL, since = "1.8", consumers = "org.junit.platform.suite.engine")
 public final class SuiteLauncherDiscoveryRequestBuilder {
 
 	private final LauncherDiscoveryRequestBuilder delegate = LauncherDiscoveryRequestBuilder.request();

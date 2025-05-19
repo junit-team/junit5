@@ -41,17 +41,8 @@ public class Helper {
 		}
 	}
 
-	public static String version(String module) {
-		if (module.startsWith("junit-jupiter")) {
-			return gradleProperties.getProperty("version");
-		}
-		if (module.startsWith("junit-platform")) {
-			return gradleProperties.getProperty("platformVersion");
-		}
-		if (module.startsWith("junit-vintage")) {
-			return gradleProperties.getProperty("vintageVersion");
-		}
-		throw new AssertionError("Unknown module: " + module);
+	public static String version() {
+		return gradleProperties.getProperty("version");
 	}
 
 	public static List<String> loadModuleDirectoryNames() {

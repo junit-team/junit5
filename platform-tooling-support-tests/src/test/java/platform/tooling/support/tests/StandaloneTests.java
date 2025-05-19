@@ -87,14 +87,11 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var suiteVersion = Helper.version("junit-platform-suite-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertLinesMatch("""
-				junit-jupiter (org.junit.jupiter:junit-jupiter-engine:%s)
-				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%s)
-				junit-vintage (org.junit.vintage:junit-vintage-engine:%s)
-				""".formatted(jupiterVersion, suiteVersion, vintageVersion).lines(), //
+				junit-jupiter (org.junit.jupiter:junit-jupiter-engine:%1$s)
+				junit-platform-suite (org.junit.platform:junit-platform-suite-engine:%1$s)
+				junit-vintage (org.junit.vintage:junit-vintage-engine:%1$s)
+				""".formatted(Helper.version()).lines(), //
 			result.stdOut().lines());
 	}
 
@@ -110,7 +107,7 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var version = Helper.version("junit-platform-console");
+		var version = Helper.version();
 		assertLinesMatch("""
 				JUnit Platform Console Launcher %s
 				JVM: .*
@@ -142,7 +139,7 @@ class StandaloneTests {
 
 		assertEquals(0, result.exitCode());
 
-		var version = Helper.version("junit-platform-console");
+		var version = Helper.version();
 		assertLinesMatch("""
 				JUnit Platform Console Launcher %s
 				JVM: .*
@@ -158,7 +155,7 @@ class StandaloneTests {
 		var result = ProcessStarters.javaCommand("javac") //
 				.workingDir(workspace) //
 				.addArguments("-Xlint:-options") //
-				.addArguments("--release", "8") //
+				.addArguments("--release", "17") //
 				.addArguments("-proc:none") //
 				.addArguments("-d", workspace.resolve("bin").toString()) //
 				.addArguments("--class-path", MavenRepo.jar("junit-platform-console-standalone").toString()) //
@@ -425,9 +422,9 @@ class StandaloneTests {
 	@Test
 	@Order(4)
 	@Execution(SAME_THREAD)
-	void executeOnJava8(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
-		var result = ProcessStarters.java(java8Home) //
+	void executeOnJava17(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var javaHome = Helper.getJavaHome(17).orElseThrow(TestAbortedException::new);
+		var result = ProcessStarters.java(javaHome) //
 				.workingDir(workspace) //
 				.addArguments("-showversion") //
 				.addArguments("-enableassertions") //
@@ -445,25 +442,23 @@ class StandaloneTests {
 		assertEquals(1, result.exitCode());
 
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
+		var expectedErrLines = getExpectedErrLinesOnJava17(workspace);
 		assertLinesMatch(expectedOutLines, result.stdOutLines());
 		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 
 	@Test
 	@Order(5)
 	@Execution(SAME_THREAD)
 	// https://github.com/junit-team/junit5/issues/2600
-	void executeOnJava8SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
-		var java8Home = Helper.getJavaHome(8).orElseThrow(TestAbortedException::new);
-		var result = ProcessStarters.java(java8Home) //
+	void executeOnJava17SelectPackage(@FilePrefix("console-launcher") OutputFiles outputFiles) throws Exception {
+		var javaHome = Helper.getJavaHome(17).orElseThrow(TestAbortedException::new);
+		var result = ProcessStarters.java(javaHome) //
 				.workingDir(workspace).addArguments("-showversion") //
 				.addArguments("-enableassertions") //
 				.addArguments("-Djava.util.logging.config.file=logging.properties") //
@@ -480,19 +475,17 @@ class StandaloneTests {
 		assertEquals(1, result.exitCode());
 
 		var expectedOutLines = Files.readAllLines(workspace.resolve("expected-out.txt"));
-		var expectedErrLines = getExpectedErrLinesOnJava8(workspace);
+		var expectedErrLines = getExpectedErrLinesOnJava17(workspace);
 		assertLinesMatch(expectedOutLines, result.stdOutLines());
 		assertLinesMatch(expectedErrLines, result.stdErrLines());
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 
-	private static List<String> getExpectedErrLinesOnJava8(Path workspace) throws IOException {
+	private static List<String> getExpectedErrLinesOnJava17(Path workspace) throws IOException {
 		var expectedErrLines = new ArrayList<String>();
 		expectedErrLines.add(">> JAVA VERSION >>");
 		expectedErrLines.addAll(Files.readAllLines(workspace.resolve("expected-err.txt")));
@@ -548,11 +541,9 @@ class StandaloneTests {
 		}
 		assertLinesMatch(expectedErrLines, actualErrLines);
 
-		var jupiterVersion = Helper.version("junit-jupiter-engine");
-		var vintageVersion = Helper.version("junit-vintage-engine");
 		assertTrue(result.stdErr().contains("junit-jupiter"
-				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + jupiterVersion));
+				+ " (group ID: org.junit.jupiter, artifact ID: junit-jupiter-engine, version: " + Helper.version()));
 		assertTrue(result.stdErr().contains("junit-vintage"
-				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + vintageVersion));
+				+ " (group ID: org.junit.vintage, artifact ID: junit-vintage-engine, version: " + Helper.version()));
 	}
 }

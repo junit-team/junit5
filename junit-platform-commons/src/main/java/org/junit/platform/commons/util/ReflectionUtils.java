@@ -14,7 +14,6 @@ import static java.lang.String.format;
 import static java.util.Collections.synchronizedMap;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
@@ -95,7 +94,7 @@ public final class ReflectionUtils {
 	 * <p>When set to {@code false} (either explicitly or implicitly), field and
 	 * method searches will adhere to Java semantics regarding whether a given
 	 * field or method is visible or overridden, where the latter only applies
-	 * to methods. When set to {@code true}, the semantics used in JUnit 5 prior
+	 * to methods. When set to {@code true}, the semantics used in versions prior
 	 * to JUnit 5.11 (JUnit Platform 1.11) will be used, which means that fields
 	 * and methods can hide, shadow, or supersede fields and methods in supertypes
 	 * based solely on the field's name or the method's signature, disregarding
@@ -390,8 +389,7 @@ public final class ReflectionUtils {
 	 */
 	@API(status = INTERNAL, since = "1.12")
 	public static boolean isRecordClass(Class<?> clazz) {
-		Class<?> superclass = clazz.getSuperclass();
-		return superclass != null && "java.lang.Record".equals(superclass.getName());
+		return clazz.isRecord();
 	}
 
 	/**
@@ -615,27 +613,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of a potentially inaccessible or nonexistent field.
-	 *
-	 * <p>If the field does not exist or the value of the field is {@code null},
-	 * an empty {@link Optional} will be returned.
-	 *
-	 * @param clazz the class where the field is declared; never {@code null}
-	 * @param fieldName the name of the field; never {@code null} or empty
-	 * @param instance the instance from where the value is to be read; may
-	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Field, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Class, String, Object)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static <T> Optional<Object> readFieldValue(Class<T> clazz, String fieldName, T instance) {
-		return tryToReadFieldValue(clazz, fieldName, instance).toOptional();
-	}
-
-	/**
 	 * Try to read the value of a potentially inaccessible or nonexistent field.
 	 *
 	 * <p>If the field does not exist or an exception occurs while reading it, a
@@ -661,25 +638,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Read the value of the supplied static field, making it accessible if
-	 * necessary and {@linkplain ExceptionUtils#throwAsUncheckedException masking}
-	 * any checked exception as an unchecked exception.
-	 *
-	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
-	 * will be returned.
-	 *
-	 * @param field the field to read; never {@code null}
-	 * @see #readFieldValue(Field, Object)
-	 * @see #readFieldValue(Class, String, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Field)} instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Object> readFieldValue(Field field) {
-		return tryToReadFieldValue(field).toOptional();
-	}
-
-	/**
 	 * Try to read the value of a potentially inaccessible static field.
 	 *
 	 * <p>If an exception occurs while reading the field, a failed {@link Try}
@@ -693,28 +651,6 @@ public final class ReflectionUtils {
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Object> tryToReadFieldValue(Field field) {
 		return tryToReadFieldValue(field, null);
-	}
-
-	/**
-	 * Read the value of the supplied field, making it accessible if necessary
-	 * and {@linkplain ExceptionUtils#throwAsUncheckedException masking} any
-	 * checked exception as an unchecked exception.
-	 *
-	 * <p>If the value of the field is {@code null}, an empty {@link Optional}
-	 * will be returned.
-	 *
-	 * @param field the field to read; never {@code null}
-	 * @param instance the instance from which the value is to be read; may
-	 * be {@code null} for a static field
-	 * @see #readFieldValue(Field)
-	 * @see #readFieldValue(Class, String, Object)
-	 * @deprecated Please use {@link #tryToReadFieldValue(Field, Object)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Object> readFieldValue(Field field, Object instance) {
-		return tryToReadFieldValue(field, instance).toOptional();
 	}
 
 	/**
@@ -790,41 +726,12 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * @see org.junit.platform.commons.support.ReflectionSupport#loadClass(String)
-	 * @deprecated Please use {@link #tryToLoadClass(String)} instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Class<?>> loadClass(String name) {
-		return tryToLoadClass(name).toOptional();
-	}
-
-	/**
 	 * @since 1.4
 	 * @see org.junit.platform.commons.support.ReflectionSupport#tryToLoadClass(String)
 	 */
 	@API(status = INTERNAL, since = "1.4")
 	public static Try<Class<?>> tryToLoadClass(String name) {
 		return tryToLoadClass(name, ClassLoaderUtils.getDefaultClassLoader());
-	}
-
-	/**
-	 * Load a class by its <em>primitive name</em> or <em>fully qualified name</em>,
-	 * using the supplied {@link ClassLoader}.
-	 *
-	 * <p>See {@link org.junit.platform.commons.support.ReflectionSupport#loadClass(String)}
-	 * for details on support for class names for arrays.
-	 *
-	 * @param name the name of the class to load; never {@code null} or blank
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
-	 * @see #loadClass(String)
-	 * @deprecated Please use {@link #tryToLoadClass(String, ClassLoader)}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	public static Optional<Class<?>> loadClass(String name, ClassLoader classLoader) {
-		return tryToLoadClass(name, classLoader).toOptional();
 	}
 
 	/**
@@ -1487,29 +1394,6 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		return findMethod(clazz, predicate).isPresent();
-	}
-
-	/**
-	 * Get the {@link Method} in the specified class with the specified name
-	 * and parameter types.
-	 *
-	 * <p>This method delegates to {@link Class#getMethod(String, Class...)} but
-	 * swallows any exception thrown.
-	 *
-	 * @param clazz the class in which to search for the method; never {@code null}
-	 * @param methodName the name of the method to get; never {@code null} or blank
-	 * @param parameterTypes the parameter types of the method; may be {@code null}
-	 * or empty
-	 * @return an {@code Optional} containing the method; never {@code null} but
-	 * empty if the invocation of {@code Class#getMethod()} throws a
-	 * {@link NoSuchMethodException}
-	 * @deprecated Please use {@link #tryToGetMethod(Class, String, Class[])}
-	 * instead.
-	 */
-	@API(status = DEPRECATED, since = "1.4")
-	@Deprecated
-	static Optional<Method> getMethod(Class<?> clazz, String methodName, Class<?>... parameterTypes) {
-		return tryToGetMethod(clazz, methodName, parameterTypes).toOptional();
 	}
 
 	/**

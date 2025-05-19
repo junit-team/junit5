@@ -16,3 +16,7 @@ dependencies {
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
 }
+
+tasks.compileJava {
+	options.compilerArgs.add("-Xlint:-module") // due to qualified exports
+}

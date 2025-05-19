@@ -10,7 +10,7 @@ plugins {
 	id("junitbuild.temp-maven-repo")
 }
 
-description = "JUnit 5"
+description = "JUnit"
 
 val license by extra(License(
 	name = "Eclipse Public License v2.0",
@@ -26,7 +26,6 @@ val platformProjects by extra(listOf(
 		projects.junitPlatformJfr,
 		projects.junitPlatformLauncher,
 		projects.junitPlatformReporting,
-		projects.junitPlatformRunner,
 		projects.junitPlatformSuite,
 		projects.junitPlatformSuiteApi,
 		projects.junitPlatformSuiteCommons,

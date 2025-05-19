@@ -39,7 +39,7 @@ class ManifestTests {
 	@ParameterizedTest
 	@MethodSource("platform.tooling.support.Helper#loadModuleDirectoryNames")
 	void manifestEntriesAdhereToConventions(String module) throws Exception {
-		var version = Helper.version(module);
+		var version = Helper.version();
 		var jarFile = MavenRepo.jar(module).toFile();
 		try (var jar = new Jar(jarFile)) {
 			var manifest = jar.getManifest();
@@ -56,10 +56,8 @@ class ManifestTests {
 			assertValue(attributes, "Bundle-SymbolicName", module);
 			assertValue(attributes, "Bundle-Version",
 				MavenVersion.parseMavenString(version).getOSGiVersion().toString());
-			switch (module) {
-				case "junit-platform-commons" -> assertValue(attributes, "Multi-Release", "true");
-				case "junit-platform-console" -> assertValue(attributes, "Main-Class",
-					"org.junit.platform.console.ConsoleLauncher");
+			if (module.equals("junit-platform-console")) {
+				assertValue(attributes, "Main-Class", "org.junit.platform.console.ConsoleLauncher");
 			}
 			var domain = Domain.domain(manifest);
 			domain.getExportPackage().forEach((pkg, attrs) -> {

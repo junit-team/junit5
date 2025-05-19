@@ -44,7 +44,6 @@ import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
  *
  * @since 1.0
  */
-@SuppressWarnings("deprecation")
 class LauncherConfigurationParametersTests {
 
 	private static final String CONFIG_FILE_NAME = "test-junit-platform.properties";
@@ -79,7 +78,6 @@ class LauncherConfigurationParametersTests {
 	@Test
 	void noConfigParams() {
 		ConfigurationParameters configParams = fromMap(Map.of());
-		assertThat(configParams.size()).isEqualTo(0);
 		assertThat(configParams.get(KEY)).isEmpty();
 		assertThat(configParams.keySet()).doesNotContain(KEY);
 		assertThat(configParams.toString()).doesNotContain(KEY);

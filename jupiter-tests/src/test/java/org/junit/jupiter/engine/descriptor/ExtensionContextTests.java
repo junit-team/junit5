@@ -431,7 +431,7 @@ public class ExtensionContextTests {
 	@MethodSource("extensionContextFactories")
 	void configurationParameter(Function<JupiterConfiguration, ? extends ExtensionContext> extensionContextFactory) {
 		JupiterConfiguration echo = new DefaultJupiterConfiguration(new EchoParameters(),
-			dummyOutputDirectoryProvider());
+			dummyOutputDirectoryProvider(), mock());
 		var key = "123";
 		var expected = Optional.of(key);
 
@@ -541,12 +541,6 @@ public class ExtensionContextTests {
 		@Override
 		public Optional<Boolean> getBoolean(String key) {
 			throw new UnsupportedOperationException("getBoolean(String) should not be called");
-		}
-
-		@SuppressWarnings({ "deprecation", "RedundantSuppression" })
-		@Override
-		public int size() {
-			throw new UnsupportedOperationException("size() should not be called");
 		}
 
 		@Override

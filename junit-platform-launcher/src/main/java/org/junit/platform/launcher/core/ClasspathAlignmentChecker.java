@@ -43,7 +43,6 @@ class ClasspathAlignmentChecker {
 		"org.junit.platform.jfr", //
 		"org.junit.platform.launcher", //
 		"org.junit.platform.reporting", //
-		"org.junit.platform.runner", //
 		"org.junit.platform.suite.api", //
 		"org.junit.platform.suite.commons", //
 		"org.junit.platform.suite.engine", //
@@ -69,9 +68,6 @@ class ClasspathAlignmentChecker {
 				.forEach(pkg -> {
 					String version = pkg.getImplementationVersion();
 					if (version != null) {
-						if (pkg.getName().startsWith("org.junit.platform") && version.contains(".")) {
-							version = platformToJupiterVersion(version);
-						}
 						packagesByVersions.computeIfAbsent(version, __ -> new ArrayList<>()).add(pkg);
 					}
 				});
@@ -83,8 +79,7 @@ class ClasspathAlignmentChecker {
 					.append("not being properly aligned. ") //
 					.append(lineBreak) //
 					.append("Please ensure consistent versions are used (see https://junit.org/junit5/docs/") //
-					.append(platformToJupiterVersion(
-						ClasspathAlignmentChecker.class.getPackage().getImplementationVersion())) //
+					.append(ClasspathAlignmentChecker.class.getPackage().getImplementationVersion()) //
 					.append("/user-guide/#dependency-metadata).") //
 					.append(lineBreak) //
 					.append("The following conflicting versions were detected:").append(lineBreak);
@@ -96,11 +91,6 @@ class ClasspathAlignmentChecker {
 			return Optional.of(new JUnitException(message.toString(), error));
 		}
 		return Optional.empty();
-	}
-
-	private static String platformToJupiterVersion(String version) {
-		int majorVersion = Integer.parseInt(version.substring(0, version.indexOf("."))) + 4;
-		return majorVersion + version.substring(version.indexOf("."));
 	}
 
 	@SuppressWarnings({ "deprecation", "RedundantSuppression" }) // only called when running on JDK 8

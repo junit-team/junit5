@@ -14,6 +14,7 @@ dependencies {
 	implementation(libs.plugins.foojayResolver.markerCoordinates)
 	implementation(libs.plugins.jmh.markerCoordinates)
 	implementation(libs.plugins.jreleaser.markerCoordinates)
+	implementation(libs.plugins.openrewrite.markerCoordinates)
 	implementation(libs.plugins.shadow.markerCoordinates)
 	implementation(libs.plugins.spotless.markerCoordinates)
 	implementation(libs.plugins.versions.markerCoordinates)

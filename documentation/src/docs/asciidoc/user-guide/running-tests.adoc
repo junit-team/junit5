@@ -13,7 +13,7 @@ however, that it is recommended to use IDEA 2017.3 or newer since more recent ve
 IDEA download the following JARs automatically based on the API version used in the
 project: `junit-platform-launcher`, `junit-jupiter-engine`, and `junit-vintage-engine`.
 
-In order to use a different JUnit 5 version (e.g., {jupiter-version}), you may need to
+In order to use a different JUnit version (e.g., {version}), you may need to
 include the corresponding versions of the `junit-platform-launcher`,
 `junit-jupiter-engine`, and `junit-vintage-engine` JARs in the classpath.
 
@@ -21,7 +21,7 @@ include the corresponding versions of the `junit-platform-launcher`,
 [source,groovy]
 [subs=attributes+]
 ----
-testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+testImplementation(platform("org.junit:junit-bom:{version}"))
 testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
@@ -54,7 +54,7 @@ testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>junit-bom</artifactId>
-			<version>{bom-version}</version>
+			<version>{version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -68,8 +68,8 @@ testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
 Eclipse IDE offers support for the JUnit Platform since the Eclipse Oxygen.1a (4.7.1a)
 release.
 
-For more information on using JUnit 5 in Eclipse consult the official _Eclipse support
-for JUnit 5_ section of the
+For more information on using JUnit Platform in Eclipse consult the official _Eclipse
+support for JUnit 5_ section of the
 https://www.eclipse.org/eclipse/news/4.7.1a/#junit-5-support[Eclipse Project Oxygen.1a
 (4.7.1a) - New and Noteworthy] documentation.
 
@@ -101,10 +101,8 @@ documentation.
 ==== Other IDEs
 
 If you are using an editor or IDE other than one of those listed in the previous sections,
-the JUnit team provides two alternative solutions to assist you in using JUnit 5. You can
-use the <<running-tests-console-launcher>> manually -- for example, from the command line
--- or execute tests with a <<running-tests-junit-platform-runner,JUnit 4 based Runner>> if
-your IDE has built-in support for JUnit 4.
+and it doesn't support running tests on the JUnit Platform, you can use the
+<<running-tests-console-launcher>> to run them from the command line.
 
 [[running-tests-build]]
 === Build Support
@@ -153,14 +151,14 @@ of JUnit used in your Spring Boot application.
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
 recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
-versions of all JUnit 5 artifacts.
+versions of all JUnit artifacts.
 
 [source,groovy,indent=0]
 [subs=attributes+]
 .Explicit platform dependency on the BOM
 ----
 dependencies {
-	testImplementation(platform("org.junit:junit-bom:{bom-version}"))
+	testImplementation(platform("org.junit:junit-bom:{version}"))
 	testImplementation("org.junit.jupiter:junit-jupiter")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
@@ -173,7 +171,7 @@ Since all JUnit artifacts declare a
 https://docs.gradle.org/current/userguide/platforms.html[platform] dependency on the BOM,
 you usually don't need to declare an explicit dependency on it yourself. Instead, it's
 sufficient to declare _one_ regular dependency that includes a version number. Gradle will
-then pull in the BOM automatically so you can omit the version for all other JUnit 5
+then pull in the BOM automatically so you can omit the version for all other JUnit
 artifacts.
 
 [source,groovy,indent=0]
@@ -181,7 +179,7 @@ artifacts.
 .Implicit platform dependency on the BOM
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}") // <1>
+	testImplementation("org.junit.jupiter:junit-jupiter:{version}") // <1>
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher") // <2>
 }
 ----
@@ -212,7 +210,7 @@ on the dependency-aggregating JUnit Jupiter artifact similar to the following.
 [subs=attributes+]
 ----
 dependencies {
-	testImplementation("org.junit.jupiter:junit-jupiter:{jupiter-version}")
+	testImplementation("org.junit.jupiter:junit-jupiter:{version}")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
@@ -228,7 +226,7 @@ support.
 testing {
 	suites {
 		named<JvmTestSuite>("test") {
-			useJUnitJupiter("{jupiter-version}")
+			useJUnitJupiter("{version}")
 		}
 	}
 }
@@ -241,7 +239,7 @@ testing {
 testing {
 	suites {
 		test {
-			useJUnitJupiter("{jupiter-version}")
+			useJUnitJupiter("{version}")
 		}
 	}
 }
@@ -256,7 +254,7 @@ implementation similar to the following.
 ----
 dependencies {
 	testImplementation("junit:junit:{junit4-version}")
-	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{vintage-version}")
+	testRuntimeOnly("org.junit.vintage:junit-vintage-engine:{version}")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 ----
@@ -320,27 +318,9 @@ for executing tests on the JUnit Platform. The `pom.xml` file in the
 and can serve as a starting point for configuring your Maven build.
 
 [WARNING]
-.Use recent version of Maven Surefire/Failsafe to avoid interoperability issues
+.Minimum required version of Maven Surefire/Failsafe
 ====
-To avoid interoperability issues, it is recommended to use a recent version of Maven
-Surefire/Failsafe (3.0.0 or later) because it automatically aligns the version of the
-JUnit Platform Launcher that is used with the JUnit Platform version found on the test
-runtime classpath.
-
-If you are using a version older than 3.0.0-M4, you can work around the missing alignment
-by adding a test dependency on the matching version of the JUnit Platform Launcher to your
-Maven build as follows.
-
-[source,xml]
-[subs=attributes+]
-----
-<dependency>
-    <groupId>org.junit.platform</groupId>
-    <artifactId>junit-platform-launcher</artifactId>
-    <version>{platform-version}</version>
-    <scope>test</scope>
-</dependency>
-----
+As of JUnit 6.0, the minimum required version of Maven Surefire/Failsafe is 3.0.0.
 ====
 
 [[running-tests-build-maven-bom]]
@@ -348,7 +328,7 @@ Maven build as follows.
 
 Unless you're using Spring Boot which defines its own way of managing dependencies, it is
 recommended to use the JUnit Platform <<dependency-metadata-junit-bom>> to align the
-versions of all JUnit 5 artifacts.
+versions of all JUnit artifacts.
 
 [source,xml,indent=0]
 [subs=attributes+]
@@ -358,7 +338,7 @@ versions of all JUnit 5 artifacts.
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>junit-bom</artifactId>
-			<version>{bom-version}</version>
+			<version>{version}</version>
 			<type>pom</type>
 			<scope>import</scope>
 		</dependency>
@@ -391,7 +371,7 @@ following.
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>{jupiter-version}</version> <!-- can be omitted when using the BOM -->
+			<version>{version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
@@ -430,7 +410,7 @@ long as you configure `test` scoped dependencies on JUnit 4 and the JUnit Vintag
 		<dependency>
 			<groupId>org.junit.vintage</groupId>
 			<artifactId>junit-vintage-engine</artifactId>
-			<version>{vintage-version}</version> <!-- can be omitted when using the BOM -->
+			<version>{version}</version> <!-- can be omitted when using the BOM -->
 			<scope>test</scope>
 		</dependency>
 		<!-- ... -->
@@ -659,7 +639,7 @@ With Gradle you can override the JUnit Jupiter version by including the followin
 [source,groovy,indent=0]
 [subs=attributes+]
 ----
-	ext['junit-jupiter.version'] = '{jupiter-version}'
+	ext['junit-jupiter.version'] = '{version}'
 ----
 
 With Maven you can override the JUnit Jupiter version by including the following in your
@@ -669,7 +649,7 @@ With Maven you can override the JUnit Jupiter version by including the following
 [subs=attributes+]
 ----
 	<properties>
-		<junit-jupiter.version>{jupiter-version}</junit-jupiter.version>
+		<junit-jupiter.version>{version}</junit-jupiter.version>
 	</properties>
 ----
 
@@ -680,7 +660,7 @@ The `{ConsoleLauncher}` is a command-line Java application that lets you launch 
 Platform from the console. For example, it can be used to run JUnit Vintage and JUnit
 Jupiter tests and print test execution results to the console.
 
-An executable _Fat JAR_ (`junit-platform-console-standalone-{platform-version}.jar`) that
+An executable _Fat JAR_ (`junit-platform-console-standalone-{version}.jar`) that
 contains the contents of all of its dependencies is published in the {Maven_Central}
 repository under the
 https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone[junit-platform-console-standalone]
@@ -711,7 +691,7 @@ standalone `ConsoleLauncher` as shown below.
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar execute <OPTIONS>
+$ java -jar junit-platform-console-standalone-{version}.jar execute <OPTIONS>
 
 ├─ JUnit Vintage
 │  └─ example.JUnit4Tests
@@ -748,12 +728,6 @@ all jars in a directory):
 $ java -cp classes:testlib/* org.junit.platform.console.ConsoleLauncher <OPTIONS>
 ----
 
-.Exit Code
-NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
-failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
-supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
-is `0`.
-
 [[running-tests-console-launcher-options]]
 ==== Subcommands and Options
 
@@ -772,6 +746,12 @@ include::{consoleLauncherDiscoverOptionsFile}[]
 
 [[running-tests-console-launcher-options-executing-tests]]
 ===== Executing tests
+
+.Exit Code
+NOTE: The `{ConsoleLauncher}` exits with a status code of `1` if any containers or tests
+failed. If no tests are discovered and the `--fail-if-no-tests` command-line option is
+supplied, the `ConsoleLauncher` exits with a status code of `2`. Otherwise, the exit code
+is `0`.
 
 ----
 include::{consoleLauncherExecuteOptionsFile}[]
@@ -820,7 +800,7 @@ files using the `--redirect-stdout` and `--redirect-stderr` options:
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+$ java -jar junit-platform-console-standalone-{version}.jar <OPTIONS> \
   --redirect-stdout=stdout.txt \
   --redirect-stderr=stderr.txt
 ----
@@ -853,122 +833,6 @@ TEST = 34
 DYNAMIC = 35
 REPORTED = 37
 ----
-
-
-[[running-tests-junit-platform-runner]]
-=== Using JUnit 4 to run the JUnit Platform
-
-[WARNING]
-.The `JUnitPlatform` runner has been deprecated
-====
-The `JUnitPlatform` runner was developed by the JUnit team as an interim solution for
-running test suites and tests on the JUnit Platform in a JUnit 4 environment.
-
-In recent years, all mainstream build tools and IDEs provide built-in support for running
-tests directly on the JUnit Platform.
-
-In addition, the introduction of `@Suite` support provided by the
-`junit-platform-suite-engine` module makes the `JUnitPlatform` runner obsolete. See
-<<junit-platform-suite-engine>> for details.
-
-The `JUnitPlatform` runner and `@UseTechnicalNames` annotation have therefore been
-deprecated in JUnit Platform 1.8 and will be removed in JUnit Platform 2.0.
-
-If you are using the `JUnitPlatform` runner, please migrate to the `@Suite` support.
-====
-
-The `JUnitPlatform` runner is a JUnit 4 based `Runner` which enables you to run any test
-whose programming model is supported on the JUnit Platform in a JUnit 4 environment --
-for example, a JUnit Jupiter test class.
-
-Annotating a class with `@RunWith(JUnitPlatform.class)` allows it to be run with IDEs and
-build systems that support JUnit 4 but do not yet support the JUnit Platform directly.
-
-NOTE: Since the JUnit Platform has features that JUnit 4 does not have, the runner is
-only able to support a subset of the JUnit Platform functionality, especially with regard
-to reporting (see <<running-tests-junit-platform-runner-technical-names>>).
-
-[[running-tests-junit-platform-runner-setup]]
-==== Setup
-
-You need the following artifacts and their dependencies on the classpath. See
-<<dependency-metadata>> for details regarding group IDs, artifact IDs, and versions.
-
-[[running-tests-junit-platform-runner-setup-explicit-dependencies]]
-===== Explicit Dependencies
-
-* `junit-platform-runner` in _test_ scope: location of the `JUnitPlatform` runner
-* `junit-{junit4-version}.jar` in _test_ scope: to run tests using JUnit 4
-* `junit-jupiter-api` in _test_ scope: API for writing tests using JUnit Jupiter,
-  including `@Test`, etc.
-* `junit-jupiter-engine` in _test runtime_ scope: implementation of the `TestEngine` API
-  for JUnit Jupiter
-
-[[running-tests-junit-platform-runner-setup-transitive-dependencies]]
-===== Transitive Dependencies
-
-* `junit-platform-suite-api` in _test_ scope
-* `junit-platform-suite-commons` in _test_ scope
-* `junit-platform-launcher` in _test_ scope
-* `junit-platform-engine` in _test_ scope
-* `junit-platform-commons` in _test_ scope
-* `opentest4j` in _test_ scope
-
-[[running-tests-junit-platform-runner-technical-names]]
-==== Display Names vs. Technical Names
-
-To define a custom _display name_ for the class run via `@RunWith(JUnitPlatform.class)`
-annotate the class with `@SuiteDisplayName` and provide a custom value.
-
-By default, _display names_ will be used for test artifacts; however, when the
-`JUnitPlatform` runner is used to execute tests with a build tool such as Gradle or
-Maven, the generated test report often needs to include the _technical names_ of test
-artifacts — for example, fully qualified class names — instead of shorter display names
-like the simple name of a test class or a custom display name containing special
-characters. To enable technical names for reporting purposes, declare the
-`@UseTechnicalNames` annotation alongside `@RunWith(JUnitPlatform.class)`.
-
-Note that the presence of `@UseTechnicalNames` overrides any custom display name
-configured via `@SuiteDisplayName`.
-
-[[running-tests-junit-platform-runner-single-test]]
-==== Single Test Class
-
-One way to use the `JUnitPlatform` runner is to annotate a test class with
-`@RunWith(JUnitPlatform.class)` directly. Please note that the test methods in the
-following example are annotated with `org.junit.jupiter.api.Test` (JUnit Jupiter), not
-`org.junit.Test` (JUnit 4). Moreover, in this case the test class must be `public`;
-otherwise, some IDEs and build tools might not recognize it as a JUnit 4 test class.
-
-[source,java,indent=0]
-----
-include::{testDir}/example/JUnitPlatformClassDemo.java[tags=user_guide]
-----
-
-[[running-tests-junit-platform-runner-test-suite]]
-==== Test Suite
-
-If you have multiple test classes you can create a test suite as can be seen in the
-following example.
-
-[source,java,indent=0]
-----
-include::{testDir}/example/JUnitPlatformSuiteDemo.java[tags=user_guide]
-----
-
-The `JUnitPlatformSuiteDemo` will discover and run all tests in the `example` package and
-its subpackages. By default, it will only include test classes whose names either begin
-with `Test` or end with `Test` or `Tests`.
-
-.Additional Configuration Options
-NOTE: There are more configuration options for discovering and filtering tests than just
-`@SelectPackages`. Please consult the Javadoc of the `{suite-api-package}` package for
-further details.
-
-WARNING: Test classes and suites annotated with `@RunWith(JUnitPlatform.class)`
-**cannot** be executed directly on the JUnit Platform (or as a "JUnit 5" test as
-documented in some IDEs). Such classes and suites can only be executed using JUnit 4
-infrastructure.
 
 [[running-tests-discovery-selectors]]
 === Discovery Selectors
@@ -1255,7 +1119,7 @@ to a problem.
 In order to record Flight Recorder events generated while running tests, you need to:
 
 1. Ensure that you are using either Java 8 Update 262 or higher or Java 11 or later.
-2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{platform-version}.jar`)
+2. Provide the `org.junit.platform.jfr` module (`junit-platform-jfr-{version}.jar`)
    on the class-path or module-path at test runtime.
 3. Start flight recording when launching a test run. Flight Recorder can be started via
    java command line option:

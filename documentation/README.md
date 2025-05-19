@@ -1,6 +1,6 @@
-# JUnit 5 User Guide
+# JUnit User Guide
 
-This subproject contains the AsciiDoc sources for the JUnit 5 User Guide.
+This subproject contains the AsciiDoc sources for the JUnit User Guide.
 
 ## Structure
 

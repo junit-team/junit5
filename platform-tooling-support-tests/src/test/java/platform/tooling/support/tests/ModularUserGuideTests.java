@@ -53,7 +53,7 @@ class ModularUserGuideTests {
 
 			  requires org.junit.platform.engine;
 			  requires org.junit.platform.reporting;
-			  requires org.junit.platform.runner;
+			  requires org.junit.platform.suite;
 			  requires org.junit.platform.testkit;
 
 			  // Byte Buddy is used by AssertJ's soft assertions which are used by the Engine Test Kit

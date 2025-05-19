@@ -1,11 +1,10 @@
-org.junit.platform.engine@${platformVersion} jar:file:.+/junit-platform-engine-\d.+\.jar..module-info\.class
+org.junit.platform.engine@${version} jar:file:.+/junit-platform-engine-\d.+\.jar..module-info\.class
 exports org.junit.platform.engine
 exports org.junit.platform.engine.discovery
 exports org.junit.platform.engine.reporting
 exports org.junit.platform.engine.support.config
 exports org.junit.platform.engine.support.descriptor
 exports org.junit.platform.engine.support.discovery
-exports org.junit.platform.engine.support.filter
 exports org.junit.platform.engine.support.hierarchical
 exports org.junit.platform.engine.support.store
 requires java.base mandated

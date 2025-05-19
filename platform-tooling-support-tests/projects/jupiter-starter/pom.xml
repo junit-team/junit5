@@ -9,9 +9,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
-        <junit.platform.commons.version>${junit.platform.version}</junit.platform.commons.version>
+        <maven.compiler.release>17</maven.compiler.release>
+        <junit.platform.commons.version>${junit.version}</junit.platform.commons.version>
     </properties>
 
     <dependencies>
@@ -38,7 +37,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>${junit.bom.version}</version>
+                <version>${junit.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

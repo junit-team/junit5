@@ -1,4 +1,4 @@
-org.junit.jupiter.api@${jupiterVersion} jar:file:.+/junit-jupiter-api-\d.+\.jar..module-info\.class
+org.junit.jupiter.api@${version} jar:file:.+/junit-jupiter-api-\d.+\.jar..module-info\.class
 exports org.junit.jupiter.api
 exports org.junit.jupiter.api.condition
 exports org.junit.jupiter.api.extension
@@ -7,6 +7,7 @@ exports org.junit.jupiter.api.function
 exports org.junit.jupiter.api.io
 exports org.junit.jupiter.api.parallel
 requires java.base mandated
+requires kotlin.stdlib static
 requires org.apiguardian.api static transitive
 requires org.junit.platform.commons transitive
 requires org.opentest4j transitive
