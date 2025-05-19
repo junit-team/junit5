@@ -1,4 +1,4 @@
-org.junit.jupiter.params@${jupiterVersion} jar:file:.+/junit-jupiter-params-\d.+\.jar..module-info\.class
+org.junit.jupiter.params@${version} jar:file:.+/junit-jupiter-params-\d.+\.jar..module-info\.class
 exports org.junit.jupiter.params
 exports org.junit.jupiter.params.aggregator
 exports org.junit.jupiter.params.converter

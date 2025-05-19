@@ -63,7 +63,7 @@ using Gradle's Build Cache.
 .Groovy DSL
 ----
 dependencies {
-    testRuntimeOnly("org.junit.platform:junit-platform-reporting:{platform-version}")
+    testRuntimeOnly("org.junit.platform:junit-platform-reporting:{version}")
 }
 tasks.withType(Test).configureEach {
     def outputDir = reports.junitXml.outputLocation
@@ -81,7 +81,7 @@ tasks.withType(Test).configureEach {
 .Kotlin DSL
 ----
 dependencies {
-    testRuntimeOnly("org.junit.platform:junit-platform-reporting:{platform-version}")
+    testRuntimeOnly("org.junit.platform:junit-platform-reporting:{version}")
 }
 tasks.withType<Test>().configureEach {
     val outputDir = reports.junitXml.outputLocation
@@ -109,7 +109,7 @@ XML reports as follows:
 		<dependency>
 			<groupId>org.junit.platform</groupId>
 			<artifactId>junit-platform-reporting</artifactId>
-			<version>{platform-version}</version>
+			<version>{version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -140,7 +140,7 @@ output by setting the configuration parameters via `--config`:
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+$ java -jar junit-platform-console-standalone-{version}.jar <OPTIONS> \
   --config=junit.platform.reporting.open.xml.enabled=true \
   --config=junit.platform.reporting.output.dir=reports
 ----
@@ -150,7 +150,7 @@ classpath resource via the `--config-resource` option:
 
 [source,console,subs=attributes+]
 ----
-$ java -jar junit-platform-console-standalone-{platform-version}.jar <OPTIONS> \
+$ java -jar junit-platform-console-standalone-{version}.jar <OPTIONS> \
   --config-resource=configuration.properties
 ----
 

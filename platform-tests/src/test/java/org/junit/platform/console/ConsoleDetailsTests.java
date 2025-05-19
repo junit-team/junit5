@@ -87,6 +87,7 @@ class ConsoleDetailsTests {
 				for (var theme : Theme.values()) {
 					var caption = containerName + "-" + methodName + "-" + details + "-" + theme;
 					String[] args = { //
+							"execute", //
 							"--include-engine", "junit-jupiter", //
 							"--details", details.name(), //
 							"--details-theme", theme.name(), //
@@ -198,17 +199,7 @@ class ConsoleDetailsTests {
 
 	}
 
-	private static class Runner implements Executable {
-
-		private final String dirName;
-		private final String outName;
-		private final String[] args;
-
-		private Runner(String dirName, String outName, String... args) {
-			this.dirName = dirName;
-			this.outName = outName;
-			this.args = args;
-		}
+	private record Runner(String dirName, String outName, String... args) implements Executable {
 
 		@Override
 		public void execute() throws Throwable {

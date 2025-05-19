@@ -47,21 +47,6 @@ class ReflectionSupportTests {
 	final String instanceField = "instance";
 
 	@Test
-	@SuppressWarnings("deprecation")
-	void loadClassDelegates() {
-		assertEquals(ReflectionUtils.loadClass("-"), ReflectionSupport.loadClass("-"));
-		assertEquals(ReflectionUtils.loadClass("A"), ReflectionSupport.loadClass("A"));
-		assertEquals(ReflectionUtils.loadClass("java.nio.Bits"), ReflectionSupport.loadClass("java.nio.Bits"));
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void loadClassPreconditions() {
-		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.loadClass(null));
-		assertPreconditionViolationExceptionForString("Class name", () -> ReflectionSupport.loadClass(""));
-	}
-
-	@Test
 	void tryToLoadClassDelegates() {
 		assertEquals(ReflectionUtils.tryToLoadClass("-").toOptional(),
 			ReflectionSupport.tryToLoadClass("-").toOptional());

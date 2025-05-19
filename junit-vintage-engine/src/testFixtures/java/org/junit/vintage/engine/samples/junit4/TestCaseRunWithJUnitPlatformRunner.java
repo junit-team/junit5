@@ -17,7 +17,6 @@ import org.junit.runner.RunWith;
 /**
  * @since 4.12
  */
-@SuppressWarnings("deprecation")
 @RunWith(JUnitPlatform.class)
 @SelectClasses(PlainJUnit4TestCaseWithSingleTestWhichFails.class)
 public class TestCaseRunWithJUnitPlatformRunner {

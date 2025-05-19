@@ -421,7 +421,6 @@ class DefaultLauncherTests {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LauncherPassesEmptyConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -430,11 +429,9 @@ class DefaultLauncherTests {
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
 		assertThat(configurationParameters.get("key")).isNotPresent();
-		assertThat(configurationParameters.size()).isEqualTo(0);
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withConfigurationParameters_LauncherPassesPopulatedConfigurationParametersIntoTheExecutionRequest() {
 		var engine = new TestEngineSpy();
 
@@ -442,13 +439,11 @@ class DefaultLauncherTests {
 		launcher.execute(request().configurationParameter("key", "value").build());
 
 		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
-		assertThat(configurationParameters.size()).isEqualTo(1);
 		assertThat(configurationParameters.get("key")).isPresent();
 		assertThat(configurationParameters.get("key")).contains("value");
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	void withoutConfigurationParameters_LookupFallsBackToSystemProperty() {
 		System.setProperty(FOO, BAR);
 
@@ -459,7 +454,6 @@ class DefaultLauncherTests {
 			launcher.execute(request().build());
 
 			var configurationParameters = engine.requestForExecution.getConfigurationParameters();
-			assertThat(configurationParameters.size()).isEqualTo(0);
 			var optionalFoo = configurationParameters.get(FOO);
 			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
 			assertEquals(BAR, optionalFoo.get(), "foo property");
@@ -599,25 +593,6 @@ class DefaultLauncherTests {
 
 		var e = assertThrows(PreconditionViolationException.class, () -> launcher.execute(testPlan));
 		assertEquals("TestPlan must only be executed once", e.getMessage());
-	}
-
-	@Test
-	@SuppressWarnings("deprecation")
-	void testPlanThrowsExceptionWhenModified() {
-		TestEngine engine = new TestEngineSpy();
-		var launcher = createLauncher(engine);
-		var testPlan = launcher.discover(request().build());
-		var engineIdentifier = getOnlyElement(testPlan.getRoots());
-		var engineUniqueId = engineIdentifier.getUniqueIdObject();
-		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1);
-
-		var addedIdentifier = TestIdentifier.from(
-			new TestDescriptorStub(engineUniqueId.append("test", "test2"), "test2"));
-
-		var exception = assertThrows(JUnitException.class, () -> testPlan.add(addedIdentifier));
-		assertThat(exception).hasMessage("Unsupported attempt to modify the TestPlan was detected. "
-				+ "Please contact your IDE/tool vendor and request a fix or downgrade to JUnit 5.7.x (see https://github.com/junit-team/junit5/issues/1732 for details).");
-		assertThat(testPlan.getChildren(engineIdentifier)).hasSize(1).doesNotContain(addedIdentifier);
 	}
 
 	@Test

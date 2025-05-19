@@ -17,7 +17,7 @@ dependencies {
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)
-	testFixturesImplementation(projects.junitPlatformRunner)
+	testFixturesImplementation(projects.junitPlatformSuiteApi)
 
 	testImplementation(projects.junitPlatformLauncher)
 	testImplementation(projects.junitPlatformSuiteEngine)
@@ -30,6 +30,9 @@ dependencies {
 }
 
 tasks {
+	compileJava {
+		options.compilerArgs.add("-Xlint:-requires-automatic") // JUnit 4
+	}
 	compileTestFixturesGroovy {
 		javaLauncher = project.javaToolchains.launcherFor {
 			// Groovy 2.x (used for Spock tests) does not support current JDKs
@@ -39,7 +42,6 @@ tasks {
 	jar {
 		bundle {
 			val junit4Min = libs.versions.junit4Min.get()
-			val platformVersion: String by rootProject.extra
 			val version = project.version
 			bnd("""
 				# Import JUnit4 packages with a version
@@ -60,7 +62,7 @@ tasks {
 						version:Version="${'$'}{version_cleanup;$version}"
 				Require-Capability:\
 					org.junit.platform.launcher;\
-						filter:='(&(org.junit.platform.launcher=junit-platform-launcher)(version>=${'$'}{version_cleanup;$platformVersion})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;$platformVersion}})))';\
+						filter:='(&(org.junit.platform.launcher=junit-platform-launcher)(version>=${'$'}{version_cleanup;$version})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;$version}})))';\
 						effective:=active
 			""")
 		}

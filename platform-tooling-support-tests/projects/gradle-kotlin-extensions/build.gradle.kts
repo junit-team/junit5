@@ -1,4 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1
 
 plugins {
 	kotlin("jvm") version "2.1.21"
@@ -9,26 +11,26 @@ repositories {
 	mavenCentral()
 }
 
-val jupiterVersion: String by project
-val platformVersion: String by project
+val junitVersion: String by project
 
 dependencies {
-	testImplementation(kotlin("stdlib-jdk8"))
-	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+	testImplementation(kotlin("stdlib"))
+	testImplementation("org.junit.jupiter:junit-jupiter:$junitVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
 }
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 
 tasks.withType<KotlinCompile>().configureEach {
-	kotlinOptions {
-		jvmTarget = "1.8"
-		apiVersion = "1.6"
-		languageVersion = "1.6"
+	compilerOptions {
+		jvmTarget = JVM_17
+		apiVersion = KOTLIN_2_1
+		languageVersion = KOTLIN_2_1
+		freeCompilerArgs.addAll("-Xskip-prerelease-check")
 	}
 }
 

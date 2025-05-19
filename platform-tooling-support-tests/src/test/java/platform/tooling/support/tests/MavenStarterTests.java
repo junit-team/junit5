@@ -58,7 +58,7 @@ class MavenStarterTests {
 		var result = runMaven(outputFiles, "verify");
 
 		assertThat(result.stdOutLines()).contains("[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0");
-		assertThat(result.stdOut()).contains("Using Java version: 1.8");
+		assertThat(result.stdOut()).contains("Using Java version: 17");
 
 		var testResultsDir = workspace.resolve("target/surefire-reports");
 		verifyContainsExpectedStartedOpenTestReport(testResultsDir, snapshot);
@@ -81,7 +81,7 @@ class MavenStarterTests {
 	}
 
 	private ProcessResult runMaven(OutputFiles outputFiles, String... extraArgs) throws InterruptedException {
-		var result = ProcessStarters.maven(Helper.getJavaHome(8).orElseThrow(TestAbortedException::new)) //
+		var result = ProcessStarters.maven(Helper.getJavaHome(17).orElseThrow(TestAbortedException::new)) //
 				.workingDir(workspace) //
 				.addArguments(localMavenRepo.toCliArgument(), "-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("-Dsnapshot.repo.url=" + mavenRepoProxy.getBaseUri()) //

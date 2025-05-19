@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine;
 
+import static kotlin.jvm.JvmClassMappingKt.getJavaClass;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectClass;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
@@ -29,6 +30,8 @@ import org.junit.platform.testkit.engine.EngineDiscoveryResults;
 import org.junit.platform.testkit.engine.EngineExecutionResults;
 import org.junit.platform.testkit.engine.EngineTestKit;
 
+import kotlin.reflect.KClass;
+
 /**
  * Abstract base class for tests involving the {@link JupiterTestEngine}.
  *
@@ -37,6 +40,10 @@ import org.junit.platform.testkit.engine.EngineTestKit;
 public abstract class AbstractJupiterTestEngineTests {
 
 	private final JupiterTestEngine engine = new JupiterTestEngine();
+
+	protected EngineExecutionResults executeTestsForClass(KClass<?> testClass) {
+		return executeTestsForClass(getJavaClass(testClass));
+	}
 
 	protected EngineExecutionResults executeTestsForClass(Class<?> testClass) {
 		return executeTests(selectClass(testClass));

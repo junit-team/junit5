@@ -20,8 +20,7 @@ import org.apiguardian.api.API;
  * @since 1.5
  */
 @API(status = STABLE, since = "1.5")
-@SuppressWarnings({ "deprecation", "exports" })
-public class PreconditionViolationException extends org.junit.platform.commons.util.PreconditionViolationException {
+public class PreconditionViolationException extends JUnitException {
 
 	private static final long serialVersionUID = 1L;
 

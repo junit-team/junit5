@@ -1,4 +1,4 @@
-org.junit.platform.testkit@${platformVersion} jar:file:.+/junit-platform-testkit-\d.+\.jar..module-info\.class
+org.junit.platform.testkit@${version} jar:file:.+/junit-platform-testkit-\d.+\.jar..module-info\.class
 exports org.junit.platform.testkit.engine
 requires java.base mandated
 requires org.apiguardian.api static transitive

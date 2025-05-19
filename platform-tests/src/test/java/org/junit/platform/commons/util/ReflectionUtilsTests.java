@@ -30,7 +30,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.findMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.findMethods;
 import static org.junit.platform.commons.util.ReflectionUtils.invokeMethod;
 import static org.junit.platform.commons.util.ReflectionUtils.isWideningConversion;
-import static org.junit.platform.commons.util.ReflectionUtils.readFieldValue;
 import static org.junit.platform.commons.util.ReflectionUtils.readFieldValues;
 import static org.junit.platform.commons.util.ReflectionUtils.tryToReadFieldValue;
 
@@ -786,12 +785,6 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
-		@SuppressWarnings("deprecation")
-		void loadClassWhenClassNotFoundException() {
-			assertThat(ReflectionUtils.loadClass("foo.bar.EnigmaClassThatDoesNotExist")).isEmpty();
-		}
-
-		@Test
 		void tryToLoadClassWhenClassNotFoundException() {
 			assertThrows(ClassNotFoundException.class,
 				() -> ReflectionUtils.tryToLoadClass("foo.bar.EnigmaClassThatDoesNotExist").get());
@@ -809,13 +802,6 @@ class ReflectionUtilsTests {
 			// test to pass on CI servers with limited resources.
 			assertTimeoutPreemptively(ofMillis(500), () -> assertThrows(ClassNotFoundException.class,
 				() -> ReflectionUtils.tryToLoadClass(className).get()));
-		}
-
-		@Test
-		@SuppressWarnings("deprecation")
-		void loadClass() {
-			var optional = ReflectionUtils.loadClass(Integer.class.getName());
-			assertThat(optional).contains(Integer.class);
 		}
 
 		@Test
@@ -1922,13 +1908,6 @@ class ReflectionUtilsTests {
 	class ReadFieldTests {
 
 		@Test
-		@SuppressWarnings("deprecation")
-		void readFieldValueOfNonexistentStaticField() {
-			assertThat(readFieldValue(MyClass.class, "doesNotExist", null)).isNotPresent();
-			assertThat(readFieldValue(MySubClass.class, "staticField", null)).isNotPresent();
-		}
-
-		@Test
 		void tryToReadFieldValueOfNonexistentStaticField() {
 			assertThrows(NoSuchFieldException.class,
 				() -> tryToReadFieldValue(MyClass.class, "doesNotExist", null).get());
@@ -1937,28 +1916,11 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
-		@SuppressWarnings("deprecation")
-		void readFieldValueOfNonexistentInstanceField() {
-			assertThat(readFieldValue(MyClass.class, "doesNotExist", new MyClass(42))).isNotPresent();
-			assertThat(readFieldValue(MyClass.class, "doesNotExist", new MySubClass(42))).isNotPresent();
-		}
-
-		@Test
 		void tryToReadFieldValueOfNonexistentInstanceField() {
 			assertThrows(NoSuchFieldException.class,
 				() -> tryToReadFieldValue(MyClass.class, "doesNotExist", new MyClass(42)).get());
 			assertThrows(NoSuchFieldException.class,
 				() -> tryToReadFieldValue(MyClass.class, "doesNotExist", new MySubClass(42)).get());
-		}
-
-		@Test
-		@SuppressWarnings("deprecation")
-		void readFieldValueOfExistingStaticField() throws Exception {
-			assertThat(readFieldValue(MyClass.class, "staticField", null)).contains(42);
-
-			var field = MyClass.class.getDeclaredField("staticField");
-			assertThat(readFieldValue(field)).contains(42);
-			assertThat(readFieldValue(field, null)).contains(42);
 		}
 
 		@Test
@@ -1971,33 +1933,18 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
-		@SuppressWarnings("deprecation")
-		void readFieldValueOfExistingInstanceField() throws Exception {
-			var instance = new MyClass(42);
-			assertThat(readFieldValue(MyClass.class, "instanceField", instance)).contains(42);
-
-			var field = MyClass.class.getDeclaredField("instanceField");
-			assertThat(readFieldValue(field, instance)).contains(42);
-		}
-
-		@Test
-		@SuppressWarnings("deprecation")
-		void attemptToReadFieldValueOfExistingInstanceFieldAsStaticField() throws Exception {
-			var field = MyClass.class.getDeclaredField("instanceField");
-			Exception exception = assertThrows(PreconditionViolationException.class, () -> readFieldValue(field, null));
-			assertThat(exception)//
-					.hasMessageStartingWith("Cannot read non-static field")//
-					.hasMessageEndingWith("on a null instance.");
-		}
-
-		@Test
 		void tryToReadFieldValueOfExistingInstanceField() throws Exception {
 			var instance = new MyClass(42);
 			assertThat(tryToReadFieldValue(MyClass.class, "instanceField", instance).get()).isEqualTo(42);
 
 			var field = MyClass.class.getDeclaredField("instanceField");
 			assertThat(tryToReadFieldValue(field, instance).get()).isEqualTo(42);
-			assertThrows(PreconditionViolationException.class, () -> tryToReadFieldValue(field, null).get());
+
+			var exception = assertThrows(PreconditionViolationException.class,
+				() -> tryToReadFieldValue(field, null).get());
+			assertThat(exception)//
+					.hasMessageStartingWith("Cannot read non-static field")//
+					.hasMessageEndingWith("on a null instance.");
 		}
 
 	}

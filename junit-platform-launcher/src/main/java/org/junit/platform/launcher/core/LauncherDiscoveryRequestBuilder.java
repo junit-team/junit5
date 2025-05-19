@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.launcher.LauncherConstants.OUTPUT_DIR_PROPERTY_NAME;
@@ -122,12 +121,7 @@ public final class LauncherDiscoveryRequestBuilder {
 		return new LauncherDiscoveryRequestBuilder();
 	}
 
-	/**
-	 * @deprecated Use {@link #request()}
-	 */
-	@API(status = DEPRECATED, since = "1.8")
-	@Deprecated
-	public LauncherDiscoveryRequestBuilder() {
+	private LauncherDiscoveryRequestBuilder() {
 	}
 
 	/**

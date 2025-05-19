@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.reporting;
 
-import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.time.LocalDateTime;
@@ -36,12 +35,7 @@ public final class ReportEntry {
 	private final LocalDateTime timestamp = LocalDateTime.now();
 	private final Map<String, String> keyValuePairs = new LinkedHashMap<>();
 
-	/**
-	 * @deprecated Use {@link #from(String, String)} or {@link #from(Map)}
-	 */
-	@API(status = DEPRECATED, since = "1.8")
-	@Deprecated
-	public ReportEntry() {
+	private ReportEntry() {
 	}
 
 	/**

@@ -1,4 +1,4 @@
-org.junit.platform.console@${platformVersion} jar:file:.+/junit-platform-console-\d.+\.jar..module-info\.class
+org.junit.platform.console@${version} jar:file:.+/junit-platform-console-\d.+\.jar..module-info\.class
 requires java.base mandated
 requires org.apiguardian.api static
 requires org.junit.platform.commons

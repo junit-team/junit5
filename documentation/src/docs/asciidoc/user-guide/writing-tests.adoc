@@ -271,7 +271,7 @@ lifecycle methods. For further information on runtime semantics, see
 <<extensions-execution-order-wrapping-behavior>>.
 
 [source,java,indent=0]
-.A standard test class
+.A standard Java test class
 ----
 include::{testDir}/example/StandardTests.java[tags=user_guide]
 ----
@@ -284,6 +284,22 @@ following example.
 ----
 include::{testRelease21Dir}/example/MyFirstJUnitJupiterRecordTests.java[tags=user_guide]
 ----
+
+Test and lifecycle methods may be written in Kotlin and may optionally use the `suspend`
+keyword for testing code using coroutines.
+
+[source,kotlin]
+.A test class written in Kotlin
+----
+include::{kotlinTestDir}/example/KotlinCoroutinesDemo.kt[tags=user_guide]
+----
+
+NOTE: Using suspending functions as test or lifecycle methods requires
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-stdlib[`kotlin-stdlib`],
+https://central.sonatype.com/artifact/org.jetbrains.kotlin/kotlin-reflect[`kotlin-reflect`],
+and
+https://central.sonatype.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-core[`kotlinx-coroutines-core`]
+to be present on the classpath or module path.
 
 [[writing-tests-display-names]]
 === Display Names
@@ -974,9 +990,6 @@ following built-in `MethodOrderer` implementations.
   specified via the `{Order}` annotation
 * `{MethodOrderer_Random}`: orders test methods _pseudo-randomly_ and supports
   configuration of a custom _seed_
-* `{MethodOrderer_Alphanumeric}`: sorts test methods _alphanumerically_ based on their
-  names and formal parameter lists; **deprecated in favor of `{MethodOrderer_MethodName}`,
-  to be removed in 6.0**
 
 NOTE: See also: <<extensions-execution-order-wrapping-behavior>>
 
@@ -1275,9 +1288,8 @@ include::{testDir}/example/TestInfoDemo.java[tags=user_guide]
   method, respectively. This allows them to be viewed in IDEs or included in reports.
 +
 In JUnit Jupiter you should use `TestReporter` where you used to print information to
-`stdout` or `stderr` in JUnit 4. Using `@RunWith(JUnitPlatform.class)` will output all
-reported entries to `stdout`. In addition, some IDEs print report entries to `stdout` or
-display them in the user interface for test results.
+`stdout` or `stderr` in JUnit 4. Some IDEs print report entries to `stdout` or display
+them in the user interface for test results.
 
 [source,java,indent=0]
 ----
@@ -3524,11 +3536,6 @@ You can inject multiple temporary directories by specifying multiple annotated p
 ----
 include::{testDir}/example/TempDirectoryDemo.java[tags=user_guide_multiple_directories]
 ----
-
-WARNING: To revert to the old behavior of using a single temporary directory for the
-entire test class or method (depending on which level the annotation is used), you can set
-the `junit.jupiter.tempdir.scope` configuration parameter to `per_context`. However,
-please note that this option is deprecated and will be removed in a future release.
 
 The following example stores a _shared_ temporary directory in a `static` field. This
 allows the same `sharedTempDir` to be used in all lifecycle methods and test methods of

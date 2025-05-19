@@ -22,9 +22,6 @@ dependencies {
 	osgiVerification(libs.openTestReporting.tooling.spi)
 }
 
-val jupiterVersion = rootProject.version
-val vintageVersion: String by project
-
 tasks {
 	jar {
 		manifest {
@@ -62,6 +59,7 @@ tasks {
 				Import-Package: \
 					$importAPIGuardian,\
 					kotlin.*;resolution:="optional",\
+					kotlinx.*;resolution:="optional",\
 					*
 				# Disable the APIGuardian plugin since everything was already
 				# processed, again because this is an aggregate jar
@@ -77,8 +75,8 @@ tasks {
 					"Implementation-Title" to project.name,
 					// Generate test engine version information in single shared manifest file.
 					// Pattern of key and value: `"Engine-Version-{YourTestEngine#getId()}": "47.11"`
-					"Engine-Version-junit-jupiter" to jupiterVersion,
-					"Engine-Version-junit-vintage" to vintageVersion,
+					"Engine-Version-junit-jupiter" to project.version,
+					"Engine-Version-junit-vintage" to project.version,
 					// Version-aware binaries are already included - set Multi-Release flag here.
 					// See https://openjdk.java.net/jeps/238 for details
 					// Note: the "jar --update ... --release X" command does not work with the
@@ -86,13 +84,5 @@ tasks {
 					"Multi-Release" to true
 			))
 		}
-	}
-
-	// This jar contains some Java 9 code
-	// (org.junit.platform.console.ConsoleLauncherToolProvider which implements
-	// java.util.spi.ToolProvider which is @since 9).
-	// So in order to resolve this, it can only run on Java 9
-	osgiProperties {
-		property("-runee", "JavaSE-9")
 	}
 }

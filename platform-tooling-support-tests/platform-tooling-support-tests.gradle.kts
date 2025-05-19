@@ -114,7 +114,7 @@ val normalizeMavenRepo by tasks.registering(Sync::class) {
 val archUnit by testing.suites.registering(JvmTestSuite::class) {
 	dependencies {
 		implementation(libs.archunit) {
-			because("checking the architecture of JUnit 5")
+			because("checking the architecture")
 		}
 		implementation(libs.apiguardian) {
 			because("we validate that public classes are annotated")
@@ -211,12 +211,12 @@ val test by testing.suites.getting(JvmTestSuite::class) {
 
 				develocity {
 					testDistribution {
-						requirements.add("jdk=8")
+						requirements.add("jdk=17")
 						this as TestDistributionConfigurationInternal
 						preferredMaxDuration = Duration.ofMillis(500)
 					}
 				}
-				jvmArgumentProviders += JavaHomeDir(project, 8, develocity.testDistribution.enabled)
+				jvmArgumentProviders += JavaHomeDir(project, 17, develocity.testDistribution.enabled)
 				jvmArgumentProviders += JavaHomeDir(project, 17, develocity.testDistribution.enabled)
 
 				val gradleJavaVersion = JavaVersion.current().majorVersion.toInt()

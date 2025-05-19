@@ -260,12 +260,6 @@ public class KitchenSinkExtension implements
 		InvocationInterceptor.super.interceptTestTemplateMethod(invocation, invocationContext, extensionContext);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public void interceptDynamicTest(Invocation<Void> invocation, ExtensionContext extensionContext) throws Throwable {
-		InvocationInterceptor.super.interceptDynamicTest(invocation, extensionContext);
-	}
-
 	@Override
 	public void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
 			ExtensionContext extensionContext) throws Throwable {

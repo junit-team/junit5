@@ -57,12 +57,6 @@ class InternalTestPlan extends TestPlan {
 	}
 
 	@Override
-	@SuppressWarnings("deprecation")
-	public void add(TestIdentifier testIdentifier) {
-		delegate.add(testIdentifier);
-	}
-
-	@Override
 	public void addInternal(TestIdentifier testIdentifier) {
 		delegate.addInternal(testIdentifier);
 	}
@@ -82,21 +76,9 @@ class InternalTestPlan extends TestPlan {
 		return delegate.getChildren(parent);
 	}
 
-	@SuppressWarnings("deprecation")
-	@Override
-	public Set<TestIdentifier> getChildren(String parentId) {
-		return delegate.getChildren(parentId);
-	}
-
 	@Override
 	public Set<TestIdentifier> getChildren(UniqueId parentId) {
 		return delegate.getChildren(parentId);
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public TestIdentifier getTestIdentifier(String uniqueId) throws PreconditionViolationException {
-		return delegate.getTestIdentifier(uniqueId);
 	}
 
 	@Override

@@ -65,9 +65,7 @@ class JarDescribeModuleTests {
 	}
 
 	private static String replaceVersionPlaceholders(String line) {
-		line = line.replace("${jupiterVersion}", Helper.version("junit-jupiter"));
-		line = line.replace("${vintageVersion}", Helper.version("junit-vintage"));
-		line = line.replace("${platformVersion}", Helper.version("junit-platform"));
+		line = line.replace("${version}", Helper.version());
 		return line;
 	}
 

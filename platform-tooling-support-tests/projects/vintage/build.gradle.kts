@@ -9,24 +9,23 @@ repositories {
 	mavenCentral()
 }
 
-val platformVersion: String by project
-val vintageVersion: String by project
+val junitVersion: String by project
 
 dependencies {
 	val junit4Version = System.getProperty("junit4Version", "4.12")
 	testImplementation("junit:junit:$junit4Version")
 
-	testImplementation("org.junit.vintage:junit-vintage-engine:$vintageVersion") {
+	testImplementation("org.junit.vintage:junit-vintage-engine:$junitVersion") {
 		exclude(group = "junit")
 		because("we want to override it to test against different versions")
 	}
 
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
 }
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(8)
+		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
 

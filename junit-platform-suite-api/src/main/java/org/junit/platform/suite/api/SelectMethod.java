@@ -29,7 +29,6 @@ import org.apiguardian.api.API;
  *
  * @since 1.10
  * @see Suite
- * @see org.junit.platform.runner.JUnitPlatform
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectMethod(String)
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectMethod(String, String, String)
  * @see org.junit.platform.engine.discovery.DiscoverySelectors#selectMethod(String, String, Class...)

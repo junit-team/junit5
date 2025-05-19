@@ -79,8 +79,6 @@ endif::[]
 // Platform Reporting
 :LegacyXmlReportGeneratingListener:          {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/legacy/xml/LegacyXmlReportGeneratingListener.html[LegacyXmlReportGeneratingListener]
 :OpenTestReportGeneratingListener:           {javadoc-root}/org.junit.platform.reporting/org/junit/platform/reporting/open/xml/OpenTestReportGeneratingListener.html[OpenTestReportGeneratingListener]
-// Platform Runner
-:JUnitPlatform-Runner:                       {javadoc-root}/org.junit.platform.runnner/org/junit/platform/runner/JUnitPlatform.html[JUnitPlatform]
 // Platform Suite
 :suite-api-package:                          {javadoc-root}/org.junit.platform.suite.api/org/junit/platform/suite/api/package-summary.html[org.junit.platform.suite.api]
 :junit-platform-suite-engine:                {javadoc-root}/org.junit.platform.suite.engine/org/junit/platform/suite/engine/package-summary.html[junit-platform-suite-engine]
@@ -118,7 +116,6 @@ endif::[]
 :ClassOrderer:                               {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/ClassOrderer.html[ClassOrderer]
 :ClassTemplate:                              {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/ClassTemplate.html[@ClassTemplate]
 :Disabled:                                   {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html[@Disabled]
-:MethodOrderer_Alphanumeric:                 {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.Alphanumeric.html[MethodOrderer.Alphanumeric]
 :MethodOrderer_DisplayName:                  {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.DisplayName.html[MethodOrderer.DisplayName]
 :MethodOrderer_MethodName:                   {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.MethodName.html[MethodOrderer.MethodName]
 :MethodOrderer_OrderAnnotation:              {javadoc-root}/org.junit.jupiter.api/org/junit/jupiter/api/MethodOrderer.OrderAnnotation.html[MethodOrderer.OrderAnnotation]
