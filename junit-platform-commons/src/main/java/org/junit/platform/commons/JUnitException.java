@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.io.Serial;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Base class for all {@link RuntimeException RuntimeExceptions} thrown
@@ -29,11 +30,11 @@ public class JUnitException extends RuntimeException {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public JUnitException(String message) {
+	public JUnitException(@Nullable String message) {
 		super(message);
 	}
 
-	public JUnitException(String message, Throwable cause) {
+	public JUnitException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 
@@ -41,7 +42,8 @@ public class JUnitException extends RuntimeException {
 	 * @since 1.13
 	 */
 	@API(status = MAINTAINED, since = "1.13")
-	protected JUnitException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	protected JUnitException(@Nullable String message, @Nullable Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
