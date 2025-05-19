@@ -17,7 +17,6 @@ import java.io.File;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -70,7 +69,7 @@ public class FileSelector implements DiscoverySelector {
 	 * @see #getRawPath()
 	 */
 	public Path getPath() {
-		return Paths.get(this.path);
+		return Path.of(this.path);
 	}
 
 	/**

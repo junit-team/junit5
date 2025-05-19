@@ -22,7 +22,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -202,9 +201,9 @@ class ConversionSupportTests {
 
 	@Test
 	void convertsStringToPath() {
-		assertConverts("path", Path.class, Paths.get("path"));
-		assertConverts("/path", Path.class, Paths.get("/path"));
-		assertConverts("/some/path", Path.class, Paths.get("/some/path"));
+		assertConverts("path", Path.class, Path.of("path"));
+		assertConverts("/path", Path.class, Path.of("/path"));
+		assertConverts("/some/path", Path.class, Path.of("/some/path"));
 	}
 
 	// --- java.lang -----------------------------------------------------------

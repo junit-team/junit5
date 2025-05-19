@@ -37,7 +37,6 @@ import java.io.File;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -118,7 +117,7 @@ class DiscoverySelectorsTests {
 			var selector = selectFile(path);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(new File(path), selector.getFile());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 		}
 
 		@Test
@@ -132,7 +131,7 @@ class DiscoverySelectorsTests {
 			var selector = selectFile(path, filePosition);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(new File(path), selector.getFile());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 			assertEquals(filePosition, selector.getPosition().orElseThrow());
 		}
 
@@ -149,7 +148,7 @@ class DiscoverySelectorsTests {
 			var selector = selectFile(file);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(file.getCanonicalFile(), selector.getFile());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 		}
 
 		@Test
@@ -166,7 +165,7 @@ class DiscoverySelectorsTests {
 			var selector = selectFile(file, filePosition);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(file.getCanonicalFile(), selector.getFile());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 			assertEquals(FilePosition.from(12, 34), selector.getPosition().orElseThrow());
 		}
 
@@ -184,7 +183,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(FileSelector.class)) //
 					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
 						FileSelector::getPosition) //
-					.containsExactly(path, new File(path), Paths.get(path), Optional.empty());
+					.containsExactly(path, new File(path), Path.of(path), Optional.empty());
 		}
 
 		@Test
@@ -197,7 +196,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(FileSelector.class)) //
 					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
 						FileSelector::getPosition) //
-					.containsExactly(absolutePath, new File(absolutePath), Paths.get(absolutePath), Optional.empty());
+					.containsExactly(absolutePath, new File(absolutePath), Path.of(absolutePath), Optional.empty());
 		}
 
 		@Test
@@ -210,7 +209,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(FileSelector.class)) //
 					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
 						FileSelector::getPosition) //
-					.containsExactly(path, new File(path), Paths.get(path), Optional.of(filePosition));
+					.containsExactly(path, new File(path), Path.of(path), Optional.of(filePosition));
 		}
 
 		@Test
@@ -224,7 +223,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(FileSelector.class)) //
 					.extracting(FileSelector::getRawPath, FileSelector::getFile, FileSelector::getPath,
 						FileSelector::getPosition) //
-					.containsExactly(absolutePath, new File(absolutePath), Paths.get(absolutePath),
+					.containsExactly(absolutePath, new File(absolutePath), Path.of(absolutePath),
 						Optional.of(filePosition));
 		}
 
@@ -238,7 +237,7 @@ class DiscoverySelectorsTests {
 			var selector = selectDirectory(path);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(new File(path), selector.getDirectory());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 		}
 
 		@Test
@@ -254,7 +253,7 @@ class DiscoverySelectorsTests {
 			var selector = selectDirectory(directory);
 			assertEquals(path, selector.getRawPath());
 			assertEquals(directory.getCanonicalFile(), selector.getDirectory());
-			assertEquals(Paths.get(path), selector.getPath());
+			assertEquals(Path.of(path), selector.getPath());
 		}
 
 	}
@@ -272,7 +271,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(DirectorySelector.class)) //
 					.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory,
 						DirectorySelector::getPath) //
-					.containsExactly(path, new File(path), Paths.get(path));
+					.containsExactly(path, new File(path), Path.of(path));
 		}
 
 		@Test
@@ -285,7 +284,7 @@ class DiscoverySelectorsTests {
 					.asInstanceOf(type(DirectorySelector.class)) //
 					.extracting(DirectorySelector::getRawPath, DirectorySelector::getDirectory,
 						DirectorySelector::getPath) //
-					.containsExactly(path, new File(path), Paths.get(path));
+					.containsExactly(path, new File(path), Path.of(path));
 		}
 
 		@Test
@@ -468,14 +467,14 @@ class DiscoverySelectorsTests {
 
 		@Test
 		void selectClasspathRootsWithNonExistingDirectory() {
-			var selectors = selectClasspathRoots(Set.of(Paths.get("some", "local", "path")));
+			var selectors = selectClasspathRoots(Set.of(Path.of("some", "local", "path")));
 
 			assertThat(selectors).isEmpty();
 		}
 
 		@Test
 		void selectClasspathRootsWithNonExistingJarFile() {
-			var selectors = selectClasspathRoots(Set.of(Paths.get("some.jar")));
+			var selectors = selectClasspathRoots(Set.of(Path.of("some.jar")));
 
 			assertThat(selectors).isEmpty();
 		}
@@ -490,7 +489,7 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectClasspathRootsWithExistingJarFile() throws Exception {
 			var jarUri = requireNonNull(getClass().getResource("/jartest.jar")).toURI();
-			var jarFile = Paths.get(jarUri);
+			var jarFile = Path.of(jarUri);
 
 			var selectors = selectClasspathRoots(Set.of(jarFile));
 

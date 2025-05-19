@@ -19,7 +19,7 @@ import static org.junit.platform.launcher.core.LauncherFactoryForTestingPurposes
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,7 +98,7 @@ class ConsoleTestExecutorTests {
 
 	@Test
 	void usesCustomClassLoaderIfAdditionalClassPathEntriesArePresent() {
-		discoveryOptions.setAdditionalClasspathEntries(List.of(Paths.get(".")));
+		discoveryOptions.setAdditionalClasspathEntries(List.of(Path.of(".")));
 
 		var oldClassLoader = getDefaultClassLoader();
 		dummyTestEngine.addTest("failingTest",

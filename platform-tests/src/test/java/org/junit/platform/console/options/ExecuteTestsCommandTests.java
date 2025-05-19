@@ -17,7 +17,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -96,7 +96,7 @@ class ExecuteTestsCommandTests {
 
 	@Test
 	void parseValidXmlReportsDirs() {
-		var dir = Paths.get("build", "test-results");
+		var dir = Path.of("build", "test-results");
 		// @formatter:off
 		assertAll(
 				() -> assertEquals(Optional.empty(), parseArgs().getReportsDir()),

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -201,7 +201,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		public InputStream openFile(String path) {
 			Preconditions.notBlank(path, () -> "File [" + path + "] must not be null or blank");
 			try {
-				return Files.newInputStream(Paths.get(path));
+				return Files.newInputStream(Path.of(path));
 			}
 			catch (IOException e) {
 				throw new JUnitException("File [" + path + "] could not be read", e);

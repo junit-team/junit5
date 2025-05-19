@@ -33,7 +33,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -271,7 +270,7 @@ class VintageTestEngineDiscoveryTests {
 	@Test
 	void resolvesClasspathSelectorForJarFile() throws Exception {
 		var jarUrl = getClass().getResource("/vintage-testjar.jar");
-		var jarFile = Paths.get(jarUrl.toURI());
+		var jarFile = Path.of(jarUrl.toURI());
 
 		var originalClassLoader = Thread.currentThread().getContextClassLoader();
 		try (var classLoader = new URLClassLoader(new URL[] { jarUrl })) {
@@ -721,7 +720,7 @@ class VintageTestEngineDiscoveryTests {
 
 	private Path getClasspathRoot(Class<?> testClass) throws Exception {
 		var location = testClass.getProtectionDomain().getCodeSource().getLocation();
-		return Paths.get(location.toURI());
+		return Path.of(location.toURI());
 	}
 
 	private void assertYieldsNoDescriptors(Class<?> testClass) {

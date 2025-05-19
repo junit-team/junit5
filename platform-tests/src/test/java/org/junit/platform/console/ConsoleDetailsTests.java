@@ -24,7 +24,7 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
@@ -209,7 +209,7 @@ class ConsoleDetailsTests {
 			if (optionalUri.isEmpty()) {
 				if (Boolean.getBoolean("org.junit.platform.console.ConsoleDetailsTests.writeResultOut")) {
 					// do not use Files.createTempDirectory(prefix) as we want one folder for one container
-					var temp = Paths.get(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
+					var temp = Path.of(System.getProperty("java.io.tmpdir"), dirName.replace('/', '-'));
 					Files.createDirectories(temp);
 					var path = Files.writeString(temp.resolve(outName), result.out);
 					throw new TestAbortedException(
@@ -218,7 +218,7 @@ class ConsoleDetailsTests {
 				fail("could not load resource named `" + dirName + "/" + outName + "`");
 			}
 
-			var path = Paths.get(optionalUri.get());
+			var path = Path.of(optionalUri.get());
 			assumeTrue(Files.exists(path), "path does not exist: " + path);
 			assumeTrue(Files.isReadable(path), "can not read: " + path);
 
