@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.function;
 
+import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.util.Objects;
@@ -20,6 +21,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 
@@ -152,6 +154,22 @@ public abstract class Try<V extends @Nullable Object> {
 
 	/**
 	 * If this {@code Try} is a success, get the contained value; if this
+	 * {@code Try} is a failure, throw the contained exception.
+	 *
+	 * @return the contained value, if available
+	 * @throws Exception if this {@code Try} is a failure or the contained value
+	 * is {@code null}
+	 *
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public final @NonNull V getNonNull() throws Exception {
+		var value = get();
+		return checkNotNull(value, "value");
+	}
+
+	/**
+	 * If this {@code Try} is a success, get the contained value; if this
 	 * {@code Try} is a failure, call the supplied {@link Function} with the
 	 * contained exception and throw the resulting {@link Exception}.
 	 *
@@ -161,6 +179,27 @@ public abstract class Try<V extends @Nullable Object> {
 	 * @throws E if this {@code Try} is a failure
 	 */
 	public abstract <E extends Exception> V getOrThrow(Function<? super Exception, E> exceptionTransformer) throws E;
+
+	/**
+	 * If this {@code Try} is a success, get the contained value; if this
+	 * {@code Try} is a failure, call the supplied {@link Function} with the
+	 * contained exception and throw the resulting {@link Exception}.
+	 *
+	 * @param exceptionTransformer the transformer to be called with the
+	 * contained exception, if available; must not be {@code null}
+	 * @return the contained value, if available and not {@code null}
+	 * @throws E if this {@code Try} is a failure or the contained value
+	 * is {@code null}
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	public final <E extends Exception> @NonNull V getNonNullOrThrow(
+			Function<? super @Nullable Exception, E> exceptionTransformer) throws E {
+		var value = getOrThrow(exceptionTransformer);
+		if (value == null) {
+			throw exceptionTransformer.apply(null);
+		}
+		return value;
+	}
 
 	/**
 	 * If this {@code Try} is a success, call the supplied {@link Consumer} with
