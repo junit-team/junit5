@@ -3195,7 +3195,8 @@ execution order. Thus, in both cases, test methods in such test classes are only
 concurrently if the `@Execution(CONCURRENT)` annotation is present on the test class or
 method.
 
-You can use the `@Execution` annotation to explicitly configure concurrent execution for a test class or method:
+You can use the `@Execution` annotation to explicitly configure the execution mode for a
+test class or method:
 
 [source,java]
 ----
