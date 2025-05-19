@@ -1,6 +1,7 @@
 import junitbuild.extensions.javaModuleName
 
 plugins {
+	id("junitbuild.java-nullability-conventions")
 	id("junitbuild.kotlin-library-conventions")
 	`java-test-fixtures`
 }
@@ -11,6 +12,7 @@ dependencies {
 	api(platform(projects.junitBom))
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnlyApi(libs.jspecify)
 
 	compileOnly(kotlin("stdlib"))
 	compileOnly(kotlin("reflect"))
