@@ -99,6 +99,9 @@ repository on GitHub.
   `@EnabledOnJre` and `@DisabledOnJre`.
 * `@EnabledForJreRange` and `@DisabledForJreRange` now use `JAVA_17` as their default
   `min` value.
+* The contracts for the `Executable` parameter of Kotlin-specific `assertTimeout`
+  functions was changed from `callsInPlace(executable, EXACTLY_ONCE)` to
+  `callsInPlace(executable, AT_MOST_ONCE)` which might result in compile errors.
 
 [[release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
