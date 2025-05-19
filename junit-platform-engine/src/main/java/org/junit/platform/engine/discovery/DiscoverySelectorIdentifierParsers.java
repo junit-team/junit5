@@ -37,16 +37,14 @@ class DiscoverySelectorIdentifierParsers {
 		Preconditions.notNull(identifiers, "identifiers must not be null");
 		return Stream.of(identifiers) //
 				.map(DiscoverySelectorIdentifierParsers::parse) //
-				.filter(Optional::isPresent) //
-				.map(Optional::get);
+				.flatMap(Optional::stream);
 	}
 
 	static Stream<? extends DiscoverySelector> parseAll(Collection<DiscoverySelectorIdentifier> identifiers) {
 		Preconditions.notNull(identifiers, "identifiers must not be null");
 		return identifiers.stream() //
 				.map(DiscoverySelectorIdentifierParsers::parse) //
-				.filter(Optional::isPresent) //
-				.map(Optional::get);
+				.flatMap(Optional::stream);
 	}
 
 	static Optional<? extends DiscoverySelector> parse(String identifier) {

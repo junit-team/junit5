@@ -172,8 +172,7 @@ class ClassSelectorResolver implements SelectorResolver {
 				.map(index -> context.addToParent(() -> parentSelector,
 					parent -> Optional.of(newDummyClassTemplateInvocationTestDescriptor(parent, index + 1)))) //
 				.map(this::toInvocationMatch) //
-				.filter(Optional::isPresent) //
-				.map(Optional::get) //
+				.flatMap(Optional::stream) //
 				.collect(toSet());
 		return matches.isEmpty() ? unresolved() : Resolution.matches(matches);
 	}
