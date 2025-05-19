@@ -53,7 +53,7 @@ class OverloadedTestMethodTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Test
-	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifedMethodName() {
+	void executeTestCaseWithOverloadedMethodsWithSingleMethodThatAcceptsArgumentsSelectedByFullyQualifiedMethodName() {
 		String fqmn = TestCase.class.getName() + "#test(" + TestInfo.class.getName() + ")";
 		Events tests = executeTests(selectMethod(fqmn)).testEvents();
 

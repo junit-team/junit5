@@ -2042,7 +2042,7 @@ translates to a `Collection`, an `Iterable`, a `Supplier` of a stream (`Stream`,
 objects or primitives, or any type that provides an `iterator(): Iterator` method (such
 as, for example, a `kotlin.sequences.Sequence`). Each set of "arguments" within the
 "stream" can be supplied as an instance of `Arguments`, an array of objects (for example,
-`Object[]`, `String[]`, etc.), or a single value if the parameterized class ortest method accepts
+`Object[]`, `String[]`, etc.), or a single value if the parameterized class or test method accepts
 a single argument.
 
 [WARNING]

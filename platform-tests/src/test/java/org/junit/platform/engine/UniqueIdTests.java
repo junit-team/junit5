@@ -61,7 +61,7 @@ class UniqueIdTests {
 			var uniqueIdWithEngine = UniqueId.forEngine(ENGINE_ID);
 			assertThat(uniqueIdWithEngine.getEngineId()).contains("junit-jupiter");
 
-			var uniqueIdWithoutEngine = UniqueId.root("root", "avalue");
+			var uniqueIdWithoutEngine = UniqueId.root("root", "aValue");
 			assertEquals(Optional.empty(), uniqueIdWithoutEngine.getEngineId());
 		}
 
