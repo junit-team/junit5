@@ -17,7 +17,6 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPacka
 
 import java.io.PrintWriter;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
@@ -111,7 +110,7 @@ class UsingTheLauncherDemo {
 
 	@org.junit.jupiter.api.Test
 	void launcherConfig() {
-		Path reportsDir = Paths.get("target", "xml-reports");
+		Path reportsDir = Path.of("target", "xml-reports");
 		PrintWriter out = new PrintWriter(System.out);
 		// @formatter:off
 		// tag::launcherConfig[]

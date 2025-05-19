@@ -12,7 +12,6 @@ package platform.tooling.support;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -26,7 +25,7 @@ import java.util.stream.Stream;
  */
 public class Helper {
 
-	private static final Path ROOT = Paths.get("..");
+	private static final Path ROOT = Path.of("..");
 	private static final Path GRADLE_PROPERTIES = ROOT.resolve("gradle.properties");
 	private static final Path SETTINGS_GRADLE = ROOT.resolve("settings.gradle.kts");
 

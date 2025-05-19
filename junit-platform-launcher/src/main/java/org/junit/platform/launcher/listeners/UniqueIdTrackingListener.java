@@ -206,7 +206,7 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 		String prefix = configurationParameters.get(OUTPUT_FILE_PREFIX_PROPERTY_NAME) //
 				.orElse(DEFAULT_OUTPUT_FILE_PREFIX);
 		Supplier<Path> workingDirSupplier = () -> configurationParameters.get(WORKING_DIR_PROPERTY_NAME).map(
-			Paths::get).orElseGet(() -> Paths.get("."));
+			Paths::get).orElseGet(() -> Path.of("."));
 		return OutputDir.create(configurationParameters.get(OUTPUT_DIR_PROPERTY_NAME), workingDirSupplier) //
 				.createFile(prefix, "txt");
 	}

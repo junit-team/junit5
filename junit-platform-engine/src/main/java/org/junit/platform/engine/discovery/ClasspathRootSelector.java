@@ -17,7 +17,6 @@ import static org.junit.platform.commons.util.CollectionUtils.getFirstElement;
 
 import java.net.URI;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -114,7 +113,7 @@ public class ClasspathRootSelector implements DiscoverySelector {
 
 		@Override
 		public Optional<ClasspathRootSelector> parse(DiscoverySelectorIdentifier identifier, Context context) {
-			Path path = Paths.get(URI.create(identifier.getValue()));
+			Path path = Path.of(URI.create(identifier.getValue()));
 			return getFirstElement(DiscoverySelectors.selectClasspathRoots(singleton(path)));
 		}
 

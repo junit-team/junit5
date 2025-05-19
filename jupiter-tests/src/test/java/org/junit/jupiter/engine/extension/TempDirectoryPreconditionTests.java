@@ -20,7 +20,6 @@ import static org.junit.platform.testkit.engine.TestExecutionResultConditions.me
 
 import java.io.File;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -102,7 +101,7 @@ class TempDirectoryPreconditionTests extends AbstractJupiterTestEngineTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FinalStaticFieldTestCase {
 
-		static final @TempDir Path path = Paths.get(".");
+		static final @TempDir Path path = Path.of(".");
 
 		@Test
 		void test() {
@@ -112,7 +111,7 @@ class TempDirectoryPreconditionTests extends AbstractJupiterTestEngineTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class FinalInstanceFieldTestCase {
 
-		final @TempDir Path path = Paths.get(".");
+		final @TempDir Path path = Path.of(".");
 
 		@Test
 		void test() {

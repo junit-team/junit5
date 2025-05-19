@@ -17,7 +17,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Clock;
 
 import javax.xml.stream.XMLStreamException;
@@ -57,7 +56,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 
 	// For tests only
 	LegacyXmlReportGeneratingListener(String reportsDir, PrintWriter out, Clock clock) {
-		this(Paths.get(reportsDir), out, clock);
+		this(Path.of(reportsDir), out, clock);
 	}
 
 	private LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out, Clock clock) {

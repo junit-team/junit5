@@ -36,7 +36,6 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.DosFileAttributeView;
@@ -514,7 +513,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 
 		private IOException createIOExceptionWithAttachedFailures(SortedMap<Path, IOException> failures) {
-			Path emptyPath = Paths.get("");
+			Path emptyPath = Path.of("");
 			String joinedPaths = failures.keySet().stream() //
 					.map(this::tryToDeleteOnExit) //
 					.map(this::relativizeSafely) //

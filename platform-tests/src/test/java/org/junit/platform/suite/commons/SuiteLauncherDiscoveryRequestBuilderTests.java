@@ -22,7 +22,7 @@ import static org.junit.platform.suite.commons.SuiteLauncherDiscoveryRequestBuil
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.net.URI;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -487,7 +487,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<DirectorySelector> selectors = request.getSelectorsByType(DirectorySelector.class);
-		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
+		assertEquals(Path.of("path/to/root"), exactlyOne(selectors).getPath());
 	}
 
 	@Test
@@ -508,7 +508,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		LauncherDiscoveryRequest request = builder.applySelectorsAndFiltersFromSuite(Suite.class).build();
 		List<FileSelector> selectors = request.getSelectorsByType(FileSelector.class);
-		assertEquals(Paths.get("path/to/root"), exactlyOne(selectors).getPath());
+		assertEquals(Path.of("path/to/root"), exactlyOne(selectors).getPath());
 	}
 
 	@Test

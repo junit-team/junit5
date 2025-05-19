@@ -34,7 +34,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -318,7 +317,7 @@ class CommandLineOptionsParsingTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidAdditionalClasspathEntries(ArgsType type) {
-		var dir = Paths.get(".");
+		var dir = Path.of(".");
 		// @formatter:off
 		assertAll(
 			() -> assertEquals(List.of(dir), type.parseArgLine("-cp .").discovery.getAdditionalClasspathEntries()),
@@ -553,7 +552,7 @@ class CommandLineOptionsParsingTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseClasspathScanningEntries(ArgsType type) {
-		var dir = Paths.get(".");
+		var dir = Path.of(".");
 		// @formatter:off
 		assertAll(
 			() -> assertTrue(type.parseArgLine("--scan-class-path").discovery.isScanClasspath()),
@@ -563,8 +562,8 @@ class CommandLineOptionsParsingTests {
 			() -> assertTrue(type.parseArgLine("--scan-class-path .").discovery.isScanClasspath()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--scan-class-path .").discovery.getSelectedClasspathEntries()),
 			() -> assertEquals(List.of(dir), type.parseArgLine("--scan-class-path=.").discovery.getSelectedClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path . --scan-class-path src/test/java").discovery.getSelectedClasspathEntries()),
-			() -> assertEquals(List.of(dir, Paths.get("src/test/java")), type.parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").discovery.getSelectedClasspathEntries())
+			() -> assertEquals(List.of(dir, Path.of("src/test/java")), type.parseArgLine("--scan-class-path . --scan-class-path src/test/java").discovery.getSelectedClasspathEntries()),
+			() -> assertEquals(List.of(dir, Path.of("src/test/java")), type.parseArgLine("--scan-class-path ." + File.pathSeparator + "src/test/java").discovery.getSelectedClasspathEntries())
 		);
 		// @formatter:on
 	}
@@ -605,7 +604,7 @@ class CommandLineOptionsParsingTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidStdoutRedirectionFile(ArgsType type) {
-		var file = Paths.get("foo.txt");
+		var file = Path.of("foo.txt");
 		// @formatter:off
 		assertAll(
 			() -> assertNull(type.parseArgLine("").output.getStdoutPath()),
@@ -619,7 +618,7 @@ class CommandLineOptionsParsingTests {
 	@ParameterizedTest
 	@EnumSource
 	void parseValidStderrRedirectionFile(ArgsType type) {
-		var file = Paths.get("foo.txt");
+		var file = Path.of("foo.txt");
 		// @formatter:off
 		assertAll(
 			() -> assertNull(type.parseArgLine("").output.getStderrPath()),

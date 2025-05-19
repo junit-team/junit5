@@ -13,7 +13,6 @@ package org.junit.platform.launcher.core;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
@@ -62,7 +61,7 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 	}
 
 	private static Path toSanitizedPath(Segment segment) {
-		return Paths.get(sanitizeName(segment.getValue()));
+		return Path.of(sanitizeName(segment.getValue()));
 	}
 
 	private static String sanitizeName(String value) {

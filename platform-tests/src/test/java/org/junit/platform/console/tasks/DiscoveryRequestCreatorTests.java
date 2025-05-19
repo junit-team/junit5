@@ -26,7 +26,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
 import java.net.URI;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -73,7 +73,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsScanClasspathOptionWithExplicitRootDirectories() {
 		options.setScanClasspath(true);
-		options.setSelectedClasspathEntries(List.of(Paths.get("."), Paths.get("..")));
+		options.setSelectedClasspathEntries(List.of(Path.of("."), Path.of("..")));
 
 		var request = convert();
 
@@ -87,7 +87,7 @@ class DiscoveryRequestCreatorTests {
 	@Test
 	void convertsScanClasspathOptionWithAdditionalClasspathEntries() {
 		options.setScanClasspath(true);
-		options.setAdditionalClasspathEntries(List.of(Paths.get("."), Paths.get("..")));
+		options.setAdditionalClasspathEntries(List.of(Path.of("."), Path.of("..")));
 
 		var request = convert();
 

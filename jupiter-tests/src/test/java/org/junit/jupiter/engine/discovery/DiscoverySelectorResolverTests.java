@@ -49,7 +49,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
@@ -522,7 +521,7 @@ class DiscoverySelectorResolverTests extends AbstractJupiterTestEngineTests {
 
 	@Test
 	void classpathResolution() throws Exception {
-		Path classpath = Paths.get(
+		Path classpath = Path.of(
 			DiscoverySelectorResolverTests.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(classpath));
@@ -549,7 +548,7 @@ class DiscoverySelectorResolverTests extends AbstractJupiterTestEngineTests {
 	@Test
 	void classpathResolutionForJarFiles() throws Exception {
 		URL jarUrl = requireNonNull(getClass().getResource("/jupiter-testjar.jar"));
-		Path path = Paths.get(jarUrl.toURI());
+		Path path = Path.of(jarUrl.toURI());
 		List<ClasspathRootSelector> selectors = selectClasspathRoots(singleton(path));
 
 		ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
