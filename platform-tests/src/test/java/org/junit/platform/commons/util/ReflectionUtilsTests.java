@@ -1768,7 +1768,7 @@ class ReflectionUtilsTests {
 		}
 
 		@Test
-		void findMethodsReturnsAllOverloadedMethodsInGenericTypeHieararchy() {
+		void findMethodsReturnsAllOverloadedMethodsInGenericTypeHierarchy() {
 			Class<?> clazz = InterfaceWithGenericDefaultMethodImpl.class;
 
 			// Search for all foo(*) methods.
@@ -2058,7 +2058,7 @@ class ReflectionUtilsTests {
 		 * @since 1.11
 		 */
 		@Test
-		void readFieldValuesFromInteracesAndClassesInTypeHierarchy() {
+		void readFieldValuesFromInterfacesAndClassesInTypeHierarchy() {
 			var fields = findFields(InterfaceWithField.class, ReflectionUtils::isStatic, TOP_DOWN);
 			var values = readFieldValues(fields, null);
 			assertThat(values).containsOnly("ifc");
