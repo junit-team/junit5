@@ -159,9 +159,10 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 			try {
 				CleanupMode cleanupMode = determineCleanupModeForField(field);
+				boolean ignoreErrors = determineIgnoreErrorsForField(field);
 				TempDirFactory factory = determineTempDirFactoryForField(field, scope);
-				makeAccessible(field).set(testInstance,
-					getPathOrFile(field.getType(), new FieldContext(field), factory, cleanupMode, scope, context));
+				makeAccessible(field).set(testInstance, getPathOrFile(field.getType(), new FieldContext(field), factory,
+					cleanupMode, ignoreErrors, scope, context));
 			}
 			catch (Throwable t) {
 				throw ExceptionUtils.throwAsUncheckedException(t);
@@ -187,9 +188,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		Class<?> parameterType = parameterContext.getParameter().getType();
 		assertSupportedType("parameter", parameterType);
 		CleanupMode cleanupMode = determineCleanupModeForParameter(parameterContext);
+		boolean ignoreErrors = determineIgnoreErrorsForParameter(parameterContext);
 		Scope scope = getScope(extensionContext);
 		TempDirFactory factory = determineTempDirFactoryForParameter(parameterContext, scope);
-		return getPathOrFile(parameterType, parameterContext, factory, cleanupMode, scope, extensionContext);
+		return getPathOrFile(parameterType, parameterContext, factory, cleanupMode, ignoreErrors, scope,
+			extensionContext);
 	}
 
 	private CleanupMode determineCleanupModeForField(Field field) {
@@ -207,6 +210,22 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private CleanupMode determineCleanupMode(TempDir tempDir) {
 		CleanupMode cleanupMode = tempDir.cleanup();
 		return cleanupMode == DEFAULT ? this.configuration.getDefaultTempDirCleanupMode() : cleanupMode;
+	}
+
+	private boolean determineIgnoreErrorsForField(Field field) {
+		TempDir tempDir = findAnnotation(field, TempDir.class).orElseThrow(
+			() -> new JUnitException("Field " + field + " must be annotated with @TempDir"));
+		return determineIgnoreErrors(tempDir);
+	}
+
+	private boolean determineIgnoreErrorsForParameter(ParameterContext parameterContext) {
+		TempDir tempDir = parameterContext.findAnnotation(TempDir.class).orElseThrow(() -> new JUnitException(
+			"Parameter " + parameterContext.getParameter() + " must be annotated with @TempDir"));
+		return determineIgnoreErrors(tempDir);
+	}
+
+	private boolean determineIgnoreErrors(TempDir tempDir) {
+		return tempDir.ignoreErrors();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -260,15 +279,15 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	private static Object getPathOrFile(Class<?> elementType, AnnotatedElementContext elementContext,
-			TempDirFactory factory, CleanupMode cleanupMode, Scope scope, ExtensionContext extensionContext) {
+			TempDirFactory factory, CleanupMode cleanupMode, boolean ignoreErrors, Scope scope,
+			ExtensionContext extensionContext) {
 
 		Namespace namespace = scope == Scope.PER_DECLARATION //
 				? NAMESPACE.append(elementContext) //
 				: NAMESPACE;
 		Path path = extensionContext.getStore(namespace) //
-				.getOrComputeIfAbsent(KEY,
-					__ -> createTempDir(factory, cleanupMode, elementType, elementContext, extensionContext),
-					CloseablePath.class) //
+				.getOrComputeIfAbsent(KEY, __ -> createTempDir(factory, cleanupMode, ignoreErrors, elementType,
+					elementContext, extensionContext), CloseablePath.class) //
 				.get();
 
 		return (elementType == Path.class) ? path : path.toFile();
@@ -276,9 +295,14 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode, Class<?> elementType,
 			AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
+		return createTempDir(factory, cleanupMode, false, elementType, elementContext, extensionContext);
+	}
+
+	static CloseablePath createTempDir(TempDirFactory factory, CleanupMode cleanupMode, boolean ignoreErrors,
+			Class<?> elementType, AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 
 		try {
-			return new CloseablePath(factory, cleanupMode, elementType, elementContext, extensionContext);
+			return new CloseablePath(factory, cleanupMode, ignoreErrors, elementType, elementContext, extensionContext);
 		}
 		catch (Exception ex) {
 			throw new ExtensionConfigurationException("Failed to create default temp directory", ex);
@@ -302,14 +326,17 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		private final Path dir;
 		private final TempDirFactory factory;
 		private final CleanupMode cleanupMode;
+		private final boolean ignoreErrors;
 		private final AnnotatedElement annotatedElement;
 		private final ExtensionContext extensionContext;
 
-		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, Class<?> elementType,
-				AnnotatedElementContext elementContext, ExtensionContext extensionContext) throws Exception {
+		private CloseablePath(TempDirFactory factory, CleanupMode cleanupMode, boolean ignoreErrors,
+				Class<?> elementType, AnnotatedElementContext elementContext, ExtensionContext extensionContext)
+				throws Exception {
 			this.dir = factory.createTempDirectory(elementContext, extensionContext);
 			this.factory = factory;
 			this.cleanupMode = cleanupMode;
+			this.ignoreErrors = ignoreErrors;
 			this.annotatedElement = elementContext.getAnnotatedElement();
 			this.extensionContext = extensionContext;
 
@@ -350,14 +377,23 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 					}
 					catch (IOException e) {
 						LOGGER.trace(e, () -> "Failed to delete " + file);
-						throw e;
+						if (!this.ignoreErrors) {
+							throw e;
+						}
 					}
 				};
 
 				LOGGER.trace(() -> "Cleaning up temp dir " + this.dir);
 				SortedMap<Path, IOException> failures = deleteAllFilesAndDirectories(loggingFileOperations);
 				if (!failures.isEmpty()) {
-					throw createIOExceptionWithAttachedFailures(failures);
+					IOException ex = createIOExceptionWithAttachedFailures(failures);
+					if (this.ignoreErrors) {
+						LOGGER.trace(ex,
+							() -> "Ignoring " + failures.size() + " failures while cleaning up temp dir " + this.dir);
+					}
+					else {
+						throw ex;
+					}
 				}
 			}
 			finally {

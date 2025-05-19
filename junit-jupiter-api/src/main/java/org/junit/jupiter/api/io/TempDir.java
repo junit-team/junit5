@@ -187,4 +187,12 @@ public @interface TempDir {
 	@API(status = STABLE, since = "5.11")
 	CleanupMode cleanup() default CleanupMode.DEFAULT;
 
+	/**
+	 * Whether errors during cleanup of the temporary directory should be ignored or not.
+	 *
+	 * @since 5.13
+	 */
+	@API(status = EXPERIMENTAL, since = "5.13")
+	boolean ignoreErrors() default false;
+
 }
