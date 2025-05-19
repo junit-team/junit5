@@ -61,7 +61,7 @@ class ExcludePackageNameFilter implements PackageNameFilter {
 
 	@Override
 	public Predicate<String> toPredicate() {
-		return packageName -> !findMatchingName(packageName).isPresent();
+		return packageName -> findMatchingName(packageName).isEmpty();
 	}
 
 	private Optional<String> findMatchingName(String packageName) {

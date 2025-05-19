@@ -97,7 +97,7 @@ class ParameterizedClassExtension extends ParameterizedInvocationContextProvider
 
 		Optional<ParameterizedClass> annotation = findAnnotation(extensionContext.getTestClass(),
 			ParameterizedClass.class);
-		if (!annotation.isPresent()) {
+		if (annotation.isEmpty()) {
 			return false;
 		}
 

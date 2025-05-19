@@ -220,7 +220,7 @@ public final class AnnotationSupport {
 		Preconditions.notNull(enclosingInstanceTypes, "enclosingInstanceTypes must not be null");
 
 		Optional<A> annotation = findAnnotation(clazz, annotationType);
-		if (!annotation.isPresent()) {
+		if (annotation.isEmpty()) {
 			ListIterator<Class<?>> iterator = enclosingInstanceTypes.listIterator(enclosingInstanceTypes.size());
 			while (iterator.hasPrevious()) {
 				annotation = findAnnotation(iterator.previous(), annotationType);

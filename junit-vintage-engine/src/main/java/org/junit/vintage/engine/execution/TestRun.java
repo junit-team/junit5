@@ -114,7 +114,7 @@ class TestRun {
 		VintageDescriptors vintageDescriptors = descriptionToDescriptors.getOrDefault(description,
 			VintageDescriptors.NONE);
 		Optional<VintageTestDescriptor> result = vintageDescriptors.getUnambiguously(description);
-		if (!result.isPresent()) {
+		if (result.isEmpty()) {
 			result = fallback.apply(vintageDescriptors);
 		}
 		return result;

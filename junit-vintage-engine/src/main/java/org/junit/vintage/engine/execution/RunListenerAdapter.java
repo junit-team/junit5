@@ -216,7 +216,7 @@ class RunListenerAdapter extends RunListener {
 
 	private boolean isAncestor(TestDescriptor candidate, TestDescriptor testDescriptor) {
 		Optional<TestDescriptor> parent = testDescriptor.getParent();
-		if (!parent.isPresent()) {
+		if (parent.isEmpty()) {
 			return false;
 		}
 		if (parent.get().equals(candidate)) {

@@ -111,7 +111,7 @@ public final class AnnotationUtils {
 	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
 			Class<A> annotationType) {
 
-		if (element == null || !element.isPresent()) {
+		if (element == null || element.isEmpty()) {
 			return Optional.empty();
 		}
 
@@ -251,7 +251,7 @@ public final class AnnotationUtils {
 	public static <A extends Annotation> List<A> findRepeatableAnnotations(Optional<? extends AnnotatedElement> element,
 			Class<A> annotationType) {
 
-		if (element == null || !element.isPresent()) {
+		if (element == null || element.isEmpty()) {
 			return Collections.emptyList();
 		}
 

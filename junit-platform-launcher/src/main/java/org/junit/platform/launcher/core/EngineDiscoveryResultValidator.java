@@ -39,12 +39,11 @@ class EngineDiscoveryResultValidator {
 	 */
 	void validate(TestEngine testEngine, TestDescriptor root) {
 		Preconditions.notNull(root,
-			() -> String.format(
-				"The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.",
+			() -> "The discover() method for TestEngine with ID '%s' must return a non-null root TestDescriptor.".formatted(
 				testEngine.getId()));
 		Optional<String> cyclicGraphInfo = getCyclicGraphInfo(root);
-		Preconditions.condition(!cyclicGraphInfo.isPresent(),
-			() -> String.format("The discover() method for TestEngine with ID '%s' returned a cyclic graph; %s",
+		Preconditions.condition(cyclicGraphInfo.isEmpty(),
+			() -> "The discover() method for TestEngine with ID '%s' returned a cyclic graph; %s".formatted(
 				testEngine.getId(), cyclicGraphInfo.get()));
 	}
 
