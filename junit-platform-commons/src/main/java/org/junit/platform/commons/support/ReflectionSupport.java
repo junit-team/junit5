@@ -23,6 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.util.ExceptionUtils;
@@ -447,12 +448,13 @@ public final class ReflectionSupport {
 	 * @param method the method to invoke; never {@code null}
 	 * @param target the object on which to invoke the method; may be
 	 * {@code null} if the method is {@code static}
-	 * @param args the arguments to pass to the method
+	 * @param args the arguments to pass to the method; never {@code null}
 	 * @return the value returned by the method invocation or {@code null}
 	 * if the return type is {@code void}
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
-	public static Object invokeMethod(Method method, Object target, Object... args) {
+	@Nullable
+	public static Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
 		return ReflectionUtils.invokeMethod(method, target, args);
 	}
 
@@ -522,7 +524,7 @@ public final class ReflectionSupport {
 	 * @since 1.4
 	 */
 	@API(status = MAINTAINED, since = "1.4")
-	public static Try<Object> tryToReadFieldValue(Field field, Object instance) {
+	public static Try<@Nullable Object> tryToReadFieldValue(Field field, @Nullable Object instance) {
 		return ReflectionUtils.tryToReadFieldValue(field, instance);
 	}
 
@@ -547,7 +549,7 @@ public final class ReflectionSupport {
 	 * but potentially empty if no such method could be found
 	 * @see #findMethod(Class, String, Class...)
 	 */
-	public static Optional<Method> findMethod(Class<?> clazz, String methodName, String parameterTypeNames) {
+	public static Optional<Method> findMethod(Class<?> clazz, String methodName, @Nullable String parameterTypeNames) {
 		return ReflectionUtils.findMethod(clazz, methodName, parameterTypeNames);
 	}
 
