@@ -120,7 +120,7 @@ public interface TestDescriptor {
 	 */
 	@API(status = STABLE, since = "1.10")
 	default Set<? extends TestDescriptor> getAncestors() {
-		if (!getParent().isPresent()) {
+		if (getParent().isEmpty()) {
 			return Collections.emptySet();
 		}
 		TestDescriptor parent = getParent().get();
@@ -215,7 +215,7 @@ public interface TestDescriptor {
 	 * <p>A <em>root</em> descriptor is a descriptor without a parent.
 	 */
 	default boolean isRoot() {
-		return !getParent().isPresent();
+		return getParent().isEmpty();
 	}
 
 	/**

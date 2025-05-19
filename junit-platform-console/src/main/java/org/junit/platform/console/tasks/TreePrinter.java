@@ -80,7 +80,7 @@ class TreePrinter {
 			out.print(" ");
 			out.print(duration);
 		}
-		boolean nodeIsBeingListed = node.duration == 0 && !node.result().isPresent() && !node.reason().isPresent();
+		boolean nodeIsBeingListed = node.duration == 0 && node.result().isEmpty() && node.reason().isEmpty();
 		if (!nodeIsBeingListed) {
 			out.print(" ");
 			out.print(icon);
@@ -120,7 +120,7 @@ class TreePrinter {
 	}
 
 	private void printThrowable(String indent, TestExecutionResult result) {
-		if (!result.getThrowable().isPresent()) {
+		if (result.getThrowable().isEmpty()) {
 			return;
 		}
 		Throwable throwable = result.getThrowable().get();

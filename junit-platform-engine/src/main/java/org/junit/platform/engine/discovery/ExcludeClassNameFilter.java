@@ -50,7 +50,7 @@ class ExcludeClassNameFilter extends AbstractClassNameFilter {
 
 	@Override
 	public Predicate<String> toPredicate() {
-		return className -> !findMatchingPattern(className).isPresent();
+		return className -> findMatchingPattern(className).isEmpty();
 	}
 
 	@Override

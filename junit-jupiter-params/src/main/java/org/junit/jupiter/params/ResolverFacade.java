@@ -710,7 +710,7 @@ class ResolverFacade {
 		private ParameterContext toParameterContext(ExtensionContext extensionContext,
 				Optional<ParameterContext> originalParameterContext) {
 			Optional<Object> target = originalParameterContext.flatMap(ParameterContext::getTarget);
-			if (!target.isPresent()) {
+			if (target.isEmpty()) {
 				target = extensionContext.getTestInstance();
 			}
 			return toParameterContext(target);

@@ -31,7 +31,7 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 	@Override
 	public boolean supportsTestTemplate(ExtensionContext context) {
 		Optional<ParameterizedTest> annotation = findAnnotation(context.getTestMethod(), ParameterizedTest.class);
-		if (!annotation.isPresent()) {
+		if (annotation.isEmpty()) {
 			return false;
 		}
 

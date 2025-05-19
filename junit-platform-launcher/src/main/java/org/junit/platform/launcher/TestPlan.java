@@ -110,7 +110,7 @@ public class TestPlan {
 		allIdentifiers.put(testIdentifier.getUniqueIdObject(), testIdentifier);
 
 		// Root identifiers. Typically, a test engine.
-		if (!testIdentifier.getParentIdObject().isPresent()) {
+		if (testIdentifier.getParentIdObject().isEmpty()) {
 			roots.add(testIdentifier);
 			return;
 		}

@@ -52,7 +52,7 @@ public final class RuntimeUtils {
 	static Optional<List<String>> getInputArguments() {
 		Optional<Class<?>> managementFactoryClass = ReflectionUtils.tryToLoadClass(
 			"java.lang.management.ManagementFactory").toOptional();
-		if (!managementFactoryClass.isPresent()) {
+		if (managementFactoryClass.isEmpty()) {
 			return Optional.empty();
 		}
 		// Can't use "java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments()"

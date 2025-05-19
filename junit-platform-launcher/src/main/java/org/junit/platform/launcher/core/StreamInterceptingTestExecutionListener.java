@@ -55,7 +55,7 @@ class StreamInterceptingTestExecutionListener implements EagerTestExecutionListe
 		Optional<StreamInterceptor> stderrInterceptor = captureStderr ? StreamInterceptor.registerStderr(maxSize)
 				: Optional.empty();
 
-		if ((!stdoutInterceptor.isPresent() && captureStdout) || (!stderrInterceptor.isPresent() && captureStderr)) {
+		if ((stdoutInterceptor.isEmpty() && captureStdout) || (stderrInterceptor.isEmpty() && captureStderr)) {
 			stdoutInterceptor.ifPresent(StreamInterceptor::unregister);
 			stderrInterceptor.ifPresent(StreamInterceptor::unregister);
 			return Optional.empty();

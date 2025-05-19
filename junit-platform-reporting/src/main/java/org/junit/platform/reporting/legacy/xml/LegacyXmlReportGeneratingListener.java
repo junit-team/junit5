@@ -121,7 +121,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	}
 
 	private boolean isRoot(TestIdentifier testIdentifier) {
-		return !testIdentifier.getParentIdObject().isPresent();
+		return testIdentifier.getParentIdObject().isEmpty();
 	}
 
 	private void printException(String message, Exception exception) {

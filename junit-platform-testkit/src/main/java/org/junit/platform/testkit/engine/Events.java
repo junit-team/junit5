@@ -476,7 +476,7 @@ public final class Events {
 				.findFirst();
 		// @formatter:on
 
-		if (!matchedEvent.isPresent()) {
+		if (matchedEvent.isEmpty()) {
 			softly.fail("Condition did not match any event: " + condition);
 		}
 

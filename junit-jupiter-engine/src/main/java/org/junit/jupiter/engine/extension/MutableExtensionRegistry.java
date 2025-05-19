@@ -312,12 +312,12 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		}
 
 		void initialize(Object testInstance) {
-			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
+			Preconditions.condition(extension.isEmpty(), "Extension already initialized");
 			extension = Optional.of(initializer.apply(testInstance));
 		}
 
 		LateInitEntry copy() {
-			Preconditions.condition(!extension.isPresent(), "Extension already initialized");
+			Preconditions.condition(extension.isEmpty(), "Extension already initialized");
 			return new LateInitEntry(testClass, initializer);
 		}
 	}
