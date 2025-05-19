@@ -60,8 +60,8 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 				.map(field -> validateField(field, testInstance))
 				.map(field -> readField(field, testInstance))
 				.flatMap(fieldValue -> {
-					if (fieldValue instanceof Supplier<?>) {
-						fieldValue = ((Supplier<?>) fieldValue).get();
+					if (fieldValue instanceof Supplier<?> supplier) {
+						fieldValue = supplier.get();
 					}
 					return CollectionUtils.toStream(fieldValue);
 				})
@@ -141,21 +141,18 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		// Check declared type T of Supplier<T>.
 		if (Supplier.class.isAssignableFrom(field.getType())) {
 			Type genericType = field.getGenericType();
-			if (genericType instanceof ParameterizedType) {
-				ParameterizedType parameterizedType = (ParameterizedType) genericType;
+			if (genericType instanceof ParameterizedType parameterizedType) {
 				Type[] typeArguments = parameterizedType.getActualTypeArguments();
 				if (typeArguments.length == 1) {
 					Type type = typeArguments[0];
 					// Handle cases such as Supplier<IntStream>
-					if (type instanceof Class) {
-						Class<?> clazz = (Class<?>) type;
+					if (type instanceof Class<?> clazz) {
 						return CollectionUtils.isConvertibleToStream(clazz);
 					}
 					// Handle cases such as Supplier<Stream<String>>
-					if (type instanceof ParameterizedType) {
-						Type rawType = ((ParameterizedType) type).getRawType();
-						if (rawType instanceof Class<?>) {
-							Class<?> clazz = (Class<?>) rawType;
+					if (type instanceof ParameterizedType innerParameterizedType) {
+						Type rawType = innerParameterizedType.getRawType();
+						if (rawType instanceof Class<?> clazz) {
 							return CollectionUtils.isConvertibleToStream(clazz);
 						}
 					}

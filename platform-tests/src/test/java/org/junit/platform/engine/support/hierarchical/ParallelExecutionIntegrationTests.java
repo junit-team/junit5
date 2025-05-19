@@ -265,8 +265,8 @@ class ParallelExecutionIntegrationTests {
 		List<Event> parallelTestMethodEvents = events.reportingEntryPublished() //
 				.filter(e -> e.getTestDescriptor().getSource() //
 						.filter(it -> //
-						it instanceof MethodSource
-								&& SuccessfulParallelTestCase.class.equals(((MethodSource) it).getJavaClass()) //
+						it instanceof MethodSource methodSource
+								&& SuccessfulParallelTestCase.class.equals(methodSource.getJavaClass()) //
 						).isPresent() //
 				) //
 				.toList();

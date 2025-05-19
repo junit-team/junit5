@@ -120,46 +120,46 @@ class EngineDiscoveryRequestResolution {
 		if (resolvedSelectors.containsKey(selector)) {
 			return Optional.of(resolvedSelectors.get(selector));
 		}
-		if (selector instanceof UniqueIdSelector) {
-			return resolveUniqueId((UniqueIdSelector) selector);
+		if (selector instanceof UniqueIdSelector uniqueIdSelector) {
+			return resolveUniqueId(uniqueIdSelector);
 		}
 		return resolve(selector, resolver -> {
 			Context context = getContext(selector);
-			if (selector instanceof ClasspathResourceSelector) {
-				return resolver.resolve((ClasspathResourceSelector) selector, context);
+			if (selector instanceof ClasspathResourceSelector classpathResourceSelector) {
+				return resolver.resolve(classpathResourceSelector, context);
 			}
-			if (selector instanceof ClasspathRootSelector) {
-				return resolver.resolve((ClasspathRootSelector) selector, context);
+			if (selector instanceof ClasspathRootSelector classpathRootSelector) {
+				return resolver.resolve(classpathRootSelector, context);
 			}
-			if (selector instanceof ClassSelector) {
-				return resolver.resolve((ClassSelector) selector, context);
+			if (selector instanceof ClassSelector classSelector) {
+				return resolver.resolve(classSelector, context);
 			}
-			if (selector instanceof IterationSelector) {
-				return resolver.resolve((IterationSelector) selector, context);
+			if (selector instanceof IterationSelector iterationSelector) {
+				return resolver.resolve(iterationSelector, context);
 			}
-			if (selector instanceof NestedClassSelector) {
-				return resolver.resolve((NestedClassSelector) selector, context);
+			if (selector instanceof NestedClassSelector nestedClassSelector) {
+				return resolver.resolve(nestedClassSelector, context);
 			}
-			if (selector instanceof DirectorySelector) {
-				return resolver.resolve((DirectorySelector) selector, context);
+			if (selector instanceof DirectorySelector directorySelector) {
+				return resolver.resolve(directorySelector, context);
 			}
-			if (selector instanceof FileSelector) {
-				return resolver.resolve((FileSelector) selector, context);
+			if (selector instanceof FileSelector fileSelector) {
+				return resolver.resolve(fileSelector, context);
 			}
-			if (selector instanceof MethodSelector) {
-				return resolver.resolve((MethodSelector) selector, context);
+			if (selector instanceof MethodSelector methodSelector) {
+				return resolver.resolve(methodSelector, context);
 			}
-			if (selector instanceof NestedMethodSelector) {
-				return resolver.resolve((NestedMethodSelector) selector, context);
+			if (selector instanceof NestedMethodSelector nestedMethodSelector) {
+				return resolver.resolve(nestedMethodSelector, context);
 			}
-			if (selector instanceof ModuleSelector) {
-				return resolver.resolve((ModuleSelector) selector, context);
+			if (selector instanceof ModuleSelector moduleSelector) {
+				return resolver.resolve(moduleSelector, context);
 			}
-			if (selector instanceof PackageSelector) {
-				return resolver.resolve((PackageSelector) selector, context);
+			if (selector instanceof PackageSelector packageSelector) {
+				return resolver.resolve(packageSelector, context);
 			}
-			if (selector instanceof UriSelector) {
-				return resolver.resolve((UriSelector) selector, context);
+			if (selector instanceof UriSelector uriSelector) {
+				return resolver.resolve(uriSelector, context);
 			}
 			return resolver.resolve(selector, context);
 		});

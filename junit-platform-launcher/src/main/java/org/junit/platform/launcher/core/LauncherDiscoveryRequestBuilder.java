@@ -304,14 +304,14 @@ public final class LauncherDiscoveryRequestBuilder {
 	}
 
 	private void storeFilter(Filter<?> filter) {
-		if (filter instanceof EngineFilter) {
-			this.engineFilters.add((EngineFilter) filter);
+		if (filter instanceof EngineFilter engineFilter) {
+			this.engineFilters.add(engineFilter);
 		}
-		else if (filter instanceof PostDiscoveryFilter) {
-			this.postDiscoveryFilters.add((PostDiscoveryFilter) filter);
+		else if (filter instanceof PostDiscoveryFilter postDiscoveryFilter) {
+			this.postDiscoveryFilters.add(postDiscoveryFilter);
 		}
-		else if (filter instanceof DiscoveryFilter<?>) {
-			this.discoveryFilters.add((DiscoveryFilter<?>) filter);
+		else if (filter instanceof DiscoveryFilter<?> discoveryFilter) {
+			this.discoveryFilters.add(discoveryFilter);
 		}
 		else {
 			throw new PreconditionViolationException(

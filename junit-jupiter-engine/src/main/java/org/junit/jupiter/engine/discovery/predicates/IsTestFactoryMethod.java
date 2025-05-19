@@ -69,20 +69,19 @@ public class IsTestFactoryMethod extends IsTestableMethod {
 	private static boolean isCompatibleContainerType(Method method, DiscoveryIssueReporter issueReporter) {
 		Type genericReturnType = getGenericReturnType(method);
 
-		if (genericReturnType instanceof ParameterizedType) {
-			Type[] typeArguments = ((ParameterizedType) genericReturnType).getActualTypeArguments();
+		if (genericReturnType instanceof ParameterizedType type) {
+			Type[] typeArguments = type.getActualTypeArguments();
 			if (typeArguments.length == 1) {
 				Type typeArgument = typeArguments[0];
-				if (typeArgument instanceof Class) {
+				if (typeArgument instanceof Class<?> clazz) {
 					// Stream<DynamicNode> etc.
-					return DynamicNode.class.isAssignableFrom((Class<?>) typeArgument);
+					return DynamicNode.class.isAssignableFrom(clazz);
 				}
-				if (typeArgument instanceof WildcardType) {
-					WildcardType wildcardType = (WildcardType) typeArgument;
+				if (typeArgument instanceof WildcardType wildcardType) {
 					Type[] upperBounds = wildcardType.getUpperBounds();
 					Type[] lowerBounds = wildcardType.getLowerBounds();
-					if (upperBounds.length == 1 && lowerBounds.length == 0 && upperBounds[0] instanceof Class) {
-						Class<?> upperBound = (Class<?>) upperBounds[0];
+					if (upperBounds.length == 1 && lowerBounds.length == 0
+							&& upperBounds[0] instanceof Class<?> upperBound) {
 						if (Object.class.equals(upperBound)) { // Stream<?> etc.
 							issueReporter.reportIssue(createTooGenericReturnTypeIssue(method));
 							return true;

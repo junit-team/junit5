@@ -134,8 +134,8 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 		new LinkedHashSet<>(this.children).forEach(child -> child.accept(TestDescriptor::prune));
 		// Second iteration to avoid processing children that were pruned in the first iteration
 		this.children.forEach(child -> {
-			if (child instanceof ClassTemplateInvocationTestDescriptor) {
-				int index = ((ClassTemplateInvocationTestDescriptor) child).getIndex();
+			if (child instanceof ClassTemplateInvocationTestDescriptor descriptor) {
+				int index = descriptor.getIndex();
 				this.dynamicDescendantFilter.allowIndex(index - 1);
 				this.childrenPrototypesByIndex.put(index, child.getChildren());
 			}
@@ -180,8 +180,8 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 	public Set<ExclusiveResource> getExclusiveResources() {
 		Set<ExclusiveResource> result = determineExclusiveResources().collect(toCollection(HashSet::new));
 		Visitor visitor = testDescriptor -> {
-			if (testDescriptor instanceof Node) {
-				result.addAll(((Node<?>) testDescriptor).getExclusiveResources());
+			if (testDescriptor instanceof Node<?> node) {
+				result.addAll(node.getExclusiveResources());
 			}
 		};
 		this.childrenPrototypes.forEach(child -> child.accept(visitor));

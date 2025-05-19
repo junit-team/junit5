@@ -78,8 +78,8 @@ class LoggingLauncherDiscoveryListener implements LauncherDiscoveryListener {
 				break;
 			case UNRESOLVED:
 				Consumer<Supplier<String>> loggingConsumer = logger::debug;
-				if (selector instanceof UniqueIdSelector) {
-					UniqueId uniqueId = ((UniqueIdSelector) selector).getUniqueId();
+				if (selector instanceof UniqueIdSelector uniqueIdSelector) {
+					UniqueId uniqueId = uniqueIdSelector.getUniqueId();
 					if (uniqueId.hasPrefix(engineId)) {
 						loggingConsumer = logger::warn;
 					}

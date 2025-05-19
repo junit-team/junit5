@@ -59,8 +59,7 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	private Optional<RunnerTestDescriptor> addFilter(TestDescriptor parent,
 			Function<RunnerTestDescriptor, Filter> filterCreator) {
-		if (parent instanceof RunnerTestDescriptor) {
-			RunnerTestDescriptor runnerTestDescriptor = (RunnerTestDescriptor) parent;
+		if (parent instanceof RunnerTestDescriptor runnerTestDescriptor) {
 			runnerTestDescriptor.getFilters().ifPresent(
 				filters -> filters.add(filterCreator.apply(runnerTestDescriptor)));
 			return Optional.of(runnerTestDescriptor);

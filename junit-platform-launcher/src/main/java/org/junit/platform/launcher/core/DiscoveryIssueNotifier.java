@@ -123,12 +123,10 @@ class DiscoveryIssueNotifier {
 				issue.message());
 			issue.source().ifPresent(source -> {
 				message.append("\n    Source: ").append(source);
-				if (source instanceof MethodSource) {
-					MethodSource methodSource = (MethodSource) source;
+				if (source instanceof MethodSource methodSource) {
 					appendIdeCompatibleLink(message, methodSource.getClassName(), methodSource.getMethodName());
 				}
-				else if (source instanceof ClassSource) {
-					ClassSource classSource = (ClassSource) source;
+				else if (source instanceof ClassSource classSource) {
 					appendIdeCompatibleLink(message, classSource.getClassName(), "<no-method>");
 				}
 			});

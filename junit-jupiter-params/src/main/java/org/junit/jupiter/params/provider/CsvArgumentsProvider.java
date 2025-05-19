@@ -149,8 +149,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	 */
 	static RuntimeException handleCsvException(Throwable throwable, Annotation annotation) {
 		UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
-		if (throwable instanceof PreconditionViolationException) {
-			throw (PreconditionViolationException) throwable;
+		if (throwable instanceof PreconditionViolationException exception) {
+			throw exception;
 		}
 		throw new CsvParsingException("Failed to parse CSV input configured via " + annotation, throwable);
 	}

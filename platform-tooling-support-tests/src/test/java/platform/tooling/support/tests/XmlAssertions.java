@@ -73,8 +73,8 @@ class XmlAssertions {
 			UnaryOperator<String> obfuscator) {
 		return testResult -> {
 			Object obfuscatedTestResult = testResult;
-			if (testResult instanceof String) {
-				obfuscatedTestResult = obfuscator.apply((String) testResult);
+			if (testResult instanceof String string) {
+				obfuscatedTestResult = obfuscator.apply(string);
 			}
 			return delegate.serialize(obfuscatedTestResult);
 		};

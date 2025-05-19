@@ -49,7 +49,7 @@ public final class AnnotationConsumerInitializer {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> T initialize(AnnotatedElement annotatedElement, T annotationConsumerInstance) {
-		if (annotationConsumerInstance instanceof AnnotationConsumer) {
+		if (annotationConsumerInstance instanceof AnnotationConsumer consumer) {
 			Class<? extends Annotation> annotationType = findConsumedAnnotationType(annotationConsumerInstance);
 			List<? extends Annotation> annotations = findAnnotations(annotatedElement, annotationType);
 
@@ -58,8 +58,7 @@ public final class AnnotationConsumerInitializer {
 						+ " must be used with an annotation of type " + annotationType.getName());
 			}
 
-			annotations.forEach(annotation -> initializeAnnotationConsumer(
-				(AnnotationConsumer) annotationConsumerInstance, annotation));
+			annotations.forEach(annotation -> initializeAnnotationConsumer(consumer, annotation));
 		}
 		return annotationConsumerInstance;
 	}

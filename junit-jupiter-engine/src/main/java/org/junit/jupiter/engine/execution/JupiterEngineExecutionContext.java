@@ -45,9 +45,9 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	public void close() throws Exception {
 		ExtensionContext extensionContext = getExtensionContext();
-		if (extensionContext instanceof AutoCloseable) {
+		if (extensionContext instanceof AutoCloseable closeable) {
 			try {
-				((AutoCloseable) extensionContext).close();
+				closeable.close();
 			}
 			catch (Exception e) {
 				throw new JUnitException("Failed to close extension context", e);

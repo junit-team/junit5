@@ -181,8 +181,8 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	@Override
 	public Set<ExclusiveResource> getExclusiveResources() {
-		if (this instanceof ResourceLockAware) {
-			return ((ResourceLockAware) this).determineExclusiveResources().collect(toSet());
+		if (this instanceof ResourceLockAware aware) {
+			return aware.determineExclusiveResources().collect(toSet());
 		}
 		return emptySet();
 	}

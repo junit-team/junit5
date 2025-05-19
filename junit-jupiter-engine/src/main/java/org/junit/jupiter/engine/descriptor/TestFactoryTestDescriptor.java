@@ -134,8 +134,8 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 
 	@SuppressWarnings("unchecked")
 	private Stream<DynamicNode> toDynamicNodeStream(Object testFactoryMethodResult) {
-		if (testFactoryMethodResult instanceof DynamicNode) {
-			return Stream.of((DynamicNode) testFactoryMethodResult);
+		if (testFactoryMethodResult instanceof DynamicNode node) {
+			return Stream.of(node);
 		}
 		return (Stream<DynamicNode>) CollectionUtils.toStream(testFactoryMethodResult);
 	}
@@ -155,8 +155,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 		Optional<TestSource> customTestSource = node.getTestSourceUri().map(TestFactoryTestDescriptor::fromUri);
 		TestSource source = customTestSource.orElse(defaultTestSource);
 
-		if (node instanceof DynamicTest) {
-			DynamicTest test = (DynamicTest) node;
+		if (node instanceof DynamicTest test) {
 			uniqueId = parent.getUniqueId().append(DYNAMIC_TEST_SEGMENT_TYPE, "#" + index);
 			descriptorCreator = () -> new DynamicTestTestDescriptor(uniqueId, index, test, source, configuration);
 		}

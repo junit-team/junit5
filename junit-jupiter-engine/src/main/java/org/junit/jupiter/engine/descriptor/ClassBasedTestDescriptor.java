@@ -365,8 +365,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 
-			if (throwable instanceof TestInstantiationException) {
-				throw (TestInstantiationException) throwable;
+			if (throwable instanceof TestInstantiationException exception) {
+				throw exception;
 			}
 
 			String message = "TestInstanceFactory [%s] failed to instantiate test class [%s]".formatted(

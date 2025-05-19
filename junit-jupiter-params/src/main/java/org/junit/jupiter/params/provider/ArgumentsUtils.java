@@ -30,8 +30,8 @@ final class ArgumentsUtils {
 	 */
 	static Arguments toArguments(Object item) {
 		// Nothing to do except cast.
-		if (item instanceof Arguments) {
-			return (Arguments) item;
+		if (item instanceof Arguments arguments) {
+			return arguments;
 		}
 
 		// Pass all multidimensional arrays "as is", in contrast to Object[].
@@ -42,8 +42,8 @@ final class ArgumentsUtils {
 
 		// Special treatment for one-dimensional reference arrays.
 		// See https://github.com/junit-team/junit5/issues/1665
-		if (item instanceof Object[]) {
-			return arguments((Object[]) item);
+		if (item instanceof Object[] objects) {
+			return arguments(objects);
 		}
 
 		// Pass everything else "as is".

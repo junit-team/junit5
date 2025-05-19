@@ -88,7 +88,7 @@ class AssertIterableEquals {
 		}
 
 		// If both are iterables, we need to check whether they contain the same elements.
-		if (expected instanceof Iterable && actual instanceof Iterable) {
+		if (expected instanceof Iterable<?> expectedIterable && actual instanceof Iterable<?> actualIterable) {
 
 			Pair pair = new Pair(expected, actual);
 
@@ -109,8 +109,7 @@ class AssertIterableEquals {
 			// Otherwise, we put the pair under investigation and recurse.
 			investigatedElements.put(pair, Status.UNDER_INVESTIGATION);
 
-			assertIterableEquals((Iterable<?>) expected, (Iterable<?>) actual, indexes, messageOrSupplier,
-				investigatedElements);
+			assertIterableEquals(expectedIterable, actualIterable, indexes, messageOrSupplier, investigatedElements);
 
 			// If we reach this point, we've checked that the two iterables contain the same elements so we store this information
 			// in case we come across the same pair again.

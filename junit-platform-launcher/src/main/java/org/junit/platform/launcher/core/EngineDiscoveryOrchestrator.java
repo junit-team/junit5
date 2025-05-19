@@ -200,8 +200,8 @@ public class EngineDiscoveryOrchestrator {
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
 			JUnitException cause = null;
-			if (throwable instanceof LinkageError) {
-				cause = ClasspathAlignmentChecker.check((LinkageError) throwable).orElse(null);
+			if (throwable instanceof LinkageError error) {
+				cause = ClasspathAlignmentChecker.check(error).orElse(null);
 			}
 			if (cause == null) {
 				String message = "TestEngine with ID '%s' failed to discover tests".formatted(testEngine.getId());

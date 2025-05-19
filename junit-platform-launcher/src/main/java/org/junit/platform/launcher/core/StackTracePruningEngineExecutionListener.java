@@ -52,11 +52,11 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 				.map(TestDescriptor::getSource) //
 				.flatMap(Optional::stream) //
 				.map(source -> {
-					if (source instanceof ClassSource) {
-						return ((ClassSource) source).getClassName();
+					if (source instanceof ClassSource classSource) {
+						return classSource.getClassName();
 					}
-					else if (source instanceof MethodSource) {
-						return ((MethodSource) source).getClassName();
+					else if (source instanceof MethodSource methodSource) {
+						return methodSource.getClassName();
 					}
 					else {
 						return null;

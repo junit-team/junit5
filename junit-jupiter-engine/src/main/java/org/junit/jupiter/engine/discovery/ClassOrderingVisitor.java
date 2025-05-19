@@ -116,8 +116,7 @@ class ClassOrderingVisitor extends AbstractOrderingVisitor {
 				.map(this::createDescriptorWrapperOrderer)//
 				.orElseGet(() -> {
 					Object parent = classBasedTestDescriptor.getParent().orElse(null);
-					if (parent instanceof ClassBasedTestDescriptor) {
-						ClassBasedTestDescriptor parentClassTestDescriptor = (ClassBasedTestDescriptor) parent;
+					if (parent instanceof ClassBasedTestDescriptor parentClassTestDescriptor) {
 						DescriptorWrapperOrderer<ClassOrderer, DefaultClassDescriptor> cacheEntry = ordererCache.get(
 							parentClassTestDescriptor);
 						return cacheEntry != null ? cacheEntry : createClassLevelOrderer(parentClassTestDescriptor);

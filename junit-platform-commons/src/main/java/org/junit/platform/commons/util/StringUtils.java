@@ -165,29 +165,29 @@ public final class StringUtils {
 		try {
 			if (obj.getClass().isArray()) {
 				if (obj.getClass().getComponentType().isPrimitive()) {
-					if (obj instanceof boolean[]) {
-						return Arrays.toString((boolean[]) obj);
+					if (obj instanceof boolean[] booleans) {
+						return Arrays.toString(booleans);
 					}
-					if (obj instanceof char[]) {
-						return Arrays.toString((char[]) obj);
+					if (obj instanceof char[] chars) {
+						return Arrays.toString(chars);
 					}
-					if (obj instanceof short[]) {
-						return Arrays.toString((short[]) obj);
+					if (obj instanceof short[] shorts) {
+						return Arrays.toString(shorts);
 					}
-					if (obj instanceof byte[]) {
-						return Arrays.toString((byte[]) obj);
+					if (obj instanceof byte[] bytes) {
+						return Arrays.toString(bytes);
 					}
-					if (obj instanceof int[]) {
-						return Arrays.toString((int[]) obj);
+					if (obj instanceof int[] ints) {
+						return Arrays.toString(ints);
 					}
-					if (obj instanceof long[]) {
-						return Arrays.toString((long[]) obj);
+					if (obj instanceof long[] longs) {
+						return Arrays.toString(longs);
 					}
-					if (obj instanceof float[]) {
-						return Arrays.toString((float[]) obj);
+					if (obj instanceof float[] floats) {
+						return Arrays.toString(floats);
 					}
-					if (obj instanceof double[]) {
-						return Arrays.toString((double[]) obj);
+					if (obj instanceof double[] doubles) {
+						return Arrays.toString(doubles);
 					}
 				}
 				return Arrays.deepToString((Object[]) obj);

@@ -122,8 +122,7 @@ class TestRun {
 
 	void markSkipped(TestDescriptor testDescriptor) {
 		skippedDescriptors.add(testDescriptor);
-		if (testDescriptor instanceof VintageTestDescriptor) {
-			VintageTestDescriptor vintageDescriptor = (VintageTestDescriptor) testDescriptor;
+		if (testDescriptor instanceof VintageTestDescriptor vintageDescriptor) {
 			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
 		}
 	}
@@ -139,8 +138,7 @@ class TestRun {
 	void markStarted(TestDescriptor testDescriptor, EventType eventType) {
 		inProgressDescriptors.put(testDescriptor, eventType);
 		startedDescriptors.add(testDescriptor);
-		if (testDescriptor instanceof VintageTestDescriptor) {
-			VintageTestDescriptor vintageDescriptor = (VintageTestDescriptor) testDescriptor;
+		if (testDescriptor instanceof VintageTestDescriptor vintageDescriptor) {
 			inProgressDescriptorsByStartingThread.get().addLast(vintageDescriptor);
 			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
 		}
@@ -153,8 +151,7 @@ class TestRun {
 	void markFinished(TestDescriptor testDescriptor) {
 		inProgressDescriptors.remove(testDescriptor);
 		finishedDescriptors.add(testDescriptor);
-		if (testDescriptor instanceof VintageTestDescriptor) {
-			VintageTestDescriptor descriptor = (VintageTestDescriptor) testDescriptor;
+		if (testDescriptor instanceof VintageTestDescriptor descriptor) {
 			inProgressDescriptorsByStartingThread.get().removeLastOccurrence(descriptor);
 		}
 	}

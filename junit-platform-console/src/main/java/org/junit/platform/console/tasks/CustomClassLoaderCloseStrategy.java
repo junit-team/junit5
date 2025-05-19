@@ -31,8 +31,8 @@ public enum CustomClassLoaderCloseStrategy {
 
 		@Override
 		public void handle(ClassLoader customClassLoader) {
-			if (customClassLoader instanceof AutoCloseable) {
-				close((AutoCloseable) customClassLoader);
+			if (customClassLoader instanceof AutoCloseable closeable) {
+				close(closeable);
 			}
 		}
 

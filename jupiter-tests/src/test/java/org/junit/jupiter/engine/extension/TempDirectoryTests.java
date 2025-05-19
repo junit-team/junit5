@@ -1402,7 +1402,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			}
 
 			private static String getName(AnnotatedElement element) {
-				return element instanceof Field ? ((Field) element).getName() : ((Parameter) element).getName();
+				return element instanceof Field field ? field.getName() : ((Parameter) element).getName();
 			}
 
 		}

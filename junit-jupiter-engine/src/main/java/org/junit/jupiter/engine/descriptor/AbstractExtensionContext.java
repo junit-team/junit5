@@ -93,17 +93,17 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		return (__, ___, value) -> {
 			boolean isAutoCloseEnabled = this.configuration.isClosingStoredAutoCloseablesEnabled();
 
-			if (value instanceof AutoCloseable && isAutoCloseEnabled) {
-				((AutoCloseable) value).close();
+			if (value instanceof AutoCloseable closeable && isAutoCloseEnabled) {
+				closeable.close();
 				return;
 			}
 
-			if (value instanceof Store.CloseableResource) {
+			if (value instanceof Store.CloseableResource resource) {
 				if (isAutoCloseEnabled) {
 					LOGGER.warn(
 						() -> "Type implements CloseableResource but not AutoCloseable: " + value.getClass().getName());
 				}
-				((Store.CloseableResource) value).close();
+				resource.close();
 			}
 		};
 	}

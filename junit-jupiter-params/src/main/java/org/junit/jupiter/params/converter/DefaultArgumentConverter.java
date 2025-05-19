@@ -106,13 +106,13 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 			return source;
 		}
 
-		if (source instanceof String) {
+		if (source instanceof String string) {
 			if (targetType == Locale.class && getLocaleConversionFormat() == LocaleConversionFormat.BCP_47) {
-				return Locale.forLanguageTag((String) source);
+				return Locale.forLanguageTag(string);
 			}
 
 			try {
-				return convert((String) source, targetType, classLoader);
+				return convert(string, targetType, classLoader);
 			}
 			catch (ConversionException ex) {
 				throw new ArgumentConversionException(ex.getMessage(), ex);

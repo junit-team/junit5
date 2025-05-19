@@ -424,8 +424,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			if (this.value == NO_VALUE_SET) {
 				computeValue();
 			}
-			if (this.value instanceof Failure) {
-				throw ExceptionUtils.throwAsUncheckedException(((Failure) this.value).throwable);
+			if (this.value instanceof Failure failure) {
+				throw ExceptionUtils.throwAsUncheckedException(failure.throwable);
 			}
 			return this.value;
 		}
@@ -464,8 +464,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		@API(status = EXPERIMENTAL, since = "1.13")
 		static <N> CloseAction<N> closeAutoCloseables() {
 			return (__, ___, value) -> {
-				if (value instanceof AutoCloseable) {
-					((AutoCloseable) value).close();
+				if (value instanceof AutoCloseable closeable) {
+					closeable.close();
 				}
 			};
 		}
