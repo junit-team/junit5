@@ -3203,7 +3203,7 @@ test class or method:
 include::{testDir}/example/ExplicitExecutionModeDemo.java[]
 ----
 
-This allows test classes or methods to opt in or out of parallel execution regardless of
+This allows test classes or methods to opt in or out of concurrent execution regardless of
 the globally configured default.
 
 When parallel execution is enabled and a default `{ClassOrderer}` is registered (see
