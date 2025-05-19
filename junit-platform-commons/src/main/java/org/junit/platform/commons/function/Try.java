@@ -20,6 +20,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -39,7 +40,7 @@ import org.junit.platform.commons.JUnitException;
  * @since 1.4
  */
 @API(status = MAINTAINED, since = "1.4")
-public abstract class Try<V> {
+public abstract class Try<V extends @Nullable Object> {
 
 	/**
 	 * Call the supplied {@link Callable} and return a successful {@code Try}
@@ -64,7 +65,7 @@ public abstract class Try<V> {
 	 * @return a succeeded {@code Try} that contains the supplied value; never
 	 * {@code null}
 	 */
-	public static <V> Try<V> success(V value) {
+	public static <V extends @Nullable Object> Try<V> success(V value) {
 		return new Success<>(value);
 	}
 
@@ -80,7 +81,7 @@ public abstract class Try<V> {
 	}
 
 	// Cannot use Preconditions due to package cycle
-	private static <T> T checkNotNull(T input, String title) {
+	private static <T> T checkNotNull(@Nullable T input, String title) {
 		if (input == null) {
 			// Cannot use PreconditionViolationException due to package cycle
 			throw new JUnitException(title + " must not be null");
@@ -198,7 +199,7 @@ public abstract class Try<V> {
 	 * except that a {@code Transformer} may throw an exception.
 	 */
 	@FunctionalInterface
-	public interface Transformer<S, T> {
+	public interface Transformer<S extends @Nullable Object, T extends @Nullable Object> {
 
 		/**
 		 * Apply this transformer to the supplied value.
@@ -209,7 +210,7 @@ public abstract class Try<V> {
 
 	}
 
-	private static class Success<V> extends Try<V> {
+	private static class Success<V extends @Nullable Object> extends Try<V> {
 
 		private final V value;
 
@@ -287,7 +288,7 @@ public abstract class Try<V> {
 		}
 	}
 
-	private static class Failure<V> extends Try<V> {
+	private static class Failure<V extends @Nullable Object> extends Try<V> {
 
 		private final Exception cause;
 
