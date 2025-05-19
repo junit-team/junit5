@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.descriptor;
 
+import java.io.Serial;
 import java.net.URI;
 import java.util.Objects;
 
@@ -23,6 +24,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
  */
 class DefaultUriSource implements UriSource {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final URI uri;

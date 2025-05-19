@@ -12,6 +12,8 @@ package org.junit.jupiter.api.extension;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
+
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
 
@@ -24,6 +26,7 @@ import org.junit.platform.commons.JUnitException;
 @API(status = STABLE, since = "5.10")
 public class TestInstantiationException extends JUnitException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public TestInstantiationException(String message) {

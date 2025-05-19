@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = STABLE, since = "1.0")
 public class FileSource implements FileSystemSource {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	/**

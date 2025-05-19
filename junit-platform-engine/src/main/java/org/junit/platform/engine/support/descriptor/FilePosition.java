@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.descriptor;
 
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,6 +33,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = STABLE, since = "1.0")
 public class FilePosition implements Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger logger = LoggerFactory.getLogger(FilePosition.class);

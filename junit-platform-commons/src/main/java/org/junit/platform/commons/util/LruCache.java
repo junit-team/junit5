@@ -12,6 +12,7 @@ package org.junit.platform.commons.util;
 
 import static org.apiguardian.api.API.Status.INTERNAL;
 
+import java.io.Serial;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import org.apiguardian.api.API;
 @API(status = INTERNAL, since = "1.6")
 public class LruCache<K, V> extends LinkedHashMap<K, V> {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private final int maxSize;

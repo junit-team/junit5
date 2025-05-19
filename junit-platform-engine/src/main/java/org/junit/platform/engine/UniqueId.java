@@ -14,6 +14,7 @@ import static java.util.Collections.singletonList;
 import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import org.junit.platform.commons.util.ToStringBuilder;
 @API(status = STABLE, since = "1.0")
 public class UniqueId implements Cloneable, Serializable {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	private static final String ENGINE_SEGMENT_TYPE = "engine";
@@ -296,6 +298,7 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.0")
 	public static class Segment implements Serializable {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		private final String type;

@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.engine.execution;
 
+import java.io.Serial;
+
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.JUnitException;
 
@@ -22,6 +24,7 @@ import org.junit.platform.commons.JUnitException;
  */
 class ConditionEvaluationException extends JUnitException {
 
+	@Serial
 	private static final long serialVersionUID = 1L;
 
 	public ConditionEvaluationException(String message, Throwable cause) {
