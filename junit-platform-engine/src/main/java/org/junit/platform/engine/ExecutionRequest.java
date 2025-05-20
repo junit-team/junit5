@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
@@ -41,7 +42,11 @@ public class ExecutionRequest {
 	private final TestDescriptor rootTestDescriptor;
 	private final EngineExecutionListener engineExecutionListener;
 	private final ConfigurationParameters configurationParameters;
+
+	@Nullable
 	private final OutputDirectoryProvider outputDirectoryProvider;
+
+	@Nullable
 	private final NamespacedHierarchicalStore<Namespace> requestLevelStore;
 
 	@Deprecated
@@ -52,8 +57,8 @@ public class ExecutionRequest {
 	}
 
 	private ExecutionRequest(TestDescriptor rootTestDescriptor, EngineExecutionListener engineExecutionListener,
-			ConfigurationParameters configurationParameters, OutputDirectoryProvider outputDirectoryProvider,
-			NamespacedHierarchicalStore<Namespace> requestLevelStore) {
+			ConfigurationParameters configurationParameters, @Nullable OutputDirectoryProvider outputDirectoryProvider,
+			@Nullable NamespacedHierarchicalStore<Namespace> requestLevelStore) {
 		this.rootTestDescriptor = Preconditions.notNull(rootTestDescriptor, "rootTestDescriptor must not be null");
 		this.engineExecutionListener = Preconditions.notNull(engineExecutionListener,
 			"engineExecutionListener must not be null");

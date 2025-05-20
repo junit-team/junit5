@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -86,9 +87,11 @@ public class SelectorResolutionResult {
 	}
 
 	private final Status status;
+
+	@Nullable
 	private final Throwable throwable;
 
-	private SelectorResolutionResult(Status status, Throwable throwable) {
+	private SelectorResolutionResult(Status status, @Nullable Throwable throwable) {
 		this.status = status;
 		this.throwable = throwable;
 	}

@@ -17,6 +17,7 @@ import java.util.Set;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
@@ -116,7 +117,7 @@ public interface ConfigurationParameters {
 	 * @see #CONFIG_FILE_NAME
 	 */
 	@API(status = STABLE, since = "1.3")
-	default <T> Optional<T> get(String key, Function<String, T> transformer) {
+	default <T> Optional<T> get(String key, Function<String, @Nullable T> transformer) {
 		Preconditions.notNull(transformer, "transformer must not be null");
 		return get(key).map(input -> {
 			try {
