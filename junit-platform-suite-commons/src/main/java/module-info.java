@@ -8,11 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Common support utilities for declarative test suites.
  *
  * @since 1.8
  */
+@NullMarked
 module org.junit.platform.suite.commons {
 	requires static transitive org.apiguardian.api;
 	requires org.junit.platform.suite.api;
