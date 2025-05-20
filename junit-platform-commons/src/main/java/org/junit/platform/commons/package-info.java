@@ -8,7 +8,4 @@
  * APIs by external parties is not supported!</strong>
  */
 
-@NullMarked
 package org.junit.platform.commons;
-
-import org.jspecify.annotations.NullMarked;

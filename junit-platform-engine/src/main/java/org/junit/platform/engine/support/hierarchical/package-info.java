@@ -5,7 +5,4 @@
  * {@link org.junit.platform.engine.support.hierarchical.Node} abstraction.
  */
 
-@NullMarked
 package org.junit.platform.engine.support.hierarchical;
-
-import org.jspecify.annotations.NullMarked;

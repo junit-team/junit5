@@ -8,7 +8,4 @@
  * extensions with the same semantics as within the JUnit Platform itself.
  */
 
-@NullMarked
 package org.junit.platform.commons.support;
-
-import org.jspecify.annotations.NullMarked;

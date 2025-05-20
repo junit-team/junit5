@@ -8,11 +8,14 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Common APIs and support utilities for the JUnit Platform.
  *
  * @since 1.0
  */
+@NullMarked
 module org.junit.platform.commons {
 	requires java.logging;
 	requires java.management; // needed by RuntimeUtils to determine input arguments

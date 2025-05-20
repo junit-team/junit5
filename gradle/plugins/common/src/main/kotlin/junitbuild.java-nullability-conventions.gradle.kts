@@ -1,4 +1,5 @@
 import junitbuild.extensions.dependencyFromLibs
+import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
 
 plugins {
@@ -13,7 +14,7 @@ dependencies {
 }
 
 nullaway {
-	onlyNullMarked = true
+	annotatedPackages.add(javaModuleName)
 }
 
 tasks.withType<JavaCompile>().configureEach {
