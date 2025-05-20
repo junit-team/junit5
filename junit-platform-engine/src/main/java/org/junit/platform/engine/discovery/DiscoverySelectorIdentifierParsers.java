@@ -54,8 +54,9 @@ class DiscoverySelectorIdentifierParsers {
 
 	static Optional<? extends DiscoverySelector> parse(DiscoverySelectorIdentifier identifier) {
 		Preconditions.notNull(identifier, "identifier must not be null");
-		DiscoverySelectorIdentifierParser parser = Singleton.INSTANCE.parsersByPrefix.get(identifier.getPrefix());
-		Preconditions.notNull(parser, "No parser for prefix: " + identifier.getPrefix());
+		DiscoverySelectorIdentifierParser parser = Preconditions.notNull(
+			Singleton.INSTANCE.parsersByPrefix.get(identifier.getPrefix()),
+			"No parser for prefix: " + identifier.getPrefix());
 
 		return parser.parse(identifier, DiscoverySelectorIdentifierParsers::parse);
 	}

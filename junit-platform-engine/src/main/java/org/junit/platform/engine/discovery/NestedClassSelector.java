@@ -24,6 +24,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -54,11 +55,13 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 @API(status = STABLE, since = "1.6")
 public class NestedClassSelector implements DiscoverySelector {
 
+	@Nullable
 	private final ClassLoader classLoader;
+
 	private final List<ClassSelector> enclosingClassSelectors;
 	private final ClassSelector nestedClassSelector;
 
-	NestedClassSelector(ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName) {
+	NestedClassSelector(@Nullable ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName) {
 		this.classLoader = classLoader;
 		this.enclosingClassSelectors = enclosingClassNames.stream() //
 				.map(className -> new ClassSelector(classLoader, className)) //
@@ -78,6 +81,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
+	@Nullable
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.classLoader;

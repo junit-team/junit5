@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.DiscoverySelector;
@@ -44,9 +45,11 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 public class FileSelector implements DiscoverySelector {
 
 	private final String path;
+
+	@Nullable
 	private final FilePosition position;
 
-	FileSelector(String path, FilePosition position) {
+	FileSelector(String path, @Nullable FilePosition position) {
 		this.path = path;
 		this.position = position;
 	}
