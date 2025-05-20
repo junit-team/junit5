@@ -16,6 +16,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Configuration to use for parallel test execution.
@@ -66,9 +67,10 @@ public interface ParallelExecutionConfiguration {
 	 * @return the saturate predicate to be passed to the {@code ForkJoinPool} constructor; may be {@code null}
 	 * @since 1.9
 	 * @see ForkJoinPool#ForkJoinPool(int, ForkJoinPool.ForkJoinWorkerThreadFactory, Thread.UncaughtExceptionHandler,
-	 * boolean, int, int, int, Predicate, long, TimeUnit)
+	 * boolean, int, int, int, Predicate, long, java.util.concurrent.TimeUnit)
 	 */
 	@API(status = STABLE, since = "1.11")
+	@Nullable
 	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
 		return null;
 	}

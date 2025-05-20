@@ -19,6 +19,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.EngineExecutionListener;
 import org.junit.platform.engine.TestDescriptor;
@@ -218,7 +219,7 @@ public interface Node<C extends EngineExecutionContext> {
 		 * may be {@code null}
 		 * @return a skipped {@code SkipResult} with the given reason
 		 */
-		public static SkipResult skip(String reason) {
+		public static SkipResult skip(@Nullable String reason) {
 			return new SkipResult(true, reason);
 		}
 
@@ -233,7 +234,7 @@ public interface Node<C extends EngineExecutionContext> {
 			return alwaysExecuteSkipResult;
 		}
 
-		private SkipResult(boolean skipped, String reason) {
+		private SkipResult(boolean skipped, @Nullable String reason) {
 			this.skipped = skipped;
 			this.reason = Optional.ofNullable(reason);
 		}

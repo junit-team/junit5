@@ -35,6 +35,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -126,7 +127,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 	}
 
 	@Override
-	public Future<Void> submit(TestTask testTask) {
+	public Future<@Nullable Void> submit(TestTask testTask) {
 		ExclusiveTask exclusiveTask = new ExclusiveTask(testTask);
 		if (!isAlreadyRunningInForkJoinPool()) {
 			// ensure we're running inside the ForkJoinPool so we

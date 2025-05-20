@@ -18,6 +18,7 @@ import static org.junit.platform.engine.TestExecutionResult.successful;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
@@ -42,6 +43,7 @@ public class ThrowableCollector {
 
 	private final Predicate<? super Throwable> abortedExecutionPredicate;
 
+	@Nullable
 	private Throwable throwable;
 
 	/**
@@ -121,6 +123,7 @@ public class ThrowableCollector {
 	 * @see #isEmpty()
 	 * @see #assertEmpty()
 	 */
+	@Nullable
 	public Throwable getThrowable() {
 		return this.throwable;
 	}
@@ -157,7 +160,7 @@ public class ThrowableCollector {
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
 	public void assertEmpty() {
-		if (!isEmpty()) {
+		if (this.throwable != null) {
 			throw ExceptionUtils.throwAsUncheckedException(this.throwable);
 		}
 	}
@@ -174,13 +177,13 @@ public class ThrowableCollector {
 	 */
 	@API(status = MAINTAINED, since = "1.6")
 	public TestExecutionResult toTestExecutionResult() {
-		if (isEmpty()) {
+		if (this.throwable == null) {
 			return successful();
 		}
-		if (hasAbortedExecution(throwable)) {
-			return aborted(throwable);
+		if (hasAbortedExecution(this.throwable)) {
+			return aborted(this.throwable);
 		}
-		return failed(throwable);
+		return failed(this.throwable);
 	}
 
 	private boolean hasAbortedExecution(Throwable t) {

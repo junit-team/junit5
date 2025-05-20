@@ -12,6 +12,7 @@ package org.junit.platform.engine.support.hierarchical;
 
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
@@ -22,10 +23,11 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
 public class DemoHierarchicalContainerDescriptor extends AbstractTestDescriptor
 		implements Node<DemoEngineExecutionContext> {
 
+	@Nullable
 	private final Runnable beforeBlock;
 
-	public DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, TestSource source,
-			Runnable beforeBlock) {
+	public DemoHierarchicalContainerDescriptor(UniqueId uniqueId, String displayName, @Nullable TestSource source,
+			@Nullable Runnable beforeBlock) {
 		super(uniqueId, displayName, source);
 		this.beforeBlock = beforeBlock;
 	}
