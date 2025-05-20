@@ -11,6 +11,7 @@
 package org.junit.vintage.engine.descriptor;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.runner.Description;
 
 @API(status = API.Status.INTERNAL, since = "5.8")
@@ -19,6 +20,7 @@ public class DescriptionUtils {
 	private DescriptionUtils() {
 	}
 
+	@Nullable
 	public static String getMethodName(Description description) {
 		String displayName = description.getDisplayName();
 		int i = displayName.indexOf('(');

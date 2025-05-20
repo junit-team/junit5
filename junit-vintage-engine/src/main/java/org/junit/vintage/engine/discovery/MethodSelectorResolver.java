@@ -107,7 +107,7 @@ class MethodSelectorResolver implements SelectorResolver {
 
 			private boolean isParameterizedMethod(Description description) {
 				String methodName = DescriptionUtils.getMethodName(description);
-				return methodName.startsWith(desiredMethodName + "[");
+				return methodName != null && methodName.startsWith(desiredMethodName + "[");
 			}
 
 			@Override

@@ -13,6 +13,7 @@ package org.junit.vintage.engine.discovery;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.Ignore;
 import org.junit.internal.builders.AllDefaultPossibilitiesBuilder;
 import org.junit.internal.builders.AnnotatedBuilder;
@@ -108,6 +109,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 			super(suiteBuilder);
 		}
 
+		@Nullable
 		@Override
 		public Runner buildRunner(Class<? extends Runner> runnerClass, Class<?> testClass) throws Exception {
 			// Referenced by name because it might not be available at runtime.
@@ -127,6 +129,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 
 		private static final Predicate<Method> isPotentialJUnit4TestMethod = new IsPotentialJUnit4TestMethod();
 
+		@Nullable
 		@Override
 		public Runner runnerForClass(Class<?> testClass) throws Throwable {
 			if (containsTestMethods(testClass)) {
@@ -146,6 +149,7 @@ class DefensiveAllDefaultPossibilitiesBuilder extends AllDefaultPossibilitiesBui
 	 * @since 5.1
 	 */
 	private static class NullIgnoredBuilder extends IgnoredBuilder {
+		@Nullable
 		@Override
 		public Runner runnerForClass(Class<?> testClass) {
 			// don't ignore entire test classes just yet

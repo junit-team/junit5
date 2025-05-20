@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-nullability-conventions")
 	id("junitbuild.junit4-compatibility")
 	id("junitbuild.testing-conventions")
 	`java-test-fixtures`
@@ -14,6 +15,7 @@ dependencies {
 	api(libs.junit4)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jspecify)
 
 	testFixturesApi(platform(libs.groovy2.bom))
 	testFixturesApi(libs.spock1)
@@ -43,10 +45,13 @@ tasks {
 		bundle {
 			val junit4Min = libs.versions.junit4Min.get()
 			val version = project.version
+			val importAPIGuardian: String by extra
+			val importJSpecify: String by extra
 			bnd("""
 				# Import JUnit4 packages with a version
 				Import-Package: \
-					${extra["importAPIGuardian"]},\
+					${importAPIGuardian},\
+					${importJSpecify},\
 					junit.runner;version="[${junit4Min},5)",\
 					org.junit;version="[${junit4Min},5)",\
 					org.junit.experimental.categories;version="[${junit4Min},5)",\
