@@ -1,5 +1,5 @@
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import junitbuild.extensions.javaModuleName
 import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
@@ -279,5 +279,10 @@ pluginManager.withPlugin("java-test-fixtures") {
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
 		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
+		options.compilerArgs.addAll(listOf(
+			"-Xlint:all", // Enables all recommended warnings.
+			"-Werror", // Terminates compilation when warnings occur.
+			"-parameters" // Generates metadata for reflection on method parameters.
+		))
 	}
 }
