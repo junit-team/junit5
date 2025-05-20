@@ -6,7 +6,4 @@
  * @see org.junit.platform.engine.support.discovery.SelectorResolver
  */
 
-@NullMarked
 package org.junit.platform.engine.support.discovery;
-
-import org.jspecify.annotations.NullMarked;

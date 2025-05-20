@@ -120,6 +120,17 @@ See [`ExtensionContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/e
 [`ParameterContext`](junit-jupiter-api/src/main/java/org/junit/jupiter/api/extension/ParameterContext.java) for example Javadoc.
 
 
+### Nullability
+
+This project uses JSpecify's annotation to indicate nullability. In general, the approach
+is as follows:
+
+- The Gradle build is set up to treat all code as being `@NullMarked`
+- The descriptor of each module is annotated with `@NullMarked` for IDEs such as IntelliJ
+  IDEA to treat code correctly.
+- Fields, parameters, return types etc. may be annotated with `@Nullable`
+- A package can be excluded (temporarily) using `@NullUnmarked`
+
 ### Tests
 
 #### Naming

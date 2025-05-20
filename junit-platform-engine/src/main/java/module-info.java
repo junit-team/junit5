@@ -8,6 +8,8 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Public API for test engines.
  *
@@ -16,6 +18,7 @@
  *
  * @since 1.0
  */
+@NullMarked
 module org.junit.platform.engine {
 
 	requires static transitive org.apiguardian.api;
