@@ -89,6 +89,7 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "net.bytebuddy", "byte-buddy");
 		ThirdPartyJars.copy(lib, "org.apiguardian", "apiguardian-api");
 		ThirdPartyJars.copy(lib, "org.hamcrest", "hamcrest");
+		ThirdPartyJars.copy(lib, "org.jspecify", "jspecify");
 		ThirdPartyJars.copy(lib, "org.opentest4j", "opentest4j");
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
@@ -172,6 +173,7 @@ class ModularUserGuideTests {
 			"lib/guava-.+\\.jar", //
 			"lib/hamcrest-.+\\.jar", //
 			"lib/jimfs-.+\\.jar", //
+			"lib/jspecify-.+\\.jar", //
 			"lib/junit-.+\\.jar", //
 			">> ALL JUNIT 5 JARS >>", //
 			"lib/opentest4j-.+\\.jar", //

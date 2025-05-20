@@ -59,6 +59,7 @@ dependencies {
 	thirdPartyJars(libs.assertj)
 	thirdPartyJars(libs.apiguardian)
 	thirdPartyJars(libs.hamcrest)
+	thirdPartyJars(libs.jspecify)
 	thirdPartyJars(libs.opentest4j)
 	thirdPartyJars(libs.openTestReporting.tooling.spi)
 	thirdPartyJars(libs.jimfs)
