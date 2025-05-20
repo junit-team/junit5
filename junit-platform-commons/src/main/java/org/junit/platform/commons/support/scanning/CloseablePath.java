@@ -26,6 +26,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @since 1.0
  */
@@ -113,6 +115,7 @@ final class CloseablePath implements Closeable {
 			return this;
 		}
 
+		@Nullable
 		private ManagedFileSystem release() {
 			if (referenceCount.decrementAndGet() == 0) {
 				close();
