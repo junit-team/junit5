@@ -39,6 +39,7 @@ import org.assertj.core.api.Condition;
 import org.assertj.core.api.ListAssert;
 import org.assertj.core.api.SoftAssertions;
 import org.assertj.core.data.Index;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.TestExecutionResult.Status;
@@ -469,6 +470,7 @@ public final class Events {
 		}
 	}
 
+	@Nullable
 	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
 		// @formatter:off
 		Optional<Event> matchedEvent = events.stream()

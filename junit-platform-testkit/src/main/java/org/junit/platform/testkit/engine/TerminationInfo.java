@@ -13,6 +13,7 @@ package org.junit.platform.testkit.engine;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestExecutionResult;
@@ -38,7 +39,7 @@ public class TerminationInfo {
 	 * @return the created {@code TerminationInfo}; never {@code null}
 	 * @see #executed(TestExecutionResult)
 	 */
-	public static TerminationInfo skipped(String reason) {
+	public static TerminationInfo skipped(@Nullable String reason) {
 		return new TerminationInfo(true, reason, null);
 	}
 
@@ -58,10 +59,15 @@ public class TerminationInfo {
 	// -------------------------------------------------------------------------
 
 	private final boolean skipped;
+
+	@Nullable
 	private final String skipReason;
+
+	@Nullable
 	private final TestExecutionResult testExecutionResult;
 
-	private TerminationInfo(boolean skipped, String skipReason, TestExecutionResult testExecutionResult) {
+	private TerminationInfo(boolean skipped, @Nullable String skipReason,
+			@Nullable TestExecutionResult testExecutionResult) {
 		boolean executed = (testExecutionResult != null);
 		Preconditions.condition((skipped ^ executed),
 			"TerminationInfo must represent either a skipped execution or a TestExecutionResult but not both");
@@ -109,6 +115,7 @@ public class TerminationInfo {
 	 * @throws UnsupportedOperationException if this {@code TerminationInfo}
 	 * does not represent a skipped execution
 	 */
+	@Nullable
 	public String getSkipReason() throws UnsupportedOperationException {
 		if (skipped()) {
 			return this.skipReason;
@@ -125,7 +132,7 @@ public class TerminationInfo {
 	 * does not represent a completed execution
 	 */
 	public TestExecutionResult getExecutionResult() throws UnsupportedOperationException {
-		if (executed()) {
+		if (this.testExecutionResult != null) {
 			return this.testExecutionResult;
 		}
 		// else

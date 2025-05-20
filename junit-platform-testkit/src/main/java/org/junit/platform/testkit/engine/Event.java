@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
@@ -93,7 +94,7 @@ public class Event {
 	 * @return the newly created {@code Event}
 	 * @see EventType#SKIPPED
 	 */
-	public static Event executionSkipped(TestDescriptor testDescriptor, String reason) {
+	public static Event executionSkipped(TestDescriptor testDescriptor, @Nullable String reason) {
 		return new Event(EventType.SKIPPED, testDescriptor, reason);
 	}
 
@@ -170,6 +171,8 @@ public class Event {
 	private final Instant timestamp = Instant.now();
 	private final EventType type;
 	private final TestDescriptor testDescriptor;
+
+	@Nullable
 	private final Object payload;
 
 	/**
@@ -180,7 +183,7 @@ public class Event {
 	 * never {@code null}
 	 * @param payload the generic payload associated with the event; may be {@code null}
 	 */
-	private Event(EventType type, TestDescriptor testDescriptor, Object payload) {
+	private Event(EventType type, TestDescriptor testDescriptor, @Nullable Object payload) {
 		this.type = Preconditions.notNull(type, "EventType must not be null");
 		this.testDescriptor = Preconditions.notNull(testDescriptor, "TestDescriptor must not be null");
 		this.payload = payload;
