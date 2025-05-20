@@ -8,6 +8,8 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Provides Java Flight Recorder events for the JUnit Platform.
  *
@@ -19,6 +21,7 @@
  * @see <a href="https://openjdk.java.net/jeps/328">JEP 328: Flight Recorder</a>
  * @since 1.7
  */
+@NullMarked
 module org.junit.platform.jfr {
 	requires jdk.jfr;
 	requires static org.apiguardian.api;
