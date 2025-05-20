@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -120,7 +121,10 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 	private final Set<String> selectedClassNames = new LinkedHashSet<>();
 	private boolean includeClassNamePatternsUsed;
 	private boolean filterStandardClassNamePatterns = false;
+
+	@Nullable
 	private ConfigurationParameters parentConfigurationParameters;
+
 	private boolean enableParentConfigurationParameters = true;
 
 	private SuiteLauncherDiscoveryRequestBuilder() {
@@ -516,14 +520,16 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return DiscoverySelectors.selectMethod(annotation.value());
 	}
 
-	private static MethodSelector toMethodSelector(Class<?> suiteClass, Class<?> type, String typeName,
-			Class<?>[] parameterTypes, String methodName, String parameterTypeNames) {
+	private static MethodSelector toMethodSelector(Class<?> suiteClass, @Nullable Class<?> type,
+			@Nullable String typeName, Class<?> @Nullable [] parameterTypes, String methodName,
+			String parameterTypeNames) {
 		if (type == null) {
-			Preconditions.notBlank(typeName, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
-				"type must be set or type name must not be blank"));
+			String nonBlankTypeName = Preconditions.notBlank(typeName,
+				() -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
+					"type must be set or type name must not be blank"));
 			return parameterTypes == null //
-					? DiscoverySelectors.selectMethod(typeName, methodName, parameterTypeNames) //
-					: DiscoverySelectors.selectMethod(typeName, methodName, parameterTypes);
+					? DiscoverySelectors.selectMethod(nonBlankTypeName, methodName, parameterTypeNames) //
+					: DiscoverySelectors.selectMethod(nonBlankTypeName, methodName, parameterTypes);
 		}
 		else {
 			Preconditions.condition(typeName == null, () -> prefixErrorMessageForInvalidSelectMethodUsage(suiteClass,
