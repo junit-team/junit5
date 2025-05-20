@@ -61,7 +61,7 @@ public final class RuntimeUtils {
 		// See https://github.com/junit-team/junit4/pull/1187
 		try {
 			Object bean = managementFactoryClass.get().getMethod("getRuntimeMXBean").invoke(null);
-			Class<?> mx = ReflectionUtils.tryToLoadClass("java.lang.management.RuntimeMXBean").get();
+			Class<?> mx = ReflectionUtils.tryToLoadClass("java.lang.management.RuntimeMXBean").getNonNull();
 			@SuppressWarnings("unchecked")
 			List<String> args = (List<String>) mx.getMethod("getInputArguments").invoke(bean);
 			return Optional.of(args);

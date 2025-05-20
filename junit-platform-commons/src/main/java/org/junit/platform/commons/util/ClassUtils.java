@@ -17,6 +17,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Collection of utilities for working with {@link Class classes}.
@@ -49,7 +50,7 @@ public final class ClassUtils {
 	 * @see #nullSafeToString(Class...)
 	 * @see StringUtils#nullSafeToString(Object)
 	 */
-	public static String nullSafeToString(Class<?> clazz) {
+	public static String nullSafeToString(@Nullable Class<?> clazz) {
 		return clazz == null ? "null" : clazz.getName();
 	}
 
@@ -64,7 +65,7 @@ public final class ClassUtils {
 	 * @see #nullSafeToString(Function, Class...)
 	 * @see StringUtils#nullSafeToString(Object)
 	 */
-	public static String nullSafeToString(Class<?>... classes) {
+	public static String nullSafeToString(@Nullable Class<?> @Nullable... classes) {
 		return nullSafeToString(Class::getName, classes);
 	}
 
@@ -83,13 +84,16 @@ public final class ClassUtils {
 	 * @see #nullSafeToString(Class...)
 	 * @see StringUtils#nullSafeToString(Object)
 	 */
-	public static String nullSafeToString(Function<? super Class<?>, ? extends String> mapper, Class<?>... classes) {
+	public static String nullSafeToString(Function<? super Class<?>, ? extends String> mapper,
+			@Nullable Class<?> @Nullable... classes) {
 		Preconditions.notNull(mapper, "Mapping function must not be null");
 
 		if (classes == null || classes.length == 0) {
 			return "";
 		}
-		return stream(classes).map(clazz -> clazz == null ? "null" : mapper.apply(clazz)).collect(joining(", "));
+		return stream(classes) //
+				.map(clazz -> clazz == null ? "null" : mapper.apply(clazz)) //
+				.collect(joining(", "));
 	}
 
 }

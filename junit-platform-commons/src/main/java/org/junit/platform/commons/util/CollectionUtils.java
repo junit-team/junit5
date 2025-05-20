@@ -37,6 +37,7 @@ import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.support.ReflectionSupport;
 
@@ -66,7 +67,7 @@ public final class CollectionUtils {
 	 * @throws PreconditionViolationException if the collection is {@code null}
 	 * or does not contain exactly one element
 	 */
-	public static <T> T getOnlyElement(Collection<T> collection) {
+	public static <T extends @Nullable Object> T getOnlyElement(Collection<T> collection) {
 		Preconditions.notNull(collection, "collection must not be null");
 		Preconditions.condition(collection.size() == 1,
 			() -> "collection must contain exactly one element: " + collection);
@@ -82,14 +83,14 @@ public final class CollectionUtils {
 	 * @since 1.11
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public static <T> Optional<T> getFirstElement(Collection<T> collection) {
+	public static <T extends @Nullable Object> Optional<T> getFirstElement(Collection<T> collection) {
 		Preconditions.notNull(collection, "collection must not be null");
 		return collection.isEmpty() //
 				? Optional.empty() //
 				: Optional.ofNullable(firstElement(collection));
 	}
 
-	private static <T> T firstElement(Collection<T> collection) {
+	private static <T extends @Nullable Object> T firstElement(Collection<T> collection) {
 		return collection instanceof List //
 				? ((List<T>) collection).get(0) //
 				: collection.iterator().next();
@@ -104,7 +105,7 @@ public final class CollectionUtils {
 	 * @since 1.6
 	 */
 	@API(status = INTERNAL, since = "1.6")
-	public static <T> Set<T> toSet(T[] values) {
+	public static <T extends @Nullable Object> Set<T> toSet(T[] values) {
 		Preconditions.notNull(values, "values array must not be null");
 		if (values.length == 0) {
 			return Collections.emptySet();
@@ -112,7 +113,7 @@ public final class CollectionUtils {
 		if (values.length == 1) {
 			return Collections.singleton(values[0]);
 		}
-		Set<T> set = new HashSet<>();
+		var set = new HashSet<T>();
 		Collections.addAll(set, values);
 		return set;
 	}
@@ -135,7 +136,7 @@ public final class CollectionUtils {
 	 * @return a {@code Collector} which collects all the input elements into
 	 * an unmodifiable list, in encounter order
 	 */
-	public static <T> Collector<T, ?, List<T>> toUnmodifiableList() {
+	public static <T extends @Nullable Object> Collector<T, ?, List<T>> toUnmodifiableList() {
 		return collectingAndThen(toList(), Collections::unmodifiableList);
 	}
 
@@ -153,7 +154,7 @@ public final class CollectionUtils {
 	 * @see #toStream(Object)
 	 */
 	@API(status = INTERNAL, since = "1.9.1")
-	public static boolean isConvertibleToStream(Class<?> type) {
+	public static boolean isConvertibleToStream(@Nullable Class<?> type) {
 		if (type == null || type == void.class) {
 			return false;
 		}
@@ -251,7 +252,7 @@ public final class CollectionUtils {
 	 * Call the supplied action on each element of the supplied {@link List} from last to first element.
 	 */
 	@API(status = INTERNAL, since = "1.9.2")
-	public static <T> void forEachInReverseOrder(List<T> list, Consumer<? super T> action) {
+	public static <T extends @Nullable Object> void forEachInReverseOrder(List<T> list, Consumer<? super T> action) {
 		if (list.isEmpty()) {
 			return;
 		}

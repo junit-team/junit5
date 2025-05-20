@@ -13,6 +13,7 @@ package org.junit.platform.commons.util;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Internal utilities for working with <em>unrecoverable</em> exceptions.
@@ -47,7 +48,7 @@ public final class UnrecoverableExceptions {
 	 * <p>If the supplied {@code exception} is not <em>unrecoverable</em>, this
 	 * method does nothing.
 	 */
-	public static void rethrowIfUnrecoverable(Throwable exception) {
+	public static void rethrowIfUnrecoverable(@Nullable Throwable exception) {
 		if (exception instanceof OutOfMemoryError) {
 			throw ExceptionUtils.throwAsUncheckedException(exception);
 		}

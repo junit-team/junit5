@@ -19,6 +19,7 @@ import java.lang.reflect.Parameter;
 import java.lang.reflect.Type;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.function.Try;
 
 /**
@@ -29,7 +30,9 @@ import org.junit.platform.commons.function.Try;
 @API(status = INTERNAL, since = "6.0")
 public class KotlinReflectionUtils {
 
+	@Nullable
 	private static final Class<? extends Annotation> kotlinMetadata;
+	@Nullable
 	private static final Class<?> kotlinCoroutineContinuation;
 	private static final boolean kotlinReflectPresent;
 	private static final boolean kotlinxCoroutinesPresent;
@@ -89,7 +92,9 @@ public class KotlinReflectionUtils {
 		return KotlinReflectionUtilsKt.getParameterTypes(method);
 	}
 
-	public static Object invokeKotlinSuspendingFunction(Method method, Object target, Object[] args) {
+	@Nullable
+	public static Object invokeKotlinSuspendingFunction(Method method, @Nullable Object target,
+			@Nullable Object[] args) {
 		requireKotlinReflect(method);
 		requireKotlinxCoroutines(method);
 		return KotlinReflectionUtilsKt.invoke(method, target, args);
