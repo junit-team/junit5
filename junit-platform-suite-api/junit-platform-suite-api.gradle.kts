@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-nullability-conventions")
 }
 
 description = "JUnit Platform Suite API"
@@ -9,6 +10,7 @@ dependencies {
 	api(projects.junitPlatformCommons)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jspecify)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
