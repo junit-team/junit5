@@ -62,7 +62,7 @@ public final class EventConditions {
 
 	/**
 	 * Create a new {@link Condition} that matches if and only if an
-	 * {@link Event} matches all of the supplied conditions.
+	 * {@link Event} matches all the supplied conditions.
 	 */
 	@SafeVarargs
 	@SuppressWarnings("varargs")

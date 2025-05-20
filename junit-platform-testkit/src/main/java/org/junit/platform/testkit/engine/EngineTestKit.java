@@ -25,6 +25,7 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.CollectionUtils;
@@ -276,7 +277,8 @@ public final class EngineTestKit {
 		}
 	}
 
-	private static NamespacedHierarchicalStore<Namespace> newStore(NamespacedHierarchicalStore<Namespace> parentStore) {
+	private static NamespacedHierarchicalStore<Namespace> newStore(
+			@Nullable NamespacedHierarchicalStore<Namespace> parentStore) {
 		return new NamespacedHierarchicalStore<>(parentStore, closeAutoCloseables());
 	}
 

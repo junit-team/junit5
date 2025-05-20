@@ -8,12 +8,15 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
+import org.jspecify.annotations.NullMarked;
+
 /**
  * Defines the Test Kit API for the JUnit Platform.
  *
  * @since 1.4
  * @uses org.junit.platform.engine.TestEngine
  */
+@NullMarked
 module org.junit.platform.testkit {
 	requires static transitive org.apiguardian.api;
 	requires transitive org.assertj.core;
