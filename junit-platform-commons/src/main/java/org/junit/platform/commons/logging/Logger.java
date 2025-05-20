@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * The {@code Logger} API serves as a simple logging facade for
@@ -38,7 +39,7 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#SEVERE} in JUL.
 	 */
-	void error(Throwable throwable, Supplier<String> messageSupplier);
+	void error(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 	/**
 	 * Log the message from the provided {@code messageSupplier} at warning level.
@@ -53,7 +54,7 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#WARNING} in JUL.
 	 */
-	void warn(Throwable throwable, Supplier<String> messageSupplier);
+	void warn(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 	/**
 	 * Log the message from the provided {@code messageSupplier} at info level.
@@ -68,7 +69,7 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#INFO} in JUL.
 	 */
-	void info(Throwable throwable, Supplier<String> messageSupplier);
+	void info(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 	/**
 	 * Log the message from the provided {@code messageSupplier} at config level.
@@ -83,7 +84,7 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#CONFIG} in JUL.
 	 */
-	void config(Throwable throwable, Supplier<String> messageSupplier);
+	void config(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 	/**
 	 * Log the message from the provided {@code messageSupplier} at debug level.
@@ -98,7 +99,7 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#FINE} in JUL.
 	 */
-	void debug(Throwable throwable, Supplier<String> messageSupplier);
+	void debug(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 	/**
 	 * Log the message from the provided {@code messageSupplier} at trace level.
@@ -113,6 +114,6 @@ public interface Logger {
 	 *
 	 * <p>Maps to {@link java.util.logging.Level#FINER} in JUL.
 	 */
-	void trace(Throwable throwable, Supplier<String> messageSupplier);
+	void trace(@Nullable Throwable throwable, Supplier<String> messageSupplier);
 
 }
