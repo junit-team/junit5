@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -60,7 +61,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	private final NestedClassSelector nestedClassSelector;
 	private final MethodSelector methodSelector;
 
-	NestedMethodSelector(ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName,
+	NestedMethodSelector(@Nullable ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName,
 			String methodName, String parameterTypeNames) {
 		this.nestedClassSelector = new NestedClassSelector(classLoader, enclosingClassNames, nestedClassName);
 		this.methodSelector = new MethodSelector(classLoader, nestedClassName, methodName, parameterTypeNames);
@@ -69,7 +70,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	/**
 	 * @since 1.10
 	 */
-	NestedMethodSelector(ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName,
+	NestedMethodSelector(@Nullable ClassLoader classLoader, List<String> enclosingClassNames, String nestedClassName,
 			String methodName, Class<?>... parameterTypes) {
 		this.nestedClassSelector = new NestedClassSelector(classLoader, enclosingClassNames, nestedClassName);
 		this.methodSelector = new MethodSelector(classLoader, nestedClassName, methodName, parameterTypes);
@@ -100,6 +101,7 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 *
 	 * @since 1.10
 	 */
+	@Nullable
 	@API(status = EXPERIMENTAL, since = "1.10")
 	public ClassLoader getClassLoader() {
 		return this.nestedClassSelector.getClassLoader();

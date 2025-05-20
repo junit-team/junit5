@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.function.Try;
 import org.junit.platform.commons.support.ReflectionSupport;
@@ -47,12 +48,15 @@ import org.junit.platform.engine.DiscoverySelectorIdentifier;
 @API(status = STABLE, since = "1.0")
 public class ClassSelector implements DiscoverySelector {
 
+	@Nullable
 	private final ClassLoader classLoader;
+
 	private final String className;
 
+	@Nullable
 	private Class<?> javaClass;
 
-	ClassSelector(ClassLoader classLoader, String className) {
+	ClassSelector(@Nullable ClassLoader classLoader, String className) {
 		this.className = className;
 		this.classLoader = classLoader;
 	}
@@ -70,6 +74,7 @@ public class ClassSelector implements DiscoverySelector {
 	 * @since 1.10
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
+	@Nullable
 	public ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
@@ -94,7 +99,7 @@ public class ClassSelector implements DiscoverySelector {
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
 				? ReflectionSupport.tryToLoadClass(this.className)
 				: ReflectionSupport.tryToLoadClass(this.className, this.classLoader);
-			this.javaClass = tryToLoadClass.getOrThrow(cause ->
+			this.javaClass = tryToLoadClass.getNonNullOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
 			// @formatter:on
 		}
