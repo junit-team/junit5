@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -41,6 +42,7 @@ public final class LoggerFactory {
 	 * @param clazz the class for which to get the logger; never {@code null}
 	 * @return the logger
 	 */
+	@SuppressWarnings("ConstantValue")
 	public static Logger getLogger(Class<?> clazz) {
 		// NOTE: we cannot use org.junit.platform.commons.util.Preconditions here
 		// since that would introduce a package cycle.
@@ -86,7 +88,7 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void error(Throwable throwable, Supplier<String> messageSupplier) {
+		public void error(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.SEVERE, throwable, messageSupplier);
 		}
 
@@ -96,7 +98,7 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void warn(Throwable throwable, Supplier<String> messageSupplier) {
+		public void warn(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.WARNING, throwable, messageSupplier);
 		}
 
@@ -106,7 +108,7 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void info(Throwable throwable, Supplier<String> messageSupplier) {
+		public void info(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.INFO, throwable, messageSupplier);
 		}
 
@@ -116,7 +118,7 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void config(Throwable throwable, Supplier<String> messageSupplier) {
+		public void config(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.CONFIG, throwable, messageSupplier);
 		}
 
@@ -126,7 +128,7 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void debug(Throwable throwable, Supplier<String> messageSupplier) {
+		public void debug(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.FINE, throwable, messageSupplier);
 		}
 
@@ -136,11 +138,11 @@ public final class LoggerFactory {
 		}
 
 		@Override
-		public void trace(Throwable throwable, Supplier<String> messageSupplier) {
+		public void trace(@Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			log(Level.FINER, throwable, messageSupplier);
 		}
 
-		private void log(Level level, Throwable throwable, Supplier<String> messageSupplier) {
+		private void log(Level level, @Nullable Throwable throwable, Supplier<String> messageSupplier) {
 			boolean loggable = this.julLogger.isLoggable(level);
 			if (loggable || !listeners.isEmpty()) {
 				LogRecord logRecord = createLogRecord(level, throwable, nullSafeGet(messageSupplier));
@@ -151,7 +153,7 @@ public final class LoggerFactory {
 			}
 		}
 
-		private LogRecord createLogRecord(Level level, Throwable throwable, String message) {
+		private LogRecord createLogRecord(Level level, @Nullable Throwable throwable, @Nullable String message) {
 			String sourceClassName = null;
 			String sourceMethodName = null;
 			boolean found = false;
@@ -178,7 +180,7 @@ public final class LoggerFactory {
 			return logRecord;
 		}
 
-		private static String nullSafeGet(Supplier<String> messageSupplier) {
+		private static @Nullable String nullSafeGet(@Nullable Supplier<@Nullable String> messageSupplier) {
 			return (messageSupplier != null ? messageSupplier.get() : null);
 		}
 
