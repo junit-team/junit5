@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -38,15 +39,17 @@ public final class FileEntry {
 	 * @param mediaType the media type of the path to publish; may be
 	 * {@code null}
 	 */
-	public static FileEntry from(Path path, String mediaType) {
+	public static FileEntry from(Path path, @Nullable String mediaType) {
 		return new FileEntry(path, mediaType);
 	}
 
 	private final LocalDateTime timestamp = LocalDateTime.now();
 	private final Path path;
+
+	@Nullable
 	private final String mediaType;
 
-	private FileEntry(Path path, String mediaType) {
+	private FileEntry(Path path, @Nullable String mediaType) {
 		this.path = Preconditions.notNull(path, "path must not be null");
 		this.mediaType = mediaType;
 	}
