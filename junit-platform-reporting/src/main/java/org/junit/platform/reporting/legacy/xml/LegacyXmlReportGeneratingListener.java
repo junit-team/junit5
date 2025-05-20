@@ -10,6 +10,7 @@
 
 package org.junit.platform.reporting.legacy.xml;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import java.time.Clock;
 import javax.xml.stream.XMLStreamException;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -48,6 +50,7 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	private final PrintWriter out;
 	private final Clock clock;
 
+	@Nullable
 	private XmlReportData reportData;
 
 	public LegacyXmlReportGeneratingListener(Path reportsDir, PrintWriter out) {
@@ -83,23 +86,23 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 
 	@Override
 	public void executionSkipped(TestIdentifier testIdentifier, String reason) {
-		this.reportData.markSkipped(testIdentifier, reason);
+		requiredReportData().markSkipped(testIdentifier, reason);
 		writeXmlReportInCaseOfRoot(testIdentifier);
 	}
 
 	@Override
 	public void executionStarted(TestIdentifier testIdentifier) {
-		this.reportData.markStarted(testIdentifier);
+		requiredReportData().markStarted(testIdentifier);
 	}
 
 	@Override
 	public void reportingEntryPublished(TestIdentifier testIdentifier, ReportEntry entry) {
-		this.reportData.addReportEntry(testIdentifier, entry);
+		requiredReportData().addReportEntry(testIdentifier, entry);
 	}
 
 	@Override
 	public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult result) {
-		this.reportData.markFinished(testIdentifier, result);
+		requiredReportData().markFinished(testIdentifier, result);
 		writeXmlReportInCaseOfRoot(testIdentifier);
 	}
 
@@ -113,11 +116,15 @@ public class LegacyXmlReportGeneratingListener implements TestExecutionListener 
 	private void writeXmlReportSafely(TestIdentifier testIdentifier, String rootName) {
 		Path xmlFile = this.reportsDir.resolve("TEST-" + rootName + ".xml");
 		try (Writer fileWriter = Files.newBufferedWriter(xmlFile)) {
-			new XmlReportWriter(this.reportData).writeXmlReport(testIdentifier, fileWriter);
+			new XmlReportWriter(requiredReportData()).writeXmlReport(testIdentifier, fileWriter);
 		}
 		catch (XMLStreamException | IOException e) {
 			printException("Could not write XML report: " + xmlFile, e);
 		}
+	}
+
+	private XmlReportData requiredReportData() {
+		return requireNonNull(this.reportData);
 	}
 
 	private boolean isRoot(TestIdentifier testIdentifier) {

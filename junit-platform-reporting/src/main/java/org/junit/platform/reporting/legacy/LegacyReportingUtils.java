@@ -13,6 +13,7 @@ package org.junit.platform.reporting.legacy;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.support.descriptor.ClassSource;
 import org.junit.platform.launcher.TestIdentifier;
@@ -62,10 +63,12 @@ public final class LegacyReportingUtils {
 		return getParentLegacyReportingName(testPlan, testIdentifier);
 	}
 
+	@Nullable
 	private static TestIdentifier getParent(TestPlan testPlan, TestIdentifier testIdentifier) {
 		return testPlan.getParent(testIdentifier).orElse(null);
 	}
 
+	@Nullable
 	private static ClassSource getClassSource(TestIdentifier current) {
 		// @formatter:off
 		return current.getSource()

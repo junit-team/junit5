@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -60,7 +61,7 @@ class XmlReportData {
 		return this.clock;
 	}
 
-	void markSkipped(TestIdentifier testIdentifier, String reason) {
+	void markSkipped(TestIdentifier testIdentifier, @Nullable String reason) {
 		this.skippedTests.put(testIdentifier, reason == null ? "" : reason);
 	}
 
@@ -94,6 +95,7 @@ class XmlReportData {
 		return Duration.between(startInstant, endInstant).toMillis() / (double) MILLIS_PER_SECOND;
 	}
 
+	@Nullable
 	String getSkipReason(TestIdentifier testIdentifier) {
 		return findSkippedAncestor(testIdentifier).map(skippedTestIdentifier -> {
 			String reason = this.skippedTests.get(skippedTestIdentifier);
