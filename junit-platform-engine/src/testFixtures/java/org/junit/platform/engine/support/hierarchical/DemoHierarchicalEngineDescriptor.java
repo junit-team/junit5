@@ -13,6 +13,7 @@ package org.junit.platform.engine.support.hierarchical;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.doNotSkip;
 import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.skip;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.support.descriptor.EngineDescriptor;
 
@@ -21,7 +22,9 @@ import org.junit.platform.engine.support.descriptor.EngineDescriptor;
  */
 public class DemoHierarchicalEngineDescriptor extends EngineDescriptor implements Node<DemoEngineExecutionContext> {
 
+	@Nullable
 	private String skippedReason;
+
 	private boolean skipped;
 	private Runnable beforeAllBehavior = () -> {
 	};

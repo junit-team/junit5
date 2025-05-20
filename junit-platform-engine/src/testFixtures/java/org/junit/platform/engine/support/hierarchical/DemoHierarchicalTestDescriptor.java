@@ -15,6 +15,7 @@ import static org.junit.platform.engine.support.hierarchical.Node.SkipResult.ski
 
 import java.util.function.BiConsumer;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.UniqueId;
@@ -25,17 +26,21 @@ import org.junit.platform.engine.support.descriptor.AbstractTestDescriptor;
  */
 public class DemoHierarchicalTestDescriptor extends AbstractTestDescriptor implements Node<DemoEngineExecutionContext> {
 
+	@Nullable
 	private final BiConsumer<DemoEngineExecutionContext, TestDescriptor> executeBlock;
+
+	@Nullable
 	private String skippedReason;
+
 	private boolean skipped;
 
 	public DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName,
-			BiConsumer<DemoEngineExecutionContext, TestDescriptor> executeBlock) {
+			@Nullable BiConsumer<DemoEngineExecutionContext, TestDescriptor> executeBlock) {
 		this(uniqueId, displayName, null, executeBlock);
 	}
 
-	public DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
-			BiConsumer<DemoEngineExecutionContext, TestDescriptor> executeBlock) {
+	public DemoHierarchicalTestDescriptor(UniqueId uniqueId, String displayName, @Nullable TestSource source,
+			@Nullable BiConsumer<DemoEngineExecutionContext, TestDescriptor> executeBlock) {
 		super(uniqueId, displayName, source);
 		this.executeBlock = executeBlock;
 	}

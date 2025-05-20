@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -106,8 +107,8 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 									+ ParallelExecutionConfigurationStrategy.class);
 						return (ParallelExecutionConfigurationStrategy) ReflectionSupport.newInstance(strategyClass);
 					}) //
-					.andThenTry(strategy -> strategy.createConfiguration(configurationParameters)) //
-					.getOrThrow(cause -> new JUnitException(
+					.andThenTry(strategy -> requireNonNull(strategy).createConfiguration(configurationParameters)) //
+					.getNonNullOrThrow(cause -> new JUnitException(
 						"Could not create configuration for strategy class: " + className, cause));
 		}
 	};

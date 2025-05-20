@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.Future;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * A simple {@linkplain HierarchicalTestExecutorService executor service} that
@@ -31,7 +32,7 @@ public class SameThreadHierarchicalTestExecutorService implements HierarchicalTe
 	}
 
 	@Override
-	public Future<Void> submit(TestTask testTask) {
+	public Future<@Nullable Void> submit(TestTask testTask) {
 		testTask.execute();
 		return completedFuture(null);
 	}

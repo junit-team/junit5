@@ -10,6 +10,8 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
+import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 import static java.util.concurrent.CompletableFuture.completedFuture;
 import static java.util.stream.Collectors.toCollection;
 import static org.junit.platform.engine.TestExecutionResult.failed;
@@ -23,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
@@ -51,11 +54,18 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	private final Node<C> node;
 	private final Runnable finalizer;
 
+	@Nullable
 	private C parentContext;
+
+	@Nullable
 	private C context;
 
+	@Nullable
 	private SkipResult skipResult;
+
 	private boolean started;
+
+	@Nullable
 	private ThrowableCollector throwableCollector;
 
 	NodeTestTask(NodeTestTaskContext taskContext, TestDescriptor testDescriptor) {
@@ -85,7 +95,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 		return "NodeTestTask [" + testDescriptor + "]";
 	}
 
-	void setParentContext(C parentContext) {
+	void setParentContext(@Nullable C parentContext) {
 		this.parentContext = parentContext;
 	}
 
@@ -97,7 +107,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			if (throwableCollector.isEmpty()) {
 				checkWhetherSkipped();
 			}
-			if (throwableCollector.isEmpty() && !skipResult.isSkipped()) {
+			if (throwableCollector.isEmpty() && !requiredSkipResult().isSkipped()) {
 				executeRecursively();
 			}
 			if (context != null) {
@@ -126,7 +136,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void prepare() {
-		throwableCollector.execute(() -> context = node.prepare(parentContext));
+		requiredThrowableCollector().execute(() -> context = node.prepare(requireNonNull(parentContext)));
 
 		// Clear reference to parent context to allow it to be garbage collected.
 		// See https://github.com/junit-team/junit5/issues/1578
@@ -134,15 +144,17 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void checkWhetherSkipped() {
-		throwableCollector.execute(() -> skipResult = node.shouldBeSkipped(context));
+		requiredThrowableCollector().execute(() -> skipResult = node.shouldBeSkipped(requiredContext()));
 	}
 
 	private void executeRecursively() {
 		taskContext.getListener().executionStarted(testDescriptor);
 		started = true;
 
+		var throwableCollector = requiredThrowableCollector();
+
 		throwableCollector.execute(() -> {
-			node.around(context, ctx -> {
+			node.around(requiredContext(), ctx -> {
 				context = ctx;
 				throwableCollector.execute(() -> {
 					// @formatter:off
@@ -151,10 +163,10 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 							.collect(toCollection(ArrayList::new));
 					// @formatter:on
 
-					context = node.before(context);
+					context = node.before(requiredContext());
 
 					final DynamicTestExecutor dynamicTestExecutor = new DefaultDynamicTestExecutor();
-					context = node.execute(context, dynamicTestExecutor);
+					context = node.execute(requiredContext(), dynamicTestExecutor);
 
 					if (!children.isEmpty()) {
 						children.forEach(child -> child.setParentContext(context));
@@ -164,19 +176,23 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					throwableCollector.execute(dynamicTestExecutor::awaitFinished);
 				});
 
-				throwableCollector.execute(() -> node.after(context));
+				throwableCollector.execute(() -> node.after(requiredContext()));
 			});
 		});
 	}
 
 	private void cleanUp() {
-		throwableCollector.execute(() -> node.cleanUp(context));
+		requiredThrowableCollector().execute(() -> node.cleanUp(requiredContext()));
 	}
 
 	private void reportCompletion() {
-		if (throwableCollector.isEmpty() && skipResult.isSkipped()) {
+
+		var throwableCollector = requiredThrowableCollector();
+
+		if (throwableCollector.isEmpty() && requiredSkipResult().isSkipped()) {
+			var skipResult = requiredSkipResult();
 			try {
-				node.nodeSkipped(context, testDescriptor, skipResult);
+				node.nodeSkipped(requiredContext(), testDescriptor, skipResult);
 			}
 			catch (Throwable throwable) {
 				UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
@@ -191,7 +207,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			taskContext.getListener().executionStarted(testDescriptor);
 		}
 		try {
-			node.nodeFinished(context, testDescriptor, throwableCollector.toTestExecutionResult());
+			node.nodeFinished(requiredContext(), testDescriptor, throwableCollector.toTestExecutionResult());
 		}
 		catch (Throwable throwable) {
 			UnrecoverableExceptions.rethrowIfUnrecoverable(throwable);
@@ -199,7 +215,19 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				() -> "Failed to invoke nodeFinished() on Node %s".formatted(testDescriptor.getUniqueId()));
 		}
 		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
-		throwableCollector = null;
+		this.throwableCollector = null;
+	}
+
+	private C requiredContext() {
+		return requireNonNull(context);
+	}
+
+	private SkipResult requiredSkipResult() {
+		return requireNonNull(skipResult);
+	}
+
+	private ThrowableCollector requiredThrowableCollector() {
+		return requireNonNull(throwableCollector);
 	}
 
 	private class DefaultDynamicTestExecutor implements DynamicTestExecutor {
@@ -245,7 +273,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					// Futures returned by execute() may have been cancelled
 				}
 				catch (ExecutionException e) {
-					throw ExceptionUtils.throwAsUncheckedException(e.getCause());
+					throw ExceptionUtils.throwAsUncheckedException(requireNonNullElse(e.getCause(), e));
 				}
 			}
 		}
