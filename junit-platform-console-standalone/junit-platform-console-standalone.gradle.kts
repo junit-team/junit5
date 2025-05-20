@@ -54,10 +54,12 @@ tasks {
 
 		bundle {
 			val importAPIGuardian: String by extra
+			val importJSpecify: String by extra
 			bnd("""
 				# Customize the imports because this is an aggregate jar
 				Import-Package: \
 					$importAPIGuardian,\
+					$importJSpecify,\
 					kotlin.*;resolution:="optional",\
 					kotlinx.*;resolution:="optional",\
 					*
