@@ -10,12 +10,14 @@
 
 package org.junit.platform.console.tasks;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -29,6 +31,8 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 
 	private final PrintWriter out;
 	private final ColorPalette colorPalette;
+
+	@Nullable
 	private TestPlan testPlan;
 
 	TestFeedPrintingListener(PrintWriter out, ColorPalette colorPalette) {
@@ -94,7 +98,7 @@ class TestFeedPrintingListener implements DetailsPrintingListener {
 		int size = uniqueId.getSegments().size();
 		List<String> displayNames = new ArrayList<>(size);
 		for (int i = 0; i < size; i++) {
-			displayNames.add(0, testPlan.getTestIdentifier(uniqueId).getDisplayName());
+			displayNames.add(0, requireNonNull(testPlan).getTestIdentifier(uniqueId).getDisplayName());
 			if (i < size - 1) {
 				uniqueId = uniqueId.removeLastSegment();
 			}

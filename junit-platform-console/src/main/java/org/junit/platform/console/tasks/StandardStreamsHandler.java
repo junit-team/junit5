@@ -15,12 +15,15 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 
 class StandardStreamsHandler implements AutoCloseable {
 
+	@Nullable
 	private PrintStream stdout;
 
+	@Nullable
 	private PrintStream stderr;
 
 	public StandardStreamsHandler() {
@@ -39,7 +42,7 @@ class StandardStreamsHandler implements AutoCloseable {
 	 * @param stderrPath the file path for standard error, or {@code null} to
 	 * indicate no redirection
 	 */
-	public void redirectStandardStreams(Path stdoutPath, Path stderrPath) {
+	public void redirectStandardStreams(@Nullable Path stdoutPath, @Nullable Path stderrPath) {
 		if (isSameFile(stdoutPath, stderrPath)) {
 			try {
 				PrintStream commonStream = new PrintStream(Files.newOutputStream(stdoutPath), true);
@@ -92,7 +95,7 @@ class StandardStreamsHandler implements AutoCloseable {
 		}
 	}
 
-	private static boolean isSameFile(Path path1, Path path2) {
+	private static boolean isSameFile(@Nullable Path path1, @Nullable Path path2) {
 		if (path1 == null || path2 == null) {
 			return false;
 		}

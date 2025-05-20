@@ -16,6 +16,8 @@ import static org.junit.platform.console.options.TestConsoleOutputOptions.DEFAUL
 
 import java.nio.file.Path;
 
+import org.jspecify.annotations.Nullable;
+
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Option;
 
@@ -26,6 +28,7 @@ class TestConsoleOutputOptionsMixin {
 
 	static class ConsoleOutputOptions {
 
+		@Nullable
 		@Option(names = "--color-palette", paramLabel = "FILE", description = "Specify a path to a properties file to customize ANSI style of output (not supported by all terminals).")
 		private Path colorPalette;
 
@@ -41,9 +44,11 @@ class TestConsoleOutputOptionsMixin {
 				+ "Use one of: ${COMPLETION-CANDIDATES}. Default is detected based on default character encoding.")
 		private final Theme theme = DEFAULT_THEME;
 
+		@Nullable
 		@Option(names = "--redirect-stdout", paramLabel = "FILE", description = "Redirect test output to stdout to a file.")
 		private Path stdout;
 
+		@Nullable
 		@Option(names = "--redirect-stderr", paramLabel = "FILE", description = "Redirect test output to stderr to a file.")
 		private Path stderr;
 

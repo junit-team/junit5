@@ -82,12 +82,14 @@ class DiscoveryRequestCreator {
 	}
 
 	private static Set<Path> determineClasspathRoots(TestDiscoveryOptions options) {
-		if (options.getSelectedClasspathEntries().isEmpty()) {
+		var selectedClasspathEntries = Preconditions.notNull(options.getSelectedClasspathEntries(),
+			() -> "No classpath entries selected");
+		if (selectedClasspathEntries.isEmpty()) {
 			Set<Path> rootDirs = new LinkedHashSet<>(ReflectionUtils.getAllClasspathRootDirectories());
 			rootDirs.addAll(options.getExistingAdditionalClasspathEntries());
 			return rootDirs;
 		}
-		return new LinkedHashSet<>(options.getSelectedClasspathEntries());
+		return new LinkedHashSet<>(selectedClasspathEntries);
 	}
 
 	private static void addFilters(LauncherDiscoveryRequestBuilder requestBuilder, TestDiscoveryOptions options,

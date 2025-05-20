@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @since 1.10
@@ -40,14 +41,16 @@ public class CommandResult<T> {
 		return create(FAILURE, null);
 	}
 
-	public static <T> CommandResult<T> create(int exitCode, T value) {
+	public static <T> CommandResult<T> create(int exitCode, @Nullable T value) {
 		return new CommandResult<>(exitCode, value);
 	}
 
 	private final int exitCode;
+
+	@Nullable
 	private final T value;
 
-	private CommandResult(int exitCode, T value) {
+	private CommandResult(int exitCode, @Nullable T value) {
 		this.exitCode = exitCode;
 		this.value = value;
 	}

@@ -10,10 +10,13 @@
 
 package org.junit.platform.console.tasks;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.FileEntry;
@@ -28,9 +31,16 @@ class TreeNode {
 	private final String caption;
 	private final long creation;
 	long duration;
+
+	@Nullable
 	private String reason;
+
+	@Nullable
 	private TestIdentifier identifier;
+
+	@Nullable
 	private TestExecutionResult result;
+
 	final Queue<ReportEntry> reports = new ConcurrentLinkedQueue<>();
 	final Queue<FileEntry> files = new ConcurrentLinkedQueue<>();
 	final Queue<TreeNode> children = new ConcurrentLinkedQueue<>();
@@ -94,6 +104,6 @@ class TreeNode {
 		boolean normal = displayName.length() <= 80;
 		String caption = normal ? displayName : displayName.substring(0, 80) + "...";
 		String whites = StringUtils.replaceWhitespaceCharacters(caption, " ");
-		return StringUtils.replaceIsoControlCharacters(whites, ".");
+		return requireNonNull(StringUtils.replaceIsoControlCharacters(whites, "."));
 	}
 }

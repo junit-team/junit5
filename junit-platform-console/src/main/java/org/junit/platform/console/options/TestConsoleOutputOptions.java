@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.Locale;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * @since 1.10
@@ -28,11 +29,18 @@ public class TestConsoleOutputOptions {
 	static final Theme DEFAULT_THEME = Theme.valueOf(ConsoleUtils.charset());
 
 	private boolean ansiColorOutputDisabled;
+
+	@Nullable
 	private Path colorPalettePath;
+
 	private boolean isSingleColorPalette;
 	private Details details = DEFAULT_DETAILS;
 	private Theme theme = DEFAULT_THEME;
+
+	@Nullable
 	private Path stdoutPath;
+
+	@Nullable
 	private Path stderrPath;
 
 	public boolean isAnsiColorOutputDisabled() {
@@ -43,11 +51,12 @@ public class TestConsoleOutputOptions {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
 	}
 
+	@Nullable
 	public Path getColorPalettePath() {
 		return colorPalettePath;
 	}
 
-	public void setColorPalettePath(Path colorPalettePath) {
+	public void setColorPalettePath(@Nullable Path colorPalettePath) {
 		this.colorPalettePath = colorPalettePath;
 	}
 
@@ -76,22 +85,24 @@ public class TestConsoleOutputOptions {
 	}
 
 	@API(status = INTERNAL, since = "1.13")
+	@Nullable
 	public Path getStdoutPath() {
 		return this.stdoutPath;
 	}
 
 	@API(status = INTERNAL, since = "1.13")
-	public void setStdoutPath(Path stdoutPath) {
+	public void setStdoutPath(@Nullable Path stdoutPath) {
 		this.stdoutPath = stdoutPath;
 	}
 
 	@API(status = INTERNAL, since = "1.13")
+	@Nullable
 	public Path getStderrPath() {
 		return this.stderrPath;
 	}
 
 	@API(status = INTERNAL, since = "1.13")
-	public void setStderrPath(Path stderrPath) {
+	public void setStderrPath(@Nullable Path stderrPath) {
 		this.stderrPath = stderrPath;
 	}
 
