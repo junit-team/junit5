@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.junit.platform.commons.util.Preconditions;
+
 class StringToJavaTimeConverter implements StringToObjectConverter {
 
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
@@ -59,7 +61,9 @@ class StringToJavaTimeConverter implements StringToObjectConverter {
 
 	@Override
 	public Object convert(String source, Class<?> targetType) throws Exception {
-		return CONVERTERS.get(targetType).apply(source);
+		Function<String, ?> converter = Preconditions.notNull(CONVERTERS.get(targetType),
+			() -> "No registered converter for %s".formatted(targetType.getName()));
+		return converter.apply(source);
 	}
 
 }

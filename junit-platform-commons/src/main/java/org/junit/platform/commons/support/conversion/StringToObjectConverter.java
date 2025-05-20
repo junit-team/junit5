@@ -10,6 +10,8 @@
 
 package org.junit.platform.commons.support.conversion;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * Internal API for converting arguments of type {@link String} to a specified
  * target type.
@@ -31,6 +33,7 @@ interface StringToObjectConverter {
 	 * <p>This method will only be invoked in {@link #canConvertTo(Class)}
 	 * returned {@code true} for the same target type.
 	 */
+	@Nullable
 	Object convert(String source, Class<?> targetType) throws Exception;
 
 	/**
@@ -45,6 +48,7 @@ interface StringToObjectConverter {
 	 * Can be overridden by concrete implementations of this interface that need
 	 * access to the supplied {@link ClassLoader}.
 	 */
+	@Nullable
 	default Object convert(String source, Class<?> targetType, ClassLoader classLoader) throws Exception {
 		return convert(source, targetType);
 	}

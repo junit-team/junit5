@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
@@ -99,7 +100,8 @@ public final class ConversionSupport {
 	 * @since 1.11
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> T convert(String source, Class<T> targetType, ClassLoader classLoader) {
+	@Nullable
+	public static <T> T convert(@Nullable String source, Class<T> targetType, @Nullable ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(

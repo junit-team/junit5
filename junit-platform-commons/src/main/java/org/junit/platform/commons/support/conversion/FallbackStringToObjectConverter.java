@@ -26,6 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -97,6 +98,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		});
 	}
 
+	@Nullable
 	private static Method findFactoryMethod(Class<?> targetType) {
 		List<Method> factoryMethods = findMethods(targetType, new IsFactoryMethod(targetType), BOTTOM_UP);
 		if (factoryMethods.size() == 1) {
@@ -105,6 +107,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		return null;
 	}
 
+	@Nullable
 	private static Constructor<?> findFactoryConstructor(Class<?> targetType) {
 		List<Constructor<?>> constructors = findConstructors(targetType, new IsFactoryConstructor(targetType));
 		if (constructors.size() == 1) {
