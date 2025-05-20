@@ -17,7 +17,10 @@
  * @since 1.0
  */
 module org.junit.platform.engine {
+
 	requires static transitive org.apiguardian.api;
+	requires static transitive org.jspecify;
+
 	requires transitive org.junit.platform.commons;
 	requires transitive org.opentest4j;
 
