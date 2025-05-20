@@ -45,6 +45,10 @@ public class ServiceLoaderUtils {
 	 */
 	public static <T> Stream<T> filter(ServiceLoader<T> serviceLoader,
 			Predicate<? super Class<? extends T>> providerPredicate) {
+
+		Preconditions.notNull(serviceLoader, "serviceLoader must not be null");
+		Preconditions.notNull(providerPredicate, "providerPredicate must not be null");
+
 		// @formatter:off
 		return serviceLoader
 				.stream()

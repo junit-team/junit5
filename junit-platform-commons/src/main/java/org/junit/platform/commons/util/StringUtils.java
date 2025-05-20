@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Collection of utilities for working with {@link String Strings},
@@ -67,7 +68,7 @@ public final class StringUtils {
 	 * @return {@code true} if the string is blank
 	 * @see #isNotBlank(String)
 	 */
-	public static boolean isBlank(String str) {
+	public static boolean isBlank(@Nullable String str) {
 		return (str == null || str.trim().isEmpty());
 	}
 
@@ -79,7 +80,7 @@ public final class StringUtils {
 	 * @return {@code true} if the string is not blank
 	 * @see #isBlank(String)
 	 */
-	public static boolean isNotBlank(String str) {
+	public static boolean isNotBlank(@Nullable String str) {
 		return !isBlank(str);
 	}
 
@@ -91,7 +92,7 @@ public final class StringUtils {
 	 * @see #containsIsoControlCharacter(String)
 	 * @see Character#isWhitespace(int)
 	 */
-	public static boolean containsWhitespace(String str) {
+	public static boolean containsWhitespace(@Nullable String str) {
 		return str != null && str.codePoints().anyMatch(Character::isWhitespace);
 	}
 
@@ -105,7 +106,7 @@ public final class StringUtils {
 	 * @see #containsIsoControlCharacter(String)
 	 * @see Character#isWhitespace(int)
 	 */
-	public static boolean doesNotContainWhitespace(String str) {
+	public static boolean doesNotContainWhitespace(@Nullable String str) {
 		return !containsWhitespace(str);
 	}
 
@@ -117,7 +118,7 @@ public final class StringUtils {
 	 * @see #containsWhitespace(String)
 	 * @see Character#isISOControl(int)
 	 */
-	public static boolean containsIsoControlCharacter(String str) {
+	public static boolean containsIsoControlCharacter(@Nullable String str) {
 		return str != null && str.codePoints().anyMatch(Character::isISOControl);
 	}
 
@@ -131,7 +132,7 @@ public final class StringUtils {
 	 * @see #containsWhitespace(String)
 	 * @see Character#isISOControl(int)
 	 */
-	public static boolean doesNotContainIsoControlCharacter(String str) {
+	public static boolean doesNotContainIsoControlCharacter(@Nullable String str) {
 		return !containsIsoControlCharacter(str);
 	}
 
@@ -157,7 +158,7 @@ public final class StringUtils {
 	 * @see Arrays#deepToString(Object[])
 	 * @see ClassUtils#nullSafeToString(Class...)
 	 */
-	public static String nullSafeToString(Object obj) {
+	public static String nullSafeToString(@Nullable Object obj) {
 		if (obj == null) {
 			return "null";
 		}
@@ -221,7 +222,7 @@ public final class StringUtils {
 	 * @see #nullSafeToString(Object)
 	 * @see ClassUtils#nullSafeToString(Class...)
 	 */
-	public static String defaultToString(Object obj) {
+	public static String defaultToString(@Nullable Object obj) {
 		if (obj == null) {
 			return "null";
 		}
@@ -239,7 +240,7 @@ public final class StringUtils {
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
-	public static String replaceIsoControlCharacters(String str, String replacement) {
+	public static @Nullable String replaceIsoControlCharacters(@Nullable String str, String replacement) {
 		Preconditions.notNull(replacement, "replacement must not be null");
 		return str == null ? null : ISO_CONTROL_PATTERN.matcher(str).replaceAll(replacement);
 	}
@@ -254,7 +255,7 @@ public final class StringUtils {
 	 * @since 1.4
 	 */
 	@API(status = INTERNAL, since = "1.4")
-	public static String replaceWhitespaceCharacters(String str, String replacement) {
+	public static @Nullable String replaceWhitespaceCharacters(@Nullable String str, String replacement) {
 		Preconditions.notNull(replacement, "replacement must not be null");
 		return str == null ? null : WHITESPACE_PATTERN.matcher(str).replaceAll(replacement);
 	}

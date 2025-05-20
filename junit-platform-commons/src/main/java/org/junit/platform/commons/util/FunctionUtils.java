@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Collection of utilities for working with {@link Function Functions},
@@ -43,7 +44,8 @@ public final class FunctionUtils {
 	 * @param function the function to apply
 	 * @param predicate the predicate to test against the result of the function
 	 */
-	public static <T, V> Predicate<T> where(Function<T, V> function, Predicate<? super V> predicate) {
+	public static <T extends @Nullable Object, V extends @Nullable Object> Predicate<T> where(Function<T, V> function,
+			Predicate<? super V> predicate) {
 		Preconditions.notNull(function, "function must not be null");
 		Preconditions.notNull(predicate, "predicate must not be null");
 		return input -> predicate.test(function.apply(input));

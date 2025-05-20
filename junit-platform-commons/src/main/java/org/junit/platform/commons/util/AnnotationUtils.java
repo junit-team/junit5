@@ -11,6 +11,7 @@
 package org.junit.platform.commons.util;
 
 import static java.util.Arrays.asList;
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
@@ -37,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 
@@ -75,7 +77,8 @@ public final class AnnotationUtils {
 	 * @see #findAnnotation(Optional, Class)
 	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(Optional, Class)
 	 */
-	public static boolean isAnnotated(Optional<? extends AnnotatedElement> element,
+	@SuppressWarnings("NullableOptional")
+	public static boolean isAnnotated(@Nullable Optional<? extends AnnotatedElement> element,
 			Class<? extends Annotation> annotationType) {
 
 		return findAnnotation(element, annotationType).isPresent();
@@ -101,15 +104,16 @@ public final class AnnotationUtils {
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 * @see org.junit.platform.commons.support.AnnotationSupport#isAnnotated(AnnotatedElement, Class)
 	 */
-	public static boolean isAnnotated(AnnotatedElement element, Class<? extends Annotation> annotationType) {
+	public static boolean isAnnotated(@Nullable AnnotatedElement element, Class<? extends Annotation> annotationType) {
 		return findAnnotation(element, annotationType).isPresent();
 	}
 
 	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(Optional, Class)
 	 */
-	public static <A extends Annotation> Optional<A> findAnnotation(Optional<? extends AnnotatedElement> element,
-			Class<A> annotationType) {
+	@SuppressWarnings({ "OptionalAssignedToNull", "NullableOptional" })
+	public static <A extends Annotation> Optional<A> findAnnotation(
+			@Nullable Optional<? extends AnnotatedElement> element, Class<A> annotationType) {
 
 		if (element == null || element.isEmpty()) {
 			return Optional.empty();
@@ -131,14 +135,15 @@ public final class AnnotationUtils {
 	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findAnnotation(AnnotatedElement, Class)
 	 */
-	public static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType) {
+	public static <A extends Annotation> Optional<A> findAnnotation(@Nullable AnnotatedElement element,
+			Class<A> annotationType) {
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 		boolean inherited = annotationType.isAnnotationPresent(Inherited.class);
 		return findAnnotation(element, annotationType, inherited, new HashSet<>());
 	}
 
-	private static <A extends Annotation> Optional<A> findAnnotation(AnnotatedElement element, Class<A> annotationType,
-			boolean inherited, Set<Annotation> visited) {
+	private static <A extends Annotation> Optional<A> findAnnotation(@Nullable AnnotatedElement element,
+			Class<A> annotationType, boolean inherited, Set<Annotation> visited) {
 
 		Preconditions.notNull(annotationType, "annotationType must not be null");
 
@@ -223,7 +228,7 @@ public final class AnnotationUtils {
 	 * @since 1.8
 	 * @see #findAnnotation(AnnotatedElement, Class)
 	 */
-	public static <A extends Annotation> Optional<A> findAnnotation(Class<?> clazz, Class<A> annotationType,
+	public static <A extends Annotation> Optional<A> findAnnotation(@Nullable Class<?> clazz, Class<A> annotationType,
 			boolean searchEnclosingClasses) {
 
 		Preconditions.notNull(annotationType, "annotationType must not be null");
@@ -247,8 +252,9 @@ public final class AnnotationUtils {
 	 * @since 1.5
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(Optional, Class)
 	 */
-	public static <A extends Annotation> List<A> findRepeatableAnnotations(Optional<? extends AnnotatedElement> element,
-			Class<A> annotationType) {
+	@SuppressWarnings({ "OptionalAssignedToNull", "NullableOptional" })
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(
+			@Nullable Optional<? extends AnnotatedElement> element, Class<A> annotationType) {
 
 		if (element == null || element.isEmpty()) {
 			return Collections.emptyList();
@@ -270,7 +276,7 @@ public final class AnnotationUtils {
 	/**
 	 * @see org.junit.platform.commons.support.AnnotationSupport#findRepeatableAnnotations(AnnotatedElement, Class)
 	 */
-	public static <A extends Annotation> List<A> findRepeatableAnnotations(AnnotatedElement element,
+	public static <A extends Annotation> List<A> findRepeatableAnnotations(@Nullable AnnotatedElement element,
 			Class<A> annotationType) {
 
 		Preconditions.notNull(annotationType, "annotationType must not be null");
@@ -346,14 +352,14 @@ public final class AnnotationUtils {
 							cause));
 
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
-					found.addAll((Collection<? extends A>) asList(containedAnnotations));
+					found.addAll((Collection<? extends A>) asList(requireNonNull(containedAnnotations)));
 				}
 				// Nested container annotation?
 				else if (isRepeatableAnnotationContainer(candidateAnnotationType)) {
 					Method method = ReflectionUtils.tryToGetMethod(candidateAnnotationType, "value").toOptional().get();
 					Annotation[] containedAnnotations = (Annotation[]) ReflectionUtils.invokeMethod(method, candidate);
 
-					for (Annotation containedAnnotation : containedAnnotations) {
+					for (Annotation containedAnnotation : requireNonNull(containedAnnotations)) {
 						findRepeatableAnnotations(containedAnnotation.getClass(), annotationType, containerType,
 							inherited, found, visited);
 					}
@@ -419,6 +425,7 @@ public final class AnnotationUtils {
 	 * the supplied {@code index} is {@code 0}
 	 * @since 1.8
 	 */
+	@Nullable
 	private static AnnotatedElement getEffectiveAnnotatedParameter(Parameter parameter, int index) {
 		Preconditions.notNull(parameter, "Parameter must not be null");
 		Executable executable = parameter.getDeclaringExecutable();
