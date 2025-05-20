@@ -10,6 +10,7 @@
 
 package org.junit.platform.engine.support.discovery;
 
+import static java.util.Objects.requireNonNullElse;
 import static java.util.stream.Collectors.joining;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.SelectorResolutionResult.failed;
@@ -28,6 +29,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.DiscoverySelector;
@@ -199,18 +201,16 @@ class EngineDiscoveryRequestResolution {
 
 	private class DefaultContext implements Context {
 
+		@Nullable
 		private final TestDescriptor parent;
 
-		DefaultContext(TestDescriptor parent) {
+		DefaultContext(@Nullable TestDescriptor parent) {
 			this.parent = parent;
 		}
 
 		@Override
 		public <T extends TestDescriptor> Optional<T> addToParent(Function<TestDescriptor, Optional<T>> creator) {
-			if (parent != null) {
-				return createAndAdd(parent, creator);
-			}
-			return createAndAdd(engineDescriptor, creator);
+			return createAndAdd(requireNonNullElse(parent, engineDescriptor), creator);
 		}
 
 		@Override
