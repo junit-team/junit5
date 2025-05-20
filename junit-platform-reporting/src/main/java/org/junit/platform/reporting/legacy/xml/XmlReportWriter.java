@@ -15,6 +15,7 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableMap;
 import static java.util.Comparator.naturalOrder;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -55,6 +56,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.ReportEntry;
 import org.junit.platform.launcher.TestIdentifier;
@@ -244,10 +246,10 @@ class XmlReportWriter {
 			}
 		}
 
-		private void writeSkippedElement(String reason, XMLStreamWriter writer) throws XMLStreamException {
+		private void writeSkippedElement(@Nullable String reason, XMLStreamWriter writer) throws XMLStreamException {
 			if (isNotBlank(reason)) {
 				writer.writeStartElement("skipped");
-				writeCDataSafely(reason);
+				writeCDataSafely(requireNonNull(reason));
 				writer.writeEndElement();
 			}
 			else {
@@ -256,7 +258,7 @@ class XmlReportWriter {
 			newLine();
 		}
 
-		private void writeErrorOrFailureElement(Type type, Throwable throwable, XMLStreamWriter writer)
+		private void writeErrorOrFailureElement(Type type, @Nullable Throwable throwable, XMLStreamWriter writer)
 				throws XMLStreamException {
 
 			String elementName = type == FAILURE ? "failure" : "error";
