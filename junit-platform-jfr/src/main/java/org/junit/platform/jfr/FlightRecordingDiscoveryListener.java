@@ -10,6 +10,7 @@
 
 package org.junit.platform.jfr;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Map;
@@ -23,6 +24,7 @@ import jdk.jfr.Name;
 import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoveryIssue;
@@ -41,7 +43,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 @API(status = STABLE, since = "1.11")
 public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListener {
 
-	private final AtomicReference<LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
+	private final AtomicReference<@Nullable LauncherDiscoveryEvent> launcherDiscoveryEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, EngineDiscoveryEvent> engineDiscoveryEvents = new ConcurrentHashMap<>();
 
 	@Override
@@ -55,7 +57,7 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 	@Override
 	public void launcherDiscoveryFinished(LauncherDiscoveryRequest request) {
-		launcherDiscoveryEvent.getAndSet(null).commit();
+		requireNonNull(launcherDiscoveryEvent.getAndSet(null)).commit();
 	}
 
 	@Override
@@ -106,9 +108,11 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 
 		@UniqueId
 		@Label("Unique Id")
+		@Nullable
 		String uniqueId;
 
 		@Label("Result")
+		@Nullable
 		String result;
 	}
 
@@ -117,18 +121,23 @@ public class FlightRecordingDiscoveryListener implements LauncherDiscoveryListen
 	static class DiscoveryIssueEvent extends DiscoveryEvent {
 
 		@Label("Engine Id")
+		@Nullable
 		String engineId;
 
 		@Label("Severity")
+		@Nullable
 		String severity;
 
 		@Label("Message")
+		@Nullable
 		String message;
 
 		@Label("Source")
+		@Nullable
 		String source;
 
 		@Label("Cause")
+		@Nullable
 		String cause;
 	}
 }

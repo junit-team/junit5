@@ -10,6 +10,7 @@
 
 package org.junit.platform.jfr;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.util.Map;
@@ -25,6 +26,7 @@ import jdk.jfr.Name;
 import jdk.jfr.StackTrace;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.reporting.FileEntry;
 import org.junit.platform.engine.reporting.ReportEntry;
@@ -42,7 +44,7 @@ import org.junit.platform.launcher.TestPlan;
 @API(status = STABLE, since = "1.11")
 public class FlightRecordingExecutionListener implements TestExecutionListener {
 
-	private final AtomicReference<TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
+	private final AtomicReference<@Nullable TestPlanExecutionEvent> testPlanExecutionEvent = new AtomicReference<>();
 	private final Map<org.junit.platform.engine.UniqueId, TestExecutionEvent> testExecutionEvents = new ConcurrentHashMap<>();
 
 	@Override
@@ -57,7 +59,7 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan plan) {
-		testPlanExecutionEvent.getAndSet(null).commit();
+		requireNonNull(testPlanExecutionEvent.getAndSet(null)).commit();
 	}
 
 	@Override
@@ -114,21 +116,32 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Label("Test Execution")
 	@Name("org.junit.TestPlanExecution")
 	static class TestPlanExecutionEvent extends ExecutionEvent {
+
 		@Label("Contains Tests")
 		boolean containsTests;
+
 		@Label("Engine Names")
+		@Nullable
 		String engineNames;
 	}
 
 	abstract static class TestEvent extends ExecutionEvent {
+
 		@UniqueId
 		@Label("Unique Id")
+		@Nullable
 		String uniqueId;
+
 		@Label("Display Name")
+		@Nullable
 		String displayName;
+
 		@Label("Tags")
+		@Nullable
 		String tags;
+
 		@Label("Type")
+		@Nullable
 		String type;
 
 		void initialize(TestIdentifier test) {
@@ -143,39 +156,56 @@ public class FlightRecordingExecutionListener implements TestExecutionListener {
 	@Name("org.junit.SkippedTest")
 	static class SkippedTestEvent extends TestEvent {
 		@Label("Reason")
+		@Nullable
 		String reason;
 	}
 
 	@Label("Test")
 	@Name("org.junit.TestExecution")
 	static class TestExecutionEvent extends TestEvent {
+
 		@Label("Result")
+		@Nullable
 		String result;
+
 		@Label("Exception Class")
+		@Nullable
 		Class<?> exceptionClass;
+
 		@Label("Exception Message")
+		@Nullable
 		String exceptionMessage;
 	}
 
 	@Label("Report Entry")
 	@Name("org.junit.ReportEntry")
 	static class ReportEntryEvent extends ExecutionEvent {
+
 		@UniqueId
 		@Label("Unique Id")
+		@Nullable
 		String uniqueId;
+
 		@Label("Key")
+		@Nullable
 		String key;
+
 		@Label("Value")
+		@Nullable
 		String value;
 	}
 
 	@Label("File Entry")
 	@Name("org.junit.FileEntry")
 	static class FileEntryEvent extends ExecutionEvent {
+
 		@UniqueId
 		@Label("Unique Id")
+		@Nullable
 		String uniqueId;
+
 		@Label("Path")
+		@Nullable
 		String path;
 	}
 }
