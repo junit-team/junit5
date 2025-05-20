@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ResourceUtils;
@@ -79,7 +80,7 @@ public class ClasspathResourceSource implements TestSource {
 	 * {@code null} or blank
 	 * @param filePosition the position in the classpath resource; may be {@code null}
 	 */
-	public static ClasspathResourceSource from(String classpathResourceName, FilePosition filePosition) {
+	public static ClasspathResourceSource from(String classpathResourceName, @Nullable FilePosition filePosition) {
 		return new ClasspathResourceSource(classpathResourceName, filePosition);
 	}
 
@@ -112,13 +113,15 @@ public class ClasspathResourceSource implements TestSource {
 	}
 
 	private final String classpathResourceName;
+
+	@Nullable
 	private final FilePosition filePosition;
 
 	private ClasspathResourceSource(String classpathResourceName) {
 		this(classpathResourceName, null);
 	}
 
-	private ClasspathResourceSource(String classpathResourceName, FilePosition filePosition) {
+	private ClasspathResourceSource(String classpathResourceName, @Nullable FilePosition filePosition) {
 		Preconditions.notBlank(classpathResourceName, "Classpath resource name must not be null or blank");
 		boolean startsWithSlash = classpathResourceName.startsWith("/");
 		this.classpathResourceName = (startsWithSlash ? classpathResourceName.substring(1) : classpathResourceName);

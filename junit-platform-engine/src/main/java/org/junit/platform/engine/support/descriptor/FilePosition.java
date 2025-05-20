@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -116,6 +117,8 @@ public class FilePosition implements Serializable {
 	}
 
 	private final int line;
+
+	@Nullable
 	private final Integer column;
 
 	private FilePosition(int line) {

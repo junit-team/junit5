@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
@@ -44,8 +45,10 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	private final String displayName;
 
+	@Nullable
 	private final TestSource source;
 
+	@Nullable
 	private TestDescriptor parent;
 
 	/**
@@ -87,7 +90,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	 * {@code TestDescriptor}; can be {@code null}
 	 * @see #AbstractTestDescriptor(UniqueId, String)
 	 */
-	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, TestSource source) {
+	protected AbstractTestDescriptor(UniqueId uniqueId, String displayName, @Nullable TestSource source) {
 		this.uniqueId = Preconditions.notNull(uniqueId, "UniqueId must not be null");
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 		this.source = source;
@@ -119,7 +122,7 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 	}
 
 	@Override
-	public final void setParent(TestDescriptor parent) {
+	public final void setParent(@Nullable TestDescriptor parent) {
 		this.parent = parent;
 	}
 
@@ -144,8 +147,8 @@ public abstract class AbstractTestDescriptor implements TestDescriptor {
 
 	@Override
 	public void removeFromHierarchy() {
-		Preconditions.condition(!isRoot(), "cannot remove the root of a hierarchy");
-		this.parent.removeChild(this);
+		var parent = Preconditions.notNull(this.parent, "cannot remove the root of a hierarchy");
+		parent.removeChild(this);
 		this.children.forEach(child -> child.setParent(null));
 		this.children.clear();
 	}
