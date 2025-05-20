@@ -23,6 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.experimental.categories.Category;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -45,15 +46,16 @@ public class VintageTestDescriptor extends AbstractTestDescriptor {
 
 	protected Description description;
 
-	public VintageTestDescriptor(UniqueId uniqueId, Description description, TestSource source) {
+	public VintageTestDescriptor(UniqueId uniqueId, Description description, @Nullable TestSource source) {
 		this(uniqueId, description, generateDisplayName(description), source);
 	}
 
-	VintageTestDescriptor(UniqueId uniqueId, Description description, String displayName, TestSource source) {
+	VintageTestDescriptor(UniqueId uniqueId, Description description, String displayName, @Nullable TestSource source) {
 		super(uniqueId, displayName, source);
 		this.description = description;
 	}
 
+	@SuppressWarnings("NullAway")
 	private static String generateDisplayName(Description description) {
 		String methodName = DescriptionUtils.getMethodName(description);
 		return isNotBlank(methodName) ? methodName : description.getDisplayName();

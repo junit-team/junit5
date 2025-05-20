@@ -11,6 +11,7 @@
 package org.junit.vintage.engine.execution;
 
 import static java.util.Collections.emptyList;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -123,7 +124,7 @@ class TestRun {
 	void markSkipped(TestDescriptor testDescriptor) {
 		skippedDescriptors.add(testDescriptor);
 		if (testDescriptor instanceof VintageTestDescriptor vintageDescriptor) {
-			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
+			getVintageDescriptors(vintageDescriptor).incrementSkippedOrStarted();
 		}
 	}
 
@@ -140,8 +141,13 @@ class TestRun {
 		startedDescriptors.add(testDescriptor);
 		if (testDescriptor instanceof VintageTestDescriptor vintageDescriptor) {
 			inProgressDescriptorsByStartingThread.get().addLast(vintageDescriptor);
-			descriptionToDescriptors.get(vintageDescriptor.getDescription()).incrementSkippedOrStarted();
+			getVintageDescriptors(vintageDescriptor).incrementSkippedOrStarted();
 		}
+	}
+
+	private VintageDescriptors getVintageDescriptors(VintageTestDescriptor vintageDescriptor) {
+		return requireNonNull(descriptionToDescriptors.get(vintageDescriptor.getDescription()),
+			() -> "No descriptors for " + vintageDescriptor);
 	}
 
 	boolean isNotStarted(TestDescriptor testDescriptor) {
@@ -191,7 +197,7 @@ class TestRun {
 		List<Throwable> failures = testExecutionResults
 				.stream()
 				.map(TestExecutionResult::getThrowable)
-				.map(Optional::get)
+				.map(Optional::orElseThrow)
 				.collect(toList());
 		// @formatter:on
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError("", failures);
