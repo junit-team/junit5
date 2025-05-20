@@ -46,7 +46,8 @@ public interface EngineDiscoveryRequest {
 	 * Get the {@link DiscoverySelector DiscoverySelectors} for this request,
 	 * filtered by a particular type.
 	 *
-	 * @param selectorType the type of {@link DiscoverySelector} to filter by
+	 * @param selectorType the type of {@link DiscoverySelector} to filter by;
+	 * never {@code null}
 	 * @return all selectors of this request that are instances of
 	 * {@code selectorType}; never {@code null} but potentially empty
 	 */
@@ -59,7 +60,8 @@ public interface EngineDiscoveryRequest {
 	 * <p>The returned filters are to be combined using AND semantics, i.e. all
 	 * of them have to include a resource for it to end up in the test plan.
 	 *
-	 * @param filterType the type of {@link DiscoveryFilter} to filter by
+	 * @param filterType the type of {@link DiscoveryFilter} to filter by;
+	 * never {@code null}
 	 * @return all filters of this request that are instances of
 	 * {@code filterType}; never {@code null} but potentially empty
 	 */

@@ -13,6 +13,7 @@ package org.junit.platform.engine;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -22,7 +23,11 @@ final class DefaultDiscoveryIssue implements DiscoveryIssue {
 
 	private final Severity severity;
 	private final String message;
+
+	@Nullable
 	private final TestSource source;
+
+	@Nullable
 	private final Throwable cause;
 
 	DefaultDiscoveryIssue(Builder builder) {
@@ -86,7 +91,11 @@ final class DefaultDiscoveryIssue implements DiscoveryIssue {
 
 		private final Severity severity;
 		private final String message;
+
+		@Nullable
 		private TestSource source;
+
+		@Nullable
 		public Throwable cause;
 
 		Builder(Severity severity, String message) {
@@ -95,13 +104,13 @@ final class DefaultDiscoveryIssue implements DiscoveryIssue {
 		}
 
 		@Override
-		public Builder source(TestSource source) {
+		public Builder source(@Nullable TestSource source) {
 			this.source = source;
 			return this;
 		}
 
 		@Override
-		public Builder cause(Throwable cause) {
+		public Builder cause(@Nullable Throwable cause) {
 			this.cause = cause;
 			return this;
 		}

@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -138,7 +139,7 @@ public interface DiscoveryIssue {
 		 * @param source the {@link TestSource} for the {@code DiscoveryIssue};
 		 * may be {@code null}
 		 */
-		Builder source(TestSource source);
+		Builder source(@Nullable TestSource source);
 
 		/**
 		 * Set the {@link Throwable} that caused the {@code DiscoveryIssue}.
@@ -157,7 +158,7 @@ public interface DiscoveryIssue {
 		 * @param cause the {@link Throwable} that caused the
 		 * {@code DiscoveryIssue}; may be {@code null}
 		 */
-		Builder cause(Throwable cause);
+		Builder cause(@Nullable Throwable cause);
 
 		/**
 		 * Build the {@code DiscoveryIssue}.

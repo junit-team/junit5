@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -99,7 +100,7 @@ public interface TestDescriptor {
 	 *
 	 * @param parent the new parent of this descriptor; may be {@code null}.
 	 */
-	void setParent(TestDescriptor parent);
+	void setParent(@Nullable TestDescriptor parent);
 
 	/**
 	 * Get the immutable set of <em>children</em> of this descriptor.

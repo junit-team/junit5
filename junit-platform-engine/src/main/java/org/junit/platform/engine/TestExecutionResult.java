@@ -18,6 +18,7 @@ import static org.junit.platform.engine.TestExecutionResult.Status.SUCCESSFUL;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -77,7 +78,7 @@ public class TestExecutionResult {
 	 * {@code null}
 	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
-	public static TestExecutionResult aborted(Throwable throwable) {
+	public static TestExecutionResult aborted(@Nullable Throwable throwable) {
 		return new TestExecutionResult(ABORTED, throwable);
 	}
 
@@ -89,14 +90,16 @@ public class TestExecutionResult {
 	 * {@code null}
 	 * @return the {@code TestExecutionResult}; never {@code null}
 	 */
-	public static TestExecutionResult failed(Throwable throwable) {
+	public static TestExecutionResult failed(@Nullable Throwable throwable) {
 		return new TestExecutionResult(FAILED, throwable);
 	}
 
 	private final Status status;
+
+	@Nullable
 	private final Throwable throwable;
 
-	private TestExecutionResult(Status status, Throwable throwable) {
+	private TestExecutionResult(Status status, @Nullable Throwable throwable) {
 		this.status = Preconditions.notNull(status, "Status must not be null");
 		this.throwable = throwable;
 	}

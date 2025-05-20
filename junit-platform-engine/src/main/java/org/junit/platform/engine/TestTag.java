@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.StringUtils;
@@ -84,7 +85,7 @@ public final class TestTag implements Serializable {
 	 * @see #RESERVED_CHARACTERS
 	 * @see TestTag#create(String)
 	 */
-	public static boolean isValid(String name) {
+	public static boolean isValid(@Nullable String name) {
 		if (name == null) {
 			return false;
 		}

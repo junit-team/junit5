@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -32,7 +33,7 @@ public class FilterResult {
 	 * @param reason the reason why the filtered object was included
 	 * @return an included {@code FilterResult} with the given reason
 	 */
-	public static FilterResult included(String reason) {
+	public static FilterResult included(@Nullable String reason) {
 		return new FilterResult(true, reason);
 	}
 
@@ -42,14 +43,14 @@ public class FilterResult {
 	 * @param reason the reason why the filtered object was excluded
 	 * @return an excluded {@code FilterResult} with the given reason
 	 */
-	public static FilterResult excluded(String reason) {
+	public static FilterResult excluded(@Nullable String reason) {
 		return new FilterResult(false, reason);
 	}
 
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
-	 * @param included whether or not the filtered object should be included
+	 * @param included whether the filtered object should be included
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
 	public static FilterResult includedIf(boolean included) {
@@ -59,13 +60,13 @@ public class FilterResult {
 	/**
 	 * Factory for creating filter results based on the condition given.
 	 *
-	 * @param included whether or not the filtered object should be included
+	 * @param included whether the filtered object should be included
 	 * @param inclusionReasonSupplier supplier for the reason in case of inclusion
 	 * @param exclusionReasonSupplier supplier for the reason in case of exclusion
 	 * @return a valid {@code FilterResult} for the given condition
 	 */
-	public static FilterResult includedIf(boolean included, Supplier<String> inclusionReasonSupplier,
-			Supplier<String> exclusionReasonSupplier) {
+	public static FilterResult includedIf(boolean included, Supplier<@Nullable String> inclusionReasonSupplier,
+			Supplier<@Nullable String> exclusionReasonSupplier) {
 		return included ? included(inclusionReasonSupplier.get()) : excluded(exclusionReasonSupplier.get());
 	}
 
@@ -73,7 +74,7 @@ public class FilterResult {
 
 	private final Optional<String> reason;
 
-	private FilterResult(boolean included, String reason) {
+	private FilterResult(boolean included, @Nullable String reason) {
 		this.included = included;
 		this.reason = Optional.ofNullable(reason);
 	}

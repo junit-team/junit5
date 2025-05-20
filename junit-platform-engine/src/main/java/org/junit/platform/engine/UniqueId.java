@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -92,6 +93,7 @@ public class UniqueId implements Cloneable, Serializable {
 	private transient int hashCode;
 
 	// lazily computed
+	@Nullable
 	private transient SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
