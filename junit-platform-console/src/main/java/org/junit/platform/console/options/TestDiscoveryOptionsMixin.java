@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -50,6 +51,7 @@ class TestDiscoveryOptionsMixin {
 
 	static class SelectorOptions {
 
+		@Nullable
 		@Option(names = { "--scan-classpath",
 				"--scan-class-path" }, converter = ClasspathEntriesConverter.class, paramLabel = "PATH", arity = "0..1", description = "Scan all directories on the classpath or explicit classpath roots. " //
 						+ "Without arguments, only directories on the system classpath as well as additional classpath " //

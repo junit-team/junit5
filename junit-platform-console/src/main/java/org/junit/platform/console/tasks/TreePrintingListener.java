@@ -10,10 +10,14 @@
 
 package org.junit.platform.console.tasks;
 
+import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
+
 import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.console.options.Theme;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.engine.UniqueId;
@@ -28,8 +32,10 @@ import org.junit.platform.launcher.TestPlan;
 class TreePrintingListener implements DetailsPrintingListener {
 
 	private final Map<UniqueId, TreeNode> nodesByUniqueId = new ConcurrentHashMap<>();
-	private TreeNode root;
 	private final TreePrinter treePrinter;
+
+	@Nullable
+	private TreeNode root;
 
 	TreePrintingListener(PrintWriter out, ColorPalette colorPalette, Theme theme) {
 		this.treePrinter = new TreePrinter(out, theme, colorPalette);
@@ -37,11 +43,12 @@ class TreePrintingListener implements DetailsPrintingListener {
 
 	private void addNode(TestIdentifier testIdentifier, TreeNode node) {
 		nodesByUniqueId.put(testIdentifier.getUniqueIdObject(), node);
-		testIdentifier.getParentIdObject().map(nodesByUniqueId::get).orElse(root).addChild(node);
+		TreeNode parent = testIdentifier.getParentIdObject().map(nodesByUniqueId::get).orElse(null);
+		requireNonNullElse(parent, root).addChild(node);
 	}
 
 	private TreeNode getNode(TestIdentifier testIdentifier) {
-		return nodesByUniqueId.get(testIdentifier.getUniqueIdObject());
+		return requireNonNull(nodesByUniqueId.get(testIdentifier.getUniqueIdObject()));
 	}
 
 	@Override
@@ -51,7 +58,7 @@ class TreePrintingListener implements DetailsPrintingListener {
 
 	@Override
 	public void testPlanExecutionFinished(TestPlan testPlan) {
-		treePrinter.print(root);
+		treePrinter.print(requireNonNull(root));
 	}
 
 	@Override

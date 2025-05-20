@@ -1,8 +1,11 @@
 import junitbuild.extensions.javaModuleName
 import junitbuild.java.UpdateJarAction
+import net.ltgt.gradle.errorprone.errorprone
+import net.ltgt.gradle.nullaway.nullaway
 
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-nullability-conventions")
 	id("junitbuild.shadow-conventions")
 }
 
@@ -13,6 +16,7 @@ dependencies {
 	api(projects.junitPlatformReporting)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jspecify)
 
 	shadowed(libs.picocli)
 
@@ -27,6 +31,13 @@ tasks {
 			"--add-modules", "info.picocli",
 			"--add-reads", "${javaModuleName}=info.picocli"
 		))
+		options.errorprone.nullaway {
+			excludedFieldAnnotations.addAll(
+				"picocli.CommandLine.ArgGroup",
+				"picocli.CommandLine.Mixin",
+				"picocli.CommandLine.Spec",
+			)
+		}
 	}
 	javadoc {
 		(options as StandardJavadocDocletOptions).apply {

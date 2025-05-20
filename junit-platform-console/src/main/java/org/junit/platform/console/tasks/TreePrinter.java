@@ -10,6 +10,7 @@
 
 package org.junit.platform.console.tasks;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 
 import java.io.PrintWriter;
@@ -128,7 +129,7 @@ class TreePrinter {
 		if (StringUtils.isBlank(message)) {
 			message = throwable.toString();
 		}
-		printMessage(Style.FAILED, indent, message);
+		printMessage(Style.FAILED, indent, requireNonNull(message));
 	}
 
 	private void printReportEntry(String indent, ReportEntry reportEntry) {

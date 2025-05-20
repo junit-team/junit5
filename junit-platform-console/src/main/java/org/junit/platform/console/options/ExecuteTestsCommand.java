@@ -16,6 +16,7 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 
@@ -23,6 +24,7 @@ import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Mixin;
+import picocli.CommandLine.Option;
 
 @Command(//
 		name = "execute", //
@@ -93,10 +95,11 @@ class ExecuteTestsCommand extends BaseCommand<TestExecutionSummary> implements C
 
 	static class ReportingOptions {
 
-		@CommandLine.Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
+		@Option(names = "--fail-if-no-tests", description = "Fail and return exit status code 2 if no tests are found.")
 		private boolean failIfNoTests; // no single-dash equivalent: was introduced in 5.3-M1
 
-		@CommandLine.Option(names = "--reports-dir", paramLabel = "DIR", description = "Enable report output into a specified local directory (will be created if it does not exist).")
+		@Nullable
+		@Option(names = "--reports-dir", paramLabel = "DIR", description = "Enable report output into a specified local directory (will be created if it does not exist).")
 		private Path reportsDir;
 
 		Optional<Path> getReportsDir() {

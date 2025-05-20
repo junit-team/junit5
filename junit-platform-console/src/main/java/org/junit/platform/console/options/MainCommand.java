@@ -10,8 +10,11 @@
 
 package org.junit.platform.console.options;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.console.tasks.ConsoleTestExecutor;
 
 import picocli.CommandLine;
@@ -56,6 +59,7 @@ class MainCommand implements Runnable, IExitCodeGenerator {
 	@Spec
 	CommandSpec commandSpec;
 
+	@Nullable
 	CommandResult<?> commandResult;
 
 	MainCommand(ConsoleTestExecutor.Factory consoleTestExecutorFactory) {
@@ -79,7 +83,7 @@ class MainCommand implements Runnable, IExitCodeGenerator {
 
 	@Override
 	public int getExitCode() {
-		return commandResult.getExitCode();
+		return requireNonNull(commandResult).getExitCode();
 	}
 
 	CommandResult<?> run(String[] args,

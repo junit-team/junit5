@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.DiscoverySelector;
 import org.junit.platform.engine.DiscoverySelectorIdentifier;
 import org.junit.platform.engine.discovery.ClassSelector;
@@ -46,6 +47,8 @@ public class TestDiscoveryOptions {
 
 	private boolean scanClasspath;
 	private List<Path> additionalClasspathEntries = emptyList();
+
+	@Nullable
 	private List<Path> selectedClasspathEntries = emptyList();
 
 	private boolean scanModulepath;
@@ -104,11 +107,12 @@ public class TestDiscoveryOptions {
 		this.additionalClasspathEntries = additionalClasspathEntries;
 	}
 
+	@Nullable
 	public List<Path> getSelectedClasspathEntries() {
 		return this.selectedClasspathEntries;
 	}
 
-	public void setSelectedClasspathEntries(List<Path> selectedClasspathEntries) {
+	public void setSelectedClasspathEntries(@Nullable List<Path> selectedClasspathEntries) {
 		this.selectedClasspathEntries = selectedClasspathEntries;
 	}
 
