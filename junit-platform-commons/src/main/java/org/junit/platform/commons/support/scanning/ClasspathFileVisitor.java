@@ -20,6 +20,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 
@@ -55,7 +56,7 @@ class ClasspathFileVisitor extends SimpleFileVisitor<Path> {
 	}
 
 	@Override
-	public FileVisitResult postVisitDirectory(Path dir, IOException ex) {
+	public FileVisitResult postVisitDirectory(Path dir, @Nullable IOException ex) {
 		if (ex != null) {
 			logger.warn(ex, () -> "I/O error visiting directory: " + dir);
 		}
