@@ -1,6 +1,7 @@
 import junitbuild.extensions.dependencyFromLibs
 import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
+import net.ltgt.gradle.nullaway.nullaway
 
 plugins {
 	`java-library`
@@ -21,5 +22,11 @@ tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
 		disableAllChecks = true
 		enable("NullAway")
+	}
+}
+
+tasks.compileTestJava {
+	options.errorprone.nullaway {
+		handleTestAssertionLibraries = true
 	}
 }
