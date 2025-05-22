@@ -16,6 +16,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.io.Serial;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.platform.commons.JUnitException;
 
@@ -32,12 +33,12 @@ public class ExtensionContextException extends JUnitException {
 	private static final long serialVersionUID = 1L;
 
 	@SuppressWarnings("unused")
-	public ExtensionContextException(String message) {
+	public ExtensionContextException(@Nullable String message) {
 		super(message);
 	}
 
 	@API(status = EXPERIMENTAL, since = "5.10")
-	public ExtensionContextException(String message, Throwable cause) {
+	public ExtensionContextException(@Nullable String message, Throwable cause) {
 		super(message, cause);
 	}
 
