@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code TestWatcher} defines the API for {@link Extension Extensions} that
@@ -103,7 +104,7 @@ public interface TestWatcher extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable responsible for the test being aborted; may be {@code null}
 	 */
-	default void testAborted(ExtensionContext context, Throwable cause) {
+	default void testAborted(ExtensionContext context, @Nullable Throwable cause) {
 		/* no-op */
 	}
 
@@ -116,7 +117,7 @@ public interface TestWatcher extends Extension {
 	 * @param context the current extension context; never {@code null}
 	 * @param cause the throwable that caused test failure; may be {@code null}
 	 */
-	default void testFailed(ExtensionContext context, Throwable cause) {
+	default void testFailed(ExtensionContext context, @Nullable Throwable cause) {
 		/* no-op */
 	}
 

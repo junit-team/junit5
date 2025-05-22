@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.lang.reflect.Parameter;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.TestInstance;
 
 /**
@@ -99,6 +100,7 @@ public interface ParameterResolver extends TestInstantiationAwareExtension {
 	 * @see #supportsParameter
 	 * @see ParameterContext
 	 */
+	@Nullable
 	Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException;
 
