@@ -1,5 +1,4 @@
 import junitbuild.extensions.dependencyFromLibs
-import junitbuild.extensions.javaModuleName
 import net.ltgt.gradle.errorprone.errorprone
 import net.ltgt.gradle.nullaway.nullaway
 
@@ -15,13 +14,15 @@ dependencies {
 }
 
 nullaway {
-	annotatedPackages.add(javaModuleName)
+	onlyNullMarked = true
 }
 
 tasks.withType<JavaCompile>().configureEach {
 	options.errorprone {
 		disableAllChecks = true
-		enable("NullAway")
+		nullaway {
+			enable()
+		}
 	}
 }
 
