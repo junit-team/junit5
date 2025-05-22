@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 class TokenizerTests {
@@ -85,11 +86,11 @@ class TokenizerTests {
 		return tokensExtractedFrom(expression).map(token -> token.rawString);
 	}
 
-	private List<String> tokenStringsExtractedFrom(String expression) {
+	private List<String> tokenStringsExtractedFrom(@Nullable String expression) {
 		return tokensExtractedFrom(expression).map(Token::string).toList();
 	}
 
-	private Stream<Token> tokensExtractedFrom(String expression) {
+	private Stream<Token> tokensExtractedFrom(@Nullable String expression) {
 		return new Tokenizer().tokenize(expression).stream();
 	}
 }

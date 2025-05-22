@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.UniqueId.Segment;
@@ -34,6 +35,8 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 	private static final String REPLACEMENT = "_";
 
 	private final Supplier<Path> rootDirSupplier;
+
+	@Nullable
 	private volatile Path rootDir;
 
 	HierarchicalOutputDirectoryProvider(Supplier<Path> rootDirSupplier) {

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -42,13 +43,14 @@ abstract class AbstractMethodFilter implements MethodFilter {
 		this.patternDescription = Arrays.stream(patterns).collect(joining("' OR '", "'", "'"));
 	}
 
-	protected Optional<Pattern> findMatchingPattern(String methodName) {
+	protected Optional<Pattern> findMatchingPattern(@Nullable String methodName) {
 		if (methodName == null) {
 			return Optional.empty();
 		}
 		return this.patterns.stream().filter(pattern -> pattern.matcher(methodName).matches()).findAny();
 	}
 
+	@Nullable
 	protected String getFullyQualifiedMethodNameFromDescriptor(TestDescriptor descriptor) {
 		return descriptor.getSource() //
 				.filter(source -> source instanceof MethodSource) //

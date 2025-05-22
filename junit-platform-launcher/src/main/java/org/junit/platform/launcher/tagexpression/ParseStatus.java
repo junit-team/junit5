@@ -12,6 +12,8 @@ package org.junit.platform.launcher.tagexpression;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @since 1.1
  */
@@ -56,13 +58,14 @@ class ParseStatus {
 		return "<" + indexInTagExpression + ">";
 	}
 
-	private static ParseStatus error(String errorMessage) {
+	private static ParseStatus error(@Nullable String errorMessage) {
 		return new ParseStatus(errorMessage);
 	}
 
+	@Nullable
 	final String errorMessage;
 
-	private ParseStatus(String errorMessage) {
+	private ParseStatus(@Nullable String errorMessage) {
 		this.errorMessage = errorMessage;
 	}
 

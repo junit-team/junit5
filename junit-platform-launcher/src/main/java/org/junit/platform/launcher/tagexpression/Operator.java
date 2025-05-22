@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.tagexpression;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.launcher.tagexpression.Operator.Associativity.Left;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingOperatorBetween;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingRhsOperand;
@@ -18,6 +19,8 @@ import static org.junit.platform.launcher.tagexpression.ParseStatus.success;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * @since 1.1
@@ -36,6 +39,7 @@ class Operator {
 		return new Operator(representation, precedence, 0, null, (expressions, operatorToken) -> success());
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	static Operator unaryOperator(String representation, int precedence, Associativity associativity,
 			Function<TagExpression, TagExpression> unaryExpression) {
 
@@ -50,6 +54,7 @@ class Operator {
 		});
 	}
 
+	@SuppressWarnings("SameParameterValue")
 	static Operator binaryOperator(String representation, int precedence, Associativity associativity,
 			BiFunction<TagExpression, TagExpression, TagExpression> binaryExpression) {
 
@@ -75,10 +80,13 @@ class Operator {
 	private final String representation;
 	private final int precedence;
 	private final int arity;
+
+	@Nullable
 	private final Associativity associativity;
+
 	private final TagExpressionCreator tagExpressionCreator;
 
-	private Operator(String representation, int precedence, int arity, Associativity associativity,
+	private Operator(String representation, int precedence, int arity, @Nullable Associativity associativity,
 			TagExpressionCreator tagExpressionCreator) {
 
 		this.representation = representation;
@@ -126,7 +134,7 @@ class Operator {
 			if (2 == mismatch) {
 				return "missing lhs and rhs operand";
 			}
-			return missingOneOperand(operatorToken.isLeftOf(expressions.peek().token) ? "lhs" : "rhs");
+			return missingOneOperand(operatorToken.isLeftOf(requireNonNull(expressions.peek()).token) ? "lhs" : "rhs");
 		}
 		return "missing operand";
 	}

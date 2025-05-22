@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.FilterResult;
@@ -175,7 +176,7 @@ public final class TagFilter {
 		return tagExpressions.stream().map(TagFilter::parse).collect(toUnmodifiableList());
 	}
 
-	private static TagExpression parse(String tagExpression) {
+	private static TagExpression parse(@Nullable String tagExpression) {
 		return TagExpression.parseFrom(tagExpression).tagExpressionOrThrow(
 			message -> new PreconditionViolationException(
 				"Unable to parse tag expression \"" + tagExpression + "\": " + message));

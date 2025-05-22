@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -70,6 +71,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			Collectors.toSet());
 	}
 
+	@Nullable
 	private String getProperty(String key) {
 		Preconditions.notBlank(key, "key must not be null or blank");
 		return providers.stream() //
@@ -92,6 +94,8 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		private final List<String> configResources = new ArrayList<>();
 		private boolean implicitProvidersEnabled = true;
 		private String configFileName = ConfigurationParameters.CONFIG_FILE_NAME;
+
+		@Nullable
 		private ConfigurationParameters parentConfigurationParameters;
 
 		private Builder() {
@@ -149,6 +153,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 
 	private interface ParameterProvider {
 
+		@Nullable
 		String getValue(String key);
 
 		default int size() {
@@ -160,6 +165,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider explicit(Map<String, String> configParams) {
 			return new ParameterProvider() {
 				@Override
+				@Nullable
 				public String getValue(String key) {
 					return configParams.get(key);
 				}
@@ -186,6 +192,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider systemProperties() {
 			return new ParameterProvider() {
 				@Override
+				@Nullable
 				public String getValue(String key) {
 					try {
 						return System.getProperty(key);
@@ -233,6 +240,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider inherited(ConfigurationParameters configParams) {
 			return new ParameterProvider() {
 				@Override
+				@Nullable
 				public String getValue(String key) {
 					return configParams.get(key).orElse(null);
 				}

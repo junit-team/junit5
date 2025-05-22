@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.core;
 
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -23,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.TestDescriptor;
@@ -59,7 +61,7 @@ public class LauncherDiscoveryResult {
 	}
 
 	EngineResultInfo getEngineResult(TestEngine testEngine) {
-		return this.testEngineResults.get(testEngine);
+		return requireNonNull(this.testEngineResults.get(testEngine));
 	}
 
 	ConfigurationParameters getConfigurationParameters() {
@@ -116,11 +118,14 @@ public class LauncherDiscoveryResult {
 		}
 
 		private final TestDescriptor rootDescriptor;
+
+		@Nullable
 		private final Throwable cause;
+
 		private final DiscoveryIssueNotifier discoveryIssueNotifier;
 
 		EngineResultInfo(TestDescriptor rootDescriptor, DiscoveryIssueNotifier discoveryIssueNotifier,
-				Throwable cause) {
+				@Nullable Throwable cause) {
 			this.rootDescriptor = rootDescriptor;
 			this.discoveryIssueNotifier = discoveryIssueNotifier;
 			this.cause = cause;

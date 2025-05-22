@@ -56,7 +56,7 @@ class DefaultLauncher implements Launcher {
 	 */
 	DefaultLauncher(Iterable<TestEngine> testEngines, Collection<PostDiscoveryFilter> postDiscoveryFilters,
 			NamespacedHierarchicalStore<Namespace> sessionLevelStore) {
-		Preconditions.condition(testEngines != null && testEngines.iterator().hasNext(),
+		Preconditions.condition(testEngines.iterator().hasNext(),
 			() -> "Cannot create Launcher without at least one TestEngine; "
 					+ "consider adding an engine implementation JAR to the classpath");
 		Preconditions.notNull(postDiscoveryFilters, "PostDiscoveryFilter array must not be null");

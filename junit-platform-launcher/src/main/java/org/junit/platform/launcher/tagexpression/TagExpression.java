@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.INTERNAL;
 import java.util.Collection;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestTag;
 
 /**
@@ -30,11 +31,12 @@ public interface TagExpression {
 	 * Attempt to parse a {@link TagExpression} from the supplied <em>tag
 	 * expression string</em>.
 	 *
-	 * @param infixTagExpression the tag expression string to parse; never {@code null}.
+	 * @param infixTagExpression the tag expression string to parse; may be
+	 * {@code null}.
 	 * @see ParseResult
 	 */
 	@API(status = INTERNAL, since = "1.1")
-	static ParseResult parseFrom(String infixTagExpression) {
+	static ParseResult parseFrom(@Nullable String infixTagExpression) {
 		return new Parser().parse(infixTagExpression);
 	}
 

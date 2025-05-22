@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 import org.junit.platform.engine.TestDescriptor;
@@ -56,9 +57,14 @@ public final class TestIdentifier implements Serializable {
 
 	// These are effectively final but not technically due to late initialization when deserializing
 	private /* final */ UniqueId uniqueId;
+
+	@Nullable
 	private /* final */ UniqueId parentId;
+
 	private /* final */ String displayName;
 	private /* final */ String legacyReportingName;
+
+	@Nullable
 	private /* final */ TestSource source;
 	private /* final */ Set<TestTag> tags;
 	private /* final */ Type type;
@@ -79,8 +85,8 @@ public final class TestIdentifier implements Serializable {
 		return new TestIdentifier(uniqueId, displayName, source, tags, type, parentId, legacyReportingName);
 	}
 
-	private TestIdentifier(UniqueId uniqueId, String displayName, TestSource source, Set<TestTag> tags, Type type,
-			UniqueId parentId, String legacyReportingName) {
+	private TestIdentifier(UniqueId uniqueId, String displayName, @Nullable TestSource source, Set<TestTag> tags,
+			Type type, @Nullable UniqueId parentId, String legacyReportingName) {
 		Preconditions.notNull(type, "TestDescriptor.Type must not be null");
 		this.uniqueId = uniqueId;
 		this.parentId = parentId;
@@ -303,10 +309,16 @@ public final class TestIdentifier implements Serializable {
 		private static final long serialVersionUID = 1L;
 
 		private final String uniqueId;
+
+		@Nullable
 		private final String parentId;
+
 		private final String displayName;
 		private final String legacyReportingName;
+
+		@Nullable
 		private final TestSource source;
+
 		@SuppressWarnings({ "serial", "RedundantSuppression" }) // always used with serializable implementation (see TestIdentifier#copyOf())
 		private final Set<TestTag> tags;
 		private final Type type;

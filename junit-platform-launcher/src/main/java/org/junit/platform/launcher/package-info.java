@@ -4,4 +4,7 @@
  * <p>This API is typically used by IDEs and build tools.
  */
 
+@NullMarked
 package org.junit.platform.launcher;
+
+import org.jspecify.annotations.NullMarked;

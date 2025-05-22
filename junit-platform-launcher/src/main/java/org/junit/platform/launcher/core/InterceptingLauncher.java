@@ -34,6 +34,7 @@ class InterceptingLauncher extends DelegatingLauncher {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public void execute(LauncherDiscoveryRequest launcherDiscoveryRequest, TestExecutionListener... listeners) {
 		interceptor.intercept(() -> {
 			super.execute(launcherDiscoveryRequest, listeners);
@@ -42,6 +43,7 @@ class InterceptingLauncher extends DelegatingLauncher {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public void execute(TestPlan testPlan, TestExecutionListener... listeners) {
 		interceptor.intercept(() -> {
 			super.execute(testPlan, listeners);
