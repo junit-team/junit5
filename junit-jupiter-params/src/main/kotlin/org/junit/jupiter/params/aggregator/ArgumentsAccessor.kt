@@ -26,4 +26,4 @@ import org.apiguardian.api.API
  */
 @Suppress("EXTENSION_SHADOWED_BY_MEMBER") // method is in fact not shadowed due to reified type
 inline fun <reified T : Any> ArgumentsAccessor.get(index: Int): T =
-    this.get(index, T::class.java)
+    this.get(index, T::class.java)!!

@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -60,8 +61,9 @@ public interface Arguments {
 	 * @apiNote If you need a type-safe way to access some or all of the arguments,
 	 * please read the {@linkplain Arguments class-level API note}.
 	 *
-	 * @return the arguments; never {@code null}
+	 * @return the arguments; never {@code null} but may contain {@code null}
 	 */
+	@Nullable
 	Object[] get();
 
 	/**
@@ -69,12 +71,12 @@ public interface Arguments {
 	 * the supplied {@code arguments}.
 	 *
 	 * @param arguments the arguments to be used for an invocation of the test
-	 * method; must not be {@code null}
+	 * method; must not be {@code null} but may contain {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
 	 * @see #arguments(Object...)
 	 * @see #argumentSet(String, Object...)
 	 */
-	static Arguments of(Object... arguments) {
+	static Arguments of(@Nullable Object... arguments) {
 		Preconditions.notNull(arguments, "arguments array must not be null");
 		return () -> arguments;
 	}
@@ -88,12 +90,12 @@ public interface Arguments {
 	 * {@code import static org.junit.jupiter.params.provider.Arguments.arguments;}
 	 *
 	 * @param arguments the arguments to be used for an invocation of the test
-	 * method; must not be {@code null}
+	 * method; must not be {@code null} but may contain {@code null}
 	 * @return an instance of {@code Arguments}; never {@code null}
 	 * @since 5.3
 	 * @see #argumentSet(String, Object...)
 	 */
-	static Arguments arguments(Object... arguments) {
+	static Arguments arguments(@Nullable Object... arguments) {
 		return of(arguments);
 	}
 
@@ -111,7 +113,7 @@ public interface Arguments {
 	 *
 	 * @param name the name of the argument set; must not be {@code null} or blank
 	 * @param arguments the arguments to be used for an invocation of the test
-	 * method; must not be {@code null}
+	 * method; must not be {@code null} but may contain {@code null}
 	 * @return an {@code ArgumentSet}; never {@code null}
 	 * @since 5.11
 	 * @see ArgumentSet
@@ -119,7 +121,7 @@ public interface Arguments {
 	 * @see org.junit.jupiter.params.ParameterizedTest#ARGUMENT_SET_NAME_OR_ARGUMENTS_WITH_NAMES_PLACEHOLDER
 	 */
 	@API(status = EXPERIMENTAL, since = "5.11")
-	static ArgumentSet argumentSet(String name, Object... arguments) {
+	static ArgumentSet argumentSet(String name, @Nullable Object... arguments) {
 		return new ArgumentSet(name, arguments);
 	}
 
@@ -137,9 +139,9 @@ public interface Arguments {
 
 		private final String name;
 
-		private final Object[] arguments;
+		private final @Nullable Object[] arguments;
 
-		private ArgumentSet(String name, Object[] arguments) {
+		private ArgumentSet(String name, @Nullable Object[] arguments) {
 			Preconditions.notBlank(name, "name must not be null or blank");
 			Preconditions.notNull(arguments, "arguments array must not be null");
 			this.name = name;
@@ -155,7 +157,7 @@ public interface Arguments {
 		}
 
 		@Override
-		public Object[] get() {
+		public @Nullable Object[] get() {
 			return this.arguments;
 		}
 

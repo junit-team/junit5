@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.util.Optional;
@@ -56,8 +57,8 @@ class ParameterizedTestExtension extends ParameterizedInvocationContextProvider<
 	}
 
 	private ParameterizedTestContext getDeclarationContext(ExtensionContext extensionContext) {
-		return getStore(extensionContext)//
-				.get(DECLARATION_CONTEXT_KEY, ParameterizedTestContext.class);
+		return requireNonNull(getStore(extensionContext)//
+				.get(DECLARATION_CONTEXT_KEY, ParameterizedTestContext.class));
 	}
 
 	private ExtensionContext.Store getStore(ExtensionContext context) {

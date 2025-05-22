@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.support.FieldContext;
@@ -65,6 +66,7 @@ public interface ArgumentsAggregator {
 	 * @throws ArgumentsAggregationException if an error occurs during the
 	 * aggregation
 	 */
+	@Nullable
 	Object aggregateArguments(ArgumentsAccessor accessor, ParameterContext context)
 			throws ArgumentsAggregationException;
 
@@ -82,6 +84,7 @@ public interface ArgumentsAggregator {
 	 * aggregation
 	 * @since 5.13
 	 */
+	@Nullable
 	@API(status = EXPERIMENTAL, since = "5.13")
 	default Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {

@@ -13,6 +13,7 @@ package org.junit.jupiter.params.support;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -68,6 +69,7 @@ public interface ParameterInfo {
 	 * {@return the closest {@code ParameterInfo} instance for the supplied
 	 * {@code ExtensionContext}; potentially {@code null}}
 	 */
+	@Nullable
 	static ParameterInfo get(ExtensionContext context) {
 		return context.getStore(NAMESPACE).get(KEY, ParameterInfo.class);
 	}

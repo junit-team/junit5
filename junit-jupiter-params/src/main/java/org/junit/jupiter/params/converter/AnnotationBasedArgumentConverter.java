@@ -10,11 +10,13 @@
 
 package org.junit.jupiter.params.converter;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.annotation.Annotation;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.AnnotationConsumer;
 import org.junit.jupiter.params.support.FieldContext;
@@ -34,25 +36,28 @@ import org.junit.platform.commons.util.Preconditions;
 public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 		implements ArgumentConverter, AnnotationConsumer<A> {
 
+	@Nullable
+	private A annotation;
+
 	public AnnotationBasedArgumentConverter() {
 	}
 
-	private A annotation;
-
 	@Override
 	public final void accept(A annotation) {
-		Preconditions.notNull(annotation, "annotation must not be null");
-		this.annotation = annotation;
+		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
+		;
 	}
 
 	@Override
-	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
-		return convert(source, context.getParameter().getType(), this.annotation);
+	@Nullable
+	public final Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException {
+		return convert(source, context.getParameter().getType(), requireNonNull(this.annotation));
 	}
 
 	@Override
-	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
-		return convert(source, context.getField().getType(), this.annotation);
+	@Nullable
+	public final Object convert(@Nullable Object source, FieldContext context) throws ArgumentConversionException {
+		return convert(source, context.getField().getType(), requireNonNull(this.annotation));
 	}
 
 	/**
@@ -68,7 +73,8 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 	 * @throws ArgumentConversionException in case an error occurs during the
 	 * conversion
 	 */
-	protected abstract Object convert(Object source, Class<?> targetType, A annotation)
+	@Nullable
+	protected abstract Object convert(@Nullable Object source, Class<?> targetType, A annotation)
 			throws ArgumentConversionException;
 
 }

@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestTemplate;
@@ -53,7 +54,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 		return stream(methodNames)
 				.map(factoryMethodName -> findFactoryMethod(testClass, testMethod, factoryMethodName))
 				.map(factoryMethod -> validateFactoryMethod(factoryMethod, testInstance))
-				.map(factoryMethod -> context.getExecutableInvoker().invoke(factoryMethod, testInstance))
+				.map(factoryMethod -> Preconditions.notNull(context.getExecutableInvoker().invoke(factoryMethod, testInstance), () -> "@MethodSource-referenced method [%s] must not return null".formatted(factoryMethod.toGenericString())))
 				.flatMap(CollectionUtils::toStream)
 				.map(ArgumentsUtils::toArguments);
 		// @formatter:on
@@ -177,7 +178,7 @@ class MethodArgumentsProvider extends AnnotationBasedArgumentsProvider<MethodSou
 				|| isAnnotated(candidate, TestFactory.class);
 	}
 
-	private static Method validateFactoryMethod(Method factoryMethod, Object testInstance) {
+	private static Method validateFactoryMethod(Method factoryMethod, @Nullable Object testInstance) {
 		Preconditions.condition(
 			factoryMethod.getDeclaringClass().isInstance(testInstance) || ReflectionUtils.isStatic(factoryMethod),
 			() -> format("Method '%s' must be static: local factory methods must be static "

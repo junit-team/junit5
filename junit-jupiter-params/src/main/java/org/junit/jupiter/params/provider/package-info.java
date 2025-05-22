@@ -5,4 +5,7 @@
  * annotations.
  */
 
+@NullMarked
 package org.junit.jupiter.params.provider;
+
+import org.jspecify.annotations.NullMarked;

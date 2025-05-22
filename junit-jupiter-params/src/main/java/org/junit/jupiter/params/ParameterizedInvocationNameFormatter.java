@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_PLACEHOLDER;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
@@ -34,6 +35,7 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.JUnitException;
@@ -130,6 +132,7 @@ class ParameterizedInvocationNameFormatter {
 		return result.toArray(new PartialFormatter[0]);
 	}
 
+	@Nullable
 	private static PlaceholderPosition findFirstPlaceholder(PartialFormatters formatters, String segment) {
 		if (segment.length() < formatters.minimumPlaceholderLength) {
 			return null;
@@ -210,10 +213,10 @@ class ParameterizedInvocationNameFormatter {
 	private static class ArgumentsContext {
 
 		private final int invocationIndex;
-		private final Object[] consumedArguments;
+		private final @Nullable Object[] consumedArguments;
 		private final Optional<String> argumentSetName;
 
-		ArgumentsContext(int invocationIndex, Object[] consumedArguments, Optional<String> argumentSetName) {
+		ArgumentsContext(int invocationIndex, @Nullable Object[] consumedArguments, Optional<String> argumentSetName) {
 			this.invocationIndex = invocationIndex;
 			this.consumedArguments = consumedArguments;
 			this.argumentSetName = argumentSetName;
@@ -268,8 +271,9 @@ class ParameterizedInvocationNameFormatter {
 			this.messageFormat.format(makeReadable(context.consumedArguments), result, new FieldPosition(0));
 		}
 
-		private Object[] makeReadable(Object[] arguments) {
+		private @Nullable Object[] makeReadable(@Nullable Object[] arguments) {
 			Format[] formats = messageFormat.getFormatsByArgumentIndex();
+			@Nullable
 			Object[] result = Arrays.copyOf(arguments, Math.min(arguments.length, formats.length), Object[].class);
 			for (int i = 0; i < result.length; i++) {
 				if (formats[i] == null) {
@@ -279,7 +283,8 @@ class ParameterizedInvocationNameFormatter {
 			return result;
 		}
 
-		private String truncateIfExceedsMaxLength(String argument) {
+		@Nullable
+		private String truncateIfExceedsMaxLength(@Nullable String argument) {
 			if (argument != null && argument.length() > this.argumentMaxLength) {
 				return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
 			}
@@ -316,7 +321,7 @@ class ParameterizedInvocationNameFormatter {
 		}
 
 		PartialFormatter get(String placeholder) {
-			return formattersByPlaceholder.get(placeholder);
+			return requireNonNull(formattersByPlaceholder.get(placeholder));
 		}
 
 		Set<String> placeholders() {

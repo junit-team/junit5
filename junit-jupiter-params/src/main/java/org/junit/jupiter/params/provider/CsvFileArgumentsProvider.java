@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.provider;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.Spliterators.spliteratorUnknownSize;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
@@ -33,6 +34,7 @@ import java.util.stream.Stream;
 
 import com.univocity.parsers.csv.CsvParser;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
@@ -46,10 +48,6 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 
 	private final InputStreamProvider inputStreamProvider;
 
-	private Charset charset;
-	private int numLinesToSkip;
-	private CsvParser csvParser;
-
 	CsvFileArgumentsProvider() {
 		this(DefaultInputStreamProvider.INSTANCE);
 	}
@@ -61,9 +59,8 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvFileSource csvFileSource) {
-		this.charset = getCharsetFrom(csvFileSource);
-		this.numLinesToSkip = csvFileSource.numLinesToSkip();
-		this.csvParser = createParserFor(csvFileSource);
+		Charset charset = getCharsetFrom(csvFileSource);
+		CsvParser csvParser = createParserFor(csvFileSource);
 
 		Stream<Source> resources = Arrays.stream(csvFileSource.resources()).map(inputStreamProvider::classpathResource);
 		Stream<Source> files = Arrays.stream(csvFileSource.files()).map(inputStreamProvider::file);
@@ -73,7 +70,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		return Preconditions.notEmpty(sources, "Resources or files must not be empty")
 				.stream()
 				.map(source -> source.open(context))
-				.map(inputStream -> beginParsing(inputStream, csvFileSource))
+				.map(inputStream -> beginParsing(inputStream, csvFileSource, csvParser, charset))
 				.flatMap(parser -> toStream(parser, csvFileSource));
 		// @formatter:on
 	}
@@ -87,20 +84,21 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		}
 	}
 
-	private CsvParser beginParsing(InputStream inputStream, CsvFileSource csvFileSource) {
+	private CsvParser beginParsing(InputStream inputStream, CsvFileSource csvFileSource, CsvParser csvParser,
+			Charset charset) {
 		try {
-			this.csvParser.beginParsing(inputStream, this.charset);
+			csvParser.beginParsing(inputStream, charset);
 		}
 		catch (Throwable throwable) {
 			throw handleCsvException(throwable, csvFileSource);
 		}
-		return this.csvParser;
+		return csvParser;
 	}
 
 	private Stream<Arguments> toStream(CsvParser csvParser, CsvFileSource csvFileSource) {
 		CsvParserIterator iterator = new CsvParserIterator(csvParser, csvFileSource);
 		return stream(spliteratorUnknownSize(iterator, Spliterator.ORDERED), false) //
-				.skip(this.numLinesToSkip) //
+				.skip(csvFileSource.numLinesToSkip()) //
 				.onClose(() -> {
 					try {
 						csvParser.stopParsing();
@@ -117,8 +115,11 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		private final CsvFileSource csvFileSource;
 		private final boolean useHeadersInDisplayName;
 		private final Set<String> nullValues;
+
+		@Nullable
 		private Arguments nextArguments;
-		private String[] headers;
+
+		private String @Nullable [] headers;
 
 		CsvParserIterator(CsvParser csvParser, CsvFileSource csvFileSource) {
 			this.csvParser = csvParser;
@@ -137,7 +138,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 		public Arguments next() {
 			Arguments result = this.nextArguments;
 			advance();
-			return result;
+			return requireNonNull(result);
 		}
 
 		private void advance() {

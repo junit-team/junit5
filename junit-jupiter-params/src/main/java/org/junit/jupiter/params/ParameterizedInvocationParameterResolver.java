@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Executable;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -50,6 +51,7 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 	}
 
 	@Override
+	@Nullable
 	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 

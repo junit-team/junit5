@@ -83,8 +83,7 @@ class ArchUnitTests {
 	@ArchTest
 	void packagesShouldBeNullMarked(JavaClasses classes) {
 		var exclusions = Stream.of( //
-			"..shadow..", //
-			"org.junit.jupiter.params.." //
+			"..shadow.." //
 		).map(PackageMatcher::of).toList();
 
 		var subpackages = Stream.of("org.junit.platform", "org.junit.jupiter", "org.junit.vintage") //

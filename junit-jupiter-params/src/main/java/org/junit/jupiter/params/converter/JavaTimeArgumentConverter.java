@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @since 5.0
  */
@@ -50,7 +52,9 @@ class JavaTimeArgumentConverter extends AnnotationBasedArgumentConverter<JavaTim
 	}
 
 	@Override
-	protected Object convert(Object input, Class<?> targetClass, JavaTimeConversionPattern annotation) {
+	protected @Nullable Object convert(@Nullable Object input, Class<?> targetClass,
+			JavaTimeConversionPattern annotation) {
+
 		if (input == null) {
 			if (annotation.nullable()) {
 				return null;

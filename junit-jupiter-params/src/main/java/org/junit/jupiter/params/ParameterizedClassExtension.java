@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.junit.jupiter.params.ParameterizedClassContext.InjectionType.CONSTRUCTOR;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -124,8 +125,8 @@ class ParameterizedClassExtension extends ParameterizedInvocationContextProvider
 	}
 
 	private ParameterizedClassContext getDeclarationContext(ExtensionContext extensionContext) {
-		return getStore(extensionContext)//
-				.get(DECLARATION_CONTEXT_KEY, ParameterizedClassContext.class);
+		return requireNonNull(getStore(extensionContext)//
+				.get(DECLARATION_CONTEXT_KEY, ParameterizedClassContext.class));
 	}
 
 	private Store getStore(ExtensionContext context) {
