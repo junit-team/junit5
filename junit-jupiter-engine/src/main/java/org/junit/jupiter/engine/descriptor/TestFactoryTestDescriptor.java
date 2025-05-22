@@ -25,6 +25,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DynamicContainer;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.DynamicTest;
@@ -58,7 +59,8 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	public static final String DYNAMIC_CONTAINER_SEGMENT_TYPE = "dynamic-container";
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
-	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
+	@SuppressWarnings("NullAway")
+	private static final ReflectiveInterceptorCall<Method, @Nullable Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
 	private final DynamicDescendantFilter dynamicDescendantFilter;
@@ -133,7 +135,10 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	}
 
 	@SuppressWarnings("unchecked")
-	private Stream<DynamicNode> toDynamicNodeStream(Object testFactoryMethodResult) {
+	private Stream<DynamicNode> toDynamicNodeStream(@Nullable Object testFactoryMethodResult) {
+		if (testFactoryMethodResult == null) {
+			throw new JUnitException("@TestFactory method must not return null");
+		}
 		if (testFactoryMethodResult instanceof DynamicNode node) {
 			return Stream.of(node);
 		}

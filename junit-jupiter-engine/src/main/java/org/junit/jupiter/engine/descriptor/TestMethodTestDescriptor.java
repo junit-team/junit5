@@ -280,24 +280,22 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 	public void nodeFinished(JupiterEngineExecutionContext context, TestDescriptor descriptor,
 			TestExecutionResult result) {
 
-		if (context != null) {
-			ExtensionContext extensionContext = context.getExtensionContext();
-			TestExecutionResult.Status status = result.getStatus();
+		ExtensionContext extensionContext = context.getExtensionContext();
+		TestExecutionResult.Status status = result.getStatus();
 
-			invokeTestWatchers(context, true, watcher -> {
-				switch (status) {
-					case SUCCESSFUL:
-						watcher.testSuccessful(extensionContext);
-						break;
-					case ABORTED:
-						watcher.testAborted(extensionContext, result.getThrowable().orElse(null));
-						break;
-					case FAILED:
-						watcher.testFailed(extensionContext, result.getThrowable().orElse(null));
-						break;
-				}
-			});
-		}
+		invokeTestWatchers(context, true, watcher -> {
+			switch (status) {
+				case SUCCESSFUL:
+					watcher.testSuccessful(extensionContext);
+					break;
+				case ABORTED:
+					watcher.testAborted(extensionContext, result.getThrowable().orElse(null));
+					break;
+				case FAILED:
+					watcher.testFailed(extensionContext, result.getThrowable().orElse(null));
+					break;
+			}
+		});
 	}
 
 }

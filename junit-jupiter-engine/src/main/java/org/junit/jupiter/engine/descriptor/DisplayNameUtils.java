@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -82,7 +83,7 @@ final class DisplayNameUtils {
 	}
 
 	static void validateAnnotation(AnnotatedElement element, Supplier<String> elementDescription,
-			Supplier<TestSource> sourceProvider, DiscoveryIssueReporter reporter) {
+			Supplier<@Nullable TestSource> sourceProvider, DiscoveryIssueReporter reporter) {
 		findAnnotation(element, DisplayName.class) //
 				.map(DisplayName::value) //
 				.filter(StringUtils::isBlank) //

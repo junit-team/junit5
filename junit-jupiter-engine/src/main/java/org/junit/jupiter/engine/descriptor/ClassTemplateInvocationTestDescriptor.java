@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks;
 import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeBeforeCallbacks;
@@ -23,6 +24,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.BeforeClassTemplateInvocationCallback;
 import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
@@ -46,11 +48,14 @@ public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 	public static final String SEGMENT_TYPE = "class-template-invocation";
 
 	private final ClassTemplateTestDescriptor parent;
+
+	@Nullable
 	private ClassTemplateInvocationContext invocationContext;
+
 	private final int index;
 
 	public ClassTemplateInvocationTestDescriptor(UniqueId uniqueId, ClassTemplateTestDescriptor parent,
-			ClassTemplateInvocationContext invocationContext, int index, TestSource source,
+			ClassTemplateInvocationContext invocationContext, int index, @Nullable TestSource source,
 			JupiterConfiguration configuration) {
 		super(uniqueId, invocationContext.getDisplayName(index), source, configuration);
 		this.parent = parent;
@@ -67,7 +72,7 @@ public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 	@Override
 	protected ClassTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
 		return new ClassTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), parent,
-			this.invocationContext, this.index, getSource().orElse(null), this.configuration);
+			requiredInvocationContext(), this.index, getSource().orElse(null), this.configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -111,18 +116,18 @@ public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 	@Override
 	public JupiterEngineExecutionContext prepare(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = context.getExtensionRegistry();
-		List<Extension> additionalExtensions = this.invocationContext.getAdditionalExtensions();
+		List<Extension> additionalExtensions = requiredInvocationContext().getAdditionalExtensions();
 		if (!additionalExtensions.isEmpty()) {
 			MutableExtensionRegistry childRegistry = createRegistryFrom(registry, Stream.empty());
 			additionalExtensions.forEach(
-				extension -> childRegistry.registerExtension(extension, this.invocationContext));
+				extension -> childRegistry.registerExtension(extension, requiredInvocationContext()));
 			registry = childRegistry;
 		}
 		ExtensionContext extensionContext = new ClassTemplateInvocationExtensionContext(context.getExtensionContext(),
 			context.getExecutionListener(), this, context.getConfiguration(), registry,
 			context.getLauncherStoreFacade());
 		ThrowableCollector throwableCollector = createThrowableCollector();
-		throwableCollector.execute(() -> this.invocationContext.prepareInvocation(extensionContext));
+		throwableCollector.execute(() -> requiredInvocationContext().prepareInvocation(extensionContext));
 		return context.extend() //
 				.withExtensionRegistry(registry) //
 				.withExtensionContext(extensionContext) //
@@ -176,5 +181,9 @@ public class ClassTemplateInvocationTestDescriptor extends JupiterTestDescriptor
 		// forget invocationContext so it can be garbage collected
 		this.invocationContext = null;
 		super.cleanUp(context);
+	}
+
+	private ClassTemplateInvocationContext requiredInvocationContext() {
+		return requireNonNull(this.invocationContext);
 	}
 }

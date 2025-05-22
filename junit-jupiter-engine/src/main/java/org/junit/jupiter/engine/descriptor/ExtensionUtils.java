@@ -29,6 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.Extension;
@@ -138,7 +139,7 @@ final class ExtensionUtils {
 	/**
 	 * @since 5.11
 	 */
-	private static Extension readAndValidateExtensionFromField(Field field, Object instance,
+	private static Extension readAndValidateExtensionFromField(Field field, @Nullable Object instance,
 			List<Class<? extends Extension>> declarativeExtensionTypes) {
 		Object value = tryToReadFieldValue(field, instance) //
 				.getOrThrow(e -> new PreconditionViolationException(

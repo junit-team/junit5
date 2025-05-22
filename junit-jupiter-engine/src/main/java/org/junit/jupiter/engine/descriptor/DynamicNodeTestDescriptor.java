@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DynamicNode;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
@@ -27,7 +28,7 @@ abstract class DynamicNodeTestDescriptor extends JupiterTestDescriptor {
 
 	protected final int index;
 
-	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, TestSource testSource,
+	DynamicNodeTestDescriptor(UniqueId uniqueId, int index, DynamicNode dynamicNode, @Nullable TestSource testSource,
 			JupiterConfiguration configuration) {
 		super(uniqueId, dynamicNode.getDisplayName(), testSource, configuration);
 		this.index = index;
