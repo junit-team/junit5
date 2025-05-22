@@ -17,6 +17,7 @@ import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 import java.lang.reflect.Method;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ClassUtils;
@@ -37,10 +38,12 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 			() -> adapteeClass + " is not assignable from " + this.target.getClass());
 	}
 
+	@Nullable
 	protected Object executeMethod(String name) {
 		return executeMethod(name, new Class<?>[0]);
 	}
 
+	@Nullable
 	protected Object executeMethod(String methodName, Class<?>[] parameterTypes, Object... arguments) {
 		Method method = findMethod(this.target.getClass(), methodName, parameterTypes).orElseThrow(
 			() -> new JUnitException("Failed to find method %s(%s) in class %s".formatted(methodName,

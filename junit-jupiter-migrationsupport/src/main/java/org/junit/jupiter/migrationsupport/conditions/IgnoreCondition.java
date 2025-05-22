@@ -16,6 +16,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 import java.lang.reflect.AnnotatedElement;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.Ignore;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -53,7 +54,7 @@ public class IgnoreCondition implements ExecutionCondition {
 				.orElse(ENABLED);
 	}
 
-	private ConditionEvaluationResult toResult(AnnotatedElement element, Ignore annotation) {
+	private ConditionEvaluationResult toResult(@Nullable AnnotatedElement element, Ignore annotation) {
 		String value = annotation.value();
 		String reason = StringUtils.isNotBlank(value) ? value : element + " is disabled via @org.junit.Ignore";
 		return ConditionEvaluationResult.disabled(reason);

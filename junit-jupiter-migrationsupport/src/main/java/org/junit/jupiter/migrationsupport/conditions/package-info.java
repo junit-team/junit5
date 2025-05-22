@@ -4,4 +4,7 @@
  * Jupiter.
  */
 
+@NullMarked
 package org.junit.jupiter.migrationsupport.conditions;
+
+import org.jspecify.annotations.NullMarked;
