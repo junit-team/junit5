@@ -40,7 +40,7 @@ public abstract class SimpleArgumentsAggregator implements ArgumentsAggregator {
 	@Override
 	public Object aggregateArguments(ArgumentsAccessor accessor, FieldContext context)
 			throws ArgumentsAggregationException {
-		return aggregateArguments(accessor, null, context, context.getParameterIndex());
+		return aggregateArguments(accessor, context.getField().getType(), context, context.getParameterIndex());
 	}
 
 	protected abstract Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
