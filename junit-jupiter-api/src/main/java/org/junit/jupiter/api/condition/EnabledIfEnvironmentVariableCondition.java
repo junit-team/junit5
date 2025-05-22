@@ -13,6 +13,7 @@ package org.junit.jupiter.api.condition;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.util.Preconditions;
@@ -66,6 +67,7 @@ class EnabledIfEnvironmentVariableCondition
 	 * {@link System#getenv(String)}. Can be overridden in a subclass for
 	 * testing purposes.
 	 */
+	@Nullable
 	protected String getEnvironmentVariable(String name) {
 		return System.getenv(name);
 	}
