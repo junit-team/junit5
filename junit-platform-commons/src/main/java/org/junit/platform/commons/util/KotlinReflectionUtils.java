@@ -71,28 +71,28 @@ public class KotlinReflectionUtils {
 
 	public static Class<?> getKotlinSuspendingFunctionReturnType(Method method) {
 		requireKotlinReflect(method);
-		return KotlinReflectionUtilsKt.getReturnType(method);
+		return KotlinSuspendingFunctionUtils.getReturnType(method);
 	}
 
 	public static Type getKotlinSuspendingFunctionGenericReturnType(Method method) {
 		requireKotlinReflect(method);
-		return KotlinReflectionUtilsKt.getGenericReturnType(method);
+		return KotlinSuspendingFunctionUtils.getGenericReturnType(method);
 	}
 
 	public static Parameter[] getKotlinSuspendingFunctionParameters(Method method) {
 		requireKotlinReflect(method);
-		return KotlinReflectionUtilsKt.getParameters(method);
+		return KotlinSuspendingFunctionUtils.getParameters(method);
 	}
 
 	public static Class<?>[] getKotlinSuspendingFunctionParameterTypes(Method method) {
 		requireKotlinReflect(method);
-		return KotlinReflectionUtilsKt.getParameterTypes(method);
+		return KotlinSuspendingFunctionUtils.getParameterTypes(method);
 	}
 
 	public static Object invokeKotlinSuspendingFunction(Method method, Object target, Object[] args) {
 		requireKotlinReflect(method);
 		requireKotlinxCoroutines(method);
-		return KotlinReflectionUtilsKt.invoke(method, target, args);
+		return KotlinSuspendingFunctionUtils.invoke(method, target, args);
 	}
 
 	private static void requireKotlinReflect(Method method) {
