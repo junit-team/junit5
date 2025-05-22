@@ -14,6 +14,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatio
 
 import java.lang.reflect.AnnotatedElement;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
@@ -44,7 +45,7 @@ class DisabledCondition implements ExecutionCondition {
 				.orElse(ENABLED);
 	}
 
-	private ConditionEvaluationResult toResult(AnnotatedElement element, Disabled annotation) {
+	private ConditionEvaluationResult toResult(@Nullable AnnotatedElement element, Disabled annotation) {
 		String value = annotation.value();
 		String reason = StringUtils.isNotBlank(value) ? value : element + " is @Disabled";
 		return ConditionEvaluationResult.disabled(reason);

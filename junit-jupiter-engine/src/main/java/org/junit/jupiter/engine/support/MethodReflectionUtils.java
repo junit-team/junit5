@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.ReflectionSupport;
 
 @API(status = INTERNAL, since = "6.0")
@@ -37,7 +38,8 @@ public class MethodReflectionUtils {
 				: method.getGenericReturnType();
 	}
 
-	public static Object invoke(Method method, Object target, Object[] arguments) {
+	@Nullable
+	public static Object invoke(Method method, @Nullable Object target, @Nullable Object[] arguments) {
 		if (isKotlinSuspendingFunction(method)) {
 			return invokeKotlinSuspendingFunction(method, target, arguments);
 		}

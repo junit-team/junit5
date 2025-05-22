@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import java.util.concurrent.TimeoutException;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -22,7 +23,8 @@ class TimeoutExceptionFactory {
 	private TimeoutExceptionFactory() {
 	}
 
-	static TimeoutException create(String methodSignature, TimeoutDuration timeoutDuration, Throwable failure) {
+	static TimeoutException create(String methodSignature, TimeoutDuration timeoutDuration,
+			@Nullable Throwable failure) {
 		String message = "%s timed out after %s".formatted(
 			Preconditions.notNull(methodSignature, "method signature must not be null"),
 			Preconditions.notNull(timeoutDuration, "timeout duration must not be null"));

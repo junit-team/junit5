@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -60,8 +61,8 @@ public class ParameterResolutionUtils {
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
-	public static Object[] resolveParameters(Method method, Optional<Object> target, ExtensionContext extensionContext,
-			ExtensionRegistry extensionRegistry) {
+	public static @Nullable Object[] resolveParameters(Method method, Optional<Object> target,
+			ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 
 		return resolveParameters(method, target, Optional.empty(), __ -> extensionContext, extensionRegistry,
 			isKotlinSuspendingFunction(method) //
@@ -86,12 +87,12 @@ public class ParameterResolutionUtils {
 	 * @return the array of Objects to be used as parameters in the executable
 	 * invocation; never {@code null} though potentially empty
 	 */
-	public static Object[] resolveParameters(Executable executable, Optional<Object> target,
+	public static @Nullable Object[] resolveParameters(Executable executable, Optional<Object> target,
 			Optional<Object> outerInstance, ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 		return resolveParameters(executable, target, outerInstance, __ -> extensionContext, extensionRegistry);
 	}
 
-	public static Object[] resolveParameters(Executable executable, Optional<Object> target,
+	public static @Nullable Object[] resolveParameters(Executable executable, Optional<Object> target,
 			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
 			ExtensionRegistry extensionRegistry) {
 
@@ -99,12 +100,13 @@ public class ParameterResolutionUtils {
 			executable.getParameters());
 	}
 
-	private static Object[] resolveParameters(Executable executable, Optional<Object> target,
+	private static @Nullable Object[] resolveParameters(Executable executable, Optional<Object> target,
 			Optional<Object> outerInstance, ExtensionContextSupplier extensionContext,
 			ExtensionRegistry extensionRegistry, Parameter[] parameters) {
 
 		Preconditions.notNull(target, "target must not be null");
 
+		@Nullable
 		Object[] values = new Object[parameters.length];
 		int start = 0;
 
@@ -123,6 +125,7 @@ public class ParameterResolutionUtils {
 		return values;
 	}
 
+	@Nullable
 	private static Object resolveParameter(ParameterContext parameterContext, Executable executable,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry extensionRegistry) {
 
@@ -178,7 +181,7 @@ public class ParameterResolutionUtils {
 		}
 	}
 
-	private static void validateResolvedType(Parameter parameter, Object value, Executable executable,
+	private static void validateResolvedType(Parameter parameter, @Nullable Object value, Executable executable,
 			ParameterResolver resolver) {
 
 		Class<?> type = parameter.getType();

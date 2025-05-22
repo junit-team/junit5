@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
@@ -39,14 +40,17 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 	}
 
 	@Override
-	public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
+	public <T> T invoke(Constructor<T> constructor, @Nullable Object outerInstance) {
+		@Nullable
 		Object[] arguments = resolveParameters(constructor, Optional.empty(), Optional.ofNullable(outerInstance),
 			extensionContext, extensionRegistry);
 		return ReflectionUtils.newInstance(constructor, arguments);
 	}
 
 	@Override
-	public Object invoke(Method method, Object target) {
+	@Nullable
+	public Object invoke(Method method, @Nullable Object target) {
+		@Nullable
 		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
 			extensionRegistry);
 		return MethodReflectionUtils.invoke(method, target, arguments);

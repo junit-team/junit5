@@ -16,6 +16,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext.Store;
 import org.junit.jupiter.api.extension.ExtensionContextException;
 import org.junit.platform.commons.util.Preconditions;
@@ -38,12 +39,14 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@Nullable
 	public Object get(Object key) {
 		Preconditions.notNull(key, "key must not be null");
 		return accessStore(() -> this.valuesStore.get(this.namespace, key));
 	}
 
 	@Override
+	@Nullable
 	public <T> T get(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
@@ -51,6 +54,7 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@Nullable
 	public <K, V> Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
@@ -58,6 +62,7 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@Nullable
 	public <K, V> V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
@@ -67,25 +72,28 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
-	public void put(Object key, Object value) {
+	public void put(Object key, @Nullable Object value) {
 		Preconditions.notNull(key, "key must not be null");
 		accessStore(() -> this.valuesStore.put(this.namespace, key, value));
 	}
 
 	@Override
+	@Nullable
 	public Object remove(Object key) {
 		Preconditions.notNull(key, "key must not be null");
 		return accessStore(() -> this.valuesStore.remove(this.namespace, key));
 	}
 
 	@Override
+	@Nullable
 	public <T> T remove(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		return accessStore(() -> this.valuesStore.remove(this.namespace, key, requiredType));
 	}
 
-	private <T> T accessStore(Supplier<T> action) {
+	@Nullable
+	private <T> T accessStore(Supplier<@Nullable T> action) {
 		try {
 			return action.get();
 		}
