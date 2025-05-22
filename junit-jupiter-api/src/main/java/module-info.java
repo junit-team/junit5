@@ -14,7 +14,10 @@
  * @since 5.0
  */
 module org.junit.jupiter.api {
+
 	requires static transitive org.apiguardian.api;
+	requires static org.jspecify;
+
 	requires transitive org.junit.platform.commons;
 	requires transitive org.opentest4j;
 

@@ -15,7 +15,10 @@
  * @provides java.util.spi.ToolProvider
  */
 module org.junit.platform.console {
+
 	requires static org.apiguardian.api;
+	requires static org.jspecify;
+
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
 	requires org.junit.platform.launcher;

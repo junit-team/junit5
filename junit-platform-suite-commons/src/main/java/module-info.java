@@ -14,7 +14,10 @@
  * @since 1.8
  */
 module org.junit.platform.suite.commons {
+
 	requires static transitive org.apiguardian.api;
+	requires static org.jspecify;
+
 	requires org.junit.platform.suite.api;
 	requires org.junit.platform.commons;
 	requires org.junit.platform.engine;
