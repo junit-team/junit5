@@ -8,15 +8,12 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * Support for launching the JUnit Platform from the console.
  *
  * @since 1.0
  * @provides java.util.spi.ToolProvider
  */
-@NullMarked
 module org.junit.platform.console {
 	requires static org.apiguardian.api;
 	requires org.junit.platform.commons;

@@ -8,8 +8,6 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * Provides a {@link org.junit.platform.engine.TestEngine} for running JUnit 3
  * and 4 based tests on the platform.
@@ -18,7 +16,6 @@ import org.jspecify.annotations.NullMarked;
  * @provides org.junit.platform.engine.TestEngine The {@code VintageTestEngine}
  * runs JUnit 3 and 4 based tests on the platform.
  */
-@NullMarked
 module org.junit.vintage.engine {
 	requires junit; // 4
 	requires static org.apiguardian.api;

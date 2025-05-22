@@ -3,4 +3,7 @@
  * running on the JUnit Platform.
  */
 
+@NullMarked
 package org.junit.platform.testkit.engine;
+
+import org.jspecify.annotations.NullMarked;
