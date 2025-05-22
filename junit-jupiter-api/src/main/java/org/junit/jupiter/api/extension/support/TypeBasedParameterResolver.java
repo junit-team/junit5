@@ -16,6 +16,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
@@ -29,7 +30,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.6
  */
 @API(status = STABLE, since = "5.10")
-public abstract class TypeBasedParameterResolver<T> implements ParameterResolver {
+public abstract class TypeBasedParameterResolver<T extends @Nullable Object> implements ParameterResolver {
 
 	private final Type supportedParameterType;
 
@@ -51,8 +52,8 @@ public abstract class TypeBasedParameterResolver<T> implements ParameterResolver
 	}
 
 	private Type enclosedTypeOfParameterResolver() {
-		ParameterizedType typeBasedParameterResolverSuperclass = findTypeBasedParameterResolverSuperclass(getClass());
-		Preconditions.notNull(typeBasedParameterResolverSuperclass,
+		ParameterizedType typeBasedParameterResolverSuperclass = Preconditions.notNull(
+			findTypeBasedParameterResolverSuperclass(getClass()),
 			() -> String.format(
 				"Failed to discover parameter type supported by %s; "
 						+ "potentially caused by lacking parameterized type in class declaration.",
@@ -60,6 +61,7 @@ public abstract class TypeBasedParameterResolver<T> implements ParameterResolver
 		return typeBasedParameterResolverSuperclass.getActualTypeArguments()[0];
 	}
 
+	@Nullable
 	private ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> clazz) {
 		Class<?> superclass = clazz.getSuperclass();
 
