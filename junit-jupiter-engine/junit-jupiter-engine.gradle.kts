@@ -1,5 +1,6 @@
 plugins {
 	id("junitbuild.java-library-conventions")
+	id("junitbuild.java-nullability-conventions")
 	`java-test-fixtures`
 }
 
@@ -11,6 +12,7 @@ dependencies {
 	api(projects.junitJupiterApi)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jspecify)
 
 	osgiVerification(projects.junitPlatformLauncher)
 }
