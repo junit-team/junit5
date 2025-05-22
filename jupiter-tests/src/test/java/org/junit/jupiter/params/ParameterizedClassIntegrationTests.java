@@ -1055,6 +1055,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
 				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 
+			assertThat(targetType).isEqualTo(int.class);
 			return accessor.getInteger(0) * 2;
 		}
 	}
