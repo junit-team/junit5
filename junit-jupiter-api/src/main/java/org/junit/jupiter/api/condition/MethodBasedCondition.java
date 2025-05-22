@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -84,6 +85,11 @@ abstract class MethodBasedCondition<A extends Annotation> implements ExecutionCo
 			() -> "Method [%s] must accept either an ExtensionContext or no arguments".formatted(method));
 
 		Object testInstance = context.getTestInstance().orElse(null);
+		return invokeMethod(method, context, testInstance);
+	}
+
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+	private static boolean invokeMethod(Method method, ExtensionContext context, @Nullable Object testInstance) {
 		if (method.getParameterCount() == 0) {
 			return (boolean) ReflectionSupport.invokeMethod(method, testInstance);
 		}
