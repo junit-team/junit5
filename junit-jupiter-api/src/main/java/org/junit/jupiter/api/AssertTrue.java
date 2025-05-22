@@ -15,6 +15,8 @@ import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertTrue} is a collection of utility methods that support asserting
  * {@code true} in tests.
@@ -31,13 +33,13 @@ class AssertTrue {
 		assertTrue(condition, (String) null);
 	}
 
-	static void assertTrue(boolean condition, String message) {
+	static void assertTrue(boolean condition, @Nullable String message) {
 		if (!condition) {
 			failNotTrue(message);
 		}
 	}
 
-	static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
+	static void assertTrue(boolean condition, Supplier<@Nullable String> messageSupplier) {
 		if (!condition) {
 			failNotTrue(messageSupplier);
 		}
@@ -47,15 +49,15 @@ class AssertTrue {
 		assertTrue(booleanSupplier.getAsBoolean(), (String) null);
 	}
 
-	static void assertTrue(BooleanSupplier booleanSupplier, String message) {
+	static void assertTrue(BooleanSupplier booleanSupplier, @Nullable String message) {
 		assertTrue(booleanSupplier.getAsBoolean(), message);
 	}
 
-	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+	static void assertTrue(BooleanSupplier booleanSupplier, Supplier<@Nullable String> messageSupplier) {
 		assertTrue(booleanSupplier.getAsBoolean(), messageSupplier);
 	}
 
-	private static void failNotTrue(Object messageOrSupplier) {
+	private static void failNotTrue(@Nullable Object messageOrSupplier) {
 		assertionFailure() //
 				.message(messageOrSupplier) //
 				.expected(true) //

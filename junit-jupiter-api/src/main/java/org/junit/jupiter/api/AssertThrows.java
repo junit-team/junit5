@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 
@@ -34,19 +35,20 @@ class AssertThrows {
 		return assertThrows(expectedType, executable, (Object) null);
 	}
 
-	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
+	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			@Nullable String message) {
 		return assertThrows(expectedType, executable, (Object) message);
 	}
 
 	static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 
 		return assertThrows(expectedType, executable, (Object) messageSupplier);
 	}
 
 	@SuppressWarnings("unchecked")
 	private static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Object messageOrSupplier) {
+			@Nullable Object messageOrSupplier) {
 
 		try {
 			executable.execute();

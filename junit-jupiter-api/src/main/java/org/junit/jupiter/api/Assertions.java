@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.opentest4j.MultipleFailuresError;
@@ -115,6 +116,7 @@ public class Assertions {
 	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
 	 * generic return type {@code V}.
 	 */
+	@SuppressWarnings("NullAway")
 	public static <V> V fail() {
 		AssertionUtils.fail();
 		return null; // appeasing the compiler: this line will never be executed.
@@ -134,7 +136,8 @@ public class Assertions {
 	 * Stream.of().map(entry -> fail("should not be called"));
 	 * }</pre>
 	 */
-	public static <V> V fail(String message) {
+	@SuppressWarnings("NullAway")
+	public static <V> V fail(@Nullable String message) {
 		AssertionUtils.fail(message);
 		return null; // appeasing the compiler: this line will never be executed.
 	}
@@ -146,7 +149,8 @@ public class Assertions {
 	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
 	 * generic return type {@code V}.
 	 */
-	public static <V> V fail(String message, Throwable cause) {
+	@SuppressWarnings("NullAway")
+	public static <V> V fail(@Nullable String message, @Nullable Throwable cause) {
 		AssertionUtils.fail(message, cause);
 		return null; // appeasing the compiler: this line will never be executed.
 	}
@@ -157,7 +161,8 @@ public class Assertions {
 	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
 	 * generic return type {@code V}.
 	 */
-	public static <V> V fail(Throwable cause) {
+	@SuppressWarnings("NullAway")
+	public static <V> V fail(@Nullable Throwable cause) {
 		AssertionUtils.fail(cause);
 		return null; // appeasing the compiler: this line will never be executed.
 	}
@@ -169,7 +174,8 @@ public class Assertions {
 	 * <p>See Javadoc for {@link #fail(String)} for an explanation of this method's
 	 * generic return type {@code V}.
 	 */
-	public static <V> V fail(Supplier<String> messageSupplier) {
+	@SuppressWarnings("NullAway")
+	public static <V> V fail(Supplier<@Nullable String> messageSupplier) {
 		AssertionUtils.fail(messageSupplier);
 		return null; // appeasing the compiler: this line will never be executed.
 	}
@@ -187,7 +193,7 @@ public class Assertions {
 	 * <em>Assert</em> that the supplied {@code condition} is {@code true}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertTrue(boolean condition, Supplier<String> messageSupplier) {
+	public static void assertTrue(boolean condition, Supplier<@Nullable String> messageSupplier) {
 		AssertTrue.assertTrue(condition, messageSupplier);
 	}
 
@@ -202,7 +208,7 @@ public class Assertions {
 	 * <em>Assert</em> that the boolean condition supplied by {@code booleanSupplier} is {@code true}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertTrue(BooleanSupplier booleanSupplier, String message) {
+	public static void assertTrue(BooleanSupplier booleanSupplier, @Nullable String message) {
 		AssertTrue.assertTrue(booleanSupplier, message);
 	}
 
@@ -210,7 +216,7 @@ public class Assertions {
 	 * <em>Assert</em> that the supplied {@code condition} is {@code true}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertTrue(boolean condition, String message) {
+	public static void assertTrue(boolean condition, @Nullable String message) {
 		AssertTrue.assertTrue(condition, message);
 	}
 
@@ -218,7 +224,7 @@ public class Assertions {
 	 * <em>Assert</em> that the boolean condition supplied by {@code booleanSupplier} is {@code true}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+	public static void assertTrue(BooleanSupplier booleanSupplier, Supplier<@Nullable String> messageSupplier) {
 		AssertTrue.assertTrue(booleanSupplier, messageSupplier);
 	}
 
@@ -235,7 +241,7 @@ public class Assertions {
 	 * <em>Assert</em> that the supplied {@code condition} is {@code false}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertFalse(boolean condition, String message) {
+	public static void assertFalse(boolean condition, @Nullable String message) {
 		AssertFalse.assertFalse(condition, message);
 	}
 
@@ -243,7 +249,7 @@ public class Assertions {
 	 * <em>Assert</em> that the supplied {@code condition} is {@code false}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertFalse(boolean condition, Supplier<String> messageSupplier) {
+	public static void assertFalse(boolean condition, Supplier<@Nullable String> messageSupplier) {
 		AssertFalse.assertFalse(condition, messageSupplier);
 	}
 
@@ -258,7 +264,7 @@ public class Assertions {
 	 * <em>Assert</em> that the boolean condition supplied by {@code booleanSupplier} is {@code false}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertFalse(BooleanSupplier booleanSupplier, String message) {
+	public static void assertFalse(BooleanSupplier booleanSupplier, @Nullable String message) {
 		AssertFalse.assertFalse(booleanSupplier, message);
 	}
 
@@ -266,7 +272,7 @@ public class Assertions {
 	 * <em>Assert</em> that the boolean condition supplied by {@code booleanSupplier} is {@code false}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<String> messageSupplier) {
+	public static void assertFalse(BooleanSupplier booleanSupplier, Supplier<@Nullable String> messageSupplier) {
 		AssertFalse.assertFalse(booleanSupplier, messageSupplier);
 	}
 
@@ -275,7 +281,7 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code actual} is {@code null}.
 	 */
-	public static void assertNull(Object actual) {
+	public static void assertNull(@Nullable Object actual) {
 		AssertNull.assertNull(actual);
 	}
 
@@ -283,7 +289,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code actual} is {@code null}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertNull(Object actual, String message) {
+	public static void assertNull(@Nullable Object actual, @Nullable String message) {
 		AssertNull.assertNull(actual, message);
 	}
 
@@ -291,7 +297,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code actual} is {@code null}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertNull(Object actual, Supplier<String> messageSupplier) {
+	public static void assertNull(@Nullable Object actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNull.assertNull(actual, messageSupplier);
 	}
 
@@ -300,7 +306,7 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code actual} is not {@code null}.
 	 */
-	public static void assertNotNull(Object actual) {
+	public static void assertNotNull(@Nullable Object actual) {
 		AssertNotNull.assertNotNull(actual);
 	}
 
@@ -308,7 +314,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code actual} is not {@code null}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertNotNull(Object actual, String message) {
+	public static void assertNotNull(@Nullable Object actual, @Nullable String message) {
 		AssertNotNull.assertNotNull(actual, message);
 	}
 
@@ -316,7 +322,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code actual} is not {@code null}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertNotNull(Object actual, Supplier<String> messageSupplier) {
+	public static void assertNotNull(@Nullable Object actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotNull.assertNotNull(actual, messageSupplier);
 	}
 
@@ -332,14 +338,14 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(short expected, Short actual) {
+	public static void assertEquals(short expected, @Nullable Short actual) {
 		AssertEquals.assertEquals((Short) expected, actual);
 	}
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(Short expected, short actual) {
+	public static void assertEquals(@Nullable Short expected, short actual) {
 		AssertEquals.assertEquals(expected, (Short) actual);
 	}
 
@@ -349,7 +355,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Short expected, Short actual) {
+	public static void assertEquals(@Nullable Short expected, @Nullable Short actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -357,7 +363,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(short expected, short actual, String message) {
+	public static void assertEquals(short expected, short actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -365,7 +371,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(short expected, Short actual, String message) {
+	public static void assertEquals(short expected, @Nullable Short actual, @Nullable String message) {
 		AssertEquals.assertEquals((Short) expected, actual, message);
 	}
 
@@ -373,7 +379,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Short expected, short actual, String message) {
+	public static void assertEquals(@Nullable Short expected, short actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Short) actual, message);
 	}
 
@@ -384,7 +390,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Short expected, Short actual, String message) {
+	public static void assertEquals(@Nullable Short expected, @Nullable Short actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -392,7 +398,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(short expected, short actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(short expected, short actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -400,7 +406,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(short expected, Short actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(short expected, @Nullable Short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Short) expected, actual, messageSupplier);
 	}
 
@@ -408,7 +415,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Short expected, short actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Short expected, short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Short) actual, messageSupplier);
 	}
 
@@ -419,7 +427,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Short expected, Short actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Short expected, @Nullable Short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -433,14 +442,14 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(byte expected, Byte actual) {
+	public static void assertEquals(byte expected, @Nullable Byte actual) {
 		AssertEquals.assertEquals((Byte) expected, actual);
 	}
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(Byte expected, byte actual) {
+	public static void assertEquals(@Nullable Byte expected, byte actual) {
 		AssertEquals.assertEquals(expected, (Byte) actual);
 	}
 
@@ -450,7 +459,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Byte expected, Byte actual) {
+	public static void assertEquals(@Nullable Byte expected, @Nullable Byte actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -458,7 +467,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(byte expected, byte actual, String message) {
+	public static void assertEquals(byte expected, byte actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -466,7 +475,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(byte expected, Byte actual, String message) {
+	public static void assertEquals(byte expected, @Nullable Byte actual, @Nullable String message) {
 		AssertEquals.assertEquals((Byte) expected, actual, message);
 	}
 
@@ -474,7 +483,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Byte expected, byte actual, String message) {
+	public static void assertEquals(@Nullable Byte expected, byte actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Byte) actual, message);
 	}
 
@@ -485,7 +494,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Byte expected, Byte actual, String message) {
+	public static void assertEquals(@Nullable Byte expected, @Nullable Byte actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -493,7 +502,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(byte expected, byte actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(byte expected, byte actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -501,7 +510,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(byte expected, Byte actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(byte expected, @Nullable Byte actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Byte) expected, actual, messageSupplier);
 	}
 
@@ -509,7 +518,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Byte expected, byte actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Byte expected, byte actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Byte) actual, messageSupplier);
 	}
 
@@ -520,7 +529,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Byte expected, Byte actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Byte expected, @Nullable Byte actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -534,14 +544,14 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(int expected, Integer actual) {
+	public static void assertEquals(int expected, @Nullable Integer actual) {
 		AssertEquals.assertEquals((Integer) expected, actual);
 	}
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(Integer expected, int actual) {
+	public static void assertEquals(@Nullable Integer expected, int actual) {
 		AssertEquals.assertEquals(expected, (Integer) actual);
 	}
 
@@ -551,7 +561,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Integer expected, Integer actual) {
+	public static void assertEquals(@Nullable Integer expected, @Nullable Integer actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -559,7 +569,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(int expected, int actual, String message) {
+	public static void assertEquals(int expected, int actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -567,7 +577,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(int expected, Integer actual, String message) {
+	public static void assertEquals(int expected, @Nullable Integer actual, @Nullable String message) {
 		AssertEquals.assertEquals((Integer) expected, actual, message);
 	}
 
@@ -575,7 +585,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Integer expected, int actual, String message) {
+	public static void assertEquals(@Nullable Integer expected, int actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Integer) actual, message);
 	}
 
@@ -586,7 +596,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Integer expected, Integer actual, String message) {
+	public static void assertEquals(@Nullable Integer expected, @Nullable Integer actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -594,7 +604,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(int expected, int actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(int expected, int actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -602,7 +612,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(int expected, Integer actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(int expected, @Nullable Integer actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Integer) expected, actual, messageSupplier);
 	}
 
@@ -610,7 +621,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Integer expected, int actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Integer expected, int actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Integer) actual, messageSupplier);
 	}
 
@@ -621,7 +633,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Integer expected, Integer actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Integer expected, @Nullable Integer actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -635,14 +648,14 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(long expected, Long actual) {
+	public static void assertEquals(long expected, @Nullable Long actual) {
 		AssertEquals.assertEquals((Long) expected, actual);
 	}
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(Long expected, long actual) {
+	public static void assertEquals(@Nullable Long expected, long actual) {
 		AssertEquals.assertEquals(expected, (Long) actual);
 	}
 
@@ -652,7 +665,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Long expected, Long actual) {
+	public static void assertEquals(@Nullable Long expected, @Nullable Long actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -660,7 +673,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(long expected, long actual, String message) {
+	public static void assertEquals(long expected, long actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -668,7 +681,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(long expected, Long actual, String message) {
+	public static void assertEquals(long expected, @Nullable Long actual, @Nullable String message) {
 		AssertEquals.assertEquals((Long) expected, actual, message);
 	}
 
@@ -676,7 +689,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Long expected, long actual, String message) {
+	public static void assertEquals(@Nullable Long expected, long actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Long) actual, message);
 	}
 
@@ -687,7 +700,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Long expected, Long actual, String message) {
+	public static void assertEquals(@Nullable Long expected, @Nullable Long actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -695,7 +708,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(long expected, long actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(long expected, long actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -703,7 +716,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(long expected, Long actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(long expected, @Nullable Long actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Long) expected, actual, messageSupplier);
 	}
 
@@ -711,7 +724,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Long expected, long actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Long expected, long actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Long) actual, messageSupplier);
 	}
 
@@ -722,7 +735,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Long expected, Long actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Long expected, @Nullable Long actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -740,7 +754,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 */
-	public static void assertEquals(float expected, Float actual) {
+	public static void assertEquals(float expected, @Nullable Float actual) {
 		AssertEquals.assertEquals((Float) expected, actual);
 	}
 
@@ -749,7 +763,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 */
-	public static void assertEquals(Float expected, float actual) {
+	public static void assertEquals(@Nullable Float expected, float actual) {
 		AssertEquals.assertEquals(expected, (Float) actual);
 	}
 
@@ -761,7 +775,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Float expected, Float actual) {
+	public static void assertEquals(@Nullable Float expected, @Nullable Float actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -771,7 +785,7 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(float expected, float actual, String message) {
+	public static void assertEquals(float expected, float actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -781,7 +795,7 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(float expected, Float actual, String message) {
+	public static void assertEquals(float expected, @Nullable Float actual, @Nullable String message) {
 		AssertEquals.assertEquals((Float) expected, actual, message);
 	}
 
@@ -791,7 +805,7 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Float expected, float actual, String message) {
+	public static void assertEquals(@Nullable Float expected, float actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Float) actual, message);
 	}
 
@@ -804,7 +818,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Float expected, Float actual, String message) {
+	public static void assertEquals(@Nullable Float expected, @Nullable Float actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -814,7 +828,7 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(float expected, float actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(float expected, float actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -824,7 +838,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(float expected, Float actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(float expected, @Nullable Float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Float) expected, actual, messageSupplier);
 	}
 
@@ -834,7 +849,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Float expected, float actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Float expected, float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Float) actual, messageSupplier);
 	}
 
@@ -847,7 +863,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Float expected, Float actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Float expected, @Nullable Float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -866,7 +883,7 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(float expected, float actual, float delta, String message) {
+	public static void assertEquals(float expected, float actual, float delta, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, delta, message);
 	}
 
@@ -876,7 +893,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(float expected, float actual, float delta, Supplier<String> messageSupplier) {
+	public static void assertEquals(float expected, float actual, float delta,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, delta, messageSupplier);
 	}
 
@@ -894,7 +912,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 */
-	public static void assertEquals(double expected, Double actual) {
+	public static void assertEquals(double expected, @Nullable Double actual) {
 		AssertEquals.assertEquals((Double) expected, actual);
 	}
 
@@ -903,7 +921,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 */
-	public static void assertEquals(Double expected, double actual) {
+	public static void assertEquals(@Nullable Double expected, double actual) {
 		AssertEquals.assertEquals(expected, (Double) actual);
 	}
 
@@ -915,7 +933,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Double expected, Double actual) {
+	public static void assertEquals(@Nullable Double expected, @Nullable Double actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -925,7 +943,7 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(double expected, double actual, String message) {
+	public static void assertEquals(double expected, double actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -935,7 +953,7 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(double expected, Double actual, String message) {
+	public static void assertEquals(double expected, @Nullable Double actual, @Nullable String message) {
 		AssertEquals.assertEquals((Double) expected, actual, message);
 	}
 
@@ -945,7 +963,7 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Double expected, double actual, String message) {
+	public static void assertEquals(@Nullable Double expected, double actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Double) actual, message);
 	}
 
@@ -958,7 +976,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Double expected, Double actual, String message) {
+	public static void assertEquals(@Nullable Double expected, @Nullable Double actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -968,7 +986,7 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(double expected, double actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(double expected, double actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -978,7 +996,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(double expected, Double actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(double expected, @Nullable Double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Double) expected, actual, messageSupplier);
 	}
 
@@ -988,7 +1007,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Double expected, double actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Double expected, double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Double) actual, messageSupplier);
 	}
 
@@ -1001,7 +1021,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Double expected, Double actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Double expected, @Nullable Double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -1020,7 +1041,7 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(double expected, double actual, double delta, String message) {
+	public static void assertEquals(double expected, double actual, double delta, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, delta, message);
 	}
 
@@ -1030,7 +1051,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(double expected, double actual, double delta, Supplier<String> messageSupplier) {
+	public static void assertEquals(double expected, double actual, double delta,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, delta, messageSupplier);
 	}
 
@@ -1044,14 +1066,14 @@ public class Assertions {
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(char expected, Character actual) {
+	public static void assertEquals(char expected, @Nullable Character actual) {
 		AssertEquals.assertEquals((Character) expected, actual);
 	}
 
 	/**
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 */
-	public static void assertEquals(Character expected, char actual) {
+	public static void assertEquals(@Nullable Character expected, char actual) {
 		AssertEquals.assertEquals(expected, (Character) actual);
 	}
 
@@ -1061,7 +1083,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Character expected, Character actual) {
+	public static void assertEquals(@Nullable Character expected, @Nullable Character actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -1069,7 +1091,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(char expected, char actual, String message) {
+	public static void assertEquals(char expected, char actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -1077,7 +1099,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(char expected, Character actual, String message) {
+	public static void assertEquals(char expected, @Nullable Character actual, @Nullable String message) {
 		AssertEquals.assertEquals((Character) expected, actual, message);
 	}
 
@@ -1085,7 +1107,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertEquals(Character expected, char actual, String message) {
+	public static void assertEquals(@Nullable Character expected, char actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, (Character) actual, message);
 	}
 
@@ -1096,7 +1118,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Character expected, Character actual, String message) {
+	public static void assertEquals(@Nullable Character expected, @Nullable Character actual,
+			@Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -1104,7 +1127,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(char expected, char actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(char expected, char actual, Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -1112,7 +1135,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(char expected, Character actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(char expected, @Nullable Character actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals((Character) expected, actual, messageSupplier);
 	}
 
@@ -1120,7 +1144,8 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} are equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertEquals(Character expected, char actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Character expected, char actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, (Character) actual, messageSupplier);
 	}
 
@@ -1131,7 +1156,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertEquals(Character expected, Character actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Character expected, @Nullable Character actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -1141,7 +1167,7 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertEquals(Object expected, Object actual) {
+	public static void assertEquals(@Nullable Object expected, @Nullable Object actual) {
 		AssertEquals.assertEquals(expected, actual);
 	}
 
@@ -1152,7 +1178,7 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertEquals(Object expected, Object actual, String message) {
+	public static void assertEquals(@Nullable Object expected, @Nullable Object actual, @Nullable String message) {
 		AssertEquals.assertEquals(expected, actual, message);
 	}
 
@@ -1163,7 +1189,8 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertEquals(Object expected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertEquals(@Nullable Object expected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertEquals.assertEquals(expected, actual, messageSupplier);
 	}
 
@@ -1173,7 +1200,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} boolean arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual) {
+	public static void assertArrayEquals(boolean @Nullable [] expected, boolean @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1182,7 +1209,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual, String message) {
+	public static void assertArrayEquals(boolean @Nullable [] expected, boolean @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1191,7 +1219,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(boolean[] expected, boolean[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(boolean @Nullable [] expected, boolean @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1199,7 +1228,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} char arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(char[] expected, char[] actual) {
+	public static void assertArrayEquals(char @Nullable [] expected, char @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1208,7 +1237,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(char[] expected, char[] actual, String message) {
+	public static void assertArrayEquals(char @Nullable [] expected, char @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1217,7 +1247,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(char[] expected, char[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(char @Nullable [] expected, char @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1225,7 +1256,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} byte arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(byte[] expected, byte[] actual) {
+	public static void assertArrayEquals(byte @Nullable [] expected, byte @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1234,7 +1265,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(byte[] expected, byte[] actual, String message) {
+	public static void assertArrayEquals(byte @Nullable [] expected, byte @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1243,7 +1275,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(byte[] expected, byte[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(byte @Nullable [] expected, byte @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1251,7 +1284,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} short arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(short[] expected, short[] actual) {
+	public static void assertArrayEquals(short @Nullable [] expected, short @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1260,7 +1293,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(short[] expected, short[] actual, String message) {
+	public static void assertArrayEquals(short @Nullable [] expected, short @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1269,7 +1303,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(short[] expected, short[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(short @Nullable [] expected, short @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1277,7 +1312,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} int arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(int[] expected, int[] actual) {
+	public static void assertArrayEquals(int @Nullable [] expected, int @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1286,7 +1321,7 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(int[] expected, int[] actual, String message) {
+	public static void assertArrayEquals(int @Nullable [] expected, int @Nullable [] actual, @Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1295,7 +1330,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(int[] expected, int[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(int @Nullable [] expected, int @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1303,7 +1339,7 @@ public class Assertions {
 	 * <em>Assert</em> that {@code expected} and {@code actual} long arrays are equal.
 	 * <p>If both are {@code null}, they are considered equal.
 	 */
-	public static void assertArrayEquals(long[] expected, long[] actual) {
+	public static void assertArrayEquals(long @Nullable [] expected, long @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1312,7 +1348,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(long[] expected, long[] actual, String message) {
+	public static void assertArrayEquals(long @Nullable [] expected, long @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1321,7 +1358,8 @@ public class Assertions {
 	 * <p>If both are {@code null}, they are considered equal.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(long[] expected, long[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(long @Nullable [] expected, long @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1330,7 +1368,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1340,7 +1378,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual, String message) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1350,7 +1389,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1359,7 +1399,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Float#equals(Object)} and
 	 * {@link Float#compare(float, float)}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual, float delta) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta);
 	}
 
@@ -1369,7 +1409,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta, String message) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual, float delta,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta, message);
 	}
 
@@ -1379,8 +1420,8 @@ public class Assertions {
 	 * {@link Float#compare(float, float)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(float[] expected, float[] actual, float delta,
-			Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(float @Nullable [] expected, float @Nullable [] actual, float delta,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta, messageSupplier);
 	}
 
@@ -1389,7 +1430,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1399,7 +1440,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual, String message) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1409,7 +1451,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1418,7 +1461,7 @@ public class Assertions {
 	 * <p>Equality imposed by this method is consistent with {@link Double#equals(Object)} and
 	 * {@link Double#compare(double, double)}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual, double delta) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta);
 	}
 
@@ -1428,7 +1471,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta, String message) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual, double delta,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta, message);
 	}
 
@@ -1438,8 +1482,8 @@ public class Assertions {
 	 * {@link Double#compare(double, double)}.
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied {@code messageSupplier}.
 	 */
-	public static void assertArrayEquals(double[] expected, double[] actual, double delta,
-			Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(double @Nullable [] expected, double @Nullable [] actual, double delta,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, delta, messageSupplier);
 	}
 
@@ -1452,7 +1496,7 @@ public class Assertions {
 	 * @see Objects#equals(Object, Object)
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
-	public static void assertArrayEquals(Object[] expected, Object[] actual) {
+	public static void assertArrayEquals(@Nullable Object @Nullable [] expected, @Nullable Object @Nullable [] actual) {
 		AssertArrayEquals.assertArrayEquals(expected, actual);
 	}
 
@@ -1466,7 +1510,8 @@ public class Assertions {
 	 * @see Objects#equals(Object, Object)
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
-	public static void assertArrayEquals(Object[] expected, Object[] actual, String message) {
+	public static void assertArrayEquals(@Nullable Object @Nullable [] expected, @Nullable Object @Nullable [] actual,
+			@Nullable String message) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, message);
 	}
 
@@ -1480,7 +1525,8 @@ public class Assertions {
 	 * @see Objects#equals(Object, Object)
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 */
-	public static void assertArrayEquals(Object[] expected, Object[] actual, Supplier<String> messageSupplier) {
+	public static void assertArrayEquals(@Nullable Object @Nullable [] expected, @Nullable Object @Nullable [] actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertArrayEquals.assertArrayEquals(expected, actual, messageSupplier);
 	}
 
@@ -1504,7 +1550,7 @@ public class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 * @see #assertArrayEquals(Object[], Object[])
 	 */
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
+	public static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual) {
 		AssertIterableEquals.assertIterableEquals(expected, actual);
 	}
 
@@ -1528,7 +1574,8 @@ public class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 * @see #assertArrayEquals(Object[], Object[], String)
 	 */
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
+	public static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			@Nullable String message) {
 		AssertIterableEquals.assertIterableEquals(expected, actual, message);
 	}
 
@@ -1552,8 +1599,8 @@ public class Assertions {
 	 * @see Arrays#deepEquals(Object[], Object[])
 	 * @see #assertArrayEquals(Object[], Object[], Supplier)
 	 */
-	public static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual,
-			Supplier<String> messageSupplier) {
+	public static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertIterableEquals.assertIterableEquals(expected, actual, messageSupplier);
 	}
 
@@ -1613,7 +1660,8 @@ public class Assertions {
 	 *
 	 * @see #assertLinesMatch(List, List)
 	 */
-	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines, String message) {
+	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines,
+			@Nullable String message) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, message);
 	}
 
@@ -1630,7 +1678,7 @@ public class Assertions {
 	 * @see #assertLinesMatch(List, List)
 	 */
 	public static void assertLinesMatch(List<String> expectedLines, List<String> actualLines,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
 	}
 
@@ -1664,7 +1712,8 @@ public class Assertions {
 	 * @since 5.7
 	 * @see #assertLinesMatch(List, List)
 	 */
-	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, String message) {
+	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines,
+			@Nullable String message) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, message);
 	}
 
@@ -1685,7 +1734,7 @@ public class Assertions {
 	 * @see #assertLinesMatch(List, List)
 	 */
 	public static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		AssertLinesMatch.assertLinesMatch(expectedLines, actualLines, messageSupplier);
 	}
 
@@ -1707,7 +1756,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(byte unexpected, Byte actual) {
+	public static void assertNotEquals(byte unexpected, @Nullable Byte actual) {
 		AssertNotEquals.assertNotEquals((Byte) unexpected, actual);
 	}
 
@@ -1717,7 +1766,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, byte actual) {
+	public static void assertNotEquals(@Nullable Byte unexpected, byte actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Byte) actual);
 	}
 
@@ -1727,7 +1776,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, Byte actual) {
+	public static void assertNotEquals(@Nullable Byte unexpected, @Nullable Byte actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -1739,7 +1788,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(byte unexpected, byte actual, String message) {
+	public static void assertNotEquals(byte unexpected, byte actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -1751,7 +1800,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(byte unexpected, Byte actual, String message) {
+	public static void assertNotEquals(byte unexpected, @Nullable Byte actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Byte) unexpected, actual, message);
 	}
 
@@ -1763,7 +1812,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, byte actual, String message) {
+	public static void assertNotEquals(@Nullable Byte unexpected, byte actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Byte) actual, message);
 	}
 
@@ -1775,7 +1824,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, Byte actual, String message) {
+	public static void assertNotEquals(@Nullable Byte unexpected, @Nullable Byte actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -1788,7 +1837,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(byte unexpected, byte actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(byte unexpected, byte actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1801,7 +1850,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(byte unexpected, Byte actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(byte unexpected, @Nullable Byte actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Byte) unexpected, actual, messageSupplier);
 	}
 
@@ -1814,7 +1864,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, byte actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Byte unexpected, byte actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Byte) actual, messageSupplier);
 	}
 
@@ -1827,7 +1878,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Byte unexpected, Byte actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Byte unexpected, @Nullable Byte actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1847,7 +1899,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(short unexpected, Short actual) {
+	public static void assertNotEquals(short unexpected, @Nullable Short actual) {
 		AssertNotEquals.assertNotEquals((Short) unexpected, actual);
 	}
 
@@ -1857,7 +1909,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, short actual) {
+	public static void assertNotEquals(@Nullable Short unexpected, short actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Short) actual);
 	}
 
@@ -1867,7 +1919,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, Short actual) {
+	public static void assertNotEquals(@Nullable Short unexpected, @Nullable Short actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -1879,7 +1931,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(short unexpected, short actual, String message) {
+	public static void assertNotEquals(short unexpected, short actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -1891,7 +1943,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(short unexpected, Short actual, String message) {
+	public static void assertNotEquals(short unexpected, @Nullable Short actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Short) unexpected, actual, message);
 	}
 
@@ -1903,7 +1955,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, short actual, String message) {
+	public static void assertNotEquals(@Nullable Short unexpected, short actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Short) actual, message);
 	}
 
@@ -1915,7 +1967,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, Short actual, String message) {
+	public static void assertNotEquals(@Nullable Short unexpected, @Nullable Short actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -1928,7 +1980,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(short unexpected, short actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1941,7 +1993,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(short unexpected, Short actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(short unexpected, @Nullable Short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Short) unexpected, actual, messageSupplier);
 	}
 
@@ -1954,7 +2007,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, short actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Short unexpected, short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Short) actual, messageSupplier);
 	}
 
@@ -1967,7 +2021,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Short unexpected, Short actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Short unexpected, @Nullable Short actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -1987,7 +2042,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(int unexpected, Integer actual) {
+	public static void assertNotEquals(int unexpected, @Nullable Integer actual) {
 		AssertNotEquals.assertNotEquals((Integer) unexpected, actual);
 	}
 
@@ -1997,7 +2052,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, int actual) {
+	public static void assertNotEquals(@Nullable Integer unexpected, int actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Integer) actual);
 	}
 
@@ -2007,7 +2062,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, Integer actual) {
+	public static void assertNotEquals(@Nullable Integer unexpected, @Nullable Integer actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2019,7 +2074,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(int unexpected, int actual, String message) {
+	public static void assertNotEquals(int unexpected, int actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2031,7 +2086,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(int unexpected, Integer actual, String message) {
+	public static void assertNotEquals(int unexpected, @Nullable Integer actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Integer) unexpected, actual, message);
 	}
 
@@ -2043,7 +2098,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, int actual, String message) {
+	public static void assertNotEquals(@Nullable Integer unexpected, int actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Integer) actual, message);
 	}
 
@@ -2055,7 +2110,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, Integer actual, String message) {
+	public static void assertNotEquals(@Nullable Integer unexpected, @Nullable Integer actual,
+			@Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2068,7 +2124,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(int unexpected, int actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(int unexpected, int actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2081,7 +2137,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(int unexpected, Integer actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(int unexpected, @Nullable Integer actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Integer) unexpected, actual, messageSupplier);
 	}
 
@@ -2094,7 +2151,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, int actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Integer unexpected, int actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Integer) actual, messageSupplier);
 	}
 
@@ -2107,7 +2165,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Integer unexpected, Integer actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Integer unexpected, @Nullable Integer actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2127,7 +2186,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(long unexpected, Long actual) {
+	public static void assertNotEquals(long unexpected, @Nullable Long actual) {
 		AssertNotEquals.assertNotEquals((Long) unexpected, actual);
 	}
 
@@ -2137,7 +2196,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, long actual) {
+	public static void assertNotEquals(@Nullable Long unexpected, long actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Long) actual);
 	}
 
@@ -2147,7 +2206,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, Long actual) {
+	public static void assertNotEquals(@Nullable Long unexpected, @Nullable Long actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2159,7 +2218,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(long unexpected, long actual, String message) {
+	public static void assertNotEquals(long unexpected, long actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2171,7 +2230,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(long unexpected, Long actual, String message) {
+	public static void assertNotEquals(long unexpected, @Nullable Long actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Long) unexpected, actual, message);
 	}
 
@@ -2183,7 +2242,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, long actual, String message) {
+	public static void assertNotEquals(@Nullable Long unexpected, long actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Long) actual, message);
 	}
 
@@ -2195,7 +2254,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, Long actual, String message) {
+	public static void assertNotEquals(@Nullable Long unexpected, @Nullable Long actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2208,7 +2267,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(long unexpected, long actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(long unexpected, long actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2221,7 +2280,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(long unexpected, Long actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(long unexpected, @Nullable Long actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Long) unexpected, actual, messageSupplier);
 	}
 
@@ -2234,7 +2294,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, long actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Long unexpected, long actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Long) actual, messageSupplier);
 	}
 
@@ -2247,7 +2308,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Long unexpected, Long actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Long unexpected, @Nullable Long actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2273,7 +2335,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, Float actual) {
+	public static void assertNotEquals(float unexpected, @Nullable Float actual) {
 		AssertNotEquals.assertNotEquals((Float) unexpected, actual);
 	}
 
@@ -2286,7 +2348,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, float actual) {
+	public static void assertNotEquals(@Nullable Float unexpected, float actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Float) actual);
 	}
 
@@ -2299,7 +2361,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, Float actual) {
+	public static void assertNotEquals(@Nullable Float unexpected, @Nullable Float actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2314,7 +2376,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, float actual, String message) {
+	public static void assertNotEquals(float unexpected, float actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2329,7 +2391,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, Float actual, String message) {
+	public static void assertNotEquals(float unexpected, @Nullable Float actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Float) unexpected, actual, message);
 	}
 
@@ -2344,7 +2406,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, float actual, String message) {
+	public static void assertNotEquals(@Nullable Float unexpected, float actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Float) actual, message);
 	}
 
@@ -2359,7 +2421,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, Float actual, String message) {
+	public static void assertNotEquals(@Nullable Float unexpected, @Nullable Float actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2372,7 +2434,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, float actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(float unexpected, float actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2385,7 +2447,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, Float actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(float unexpected, @Nullable Float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Float) unexpected, actual, messageSupplier);
 	}
 
@@ -2398,7 +2461,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, float actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Float unexpected, float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Float) actual, messageSupplier);
 	}
 
@@ -2411,7 +2475,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Float unexpected, Float actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Float unexpected, @Nullable Float actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2441,7 +2506,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, float actual, float delta, String message) {
+	public static void assertNotEquals(float unexpected, float actual, float delta, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, delta, message);
 	}
 
@@ -2455,7 +2520,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(float unexpected, float actual, float delta,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, delta, messageSupplier);
 	}
 
@@ -2481,7 +2547,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, Double actual) {
+	public static void assertNotEquals(double unexpected, @Nullable Double actual) {
 		AssertNotEquals.assertNotEquals((Double) unexpected, actual);
 	}
 
@@ -2494,7 +2560,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, double actual) {
+	public static void assertNotEquals(@Nullable Double unexpected, double actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Double) actual);
 	}
 
@@ -2507,7 +2573,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, Double actual) {
+	public static void assertNotEquals(@Nullable Double unexpected, @Nullable Double actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2522,7 +2588,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, double actual, String message) {
+	public static void assertNotEquals(double unexpected, double actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2537,7 +2603,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, Double actual, String message) {
+	public static void assertNotEquals(double unexpected, @Nullable Double actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Double) unexpected, actual, message);
 	}
 
@@ -2552,7 +2618,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, double actual, String message) {
+	public static void assertNotEquals(@Nullable Double unexpected, double actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Double) actual, message);
 	}
 
@@ -2567,7 +2633,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, Double actual, String message) {
+	public static void assertNotEquals(@Nullable Double unexpected, @Nullable Double actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2580,7 +2646,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, double actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(double unexpected, double actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2593,7 +2659,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, Double actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(double unexpected, @Nullable Double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Double) unexpected, actual, messageSupplier);
 	}
 
@@ -2606,7 +2673,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, double actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Double unexpected, double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Double) actual, messageSupplier);
 	}
 
@@ -2619,7 +2687,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Double unexpected, Double actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Double unexpected, @Nullable Double actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2649,7 +2718,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(double unexpected, double actual, double delta, String message) {
+	public static void assertNotEquals(double unexpected, double actual, double delta, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, delta, message);
 	}
 
@@ -2664,7 +2733,7 @@ public class Assertions {
 	 */
 	@API(status = STABLE, since = "5.4")
 	public static void assertNotEquals(double unexpected, double actual, double delta,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, delta, messageSupplier);
 	}
 
@@ -2684,7 +2753,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(char unexpected, Character actual) {
+	public static void assertNotEquals(char unexpected, @Nullable Character actual) {
 		AssertNotEquals.assertNotEquals((Character) unexpected, actual);
 	}
 
@@ -2694,7 +2763,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, char actual) {
+	public static void assertNotEquals(@Nullable Character unexpected, char actual) {
 		AssertNotEquals.assertNotEquals(unexpected, (Character) actual);
 	}
 
@@ -2704,7 +2773,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, Character actual) {
+	public static void assertNotEquals(@Nullable Character unexpected, @Nullable Character actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2716,7 +2785,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(char unexpected, char actual, String message) {
+	public static void assertNotEquals(char unexpected, char actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2728,7 +2797,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(char unexpected, Character actual, String message) {
+	public static void assertNotEquals(char unexpected, @Nullable Character actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals((Character) unexpected, actual, message);
 	}
 
@@ -2740,7 +2809,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, char actual, String message) {
+	public static void assertNotEquals(@Nullable Character unexpected, char actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, (Character) actual, message);
 	}
 
@@ -2752,7 +2821,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, Character actual, String message) {
+	public static void assertNotEquals(@Nullable Character unexpected, @Nullable Character actual,
+			@Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2765,7 +2835,7 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(char unexpected, char actual, Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2778,7 +2848,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(char unexpected, Character actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(char unexpected, @Nullable Character actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals((Character) unexpected, actual, messageSupplier);
 	}
 
@@ -2791,7 +2862,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, char actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Character unexpected, char actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, (Character) actual, messageSupplier);
 	}
 
@@ -2804,7 +2876,8 @@ public class Assertions {
 	 * @since 5.4
 	 */
 	@API(status = STABLE, since = "5.4")
-	public static void assertNotEquals(Character unexpected, Character actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Character unexpected, @Nullable Character actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2815,7 +2888,7 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertNotEquals(Object unexpected, Object actual) {
+	public static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual) {
 		AssertNotEquals.assertNotEquals(unexpected, actual);
 	}
 
@@ -2828,7 +2901,7 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertNotEquals(Object unexpected, Object actual, String message) {
+	public static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual, @Nullable String message) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, message);
 	}
 
@@ -2842,7 +2915,8 @@ public class Assertions {
 	 *
 	 * @see Object#equals(Object)
 	 */
-	public static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotEquals.assertNotEquals(unexpected, actual, messageSupplier);
 	}
 
@@ -2856,7 +2930,7 @@ public class Assertions {
 	 * use one of the {@code assertEquals(...)} methods instead &mdash; for example,
 	 * use {@code assertEquals(999, 999)} instead of {@code assertSame(999, 999)}.
 	 */
-	public static void assertSame(Object expected, Object actual) {
+	public static void assertSame(@Nullable Object expected, @Nullable Object actual) {
 		AssertSame.assertSame(expected, actual);
 	}
 
@@ -2869,7 +2943,7 @@ public class Assertions {
 	 * use {@code assertEquals(999, 999)} instead of {@code assertSame(999, 999)}.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertSame(Object expected, Object actual, String message) {
+	public static void assertSame(@Nullable Object expected, @Nullable Object actual, @Nullable String message) {
 		AssertSame.assertSame(expected, actual, message);
 	}
 
@@ -2883,7 +2957,8 @@ public class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied
 	 * {@code messageSupplier}.
 	 */
-	public static void assertSame(Object expected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertSame(@Nullable Object expected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertSame.assertSame(expected, actual, messageSupplier);
 	}
 
@@ -2896,7 +2971,7 @@ public class Assertions {
 	 * objects. To assert that two objects or two primitive values are not
 	 * <em>equal</em>, use one of the {@code assertNotEquals(...)} methods instead.
 	 */
-	public static void assertNotSame(Object unexpected, Object actual) {
+	public static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual) {
 		AssertNotSame.assertNotSame(unexpected, actual);
 	}
 
@@ -2908,7 +2983,7 @@ public class Assertions {
 	 * <em>equal</em>, use one of the {@code assertNotEquals(...)} methods instead.
 	 * <p>Fails with the supplied failure {@code message}.
 	 */
-	public static void assertNotSame(Object unexpected, Object actual, String message) {
+	public static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual, @Nullable String message) {
 		AssertNotSame.assertNotSame(unexpected, actual, message);
 	}
 
@@ -2921,7 +2996,8 @@ public class Assertions {
 	 * <p>If necessary, the failure message will be retrieved lazily from the supplied
 	 * {@code messageSupplier}.
 	 */
-	public static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	public static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertNotSame.assertNotSame(unexpected, actual, messageSupplier);
 	}
 
@@ -2957,7 +3033,7 @@ public class Assertions {
 	 * @see #assertAll(String, Collection)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(String heading, Executable... executables) throws MultipleFailuresError {
+	public static void assertAll(@Nullable String heading, Executable... executables) throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}
 
@@ -2991,7 +3067,8 @@ public class Assertions {
 	 * @see #assertAll(Stream)
 	 * @see #assertAll(String, Stream)
 	 */
-	public static void assertAll(String heading, Collection<Executable> executables) throws MultipleFailuresError {
+	public static void assertAll(@Nullable String heading, Collection<Executable> executables)
+			throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}
 
@@ -3035,7 +3112,8 @@ public class Assertions {
 	 * @see #assertAll(String, Collection)
 	 * @see #assertAll(Stream)
 	 */
-	public static void assertAll(String heading, Stream<Executable> executables) throws MultipleFailuresError {
+	public static void assertAll(@Nullable String heading, Stream<Executable> executables)
+			throws MultipleFailuresError {
 		AssertAll.assertAll(heading, executables);
 	}
 
@@ -3080,7 +3158,7 @@ public class Assertions {
 	 */
 	@API(status = STABLE, since = "5.10")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
-			String message) {
+			@Nullable String message) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, message);
 	}
 
@@ -3105,7 +3183,7 @@ public class Assertions {
 	 */
 	@API(status = STABLE, since = "5.10")
 	public static <T extends Throwable> T assertThrowsExactly(Class<T> expectedType, Executable executable,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		return AssertThrowsExactly.assertThrowsExactly(expectedType, executable, messageSupplier);
 	}
 
@@ -3149,7 +3227,8 @@ public class Assertions {
 	 *
 	 * @see #assertThrowsExactly(Class, Executable, String)
 	 */
-	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable, String message) {
+	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
+			@Nullable String message) {
 		return AssertThrows.assertThrows(expectedType, executable, message);
 	}
 
@@ -3176,7 +3255,7 @@ public class Assertions {
 	 * @see #assertThrowsExactly(Class, Executable, Supplier)
 	 */
 	public static <T extends Throwable> T assertThrows(Class<T> expectedType, Executable executable,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		return AssertThrows.assertThrows(expectedType, executable, messageSupplier);
 	}
 
@@ -3214,7 +3293,7 @@ public class Assertions {
 	 * @since 5.2
 	 */
 	@API(status = STABLE, since = "5.2")
-	public static void assertDoesNotThrow(Executable executable, String message) {
+	public static void assertDoesNotThrow(Executable executable, @Nullable String message) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable, message);
 	}
 
@@ -3234,7 +3313,7 @@ public class Assertions {
 	 * @since 5.2
 	 */
 	@API(status = STABLE, since = "5.2")
-	public static void assertDoesNotThrow(Executable executable, Supplier<String> messageSupplier) {
+	public static void assertDoesNotThrow(Executable executable, Supplier<@Nullable String> messageSupplier) {
 		AssertDoesNotThrow.assertDoesNotThrow(executable, messageSupplier);
 	}
 
@@ -3255,7 +3334,7 @@ public class Assertions {
 	 * @since 5.2
 	 */
 	@API(status = STABLE, since = "5.2")
-	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
+	public static <T extends @Nullable Object> T assertDoesNotThrow(ThrowingSupplier<T> supplier) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier);
 	}
 
@@ -3276,7 +3355,8 @@ public class Assertions {
 	 * @since 5.2
 	 */
 	@API(status = STABLE, since = "5.2")
-	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, String message) {
+	public static <T extends @Nullable Object> T assertDoesNotThrow(ThrowingSupplier<T> supplier,
+			@Nullable String message) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier, message);
 	}
 
@@ -3298,7 +3378,8 @@ public class Assertions {
 	 * @since 5.2
 	 */
 	@API(status = STABLE, since = "5.2")
-	public static <T> T assertDoesNotThrow(ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+	public static <T extends @Nullable Object> T assertDoesNotThrow(ThrowingSupplier<T> supplier,
+			Supplier<@Nullable String> messageSupplier) {
 		return AssertDoesNotThrow.assertDoesNotThrow(supplier, messageSupplier);
 	}
 
@@ -3342,7 +3423,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 */
-	public static void assertTimeout(Duration timeout, Executable executable, String message) {
+	public static void assertTimeout(Duration timeout, Executable executable, @Nullable String message) {
 		AssertTimeout.assertTimeout(timeout, executable, message);
 	}
 
@@ -3364,7 +3445,8 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
 	 */
-	public static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
+	public static void assertTimeout(Duration timeout, Executable executable,
+			Supplier<@Nullable String> messageSupplier) {
 		AssertTimeout.assertTimeout(timeout, executable, messageSupplier);
 	}
 
@@ -3387,7 +3469,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable)
 	 */
-	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
+	public static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
 		return AssertTimeout.assertTimeout(timeout, supplier);
 	}
 
@@ -3410,7 +3492,8 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, String)
 	 */
-	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+	public static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			@Nullable String message) {
 		return AssertTimeout.assertTimeout(timeout, supplier, message);
 	}
 
@@ -3434,8 +3517,8 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, ThrowingSupplier, String)
 	 * @see #assertTimeoutPreemptively(Duration, Executable, Supplier)
 	 */
-	public static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) {
+	public static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<@Nullable String> messageSupplier) {
 		return AssertTimeout.assertTimeout(timeout, supplier, messageSupplier);
 	}
 
@@ -3475,7 +3558,7 @@ public class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
-	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
+	public static void assertTimeoutPreemptively(Duration timeout, Executable executable, @Nullable String message) {
 		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, message);
 	}
 
@@ -3497,7 +3580,7 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, Supplier)
 	 */
 	public static void assertTimeoutPreemptively(Duration timeout, Executable executable,
-			Supplier<String> messageSupplier) {
+			Supplier<@Nullable String> messageSupplier) {
 		AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, executable, messageSupplier);
 	}
 
@@ -3519,7 +3602,8 @@ public class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable)
 	 */
-	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
+	public static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout,
+			ThrowingSupplier<T> supplier) {
 		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier);
 	}
 
@@ -3541,7 +3625,8 @@ public class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, Supplier)
 	 * @see #assertTimeout(Duration, Executable, String)
 	 */
-	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+	public static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout,
+			ThrowingSupplier<T> supplier, @Nullable String message) {
 		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, message);
 	}
 
@@ -3564,8 +3649,8 @@ public class Assertions {
 	 * @see #assertTimeoutPreemptively(Duration, ThrowingSupplier, String)
 	 * @see #assertTimeout(Duration, Executable, Supplier)
 	 */
-	public static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) {
+	public static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout,
+			ThrowingSupplier<T> supplier, Supplier<@Nullable String> messageSupplier) {
 		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier);
 	}
 
@@ -3593,8 +3678,9 @@ public class Assertions {
 	 * @see #assertTimeout(Duration, Executable, Supplier)
 	 */
 	@API(status = INTERNAL, since = "5.9.1")
-	public static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier, TimeoutFailureFactory<E> failureFactory) throws E {
+	public static <T extends @Nullable Object, E extends Throwable> T assertTimeoutPreemptively(Duration timeout,
+			ThrowingSupplier<T> supplier, Supplier<@Nullable String> messageSupplier,
+			TimeoutFailureFactory<E> failureFactory) throws E {
 		return AssertTimeoutPreemptively.assertTimeoutPreemptively(timeout, supplier, messageSupplier, failureFactory);
 	}
 
@@ -3610,7 +3696,7 @@ public class Assertions {
 	 * @since 5.8
 	 */
 	@API(status = STABLE, since = "5.10")
-	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
+	public static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue);
 	}
 
@@ -3626,7 +3712,8 @@ public class Assertions {
 	 * @since 5.8
 	 */
 	@API(status = STABLE, since = "5.10")
-	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+	public static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue,
+			@Nullable String message) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, message);
 	}
 
@@ -3643,7 +3730,8 @@ public class Assertions {
 	 * @since 5.8
 	 */
 	@API(status = STABLE, since = "5.10")
-	public static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+	public static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue,
+			Supplier<@Nullable String> messageSupplier) {
 		return AssertInstanceOf.assertInstanceOf(expectedType, actualValue, messageSupplier);
 	}
 
@@ -3662,6 +3750,7 @@ public class Assertions {
 		 *
 		 * @return timeout failure; never {@code null}
 		 */
-		T createTimeoutFailure(Duration timeout, Supplier<String> messageSupplier, Throwable cause, Thread testThread);
+		T createTimeoutFailure(Duration timeout, @Nullable Supplier<@Nullable String> messageSupplier,
+				@Nullable Throwable cause, @Nullable Thread testThread);
 	}
 }

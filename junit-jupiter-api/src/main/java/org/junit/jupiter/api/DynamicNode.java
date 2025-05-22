@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
 
@@ -33,9 +34,10 @@ public abstract class DynamicNode {
 	private final String displayName;
 
 	/** Custom test source {@link URI} associated with this node; potentially {@code null}. */
+	@Nullable
 	private final URI testSourceUri;
 
-	DynamicNode(String displayName, URI testSourceUri) {
+	DynamicNode(String displayName, @Nullable URI testSourceUri) {
 		this.displayName = Preconditions.notBlank(displayName, "displayName must not be null or blank");
 		this.testSourceUri = testSourceUri;
 	}

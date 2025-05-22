@@ -17,6 +17,8 @@ import static org.junit.jupiter.api.AssertionUtils.objectsAreEqual;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertNotEquals} is a collection of utility methods that support asserting
  * inequality in objects and primitive values in tests.
@@ -39,7 +41,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(byte unexpected, byte actual, String message) {
+	static void assertNotEquals(byte unexpected, byte actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
@@ -48,7 +50,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(byte unexpected, byte actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(byte unexpected, byte actual, Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, messageSupplier);
 		}
@@ -64,7 +66,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(short unexpected, short actual, String message) {
+	static void assertNotEquals(short unexpected, short actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
@@ -73,7 +75,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(short unexpected, short actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(short unexpected, short actual, Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, messageSupplier);
 		}
@@ -89,7 +91,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(int unexpected, int actual, String message) {
+	static void assertNotEquals(int unexpected, int actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
@@ -98,7 +100,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(int unexpected, int actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(int unexpected, int actual, Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, messageSupplier);
 		}
@@ -114,7 +116,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(long unexpected, long actual, String message) {
+	static void assertNotEquals(long unexpected, long actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
@@ -123,7 +125,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(long unexpected, long actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(long unexpected, long actual, Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, messageSupplier);
 		}
@@ -139,7 +141,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(float unexpected, float actual, String message) {
+	static void assertNotEquals(float unexpected, float actual, @Nullable String message) {
 		if (floatsAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
@@ -148,7 +150,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(float unexpected, float actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(float unexpected, float actual, Supplier<@Nullable String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual)) {
 			failEqual(actual, messageSupplier);
 		}
@@ -164,7 +166,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(float unexpected, float actual, float delta, String message) {
+	static void assertNotEquals(float unexpected, float actual, float delta, @Nullable String message) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, message);
 		}
@@ -173,7 +175,8 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(float unexpected, float actual, float delta, Supplier<String> messageSupplier) {
+	static void assertNotEquals(float unexpected, float actual, float delta,
+			Supplier<@Nullable String> messageSupplier) {
 		if (floatsAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, messageSupplier);
 		}
@@ -189,7 +192,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(double unexpected, double actual, String message) {
+	static void assertNotEquals(double unexpected, double actual, @Nullable String message) {
 		if (doublesAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
@@ -198,7 +201,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(double unexpected, double actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(double unexpected, double actual, Supplier<@Nullable String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual)) {
 			failEqual(actual, messageSupplier);
 		}
@@ -214,7 +217,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(double unexpected, double actual, double delta, String message) {
+	static void assertNotEquals(double unexpected, double actual, double delta, @Nullable String message) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, message);
 		}
@@ -223,7 +226,8 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(double unexpected, double actual, double delta, Supplier<String> messageSupplier) {
+	static void assertNotEquals(double unexpected, double actual, double delta,
+			Supplier<@Nullable String> messageSupplier) {
 		if (doublesAreEqual(unexpected, actual, delta)) {
 			failEqual(actual, messageSupplier);
 		}
@@ -239,7 +243,7 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(char unexpected, char actual, String message) {
+	static void assertNotEquals(char unexpected, char actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failEqual(actual, message);
 		}
@@ -248,29 +252,30 @@ class AssertNotEquals {
 	/**
 	 * @since 5.4
 	 */
-	static void assertNotEquals(char unexpected, char actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(char unexpected, char actual, Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failEqual(actual, messageSupplier);
 		}
 	}
 
-	static void assertNotEquals(Object unexpected, Object actual) {
+	static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual) {
 		assertNotEquals(unexpected, actual, (String) null);
 	}
 
-	static void assertNotEquals(Object unexpected, Object actual, String message) {
+	static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual, @Nullable String message) {
 		if (objectsAreEqual(unexpected, actual)) {
 			failEqual(actual, message);
 		}
 	}
 
-	static void assertNotEquals(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	static void assertNotEquals(@Nullable Object unexpected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		if (objectsAreEqual(unexpected, actual)) {
 			failEqual(actual, messageSupplier);
 		}
 	}
 
-	private static void failEqual(Object actual, Object messageOrSupplier) {
+	private static void failEqual(@Nullable Object actual, @Nullable Object messageOrSupplier) {
 		assertionFailure() //
 				.message(messageOrSupplier) //
 				.reason("expected: not equal but was: <" + actual + ">") //

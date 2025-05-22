@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.AssertionUtils.getCanonicalName;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.StringUtils;
 import org.opentest4j.AssertionFailedError;
 
@@ -31,12 +32,23 @@ import org.opentest4j.AssertionFailedError;
 @API(status = STABLE, since = "5.9")
 public class AssertionFailureBuilder {
 
+	@Nullable
 	private Object message;
+
+	@Nullable
 	private Throwable cause;
+
 	private boolean mismatch;
+
+	@Nullable
 	private Object expected;
+
+	@Nullable
 	private Object actual;
+
+	@Nullable
 	private String reason;
+
 	private boolean includeValuesInMessage = true;
 
 	/**
@@ -59,7 +71,7 @@ public class AssertionFailureBuilder {
 	 * @param message the user-defined failure message; may be {@code null}
 	 * @return this builder for method chaining
 	 */
-	public AssertionFailureBuilder message(Object message) {
+	public AssertionFailureBuilder message(@Nullable Object message) {
 		this.message = message;
 		return this;
 	}
@@ -70,7 +82,7 @@ public class AssertionFailureBuilder {
 	 * @param reason the failure reason; may be {@code null}
 	 * @return this builder for method chaining
 	 */
-	public AssertionFailureBuilder reason(String reason) {
+	public AssertionFailureBuilder reason(@Nullable String reason) {
 		this.reason = reason;
 		return this;
 	}
@@ -81,7 +93,7 @@ public class AssertionFailureBuilder {
 	 * @param cause the failure cause; may be {@code null}
 	 * @return this builder for method chaining
 	 */
-	public AssertionFailureBuilder cause(Throwable cause) {
+	public AssertionFailureBuilder cause(@Nullable Throwable cause) {
 		this.cause = cause;
 		return this;
 	}
@@ -92,7 +104,7 @@ public class AssertionFailureBuilder {
 	 * @param expected the expected value; may be {@code null}
 	 * @return this builder for method chaining
 	 */
-	public AssertionFailureBuilder expected(Object expected) {
+	public AssertionFailureBuilder expected(@Nullable Object expected) {
 		this.mismatch = true;
 		this.expected = expected;
 		return this;
@@ -104,7 +116,7 @@ public class AssertionFailureBuilder {
 	 * @param actual the actual value; may be {@code null}
 	 * @return this builder for method chaining
 	 */
-	public AssertionFailureBuilder actual(Object actual) {
+	public AssertionFailureBuilder actual(@Nullable Object actual) {
 		this.mismatch = true;
 		this.actual = actual;
 		return this;
@@ -152,7 +164,8 @@ public class AssertionFailureBuilder {
 				: new AssertionFailedError(message, cause);
 	}
 
-	private static String nullSafeGet(Object messageOrSupplier) {
+	@Nullable
+	private static String nullSafeGet(@Nullable Object messageOrSupplier) {
 		if (messageOrSupplier == null) {
 			return null;
 		}
@@ -163,11 +176,11 @@ public class AssertionFailureBuilder {
 		return StringUtils.nullSafeToString(messageOrSupplier);
 	}
 
-	private static String buildPrefix(String message) {
+	private static String buildPrefix(@Nullable String message) {
 		return (StringUtils.isNotBlank(message) ? message + " ==> " : "");
 	}
 
-	private static String formatValues(Object expected, Object actual) {
+	private static String formatValues(@Nullable Object expected, @Nullable Object actual) {
 		String expectedString = toString(expected);
 		String actualString = toString(actual);
 		if (expectedString.equals(actualString)) {
@@ -177,7 +190,7 @@ public class AssertionFailureBuilder {
 		return "expected: <%s> but was: <%s>".formatted(expectedString, actualString);
 	}
 
-	private static String formatClassAndValue(Object value, String valueString) {
+	private static String formatClassAndValue(@Nullable Object value, String valueString) {
 		// If the value is null, return <null> instead of null<null>.
 		if (value == null) {
 			return "<null>";
@@ -187,18 +200,18 @@ public class AssertionFailureBuilder {
 		return (value instanceof Class ? "<" + classAndHash + ">" : classAndHash + "<" + valueString + ">");
 	}
 
-	private static String toString(Object obj) {
+	private static String toString(@Nullable Object obj) {
 		if (obj instanceof Class<?> clazz) {
 			return getCanonicalName(clazz);
 		}
 		return StringUtils.nullSafeToString(obj);
 	}
 
-	private static String toHash(Object obj) {
+	private static String toHash(@Nullable Object obj) {
 		return (obj == null ? "" : "@" + Integer.toHexString(System.identityHashCode(obj)));
 	}
 
-	private static String getClassName(Object obj) {
+	private static String getClassName(@Nullable Object obj) {
 		return (obj == null ? "null"
 				: obj instanceof Class<?> clazz ? getCanonicalName(clazz) : obj.getClass().getName());
 	}

@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertLinesMatch} is a collection of utility methods that support asserting
  * lines of {@link String} equality or {@link java.util.regex.Pattern}-match in tests.
@@ -41,7 +43,7 @@ class AssertLinesMatch {
 		assertLinesMatch(expectedLines, actualLines, (Object) null);
 	}
 
-	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines, String message) {
+	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines, @Nullable String message) {
 		assertLinesMatch(expectedLines, actualLines, (Object) message);
 	}
 
@@ -49,11 +51,12 @@ class AssertLinesMatch {
 		assertLinesMatch(expectedLines, actualLines, (Object) null);
 	}
 
-	static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, String message) {
+	static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, @Nullable String message) {
 		assertLinesMatch(expectedLines, actualLines, (Object) message);
 	}
 
-	static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines, Object messageOrSupplier) {
+	static void assertLinesMatch(Stream<String> expectedLines, Stream<String> actualLines,
+			@Nullable Object messageOrSupplier) {
 		notNull(expectedLines, "expectedLines must not be null");
 		notNull(actualLines, "actualLines must not be null");
 
@@ -67,7 +70,8 @@ class AssertLinesMatch {
 		assertLinesMatch(expectedListOfStrings, actualListOfStrings, messageOrSupplier);
 	}
 
-	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines, Object messageOrSupplier) {
+	static void assertLinesMatch(List<String> expectedLines, List<String> actualLines,
+			@Nullable Object messageOrSupplier) {
 		notNull(expectedLines, "expectedLines must not be null");
 		notNull(actualLines, "actualLines must not be null");
 
@@ -83,9 +87,11 @@ class AssertLinesMatch {
 
 		private final List<String> expectedLines;
 		private final List<String> actualLines;
+
+		@Nullable
 		private final Object messageOrSupplier;
 
-		LinesMatcher(List<String> expectedLines, List<String> actualLines, Object messageOrSupplier) {
+		LinesMatcher(List<String> expectedLines, List<String> actualLines, @Nullable Object messageOrSupplier) {
 			this.expectedLines = expectedLines;
 			this.actualLines = actualLines;
 			this.messageOrSupplier = messageOrSupplier;

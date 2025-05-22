@@ -65,7 +65,7 @@ class KotlinFailAssertionsTests {
             }
         assertMessageEquals(ex, message)
         val cause = ex.cause
-        assertMessageContains(cause, throwableCause)
+        assertMessageContains(cause!!, throwableCause)
     }
 
     @Test
@@ -77,7 +77,7 @@ class KotlinFailAssertionsTests {
             }
         assertEmptyMessage(ex)
         val cause = ex.cause
-        assertMessageContains(cause, throwableCause)
+        assertMessageContains(cause!!, throwableCause)
     }
 
     @Test
@@ -102,7 +102,7 @@ class KotlinFailAssertionsTests {
             }
         assertEmptyMessage(ex)
         val cause = ex.cause
-        assertMessageContains(cause, throwableCause)
+        assertMessageContains(cause!!, throwableCause)
     }
 
     @Test

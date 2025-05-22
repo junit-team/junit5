@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -84,7 +85,7 @@ public class DynamicContainer extends DynamicNode {
 	 * @since 5.3
 	 * @see #dynamicContainer(String, Iterable)
 	 */
-	public static DynamicContainer dynamicContainer(String displayName, URI testSourceUri,
+	public static DynamicContainer dynamicContainer(String displayName, @Nullable URI testSourceUri,
 			Stream<? extends DynamicNode> dynamicNodes) {
 
 		return new DynamicContainer(displayName, testSourceUri, dynamicNodes);
@@ -92,7 +93,7 @@ public class DynamicContainer extends DynamicNode {
 
 	private final Stream<? extends DynamicNode> children;
 
-	private DynamicContainer(String displayName, URI testSourceUri, Stream<? extends DynamicNode> children) {
+	private DynamicContainer(String displayName, @Nullable URI testSourceUri, Stream<? extends DynamicNode> children) {
 		super(displayName, testSourceUri);
 		Preconditions.notNull(children, "children must not be null");
 		this.children = children;

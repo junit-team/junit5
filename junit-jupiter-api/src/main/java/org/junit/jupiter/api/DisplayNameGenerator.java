@@ -31,6 +31,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassUtils;
 import org.junit.platform.commons.util.Preconditions;
@@ -386,14 +387,13 @@ public interface DisplayNameGenerator {
 		private String getSentenceBeginning(Class<?> testClass, List<Class<?>> enclosingInstanceTypes) {
 			Class<?> enclosingClass = enclosingInstanceTypes.isEmpty() ? null
 					: enclosingInstanceTypes.get(enclosingInstanceTypes.size() - 1);
-			boolean topLevelTestClass = (enclosingClass == null || isStatic(testClass));
 
 			String sentenceFragment = findAnnotation(testClass, DisplayName.class)//
 					.map(DisplayName::value)//
 					.map(String::trim)//
 					.orElseGet(() -> getSentenceFragment(testClass));
 
-			if (topLevelTestClass) {
+			if (enclosingClass == null || isStatic(testClass)) { // top-level class
 				if (sentenceFragment != null) {
 					return sentenceFragment;
 				}
@@ -501,6 +501,7 @@ public interface DisplayNameGenerator {
 			return findAnnotation(testClass, IndicativeSentencesGeneration.class, enclosingInstanceTypes);
 		}
 
+		@Nullable
 		private static String getSentenceFragment(AnnotatedElement element) {
 			return findAnnotation(element, SentenceFragment.class) //
 					.map(SentenceFragment::value) //

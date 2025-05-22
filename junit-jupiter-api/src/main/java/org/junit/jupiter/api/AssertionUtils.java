@@ -15,6 +15,7 @@ import static java.util.stream.Collectors.joining;
 import java.util.Deque;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.opentest4j.AssertionFailedError;
 
@@ -34,23 +35,24 @@ class AssertionUtils {
 		throw new AssertionFailedError();
 	}
 
-	static void fail(String message) {
+	static void fail(@Nullable String message) {
 		throw new AssertionFailedError(message);
 	}
 
-	static void fail(String message, Throwable cause) {
+	static void fail(@Nullable String message, @Nullable Throwable cause) {
 		throw new AssertionFailedError(message, cause);
 	}
 
-	static void fail(Throwable cause) {
+	static void fail(@Nullable Throwable cause) {
 		throw new AssertionFailedError(null, cause);
 	}
 
-	static void fail(Supplier<String> messageSupplier) {
+	static void fail(Supplier<@Nullable String> messageSupplier) {
 		throw new AssertionFailedError(nullSafeGet(messageSupplier));
 	}
 
-	static String nullSafeGet(Supplier<String> messageSupplier) {
+	@Nullable
+	static String nullSafeGet(@Nullable Supplier<@Nullable String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 
@@ -65,7 +67,7 @@ class AssertionUtils {
 		}
 	}
 
-	static String formatIndexes(Deque<Integer> indexes) {
+	static String formatIndexes(@Nullable Deque<Integer> indexes) {
 		if (indexes == null || indexes.isEmpty()) {
 			return "";
 		}
@@ -103,7 +105,7 @@ class AssertionUtils {
 		return Double.doubleToLongBits(value1) == Double.doubleToLongBits(value2);
 	}
 
-	static boolean objectsAreEqual(Object obj1, Object obj2) {
+	static boolean objectsAreEqual(@Nullable Object obj1, @Nullable Object obj2) {
 		if (obj1 == null) {
 			return (obj2 == null);
 		}

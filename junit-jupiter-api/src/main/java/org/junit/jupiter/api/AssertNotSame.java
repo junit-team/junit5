@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertNotSame} is a collection of utility methods that support asserting
  * two objects are not the same.
@@ -26,23 +28,24 @@ class AssertNotSame {
 		/* no-op */
 	}
 
-	static void assertNotSame(Object unexpected, Object actual) {
+	static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual) {
 		assertNotSame(unexpected, actual, (String) null);
 	}
 
-	static void assertNotSame(Object unexpected, Object actual, String message) {
+	static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual, @Nullable String message) {
 		if (unexpected == actual) {
 			failSame(actual, message);
 		}
 	}
 
-	static void assertNotSame(Object unexpected, Object actual, Supplier<String> messageSupplier) {
+	static void assertNotSame(@Nullable Object unexpected, @Nullable Object actual,
+			Supplier<@Nullable String> messageSupplier) {
 		if (unexpected == actual) {
 			failSame(actual, messageSupplier);
 		}
 	}
 
-	private static void failSame(Object actual, Object messageOrSupplier) {
+	private static void failSame(@Nullable Object actual, @Nullable Object messageOrSupplier) {
 		assertionFailure() //
 				.message(messageOrSupplier) //
 				.reason("expected: not same but was: <" + actual + ">") //
