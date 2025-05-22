@@ -14,8 +14,11 @@
  * @since 1.4
  */
 module org.junit.platform.reporting {
-	requires java.xml;
+
 	requires static transitive org.apiguardian.api;
+	requires static org.jspecify;
+
+	requires java.xml;
 	requires org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 	requires transitive org.junit.platform.launcher;

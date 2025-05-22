@@ -17,8 +17,11 @@
  * runs JUnit 3 and 4 based tests on the platform.
  */
 module org.junit.vintage.engine {
-	requires junit; // 4
+
 	requires static org.apiguardian.api;
+	requires static org.jspecify;
+
+	requires junit; // 4
 	requires org.junit.platform.engine;
 
 	provides org.junit.platform.engine.TestEngine

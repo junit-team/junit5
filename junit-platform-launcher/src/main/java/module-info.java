@@ -22,8 +22,11 @@
  * @uses org.junit.platform.launcher.TestExecutionListener
  */
 module org.junit.platform.launcher {
-	requires transitive java.logging;
+
 	requires static transitive org.apiguardian.api;
+	requires static org.jspecify;
+
+	requires transitive java.logging;
 	requires transitive org.junit.platform.commons;
 	requires transitive org.junit.platform.engine;
 
