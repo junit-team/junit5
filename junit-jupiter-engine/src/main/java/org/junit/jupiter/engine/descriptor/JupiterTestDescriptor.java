@@ -31,6 +31,7 @@ import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
 import org.junit.jupiter.api.extension.Extension;
@@ -65,11 +66,11 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	final JupiterConfiguration configuration;
 
 	JupiterTestDescriptor(UniqueId uniqueId, AnnotatedElement element, Supplier<String> displayNameSupplier,
-			TestSource source, JupiterConfiguration configuration) {
+			@Nullable TestSource source, JupiterConfiguration configuration) {
 		this(uniqueId, determineDisplayName(element, displayNameSupplier), source, configuration);
 	}
 
-	JupiterTestDescriptor(UniqueId uniqueId, String displayName, TestSource source,
+	JupiterTestDescriptor(UniqueId uniqueId, String displayName, @Nullable TestSource source,
 			JupiterConfiguration configuration) {
 		super(uniqueId, displayName, source);
 		this.configuration = configuration;
@@ -79,7 +80,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 
 	static Set<TestTag> getTags(AnnotatedElement element, Supplier<String> elementDescription,
 			Supplier<TestSource> sourceProvider, Consumer<DiscoveryIssue> issueCollector) {
-		AtomicReference<TestSource> source = new AtomicReference<>();
+		AtomicReference<@Nullable TestSource> source = new AtomicReference<>();
 		return findRepeatableAnnotations(element, Tag.class).stream() //
 				.map(Tag::value) //
 				.filter(tag -> {

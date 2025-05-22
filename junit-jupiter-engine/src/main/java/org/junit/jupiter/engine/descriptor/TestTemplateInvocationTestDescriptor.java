@@ -11,6 +11,7 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.Collections.emptySet;
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.lang.reflect.Method;
@@ -18,6 +19,7 @@ import java.util.Set;
 import java.util.function.UnaryOperator;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
 import org.junit.jupiter.api.extension.TestTemplateInvocationContext;
@@ -42,7 +44,9 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	private static final ReflectiveInterceptorCall<Method, Void> interceptorCall = ReflectiveInterceptorCall.ofVoidMethod(
 		InvocationInterceptor::interceptTestTemplateMethod);
 
+	@Nullable
 	private TestTemplateInvocationContext invocationContext;
+
 	private final int index;
 
 	TestTemplateInvocationTestDescriptor(UniqueId uniqueId, Class<?> testClass, Method templateMethod,
@@ -58,7 +62,7 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	@Override
 	protected TestTemplateInvocationTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
 		return new TestTemplateInvocationTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), getTestClass(),
-			getTestMethod(), this.invocationContext, this.index, this.configuration);
+			getTestMethod(), requiredInvocationContext(), this.index, this.configuration);
 	}
 
 	// --- TestDescriptor ------------------------------------------------------
@@ -77,20 +81,25 @@ public class TestTemplateInvocationTestDescriptor extends TestMethodTestDescript
 	@Override
 	protected MutableExtensionRegistry populateNewExtensionRegistry(JupiterEngineExecutionContext context) {
 		MutableExtensionRegistry registry = super.populateNewExtensionRegistry(context);
-		this.invocationContext.getAdditionalExtensions().forEach(
+		var invocationContext = requiredInvocationContext();
+		invocationContext.getAdditionalExtensions().forEach(
 			extension -> registry.registerExtension(extension, invocationContext));
 		return registry;
 	}
 
 	@Override
 	protected void prepareExtensionContext(ExtensionContext extensionContext) {
-		this.invocationContext.prepareInvocation(extensionContext);
+		requiredInvocationContext().prepareInvocation(extensionContext);
 	}
 
 	@Override
 	public void after(JupiterEngineExecutionContext context) {
 		// forget invocationContext so it can be garbage collected
 		this.invocationContext = null;
+	}
+
+	private TestTemplateInvocationContext requiredInvocationContext() {
+		return requireNonNull(this.invocationContext);
 	}
 
 }

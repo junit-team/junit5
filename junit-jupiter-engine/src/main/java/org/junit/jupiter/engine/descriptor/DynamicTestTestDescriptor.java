@@ -10,8 +10,11 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.function.UnaryOperator;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.extension.DynamicTestInvocationContext;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -35,9 +38,10 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	private static final InvocationInterceptorChain interceptorChain = new InvocationInterceptorChain();
 
+	@Nullable
 	private DynamicTest dynamicTest;
 
-	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, TestSource source,
+	DynamicTestTestDescriptor(UniqueId uniqueId, int index, DynamicTest dynamicTest, @Nullable TestSource source,
 			JupiterConfiguration configuration) {
 		super(uniqueId, index, dynamicTest, source, configuration);
 		this.dynamicTest = dynamicTest;
@@ -45,8 +49,8 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 
 	@Override
 	protected DynamicTestTestDescriptor withUniqueId(UnaryOperator<UniqueId> uniqueIdTransformer) {
-		return new DynamicTestTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.index, this.dynamicTest,
-			this.getSource().orElse(null), this.configuration);
+		return new DynamicTestTestDescriptor(uniqueIdTransformer.apply(getUniqueId()), this.index,
+			requireNonNull(this.dynamicTest), this.getSource().orElse(null), this.configuration);
 	}
 
 	@Override
@@ -57,18 +61,22 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	@Override
 	public JupiterEngineExecutionContext execute(JupiterEngineExecutionContext context,
 			DynamicTestExecutor dynamicTestExecutor) {
-		InvocationInterceptor.Invocation<Void> invocation = () -> {
-			dynamicTest.getExecutable().execute();
-			return null;
-		};
 		DynamicTestInvocationContext dynamicTestInvocationContext = new DefaultDynamicTestInvocationContext(
-			dynamicTest.getExecutable());
+			requiredDynamicTest().getExecutable());
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-		interceptorChain.invoke(invocation, extensionRegistry, InterceptorCall.ofVoid(
+		interceptorChain.invoke(toInvocation(), extensionRegistry, InterceptorCall.ofVoid(
 			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation,
 				dynamicTestInvocationContext, extensionContext)));
 		return context;
+	}
+
+	@SuppressWarnings("NullAway")
+	private InvocationInterceptor.Invocation<Void> toInvocation() {
+		return () -> {
+			requiredDynamicTest().getExecutable().execute();
+			return null;
+		};
 	}
 
 	/**
@@ -84,6 +92,10 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 	public void after(JupiterEngineExecutionContext context) throws Exception {
 		super.after(context);
 		this.dynamicTest = null;
+	}
+
+	private DynamicTest requiredDynamicTest() {
+		return requireNonNull(dynamicTest);
 	}
 
 }

@@ -156,10 +156,8 @@ public abstract class MethodBasedTestDescriptor extends JupiterTestDescriptor
 	 */
 	@Override
 	public void nodeSkipped(JupiterEngineExecutionContext context, TestDescriptor descriptor, SkipResult result) {
-		if (context != null) {
-			invokeTestWatchers(context, false,
-				watcher -> watcher.testDisabled(context.getExtensionContext(), result.getReason()));
-		}
+		invokeTestWatchers(context, false,
+			watcher -> watcher.testDisabled(context.getExtensionContext(), result.getReason()));
 	}
 
 	/**

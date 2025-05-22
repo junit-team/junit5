@@ -23,6 +23,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
@@ -71,8 +72,9 @@ interface ResourceLockAware extends TestDescriptor {
 	static Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>> enclosingInstanceTypesDependentResourceLocksProviderEvaluator(
 			Supplier<List<Class<?>>> enclosingInstanceTypesSupplier,
 			BiFunction<ResourceLocksProvider, List<Class<?>>, Set<ResourceLocksProvider.Lock>> evaluator) {
-		return new Function<ResourceLocksProvider, Set<ResourceLocksProvider.Lock>>() {
+		return new Function<>() {
 
+			@Nullable
 			private List<Class<?>> enclosingInstanceTypes;
 
 			@Override

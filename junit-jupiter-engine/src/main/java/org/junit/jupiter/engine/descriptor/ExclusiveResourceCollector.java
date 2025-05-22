@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLockTarget;
@@ -73,6 +74,8 @@ abstract class ExclusiveResourceCollector {
 	private static class DefaultExclusiveResourceCollector extends ExclusiveResourceCollector {
 
 		private final List<ResourceLock> annotations;
+
+		@Nullable
 		private List<ResourceLocksProvider> providers;
 
 		DefaultExclusiveResourceCollector(List<ResourceLock> annotations) {

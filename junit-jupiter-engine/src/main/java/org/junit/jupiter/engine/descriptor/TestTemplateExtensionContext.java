@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.TestInstances;
@@ -28,11 +29,13 @@ import org.junit.platform.engine.support.hierarchical.Node;
  */
 final class TestTemplateExtensionContext extends AbstractExtensionContext<TestTemplateTestDescriptor> {
 
+	@Nullable
 	private final TestInstances testInstances;
 
 	TestTemplateExtensionContext(ExtensionContext parent, EngineExecutionListener engineExecutionListener,
 			TestTemplateTestDescriptor testDescriptor, JupiterConfiguration configuration,
-			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade, TestInstances testInstances) {
+			ExtensionRegistry extensionRegistry, LauncherStoreFacade launcherStoreFacade,
+			@Nullable TestInstances testInstances) {
 
 		super(parent, engineExecutionListener, testDescriptor, configuration, extensionRegistry, launcherStoreFacade);
 		this.testInstances = testInstances;

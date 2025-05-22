@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.descriptor;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.engine.descriptor.CallbackSupport.invokeAfterCallbacks;
@@ -37,6 +38,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -92,7 +94,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 	protected final ClassInfo classInfo;
 
+	@Nullable
 	private LifecycleMethods lifecycleMethods;
+
+	@Nullable
 	private TestInstanceFactory testInstanceFactory;
 
 	ClassBasedTestDescriptor(UniqueId uniqueId, Class<?> testClass, Supplier<String> displayNameSupplier,
@@ -148,7 +153,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	protected void validateCoreLifecycleMethods(DiscoveryIssueReporter reporter) {
-		Validatable.reportAndClear(this.lifecycleMethods.discoveryIssues, reporter);
+		Validatable.reportAndClear(requireLifecycleMethods().discoveryIssues, reporter);
 	}
 
 	protected void validateClassTemplateInvocationLifecycleMethods(DiscoveryIssueReporter reporter) {
@@ -198,7 +203,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			registerExtensionsFromConstructorParameters(registry, getTestClass());
 		}
 
-		this.lifecycleMethods.beforeAll.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		requireLifecycleMethods().beforeAll.forEach(
+			method -> registerExtensionsFromExecutableParameters(registry, method));
 		// Since registerBeforeEachMethodAdapters() and registerAfterEachMethodAdapters() also
 		// invoke registerExtensionsFromExecutableParameters(), we invoke those methods before
 		// invoking registerExtensionsFromExecutableParameters() for @AfterAll methods,
@@ -206,7 +212,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		// on parameters in lifecycle methods.
 		registerBeforeEachMethodAdapters(registry);
 		registerAfterEachMethodAdapters(registry);
-		this.lifecycleMethods.afterAll.forEach(method -> registerExtensionsFromExecutableParameters(registry, method));
+		requireLifecycleMethods().afterAll.forEach(
+			method -> registerExtensionsFromExecutableParameters(registry, method));
 		registerExtensionsFromInstanceFields(registry, getTestClass());
 
 		ThrowableCollector throwableCollector = createThrowableCollector();
@@ -288,6 +295,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		this.testInstanceFactory = null;
 	}
 
+	@Nullable
 	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
 		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
 
@@ -347,19 +355,19 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		invokeTestInstancePreConstructCallbacks(new DefaultTestInstanceFactoryContext(getTestClass(), outerInstance),
 			registry, extensionContext);
 		Object instance = this.testInstanceFactory != null //
-				? invokeTestInstanceFactory(outerInstance, extensionContext) //
+				? invokeTestInstanceFactory(this.testInstanceFactory, outerInstance, extensionContext) //
 				: invokeTestClassConstructor(outerInstance, registry, extensionContext);
 		return outerInstances.map(instances -> DefaultTestInstances.of(instances, instance)) //
 				.orElse(DefaultTestInstances.of(instance));
 	}
 
-	private Object invokeTestInstanceFactory(Optional<Object> outerInstance,
+	private Object invokeTestInstanceFactory(TestInstanceFactory testInstanceFactory, Optional<Object> outerInstance,
 			ExtensionContextSupplier extensionContext) {
 		Object instance;
 
 		try {
-			ExtensionContext actualExtensionContext = extensionContext.get(this.testInstanceFactory);
-			instance = this.testInstanceFactory.createTestInstance(
+			ExtensionContext actualExtensionContext = extensionContext.get(testInstanceFactory);
+			instance = testInstanceFactory.createTestInstance(
 				new DefaultTestInstanceFactoryContext(getTestClass(), outerInstance), actualExtensionContext);
 		}
 		catch (Throwable throwable) {
@@ -370,7 +378,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			}
 
 			String message = "TestInstanceFactory [%s] failed to instantiate test class [%s]".formatted(
-				this.testInstanceFactory.getClass().getName(), getTestClass().getName());
+				testInstanceFactory.getClass().getName(), getTestClass().getName());
 			if (StringUtils.isNotBlank(throwable.getMessage())) {
 				message += ": " + throwable.getMessage();
 			}
@@ -390,7 +398,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 				instanceClassName += "@" + Integer.toHexString(System.identityHashCode(instanceClass));
 			}
 			String message = "TestInstanceFactory [%s] failed to return an instance of [%s] and instead returned an instance of [%s].".formatted(
-				this.testInstanceFactory.getClass().getName(), testClassName, instanceClassName);
+				testInstanceFactory.getClass().getName(), testClassName, instanceClassName);
 
 			throw new TestInstantiationException(message);
 		}
@@ -438,7 +446,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		for (Method method : this.lifecycleMethods.beforeAll) {
+		for (Method method : requireLifecycleMethods().beforeAll) {
 			throwableCollector.execute(() -> {
 				try {
 					executableInvoker.invoke(method, testInstance, extensionContext, registry,
@@ -467,7 +475,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		ThrowableCollector throwableCollector = context.getThrowableCollector();
 		Object testInstance = extensionContext.getTestInstance().orElse(null);
 
-		this.lifecycleMethods.afterAll.forEach(method -> throwableCollector.execute(() -> {
+		requireLifecycleMethods().afterAll.forEach(method -> throwableCollector.execute(() -> {
 			try {
 				executableInvoker.invoke(method, testInstance, extensionContext, registry,
 					ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod));
@@ -500,13 +508,13 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 	}
 
 	private void registerBeforeEachMethodAdapters(ExtensionRegistrar registrar) {
-		registerMethodsAsExtensions(this.lifecycleMethods.beforeEach, registrar,
+		registerMethodsAsExtensions(requireLifecycleMethods().beforeEach, registrar,
 			this::synthesizeBeforeEachMethodAdapter);
 	}
 
 	private void registerAfterEachMethodAdapters(ExtensionRegistrar registrar) {
 		// Make a local copy since findAfterEachMethods() returns an immutable list.
-		List<Method> afterEachMethods = new ArrayList<>(this.lifecycleMethods.afterEach);
+		List<Method> afterEachMethods = new ArrayList<>(requireLifecycleMethods().afterEach);
 
 		// Since the bottom-up ordering of afterEachMethods will later be reversed when the
 		// synthesized AfterEachMethodAdapters are executed within TestMethodTestDescriptor,
@@ -546,6 +554,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
 	}
 
+	private LifecycleMethods requireLifecycleMethods() {
+		return requireNonNull(this.lifecycleMethods);
+	}
+
 	protected static class ClassInfo {
 
 		private final List<DiscoveryIssue> discoveryIssues = new ArrayList<>();
@@ -553,7 +565,10 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		final Class<?> testClass;
 		final Set<TestTag> tags;
 		final Lifecycle lifecycle;
+
+		@Nullable
 		ExecutionMode defaultChildExecutionMode;
+
 		final ExclusiveResourceCollector exclusiveResourceCollector;
 
 		ClassInfo(Class<?> testClass, JupiterConfiguration configuration) {
