@@ -15,7 +15,6 @@ import static com.tngtech.archunit.base.DescribedPredicate.not;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.ANONYMOUS_CLASSES;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.TOP_LEVEL_CLASSES;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAPackage;
-import static com.tngtech.archunit.core.domain.JavaClass.Predicates.resideInAnyPackage;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleName;
 import static com.tngtech.archunit.core.domain.JavaClass.Predicates.simpleNameEndingWith;
 import static com.tngtech.archunit.core.domain.JavaModifier.PUBLIC;
@@ -27,6 +26,7 @@ import static com.tngtech.archunit.lang.conditions.ArchPredicates.are;
 import static com.tngtech.archunit.lang.conditions.ArchPredicates.have;
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.lang.annotation.Annotation;
@@ -35,10 +35,13 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaPackage;
+import com.tngtech.archunit.core.domain.PackageMatcher;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchCondition;
@@ -46,6 +49,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.library.GeneralCodingRules;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.NullMarked;
 
 @AnalyzeClasses(packages = { "org.junit.platform", "org.junit.jupiter", "org.junit.vintage" })
 class ArchUnitTests {
@@ -64,7 +68,7 @@ class ArchUnitTests {
 			.and(not(describe("are Kotlin SAM type implementations", simpleName("")))) //
 			.and(not(describe("are Kotlin-generated classes that contain only top-level functions",
 				simpleNameEndingWith("Kt")))) //
-			.and(not(describe("are shadowed", resideInAnyPackage("..shadow..")))) //
+			.and(not(describe("are shadowed", resideInAPackage("..shadow..")))) //
 			.should().beAnnotatedWith(API.class);
 
 	@SuppressWarnings("unused")
@@ -75,6 +79,32 @@ class ArchUnitTests {
 			.and().areAnnotatedWith(Repeatable.class) //
 			.should(haveContainerAnnotationWithSameRetentionPolicy()) //
 			.andShould(haveContainerAnnotationWithSameTargetTypes());
+
+	@ArchTest
+	void packagesShouldBeNullMarked(JavaClasses classes) {
+		var exclusions = Stream.of( //
+			"..shadow..", //
+			"org.junit.jupiter.api..", //
+			"org.junit.jupiter.engine..", //
+			"org.junit.jupiter.migrationsupport..", //
+			"org.junit.jupiter.params..", //
+			"org.junit.platform.launcher.." //
+		).map(PackageMatcher::of).toList();
+
+		var subpackages = Stream.of("org.junit.platform", "org.junit.jupiter", "org.junit.vintage") //
+				.map(classes::getPackage) //
+				.flatMap(rootPackage -> rootPackage.getSubpackagesInTree().stream()) //
+				.filter(pkg -> exclusions.stream().noneMatch(it -> it.matches(pkg.getName()))) //
+				.filter(pkg -> !pkg.getClasses().isEmpty()) //
+				.toList();
+		assertThat(subpackages).isNotEmpty();
+
+		var violations = subpackages.stream() //
+				.filter(pkg -> !pkg.isAnnotatedWith(NullMarked.class)) //
+				.map(JavaPackage::getName) //
+				.sorted();
+		assertThat(violations).describedAs("The following packages are missing the @NullMarked annotation").isEmpty();
+	}
 
 	@ArchTest
 	void allAreIn(JavaClasses classes) {

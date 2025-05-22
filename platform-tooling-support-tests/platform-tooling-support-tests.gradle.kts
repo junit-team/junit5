@@ -120,6 +120,10 @@ val archUnit by testing.suites.registering(JvmTestSuite::class) {
 		implementation(libs.apiguardian) {
 			because("we validate that public classes are annotated")
 		}
+		implementation(libs.jspecify) {
+			because("we validate that packages are annotated")
+		}
+		implementation(libs.assertj)
 		runtimeOnly.bundle(libs.bundles.log4j)
 		val modularProjects: List<Project> by rootProject
 		modularProjects.forEach {
