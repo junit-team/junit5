@@ -24,6 +24,7 @@ import java.util.UUID;
 import java.util.function.Function;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
@@ -80,20 +81,22 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	}
 
 	@Override
-	public final Object convert(Object source, ParameterContext context) {
+	public final @Nullable Object convert(@Nullable Object source, ParameterContext context) {
 		Class<?> targetType = context.getParameter().getType();
 		ClassLoader classLoader = getClassLoader(context.getDeclaringExecutable().getDeclaringClass());
 		return convert(source, targetType, classLoader);
 	}
 
 	@Override
-	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, FieldContext context)
+			throws ArgumentConversionException {
+
 		Class<?> targetType = context.getField().getType();
 		ClassLoader classLoader = getClassLoader(context.getField().getDeclaringClass());
 		return convert(source, targetType, classLoader);
 	}
 
-	public final Object convert(Object source, Class<?> targetType, ClassLoader classLoader) {
+	public final @Nullable Object convert(@Nullable Object source, Class<?> targetType, ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ArgumentConversionException(
@@ -128,7 +131,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 				.orElse(LocaleConversionFormat.BCP_47);
 	}
 
-	Object convert(String source, Class<?> targetType, ClassLoader classLoader) {
+	@Nullable
+	Object convert(@Nullable String source, Class<?> targetType, ClassLoader classLoader) {
 		return ConversionSupport.convert(source, targetType, classLoader);
 	}
 

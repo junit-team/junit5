@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 import java.util.stream.BaseStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
@@ -90,12 +91,12 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 				.findFirst()//
 				.orElse(null);
 
-		Preconditions.notNull(field, () -> "Could not find field named [%s] in class [%s]".formatted(resolvedFieldName,
-			resolvedClass.getName()));
-		return field;
+		return Preconditions.notNull(field,
+			() -> "Could not find field named [%s] in class [%s]".formatted(resolvedFieldName,
+				resolvedClass.getName()));
 	}
 
-	private static Field validateField(Field field, Object testInstance) {
+	private static Field validateField(Field field, @Nullable Object testInstance) {
 		Preconditions.condition(field.getDeclaringClass().isInstance(testInstance) || ModifierSupport.isStatic(field),
 			() -> format("Field '%s' must be static: local @FieldSource fields must be static "
 					+ "unless the PER_CLASS @TestInstance lifecycle mode is used; "
@@ -104,7 +105,7 @@ class FieldArgumentsProvider extends AnnotationBasedArgumentsProvider<FieldSourc
 		return field;
 	}
 
-	private static Object readField(Field field, Object testInstance) {
+	private static Object readField(Field field, @Nullable Object testInstance) {
 		Object value = ReflectionSupport.tryToReadFieldValue(field, testInstance).getOrThrow(
 			cause -> new JUnitException("Could not read field [%s]".formatted(field.getName()), cause));
 

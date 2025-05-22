@@ -6,4 +6,7 @@
  * for arguments.
  */
 
+@NullMarked
 package org.junit.jupiter.params.support;
+
+import org.jspecify.annotations.NullMarked;

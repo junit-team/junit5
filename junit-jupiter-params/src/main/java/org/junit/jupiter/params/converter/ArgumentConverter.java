@@ -14,6 +14,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.params.support.FieldContext;
@@ -64,7 +65,8 @@ public interface ArgumentConverter {
 	 * @throws ArgumentConversionException if an error occurs during the
 	 * conversion
 	 */
-	Object convert(Object source, ParameterContext context) throws ArgumentConversionException;
+	@Nullable
+	Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException;
 
 	/**
 	 * Convert the supplied {@code source} object according to the supplied
@@ -80,7 +82,7 @@ public interface ArgumentConverter {
 	 * @since 5.13
 	 */
 	@API(status = EXPERIMENTAL, since = "5.13")
-	default Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+	default @Nullable Object convert(@Nullable Object source, FieldContext context) throws ArgumentConversionException {
 		throw new JUnitException(
 			String.format("ArgumentConverter does not override the convert(Object, FieldContext) method. "
 					+ "Please report this issue to the maintainers of %s.",

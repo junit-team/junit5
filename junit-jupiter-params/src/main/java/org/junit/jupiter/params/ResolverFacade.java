@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import static java.lang.System.lineSeparator;
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -41,6 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -251,6 +253,7 @@ class ResolverFacade {
 	 * Resolve the parameter for the supplied context using the supplied
 	 * arguments.
 	 */
+	@Nullable
 	Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 			int invocationIndex, ResolutionCache resolutionCache) {
 
@@ -304,6 +307,7 @@ class ResolverFacade {
 		}
 	}
 
+	@Nullable
 	private Object resolve(ResolvableParameterDeclaration parameterDeclaration, ExtensionContext extensionContext,
 			EvaluatedArgumentSet arguments, int invocationIndex, Optional<ParameterContext> parameterContext) {
 		Resolver resolver = getResolver(extensionContext, parameterDeclaration);
@@ -465,9 +469,11 @@ class ResolverFacade {
 
 	private interface Resolver {
 
+		@Nullable
 		Object resolve(ParameterContext parameterContext, int parameterIndex, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex);
 
+		@Nullable
 		Object resolve(FieldContext fieldContext, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 				int invocationIndex);
 
@@ -486,6 +492,7 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(ParameterContext parameterContext, int parameterIndex, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex) {
 			Object argument = arguments.getConsumedPayload(parameterIndex);
@@ -498,6 +505,7 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(FieldContext fieldContext, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex) {
 			Object argument = arguments.getConsumedPayload(fieldContext.getParameterIndex());
@@ -527,9 +535,10 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(ParameterContext parameterContext, int parameterIndex, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex) {
-			ArgumentsAccessor accessor = ParameterInfo.get(extensionContext).getArguments();
+			ArgumentsAccessor accessor = requireNonNull(ParameterInfo.get(extensionContext)).getArguments();
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, parameterContext);
 			}
@@ -540,9 +549,10 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(FieldContext fieldContext, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex) {
-			ArgumentsAccessor accessor = ParameterInfo.get(extensionContext).getArguments();
+			ArgumentsAccessor accessor = requireNonNull(ParameterInfo.get(extensionContext)).getArguments();
 			try {
 				return this.argumentsAggregator.aggregateArguments(accessor, fieldContext);
 			}
@@ -618,6 +628,7 @@ class ResolverFacade {
 					|| isAnnotated(getAnnotatedElement(), AggregateWith.class);
 		}
 
+		@Nullable
 		protected abstract Object resolve(Resolver resolver, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex,
 				Optional<ParameterContext> originalParameterContext);
@@ -659,6 +670,7 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 				int invocationIndex, Optional<ParameterContext> originalParameterContext) {
 			return resolver.resolve(this, extensionContext, arguments, invocationIndex);
@@ -698,6 +710,7 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(Resolver resolver, ExtensionContext extensionContext, EvaluatedArgumentSet arguments,
 				int invocationIndex, Optional<ParameterContext> originalParameterContext) {
 			ParameterContext parameterContext = originalParameterContext //
@@ -759,6 +772,7 @@ class ResolverFacade {
 		}
 
 		@Override
+		@Nullable
 		public Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache) {
 

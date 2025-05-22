@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.List;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code ArgumentsAccessor} defines the public API for accessing arguments provided
@@ -52,6 +53,7 @@ public interface ArgumentsAccessor {
 	 * equal to zero and less than {@link #size}
 	 * @return the value at the given index, potentially {@code null}
 	 */
+	@Nullable
 	Object get(int index) throws ArgumentAccessException;
 
 	/**
@@ -63,6 +65,7 @@ public interface ArgumentsAccessor {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the value at the given index, potentially {@code null}
 	 */
+	@Nullable
 	<T> T get(int index, Class<T> requiredType) throws ArgumentAccessException;
 
 	/**
@@ -75,6 +78,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Character getCharacter(int index) throws ArgumentAccessException;
 
 	/**
@@ -87,6 +91,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Boolean getBoolean(int index) throws ArgumentAccessException;
 
 	/**
@@ -99,6 +104,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Byte getByte(int index) throws ArgumentAccessException;
 
 	/**
@@ -111,6 +117,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Short getShort(int index) throws ArgumentAccessException;
 
 	/**
@@ -123,6 +130,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Integer getInteger(int index) throws ArgumentAccessException;
 
 	/**
@@ -135,6 +143,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Long getLong(int index) throws ArgumentAccessException;
 
 	/**
@@ -147,6 +156,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Float getFloat(int index) throws ArgumentAccessException;
 
 	/**
@@ -159,6 +169,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	Double getDouble(int index) throws ArgumentAccessException;
 
 	/**
@@ -171,6 +182,7 @@ public interface ArgumentsAccessor {
 	 * @throws ArgumentAccessException if the value cannot be accessed
 	 * or converted to the desired type
 	 */
+	@Nullable
 	String getString(int index) throws ArgumentAccessException;
 
 	/**
@@ -181,12 +193,13 @@ public interface ArgumentsAccessor {
 	/**
 	 * Get all arguments in this accessor as an array.
 	 */
+	@Nullable
 	Object[] toArray();
 
 	/**
 	 * Get all arguments in this accessor as an immutable list.
 	 */
-	List<Object> toList();
+	List<@Nullable Object> toList();
 
 	/**
 	 * Get the index of the current test invocation.

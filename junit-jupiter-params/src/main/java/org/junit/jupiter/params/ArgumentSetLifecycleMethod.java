@@ -12,6 +12,7 @@ package org.junit.jupiter.params;
 
 import java.lang.reflect.Method;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.platform.commons.JUnitException;
@@ -51,6 +52,7 @@ class ArgumentSetLifecycleMethod {
 
 		boolean supports(ParameterContext parameterContext);
 
+		@Nullable
 		Object resolve(ParameterContext parameterContext, ExtensionContext extensionContext,
 				EvaluatedArgumentSet arguments, int invocationIndex, ResolutionCache resolutionCache);
 

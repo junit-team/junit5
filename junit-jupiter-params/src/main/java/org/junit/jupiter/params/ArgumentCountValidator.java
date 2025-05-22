@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -72,7 +74,7 @@ class ArgumentCountValidator {
 		String key = ARGUMENT_COUNT_VALIDATION_KEY;
 		ArgumentCountValidationMode fallback = ArgumentCountValidationMode.NONE;
 		ExtensionContext.Store store = getStore(extensionContext);
-		return store.getOrComputeIfAbsent(key, __ -> {
+		return requireNonNull(store.getOrComputeIfAbsent(key, __ -> {
 			Optional<String> optionalConfigValue = extensionContext.getConfigurationParameter(key);
 			if (optionalConfigValue.isPresent()) {
 				String configValue = optionalConfigValue.get();
@@ -96,7 +98,7 @@ class ArgumentCountValidator {
 			else {
 				return fallback;
 			}
-		}, ArgumentCountValidationMode.class);
+		}, ArgumentCountValidationMode.class));
 	}
 
 	private static String pluralize(int count, String singular, String plural) {

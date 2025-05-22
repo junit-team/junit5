@@ -15,6 +15,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.IntUnaryOperator;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.Arguments.ArgumentSet;
@@ -32,25 +33,29 @@ import org.junit.platform.commons.util.Preconditions;
 class EvaluatedArgumentSet {
 
 	static EvaluatedArgumentSet allOf(Arguments arguments) {
+		@Nullable
 		Object[] all = arguments.get();
 		return create(all, all, arguments);
 	}
 
 	static EvaluatedArgumentSet of(Arguments arguments, IntUnaryOperator consumedLengthComputer) {
+		@Nullable
 		Object[] all = arguments.get();
+		@Nullable
 		Object[] consumed = dropSurplus(all, consumedLengthComputer.applyAsInt(all.length));
 		return create(all, consumed, arguments);
 	}
 
-	private static EvaluatedArgumentSet create(Object[] all, Object[] consumed, Arguments arguments) {
+	private static EvaluatedArgumentSet create(@Nullable Object[] all, @Nullable Object[] consumed,
+			Arguments arguments) {
 		return new EvaluatedArgumentSet(all, consumed, determineName(arguments));
 	}
 
-	private final Object[] all;
-	private final Object[] consumed;
+	private final @Nullable Object[] all;
+	private final @Nullable Object[] consumed;
 	private final Optional<String> name;
 
-	private EvaluatedArgumentSet(Object[] all, Object[] consumed, Optional<String> name) {
+	private EvaluatedArgumentSet(@Nullable Object[] all, @Nullable Object[] consumed, Optional<String> name) {
 		this.all = all;
 		this.consumed = consumed;
 		this.name = name;
@@ -60,6 +65,7 @@ class EvaluatedArgumentSet {
 		return this.all.length;
 	}
 
+	@Nullable
 	Object[] getAllPayloads() {
 		return extractFromNamed(this.all, Named::getPayload);
 	}
@@ -68,14 +74,17 @@ class EvaluatedArgumentSet {
 		return this.consumed.length;
 	}
 
+	@Nullable
 	Object[] getConsumedNames() {
 		return extractFromNamed(this.consumed, Named::getName);
 	}
 
+	@Nullable
 	Object[] getConsumedPayloads() {
 		return extractFromNamed(this.consumed, Named::getPayload);
 	}
 
+	@Nullable
 	Object getConsumedPayload(int index) {
 		return extractFromNamed(this.consumed[index], Named::getPayload);
 	}
@@ -84,7 +93,7 @@ class EvaluatedArgumentSet {
 		return this.name;
 	}
 
-	private static Object[] dropSurplus(Object[] arguments, int newLength) {
+	private static @Nullable Object[] dropSurplus(@Nullable Object[] arguments, int newLength) {
 		Preconditions.condition(newLength <= arguments.length,
 			() -> "New length %d must be less than or equal to the total length %d".formatted(newLength,
 				arguments.length));
@@ -98,13 +107,15 @@ class EvaluatedArgumentSet {
 		return Optional.empty();
 	}
 
-	private static Object[] extractFromNamed(Object[] arguments, Function<Named<?>, Object> mapper) {
+	private static @Nullable Object[] extractFromNamed(@Nullable Object[] arguments,
+			Function<Named<?>, @Nullable Object> mapper) {
 		return Arrays.stream(arguments) //
 				.map(argument -> extractFromNamed(argument, mapper)) //
 				.toArray();
 	}
 
-	private static Object extractFromNamed(Object argument, Function<Named<?>, Object> mapper) {
+	@Nullable
+	private static Object extractFromNamed(@Nullable Object argument, Function<Named<?>, @Nullable Object> mapper) {
 		return argument instanceof Named<?> named ? mapper.apply(named) : argument;
 	}
 

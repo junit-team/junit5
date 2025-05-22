@@ -10,6 +10,8 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
+
 import org.junit.jupiter.api.extension.ExecutableInvoker;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -52,9 +54,9 @@ abstract class AbstractParameterizedClassInvocationLifecycleMethodInvoker implem
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
-		return this.lifecycleMethod.parameterResolver //
+		return requireNonNull(this.lifecycleMethod.parameterResolver //
 				.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,
-					this.resolutionCache);
+					this.resolutionCache));
 	}
 
 	protected void invoke(ExtensionContext context) {

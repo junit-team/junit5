@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.io.Serial;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 
 /**
@@ -31,11 +32,11 @@ public class ArgumentConversionException extends JUnitException {
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	public ArgumentConversionException(String message) {
+	public ArgumentConversionException(@Nullable String message) {
 		super(message);
 	}
 
-	public ArgumentConversionException(String message, Throwable cause) {
+	public ArgumentConversionException(@Nullable String message, @Nullable Throwable cause) {
 		super(message, cause);
 	}
 

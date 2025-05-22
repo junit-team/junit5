@@ -1,6 +1,7 @@
 import junitbuild.extensions.javaModuleName
 
 plugins {
+	id("junitbuild.java-nullability-conventions")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.jmh-conventions")
@@ -15,6 +16,7 @@ dependencies {
 	api(projects.junitJupiterApi)
 
 	compileOnlyApi(libs.apiguardian)
+	compileOnly(libs.jspecify)
 
 	shadowed(libs.univocity.parsers)
 

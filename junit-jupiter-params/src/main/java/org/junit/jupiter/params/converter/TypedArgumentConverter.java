@@ -13,6 +13,7 @@ package org.junit.jupiter.params.converter;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.params.support.FieldContext;
 import org.junit.platform.commons.util.Preconditions;
@@ -30,7 +31,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @see SimpleArgumentConverter
  */
 @API(status = STABLE, since = "5.10")
-public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter {
+public abstract class TypedArgumentConverter<S, T extends @Nullable Object> implements ArgumentConverter {
 
 	private final Class<S> sourceType;
 	private final Class<T> targetType;
@@ -48,16 +49,20 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	}
 
 	@Override
-	public final Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, ParameterContext context)
+			throws ArgumentConversionException {
+
 		return convert(source, context.getParameter().getType());
 	}
 
 	@Override
-	public final Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, FieldContext context)
+			throws ArgumentConversionException {
+
 		return convert(source, context.getField().getType());
 	}
 
-	private T convert(Object source, Class<?> actualTargetType) {
+	private T convert(@Nullable Object source, Class<?> actualTargetType) {
 		if (source == null) {
 			return convert(null);
 		}
@@ -84,6 +89,6 @@ public abstract class TypedArgumentConverter<S, T> implements ArgumentConverter 
 	 * @throws ArgumentConversionException if an error occurs during the
 	 * conversion
 	 */
-	protected abstract T convert(S source) throws ArgumentConversionException;
+	protected abstract T convert(@Nullable S source) throws ArgumentConversionException;
 
 }

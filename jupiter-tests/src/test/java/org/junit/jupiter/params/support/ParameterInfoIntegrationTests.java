@@ -34,7 +34,7 @@ class ParameterInfoIntegrationTests extends AbstractJupiterTestEngineTests {
 	void storesParameterInfoInExtensionContextStoreOnDifferentLevels() {
 		var results = executeTestsForClass(TestCase.class);
 
-		results.allEvents().assertStatistics(stats -> stats.started(7).succeeded(7));
+		results.allEvents().debug().assertStatistics(stats -> stats.started(7).succeeded(7));
 	}
 
 	@ParameterizedClass

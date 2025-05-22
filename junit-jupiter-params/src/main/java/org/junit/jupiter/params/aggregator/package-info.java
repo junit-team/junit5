@@ -4,4 +4,7 @@
  * {@link org.junit.jupiter.params.aggregator.AggregateWith} annotation.
  */
 
+@NullMarked
 package org.junit.jupiter.params.aggregator;
+
+import org.jspecify.annotations.NullMarked;
