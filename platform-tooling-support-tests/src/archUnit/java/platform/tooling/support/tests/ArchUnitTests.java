@@ -84,7 +84,6 @@ class ArchUnitTests {
 	void packagesShouldBeNullMarked(JavaClasses classes) {
 		var exclusions = Stream.of( //
 			"..shadow..", //
-			"org.junit.jupiter.migrationsupport..", //
 			"org.junit.jupiter.params.." //
 		).map(PackageMatcher::of).toList();
 

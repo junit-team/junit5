@@ -11,6 +11,7 @@
 package org.junit.jupiter.migrationsupport.rules;
 
 import static java.util.Collections.unmodifiableList;
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.commons.support.AnnotationSupport.findPublicAnnotatedFields;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
@@ -146,8 +147,8 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		Object testInstance = context.getRequiredTestInstance();
 		Namespace namespace = Namespace.create(TestRuleSupport.class, context.getRequiredTestClass());
 		// @formatter:off
-		return new ArrayList<>(context.getStore(namespace)
-				.getOrComputeIfAbsent("rule-annotated-members", key -> findRuleAnnotatedMembers(testInstance), List.class));
+		return new ArrayList<TestRuleAnnotatedMember>(requireNonNull(context.getStore(namespace)
+				.getOrComputeIfAbsent("rule-annotated-members", key -> findRuleAnnotatedMembers(testInstance), List.class)));
 		// @formatter:on
 	}
 
