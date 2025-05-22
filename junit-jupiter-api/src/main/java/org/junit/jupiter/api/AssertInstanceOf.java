@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertInstanceOf} is a collection of utility methods that support
  * asserting that an object is of an expected type &mdash; in other words, if it
@@ -27,19 +29,22 @@ class AssertInstanceOf {
 		/* no-op */
 	}
 
-	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue) {
+	static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue) {
 		return assertInstanceOf(expectedType, actualValue, (Object) null);
 	}
 
-	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, String message) {
+	static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue, @Nullable String message) {
 		return assertInstanceOf(expectedType, actualValue, (Object) message);
 	}
 
-	static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Supplier<String> messageSupplier) {
+	static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue,
+			Supplier<@Nullable String> messageSupplier) {
 		return assertInstanceOf(expectedType, actualValue, (Object) messageSupplier);
 	}
 
-	private static <T> T assertInstanceOf(Class<T> expectedType, Object actualValue, Object messageOrSupplier) {
+	@SuppressWarnings("NullAway")
+	private static <T> T assertInstanceOf(Class<T> expectedType, @Nullable Object actualValue,
+			@Nullable Object messageOrSupplier) {
 		if (!expectedType.isInstance(actualValue)) {
 			assertionFailure() //
 					.message(messageOrSupplier) //

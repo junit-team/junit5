@@ -16,6 +16,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.StringUtils;
@@ -89,7 +90,8 @@ public class Assumptions {
 	 * if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
-	public static void assumeTrue(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
+	public static void assumeTrue(BooleanSupplier assumptionSupplier, @Nullable String message)
+			throws TestAbortedException {
 		assumeTrue(assumptionSupplier.getAsBoolean(), message);
 	}
 
@@ -101,7 +103,8 @@ public class Assumptions {
 	 * the {@code TestAbortedException} if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
-	public static void assumeTrue(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
+	public static void assumeTrue(boolean assumption, Supplier<@Nullable String> messageSupplier)
+			throws TestAbortedException {
 		if (!assumption) {
 			throwAssumptionFailed(messageSupplier.get());
 		}
@@ -115,7 +118,7 @@ public class Assumptions {
 	 * if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
-	public static void assumeTrue(boolean assumption, String message) throws TestAbortedException {
+	public static void assumeTrue(boolean assumption, @Nullable String message) throws TestAbortedException {
 		if (!assumption) {
 			throwAssumptionFailed(message);
 		}
@@ -129,7 +132,7 @@ public class Assumptions {
 	 * the {@code TestAbortedException} if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code true}
 	 */
-	public static void assumeTrue(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
+	public static void assumeTrue(BooleanSupplier assumptionSupplier, Supplier<@Nullable String> messageSupplier)
 			throws TestAbortedException {
 
 		assumeTrue(assumptionSupplier.getAsBoolean(), messageSupplier);
@@ -165,7 +168,8 @@ public class Assumptions {
 	 * if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
-	public static void assumeFalse(BooleanSupplier assumptionSupplier, String message) throws TestAbortedException {
+	public static void assumeFalse(BooleanSupplier assumptionSupplier, @Nullable String message)
+			throws TestAbortedException {
 		assumeFalse(assumptionSupplier.getAsBoolean(), message);
 	}
 
@@ -177,7 +181,8 @@ public class Assumptions {
 	 * the {@code TestAbortedException} if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
-	public static void assumeFalse(boolean assumption, Supplier<String> messageSupplier) throws TestAbortedException {
+	public static void assumeFalse(boolean assumption, Supplier<@Nullable String> messageSupplier)
+			throws TestAbortedException {
 		if (assumption) {
 			throwAssumptionFailed(messageSupplier.get());
 		}
@@ -191,7 +196,7 @@ public class Assumptions {
 	 * if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
-	public static void assumeFalse(boolean assumption, String message) throws TestAbortedException {
+	public static void assumeFalse(boolean assumption, @Nullable String message) throws TestAbortedException {
 		if (assumption) {
 			throwAssumptionFailed(message);
 		}
@@ -205,7 +210,7 @@ public class Assumptions {
 	 * the {@code TestAbortedException} if the assumption is invalid
 	 * @throws TestAbortedException if the assumption is not {@code false}
 	 */
-	public static void assumeFalse(BooleanSupplier assumptionSupplier, Supplier<String> messageSupplier)
+	public static void assumeFalse(BooleanSupplier assumptionSupplier, Supplier<@Nullable String> messageSupplier)
 			throws TestAbortedException {
 
 		assumeFalse(assumptionSupplier.getAsBoolean(), messageSupplier);
@@ -316,7 +321,7 @@ public class Assumptions {
 		throw new TestAbortedException(messageSupplier.get());
 	}
 
-	private static void throwAssumptionFailed(String message) {
+	private static void throwAssumptionFailed(@Nullable String message) {
 		throw new TestAbortedException(
 			StringUtils.isNotBlank(message) ? "Assumption failed: " + message : "Assumption failed");
 	}

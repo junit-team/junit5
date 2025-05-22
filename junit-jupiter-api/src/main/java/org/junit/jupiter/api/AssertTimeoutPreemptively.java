@@ -10,9 +10,11 @@
 
 package org.junit.jupiter.api;
 
+import static java.util.Objects.requireNonNullElse;
 import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedException;
 
+import java.io.Serial;
 import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -25,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 import org.junit.platform.commons.JUnitException;
@@ -43,37 +46,42 @@ class AssertTimeoutPreemptively {
 		assertTimeoutPreemptively(timeout, executable, (String) null);
 	}
 
-	static void assertTimeoutPreemptively(Duration timeout, Executable executable, String message) {
+	@SuppressWarnings("NullAway")
+	static void assertTimeoutPreemptively(Duration timeout, Executable executable, @Nullable String message) {
 		assertTimeoutPreemptively(timeout, () -> {
 			executable.execute();
 			return null;
 		}, message);
 	}
 
-	static void assertTimeoutPreemptively(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
+	@SuppressWarnings("NullAway")
+	static void assertTimeoutPreemptively(Duration timeout, Executable executable,
+			Supplier<@Nullable String> messageSupplier) {
 		assertTimeoutPreemptively(timeout, () -> {
 			executable.execute();
 			return null;
 		}, messageSupplier);
 	}
 
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
+	static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier) {
 		return assertTimeoutPreemptively(timeout, supplier, null, AssertTimeoutPreemptively::createAssertionFailure);
 	}
 
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+	static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			@Nullable String message) {
 		return assertTimeoutPreemptively(timeout, supplier, message == null ? null : () -> message,
 			AssertTimeoutPreemptively::createAssertionFailure);
 	}
 
-	static <T> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier) {
+	static <T extends @Nullable Object> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<@Nullable String> messageSupplier) {
 		return assertTimeoutPreemptively(timeout, supplier, messageSupplier,
 			AssertTimeoutPreemptively::createAssertionFailure);
 	}
 
-	static <T, E extends Throwable> T assertTimeoutPreemptively(Duration timeout, ThrowingSupplier<T> supplier,
-			Supplier<String> messageSupplier, Assertions.TimeoutFailureFactory<E> failureFactory) throws E {
+	static <T extends @Nullable Object, E extends Throwable> T assertTimeoutPreemptively(Duration timeout,
+			ThrowingSupplier<T> supplier, @Nullable Supplier<@Nullable String> messageSupplier,
+			Assertions.TimeoutFailureFactory<E> failureFactory) throws E {
 		AtomicReference<Thread> threadReference = new AtomicReference<>();
 		ExecutorService executorService = Executors.newSingleThreadExecutor(new TimeoutThreadFactory());
 
@@ -87,8 +95,8 @@ class AssertTimeoutPreemptively {
 		}
 	}
 
-	private static <T> Future<T> submitTask(ThrowingSupplier<T> supplier, AtomicReference<Thread> threadReference,
-			ExecutorService executorService) {
+	private static <T extends @Nullable Object> Future<T> submitTask(ThrowingSupplier<T> supplier,
+			AtomicReference<Thread> threadReference, ExecutorService executorService) {
 		return executorService.submit(() -> {
 			try {
 				threadReference.set(Thread.currentThread());
@@ -100,9 +108,10 @@ class AssertTimeoutPreemptively {
 		});
 	}
 
-	private static <T, E extends Throwable> T resolveFutureAndHandleException(Future<T> future, Duration timeout,
-			Supplier<String> messageSupplier, Supplier<Thread> threadSupplier,
-			Assertions.TimeoutFailureFactory<E> failureFactory) throws E {
+	private static <T extends @Nullable Object, E extends Throwable> T resolveFutureAndHandleException(Future<T> future,
+			Duration timeout, @Nullable Supplier<@Nullable String> messageSupplier,
+			Supplier<@Nullable Thread> threadSupplier, Assertions.TimeoutFailureFactory<E> failureFactory)
+			throws E, RuntimeException {
 		try {
 			return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);
 		}
@@ -116,15 +125,15 @@ class AssertTimeoutPreemptively {
 			throw failureFactory.createTimeoutFailure(timeout, messageSupplier, cause, thread);
 		}
 		catch (ExecutionException ex) {
-			throw throwAsUncheckedException(ex.getCause());
+			throw throwAsUncheckedException(requireNonNullElse(ex.getCause(), ex));
 		}
 		catch (Throwable ex) {
 			throw throwAsUncheckedException(ex);
 		}
 	}
 
-	private static AssertionFailedError createAssertionFailure(Duration timeout, Supplier<String> messageSupplier,
-			Throwable cause, Thread thread) {
+	private static AssertionFailedError createAssertionFailure(Duration timeout,
+			@Nullable Supplier<@Nullable String> messageSupplier, @Nullable Throwable cause, @Nullable Thread thread) {
 		return assertionFailure() //
 				.message(messageSupplier) //
 				.reason("execution timed out after " + timeout.toMillis() + " ms") //
@@ -134,6 +143,7 @@ class AssertTimeoutPreemptively {
 
 	private static class ExecutionTimeoutException extends JUnitException {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
 
 		ExecutionTimeoutException(String message) {

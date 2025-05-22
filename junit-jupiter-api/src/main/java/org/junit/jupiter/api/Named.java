@@ -13,6 +13,7 @@ package org.junit.jupiter.api;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
@@ -23,7 +24,7 @@ import org.junit.platform.commons.util.Preconditions;
  * @since 5.8
  */
 @API(status = STABLE, since = "5.8")
-public interface Named<T> {
+public interface Named<T extends @Nullable Object> {
 
 	/**
 	 * Factory method for creating an instance of {@code Named} based on a
@@ -37,10 +38,10 @@ public interface Named<T> {
 	 * @return an instance of {@code Named}; never {@code null}
 	 * @see #named(String, java.lang.Object)
 	 */
-	static <T> Named<T> of(String name, T payload) {
+	static <T extends @Nullable Object> Named<T> of(String name, T payload) {
 		Preconditions.notBlank(name, "name must not be null or blank");
 
-		return new Named<T>() {
+		return new Named<>() {
 			@Override
 			public String getName() {
 				return name;
@@ -73,7 +74,7 @@ public interface Named<T> {
 	 * @param <T> the type of the payload
 	 * @return an instance of {@code Named}; never {@code null}
 	 */
-	static <T> Named<T> named(String name, T payload) {
+	static <T extends @Nullable Object> Named<T> named(String name, T payload) {
 		return of(name, payload);
 	}
 

@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.AssertionFailureBuilder.assertionFailure;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * {@code AssertNull} is a collection of utility methods that support asserting
  * there is no object.
@@ -26,23 +28,23 @@ class AssertNull {
 		/* no-op */
 	}
 
-	static void assertNull(Object actual) {
+	static void assertNull(@Nullable Object actual) {
 		assertNull(actual, (String) null);
 	}
 
-	static void assertNull(Object actual, String message) {
+	static void assertNull(@Nullable Object actual, @Nullable String message) {
 		if (actual != null) {
 			failNotNull(actual, message);
 		}
 	}
 
-	static void assertNull(Object actual, Supplier<String> messageSupplier) {
+	static void assertNull(@Nullable Object actual, Supplier<@Nullable String> messageSupplier) {
 		if (actual != null) {
 			failNotNull(actual, messageSupplier);
 		}
 	}
 
-	private static void failNotNull(Object actual, Object messageOrSupplier) {
+	private static void failNotNull(@Nullable Object actual, @Nullable Object messageOrSupplier) {
 		assertionFailure() //
 				.message(messageOrSupplier) //
 				.expected(null) //

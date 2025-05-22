@@ -22,6 +22,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.util.Preconditions;
@@ -78,7 +79,7 @@ public class DynamicTest extends DynamicNode {
 	 * @since 5.3
 	 * @see #stream(Iterator, Function, ThrowingConsumer)
 	 */
-	public static DynamicTest dynamicTest(String displayName, URI testSourceUri, Executable executable) {
+	public static DynamicTest dynamicTest(String displayName, @Nullable URI testSourceUri, Executable executable) {
 		return new DynamicTest(displayName, testSourceUri, executable);
 	}
 
@@ -290,7 +291,7 @@ public class DynamicTest extends DynamicNode {
 
 	private final Executable executable;
 
-	private DynamicTest(String displayName, URI testSourceUri, Executable executable) {
+	private DynamicTest(String displayName, @Nullable URI testSourceUri, Executable executable) {
 		super(displayName, testSourceUri);
 		this.executable = Preconditions.notNull(executable, "executable must not be null");
 	}

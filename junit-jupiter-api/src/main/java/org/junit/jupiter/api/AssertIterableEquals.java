@@ -22,6 +22,9 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
+import org.opentest4j.AssertionFailedError;
+
 /**
  * {@code AssertIterable} is a collection of utility methods that support asserting
  * Iterable equality in tests.
@@ -34,30 +37,37 @@ class AssertIterableEquals {
 		/* no-op */
 	}
 
-	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual) {
+	static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual) {
 		assertIterableEquals(expected, actual, (String) null);
 	}
 
-	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, String message) {
+	static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			@Nullable String message) {
 		assertIterableEquals(expected, actual, new ArrayDeque<>(), message);
 	}
 
-	static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Supplier<String> messageSupplier) {
+	static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			Supplier<@Nullable String> messageSupplier) {
 		assertIterableEquals(expected, actual, new ArrayDeque<>(), messageSupplier);
 	}
 
-	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Object messageOrSupplier) {
+	private static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			Deque<Integer> indexes, @Nullable Object messageOrSupplier) {
 		assertIterableEquals(expected, actual, indexes, messageOrSupplier, new LinkedHashMap<>());
 	}
 
-	private static void assertIterableEquals(Iterable<?> expected, Iterable<?> actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
+	private static void assertIterableEquals(@Nullable Iterable<?> expected, @Nullable Iterable<?> actual,
+			Deque<Integer> indexes, @Nullable Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
 
 		if (expected == actual) {
 			return;
 		}
-		assertIterablesNotNull(expected, actual, indexes, messageOrSupplier);
+		if (expected == null) {
+			throw expectedIterableIsNullFailure(indexes, messageOrSupplier);
+		}
+		if (actual == null) {
+			throw actualIterableIsNullFailure(indexes, messageOrSupplier);
+		}
 
 		Iterator<?> expectedIterator = expected.iterator();
 		Iterator<?> actualIterator = actual.iterator();
@@ -80,7 +90,7 @@ class AssertIterableEquals {
 	}
 
 	private static void assertIterableElementsEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
+			@Nullable Object messageOrSupplier, Map<Pair, Status> investigatedElements) {
 
 		// If both are equal, we don't need to check recursively.
 		if (Objects.equals(expected, actual)) {
@@ -123,8 +133,8 @@ class AssertIterableEquals {
 		}
 	}
 
-	private static void assertIterablesNotNull(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier) {
+	private static void assertIterablesNotNull(@Nullable Object expected, @Nullable Object actual,
+			Deque<Integer> indexes, @Nullable Object messageOrSupplier) {
 
 		if (expected == null) {
 			failExpectedIterableIsNull(indexes, messageOrSupplier);
@@ -134,22 +144,32 @@ class AssertIterableEquals {
 		}
 	}
 
-	private static void failExpectedIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		assertionFailure() //
-				.message(messageOrSupplier) //
-				.reason("expected iterable was <null>" + formatIndexes(indexes)) //
-				.buildAndThrow();
+	private static void failExpectedIterableIsNull(Deque<Integer> indexes, @Nullable Object messageOrSupplier) {
+		throw expectedIterableIsNullFailure(indexes, messageOrSupplier);
 	}
 
-	private static void failActualIterableIsNull(Deque<Integer> indexes, Object messageOrSupplier) {
-		assertionFailure() //
+	private static AssertionFailedError expectedIterableIsNullFailure(Deque<Integer> indexes,
+			@Nullable Object messageOrSupplier) {
+		return assertionFailure() //
+				.message(messageOrSupplier) //
+				.reason("expected iterable was <null>" + formatIndexes(indexes)) //
+				.build();
+	}
+
+	private static void failActualIterableIsNull(Deque<Integer> indexes, @Nullable Object messageOrSupplier) {
+		throw actualIterableIsNullFailure(indexes, messageOrSupplier);
+	}
+
+	private static AssertionFailedError actualIterableIsNullFailure(Deque<Integer> indexes,
+			@Nullable Object messageOrSupplier) {
+		return assertionFailure() //
 				.message(messageOrSupplier) //
 				.reason("actual iterable was <null>" + formatIndexes(indexes)) //
-				.buildAndThrow();
+				.build();
 	}
 
 	private static void assertIteratorsAreEmpty(Iterator<?> expected, Iterator<?> actual, int processed,
-			Deque<Integer> indexes, Object messageOrSupplier) {
+			Deque<Integer> indexes, @Nullable Object messageOrSupplier) {
 
 		if (expected.hasNext() || actual.hasNext()) {
 			AtomicInteger expectedCount = new AtomicInteger(processed);
@@ -168,7 +188,7 @@ class AssertIterableEquals {
 	}
 
 	private static void failIterablesNotEqual(Object expected, Object actual, Deque<Integer> indexes,
-			Object messageOrSupplier) {
+			@Nullable Object messageOrSupplier) {
 
 		assertionFailure() //
 				.message(messageOrSupplier) //

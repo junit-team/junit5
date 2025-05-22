@@ -16,6 +16,7 @@ import static org.junit.platform.commons.util.ExceptionUtils.throwAsUncheckedExc
 import java.time.Duration;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingSupplier;
 
@@ -35,36 +36,41 @@ class AssertTimeout {
 		assertTimeout(timeout, executable, (String) null);
 	}
 
-	static void assertTimeout(Duration timeout, Executable executable, String message) {
+	@SuppressWarnings("NullAway")
+	static void assertTimeout(Duration timeout, Executable executable, @Nullable String message) {
 		assertTimeout(timeout, () -> {
 			executable.execute();
 			return null;
 		}, message);
 	}
 
-	static void assertTimeout(Duration timeout, Executable executable, Supplier<String> messageSupplier) {
+	@SuppressWarnings("NullAway")
+	static void assertTimeout(Duration timeout, Executable executable, Supplier<@Nullable String> messageSupplier) {
 		assertTimeout(timeout, () -> {
 			executable.execute();
 			return null;
 		}, messageSupplier);
 	}
 
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
+	static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier) {
 		return assertTimeout(timeout, supplier, (Object) null);
 	}
 
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, String message) {
+	static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			@Nullable String message) {
 		return assertTimeout(timeout, supplier, (Object) message);
 	}
 
-	static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Supplier<String> messageSupplier) {
+	static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			Supplier<@Nullable String> messageSupplier) {
 		return assertTimeout(timeout, supplier, (Object) messageSupplier);
 	}
 
-	private static <T> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier, Object messageOrSupplier) {
+	private static <T extends @Nullable Object> T assertTimeout(Duration timeout, ThrowingSupplier<T> supplier,
+			@Nullable Object messageOrSupplier) {
 		long timeoutInMillis = timeout.toMillis();
 		long start = System.currentTimeMillis();
-		T result = null;
+		T result;
 		try {
 			result = supplier.get();
 		}
