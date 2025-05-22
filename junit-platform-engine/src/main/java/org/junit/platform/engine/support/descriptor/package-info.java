@@ -4,4 +4,7 @@
  * the launcher.
  */
 
+@NullMarked
 package org.junit.platform.engine.support.descriptor;
+
+import org.jspecify.annotations.NullMarked;

@@ -8,4 +8,7 @@
  * Use at your own risk!
  */
 
+@NullMarked
 package org.junit.platform.commons.util;
+
+import org.jspecify.annotations.NullMarked;

@@ -6,4 +6,7 @@
  * {@code junit-platform-suite-engine} module.
  */
 
+@NullMarked
 package org.junit.platform.suite.api;
+
+import org.jspecify.annotations.NullMarked;

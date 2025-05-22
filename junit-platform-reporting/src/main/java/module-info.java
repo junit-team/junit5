@@ -8,14 +8,11 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * Defines the JUnit Platform Reporting API.
  *
  * @since 1.4
  */
-@NullMarked
 module org.junit.platform.reporting {
 	requires java.xml;
 	requires static transitive org.apiguardian.api;

@@ -4,4 +4,7 @@
  * by the Ant build system.
  */
 
+@NullMarked
 package org.junit.platform.reporting.legacy.xml;
+
+import org.jspecify.annotations.NullMarked;

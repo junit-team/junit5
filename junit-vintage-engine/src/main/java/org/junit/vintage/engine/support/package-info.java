@@ -3,4 +3,7 @@
  * Vintage test engine.
  */
 
+@NullMarked
 package org.junit.vintage.engine.support;
+
+import org.jspecify.annotations.NullMarked;

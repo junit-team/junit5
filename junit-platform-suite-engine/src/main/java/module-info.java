@@ -8,8 +8,6 @@
  * https://www.eclipse.org/legal/epl-v20.html
  */
 
-import org.jspecify.annotations.NullMarked;
-
 /**
  * Provides a {@link org.junit.platform.engine.TestEngine} for running
  * declarative test suites.
@@ -17,7 +15,6 @@ import org.jspecify.annotations.NullMarked;
  * @since 1.8
  * @provides org.junit.platform.engine.TestEngine
  */
-@NullMarked
 module org.junit.platform.suite.engine {
 	requires static org.apiguardian.api;
 	requires org.junit.platform.suite.api;
