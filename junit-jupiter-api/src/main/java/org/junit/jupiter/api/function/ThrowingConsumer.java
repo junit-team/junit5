@@ -13,6 +13,7 @@ package org.junit.jupiter.api.function;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code ThrowingConsumer} is a functional interface that can be used to
@@ -41,7 +42,7 @@ import org.apiguardian.api.API;
  */
 @FunctionalInterface
 @API(status = STABLE, since = "5.0")
-public interface ThrowingConsumer<T> {
+public interface ThrowingConsumer<T extends @Nullable Object> {
 
 	/**
 	 * Consume the supplied argument, potentially throwing an exception.
