@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
@@ -60,7 +61,7 @@ class ClasspathAlignmentChecker {
 	}
 
 	// VisibleForTesting
-	static Optional<JUnitException> check(LinkageError error, Function<String, Package> packageLookup) {
+	static Optional<JUnitException> check(LinkageError error, Function<String, @Nullable Package> packageLookup) {
 		Map<String, List<Package>> packagesByVersions = new HashMap<>();
 		WELL_KNOWN_PACKAGES.stream() //
 				.map(packageLookup) //

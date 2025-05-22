@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -109,7 +110,11 @@ public final class LauncherDiscoveryRequestBuilder {
 	private final List<String> configurationParametersResources = new ArrayList<>();
 	private final List<LauncherDiscoveryListener> discoveryListeners = new ArrayList<>();
 	private boolean implicitConfigurationParametersEnabled = true;
+
+	@Nullable
 	private ConfigurationParameters parentConfigurationParameters;
+
+	@Nullable
 	private OutputDirectoryProvider outputDirectoryProvider;
 
 	/**

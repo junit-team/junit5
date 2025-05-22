@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.STABLE;
 import java.util.Optional;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.ToStringBuilder;
 
 /**
@@ -66,14 +67,16 @@ public class EngineDiscoveryResult {
 	 * {@code null}
 	 * @return the {@code EngineDiscoveryResult}; never {@code null}
 	 */
-	public static EngineDiscoveryResult failed(Throwable throwable) {
+	public static EngineDiscoveryResult failed(@Nullable Throwable throwable) {
 		return new EngineDiscoveryResult(Status.FAILED, throwable);
 	}
 
 	private final Status status;
+
+	@Nullable
 	private final Throwable throwable;
 
-	private EngineDiscoveryResult(Status status, Throwable throwable) {
+	private EngineDiscoveryResult(Status status, @Nullable Throwable throwable) {
 		this.status = status;
 		this.throwable = throwable;
 	}

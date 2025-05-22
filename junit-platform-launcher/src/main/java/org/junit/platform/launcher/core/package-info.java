@@ -5,4 +5,7 @@
  * LauncherDiscoveryRequestBuilder}.
  */
 
+@NullMarked
 package org.junit.platform.launcher.core;
+
+import org.jspecify.annotations.NullMarked;

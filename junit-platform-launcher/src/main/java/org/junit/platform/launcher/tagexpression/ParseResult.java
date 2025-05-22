@@ -41,7 +41,7 @@ public interface ParseResult {
 		if (errorMessage().isPresent()) {
 			throw exceptionCreator.apply(errorMessage().get());
 		}
-		return tagExpression().get();
+		return tagExpression().orElseThrow();
 	}
 
 	/**

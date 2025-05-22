@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -134,6 +136,8 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private final List<String> uniqueIds = new ArrayList<>();
 
 	private boolean enabled;
+
+	@Nullable
 	private TestPlan testPlan;
 
 	public UniqueIdTrackingListener() {
@@ -165,7 +169,7 @@ public class UniqueIdTrackingListener implements TestExecutionListener {
 	private void trackTestUidRecursively(TestIdentifier testIdentifier) {
 		boolean tracked = trackTestUid(testIdentifier);
 		if (!tracked) {
-			this.testPlan.getChildren(testIdentifier).forEach(this::trackTestUidRecursively);
+			requireNonNull(this.testPlan).getChildren(testIdentifier).forEach(this::trackTestUidRecursively);
 		}
 	}
 

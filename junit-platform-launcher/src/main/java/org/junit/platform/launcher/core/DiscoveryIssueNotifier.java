@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.commons.util.Preconditions;
@@ -42,13 +43,19 @@ class DiscoveryIssueNotifier {
 	private final List<DiscoveryIssue> criticalIssues;
 	private final List<DiscoveryIssue> nonCriticalIssues;
 
+	@SuppressWarnings("NullAway")
 	static DiscoveryIssueNotifier from(Severity criticalSeverity, List<DiscoveryIssue> issues) {
-		Map<Boolean, List<DiscoveryIssue>> issuesByCriticality = issues.stream() //
-				.sorted(comparing(DiscoveryIssue::severity).reversed()) //
-				.collect(partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0));
+		var issuesByCriticality = partitionByCriticality(criticalSeverity, issues);
 		List<DiscoveryIssue> criticalIssues = issuesByCriticality.get(true);
 		List<DiscoveryIssue> nonCriticalIssues = issuesByCriticality.get(false);
 		return new DiscoveryIssueNotifier(new ArrayList<>(issues), criticalIssues, nonCriticalIssues);
+	}
+
+	private static Map<Boolean, List<DiscoveryIssue>> partitionByCriticality(Severity criticalSeverity,
+			List<DiscoveryIssue> issues) {
+		return issues.stream() //
+				.sorted(comparing(DiscoveryIssue::severity).reversed()) //
+				.collect(partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0));
 	}
 
 	private DiscoveryIssueNotifier(List<DiscoveryIssue> allIssues, List<DiscoveryIssue> criticalIssues,
@@ -74,6 +81,7 @@ class DiscoveryIssueNotifier {
 		logIssues(testEngine, nonCriticalIssues, "non-critical");
 	}
 
+	@Nullable
 	DiscoveryIssueException createExceptionForCriticalIssues(TestEngine testEngine) {
 		if (criticalIssues.isEmpty()) {
 			return null;

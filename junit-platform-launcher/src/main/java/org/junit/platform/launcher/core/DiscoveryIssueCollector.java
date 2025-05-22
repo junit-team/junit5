@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -77,6 +78,7 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		}
 	}
 
+	@Nullable
 	static TestSource toSource(DiscoverySelector selector) {
 		if (selector instanceof ClassSelector classSelector) {
 			return ClassSource.from(classSelector.getClassName());

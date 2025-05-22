@@ -11,6 +11,7 @@
 package org.junit.platform.launcher.tagexpression;
 
 import static java.lang.Integer.MIN_VALUE;
+import static java.util.Objects.requireNonNull;
 import static org.junit.platform.launcher.tagexpression.Operator.nullaryOperator;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.emptyTagExpression;
 import static org.junit.platform.launcher.tagexpression.ParseStatus.missingClosingParenthesis;
@@ -53,7 +54,7 @@ class ShuntingYard {
 				.process(this::ensureOnlySingleExpressionRemains);
 		// @formatter:on
 		if (parseStatus.isError()) {
-			return ParseResults.error(parseStatus.errorMessage);
+			return ParseResults.error(requireNonNull(parseStatus.errorMessage));
 		}
 		return ParseResults.success(expressions.pop().element);
 	}
@@ -75,8 +76,8 @@ class ShuntingYard {
 		if (RightParenthesis.represents(trimmed)) {
 			return findMatchingLeftParenthesis(token);
 		}
-		if (validOperators.isOperator(trimmed)) {
-			Operator operator = validOperators.operatorFor(trimmed);
+		var operator = validOperators.operatorFor(trimmed);
+		if (operator != null) {
 			return findOperands(token, operator);
 		}
 		pushExpressionAt(token, convertLeafTokenToExpression(trimmed));

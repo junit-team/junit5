@@ -12,6 +12,8 @@ package org.junit.platform.launcher.tagexpression;
 
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @since 1.1
  */
@@ -19,11 +21,11 @@ class Parser {
 
 	private final Tokenizer tokenizer = new Tokenizer();
 
-	ParseResult parse(String infixTagExpression) {
+	ParseResult parse(@Nullable String infixTagExpression) {
 		return constructExpressionFrom(tokensDerivedFrom(infixTagExpression));
 	}
 
-	private List<Token> tokensDerivedFrom(String infixTagExpression) {
+	private List<Token> tokensDerivedFrom(@Nullable String infixTagExpression) {
 		return tokenizer.tokenize(infixTagExpression);
 	}
 

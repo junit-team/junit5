@@ -250,7 +250,7 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		seenThrowables.add(throwable);
 
 		StackTraceElement[] trace = throwable.getStackTrace();
-		if (parentTrace != null && parentTrace.length > 0) {
+		if (parentTrace.length > 0) {
 			writer.printf("%s%s%s%n", indentation, caption, throwable);
 		}
 		int duplicates = numberOfCommonFrames(trace, parentTrace);

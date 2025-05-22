@@ -15,6 +15,7 @@ import static org.junit.platform.engine.FilterResult.included;
 
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.FilterResult;
 import org.junit.platform.engine.TestDescriptor;
 
@@ -41,11 +42,11 @@ class ExcludeMethodFilter extends AbstractMethodFilter {
 				.orElseGet(() -> included(formatInclusionReason(methodName)));
 	}
 
-	private String formatInclusionReason(String methodName) {
+	private String formatInclusionReason(@Nullable String methodName) {
 		return "Method name [%s] does not match any excluded pattern: %s".formatted(methodName, patternDescription);
 	}
 
-	private String formatExclusionReason(String methodName, Pattern pattern) {
+	private String formatExclusionReason(@Nullable String methodName, Pattern pattern) {
 		return "Method name [%s] matches excluded pattern: '%s'".formatted(methodName, pattern);
 	}
 

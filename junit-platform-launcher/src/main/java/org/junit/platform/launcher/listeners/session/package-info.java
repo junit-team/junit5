@@ -6,4 +6,7 @@
  * @since 1.8
  */
 
+@NullMarked
 package org.junit.platform.launcher.listeners.session;
+
+import org.jspecify.annotations.NullMarked;

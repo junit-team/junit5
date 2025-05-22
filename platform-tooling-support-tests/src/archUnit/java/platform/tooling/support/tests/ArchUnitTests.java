@@ -87,8 +87,7 @@ class ArchUnitTests {
 			"org.junit.jupiter.api..", //
 			"org.junit.jupiter.engine..", //
 			"org.junit.jupiter.migrationsupport..", //
-			"org.junit.jupiter.params..", //
-			"org.junit.platform.launcher.." //
+			"org.junit.jupiter.params.." //
 		).map(PackageMatcher::of).toList();
 
 		var subpackages = Stream.of("org.junit.platform", "org.junit.jupiter", "org.junit.vintage") //

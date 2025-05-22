@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.TestExecutionResult;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -82,7 +83,7 @@ public class LoggingListener implements TestExecutionListener {
 		return new LoggingListener(logger);
 	}
 
-	private final BiConsumer<Throwable, Supplier<String>> logger;
+	private final BiConsumer<@Nullable Throwable, Supplier<String>> logger;
 
 	private LoggingListener(BiConsumer<Throwable, Supplier<String>> logger) {
 		this.logger = Preconditions.notNull(logger, "logger must not be null");
@@ -123,7 +124,7 @@ public class LoggingListener implements TestExecutionListener {
 		logWithThrowable(message, null, args);
 	}
 
-	private void logWithThrowable(String message, Throwable t, Object... args) {
+	private void logWithThrowable(String message, @Nullable Throwable t, Object... args) {
 		this.logger.accept(t, () -> message.formatted(args));
 	}
 

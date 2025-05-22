@@ -13,6 +13,8 @@ package org.junit.platform.launcher.tagexpression;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import org.junit.platform.commons.util.Preconditions;
+
 /**
  * @since 1.1
  */
@@ -27,12 +29,12 @@ class DequeStack<T> implements Stack<T> {
 
 	@Override
 	public T peek() {
-		return deque.peek();
+		return Preconditions.notNull(deque.peek(), () -> "stack is empty");
 	}
 
 	@Override
 	public T pop() {
-		return deque.pollFirst();
+		return Preconditions.notNull(deque.pollFirst(), () -> "stack is empty");
 	}
 
 	@Override
