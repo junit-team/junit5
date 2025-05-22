@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.concurrent.TimeUnit.DAYS;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MICROSECONDS;
@@ -56,7 +57,7 @@ class TimeoutDurationParser {
 			long value = Long.parseLong(matcher.group(1));
 			String unitAbbreviation = matcher.group(2);
 			TimeUnit unit = unitAbbreviation == null ? SECONDS
-					: UNITS_BY_ABBREVIATION.get(unitAbbreviation.toLowerCase(Locale.ENGLISH));
+					: requireNonNull(UNITS_BY_ABBREVIATION.get(unitAbbreviation.toLowerCase(Locale.ENGLISH)));
 			return new TimeoutDuration(value, unit);
 		}
 		throw new DateTimeParseException("Timeout duration is not in the expected format (<number> [ns|μs|ms|s|m|h|d])",

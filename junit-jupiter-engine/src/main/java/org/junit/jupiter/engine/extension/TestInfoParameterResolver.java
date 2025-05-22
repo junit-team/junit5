@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -89,7 +90,9 @@ class TestInfoParameterResolver implements ParameterResolver {
 			// @formatter:on
 		}
 
-		private static Object nullSafeGet(Optional<?> optional) {
+		@SuppressWarnings("OptionalAssignedToNull")
+		@Nullable
+		private static Object nullSafeGet(@Nullable Optional<?> optional) {
 			return optional != null ? optional.orElse(null) : null;
 		}
 

@@ -33,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.platform.commons.logging.Logger;
@@ -256,7 +257,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		registerExtension(category, extension, null);
 	}
 
-	private void registerExtension(String category, Extension extension, Object source) {
+	private void registerExtension(String category, Extension extension, @Nullable Object source) {
 		Preconditions.notBlank(category, "category must not be null or blank");
 		Preconditions.notNull(extension, "extension must not be null");
 
@@ -266,7 +267,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 		this.registeredExtensionTypes.add(extension.getClass());
 	}
 
-	private String buildSourceInfo(Object source) {
+	private String buildSourceInfo(@Nullable Object source) {
 		if (source == null) {
 			return "";
 		}

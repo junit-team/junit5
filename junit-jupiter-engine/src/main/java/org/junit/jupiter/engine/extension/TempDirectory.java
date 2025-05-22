@@ -12,6 +12,7 @@ package org.junit.jupiter.engine.extension;
 
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.nio.file.FileVisitResult.SKIP_SUBTREE;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.extension.TestInstantiationAwareExtension.ExtensionContextScope.TEST_METHOD;
 import static org.junit.jupiter.api.io.CleanupMode.DEFAULT;
@@ -46,6 +47,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -146,7 +148,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 		}
 	}
 
-	private void injectFields(ExtensionContext context, Object testInstance, Class<?> testClass,
+	private void injectFields(ExtensionContext context, @Nullable Object testInstance, Class<?> testClass,
 			Predicate<Field> predicate) {
 
 		findAnnotatedFields(testClass, TempDir.class, predicate).forEach(field -> {
@@ -240,11 +242,11 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	private static Object getPathOrFile(Class<?> elementType, AnnotatedElementContext elementContext,
 			TempDirFactory factory, CleanupMode cleanupMode, ExtensionContext extensionContext) {
 
-		Path path = extensionContext.getStore(NAMESPACE.append(elementContext)) //
+		Path path = requireNonNull(extensionContext.getStore(NAMESPACE.append(elementContext)) //
 				.getOrComputeIfAbsent(KEY,
 					__ -> createTempDir(factory, cleanupMode, elementType, elementContext, extensionContext),
-					CloseablePath.class) //
-				.get();
+					CloseablePath.class)) //
+							.get();
 
 		return (elementType == Path.class) ? path : path.toFile();
 	}

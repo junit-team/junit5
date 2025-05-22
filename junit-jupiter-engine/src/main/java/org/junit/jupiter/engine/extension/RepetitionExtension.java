@@ -13,6 +13,7 @@ package org.junit.jupiter.engine.extension;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.disabled;
 import static org.junit.jupiter.api.extension.ConditionEvaluationResult.enabled;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.extension.ConditionEvaluationResult;
@@ -61,7 +62,7 @@ class RepetitionExtension implements ParameterResolver, TestWatcher, ExecutionCo
 	}
 
 	@Override
-	public void testFailed(ExtensionContext context, Throwable cause) {
+	public void testFailed(ExtensionContext context, @Nullable Throwable cause) {
 		this.repetitionInfo.failureCount.incrementAndGet();
 	}
 

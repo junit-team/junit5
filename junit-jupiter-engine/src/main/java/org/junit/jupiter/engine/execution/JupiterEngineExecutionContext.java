@@ -10,9 +10,11 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.descriptor.LauncherStoreFacade;
@@ -68,19 +70,19 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	}
 
 	public TestInstancesProvider getTestInstancesProvider() {
-		return this.state.testInstancesProvider;
+		return requireNonNull(this.state.testInstancesProvider);
 	}
 
 	public MutableExtensionRegistry getExtensionRegistry() {
-		return this.state.extensionRegistry;
+		return requireNonNull(this.state.extensionRegistry);
 	}
 
 	public ExtensionContext getExtensionContext() {
-		return this.state.extensionContext;
+		return requireNonNull(this.state.extensionContext);
 	}
 
 	public ThrowableCollector getThrowableCollector() {
-		return this.state.throwableCollector;
+		return requireNonNull(this.state.throwableCollector);
 	}
 
 	/**
@@ -125,9 +127,17 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 		final EngineExecutionListener executionListener;
 		final JupiterConfiguration configuration;
 		final LauncherStoreFacade launcherStoreFacade;
+
+		@Nullable
 		TestInstancesProvider testInstancesProvider;
+
+		@Nullable
 		MutableExtensionRegistry extensionRegistry;
+
+		@Nullable
 		ExtensionContext extensionContext;
+
+		@Nullable
 		ThrowableCollector throwableCollector;
 
 		State(EngineExecutionListener executionListener, JupiterConfiguration configuration,
@@ -152,6 +162,8 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 	public static class Builder {
 
 		private State originalState;
+
+		@Nullable
 		private State newState = null;
 
 		private Builder(State originalState) {

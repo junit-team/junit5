@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.ExtensionConfigurationException;
@@ -59,14 +60,15 @@ class AutoCloseExtension implements TestInstancePreDestroyCallback, AfterAllCall
 		throwableCollector.assertEmpty();
 	}
 
-	private static void closeFields(Class<?> testClass, Object testInstance, ThrowableCollector throwableCollector) {
+	private static void closeFields(Class<?> testClass, @Nullable Object testInstance,
+			ThrowableCollector throwableCollector) {
 		Predicate<Field> predicate = (testInstance == null ? ModifierSupport::isStatic : ModifierSupport::isNotStatic);
 		AnnotationSupport.findAnnotatedFields(testClass, AutoClose.class, predicate, BOTTOM_UP).forEach(
 			field -> throwableCollector.execute(() -> closeField(field, testInstance)));
 	}
 
-	private static void closeField(Field field, Object testInstance) throws Exception {
-		String methodName = AnnotationSupport.findAnnotation(field, AutoClose.class).get().value();
+	private static void closeField(Field field, @Nullable Object testInstance) throws Exception {
+		String methodName = AnnotationSupport.findAnnotation(field, AutoClose.class).orElseThrow().value();
 		Class<?> fieldType = field.getType();
 
 		checkCondition(StringUtils.isNotBlank(methodName), "@AutoClose on field %s must specify a method name.", field);

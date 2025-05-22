@@ -3,4 +3,7 @@
  * Contains resolvers for Java elements.
  */
 
+@NullMarked
 package org.junit.jupiter.engine.discovery;
+
+import org.jspecify.annotations.NullMarked;
