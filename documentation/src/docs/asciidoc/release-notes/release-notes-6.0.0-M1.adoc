@@ -107,6 +107,8 @@ repository on GitHub.
 ==== New Features and Improvements
 
 * Add support for using Kotlin's `suspend` modifier on test and lifecycle methods.
+* The `Arguments` interface for parameterized tests is now officially a
+  `@FunctionalInterface`.
 
 
 [[release-notes-6.0.0-M1-junit-vintage]]
