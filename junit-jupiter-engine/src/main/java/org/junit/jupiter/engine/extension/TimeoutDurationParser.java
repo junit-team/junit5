@@ -22,8 +22,6 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.UNICODE_CASE;
 
 import java.time.format.DateTimeParseException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -37,19 +35,16 @@ class TimeoutDurationParser {
 
 	private static final Pattern PATTERN = Pattern.compile("([1-9]\\d*) ?((?:[nμm]?s)|m|h|d)?",
 		CASE_INSENSITIVE | UNICODE_CASE);
-	private static final Map<String, TimeUnit> UNITS_BY_ABBREVIATION;
 
-	static {
-		Map<String, TimeUnit> unitsByAbbreviation = new HashMap<>();
-		unitsByAbbreviation.put("ns", NANOSECONDS);
-		unitsByAbbreviation.put("μs", MICROSECONDS);
-		unitsByAbbreviation.put("ms", MILLISECONDS);
-		unitsByAbbreviation.put("s", SECONDS);
-		unitsByAbbreviation.put("m", MINUTES);
-		unitsByAbbreviation.put("h", HOURS);
-		unitsByAbbreviation.put("d", DAYS);
-		UNITS_BY_ABBREVIATION = Collections.unmodifiableMap(unitsByAbbreviation);
-	}
+	private static final Map<String, TimeUnit> UNITS_BY_ABBREVIATION = Map.of( //
+		"ns", NANOSECONDS, //
+		"μs", MICROSECONDS, //
+		"ms", MILLISECONDS, //
+		"s", SECONDS, //
+		"m", MINUTES, //
+		"h", HOURS, //
+		"d", DAYS //
+	);
 
 	TimeoutDuration parse(CharSequence text) throws DateTimeParseException {
 		Matcher matcher = PATTERN.matcher(text);

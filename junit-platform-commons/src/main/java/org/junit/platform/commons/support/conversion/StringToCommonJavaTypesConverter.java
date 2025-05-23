@@ -10,8 +10,6 @@
 
 package org.junit.platform.commons.support.conversion;
 
-import static java.util.Collections.unmodifiableMap;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -20,7 +18,6 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Currency;
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -30,25 +27,19 @@ import org.junit.platform.commons.util.Preconditions;
 
 class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 
-	private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
-
-	static {
-		Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
-
+	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
 		// java.io and java.nio
-		converters.put(File.class, File::new);
-		converters.put(Charset.class, Charset::forName);
-		converters.put(Path.class, Paths::get);
+		File.class, File::new, //
+		Charset.class, Charset::forName, //
+		Path.class, Paths::get,
 		// java.net
-		converters.put(URI.class, URI::create);
-		converters.put(URL.class, StringToCommonJavaTypesConverter::toURL);
+		URI.class, URI::create, //
+		URL.class, StringToCommonJavaTypesConverter::toURL,
 		// java.util
-		converters.put(Currency.class, Currency::getInstance);
-		converters.put(Locale.class, Locale::new);
-		converters.put(UUID.class, UUID::fromString);
-
-		CONVERTERS = unmodifiableMap(converters);
-	}
+		Currency.class, Currency::getInstance, //
+		Locale.class, Locale::new, //
+		UUID.class, UUID::fromString //
+	);
 
 	@Override
 	public boolean canConvertTo(Class<?> targetType) {

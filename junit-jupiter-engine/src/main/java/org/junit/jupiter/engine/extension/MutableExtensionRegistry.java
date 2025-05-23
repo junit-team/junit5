@@ -18,8 +18,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -53,13 +51,14 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 
 	private static final Logger logger = LoggerFactory.getLogger(MutableExtensionRegistry.class);
 
-	private static final List<Extension> DEFAULT_STATELESS_EXTENSIONS = Collections.unmodifiableList(Arrays.asList(//
+	private static final List<Extension> DEFAULT_STATELESS_EXTENSIONS = List.of( //
 		new DisabledCondition(), //
 		new AutoCloseExtension(), //
 		new TimeoutExtension(), //
 		new RepeatedTestExtension(), //
 		new TestInfoParameterResolver(), //
-		new TestReporterParameterResolver()));
+		new TestReporterParameterResolver() //
+	);
 
 	/**
 	 * Factory for creating and populating a new root registry with the default

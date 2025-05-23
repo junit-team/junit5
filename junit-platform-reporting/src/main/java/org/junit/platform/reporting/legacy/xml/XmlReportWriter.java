@@ -13,7 +13,6 @@ package org.junit.platform.reporting.legacy.xml;
 import static java.text.MessageFormat.format;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableMap;
 import static java.util.Comparator.naturalOrder;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
@@ -41,7 +40,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -75,14 +73,11 @@ class XmlReportWriter {
 
 	static final char ILLEGAL_CHARACTER_REPLACEMENT = '\uFFFD';
 
-	private static final Map<Character, String> REPLACEMENTS_IN_ATTRIBUTE_VALUES;
-	static {
-		Map<Character, String> tmp = new HashMap<>(3);
-		tmp.put('\n', "&#10;");
-		tmp.put('\r', "&#13;");
-		tmp.put('\t', "&#9;");
-		REPLACEMENTS_IN_ATTRIBUTE_VALUES = unmodifiableMap(tmp);
-	}
+	private static final Map<Character, String> REPLACEMENTS_IN_ATTRIBUTE_VALUES = Map.of( //
+		'\n', "&#10;", //
+		'\r', "&#13;", //
+		'\t', "&#9;" //
+	);
 
 	// Using zero-width assertions in the split pattern simplifies the splitting process: All split parts
 	// (including the first and last one) can be used directly, without having to re-add separator characters.

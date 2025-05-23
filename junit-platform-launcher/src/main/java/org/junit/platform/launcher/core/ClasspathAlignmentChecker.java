@@ -10,11 +10,9 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.unmodifiableList;
 import static java.util.Comparator.comparing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +31,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
 class ClasspathAlignmentChecker {
 
 	// VisibleForTesting
-	static final List<String> WELL_KNOWN_PACKAGES = unmodifiableList(Arrays.asList( //
+	static final List<String> WELL_KNOWN_PACKAGES = List.of( //
 		"org.junit.jupiter.api", //
 		"org.junit.jupiter.engine", //
 		"org.junit.jupiter.migrationsupport", //
@@ -49,7 +47,7 @@ class ClasspathAlignmentChecker {
 		"org.junit.platform.suite.engine", //
 		"org.junit.platform.testkit", //
 		"org.junit.vintage.engine" //
-	));
+	);
 
 	static Optional<JUnitException> check(LinkageError error) {
 		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(ClasspathAlignmentChecker.class);

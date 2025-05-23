@@ -10,7 +10,7 @@
 
 package org.junit.platform.commons.support.conversion;
 
-import static java.util.Collections.unmodifiableMap;
+import static java.util.Map.entry;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -26,7 +26,6 @@ import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -34,25 +33,22 @@ import org.junit.platform.commons.util.Preconditions;
 
 class StringToJavaTimeConverter implements StringToObjectConverter {
 
-	private static final Map<Class<?>, Function<String, ?>> CONVERTERS;
-	static {
-		Map<Class<?>, Function<String, ?>> converters = new HashMap<>();
-		converters.put(Duration.class, Duration::parse);
-		converters.put(Instant.class, Instant::parse);
-		converters.put(LocalDate.class, LocalDate::parse);
-		converters.put(LocalDateTime.class, LocalDateTime::parse);
-		converters.put(LocalTime.class, LocalTime::parse);
-		converters.put(MonthDay.class, MonthDay::parse);
-		converters.put(OffsetDateTime.class, OffsetDateTime::parse);
-		converters.put(OffsetTime.class, OffsetTime::parse);
-		converters.put(Period.class, Period::parse);
-		converters.put(Year.class, Year::parse);
-		converters.put(YearMonth.class, YearMonth::parse);
-		converters.put(ZonedDateTime.class, ZonedDateTime::parse);
-		converters.put(ZoneId.class, ZoneId::of);
-		converters.put(ZoneOffset.class, ZoneOffset::of);
-		CONVERTERS = unmodifiableMap(converters);
-	}
+	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.ofEntries( //
+		entry(Duration.class, Duration::parse), //
+		entry(Instant.class, Instant::parse), //
+		entry(LocalDate.class, LocalDate::parse), //
+		entry(LocalDateTime.class, LocalDateTime::parse), //
+		entry(LocalTime.class, LocalTime::parse), //
+		entry(MonthDay.class, MonthDay::parse), //
+		entry(OffsetDateTime.class, OffsetDateTime::parse), //
+		entry(OffsetTime.class, OffsetTime::parse), //
+		entry(Period.class, Period::parse), //
+		entry(Year.class, Year::parse), //
+		entry(YearMonth.class, YearMonth::parse), //
+		entry(ZonedDateTime.class, ZonedDateTime::parse), //
+		entry(ZoneId.class, ZoneId::of), //
+		entry(ZoneOffset.class, ZoneOffset::of) //
+	);
 
 	@Override
 	public boolean canConvertTo(Class<?> targetType) {
