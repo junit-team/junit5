@@ -25,7 +25,7 @@ import org.jspecify.annotations.Nullable;
  */
 class Tokenizer {
 
-	private static final Pattern PATTERN = Pattern.compile("\\s*(?:(?:(?:any|none)\\(\\))|[()!|&]|(?:[^\\s()!|&]+))",
+	private static final Pattern PATTERN = Pattern.compile("\\s*(?:(?:any|none)\\(\\)|[()!|&]|[^\\s()!|&]+)",
 		CASE_INSENSITIVE);
 
 	List<Token> tokenize(@Nullable String infixTagExpression) {
