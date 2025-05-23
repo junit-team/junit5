@@ -10,6 +10,7 @@
 
 package org.junit.platform.commons.util;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
@@ -298,10 +299,10 @@ public class ModuleUtils {
 
 		private Resource loadResourceUnchecked(String binaryName) {
 			try {
-				URI uri = classLoader.getResource(binaryName).toURI();
+				URI uri = requireNonNull(classLoader.getResource(binaryName)).toURI();
 				return new DefaultResource(binaryName, uri);
 			}
-			catch (URISyntaxException e) {
+			catch (NullPointerException | URISyntaxException e) {
 				throw new JUnitException("Failed to load resource with name '" + binaryName + "'.", e);
 			}
 		}

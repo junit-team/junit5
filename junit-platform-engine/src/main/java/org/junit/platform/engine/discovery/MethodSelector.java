@@ -219,44 +219,50 @@ public class MethodSelector implements DiscoverySelector {
 	}
 
 	private Class<?> lazyLoadJavaClass() {
-		// @formatter:off
-		if (this.javaClass == null) {
+		Class<?> value = this.javaClass;
+		if (value == null) {
+			// @formatter:off
 			Try<Class<?>> tryToLoadClass = this.classLoader == null
 				? ReflectionSupport.tryToLoadClass(this.className)
 				: ReflectionSupport.tryToLoadClass(this.className, this.classLoader);
-			this.javaClass = tryToLoadClass.getNonNullOrThrow(cause ->
+			value = tryToLoadClass.getNonNullOrThrow(cause ->
 				new PreconditionViolationException("Could not load class with name: " + this.className, cause));
+			// @formatter:on
+			this.javaClass = value;
 		}
-		// @formatter:on
-		return this.javaClass;
+		return value;
 	}
 
 	private Method lazyLoadJavaMethod() {
-		if (this.javaMethod == null) {
+		var value = this.javaMethod;
+		if (value == null) {
 			Class<?> javaClass = lazyLoadJavaClass();
 			var parameterTypes = lazyLoadParameterTypes();
 			if (parameterTypes.length > 0) {
-				this.javaMethod = ReflectionSupport.findMethod(javaClass, this.methodName, parameterTypes).orElseThrow(
+				value = ReflectionSupport.findMethod(javaClass, this.methodName, parameterTypes).orElseThrow(
 					() -> new PreconditionViolationException(
 						"Could not find method with name [%s] and parameter types [%s] in class [%s].".formatted(
 							this.methodName, this.parameterTypeNames, javaClass.getName())));
 			}
 			else {
-				this.javaMethod = ReflectionSupport.findMethod(javaClass, this.methodName).orElseThrow(
+				value = ReflectionSupport.findMethod(javaClass, this.methodName).orElseThrow(
 					() -> new PreconditionViolationException(
 						"Could not find method with name [%s] in class [%s].".formatted(this.methodName,
 							javaClass.getName())));
 			}
+			this.javaMethod = value;
 		}
-		return this.javaMethod;
+		return value;
 	}
 
 	private Class<?>[] lazyLoadParameterTypes() {
-		if (this.parameterTypes == null) {
-			this.parameterTypes = ReflectionUtils.resolveParameterTypes(lazyLoadJavaClass(), this.methodName,
+		var value = this.parameterTypes;
+		if (value == null) {
+			value = ReflectionUtils.resolveParameterTypes(lazyLoadJavaClass(), this.methodName,
 				this.parameterTypeNames);
+			this.parameterTypes = value;
 		}
-		return this.parameterTypes;
+		return value;
 	}
 
 	/**

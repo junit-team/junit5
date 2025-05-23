@@ -10,10 +10,14 @@
 
 package example.util;
 
+import static java.util.Objects.requireNonNull;
+
+import org.jspecify.annotations.Nullable;
+
 public class StringUtils {
 
-	public static boolean isPalindrome(String candidate) {
-		int length = candidate.length();
+	public static boolean isPalindrome(@Nullable String candidate) {
+		int length = requireNonNull(candidate).length();
 		for (int i = 0; i < length / 2; i++) {
 			if (candidate.charAt(i) != candidate.charAt(length - (i + 1))) {
 				return false;
