@@ -22,6 +22,7 @@ import org.mockito.InOrder;
 
 class CompositeTestDescriptorVisitorTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void checksPreconditions() {
 		assertThrows(PreconditionViolationException.class, Visitor::composite);

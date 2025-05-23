@@ -33,6 +33,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.function.Executable;
@@ -105,6 +106,7 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		);
 	}
 
+	@SuppressWarnings("NullAway")
 	@ParameterizedTest
 	@MethodSource("incompatibleLockCombinations")
 	void defersTasksWithIncompatibleLocks(Set<ExclusiveResource> initialResources,
@@ -166,6 +168,7 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		);
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@ParameterizedTest
 	@MethodSource("compatibleLockCombinations")
 	void canWorkStealTaskWithCompatibleLocks(Set<ExclusiveResource> initialResources,
@@ -198,6 +201,8 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 
 		var deferred = new ConcurrentHashMap<TestTask, CountDownLatch>();
 		var deferredTasks = new CopyOnWriteArrayList<TestTask>();
+
+		@SuppressWarnings("NullAway")
 		TaskEventListener taskEventListener = testTask -> {
 			deferredTasks.add(testTask);
 			deferred.get(testTask).countDown();
@@ -305,9 +310,11 @@ class ForkJoinPoolHierarchicalTestExecutorServiceTests {
 		private final ResourceLock resourceLock;
 		private final Executable action;
 
+		@Nullable
 		private volatile String threadName;
+
 		private final CountDownLatch started = new CountDownLatch(1);
-		private final CompletableFuture<Void> completion = new CompletableFuture<>();
+		private final CompletableFuture<@Nullable Void> completion = new CompletableFuture<>();
 
 		DummyTestTask(String identifier, ResourceLock resourceLock, Executable action) {
 			this.identifier = identifier;

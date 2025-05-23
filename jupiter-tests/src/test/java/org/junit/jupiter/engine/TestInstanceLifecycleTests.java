@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -96,6 +97,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		afterEachCount = 0;
 	}
 
+	@SuppressWarnings("NullAway")
 	@Test
 	void instancePerMethod() {
 		Class<?> testClass = InstancePerMethodTestCase.class;
@@ -181,6 +183,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			instanceCounts(entry(SubInstancePerClassTestCase.class, 1)));
 	}
 
+	@SuppressWarnings("NullAway")
 	private void instancePerClass(Class<?> testClass, Map.Entry<Class<?>, Integer>[] instances) {
 		int containers = 3;
 		int tests = 3;
@@ -248,6 +251,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertThat(lifecyclesMap.get(testClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
+	@SuppressWarnings("NullAway")
 	@Test
 	void instancePerMethodWithNestedTestClass() {
 		Class<?> testClass = InstancePerMethodOuterTestCase.class;
@@ -370,6 +374,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_METHOD::equals);
 	}
 
+	@SuppressWarnings("NullAway")
 	@Test
 	void instancePerClassWithNestedTestClass() {
 		Class<?> testClass = InstancePerClassOuterTestCase.class;
@@ -490,6 +495,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		assertThat(lifecyclesMap.get(nestedTestClass).stream()).allMatch(Lifecycle.PER_CLASS::equals);
 	}
 
+	@SuppressWarnings("NullAway")
 	@Test
 	void instancePerMethodOnOuterTestClassWithInstancePerClassOnNestedTestClass() {
 		Class<?> testClass = MixedLifecyclesOuterTestCase.class;
@@ -676,7 +682,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		instanceCount.compute(testClass, (key, value) -> value == null ? 1 : value + 1);
 	}
 
-	private static String executionConditionKey(Class<?> testClass, String testMethod) {
+	private static String executionConditionKey(Class<?> testClass, @Nullable String testMethod) {
 		return concat(ExecutionCondition.class, testClass, testMethod);
 	}
 
@@ -708,7 +714,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		return concat(TestTemplateInvocationContextProvider.class, testClass, testMethod);
 	}
 
-	private static String concat(Class<?> c1, Class<?> c2, String str) {
+	private static String concat(Class<?> c1, Class<?> c2, @Nullable String str) {
 		return concat(c1.getSimpleName(), c2.getSimpleName(), str);
 	}
 
@@ -716,7 +722,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 		return concat(c1.getSimpleName(), c2.getSimpleName());
 	}
 
-	private static String concat(String... args) {
+	private static String concat(@Nullable String... args) {
 		return join(".", args);
 	}
 
@@ -814,6 +820,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			beforeAllCount++;
 		}
 
+		@SuppressWarnings("NullAway")
 		@Test
 		void outerTest() {
 			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
@@ -839,18 +846,21 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				beforeEachCount++;
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test1(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test2(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
@@ -879,6 +889,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			beforeAllCount++;
 		}
 
+		@SuppressWarnings("NullAway")
 		@Test
 		void outerTest() {
 			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
@@ -909,18 +920,21 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				beforeEachCount++;
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test1(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test2(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
@@ -955,6 +969,7 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 			beforeEachCount++;
 		}
 
+		@SuppressWarnings("NullAway")
 		@Test
 		void outerTest() {
 			assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
@@ -984,18 +999,21 @@ class TestInstanceLifecycleTests extends AbstractJupiterTestEngineTests {
 				beforeEachCount++;
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test1(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@Test
 			void test2(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());
 				testsInvoked.add(testInfo.getTestMethod().get().getName());
 			}
 
+			@SuppressWarnings("NullAway")
 			@SingletonTest
 			void singletonTest(TestInfo testInfo) {
 				assertSame(this, instanceMap.get(postProcessTestInstanceKey(getClass())).getInnermostInstance());

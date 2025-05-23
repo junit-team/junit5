@@ -29,5 +29,14 @@ tasks.withType<JavaCompile>().configureEach {
 tasks.compileTestJava {
 	options.errorprone.nullaway {
 		handleTestAssertionLibraries = true
+		excludedFieldAnnotations.addAll(
+			"org.junit.jupiter.api.io.TempDir",
+			"org.junit.jupiter.params.Parameter",
+			"org.junit.runners.Parameterized.Parameter",
+			"org.mockito.Captor",
+			"org.mockito.InjectMocks",
+			"org.mockito.Mock",
+			"org.mockito.Spy",
+		)
 	}
 }

@@ -30,6 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
@@ -385,12 +386,12 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void testAborted(ExtensionContext context, Throwable cause) {
+		public void testAborted(ExtensionContext context, @Nullable Throwable cause) {
 			trackResult("testAborted", context);
 		}
 
 		@Override
-		public void testFailed(ExtensionContext context, Throwable cause) {
+		public void testFailed(ExtensionContext context, @Nullable Throwable cause) {
 			trackResult("testFailed", context);
 		}
 
@@ -419,12 +420,12 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		public void testAborted(ExtensionContext context, Throwable cause) {
+		public void testAborted(ExtensionContext context, @Nullable Throwable cause) {
 			throw new JUnitException("Exception in testAborted()");
 		}
 
 		@Override
-		public void testFailed(ExtensionContext context, Throwable cause) {
+		public void testFailed(ExtensionContext context, @Nullable Throwable cause) {
 			throw new JUnitException("Exception in testFailed()");
 		}
 
@@ -440,7 +441,7 @@ class TestWatcherTests extends AbstractJupiterTestEngineTests {
 
 		private static final String KEY = "key";
 
-		private static final Map<String, String> results = new HashMap<>();
+		private static final Map<String, @Nullable String> results = new HashMap<>();
 
 		@Override
 		public void beforeTestExecution(ExtensionContext context) throws Exception {

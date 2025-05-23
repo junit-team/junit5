@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.ClassOrderer;
@@ -209,12 +210,12 @@ class OrderedClassTests {
 				.containsExactlyInAnyOrder(ClassSource.from(A_TestCase.class), ClassSource.from(C_TestCase.class));
 	}
 
-	private Events executeTests(Class<? extends ClassOrderer> classOrderer) {
+	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer) {
 		return executeTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
 			selectClass(C_TestCase.class));
 	}
 
-	private Events executeTests(Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
+	private Events executeTests(@Nullable Class<? extends ClassOrderer> classOrderer, DiscoverySelector... selectors) {
 		// @formatter:off
 		return testKit(classOrderer, selectors)
 				.execute()
@@ -222,17 +223,17 @@ class OrderedClassTests {
 		// @formatter:on
 	}
 
-	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer) {
+	private EngineDiscoveryResults discoverTests(@Nullable Class<? extends ClassOrderer> classOrderer) {
 		return discoverTests(classOrderer, selectClass(A_TestCase.class), selectClass(B_TestCase.class),
 			selectClass(C_TestCase.class));
 	}
 
-	private EngineDiscoveryResults discoverTests(Class<? extends ClassOrderer> classOrderer,
+	private EngineDiscoveryResults discoverTests(@Nullable Class<? extends ClassOrderer> classOrderer,
 			DiscoverySelector... selectors) {
 		return testKit(classOrderer, selectors).discover();
 	}
 
-	private static EngineTestKit.Builder testKit(Class<? extends ClassOrderer> classOrderer,
+	private static EngineTestKit.Builder testKit(@Nullable Class<? extends ClassOrderer> classOrderer,
 			DiscoverySelector[] selectors) {
 
 		var testKit = EngineTestKit.engine("junit-jupiter");
@@ -246,7 +247,7 @@ class OrderedClassTests {
 
 		@BeforeEach
 		void trackInvocations(TestInfo testInfo) {
-			var testClass = testInfo.getTestClass().get();
+			var testClass = testInfo.getTestClass().orElseThrow();
 
 			callSequence.add(testClass.getSimpleName());
 		}

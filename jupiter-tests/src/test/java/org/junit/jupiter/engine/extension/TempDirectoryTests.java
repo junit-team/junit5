@@ -14,6 +14,7 @@ import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -51,6 +52,8 @@ import com.google.common.jimfs.Configuration;
 import com.google.common.jimfs.Jimfs;
 
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -110,6 +113,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 		AllPossibleDeclarationLocationsTestCase.tempDirs.clear();
 	}
 
+	@SuppressWarnings("NullAway")
 	@ParameterizedTest(name = "{0}")
 	@EnumSource(TestInstance.Lifecycle.class)
 	@DisplayName("resolves separate temp dirs for each annotation declaration")
@@ -352,6 +356,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		private static class FactoryNotReturningDirectory implements TempDirFactory {
 
+			@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext) {
 				return null;
@@ -1112,6 +1117,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@NullUnmarked
 	static class StaticTempDirUsageInsideNestedClassTestCase {
 
 		@TempDir
@@ -1308,6 +1314,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		private static class Factory implements TempDirFactory {
 
+			@Nullable
 			private static Path parent;
 
 			private Factory() throws IOException {
@@ -1317,7 +1324,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Path createTempDirectory(AnnotatedElementContext elementContext, ExtensionContext extensionContext)
 					throws Exception {
-				return Files.createTempDirectory(parent, "prefix");
+				return Files.createTempDirectory(requireNonNull(parent), "prefix");
 			}
 		}
 
@@ -1334,6 +1341,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		private static class Factory implements TempDirFactory {
 
+			@Nullable
 			private static FileSystem fileSystem;
 
 			@Override
@@ -1345,7 +1353,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 			@Override
 			public void close() throws IOException {
-				fileSystem.close();
+				requireNonNull(fileSystem).close();
 				fileSystem = null;
 			}
 		}
@@ -1363,6 +1371,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 		private static class Factory implements TempDirFactory {
 
+			@Nullable
 			private static FileSystem fileSystem;
 
 			@Override
@@ -1374,7 +1383,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 
 			@Override
 			public void close() throws IOException {
-				fileSystem.close();
+				requireNonNull(fileSystem).close();
 				fileSystem = null;
 			}
 		}
@@ -1410,6 +1419,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@NullUnmarked
 	static class FactoryWithCustomMetaAnnotationTestCase {
 
 		@TempDirForField
@@ -1464,6 +1474,7 @@ class TempDirectoryTests extends AbstractJupiterTestEngineTests {
 			// never called
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		private static class Factory implements TempDirFactory {
 
 			@Override

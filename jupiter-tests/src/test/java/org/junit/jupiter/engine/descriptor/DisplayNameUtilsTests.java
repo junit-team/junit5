@@ -227,6 +227,7 @@ class DisplayNameUtilsTests {
 
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	static class NullDisplayNameGenerator implements DisplayNameGenerator {
 
 		@Override

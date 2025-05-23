@@ -41,6 +41,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -228,12 +229,11 @@ class ConversionSupportTests {
 			var customType = testClassLoader.loadClass(customTypeName);
 			assertThat(customType.getClassLoader()).isSameAs(testClassLoader);
 
-			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").get();
+			var declaringExecutable = ReflectionSupport.findMethod(customType, "foo").orElseThrow();
 			assertThat(declaringExecutable.getDeclaringClass().getClassLoader()).isSameAs(testClassLoader);
 
 			var clazz = (Class<?>) convert(customTypeName, Class.class, classLoader(declaringExecutable));
-			assertThat(clazz).isNotEqualTo(Enigma.class);
-			assertThat(clazz).isEqualTo(customType);
+			assertThat(clazz).isNotNull().isNotEqualTo(Enigma.class).isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 		}
 	}
@@ -308,7 +308,7 @@ class ConversionSupportTests {
 
 	// -------------------------------------------------------------------------
 
-	private void assertConverts(String input, Class<?> targetClass, Object expectedOutput) {
+	private void assertConverts(@Nullable String input, Class<?> targetClass, @Nullable Object expectedOutput) {
 		var result = convert(input, targetClass);
 
 		assertThat(result) //
@@ -316,16 +316,18 @@ class ConversionSupportTests {
 				.isEqualTo(expectedOutput);
 	}
 
-	private Object convert(String input, Class<?> targetClass) {
+	@Nullable
+	private Object convert(@Nullable String input, Class<?> targetClass) {
 		return convert(input, targetClass, classLoader());
 	}
 
-	private Object convert(String input, Class<?> targetClass, ClassLoader classLoader) {
+	@Nullable
+	private Object convert(@Nullable String input, Class<?> targetClass, ClassLoader classLoader) {
 		return ConversionSupport.convert(input, targetClass, classLoader);
 	}
 
 	private static ClassLoader classLoader() {
-		Method declaringExecutable = ReflectionSupport.findMethod(ConversionSupportTests.class, "foo").get();
+		Method declaringExecutable = ReflectionSupport.findMethod(ConversionSupportTests.class, "foo").orElseThrow();
 		return classLoader(declaringExecutable);
 	}
 

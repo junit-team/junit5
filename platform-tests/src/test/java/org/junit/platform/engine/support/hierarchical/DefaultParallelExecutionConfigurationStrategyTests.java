@@ -49,6 +49,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + 42);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
 		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
 	}
 
@@ -62,6 +63,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		var configuration = strategy.createConfiguration(configParams);
 		assertThat(configuration.getParallelism()).isEqualTo(42);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(42);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
 		assertThat(configuration.getSaturatePredicate().test(null)).isFalse();
 	}
 
@@ -78,6 +80,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(256 + (availableProcessors * 2));
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
 		assertThat(configuration.getSaturatePredicate().test(null)).isTrue();
 	}
 
@@ -96,6 +99,7 @@ class DefaultParallelExecutionConfigurationStrategyTests {
 		assertThat(configuration.getMinimumRunnable()).isEqualTo(availableProcessors * 2);
 		assertThat(configuration.getMaxPoolSize()).isEqualTo(availableProcessors * 6);
 		assertThat(configuration.getKeepAliveSeconds()).isEqualTo(30);
+		assertThat(configuration.getSaturatePredicate()).isNotNull();
 		assertThat(configuration.getSaturatePredicate().test(null)).isFalse();
 	}
 

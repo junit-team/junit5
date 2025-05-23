@@ -32,6 +32,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,7 @@ class CollectionUtilsTests {
 	@Nested
 	class OnlyElement {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void nullCollection() {
 			var exception = assertThrows(PreconditionViolationException.class,
@@ -89,6 +91,7 @@ class CollectionUtilsTests {
 	@Nested
 	class FirstElement {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void nullCollection() {
 			var exception = assertThrows(PreconditionViolationException.class,
@@ -191,6 +194,7 @@ class CollectionUtilsTests {
 			assertThat(CollectionUtils.isConvertibleToStream(null)).isFalse();
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void toStreamWithNull() {
 			Exception exception = assertThrows(PreconditionViolationException.class,
@@ -368,7 +372,8 @@ class CollectionUtilsTests {
 
 		private static class CommaSeparator implements ArgumentConverter {
 			@Override
-			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			public Object convert(@Nullable Object source, ParameterContext context)
+					throws ArgumentConversionException {
 				return source == null ? List.of() : List.of(((String) source).split(","));
 			}
 		}

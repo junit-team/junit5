@@ -36,6 +36,7 @@ class SeparateThreadTimeoutInvocationTests {
 
 	private static final long PREEMPTIVE_TIMEOUT_MILLIS = WINDOWS.isCurrentOs() ? 1000 : 100;
 
+	@SuppressWarnings("NullAway")
 	@Test
 	@DisplayName("throws timeout exception when timeout duration is exceeded")
 	void throwsTimeoutException() {

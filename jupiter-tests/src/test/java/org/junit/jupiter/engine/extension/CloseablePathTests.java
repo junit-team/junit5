@@ -52,6 +52,8 @@ import java.util.logging.LogRecord;
 import com.google.common.jimfs.Jimfs;
 
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -68,6 +70,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.api.io.TempDirFactory;
 import org.junit.jupiter.engine.AbstractJupiterTestEngineTests;
 import org.junit.jupiter.engine.execution.NamespaceAwareStore;
+import org.junit.jupiter.engine.extension.TempDirectory.CloseablePath;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -86,7 +89,8 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 	private final AnnotatedElementContext elementContext = mock();
 	private final ExtensionContext extensionContext = mock();
 
-	private TempDirectory.CloseablePath closeablePath;
+	@Nullable
+	private CloseablePath closeablePath;
 
 	@Target(METHOD)
 	@Retention(RUNTIME)
@@ -164,6 +168,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 			delete(closeablePath.get());
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@DisplayName("fails if the factory returns null")
 		@ParameterizedTest
 		@ElementTypeSource
@@ -276,7 +281,9 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 
 		@AfterEach
 		void cleanupTempDirectory() throws IOException {
-			deleteIfExists(closeablePath.get());
+			if (closeablePath != null) {
+				deleteIfExists(closeablePath.get());
+			}
 		}
 
 		@DisplayName("is done for a cleanup mode of ALWAYS")
@@ -457,6 +464,7 @@ class CloseablePathTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@NullUnmarked
 	static class TestCase {
 
 		Path tempDir;

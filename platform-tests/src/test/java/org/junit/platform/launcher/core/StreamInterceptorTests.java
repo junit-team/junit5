@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.stream.IntStream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,7 @@ class StreamInterceptorTests {
 	PrintStream targetStream = new PrintStream(originalOut);
 
 	@AutoClose
+	@Nullable
 	StreamInterceptor streamInterceptor;
 
 	@Test

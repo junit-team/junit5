@@ -19,6 +19,7 @@ import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.
 import static org.junit.platform.engine.support.hierarchical.Node.ExecutionMode.SAME_THREAD;
 import static org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder.request;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -41,7 +42,7 @@ class DefaultExecutionModeTests extends AbstractJupiterTestEngineTests {
 		assertUsesExpectedExecutionMode(CONCURRENT, CONCURRENT);
 	}
 
-	private void assertUsesExpectedExecutionMode(ExecutionMode defaultExecutionMode,
+	private void assertUsesExpectedExecutionMode(@Nullable ExecutionMode defaultExecutionMode,
 			ExecutionMode expectedExecutionMode) {
 		var engineDescriptor = discoverTestsWithDefaultExecutionMode(TestCase.class, defaultExecutionMode);
 		assertExecutionModeRecursively(engineDescriptor, expectedExecutionMode);
@@ -63,7 +64,7 @@ class DefaultExecutionModeTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private void assertUsesExpectedExecutionModeForTestClassAndItsDescendants(Class<?> testClass,
-			ExecutionMode defaultExecutionMode, ExecutionMode expectedExecutionMode) {
+			@Nullable ExecutionMode defaultExecutionMode, ExecutionMode expectedExecutionMode) {
 		var engineDescriptor = discoverTestsWithDefaultExecutionMode(testClass, defaultExecutionMode);
 		engineDescriptor.getChildren().forEach(child -> assertExecutionModeRecursively(child, expectedExecutionMode));
 	}
@@ -104,7 +105,7 @@ class DefaultExecutionModeTests extends AbstractJupiterTestEngineTests {
 	}
 
 	private JupiterEngineDescriptor discoverTestsWithDefaultExecutionMode(Class<?> testClass,
-			ExecutionMode executionMode) {
+			@Nullable ExecutionMode executionMode) {
 		LauncherDiscoveryRequestBuilder request = request().selectors(selectClass(testClass));
 		if (executionMode != null) {
 			request.configurationParameter(Constants.DEFAULT_PARALLEL_EXECUTION_MODE, executionMode.name());

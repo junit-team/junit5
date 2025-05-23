@@ -48,6 +48,7 @@ class TestInstanceLifecycleUtilsTests {
 
 	private static final String KEY = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void getTestInstanceLifecyclePreconditions() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,

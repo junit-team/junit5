@@ -73,6 +73,7 @@ class FailAssertionsTests {
 		}
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void failWithNullMessageSupplier() {
 		try {

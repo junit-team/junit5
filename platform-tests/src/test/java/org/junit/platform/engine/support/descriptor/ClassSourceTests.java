@@ -39,6 +39,7 @@ class ClassSourceTests extends AbstractTestSourceTests {
 		);
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class, () -> ClassSource.from((String) null));

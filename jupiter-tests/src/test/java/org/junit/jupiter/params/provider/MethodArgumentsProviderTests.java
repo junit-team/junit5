@@ -29,6 +29,8 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  */
 class MethodArgumentsProviderTests {
 
+	@Nullable
 	private MutableExtensionRegistry extensionRegistry;
 
 	@Test
@@ -729,15 +732,15 @@ class MethodArgumentsProviderTests {
 		return objects;
 	}
 
-	private Stream<Object[]> provideArguments(String... factoryMethodNames) {
+	private Stream<@Nullable Object[]> provideArguments(String... factoryMethodNames) {
 		return provideArguments(TestCase.class, false, factoryMethodNames);
 	}
 
-	private Stream<Object[]> provideArguments(Method testMethod, String factoryMethodName) {
+	private Stream<@Nullable Object[]> provideArguments(Method testMethod, String factoryMethodName) {
 		return provideArguments(TestCase.class, testMethod, false, factoryMethodName);
 	}
 
-	private Stream<Object[]> provideArguments(Class<?> testClass, boolean allowNonStaticMethod,
+	private Stream<@Nullable Object[]> provideArguments(Class<?> testClass, boolean allowNonStaticMethod,
 			String... factoryMethodNames) {
 
 		// Ensure we have a non-null test method, even if it's not a real test method.
@@ -746,8 +749,8 @@ class MethodArgumentsProviderTests {
 		return provideArguments(testClass, testMethod, allowNonStaticMethod, factoryMethodNames);
 	}
 
-	private Stream<Object[]> provideArguments(Class<?> testClass, Method testMethod, boolean allowNonStaticMethod,
-			String... factoryMethodNames) {
+	private Stream<@Nullable Object[]> provideArguments(Class<?> testClass, Method testMethod,
+			boolean allowNonStaticMethod, String... factoryMethodNames) {
 
 		var methodSource = mock(MethodSource.class);
 
@@ -756,8 +759,7 @@ class MethodArgumentsProviderTests {
 		var extensionContext = mock(ExtensionContext.class);
 		when(extensionContext.getTestClass()).thenReturn(Optional.of(testClass));
 		when(extensionContext.getTestMethod()).thenReturn(Optional.of(testMethod));
-		when(extensionContext.getExecutableInvoker()).thenReturn(
-			new DefaultExecutableInvoker(extensionContext, extensionRegistry));
+		when(extensionContext.getExecutableInvoker()).thenReturn(getExecutableInvoker(extensionContext));
 
 		doCallRealMethod().when(extensionContext).getRequiredTestClass();
 
@@ -770,6 +772,11 @@ class MethodArgumentsProviderTests {
 		var provider = new MethodArgumentsProvider();
 		provider.accept(methodSource);
 		return provider.provideArguments(mock(), extensionContext).map(Arguments::get);
+	}
+
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+	private DefaultExecutableInvoker getExecutableInvoker(ExtensionContext extensionContext) {
+		return new DefaultExecutableInvoker(extensionContext, extensionRegistry);
 	}
 
 	// -------------------------------------------------------------------------
@@ -803,6 +810,7 @@ class MethodArgumentsProviderTests {
 		}
 	}
 
+	@NullUnmarked
 	static class MultipleInvalidDefaultFactoriesTestCase {
 
 		// Test

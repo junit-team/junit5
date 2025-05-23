@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -26,16 +27,19 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class ToStringBuilderTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void withNullObject() {
 		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Object) null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void withNullClass() {
 		assertThrows(PreconditionViolationException.class, () -> new ToStringBuilder((Class<?>) null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void appendWithIllegalName() {
 		var builder = new ToStringBuilder("");
@@ -141,6 +145,7 @@ class ToStringBuilderTests {
 		assertEquals("RoleModel [name = 'Dilbert', age = 42]", roleModel.toString());
 	}
 
+	@NullUnmarked
 	static class RoleModel {
 
 		String name;

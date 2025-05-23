@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.io.TempDir;
@@ -548,7 +549,7 @@ class CsvFileArgumentsProviderTests {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static <T> T[] array(T... elements) {
+	private static <T> @Nullable T[] array(@Nullable T... elements) {
 		return elements;
 	}
 

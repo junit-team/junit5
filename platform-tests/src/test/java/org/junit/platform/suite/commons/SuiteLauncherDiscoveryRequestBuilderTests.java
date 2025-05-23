@@ -691,7 +691,7 @@ class SuiteLauncherDiscoveryRequestBuilderTests {
 
 		@Override
 		public Set<String> keySet() {
-			return null;
+			return Set.of();
 		}
 
 	}

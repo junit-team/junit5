@@ -56,20 +56,20 @@ class TypeBasedParameterResolverTests {
 	@Test
 	void supportsParameterForBasicTypes() {
 		Parameter parameter1 = findParameterOfMethod("methodWithBasicTypeParameter", String.class);
-		assertTrue(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
-		assertTrue(subClassedBasicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
+		assertTrue(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), mock()));
+		assertTrue(subClassedBasicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), mock()));
 
 		Parameter parameter2 = findParameterOfMethod("methodWithObjectParameter", Object.class);
-		assertFalse(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter2), null));
+		assertFalse(basicTypeBasedParameterResolver.supportsParameter(parameterContext(parameter2), mock()));
 	}
 
 	@Test
 	void supportsParameterForParameterizedTypes() {
 		Parameter parameter1 = findParameterOfMethod("methodWithParameterizedTypeParameter", Map.class);
-		assertTrue(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), null));
+		assertTrue(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter1), mock()));
 
 		Parameter parameter3 = findParameterOfMethod("methodWithAnotherParameterizedTypeParameter", Map.class);
-		assertFalse(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter3), null));
+		assertFalse(parametrizedTypeBasedParameterResolver.supportsParameter(parameterContext(parameter3), mock()));
 	}
 
 	@Test
@@ -98,7 +98,7 @@ class TypeBasedParameterResolverTests {
 	}
 
 	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).get();
+		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).orElseThrow();
 		return method.getParameters()[0];
 	}
 

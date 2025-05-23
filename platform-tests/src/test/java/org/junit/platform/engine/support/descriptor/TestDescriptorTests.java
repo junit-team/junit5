@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestSource;
 import org.junit.platform.engine.TestTag;
@@ -57,7 +58,7 @@ class TestDescriptorTests implements TestDescriptorOrderChildrenTests {
 		}
 
 		@Override
-		public void setParent(TestDescriptor parent) {
+		public void setParent(@Nullable TestDescriptor parent) {
 			throw new UnsupportedOperationException("Not implemented");
 		}
 

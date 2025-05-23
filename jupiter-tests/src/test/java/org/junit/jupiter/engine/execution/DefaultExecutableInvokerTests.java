@@ -10,7 +10,11 @@
 
 package org.junit.jupiter.engine.execution;
 
+import static java.util.Objects.requireNonNull;
+
 import java.lang.reflect.Constructor;
+
+import org.jspecify.annotations.Nullable;
 
 /**
  * Unit tests for {@link DefaultExecutableInvoker}.
@@ -21,11 +25,11 @@ class DefaultExecutableInvokerTests extends AbstractExecutableInvokerTests {
 
 	@Override
 	void invokeMethod() {
-		newInvoker().invoke(this.method, this.instance);
+		newInvoker().invoke(requireNonNull(this.method), this.instance);
 	}
 
 	@Override
-	<T> T invokeConstructor(Constructor<T> constructor, Object outerInstance) {
+	<T> T invokeConstructor(Constructor<T> constructor, @Nullable Object outerInstance) {
 		return newInvoker().invoke(constructor, outerInstance);
 	}
 

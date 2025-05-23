@@ -30,6 +30,7 @@ import org.junit.platform.launcher.TestExecutionListener;
  */
 class LauncherConfigTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class,

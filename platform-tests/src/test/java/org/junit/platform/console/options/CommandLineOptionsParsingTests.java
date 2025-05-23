@@ -29,6 +29,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectModul
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
+import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -708,12 +709,12 @@ class CommandLineOptionsParsingTests {
 		abstract Result parseArgLine(String argLine) throws IOException;
 
 		private static String[] split(String argLine) {
-			return "".equals(argLine) ? new String[0] : argLine.split("\\s+");
+			return argLine.isEmpty() ? new String[0] : argLine.split("\\s+");
 		}
 	}
 
 	private static Result parse(String... args) {
-		ExecuteTestsCommand command = new ExecuteTestsCommand((__, ___) -> null);
+		ExecuteTestsCommand command = new ExecuteTestsCommand((__, ___) -> mock());
 		command.parseArgs(args);
 		return new Result(command.toTestDiscoveryOptions(), command.toTestConsoleOutputOptions());
 	}

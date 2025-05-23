@@ -163,7 +163,7 @@ class TestFactoryTestDescriptorTests {
 			extensionContext = mock();
 			isClosed = false;
 
-			context = new JupiterEngineExecutionContext(null, null, null) //
+			context = new JupiterEngineExecutionContext(mock(), mock(), mock()) //
 					.extend() //
 					.withThrowableCollector(new OpenTest4JAwareThrowableCollector()) //
 					.withExtensionContext(extensionContext) //

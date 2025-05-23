@@ -44,6 +44,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -499,6 +500,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 			fail("never called: " + parameter);
 		}
 
+		@Nullable
 		String parameterInstanceVariable;
 
 		@ExtendWith(StringParameterInjectingInvocationContextProvider.class)
@@ -549,7 +551,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 
 	static class TestTemplateTestClassWithBeforeAndAfterEach {
 
-		private static List<String> lifecycleEvents = new ArrayList<>();
+		private static final List<String> lifecycleEvents = new ArrayList<>();
 
 		@BeforeAll
 		static void beforeAll(TestInfo testInfo) {
@@ -916,6 +918,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
+		@Nullable
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
 			return extensionContext.getStore(PreparingTestTemplateInvocationContextProvider.NAMESPACE).get("resource");

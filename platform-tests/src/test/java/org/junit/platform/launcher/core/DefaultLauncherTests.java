@@ -129,6 +129,7 @@ class DefaultLauncherTests {
 	void discoverTestPlanForEngineThatReturnsNullForItsRootDescriptor() {
 		TestEngine engine = new TestEngineStub("some-engine-id") {
 
+			@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				return null;
@@ -149,6 +150,7 @@ class DefaultLauncherTests {
 	void discoverErrorTestDescriptorForEngineThatThrowsInDiscoveryPhase(Class<? extends Throwable> throwableClass) {
 		TestEngine engine = new TestEngineStub("my-engine-id") {
 
+			@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 			@Override
 			public TestDescriptor discover(EngineDiscoveryRequest discoveryRequest, UniqueId uniqueId) {
 				try {
@@ -427,7 +429,7 @@ class DefaultLauncherTests {
 		var launcher = createLauncher(engine);
 		launcher.execute(request().build());
 
-		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		var configurationParameters = requireNonNull(engine.requestForExecution).getConfigurationParameters();
 		assertThat(configurationParameters.get("key")).isNotPresent();
 	}
 
@@ -438,7 +440,7 @@ class DefaultLauncherTests {
 		var launcher = createLauncher(engine);
 		launcher.execute(request().configurationParameter("key", "value").build());
 
-		var configurationParameters = engine.requestForExecution.getConfigurationParameters();
+		var configurationParameters = requireNonNull(engine.requestForExecution).getConfigurationParameters();
 		assertThat(configurationParameters.get("key")).isPresent();
 		assertThat(configurationParameters.get("key")).contains("value");
 	}
@@ -453,7 +455,7 @@ class DefaultLauncherTests {
 			var launcher = createLauncher(engine);
 			launcher.execute(request().build());
 
-			var configurationParameters = engine.requestForExecution.getConfigurationParameters();
+			var configurationParameters = requireNonNull(engine.requestForExecution).getConfigurationParameters();
 			var optionalFoo = configurationParameters.get(FOO);
 			assertTrue(optionalFoo.isPresent(), "foo should have been picked up via system property");
 			assertEquals(BAR, optionalFoo.get(), "foo property");

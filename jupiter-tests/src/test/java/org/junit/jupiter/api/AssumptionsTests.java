@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 
@@ -216,11 +217,11 @@ class AssumptionsTests {
 
 	// -------------------------------------------------------------------
 
-	private static void assertAssumptionFailure(String msg, Executable executable) {
+	private static void assertAssumptionFailure(@Nullable String msg, Executable executable) {
 		assertTestAbortedException(msg == null ? "Assumption failed" : "Assumption failed: " + msg, executable);
 	}
 
-	private static void assertTestAbortedException(String expectedMessage, Executable executable) {
+	private static void assertTestAbortedException(@Nullable String expectedMessage, Executable executable) {
 		try {
 			executable.execute();
 			expectTestAbortedException();
@@ -235,7 +236,7 @@ class AssumptionsTests {
 		throw new AssertionError("Should have thrown a " + TestAbortedException.class.getName());
 	}
 
-	private static void assertMessageEquals(Throwable t, String expectedMessage) throws AssertionError {
+	private static void assertMessageEquals(Throwable t, @Nullable String expectedMessage) throws AssertionError {
 		if (!Objects.equals(expectedMessage, t.getMessage())) {
 			throw new AssertionError("Message in TestAbortedException should be [" + expectedMessage + "], but was ["
 					+ t.getMessage() + "].");

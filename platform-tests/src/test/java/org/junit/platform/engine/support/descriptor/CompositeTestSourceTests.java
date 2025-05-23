@@ -37,6 +37,7 @@ class CompositeTestSourceTests extends AbstractTestSourceTests {
 		return Stream.of(CompositeTestSource.from(sources));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void createCompositeTestSourceFromNullList() {
 		assertThrows(PreconditionViolationException.class, () -> CompositeTestSource.from(null));

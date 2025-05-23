@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegr
 import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.KEY1;
 import static org.junit.jupiter.api.condition.EnabledIfEnvironmentVariableIntegrationTests.KEY2;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -37,6 +38,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	private ExecutionCondition condition = new EnabledIfEnvironmentVariableCondition() {
 
 		@Override
+		@Nullable
 		protected String getEnvironmentVariable(String name) {
 			return KEY1.equals(name) ? ENIGMA : null;
 		}
@@ -100,6 +102,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 		this.condition = new EnabledIfEnvironmentVariableCondition() {
 
 			@Override
+			@Nullable
 			protected String getEnvironmentVariable(String name) {
 				return KEY1.equals(name) || KEY2.equals(name) ? ENIGMA : null;
 			}
@@ -141,6 +144,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 		this.condition = new EnabledIfEnvironmentVariableCondition() {
 
 			@Override
+			@Nullable
 			protected String getEnvironmentVariable(String name) {
 				return KEY1.equals(name) ? ENIGMA : KEY2.equals(name) ? BOGUS : null;
 			}

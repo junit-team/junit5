@@ -38,6 +38,7 @@ class ClasspathResourceSourceTests extends AbstractTestSourceTests {
 		return Stream.of(ClasspathResourceSource.from(FOO_RESOURCE));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class, () -> ClasspathResourceSource.from((String) null));

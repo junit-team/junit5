@@ -28,6 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AutoClose;
 import org.junit.jupiter.api.BeforeAll;
@@ -422,6 +423,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		final int[] x = {};
 	}
 
+	@NullUnmarked
 	static class NullCloseableFieldTestCase implements TestInterface {
 
 		@AutoClose
@@ -456,6 +458,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 
 	@TestInstance(PER_METHOD)
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@NullUnmarked
 	static class InstancePerMethodTestCase {
 
 		@AutoClose
@@ -694,6 +697,7 @@ class AutoCloseTests extends AbstractJupiterTestEngineTests {
 		}
 	}
 
+	@NullUnmarked
 	static class AutoCloseSpy implements AutoCloseable, Runnable {
 
 		private final String prefix;

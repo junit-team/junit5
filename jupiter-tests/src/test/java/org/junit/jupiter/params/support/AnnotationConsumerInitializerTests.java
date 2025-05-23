@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -126,10 +127,12 @@ class AnnotationConsumerInitializerTests {
 	private static class SomeAnnotationBasedArgumentConverter
 			extends AnnotationBasedArgumentConverter<JavaTimeConversionPattern> {
 
+		@Nullable
 		JavaTimeConversionPattern annotation;
 
 		@Override
-		protected Object convert(Object source, Class<?> targetType, JavaTimeConversionPattern annotation) {
+		protected @Nullable Object convert(@Nullable Object source, Class<?> targetType,
+				JavaTimeConversionPattern annotation) {
 			this.annotation = annotation;
 			return null;
 		}
@@ -137,6 +140,7 @@ class AnnotationConsumerInitializerTests {
 
 	private static class SomeAnnotationConsumer implements AnnotationConsumer<CsvSource> {
 
+		@Nullable
 		CsvSource annotation;
 
 		@Override

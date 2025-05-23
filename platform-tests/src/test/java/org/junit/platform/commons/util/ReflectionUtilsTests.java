@@ -59,6 +59,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -113,6 +114,7 @@ class ReflectionUtilsTests {
 			assertFalse(ReflectionUtils.returnsPrimitiveVoid(clazz.getDeclaredMethod("methodReturningPrimitive")));
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void getAllAssignmentCompatibleClassesWithNullClass() {
 			assertThrows(PreconditionViolationException.class,
@@ -127,6 +129,7 @@ class ReflectionUtilsTests {
 			assertTrue(superclasses.stream().allMatch(clazz -> clazz.isAssignableFrom(B.class)));
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void newInstance() {
 			// @formatter:off
@@ -233,6 +236,7 @@ class ReflectionUtilsTests {
 			}
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void getDeclaredConstructorPreconditions() {
 			// @formatter:off
@@ -531,6 +535,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class IsClassAssignableToClassTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void isAssignableToForNullSourceType() {
 			assertThatExceptionOfType(PreconditionViolationException.class)//
@@ -545,6 +550,7 @@ class ReflectionUtilsTests {
 					.withMessage("source type must not be a primitive type");
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void isAssignableToForNullTargetType() {
 			assertThatExceptionOfType(PreconditionViolationException.class)//
@@ -601,6 +607,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class IsObjectAssignableToClassTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void isAssignableToForNullClass() {
 			assertThrows(PreconditionViolationException.class,
@@ -666,6 +673,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class MethodInvocationTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void invokeMethodPreconditions() {
 			// @formatter:off
@@ -732,6 +740,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class ResourceLoadingTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToGetResourcePreconditions() {
 			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetResources(""));
@@ -773,6 +782,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class ClassLoadingTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToLoadClassPreconditions() {
 			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToLoadClass(null));
@@ -939,6 +949,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class FullyQualifiedMethodNameTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void getFullyQualifiedMethodNamePreconditions() {
 			// @formatter:off
@@ -974,6 +985,7 @@ class ReflectionUtilsTests {
 			// @formatter:on
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void parseFullyQualifiedMethodNamePreconditions() {
 			// @formatter:off
@@ -1013,6 +1025,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class NestedClassTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void findNestedClassesPreconditions() {
 			// @formatter:off
@@ -1022,6 +1035,7 @@ class ReflectionUtilsTests {
 			// @formatter:on
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void isNestedClassPresentPreconditions() {
 			// @formatter:off
@@ -1199,6 +1213,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class MethodUtilitiesTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToGetMethodPreconditions() {
 			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.tryToGetMethod(null, null));
@@ -1223,6 +1238,7 @@ class ReflectionUtilsTests {
 			assertThat(ReflectionUtils.tryToGetMethod(Object.class, "clone", int.class).toOptional()).isEmpty();
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void isMethodPresentPreconditions() {
 			assertThrows(PreconditionViolationException.class, () -> ReflectionUtils.isMethodPresent(null, m -> true));
@@ -1244,6 +1260,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class FindMethodTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void findMethodByParameterTypesPreconditions() {
 			// @formatter:off
@@ -1432,6 +1449,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class FindMethodsTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void findMethodsPreconditions() {
 			// @formatter:off
@@ -1907,6 +1925,7 @@ class ReflectionUtilsTests {
 	@Nested
 	class ReadFieldTests {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToReadFieldValueOfNonexistentStaticField() {
 			assertThrows(NoSuchFieldException.class,
@@ -1923,6 +1942,7 @@ class ReflectionUtilsTests {
 				() -> tryToReadFieldValue(MyClass.class, "doesNotExist", new MySubClass(42)).get());
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void tryToReadFieldValueOfExistingStaticField() throws Exception {
 			assertThat(tryToReadFieldValue(MyClass.class, "staticField", null).get()).isEqualTo(42);
@@ -1938,7 +1958,7 @@ class ReflectionUtilsTests {
 			assertThat(tryToReadFieldValue(MyClass.class, "instanceField", instance).get()).isEqualTo(42);
 
 			var field = MyClass.class.getDeclaredField("instanceField");
-			assertThat(tryToReadFieldValue(field, instance).get()).isEqualTo(42);
+			assertThat(tryToReadFieldValue(field, instance).getNonNull()).isEqualTo(42);
 
 			var exception = assertThrows(PreconditionViolationException.class,
 				() -> tryToReadFieldValue(field, null).get());
@@ -1974,6 +1994,7 @@ class ReflectionUtilsTests {
 			assertThat(fields).containsExactly(nonStaticField);
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void readFieldValuesPreconditions() {
 			List<Field> fields = new ArrayList<>();
@@ -2090,6 +2111,7 @@ class ReflectionUtilsTests {
 			@SuppressWarnings("unused")
 			private final String privateStringField = "enigma";
 
+			@Nullable
 			final String nullStringField = null;
 
 			public final int integerField = 42;

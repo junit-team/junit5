@@ -26,12 +26,14 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class FunctionUtilsTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void whereWithNullFunction() {
 		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(null, o -> true));
 		assertEquals("function must not be null", exception.getMessage());
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void whereWithNullPredicate() {
 		var exception = assertThrows(PreconditionViolationException.class, () -> FunctionUtils.where(o -> o, null));

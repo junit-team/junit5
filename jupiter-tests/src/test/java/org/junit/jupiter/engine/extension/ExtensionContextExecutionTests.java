@@ -34,13 +34,13 @@ class ExtensionContextExecutionTests extends AbstractJupiterTestEngineTests {
 
 		Optional<ExtensionContext> classExtensionContext = methodExtensionContext.getParent();
 		assertThat(classExtensionContext).isNotEmpty();
-		assertThat(classExtensionContext.orElse(null).getElement()).contains(ExtensionContextExecutionTests.class);
+		assertThat(classExtensionContext.orElseThrow().getElement()).contains(ExtensionContextExecutionTests.class);
 
-		Optional<ExtensionContext> engineExtensionContext = classExtensionContext.orElse(null).getParent();
+		Optional<ExtensionContext> engineExtensionContext = classExtensionContext.orElseThrow().getParent();
 		assertThat(engineExtensionContext).isNotEmpty();
-		assertThat(engineExtensionContext.orElse(null).getElement()).isEmpty();
+		assertThat(engineExtensionContext.orElseThrow().getElement()).isEmpty();
 
-		assertThat(engineExtensionContext.orElse(null).getParent()).isEmpty();
+		assertThat(engineExtensionContext.orElseThrow().getParent()).isEmpty();
 	}
 
 	@Test

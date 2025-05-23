@@ -63,6 +63,7 @@ import java.util.TreeSet;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assumptions;
@@ -928,8 +929,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		void reportsContainerWithAssumptionFailureInMethodSourceAsAborted() {
 			execute("assumptionFailureInMethodSourceFactoryMethod", String.class).allEvents().assertThatEvents() //
 					.haveExactly(1, event(container("test-template:assumptionFailureInMethodSourceFactoryMethod"), //
-						abortedWithReason(instanceOf(TestAbortedException.class),
-							message("Assumption failed: nothing to test"))));
+						abortedWithReason(instanceOf(TestAbortedException.class), message("nothing to test"))));
 		}
 
 		@Test
@@ -1928,8 +1928,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		static List<String> assumptionFailureInMethodSourceFactoryMethod() {
-			Assumptions.assumeFalse(true, "nothing to test");
-			return null;
+			Assumptions.abort("nothing to test");
+			return List.of();
 		}
 
 	}
@@ -2508,7 +2508,8 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		record ArgumentConverterWithConstructorParameter(String value) implements ArgumentConverter {
 
 			@Override
-			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			public Object convert(@Nullable Object source, ParameterContext context)
+					throws ArgumentConversionException {
 				return value;
 			}
 		}
@@ -2593,7 +2594,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	private static class StringLengthConverter implements ArgumentConverter {
 
 		@Override
-		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		public Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException {
 			return String.valueOf(source).length();
 		}
 	}
@@ -2610,7 +2611,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 	private static class ErroneousConverter implements ArgumentConverter {
 
 		@Override
-		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		public Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException {
 			throw new ArgumentConversionException("something went horribly wrong");
 		}
 	}

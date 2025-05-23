@@ -18,6 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.opentest4j.AssertionFailedError;
 
 /**
@@ -63,7 +65,8 @@ class AssertNullAssertionsTests {
 	}
 
 	@SuppressWarnings("unused")
-	private void assertNullWithNonNullObjectWithNullStringReturnedFromToString(Supplier<String> messageSupplier) {
+	private void assertNullWithNonNullObjectWithNullStringReturnedFromToString(
+			@Nullable Supplier<String> messageSupplier) {
 		String actual = "null";
 		try {
 			if (messageSupplier == null) {
@@ -94,7 +97,8 @@ class AssertNullAssertionsTests {
 	}
 
 	@SuppressWarnings("unused")
-	private void assertNullWithNonNullObjectWithNullReferenceReturnedFromToString(Supplier<String> messageSupplier) {
+	private void assertNullWithNonNullObjectWithNullReferenceReturnedFromToString(
+			@Nullable Supplier<String> messageSupplier) {
 		Object actual = new NullToString();
 		try {
 			if (messageSupplier == null) {
@@ -141,6 +145,7 @@ class AssertNullAssertionsTests {
 		}
 	}
 
+	@NullUnmarked
 	private static class NullToString {
 
 		@Override

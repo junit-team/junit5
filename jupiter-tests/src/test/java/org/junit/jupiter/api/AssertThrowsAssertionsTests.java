@@ -47,6 +47,7 @@ class AssertThrowsAssertionsTests {
 		future.run();
 
 		ExecutionException exception = assertThrows(ExecutionException.class, future::get);
+		assertNotNull(exception.getCause());
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 

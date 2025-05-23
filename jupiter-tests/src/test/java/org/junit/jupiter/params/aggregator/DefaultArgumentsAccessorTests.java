@@ -20,6 +20,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Arrays;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -31,6 +32,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class DefaultArgumentsAccessorTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void argumentsMustNotBeNull() {
 		assertThrows(PreconditionViolationException.class, () -> defaultArgumentsAccessor(1, (Object[]) null));
@@ -52,12 +54,12 @@ class DefaultArgumentsAccessorTests {
 
 	@Test
 	void getNull() {
-		assertNull(defaultArgumentsAccessor(1, new Object[] { null }).get(0));
+		assertNull(defaultArgumentsAccessor(1, new @Nullable Object[] { null }).get(0));
 	}
 
 	@Test
 	void getWithNullCastToWrapperType() {
-		assertNull(defaultArgumentsAccessor(1, (Object[]) new Integer[] { null }).get(0, Integer.class));
+		assertNull(defaultArgumentsAccessor(1, (Object[]) new @Nullable Integer[] { null }).get(0, Integer.class));
 	}
 
 	@Test
@@ -79,7 +81,7 @@ class DefaultArgumentsAccessorTests {
 			"Argument at index [0] with value [1] and type [java.lang.Integer] could not be converted or cast to type [int].");
 
 		exception = assertThrows(ArgumentAccessException.class,
-			() -> defaultArgumentsAccessor(1, new Object[] { null }).get(0, int.class));
+			() -> defaultArgumentsAccessor(1, new @Nullable Object[] { null }).get(0, int.class));
 		assertThat(exception.getMessage()).isEqualTo(
 			"Argument at index [0] with value [null] and type [null] could not be converted or cast to type [int].");
 	}
@@ -165,7 +167,8 @@ class DefaultArgumentsAccessorTests {
 		assertEquals(5, defaultArgumentsAccessor(1, 'a', 'b', 'c', 'd', 'e').size());
 	}
 
-	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex, Object... arguments) {
+	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex,
+			@Nullable Object... arguments) {
 		var context = mock(ExtensionContext.class);
 		var classLoader = DefaultArgumentsAccessorTests.class.getClassLoader();
 		return DefaultArgumentsAccessor.create(context, invocationIndex, classLoader, arguments);

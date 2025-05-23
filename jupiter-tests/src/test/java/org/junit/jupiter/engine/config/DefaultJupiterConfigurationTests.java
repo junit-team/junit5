@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,7 @@ class DefaultJupiterConfigurationTests {
 
 	private static final String KEY = DEFAULT_TEST_INSTANCE_LIFECYCLE_PROPERTY_NAME;
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void getDefaultTestInstanceLifecyclePreconditions() {
 		PreconditionViolationException exception = assertThrows(PreconditionViolationException.class,
@@ -153,7 +155,7 @@ class DefaultJupiterConfigurationTests {
 		assertThat(supplier.get()).isSameAs(TempDirFactory.Standard.INSTANCE);
 	}
 
-	private void assertDefaultConfigParam(String configValue, Lifecycle expected) {
+	private void assertDefaultConfigParam(@Nullable String configValue, Lifecycle expected) {
 		ConfigurationParameters configParams = mock();
 		when(configParams.get(KEY)).thenReturn(Optional.ofNullable(configValue));
 		Lifecycle lifecycle = new DefaultJupiterConfiguration(configParams, dummyOutputDirectoryProvider(),

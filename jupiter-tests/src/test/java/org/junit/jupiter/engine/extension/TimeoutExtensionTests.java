@@ -37,6 +37,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -340,7 +341,8 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	private static Execution findExecution(Events events, String displayName) {
 		return events.executions()//
 				.filter(execution -> execution.getTestDescriptor().getDisplayName().contains(displayName))//
-				.findFirst().get();
+				.findFirst() //
+				.orElseThrow();
 	}
 
 	@Nested
@@ -618,6 +620,7 @@ class TimeoutExtensionTests extends AbstractJupiterTestEngineTests {
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	static class PlainTestCase {
 
+		@Nullable
 		public static String slowMethod;
 
 		@BeforeAll
