@@ -33,13 +33,10 @@ import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.engine.DiscoveryFilter;
 import org.junit.platform.engine.DiscoveryIssue;
 import org.junit.platform.engine.DiscoverySelector;
-import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.EngineExecutionListener;
-import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.Filter;
 import org.junit.platform.engine.TestDescriptor;
 import org.junit.platform.engine.TestEngine;
-import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.reporting.OutputDirectoryProvider;
 import org.junit.platform.engine.support.store.Namespace;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
@@ -249,17 +246,6 @@ public final class EngineTestKit {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
 		executeUsingLauncherOrchestration(testEngine, discoveryRequest, executionRecorder);
 		return executionRecorder.getExecutionResults();
-	}
-
-	private static void executeDirectly(TestEngine testEngine, EngineDiscoveryRequest discoveryRequest,
-			EngineExecutionListener listener) {
-		UniqueId engineUniqueId = UniqueId.forEngine(testEngine.getId());
-		TestDescriptor engineTestDescriptor = testEngine.discover(discoveryRequest, engineUniqueId);
-		withRequestLevelStore(store -> {
-			ExecutionRequest request = ExecutionRequest.create(engineTestDescriptor, listener,
-				discoveryRequest.getConfigurationParameters(), discoveryRequest.getOutputDirectoryProvider(), store);
-			testEngine.execute(request);
-		});
 	}
 
 	private static void executeUsingLauncherOrchestration(TestEngine testEngine,

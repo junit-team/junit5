@@ -1648,14 +1648,6 @@ public final class ReflectionUtils {
 	}
 
 	/**
-	 * Custom alternative to {@link Class#getFields()} that sorts the fields
-	 * and converts them to a mutable list.
-	 */
-	private static List<Field> getFields(Class<?> clazz) {
-		return toSortedMutableList(clazz.getFields());
-	}
-
-	/**
 	 * Custom alternative to {@link Class#getDeclaredFields()} that sorts the
 	 * fields and converts them to a mutable list.
 	 */
