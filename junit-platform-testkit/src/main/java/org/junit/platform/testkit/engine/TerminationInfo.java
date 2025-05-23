@@ -115,8 +115,7 @@ public class TerminationInfo {
 	 * @throws UnsupportedOperationException if this {@code TerminationInfo}
 	 * does not represent a skipped execution
 	 */
-	@Nullable
-	public String getSkipReason() throws UnsupportedOperationException {
+	public @Nullable String getSkipReason() throws UnsupportedOperationException {
 		if (skipped()) {
 			return this.skipReason;
 		}

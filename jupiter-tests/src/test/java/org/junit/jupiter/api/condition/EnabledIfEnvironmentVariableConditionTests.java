@@ -38,8 +38,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 	private ExecutionCondition condition = new EnabledIfEnvironmentVariableCondition() {
 
 		@Override
-		@Nullable
-		protected String getEnvironmentVariable(String name) {
+		protected @Nullable String getEnvironmentVariable(String name) {
 			return KEY1.equals(name) ? ENIGMA : null;
 		}
 	};
@@ -102,8 +101,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 		this.condition = new EnabledIfEnvironmentVariableCondition() {
 
 			@Override
-			@Nullable
-			protected String getEnvironmentVariable(String name) {
+			protected @Nullable String getEnvironmentVariable(String name) {
 				return KEY1.equals(name) || KEY2.equals(name) ? ENIGMA : null;
 			}
 		};
@@ -144,8 +142,7 @@ class EnabledIfEnvironmentVariableConditionTests extends AbstractExecutionCondit
 		this.condition = new EnabledIfEnvironmentVariableCondition() {
 
 			@Override
-			@Nullable
-			protected String getEnvironmentVariable(String name) {
+			protected @Nullable String getEnvironmentVariable(String name) {
 				return KEY1.equals(name) ? ENIGMA : KEY2.equals(name) ? BOGUS : null;
 			}
 		};

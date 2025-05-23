@@ -165,8 +165,7 @@ public class MethodSource implements TestSource {
 	/**
 	 * Get the method parameter types of this source.
 	 */
-	@Nullable
-	public final String getMethodParameterTypes() {
+	public final @Nullable String getMethodParameterTypes() {
 		return this.methodParameterTypes;
 	}
 

@@ -68,8 +68,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	@Override
-	@Nullable
-	public <T> T get(int index, Class<T> requiredType) {
+	public <T> @Nullable T get(int index, Class<T> requiredType) {
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		Object value = get(index);
 		try {
@@ -85,56 +84,47 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	@Override
-	@Nullable
-	public Character getCharacter(int index) {
+	public @Nullable Character getCharacter(int index) {
 		return get(index, Character.class);
 	}
 
 	@Override
-	@Nullable
-	public Boolean getBoolean(int index) {
+	public @Nullable Boolean getBoolean(int index) {
 		return get(index, Boolean.class);
 	}
 
 	@Override
-	@Nullable
-	public Byte getByte(int index) {
+	public @Nullable Byte getByte(int index) {
 		return get(index, Byte.class);
 	}
 
 	@Override
-	@Nullable
-	public Short getShort(int index) {
+	public @Nullable Short getShort(int index) {
 		return get(index, Short.class);
 	}
 
 	@Override
-	@Nullable
-	public Integer getInteger(int index) {
+	public @Nullable Integer getInteger(int index) {
 		return get(index, Integer.class);
 	}
 
 	@Override
-	@Nullable
-	public Long getLong(int index) {
+	public @Nullable Long getLong(int index) {
 		return get(index, Long.class);
 	}
 
 	@Override
-	@Nullable
-	public Float getFloat(int index) {
+	public @Nullable Float getFloat(int index) {
 		return get(index, Float.class);
 	}
 
 	@Override
-	@Nullable
-	public Double getDouble(int index) {
+	public @Nullable Double getDouble(int index) {
 		return get(index, Double.class);
 	}
 
 	@Override
-	@Nullable
-	public String getString(int index) {
+	public @Nullable String getString(int index) {
 		return get(index, String.class);
 	}
 
@@ -144,8 +134,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 	}
 
 	@Override
-	@Nullable
-	public Object[] toArray() {
+	public @Nullable Object[] toArray() {
 		return Arrays.copyOf(this.arguments, this.arguments.length);
 	}
 

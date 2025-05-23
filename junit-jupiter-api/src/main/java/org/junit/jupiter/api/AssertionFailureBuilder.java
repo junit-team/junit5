@@ -164,8 +164,7 @@ public class AssertionFailureBuilder {
 				: new AssertionFailedError(message, cause);
 	}
 
-	@Nullable
-	private static String nullSafeGet(@Nullable Object messageOrSupplier) {
+	private static @Nullable String nullSafeGet(@Nullable Object messageOrSupplier) {
 		if (messageOrSupplier == null) {
 			return null;
 		}

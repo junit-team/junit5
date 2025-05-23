@@ -61,8 +61,7 @@ public abstract class TypeBasedParameterResolver<T extends @Nullable Object> imp
 		return typeBasedParameterResolverSuperclass.getActualTypeArguments()[0];
 	}
 
-	@Nullable
-	private ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> clazz) {
+	private @Nullable ParameterizedType findTypeBasedParameterResolverSuperclass(Class<?> clazz) {
 		Class<?> superclass = clazz.getSuperclass();
 
 		// Abort?

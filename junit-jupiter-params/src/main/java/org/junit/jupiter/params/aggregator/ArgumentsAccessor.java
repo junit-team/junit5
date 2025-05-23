@@ -65,8 +65,7 @@ public interface ArgumentsAccessor {
 	 * @param requiredType the required type of the value; never {@code null}
 	 * @return the value at the given index, potentially {@code null}
 	 */
-	@Nullable
-	<T> T get(int index, Class<T> requiredType) throws ArgumentAccessException;
+	<T> @Nullable T get(int index, Class<T> requiredType) throws ArgumentAccessException;
 
 	/**
 	 * Get the value of the argument at the given index as a {@link Character},

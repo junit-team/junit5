@@ -78,8 +78,7 @@ class DiscoveryIssueCollector implements LauncherDiscoveryListener {
 		}
 	}
 
-	@Nullable
-	static TestSource toSource(DiscoverySelector selector) {
+	static @Nullable TestSource toSource(DiscoverySelector selector) {
 		if (selector instanceof ClassSelector classSelector) {
 			return ClassSource.from(classSelector.getClassName());
 		}

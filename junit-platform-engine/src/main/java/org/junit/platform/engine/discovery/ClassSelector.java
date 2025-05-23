@@ -74,8 +74,7 @@ public class ClassSelector implements DiscoverySelector {
 	 * @since 1.10
 	 */
 	@API(status = EXPERIMENTAL, since = "1.10")
-	@Nullable
-	public ClassLoader getClassLoader() {
+	public @Nullable ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
 

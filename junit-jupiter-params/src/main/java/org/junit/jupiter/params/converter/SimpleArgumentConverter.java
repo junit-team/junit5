@@ -34,14 +34,14 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 	}
 
 	@Override
-	@Nullable
-	public final Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, ParameterContext context)
+			throws ArgumentConversionException {
 		return convert(source, context.getParameter().getType());
 	}
 
 	@Override
-	@Nullable
-	public final Object convert(@Nullable Object source, FieldContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, FieldContext context)
+			throws ArgumentConversionException {
 		return convert(source, context.getField().getType());
 	}
 
@@ -57,7 +57,7 @@ public abstract class SimpleArgumentConverter implements ArgumentConverter {
 	 * @throws ArgumentConversionException in case an error occurs during the
 	 * conversion
 	 */
-	@Nullable
-	protected abstract Object convert(@Nullable Object source, Class<?> targetType) throws ArgumentConversionException;
+	protected abstract @Nullable Object convert(@Nullable Object source, Class<?> targetType)
+			throws ArgumentConversionException;
 
 }

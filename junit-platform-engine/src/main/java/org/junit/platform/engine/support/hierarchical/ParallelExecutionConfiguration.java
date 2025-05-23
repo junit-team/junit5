@@ -70,8 +70,7 @@ public interface ParallelExecutionConfiguration {
 	 * boolean, int, int, int, Predicate, long, java.util.concurrent.TimeUnit)
 	 */
 	@API(status = STABLE, since = "1.11")
-	@Nullable
-	default Predicate<? super ForkJoinPool> getSaturatePredicate() {
+	default @Nullable Predicate<? super ForkJoinPool> getSaturatePredicate() {
 		return null;
 	}
 

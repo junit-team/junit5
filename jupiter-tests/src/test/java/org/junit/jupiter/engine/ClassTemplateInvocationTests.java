@@ -1169,9 +1169,8 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			}
 
 			@Override
-			@Nullable
-			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
-					throws ParameterResolutionException {
+			public @Nullable Object resolveParameter(ParameterContext parameterContext,
+					ExtensionContext extensionContext) throws ParameterResolutionException {
 				return extensionContext.getStore(Namespace.GLOBAL).get("someResource");
 			}
 		}
@@ -1433,8 +1432,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 		}
 
 		@Override
-		@Nullable
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+		public @Nullable Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
 			return extensionContext.getStore(PreparingClassTemplateInvocationContextProvider.NAMESPACE).get("resource");
 		}

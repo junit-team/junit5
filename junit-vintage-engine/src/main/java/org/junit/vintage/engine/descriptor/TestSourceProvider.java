@@ -45,8 +45,7 @@ public class TestSourceProvider {
 	private final Map<Description, TestSource> testSourceCache = new ConcurrentHashMap<>();
 	private final Map<Class<?>, List<Method>> methodsCache = synchronizedMap(new LruCache<>(31));
 
-	@Nullable
-	public TestSource findTestSource(Description description) {
+	public @Nullable TestSource findTestSource(Description description) {
 		TestSource testSource = testSourceCache.computeIfAbsent(description, this::computeTestSource);
 		return testSource == NULL_SOURCE ? null : testSource;
 	}
@@ -74,8 +73,7 @@ public class TestSourceProvider {
 		return methodName;
 	}
 
-	@Nullable
-	private Method findMethod(Class<?> testClass, String methodName) {
+	private @Nullable Method findMethod(Class<?> testClass, String methodName) {
 		List<Method> methods = methodsCache.computeIfAbsent(testClass,
 			clazz -> findMethods(clazz, m -> true, TOP_DOWN)).stream() //
 				.filter(where(Method::getName, isEqual(methodName))) //

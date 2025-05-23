@@ -918,8 +918,7 @@ class TestTemplateInvocationTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Override
-		@Nullable
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+		public @Nullable Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
 			return extensionContext.getStore(PreparingTestTemplateInvocationContextProvider.NAMESPACE).get("resource");
 		}

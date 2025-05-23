@@ -98,8 +98,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		});
 	}
 
-	@Nullable
-	private static Method findFactoryMethod(Class<?> targetType) {
+	private static @Nullable Method findFactoryMethod(Class<?> targetType) {
 		List<Method> factoryMethods = findMethods(targetType, new IsFactoryMethod(targetType), BOTTOM_UP);
 		if (factoryMethods.size() == 1) {
 			return factoryMethods.get(0);
@@ -107,8 +106,7 @@ class FallbackStringToObjectConverter implements StringToObjectConverter {
 		return null;
 	}
 
-	@Nullable
-	private static Constructor<?> findFactoryConstructor(Class<?> targetType) {
+	private static @Nullable Constructor<?> findFactoryConstructor(Class<?> targetType) {
 		List<Constructor<?>> constructors = findConstructors(targetType, new IsFactoryConstructor(targetType));
 		if (constructors.size() == 1) {
 			return constructors.get(0);

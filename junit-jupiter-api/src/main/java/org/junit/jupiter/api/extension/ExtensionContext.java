@@ -555,8 +555,7 @@ public interface ExtensionContext {
 		 * @see #get(Object)
 		 * @see #getOrDefault(Object, Class, Object)
 		 */
-		@Nullable
-		<V> V get(Object key, Class<V> requiredType);
+		<V> @Nullable V get(Object key, Class<V> requiredType);
 
 		/**
 		 * Get the value of the specified required type that is stored under
@@ -653,8 +652,7 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
-		@Nullable
-		<K, V> Object getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator);
+		<K, V> @Nullable Object getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator);
 
 		/**
 		 * Get the value of the specified required type that is stored under the
@@ -685,8 +683,7 @@ public interface ExtensionContext {
 		 * @see CloseableResource
 		 * @see AutoCloseable
 		 */
-		@Nullable
-		<K, V> V getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator, Class<V> requiredType);
+		<K, V> @Nullable V getOrComputeIfAbsent(K key, Function<K, @Nullable V> defaultCreator, Class<V> requiredType);
 
 		/**
 		 * Store a {@code value} for later retrieval under the supplied {@code key}.
@@ -742,8 +739,7 @@ public interface ExtensionContext {
 		 * for the specified key
 		 * @see #remove(Object)
 		 */
-		@Nullable
-		<V> V remove(Object key, Class<V> requiredType);
+		<V> @Nullable V remove(Object key, Class<V> requiredType);
 
 	}
 

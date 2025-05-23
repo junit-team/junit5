@@ -123,8 +123,7 @@ public class ThrowableCollector {
 	 * @see #isEmpty()
 	 * @see #assertEmpty()
 	 */
-	@Nullable
-	public Throwable getThrowable() {
+	public @Nullable Throwable getThrowable() {
 		return this.throwable;
 	}
 

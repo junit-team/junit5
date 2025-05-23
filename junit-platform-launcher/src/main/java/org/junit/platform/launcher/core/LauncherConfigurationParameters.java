@@ -71,8 +71,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 			Collectors.toSet());
 	}
 
-	@Nullable
-	private String getProperty(String key) {
+	private @Nullable String getProperty(String key) {
 		Preconditions.notBlank(key, "key must not be null or blank");
 		return providers.stream() //
 				.map(parameterProvider -> parameterProvider.getValue(key)) //
@@ -165,8 +164,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider explicit(Map<String, String> configParams) {
 			return new ParameterProvider() {
 				@Override
-				@Nullable
-				public String getValue(String key) {
+				public @Nullable String getValue(String key) {
 					return configParams.get(key);
 				}
 
@@ -192,8 +190,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider systemProperties() {
 			return new ParameterProvider() {
 				@Override
-				@Nullable
-				public String getValue(String key) {
+				public @Nullable String getValue(String key) {
 					try {
 						return System.getProperty(key);
 					}
@@ -240,8 +237,7 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		static ParameterProvider inherited(ConfigurationParameters configParams) {
 			return new ParameterProvider() {
 				@Override
-				@Nullable
-				public String getValue(String key) {
+				public @Nullable String getValue(String key) {
 					return configParams.get(key).orElse(null);
 				}
 

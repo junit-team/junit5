@@ -364,8 +364,7 @@ class ParameterResolutionUtilsTests {
 		}
 
 		@Override
-		@Nullable
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public @Nullable Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			resolveArguments = new ArgumentRecordingParameterResolver.Arguments(parameterContext, extensionContext);
 			return null;
 		}
@@ -405,9 +404,8 @@ class ParameterResolutionUtilsTests {
 			return supports.test(parameterContext);
 		}
 
-		@Nullable
 		@Override
-		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		public @Nullable Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 			return resolve.apply(parameterContext);
 		}
 	}

@@ -316,13 +316,11 @@ class ConversionSupportTests {
 				.isEqualTo(expectedOutput);
 	}
 
-	@Nullable
-	private Object convert(@Nullable String input, Class<?> targetClass) {
+	private @Nullable Object convert(@Nullable String input, Class<?> targetClass) {
 		return convert(input, targetClass, classLoader());
 	}
 
-	@Nullable
-	private Object convert(@Nullable String input, Class<?> targetClass, ClassLoader classLoader) {
+	private @Nullable Object convert(@Nullable String input, Class<?> targetClass, ClassLoader classLoader) {
 		return ConversionSupport.convert(input, targetClass, classLoader);
 	}
 

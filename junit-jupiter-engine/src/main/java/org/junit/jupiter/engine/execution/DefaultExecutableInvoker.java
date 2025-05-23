@@ -48,8 +48,7 @@ public class DefaultExecutableInvoker implements ExecutableInvoker {
 	}
 
 	@Override
-	@Nullable
-	public Object invoke(Method method, @Nullable Object target) {
+	public @Nullable Object invoke(Method method, @Nullable Object target) {
 		@Nullable
 		Object[] arguments = resolveParameters(method, Optional.ofNullable(target), extensionContext,
 			extensionRegistry);

@@ -100,8 +100,8 @@ public final class ConversionSupport {
 	 * @since 1.11
 	 */
 	@SuppressWarnings("unchecked")
-	@Nullable
-	public static <T> T convert(@Nullable String source, Class<T> targetType, @Nullable ClassLoader classLoader) {
+	public static <T> @Nullable T convert(@Nullable String source, Class<T> targetType,
+			@Nullable ClassLoader classLoader) {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(

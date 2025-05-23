@@ -143,7 +143,6 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @return the result of the invocation; potentially {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	@Nullable
 	default <T extends @Nullable Object> T interceptTestFactoryMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		return invocation.proceed();

@@ -91,8 +91,7 @@ class TestInfoParameterResolver implements ParameterResolver {
 		}
 
 		@SuppressWarnings("OptionalAssignedToNull")
-		@Nullable
-		private static Object nullSafeGet(@Nullable Optional<?> optional) {
+		private static @Nullable Object nullSafeGet(@Nullable Optional<?> optional) {
 			return optional != null ? optional.orElse(null) : null;
 		}
 

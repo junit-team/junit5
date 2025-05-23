@@ -132,8 +132,7 @@ class ParameterizedInvocationNameFormatter {
 		return result.toArray(new PartialFormatter[0]);
 	}
 
-	@Nullable
-	private static PlaceholderPosition findFirstPlaceholder(PartialFormatters formatters, String segment) {
+	private static @Nullable PlaceholderPosition findFirstPlaceholder(PartialFormatters formatters, String segment) {
 		if (segment.length() < formatters.minimumPlaceholderLength) {
 			return null;
 		}
@@ -283,8 +282,7 @@ class ParameterizedInvocationNameFormatter {
 			return result;
 		}
 
-		@Nullable
-		private String truncateIfExceedsMaxLength(@Nullable String argument) {
+		private @Nullable String truncateIfExceedsMaxLength(@Nullable String argument) {
 			if (argument != null && argument.length() > this.argumentMaxLength) {
 				return argument.substring(0, this.argumentMaxLength - 1) + ELLIPSIS;
 			}

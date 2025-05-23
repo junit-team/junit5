@@ -425,8 +425,7 @@ public final class AnnotationUtils {
 	 * the supplied {@code index} is {@code 0}
 	 * @since 1.8
 	 */
-	@Nullable
-	private static AnnotatedElement getEffectiveAnnotatedParameter(Parameter parameter, int index) {
+	private static @Nullable AnnotatedElement getEffectiveAnnotatedParameter(Parameter parameter, int index) {
 		Preconditions.notNull(parameter, "Parameter must not be null");
 		Executable executable = parameter.getDeclaringExecutable();
 

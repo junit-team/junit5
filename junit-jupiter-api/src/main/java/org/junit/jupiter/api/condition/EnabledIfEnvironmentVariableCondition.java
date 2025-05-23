@@ -67,8 +67,7 @@ class EnabledIfEnvironmentVariableCondition
 	 * {@link System#getenv(String)}. Can be overridden in a subclass for
 	 * testing purposes.
 	 */
-	@Nullable
-	protected String getEnvironmentVariable(String name) {
+	protected @Nullable String getEnvironmentVariable(String name) {
 		return System.getenv(name);
 	}
 

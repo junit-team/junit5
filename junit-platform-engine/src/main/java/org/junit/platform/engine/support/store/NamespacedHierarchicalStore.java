@@ -157,8 +157,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if this store has already been
 	 * closed
 	 */
-	@Nullable
-	public Object get(N namespace, Object key) {
+	public @Nullable Object get(N namespace, Object key) {
 		StoredValue storedValue = getStoredValue(new CompositeKey<>(namespace, key));
 		return StoredValue.evaluateIfNotNull(storedValue);
 	}
@@ -174,8 +173,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 * be cast to the required type, or if this store has already been closed
 	 */
-	@Nullable
-	public <T> T get(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
+	public <T> @Nullable T get(N namespace, Object key, Class<T> requiredType)
+			throws NamespacedHierarchicalStoreException {
 		Object value = get(namespace, key);
 		return castToRequiredType(key, value, requiredType);
 	}
@@ -192,8 +191,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if this store has already been
 	 * closed
 	 */
-	@Nullable
-	public <K, V> Object getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator) {
+	public <K, V> @Nullable Object getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator) {
 		Preconditions.notNull(defaultCreator, "defaultCreator must not be null");
 		CompositeKey<N> compositeKey = new CompositeKey<>(namespace, key);
 		StoredValue storedValue = getStoredValue(compositeKey);
@@ -221,8 +219,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 * be cast to the required type, or if this store has already been closed
 	 */
-	@Nullable
-	public <K, V> V getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator,
+	public <K, V> @Nullable V getOrComputeIfAbsent(N namespace, K key, Function<K, @Nullable V> defaultCreator,
 			Class<V> requiredType) throws NamespacedHierarchicalStoreException {
 
 		Object value = getOrComputeIfAbsent(namespace, key, defaultCreator);
@@ -243,8 +240,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if an error occurs while
 	 * storing the value, or if this store has already been closed
 	 */
-	@Nullable
-	public Object put(N namespace, Object key, @Nullable Object value) throws NamespacedHierarchicalStoreException {
+	public @Nullable Object put(N namespace, Object key, @Nullable Object value)
+			throws NamespacedHierarchicalStoreException {
 		rejectIfClosed();
 		StoredValue oldValue = this.storedValues.put(new CompositeKey<>(namespace, key), newStoredValue(() -> value));
 		return StoredValue.evaluateIfNotNull(oldValue);
@@ -263,8 +260,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if this store has already been
 	 * closed
 	 */
-	@Nullable
-	public Object remove(N namespace, Object key) {
+	public @Nullable Object remove(N namespace, Object key) {
 		rejectIfClosed();
 		StoredValue previous = this.storedValues.remove(new CompositeKey<>(namespace, key));
 		return StoredValue.evaluateIfNotNull(previous);
@@ -284,8 +280,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 	 * @throws NamespacedHierarchicalStoreException if the stored value cannot
 	 * be cast to the required type, or if this store has already been closed
 	 */
-	@Nullable
-	public <T> T remove(N namespace, Object key, Class<T> requiredType) throws NamespacedHierarchicalStoreException {
+	public <T> @Nullable T remove(N namespace, Object key, Class<T> requiredType)
+			throws NamespacedHierarchicalStoreException {
 		rejectIfClosed();
 		Object value = remove(namespace, key);
 		return castToRequiredType(key, value, requiredType);
@@ -295,8 +291,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		return new StoredValue(this.insertOrderSequence.getAndIncrement(), value);
 	}
 
-	@Nullable
-	private StoredValue getStoredValue(CompositeKey<N> compositeKey) {
+	private @Nullable StoredValue getStoredValue(CompositeKey<N> compositeKey) {
 		StoredValue storedValue = this.storedValues.get(compositeKey);
 		if (storedValue != null) {
 			return storedValue;
@@ -307,9 +302,8 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		return null;
 	}
 
-	@Nullable
 	@SuppressWarnings("unchecked")
-	private <T> T castToRequiredType(Object key, @Nullable Object value, Class<T> requiredType) {
+	private <T> @Nullable T castToRequiredType(Object key, @Nullable Object value, Class<T> requiredType) {
 		Preconditions.notNull(requiredType, "requiredType must not be null");
 		if (value == null) {
 			return null;
@@ -372,8 +366,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			this.supplier = supplier;
 		}
 
-		@Nullable
-		private <N> EvaluatedValue<N> evaluateSafely(CompositeKey<N> compositeKey) {
+		private <N> @Nullable EvaluatedValue<N> evaluateSafely(CompositeKey<N> compositeKey) {
 			try {
 				return new EvaluatedValue<>(compositeKey, this.order, evaluate());
 			}
@@ -383,13 +376,11 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			}
 		}
 
-		@Nullable
-		private Object evaluate() {
+		private @Nullable Object evaluate() {
 			return this.supplier.get();
 		}
 
-		@Nullable
-		static Object evaluateIfNotNull(@Nullable StoredValue value) {
+		static @Nullable Object evaluateIfNotNull(@Nullable StoredValue value) {
 			return value != null ? value.evaluate() : null;
 		}
 
@@ -443,8 +434,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 
 		@Override
-		@Nullable
-		public Object get() {
+		public @Nullable Object get() {
 			if (this.value == NO_VALUE_SET) {
 				computeValue();
 			}

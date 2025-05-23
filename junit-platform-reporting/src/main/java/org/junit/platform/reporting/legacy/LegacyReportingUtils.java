@@ -63,13 +63,11 @@ public final class LegacyReportingUtils {
 		return getParentLegacyReportingName(testPlan, testIdentifier);
 	}
 
-	@Nullable
-	private static TestIdentifier getParent(TestPlan testPlan, TestIdentifier testIdentifier) {
+	private static @Nullable TestIdentifier getParent(TestPlan testPlan, TestIdentifier testIdentifier) {
 		return testPlan.getParent(testIdentifier).orElse(null);
 	}
 
-	@Nullable
-	private static ClassSource getClassSource(TestIdentifier current) {
+	private static @Nullable ClassSource getClassSource(TestIdentifier current) {
 		// @formatter:off
 		return current.getSource()
 				.filter(ClassSource.class::isInstance)

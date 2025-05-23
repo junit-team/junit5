@@ -107,8 +107,7 @@ public class TestDiscoveryOptions {
 		this.additionalClasspathEntries = additionalClasspathEntries;
 	}
 
-	@Nullable
-	public List<Path> getSelectedClasspathEntries() {
+	public @Nullable List<Path> getSelectedClasspathEntries() {
 		return this.selectedClasspathEntries;
 	}
 

@@ -566,8 +566,7 @@ public final class ReflectionUtils {
 	 * @return the corresponding wrapper type or {@code null} if the
 	 * supplied type is {@code null} or not a primitive type
 	 */
-	@Nullable
-	public static Class<?> getWrapperType(Class<?> type) {
+	public static @Nullable Class<?> getWrapperType(Class<?> type) {
 		return primitiveToWrapperMap.get(type);
 	}
 
@@ -715,8 +714,7 @@ public final class ReflectionUtils {
 	/**
 	 * @see org.junit.platform.commons.support.ReflectionSupport#invokeMethod(Method, Object, Object...)
 	 */
-	@Nullable
-	public static Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
+	public static @Nullable Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
 		Preconditions.notNull(method, "Method must not be null");
 		Preconditions.condition((target != null || isStatic(method)),
 			() -> String.format("Cannot invoke non-static method [%s] on a null target.", method.toGenericString()));

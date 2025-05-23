@@ -115,8 +115,7 @@ final class CloseablePath implements Closeable {
 			return this;
 		}
 
-		@Nullable
-		private ManagedFileSystem release() {
+		private @Nullable ManagedFileSystem release() {
 			if (referenceCount.decrementAndGet() == 0) {
 				close();
 				return null;

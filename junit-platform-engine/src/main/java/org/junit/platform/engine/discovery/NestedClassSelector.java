@@ -81,9 +81,8 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * @return the {@code ClassLoader}; potentially {@code null}
 	 * @since 1.10
 	 */
-	@Nullable
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public ClassLoader getClassLoader() {
+	public @Nullable ClassLoader getClassLoader() {
 		return this.classLoader;
 	}
 

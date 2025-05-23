@@ -38,13 +38,11 @@ public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAd
 			() -> adapteeClass + " is not assignable from " + this.target.getClass());
 	}
 
-	@Nullable
-	protected Object executeMethod(String name) {
+	protected @Nullable Object executeMethod(String name) {
 		return executeMethod(name, new Class<?>[0]);
 	}
 
-	@Nullable
-	protected Object executeMethod(String methodName, Class<?>[] parameterTypes, Object... arguments) {
+	protected @Nullable Object executeMethod(String methodName, Class<?>[] parameterTypes, Object... arguments) {
 		Method method = findMethod(this.target.getClass(), methodName, parameterTypes).orElseThrow(
 			() -> new JUnitException("Failed to find method %s(%s) in class %s".formatted(methodName,
 				ClassUtils.nullSafeToString(parameterTypes), this.target.getClass().getName())));

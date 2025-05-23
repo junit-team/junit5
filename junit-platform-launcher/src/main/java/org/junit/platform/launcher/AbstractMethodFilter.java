@@ -50,8 +50,7 @@ abstract class AbstractMethodFilter implements MethodFilter {
 		return this.patterns.stream().filter(pattern -> pattern.matcher(methodName).matches()).findAny();
 	}
 
-	@Nullable
-	protected String getFullyQualifiedMethodNameFromDescriptor(TestDescriptor descriptor) {
+	protected @Nullable String getFullyQualifiedMethodNameFromDescriptor(TestDescriptor descriptor) {
 		return descriptor.getSource() //
 				.filter(source -> source instanceof MethodSource) //
 				.map(methodSource -> getFullyQualifiedMethodNameWithoutParameters(((MethodSource) methodSource))) //

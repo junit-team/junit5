@@ -51,8 +51,7 @@ public class TestConsoleOutputOptions {
 		this.ansiColorOutputDisabled = ansiColorOutputDisabled;
 	}
 
-	@Nullable
-	public Path getColorPalettePath() {
+	public @Nullable Path getColorPalettePath() {
 		return colorPalettePath;
 	}
 
@@ -85,8 +84,7 @@ public class TestConsoleOutputOptions {
 	}
 
 	@API(status = INTERNAL, since = "1.13")
-	@Nullable
-	public Path getStdoutPath() {
+	public @Nullable Path getStdoutPath() {
 		return this.stdoutPath;
 	}
 
@@ -96,8 +94,7 @@ public class TestConsoleOutputOptions {
 	}
 
 	@API(status = INTERNAL, since = "1.13")
-	@Nullable
-	public Path getStderrPath() {
+	public @Nullable Path getStderrPath() {
 		return this.stderrPath;
 	}
 
