@@ -17,6 +17,7 @@ import static org.junit.platform.commons.support.AnnotationSupport.findAnnotated
 import java.lang.reflect.Field;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -69,7 +70,7 @@ class RandomNumberExtension
 		return this.random.nextInt();
 	}
 
-	private void injectFields(Class<?> testClass, Object testInstance,
+	private void injectFields(Class<?> testClass, @Nullable Object testInstance,
 			Predicate<Field> predicate) {
 
 		predicate = predicate.and(field -> isInteger(field.getType()));

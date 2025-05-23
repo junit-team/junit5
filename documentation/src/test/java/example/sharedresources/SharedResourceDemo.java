@@ -24,6 +24,7 @@ import org.junit.platform.launcher.core.LauncherFactory;
 
 class SharedResourceDemo {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	//tag::user_guide[]
 	@Test
 	void runBothCustomEnginesTest() {

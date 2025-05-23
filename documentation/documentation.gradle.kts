@@ -18,6 +18,7 @@ plugins {
 	alias(libs.plugins.plantuml)
 	id("junitbuild.build-parameters")
 	id("junitbuild.java-multi-release-test-sources")
+	id("junitbuild.java-nullability-conventions")
 	id("junitbuild.kotlin-library-conventions")
 	id("junitbuild.testing-conventions")
 }

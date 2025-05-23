@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.engine.EngineDiscoveryRequest;
 import org.junit.platform.engine.ExecutionRequest;
 import org.junit.platform.engine.TestDescriptor;
@@ -32,6 +33,9 @@ import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
  */
 public class SecondCustomEngine implements TestEngine {
 
+	//end::user_guide[]
+	@Nullable
+	//tag::user_guide[]
 	public ServerSocket socket;
 
 	@Override

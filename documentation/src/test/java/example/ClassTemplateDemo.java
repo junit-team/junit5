@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.ClassTemplate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ClassTemplateInvocationContext;
@@ -37,6 +38,9 @@ class ClassTemplateDemo {
 	// tag::custom_line_break[]
 		= unmodifiableList(Arrays.asList("apple", "banana", "lemon"));
 
+	//end::user_guide[]
+	@Nullable
+	//tag::user_guide[]
 	private String fruit;
 
 	@Test

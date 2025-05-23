@@ -28,12 +28,15 @@ public class HttpServerExtension implements ParameterResolver {
 		return HttpServer.class.equals(parameterContext.getParameter().getType());
 	}
 
+	//end::user_guide[]
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+	//tag::user_guide[]
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 
 		ExtensionContext rootContext = extensionContext.getRoot();
 		ExtensionContext.Store store = rootContext.getStore(Namespace.GLOBAL);
-		String key = HttpServerResource.class.getName();
+		Class<HttpServerResource> key = HttpServerResource.class;
 		HttpServerResource resource = store.getOrComputeIfAbsent(key, __ -> {
 			try {
 				HttpServerResource serverResource = new HttpServerResource(0);

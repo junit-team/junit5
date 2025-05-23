@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -53,6 +54,9 @@ public class ParameterizedLifecycleDemo {
 			textFile.path = Files.writeString(filePath, textFile.content);
 		}
 
+		//end::user_guide[]
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+		//tag::user_guide[]
 		@AfterParameterizedClassInvocation
 		static void afterInvocation(TextFile textFile) throws Exception {
 			var actualContent = Files.readString(textFile.path); // <3>
@@ -61,6 +65,9 @@ public class ParameterizedLifecycleDemo {
 			// File will be deleted automatically by @TempDir support
 		}
 
+		//end::user_guide[]
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+		//tag::user_guide[]
 		@Test
 		void test() {
 			assertTrue(Files.exists(textFile.path)); // <2>
@@ -75,6 +82,9 @@ public class ParameterizedLifecycleDemo {
 
 			final String fileName;
 			final String content;
+			// end::example[]
+			@Nullable
+			// tag::example[]
 			Path path;
 
 			TextFile(String fileName, String content) {
