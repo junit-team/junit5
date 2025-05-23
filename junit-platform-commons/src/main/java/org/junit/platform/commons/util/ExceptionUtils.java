@@ -171,7 +171,7 @@ public final class ExceptionUtils {
 			}
 		}
 
-		return Collections.unmodifiableList(new ArrayList<>(visited));
+		return List.copyOf(visited);
 	}
 
 }

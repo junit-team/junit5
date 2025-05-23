@@ -25,7 +25,6 @@ import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -295,7 +294,7 @@ public final class AnnotationUtils {
 		Set<A> found = new LinkedHashSet<>(16);
 		findRepeatableAnnotations(element, annotationType, containerType, inherited, found, new HashSet<>(16));
 		// unmodifiable since returned from public, non-internal method(s)
-		return Collections.unmodifiableList(new ArrayList<>(found));
+		return List.copyOf(found);
 	}
 
 	private static <A extends Annotation> void findRepeatableAnnotations(AnnotatedElement element,

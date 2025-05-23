@@ -11,7 +11,6 @@
 package org.junit.jupiter.params;
 
 import static java.lang.System.lineSeparator;
-import static java.util.Collections.unmodifiableList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
 import static java.util.stream.Collectors.toList;
@@ -584,7 +583,7 @@ class ResolverFacade {
 
 		@Override
 		public List<ParameterDeclaration> getAll() {
-			return unmodifiableList(new ArrayList<>(this.declarationsByIndex.values()));
+			return List.copyOf(this.declarationsByIndex.values());
 		}
 
 		@Override

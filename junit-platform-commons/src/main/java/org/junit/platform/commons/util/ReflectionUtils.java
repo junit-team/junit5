@@ -1150,7 +1150,7 @@ public final class ReflectionUtils {
 			candidates.add(nestedClass);
 			return true;
 		});
-		return Collections.unmodifiableList(new ArrayList<>(candidates));
+		return List.copyOf(candidates);
 	}
 
 	/**

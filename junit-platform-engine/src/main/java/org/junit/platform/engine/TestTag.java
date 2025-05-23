@@ -14,9 +14,6 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -54,8 +51,7 @@ public final class TestTag implements Serializable {
 	 * <li>{@code !}: <em>exclamation point</em></li>
 	 * </ul>
 	 */
-	public static final Set<String> RESERVED_CHARACTERS = Collections.unmodifiableSet(
-		new HashSet<>(Arrays.asList(",", "(", ")", "&", "|", "!")));
+	public static final Set<String> RESERVED_CHARACTERS = Set.of(",", "(", ")", "&", "|", "!");
 
 	/**
 	 * Determine if the supplied tag name is valid with regard to the supported

@@ -10,8 +10,6 @@
 
 package org.junit.platform.commons.support.conversion;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 
@@ -31,7 +29,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
 @API(status = EXPERIMENTAL, since = "1.11")
 public final class ConversionSupport {
 
-	private static final List<StringToObjectConverter> stringToObjectConverters = unmodifiableList(asList( //
+	private static final List<StringToObjectConverter> stringToObjectConverters = List.of( //
 		new StringToBooleanConverter(), //
 		new StringToCharacterConverter(), //
 		new StringToNumberConverter(), //
@@ -40,7 +38,7 @@ public final class ConversionSupport {
 		new StringToJavaTimeConverter(), //
 		new StringToCommonJavaTypesConverter(), //
 		new FallbackStringToObjectConverter() //
-	));
+	);
 
 	private ConversionSupport() {
 		/* no-op */
