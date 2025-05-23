@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.descriptor;
 import static org.junit.jupiter.engine.support.MethodReflectionUtils.getReturnType;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.engine.support.discovery.DiscoveryIssueReporter.Condition.alwaysSatisfied;
 
 import java.lang.annotation.Annotation;
@@ -134,7 +133,7 @@ final class LifecycleMethodUtils {
 				.peek(isNotPrivateWarning(issueReporter, annotationType::getSimpleName).toConsumer()) //
 				.filter(returnsPrimitiveVoid(issueReporter, __ -> annotationType.getSimpleName()).and(
 					additionalCondition).toPredicate()) //
-				.collect(toUnmodifiableList());
+				.toList();
 	}
 
 	private static Condition<Method> isStatic(DiscoveryIssueReporter issueReporter,

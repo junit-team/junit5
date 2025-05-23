@@ -18,7 +18,6 @@ import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findFields;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.isRecordClass;
 
 import java.lang.annotation.Annotation;
@@ -161,7 +160,7 @@ class ParameterizedClassContext implements ParameterizedDeclarationContext<Class
 					}
 					return new ArgumentSetLifecycleMethod(method);
 				}) //
-				.collect(toUnmodifiableList());
+				.toList();
 	}
 
 	private static <A extends Annotation> A getAnnotation(Method method, Class<A> annotationType) {

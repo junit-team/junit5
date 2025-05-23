@@ -16,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -118,16 +117,6 @@ class CollectionUtilsTests {
 		@Test
 		void collectionWithNullValues() {
 			assertThat(CollectionUtils.getFirstElement(Arrays.asList(new Object[1]))).isEmpty();
-		}
-	}
-
-	@Nested
-	class UnmodifiableList {
-
-		@Test
-		void throwsOnMutation() {
-			var numbers = Stream.of(1).collect(toUnmodifiableList());
-			assertThrows(UnsupportedOperationException.class, numbers::clear);
 		}
 	}
 

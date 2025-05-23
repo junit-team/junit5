@@ -16,7 +16,6 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.PackageNameUtils.getPackageName;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
@@ -707,7 +706,7 @@ public final class ReflectionUtils {
 				.map(field ->
 					tryToReadFieldValue(field, instance)
 						.getOrThrow(ExceptionUtils::throwAsUncheckedException))
-				.collect(toUnmodifiableList());
+				.toList();
 		// @formatter:on
 	}
 
@@ -1314,7 +1313,7 @@ public final class ReflectionUtils {
 			// @formatter:off
 			return Arrays.stream(clazz.getDeclaredConstructors())
 					.filter(predicate)
-					.collect(toUnmodifiableList());
+					.toList();
 			// @formatter:on
 		}
 		catch (Throwable t) {
@@ -1328,7 +1327,7 @@ public final class ReflectionUtils {
 	public static List<Field> findFields(Class<?> clazz, Predicate<Field> predicate,
 			HierarchyTraversalMode traversalMode) {
 
-		return streamFields(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+		return streamFields(clazz, predicate, traversalMode).toList();
 	}
 
 	/**
@@ -1594,7 +1593,7 @@ public final class ReflectionUtils {
 	public static List<Method> findMethods(Class<?> clazz, Predicate<Method> predicate,
 			HierarchyTraversalMode traversalMode) {
 
-		return streamMethods(clazz, predicate, traversalMode).collect(toUnmodifiableList());
+		return streamMethods(clazz, predicate, traversalMode).toList();
 	}
 
 	/**

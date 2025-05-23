@@ -12,7 +12,6 @@ package org.junit.platform.launcher;
 
 import static java.util.Arrays.asList;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.util.List;
 import java.util.Set;
@@ -173,7 +172,7 @@ public final class TagFilter {
 	}
 
 	private static List<TagExpression> parseAll(List<String> tagExpressions) {
-		return tagExpressions.stream().map(TagFilter::parse).collect(toUnmodifiableList());
+		return tagExpressions.stream().map(TagFilter::parse).toList();
 	}
 
 	private static TagExpression parse(@Nullable String tagExpression) {

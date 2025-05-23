@@ -12,8 +12,6 @@ package org.junit.platform.commons.util;
 
 import static java.util.Spliterator.ORDERED;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
@@ -22,13 +20,11 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
@@ -92,28 +88,6 @@ public final class CollectionUtils {
 		return collection instanceof List //
 				? ((List<T>) collection).get(0) //
 				: collection.iterator().next();
-	}
-
-	/**
-	 * Return a {@code Collector} that accumulates the input elements into a
-	 * new unmodifiable list, in encounter order.
-	 *
-	 * <p>There are no guarantees on the type or serializability of the list
-	 * returned, so if more control over the returned list is required,
-	 * consider creating a new {@code Collector} implementation like the
-	 * following:
-	 *
-	 * <pre class="code">
-	 * public static &lt;T&gt; Collector&lt;T, ?, List&lt;T&gt;&gt; toUnmodifiableList(Supplier&lt;List&lt;T&gt;&gt; listSupplier) {
-	 *     return Collectors.collectingAndThen(Collectors.toCollection(listSupplier), Collections::unmodifiableList);
-	 * }</pre>
-	 *
-	 * @param <T> the type of the input elements
-	 * @return a {@code Collector} which collects all the input elements into
-	 * an unmodifiable list, in encounter order
-	 */
-	public static <T extends @Nullable Object> Collector<T, ?, List<T>> toUnmodifiableList() {
-		return collectingAndThen(toList(), Collections::unmodifiableList);
 	}
 
 	/**

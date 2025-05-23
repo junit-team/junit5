@@ -225,7 +225,7 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 		assertFruitTable(fruit, rank, testInfo);
 	}
 
-	private void assertFruitTable(String fruit, double rank, TestInfo testInfo) {
+	private void assertFruitTable(@Nullable String fruit, double rank, TestInfo testInfo) {
 		String displayName = testInfo.getDisplayName();
 
 		if (fruit == null) {

@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -65,7 +64,7 @@ public class NestedClassSelector implements DiscoverySelector {
 		this.classLoader = classLoader;
 		this.enclosingClassSelectors = enclosingClassNames.stream() //
 				.map(className -> new ClassSelector(classLoader, className)) //
-				.collect(toUnmodifiableList());
+				.toList();
 		this.nestedClassSelector = new ClassSelector(classLoader, nestedClassName);
 	}
 
