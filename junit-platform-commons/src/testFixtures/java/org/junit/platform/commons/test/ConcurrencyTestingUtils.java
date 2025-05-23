@@ -21,6 +21,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.jspecify.annotations.Nullable;
+
 public class ConcurrencyTestingUtils {
 
 	public static void executeConcurrently(int threads, Runnable action) throws Exception {
@@ -30,7 +32,7 @@ public class ConcurrencyTestingUtils {
 		});
 	}
 
-	public static <T> List<T> executeConcurrently(int threads, Callable<T> action) throws Exception {
+	public static <T> List<T> executeConcurrently(int threads, Callable<@Nullable T> action) throws Exception {
 		ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
 			CountDownLatch latch = new CountDownLatch(threads);
