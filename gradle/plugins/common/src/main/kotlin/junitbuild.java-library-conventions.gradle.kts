@@ -208,22 +208,16 @@ tasks.withType<ShadowJar>().configureEach {
 
 tasks.withType<JavaCompile>().configureEach {
 	options.encoding = "UTF-8"
+	options.compilerArgs.addAll(listOf(
+		"-Xlint:all", // Enables all recommended warnings.
+		"-Werror", // Terminates compilation when warnings occur.
+		"-parameters", // Generates metadata for reflection on method parameters.
+	))
 }
 
 tasks.compileJava {
 	options.compilerArgs.addAll(listOf(
-			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror", // Terminates compilation when warnings occur.
-			"-parameters", // Generates metadata for reflection on method parameters.
-			"--module-version", "${project.version}"
-	))
-}
-
-tasks.compileTestJava {
-	options.compilerArgs.addAll(listOf(
-			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror", // Terminates compilation when warnings occur.
-			"-parameters" // Generates metadata for reflection on method parameters.
+		"--module-version", "${project.version}"
 	))
 }
 
@@ -279,10 +273,5 @@ pluginManager.withPlugin("java-test-fixtures") {
 	}
 	tasks.named<JavaCompile>("compileTestFixturesJava") {
 		options.release = extension.testJavaVersion.map { it.majorVersion.toInt() }
-		options.compilerArgs.addAll(listOf(
-			"-Xlint:all", // Enables all recommended warnings.
-			"-Werror", // Terminates compilation when warnings occur.
-			"-parameters" // Generates metadata for reflection on method parameters.
-		))
 	}
 }
