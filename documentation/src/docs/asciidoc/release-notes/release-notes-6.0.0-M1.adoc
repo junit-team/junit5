@@ -27,7 +27,8 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-overall-new-features-and-improvements]]
 ==== New Features and Improvements
 
-* ❓
+* All JUnit modules now use https://jspecify.dev/[JSpecify]'s nullability annotations to
+  indicate which method parameters, return types, etc. can be `null`.
 
 
 [[release-notes-6.0.0-M1-junit-platform]]
