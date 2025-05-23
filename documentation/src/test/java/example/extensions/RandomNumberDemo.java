@@ -10,6 +10,7 @@
 
 package example.extensions;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,6 +20,9 @@ class RandomNumberDemo {
 	// Use static randomNumber0 field anywhere in the test class,
 	// including @BeforeAll or @AfterEach lifecycle methods.
 	@Random
+	// end::user_guide[]
+	@Nullable
+	// tag::user_guide[]
 	private static Integer randomNumber0;
 
 	// Use randomNumber1 field in test methods and @BeforeEach

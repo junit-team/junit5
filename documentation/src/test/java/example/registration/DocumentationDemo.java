@@ -12,6 +12,7 @@ package example.registration;
 
 import java.nio.file.Path;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -20,6 +21,9 @@ import org.junit.jupiter.api.extension.RegisterExtension;
 //tag::user_guide[]
 class DocumentationDemo {
 
+	//end::user_guide[]
+	@Nullable
+	//tag::user_guide[]
 	static Path lookUpDocsDir() {
 		// return path to docs dir
 		// end::user_guide[]
@@ -40,13 +44,13 @@ class DocumentationDemo {
 class DocumentationExtension implements AfterEachCallback {
 
 	@SuppressWarnings("unused")
-	private final Path path;
+	private final @Nullable Path path;
 
-	private DocumentationExtension(Path path) {
+	private DocumentationExtension(@Nullable Path path) {
 		this.path = path;
 	}
 
-	static DocumentationExtension forPath(Path path) {
+	static DocumentationExtension forPath(@Nullable Path path) {
 		return new DocumentationExtension(path);
 	}
 

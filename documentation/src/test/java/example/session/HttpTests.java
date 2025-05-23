@@ -49,6 +49,9 @@ class HttpServerParameterResolver implements ParameterResolver {
 		return HttpServer.class.equals(parameterContext.getParameter().getType());
 	}
 
+	//end::user_guide[]
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+	//tag::user_guide[]
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		return extensionContext

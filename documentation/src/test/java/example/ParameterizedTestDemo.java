@@ -459,6 +459,7 @@ class ParameterizedTestDemo {
 
 	// end::explicit_conversion_example[]
 	static
+	@SuppressWarnings({ "NullableProblems", "NullAway" })
 	// tag::explicit_conversion_example_ToStringArgumentConverter[]
 	public class ToStringArgumentConverter extends SimpleArgumentConverter {
 
@@ -474,6 +475,7 @@ class ParameterizedTestDemo {
 	// end::explicit_conversion_example_ToStringArgumentConverter[]
 
 	static
+	@SuppressWarnings({ "NullableProblems", "NullAway", "ConstantValue" })
 	// tag::explicit_conversion_example_TypedArgumentConverter[]
 	public class ToLengthArgumentConverter extends TypedArgumentConverter<String, Integer> {
 

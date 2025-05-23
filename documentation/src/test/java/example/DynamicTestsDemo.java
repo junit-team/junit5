@@ -47,7 +47,7 @@ class DynamicTestsDemo {
 	@TestFactory
 	// end::user_guide[]
 	@Tag("exclude")
-	DynamicTest dummy() { return null; }
+	DynamicTest dummy() { return dynamicTest("dummy", () -> {}); }
 	// tag::user_guide[]
 	List<String> dynamicTestsWithInvalidReturnType() {
 		return Arrays.asList("Hello");

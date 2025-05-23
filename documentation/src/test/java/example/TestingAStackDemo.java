@@ -27,8 +27,6 @@ import org.junit.jupiter.api.Test;
 @DisplayName("A stack")
 class TestingAStackDemo {
 
-	Stack<Object> stack;
-
 	@Test
 	@DisplayName("is instantiated with new Stack()")
 	void isInstantiatedWithNew() {
@@ -38,6 +36,8 @@ class TestingAStackDemo {
 	@Nested
 	@DisplayName("when new")
 	class WhenNew {
+
+		Stack<Object> stack;
 
 		@BeforeEach
 		void createNewStack() {

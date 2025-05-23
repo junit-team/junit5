@@ -26,7 +26,7 @@ tasks.withType<JavaCompile>().configureEach {
 	}
 }
 
-tasks.compileTestJava {
+tasks.withType<JavaCompile>().named { it.startsWith("compileTest") }.configureEach {
 	options.errorprone.nullaway {
 		handleTestAssertionLibraries = true
 		excludedFieldAnnotations.addAll(
