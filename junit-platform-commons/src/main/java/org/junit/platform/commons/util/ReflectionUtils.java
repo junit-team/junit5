@@ -16,7 +16,6 @@ import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.PackageNameUtils.getPackageName;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.BOTTOM_UP;
 import static org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode.TOP_DOWN;
 
@@ -1877,7 +1876,7 @@ public final class ReflectionUtils {
 	}
 
 	private static boolean declaredInSamePackage(Method m1, Method m2) {
-		return getPackageName(m1.getDeclaringClass()).equals(getPackageName(m2.getDeclaringClass()));
+		return m1.getDeclaringClass().getPackageName().equals(m2.getDeclaringClass().getPackageName());
 	}
 
 	/**
