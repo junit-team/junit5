@@ -24,17 +24,16 @@ import org.junit.platform.commons.util.Preconditions;
  * typically be provided by an {@link ArgumentsProvider}.
  *
  * @apiNote <p>This interface is specifically designed as a simple holder of
- * arguments of a parameterized test. Therefore, if you end up
- * {@linkplain java.util.stream.Stream#map(java.util.function.Function) transforming}
- * or
+ * arguments for a parameterized test. Therefore, if you end up
+ * {@linkplain java.util.stream.Stream#map(java.util.function.Function) transforming} or
  * {@linkplain java.util.stream.Stream#filter(java.util.function.Predicate) filtering}
  * the arguments, you should consider using one of the following in intermediate
  * steps:
  *
  * <ul>
- *   <li>The standard collections</li>
- *   <li>Tuples from third-party libraries, e.g.,
- *   <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/package-summary.html">Commons Lang</a>,
+ *   <li>The standard Java collections</li>
+ *   <li>Tuples from third-party libraries &mdash; for example,
+ *   <a href="https://commons.apache.org/proper/commons-lang/apidocs/org/apache/commons/lang3/tuple/package-summary.html">Commons Lang</a>
  *   or <a href="https://www.javatuples.org">javatuples</a></li>
  *   <li>Your own data class</li>
  * </ul>
