@@ -15,7 +15,6 @@ import static java.util.stream.Collectors.toList;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -51,12 +50,7 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private static String encode(char c) {
-		try {
-			return URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8.name());
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new AssertionError("UTF-8 should be supported", e);
-		}
+		return URLEncoder.encode(String.valueOf(c), StandardCharsets.UTF_8);
 	}
 
 	private final char openSegment;
@@ -152,12 +146,7 @@ class UniqueIdFormat implements Serializable {
 	}
 
 	private static String decode(String s) {
-		try {
-			return URLDecoder.decode(s, StandardCharsets.UTF_8.name());
-		}
-		catch (UnsupportedEncodingException e) {
-			throw new JUnitException("UTF-8 should be supported", e);
-		}
+		return URLDecoder.decode(s, StandardCharsets.UTF_8);
 	}
 
 }
