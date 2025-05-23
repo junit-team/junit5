@@ -1,4 +1,6 @@
 import junitbuild.extensions.javaModuleName
+import net.ltgt.gradle.errorprone.errorprone
+import net.ltgt.gradle.nullaway.nullaway
 
 plugins {
 	id("junitbuild.java-nullability-conventions")
@@ -55,6 +57,14 @@ tasks {
 			"--add-modules", "univocity.parsers",
 			"--add-reads", "${javaModuleName}=univocity.parsers"
 		))
+	}
+	compileJmhJava {
+		options.compilerArgs.add("-Xlint:-processing")
+		options.errorprone.nullaway {
+			customInitializerAnnotations.add(
+				"org.openjdk.jmh.annotations.Setup",
+			)
+		}
 	}
 	javadoc {
 		(options as StandardJavadocDocletOptions).apply {
