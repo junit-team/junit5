@@ -90,6 +90,6 @@ public interface ResourceLock extends AutoCloseable {
 				.filter(resource -> ExclusiveResource.COMPARATOR.compare(resource,
 					ownResources.get(ownResources.size() - 1)) < 0);
 
-		return !(potentiallyDeadlockCausingAdditionalResource.isPresent());
+		return potentiallyDeadlockCausingAdditionalResource.isEmpty();
 	}
 }

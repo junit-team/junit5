@@ -73,9 +73,8 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 	private void orderContainedMethods(ClassBasedTestDescriptor classBasedTestDescriptor, Class<?> testClass) {
 		Optional<MethodOrderer> methodOrderer = findAnnotation(testClass, TestMethodOrder.class)//
 				.map(TestMethodOrder::value)//
-				.<MethodOrderer> map(ReflectionSupport::newInstance)//
-				.map(Optional::of)//
-				.orElseGet(configuration::getDefaultTestMethodOrderer);
+				.<MethodOrderer> map(ReflectionSupport::newInstance) //
+				.or(configuration::getDefaultTestMethodOrderer);
 		orderContainedMethods(classBasedTestDescriptor, testClass, methodOrderer);
 	}
 
