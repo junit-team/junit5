@@ -579,11 +579,11 @@ subcommand.</p>
 <code>--h</code> (rather than <code>-h</code>) or <code>-help</code> (rather than <code>--help</code>).</p>
 </li>
 <li>
-<p>The <code>junit-platform-runner</code> module that provided the <code>JUnitPlatform</code> runner has been
-discontinued.</p>
+<p>The <code>junit-platform-runner</code> module that provided the JUnit 4 based <code>JUnitPlatform</code>
+runner has been discontinued.</p>
 </li>
 <li>
-<p>Support for Maven Surefire/Failsafe versions &lt; 3.0.0 has been dropped.</p>
+<p>Support for Maven Surefire/Failsafe versions less than 3.0.0 has been dropped.</p>
 </li>
 <li>
 <p>The following deprecated APIs have been removed:</p>
@@ -695,19 +695,20 @@ supported.</p>
 </li>
 <li>
 <p>The <code>JRE</code> enum constants for <code>JAVA_8</code> to <code>JAVA_16</code> have been deprecated because they can
-no longer be used at runtime since <code>JAVA_17</code> is the new baseline. Please also check for
-values less than 17 used with the <code>minVersion</code> and <code>maxVersion</code> attributes of
-<code>@EnabledForJreRange</code> nad <code>@DisabledForJreRange</code> or the <code>versions</code> attribute of
-<code>@EnabledOnJre</code> and <code>@DisabledOnJre</code>.</p>
+no longer be used at runtime since <code>JAVA_17</code> is the new baseline. Please also manually
+update any values used with the <code>minVersion</code> and <code>maxVersion</code> attributes in
+<code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> or the <code>versions</code> attributes in
+<code>@EnabledOnJre</code> and <code>@DisabledOnJre</code> to ensure that you are no longer declaring version
+values less than 17.</p>
 </li>
 <li>
 <p><code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> now use <code>JAVA_17</code> as their default
 <code>min</code> value.</p>
 </li>
 <li>
-<p>The contracts for the <code>Executable</code> parameter of Kotlin-specific <code>assertTimeout</code>
-functions was changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> to
-<code>callsInPlace(executable, AT_MOST_ONCE)</code> which might result in compile errors.</p>
+<p>The contracts for the <code>Executable</code> parameters of Kotlin-specific <code>assertTimeout</code>
+functions were changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> to
+<code>callsInPlace(executable, AT_MOST_ONCE)</code> which might result in compilation errors.</p>
 </li>
 </ul>
 </div>
@@ -717,7 +718,7 @@ functions was changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> t
 <div class="ulist">
 <ul>
 <li>
-<p>Add support for using Kotlin&#8217;s <code>suspend</code> modifier on test and lifecycle methods.</p>
+<p>Kotlin&#8217;s <code>suspend</code> modifier may now be applied to test and lifecycle methods.</p>
 </li>
 <li>
 <p>The <code>Arguments</code> interface for parameterized tests is now officially a
