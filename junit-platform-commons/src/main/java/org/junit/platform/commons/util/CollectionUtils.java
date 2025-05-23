@@ -23,12 +23,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collector;
 import java.util.stream.DoubleStream;
@@ -94,28 +92,6 @@ public final class CollectionUtils {
 		return collection instanceof List //
 				? ((List<T>) collection).get(0) //
 				: collection.iterator().next();
-	}
-
-	/**
-	 * Convert the supplied array of values to a {@link Set}.
-	 *
-	 * @param values the array of values; never {@code null}
-	 * @return a set of the values
-	 * @throws PreconditionViolationException if the array is {@code null}
-	 * @since 1.6
-	 */
-	@API(status = INTERNAL, since = "1.6")
-	public static <T extends @Nullable Object> Set<T> toSet(T[] values) {
-		Preconditions.notNull(values, "values array must not be null");
-		if (values.length == 0) {
-			return Collections.emptySet();
-		}
-		if (values.length == 1) {
-			return Collections.singleton(values[0]);
-		}
-		var set = new HashSet<T>();
-		Collections.addAll(set, values);
-		return set;
 	}
 
 	/**

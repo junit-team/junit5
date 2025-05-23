@@ -12,7 +12,6 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
-import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
@@ -43,7 +42,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvSource csvSource) {
-		Set<String> nullValues = toSet(csvSource.nullValues());
+		Set<String> nullValues = Set.of(csvSource.nullValues());
 		CsvParser csvParser = createParserFor(csvSource);
 		final boolean textBlockDeclared = !csvSource.textBlock().isEmpty();
 		Preconditions.condition(csvSource.value().length > 0 ^ textBlockDeclared,
@@ -59,11 +58,11 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
-			List<String[]> csvRecords = csvParser.parseAll(new StringReader(textBlock));
+			List<@Nullable String[]> csvRecords = csvParser.parseAll(new StringReader(textBlock));
 			String[] headers = useHeadersInDisplayName ? getHeaders(csvParser) : null;
 
 			AtomicInteger index = new AtomicInteger(0);
-			for (String[] csvRecord : csvRecords) {
+			for (var csvRecord : csvRecords) {
 				index.incrementAndGet();
 				Preconditions.notNull(csvRecord,
 					() -> "Record at index " + index + " contains invalid CSV: \"\"\"\n" + textBlock + "\n\"\"\"");
@@ -116,8 +115,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	 * {@link Named} if necessary (for CSV header support), and returns the
 	 * CSV record wrapped in an {@link Arguments} instance.
 	 */
-	static Arguments processCsvRecord(String[] csvRecord, Set<String> nullValues, boolean useHeadersInDisplayName,
-			String @Nullable [] headers) {
+	static Arguments processCsvRecord(@Nullable String[] csvRecord, Set<String> nullValues,
+			boolean useHeadersInDisplayName, String @Nullable [] headers) {
 
 		// Nothing to process?
 		if (nullValues.isEmpty() && !useHeadersInDisplayName) {
@@ -132,7 +131,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		Object[] arguments = new Object[csvRecord.length];
 		for (int i = 0; i < csvRecord.length; i++) {
 			Object column = csvRecord[i];
-			if (nullValues.contains(column)) {
+			if (column != null && nullValues.contains(column)) {
 				column = null;
 			}
 			if (useHeadersInDisplayName) {

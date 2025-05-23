@@ -18,7 +18,6 @@ import static org.junit.jupiter.params.provider.CsvArgumentsProvider.getHeaders;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.processCsvRecord;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
-import static org.junit.platform.commons.util.CollectionUtils.toSet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -125,7 +124,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 			this.csvParser = csvParser;
 			this.csvFileSource = csvFileSource;
 			this.useHeadersInDisplayName = csvFileSource.useHeadersInDisplayName();
-			this.nullValues = toSet(csvFileSource.nullValues());
+			this.nullValues = Set.of(csvFileSource.nullValues());
 			advance();
 		}
 
