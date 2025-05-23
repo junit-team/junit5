@@ -101,9 +101,8 @@ public class NestedMethodSelector implements DiscoverySelector {
 	 *
 	 * @since 1.10
 	 */
-	@Nullable
 	@API(status = EXPERIMENTAL, since = "1.10")
-	public ClassLoader getClassLoader() {
+	public @Nullable ClassLoader getClassLoader() {
 		return this.nestedClassSelector.getClassLoader();
 	}
 

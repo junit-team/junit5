@@ -92,8 +92,7 @@ public class KotlinReflectionUtils {
 		return KotlinReflectionUtilsKt.getParameterTypes(method);
 	}
 
-	@Nullable
-	public static Object invokeKotlinSuspendingFunction(Method method, @Nullable Object target,
+	public static @Nullable Object invokeKotlinSuspendingFunction(Method method, @Nullable Object target,
 			@Nullable Object[] args) {
 		requireKotlinReflect(method);
 		requireKotlinxCoroutines(method);

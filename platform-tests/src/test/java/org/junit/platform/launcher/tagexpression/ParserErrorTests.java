@@ -90,8 +90,7 @@ class ParserErrorTests {
 		// @formatter:on
 	}
 
-	@Nullable
-	private String parseErrorFromParsing(String tagExpression) {
+	private @Nullable String parseErrorFromParsing(String tagExpression) {
 		try {
 			var parseResult = parser.parse(tagExpression);
 			parseResult.tagExpressionOrThrow(RuntimeException::new);

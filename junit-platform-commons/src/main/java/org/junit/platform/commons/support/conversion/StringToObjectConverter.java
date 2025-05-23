@@ -48,8 +48,7 @@ interface StringToObjectConverter {
 	 * Can be overridden by concrete implementations of this interface that need
 	 * access to the supplied {@link ClassLoader}.
 	 */
-	@Nullable
-	default Object convert(String source, Class<?> targetType, ClassLoader classLoader) throws Exception {
+	default @Nullable Object convert(String source, Class<?> targetType, ClassLoader classLoader) throws Exception {
 		return convert(source, targetType);
 	}
 

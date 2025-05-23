@@ -51,8 +51,7 @@ abstract class ParameterizedInvocationParameterResolver implements ParameterReso
 	}
 
 	@Override
-	@Nullable
-	public final Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
+	public final @Nullable Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 			throws ParameterResolutionException {
 
 		return this.resolverFacade.resolve(parameterContext, extensionContext, this.arguments, this.invocationIndex,

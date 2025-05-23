@@ -26,8 +26,7 @@ class StringToClassConverter implements StringToObjectConverter {
 	}
 
 	@Override
-	@Nullable
-	public Object convert(String className, Class<?> targetType, ClassLoader classLoader) throws Exception {
+	public @Nullable Object convert(String className, Class<?> targetType, ClassLoader classLoader) throws Exception {
 		// @formatter:off
 		return ReflectionSupport.tryToLoadClass(className, classLoader)
 				.getOrThrow(cause -> new ConversionException(

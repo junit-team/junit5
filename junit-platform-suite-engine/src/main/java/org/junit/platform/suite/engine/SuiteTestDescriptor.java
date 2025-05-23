@@ -179,8 +179,7 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
-	@Nullable
-	private TestExecutionSummary executeTests(EngineExecutionListener parentEngineExecutionListener,
+	private @Nullable TestExecutionSummary executeTests(EngineExecutionListener parentEngineExecutionListener,
 			NamespacedHierarchicalStore<Namespace> requestLevelStore, ThrowableCollector throwableCollector) {
 		if (throwableCollector.isNotEmpty()) {
 			return null;

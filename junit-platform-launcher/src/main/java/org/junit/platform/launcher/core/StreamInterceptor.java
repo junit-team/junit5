@@ -114,8 +114,7 @@ class StreamInterceptor extends PrintStream {
 		}
 	}
 
-	@Nullable
-	private RewindableByteArrayOutputStream getOutput() {
+	private @Nullable RewindableByteArrayOutputStream getOutput() {
 		RewindableByteArrayOutputStream out = output.get();
 		return out.isMarked() ? out : mostRecentOutputs.peek();
 	}

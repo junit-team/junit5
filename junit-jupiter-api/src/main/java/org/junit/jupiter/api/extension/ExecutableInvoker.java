@@ -34,8 +34,7 @@ public interface ExecutableInvoker {
 	 * @param method the method to invoke and resolve parameters for
 	 * @see #invoke(Method, Object)
 	 */
-	@Nullable
-	default Object invoke(Method method) {
+	default @Nullable Object invoke(Method method) {
 		return invoke(method, null);
 	}
 

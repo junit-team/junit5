@@ -125,8 +125,7 @@ public class ParameterResolutionUtils {
 		return values;
 	}
 
-	@Nullable
-	private static Object resolveParameter(ParameterContext parameterContext, Executable executable,
+	private static @Nullable Object resolveParameter(ParameterContext parameterContext, Executable executable,
 			ExtensionContextSupplier extensionContext, ExtensionRegistry extensionRegistry) {
 
 		try {

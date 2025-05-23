@@ -49,14 +49,14 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 	}
 
 	@Override
-	@Nullable
-	public final Object convert(@Nullable Object source, ParameterContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, ParameterContext context)
+			throws ArgumentConversionException {
 		return convert(source, context.getParameter().getType(), requireNonNull(this.annotation));
 	}
 
 	@Override
-	@Nullable
-	public final Object convert(@Nullable Object source, FieldContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, FieldContext context)
+			throws ArgumentConversionException {
 		return convert(source, context.getField().getType(), requireNonNull(this.annotation));
 	}
 
@@ -73,8 +73,7 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 	 * @throws ArgumentConversionException in case an error occurs during the
 	 * conversion
 	 */
-	@Nullable
-	protected abstract Object convert(@Nullable Object source, Class<?> targetType, A annotation)
+	protected abstract @Nullable Object convert(@Nullable Object source, Class<?> targetType, A annotation)
 			throws ArgumentConversionException;
 
 }

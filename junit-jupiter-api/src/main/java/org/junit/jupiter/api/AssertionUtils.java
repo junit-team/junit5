@@ -51,8 +51,7 @@ class AssertionUtils {
 		throw new AssertionFailedError(nullSafeGet(messageSupplier));
 	}
 
-	@Nullable
-	static String nullSafeGet(@Nullable Supplier<@Nullable String> messageSupplier) {
+	static @Nullable String nullSafeGet(@Nullable Supplier<@Nullable String> messageSupplier) {
 		return (messageSupplier != null ? messageSupplier.get() : null);
 	}
 

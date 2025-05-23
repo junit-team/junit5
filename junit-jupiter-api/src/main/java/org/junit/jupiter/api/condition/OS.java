@@ -104,18 +104,15 @@ public enum OS {
 	 * @since 5.9
 	 */
 	@API(status = STABLE, since = "5.10")
-	@Nullable
-	public static OS current() {
+	public static @Nullable OS current() {
 		return CURRENT_OS;
 	}
 
-	@Nullable
-	private static OS determineCurrentOs() {
+	private static @Nullable OS determineCurrentOs() {
 		return parse(System.getProperty("os.name"));
 	}
 
-	@Nullable
-	static OS parse(String osName) {
+	static @Nullable OS parse(String osName) {
 		if (StringUtils.isBlank(osName)) {
 			logger.debug(
 				() -> "JVM system property 'os.name' is undefined. It is therefore not possible to detect the current OS.");

@@ -114,8 +114,8 @@ class EvaluatedArgumentSet {
 				.toArray();
 	}
 
-	@Nullable
-	private static Object extractFromNamed(@Nullable Object argument, Function<Named<?>, @Nullable Object> mapper) {
+	private static @Nullable Object extractFromNamed(@Nullable Object argument,
+			Function<Named<?>, @Nullable Object> mapper) {
 		return argument instanceof Named<?> named ? mapper.apply(named) : argument;
 	}
 

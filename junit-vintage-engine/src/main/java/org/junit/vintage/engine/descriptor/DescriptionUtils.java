@@ -20,8 +20,7 @@ public class DescriptionUtils {
 	private DescriptionUtils() {
 	}
 
-	@Nullable
-	public static String getMethodName(Description description) {
+	public static @Nullable String getMethodName(Description description) {
 		String displayName = description.getDisplayName();
 		int i = displayName.indexOf('(');
 		if (i >= 0) {

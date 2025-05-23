@@ -163,8 +163,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return decorate(invocation, invocationContext, extensionContext, timeout).proceed();
 	}
 
-	@Nullable
-	private TimeoutDuration getDefaultTimeout(ExtensionContext extensionContext,
+	private @Nullable TimeoutDuration getDefaultTimeout(ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) {
 
 		return defaultTimeoutProvider.apply(getGlobalTimeoutConfiguration(extensionContext)).orElse(null);
@@ -197,8 +196,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return annotationThreadMode;
 	}
 
-	@Nullable
-	private ThreadMode getAnnotationThreadMode(ExtensionContext extensionContext) {
+	private @Nullable ThreadMode getAnnotationThreadMode(ExtensionContext extensionContext) {
 		return extensionContext.getStore(NAMESPACE).get(TESTABLE_METHOD_TIMEOUT_THREAD_MODE_KEY, ThreadMode.class);
 	}
 

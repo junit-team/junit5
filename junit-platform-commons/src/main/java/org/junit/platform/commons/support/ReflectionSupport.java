@@ -453,8 +453,7 @@ public final class ReflectionSupport {
 	 * if the return type is {@code void}
 	 * @see ExceptionUtils#throwAsUncheckedException(Throwable)
 	 */
-	@Nullable
-	public static Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
+	public static @Nullable Object invokeMethod(Method method, @Nullable Object target, @Nullable Object... args) {
 		return ReflectionUtils.invokeMethod(method, target, args);
 	}
 

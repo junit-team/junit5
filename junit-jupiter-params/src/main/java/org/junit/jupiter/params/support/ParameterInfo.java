@@ -69,8 +69,7 @@ public interface ParameterInfo {
 	 * {@return the closest {@code ParameterInfo} instance for the supplied
 	 * {@code ExtensionContext}; potentially {@code null}}
 	 */
-	@Nullable
-	static ParameterInfo get(ExtensionContext context) {
+	static @Nullable ParameterInfo get(ExtensionContext context) {
 		return context.getStore(NAMESPACE).get(KEY, ParameterInfo.class);
 	}
 

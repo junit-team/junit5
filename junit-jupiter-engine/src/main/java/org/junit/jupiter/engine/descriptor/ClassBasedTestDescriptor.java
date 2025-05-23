@@ -295,8 +295,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		this.testInstanceFactory = null;
 	}
 
-	@Nullable
-	private TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
+	private @Nullable TestInstanceFactory resolveTestInstanceFactory(ExtensionRegistry registry) {
 		List<TestInstanceFactory> factories = registry.getExtensions(TestInstanceFactory.class);
 
 		if (factories.size() == 1) {

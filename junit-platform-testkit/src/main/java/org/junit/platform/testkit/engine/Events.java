@@ -470,8 +470,8 @@ public final class Events {
 		}
 	}
 
-	@Nullable
-	private static Event findEvent(List<Event> events, SoftAssertions softly, Condition<? super Event> condition) {
+	private static @Nullable Event findEvent(List<Event> events, SoftAssertions softly,
+			Condition<? super Event> condition) {
 		// @formatter:off
 		Optional<Event> matchedEvent = events.stream()
 				.filter(condition::matches)

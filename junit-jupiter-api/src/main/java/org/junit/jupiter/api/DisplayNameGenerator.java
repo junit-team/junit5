@@ -501,8 +501,7 @@ public interface DisplayNameGenerator {
 			return findAnnotation(testClass, IndicativeSentencesGeneration.class, enclosingInstanceTypes);
 		}
 
-		@Nullable
-		private static String getSentenceFragment(AnnotatedElement element) {
+		private static @Nullable String getSentenceFragment(AnnotatedElement element) {
 			return findAnnotation(element, SentenceFragment.class) //
 					.map(SentenceFragment::value) //
 					.map(sentenceFragment -> {
