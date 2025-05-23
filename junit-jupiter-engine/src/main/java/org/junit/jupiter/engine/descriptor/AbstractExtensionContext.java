@@ -221,16 +221,11 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 
 	@Override
 	public Store getStore(StoreScope scope, Namespace namespace) {
-		// TODO [#4246] Use switch expression
-		switch (scope) {
-			case LAUNCHER_SESSION:
-				return launcherStoreFacade.getSessionLevelStore(namespace);
-			case EXECUTION_REQUEST:
-				return launcherStoreFacade.getRequestLevelStore(namespace);
-			case EXTENSION_CONTEXT:
-				return getStore(namespace);
-		}
-		throw new JUnitException("Unknown StoreScope: " + scope);
+		return switch (scope) {
+			case LAUNCHER_SESSION -> launcherStoreFacade.getSessionLevelStore(namespace);
+			case EXECUTION_REQUEST -> launcherStoreFacade.getRequestLevelStore(namespace);
+			case EXTENSION_CONTEXT -> getStore(namespace);
+		};
 	}
 
 	@Override
@@ -267,12 +262,9 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 	protected abstract Node.ExecutionMode getPlatformExecutionMode();
 
 	private ExecutionMode toJupiterExecutionMode(Node.ExecutionMode mode) {
-		switch (mode) {
-			case CONCURRENT:
-				return ExecutionMode.CONCURRENT;
-			case SAME_THREAD:
-				return ExecutionMode.SAME_THREAD;
-		}
-		throw new JUnitException("Unknown ExecutionMode: " + mode);
+		return switch (mode) {
+			case CONCURRENT -> ExecutionMode.CONCURRENT;
+			case SAME_THREAD -> ExecutionMode.SAME_THREAD;
+		};
 	}
 }

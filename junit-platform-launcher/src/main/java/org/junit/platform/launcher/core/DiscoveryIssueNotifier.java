@@ -98,17 +98,11 @@ class DiscoveryIssueNotifier {
 	}
 
 	private static Consumer<Supplier<String>> logger(Severity severity) {
-		// TODO [#4246] Use switch expression
-		switch (severity) {
-			case INFO:
-				return logger::info;
-			case WARNING:
-				return logger::warn;
-			case ERROR:
-				return logger::error;
-			default:
-				throw new IllegalArgumentException("Unknown severity: " + severity);
-		}
+		return switch (severity) {
+			case INFO -> logger::info;
+			case WARNING -> logger::warn;
+			case ERROR -> logger::error;
+		};
 	}
 
 	private static String formatMessage(TestEngine testEngine, List<DiscoveryIssue> issues, String adjective) {

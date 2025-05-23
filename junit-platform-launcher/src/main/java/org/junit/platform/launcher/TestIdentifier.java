@@ -98,14 +98,11 @@ public final class TestIdentifier implements Serializable {
 	}
 
 	private Set<TestTag> copyOf(Set<TestTag> tags) {
-		switch (tags.size()) {
-			case 0:
-				return emptySet();
-			case 1:
-				return singleton(getOnlyElement(tags));
-			default:
-				return new LinkedHashSet<>(tags);
-		}
+		return switch (tags.size()) {
+			case 0 -> emptySet();
+			case 1 -> singleton(getOnlyElement(tags));
+			default -> new LinkedHashSet<>(tags);
+		};
 	}
 
 	/**

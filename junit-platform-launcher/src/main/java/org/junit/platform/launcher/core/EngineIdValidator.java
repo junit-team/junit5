@@ -58,22 +58,21 @@ class EngineIdValidator {
 		if (!engineId.startsWith("junit-")) {
 			return true;
 		}
-		switch (engineId) {
-			case "junit-jupiter": {
+		return switch (engineId) {
+			case "junit-jupiter" -> {
 				validateWellKnownClassName(testEngine, "org.junit.jupiter.engine.JupiterTestEngine");
-				return true;
+				yield true;
 			}
-			case "junit-vintage": {
+			case "junit-vintage" -> {
 				validateWellKnownClassName(testEngine, "org.junit.vintage.engine.VintageTestEngine");
-				return true;
+				yield true;
 			}
-			case "junit-platform-suite": {
+			case "junit-platform-suite" -> {
 				validateWellKnownClassName(testEngine, "org.junit.platform.suite.engine.SuiteTestEngine");
-				return true;
+				yield true;
 			}
-			default:
-				return false;
-		}
+			default -> false;
+		};
 	}
 
 	private static void validateWellKnownClassName(TestEngine testEngine, String expectedClassName) {

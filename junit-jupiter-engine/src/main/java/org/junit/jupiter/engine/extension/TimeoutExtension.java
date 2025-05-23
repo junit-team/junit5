@@ -221,16 +221,12 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	 * Determine if timeouts are disabled for the supplied mode.
 	 */
 	private boolean isTimeoutDisabled(String mode) {
-		switch (mode) {
-			case ENABLED_MODE_VALUE:
-				return false;
-			case DISABLED_MODE_VALUE:
-				return true;
-			case DISABLED_ON_DEBUG_MODE_VALUE:
-				return RuntimeUtils.isDebugMode();
-			default:
-				throw new ExtensionConfigurationException("Unsupported timeout mode: " + mode);
-		}
+		return switch (mode) {
+			case ENABLED_MODE_VALUE -> false;
+			case DISABLED_MODE_VALUE -> true;
+			case DISABLED_ON_DEBUG_MODE_VALUE -> RuntimeUtils.isDebugMode();
+			default -> throw new ExtensionConfigurationException("Unsupported timeout mode: " + mode);
+		};
 	}
 
 	@FunctionalInterface
