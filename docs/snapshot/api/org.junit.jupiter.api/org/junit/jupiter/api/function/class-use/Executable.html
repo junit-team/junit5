@@ -122,7 +122,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,org.junit.jupiter.api.function.Executable...)" class="member-name-link">assertAll</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
+<div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,org.junit.jupiter.api.function.Executable...)" class="member-name-link">assertAll</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>...&nbsp;executables)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that <em>all</em> supplied <code>executables</code> do not throw
@@ -142,14 +142,14 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertDoesNotThrow(org.junit.jupiter.api.function.Executable,java.lang.String)" class="member-name-link">assertDoesNotThrow</a><wbr>(<a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> does
  <em>not</em> throw any kind of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">exception</a>.</div>
 </div>
 <div class="col-first even-row-color"><code>static void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertDoesNotThrow(org.junit.jupiter.api.function.Executable,java.util.function.Supplier)" class="member-name-link">assertDoesNotThrow</a><wbr>(<a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> does
  <em>not</em> throw any kind of <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">exception</a>.</div>
@@ -164,7 +164,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&gt;<br>T</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable,java.lang.String)" class="member-name-link">assertThrows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;expectedType,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> throws
  an exception of the <code>expectedType</code> and return the exception.</div>
@@ -172,7 +172,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&gt;<br>T</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable,java.util.function.Supplier)" class="member-name-link">assertThrows</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;expectedType,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> throws
  an exception of the <code>expectedType</code> and return the exception.</div>
@@ -187,7 +187,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first odd-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&gt;<br>T</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertThrowsExactly(java.lang.Class,org.junit.jupiter.api.function.Executable,java.lang.String)" class="member-name-link">assertThrowsExactly</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;expectedType,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> throws
  an exception of exactly the <code>expectedType</code> and return the exception.</div>
@@ -195,7 +195,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first even-row-color"><code>static &lt;T extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&gt;<br>T</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertThrowsExactly(java.lang.Class,org.junit.jupiter.api.function.Executable,java.util.function.Supplier)" class="member-name-link">assertThrowsExactly</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;expectedType,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code> throws
  an exception of exactly the <code>expectedType</code> and return the exception.</div>
@@ -210,7 +210,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first even-row-color"><code>static void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertTimeout(java.time.Duration,org.junit.jupiter.api.function.Executable,java.lang.String)" class="member-name-link">assertTimeout</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;timeout,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code>
  completes before the given <code>timeout</code> is exceeded.</div>
@@ -218,7 +218,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertTimeout(java.time.Duration,org.junit.jupiter.api.function.Executable,java.util.function.Supplier)" class="member-name-link">assertTimeout</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;timeout,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code>
  completes before the given <code>timeout</code> is exceeded.</div>
@@ -233,7 +233,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first odd-row-color"><code>static void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertTimeoutPreemptively(java.time.Duration,org.junit.jupiter.api.function.Executable,java.lang.String)" class="member-name-link">assertTimeoutPreemptively</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;timeout,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code>
  completes before the given <code>timeout</code> is exceeded.</div>
@@ -241,7 +241,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="col-first even-row-color"><code>static void</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertTimeoutPreemptively(java.time.Duration,org.junit.jupiter.api.function.Executable,java.util.function.Supplier)" class="member-name-link">assertTimeoutPreemptively</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html" title="class or interface in java.time" class="external-link">Duration</a>&nbsp;timeout,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;messageSupplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that execution of the supplied <code>executable</code>
  completes before the given <code>timeout</code> is exceeded.</div>
@@ -262,7 +262,7 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../../DynamicTest.html" title="class in org.junit.jupiter.api">DynamicTest</a></code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">DynamicTest.</span><code><a href="../../DynamicTest.html#dynamicTest(java.lang.String,java.net.URI,org.junit.jupiter.api.function.Executable)" class="member-name-link">dynamicTest</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;displayName,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;testSourceUri,
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/net/URI.html" title="class or interface in java.net" class="external-link">URI</a>&nbsp;testSourceUri,
  <a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&nbsp;executable)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Factory for creating a new <code>DynamicTest</code> for the supplied display
@@ -282,14 +282,14 @@ E extends <a href="../Executable.html" title="interface in org.junit.jupiter.api
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,java.util.Collection)" class="member-name-link">assertAll</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
+<div class="col-second even-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,java.util.Collection)" class="member-name-link">assertAll</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&gt;&nbsp;executables)</code></div>
 <div class="col-last even-row-color">
 <div class="block"><em>Assert</em> that <em>all</em> supplied <code>executables</code> do not throw
  exceptions.</div>
 </div>
 <div class="col-first odd-row-color"><code>static void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,java.util.stream.Stream)" class="member-name-link">assertAll</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
+<div class="col-second odd-row-color"><span class="type-name-label">Assertions.</span><code><a href="../../Assertions.html#assertAll(java.lang.String,java.util.stream.Stream)" class="member-name-link">assertAll</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;heading,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html" title="class or interface in java.util.stream" class="external-link">Stream</a>&lt;<a href="../Executable.html" title="interface in org.junit.jupiter.api.function">Executable</a>&gt;&nbsp;executables)</code></div>
 <div class="col-last odd-row-color">
 <div class="block"><em>Assert</em> that <em>all</em> supplied <code>executables</code> do not throw

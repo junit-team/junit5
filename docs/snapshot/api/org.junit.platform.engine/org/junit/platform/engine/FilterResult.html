@@ -122,7 +122,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#excluded()" class="member-name-link">excluded</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#excluded(java.lang.String)" class="member-name-link">excluded</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#excluded(java.lang.String)" class="member-name-link">excluded</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Factory for creating <em>excluded</em> results.</div>
 </div>
@@ -136,7 +136,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#included()" class="member-name-link">included</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#included(java.lang.String)" class="member-name-link">included</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#included(java.lang.String)" class="member-name-link">included</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Factory for creating <em>included</em> results.</div>
 </div>
@@ -147,8 +147,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#includedIf(boolean,java.util.function.Supplier,java.util.function.Supplier)" class="member-name-link">includedIf</a><wbr>(boolean&nbsp;included,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Factory for creating filter results based on the condition given.</div>
 </div>
@@ -175,7 +175,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="included(java.lang.String)">
 <h3>included</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></span>&nbsp;<span class="element-name">included</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></span>&nbsp;<span class="element-name">included</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</span></div>
 <div class="block">Factory for creating <em>included</em> results.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -188,7 +188,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="excluded(java.lang.String)">
 <h3>excluded</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></span>&nbsp;<span class="element-name">excluded</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</span></div>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></span>&nbsp;<span class="element-name">excluded</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</span></div>
 <div class="block">Factory for creating <em>excluded</em> results.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -205,7 +205,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Factory for creating filter results based on the condition given.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>included</code> - whether or not the filtered object should be included</dd>
+<dd><code>included</code> - whether the filtered object should be included</dd>
 <dt>Returns:</dt>
 <dd>a valid <code>FilterResult</code> for the given condition</dd>
 </dl>
@@ -215,12 +215,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="includedIf(boolean,java.util.function.Supplier,java.util.function.Supplier)">
 <h3>includedIf</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></span>&nbsp;<span class="element-name">includedIf</span><wbr><span class="parameters">(boolean&nbsp;included,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</span></div>
 <div class="block">Factory for creating filter results based on the condition given.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>included</code> - whether or not the filtered object should be included</dd>
+<dd><code>included</code> - whether the filtered object should be included</dd>
 <dd><code>inclusionReasonSupplier</code> - supplier for the reason in case of inclusion</dd>
 <dd><code>exclusionReasonSupplier</code> - supplier for the reason in case of exclusion</dd>
 <dt>Returns:</dt>

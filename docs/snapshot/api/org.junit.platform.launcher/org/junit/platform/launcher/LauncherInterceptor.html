@@ -151,7 +151,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Interface</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="LauncherInterceptor.Invocation.html" class="type-name-link" title="interface in org.junit.platform.launcher">LauncherInterceptor.Invocation</a>&lt;<a href="LauncherInterceptor.Invocation.html" title="type parameter in LauncherInterceptor.Invocation">T</a>&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="LauncherInterceptor.Invocation.html" class="type-name-link" title="interface in org.junit.platform.launcher">LauncherInterceptor.Invocation</a>&lt;<a href="LauncherInterceptor.Invocation.html" title="type parameter in LauncherInterceptor.Invocation">T</a> extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-last even-row-color">
 <div class="block">An invocation that can be intercepted.</div>
 </div>
@@ -174,7 +174,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Closes this interceptor.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;<br>T</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#intercept(org.junit.platform.launcher.LauncherInterceptor.Invocation)" class="member-name-link">intercept</a><wbr>(<a href="LauncherInterceptor.Invocation.html" title="interface in org.junit.platform.launcher">LauncherInterceptor.Invocation</a>&lt;T&gt;&nbsp;invocation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Intercept the supplied invocation.</div>
@@ -196,7 +196,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="intercept(org.junit.platform.launcher.LauncherInterceptor.Invocation)">
 <h3>intercept</h3>
-<div class="member-signature"><span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">intercept</span><wbr><span class="parameters">(<a href="LauncherInterceptor.Invocation.html" title="interface in org.junit.platform.launcher">LauncherInterceptor.Invocation</a>&lt;T&gt;&nbsp;invocation)</span></div>
+<div class="member-signature"><span class="type-parameters">&lt;T extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">intercept</span><wbr><span class="parameters">(<a href="LauncherInterceptor.Invocation.html" title="interface in org.junit.platform.launcher">LauncherInterceptor.Invocation</a>&lt;T&gt;&nbsp;invocation)</span></div>
 <div class="block">Intercept the supplied invocation.
 
  <p>Implementations must call <a href="LauncherInterceptor.Invocation.html#proceed()"><code>LauncherInterceptor.Invocation.proceed()</code></a> exactly once.</div>

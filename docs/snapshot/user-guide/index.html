@@ -3710,8 +3710,6 @@ both as source code and as a screenshot of the execution within an IDE.</p>
 <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"A stack"</span><span class="o">)</span>
 <span class="kd">class</span> <span class="nc">TestingAStackDemo</span> <span class="o">{</span>
 
-    <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">stack</span><span class="o">;</span>
-
     <span class="nd">@Test</span>
     <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"is instantiated with new Stack()"</span><span class="o">)</span>
     <span class="kt">void</span> <span class="nf">isInstantiatedWithNew</span><span class="o">()</span> <span class="o">{</span>
@@ -3721,6 +3719,8 @@ both as source code and as a screenshot of the execution within an IDE.</p>
     <span class="nd">@Nested</span>
     <span class="nd">@DisplayName</span><span class="o">(</span><span class="s">"when new"</span><span class="o">)</span>
     <span class="kd">class</span> <span class="nc">WhenNew</span> <span class="o">{</span>
+
+        <span class="nc">Stack</span><span class="o">&lt;</span><span class="nc">Object</span><span class="o">&gt;</span> <span class="n">stack</span><span class="o">;</span>
 
         <span class="nd">@BeforeEach</span>
         <span class="kt">void</span> <span class="nf">createNewStack</span><span class="o">()</span> <span class="o">{</span>
@@ -6882,6 +6882,7 @@ by the following example.</p>
         <span class="n">textFile</span><span class="o">.</span><span class="na">path</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">writeString</span><span class="o">(</span><span class="n">filePath</span><span class="o">,</span> <span class="n">textFile</span><span class="o">.</span><span class="na">content</span><span class="o">);</span>
     <span class="o">}</span>
 
+    <span class="nd">@SuppressWarnings</span><span class="o">({</span> <span class="s">"DataFlowIssue"</span><span class="o">,</span> <span class="s">"NullAway"</span> <span class="o">})</span>
     <span class="nd">@AfterParameterizedClassInvocation</span>
     <span class="kd">static</span> <span class="kt">void</span> <span class="nf">afterInvocation</span><span class="o">(</span><span class="nc">TextFile</span> <span class="n">textFile</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
         <span class="kt">var</span> <span class="n">actualContent</span> <span class="o">=</span> <span class="nc">Files</span><span class="o">.</span><span class="na">readString</span><span class="o">(</span><span class="n">textFile</span><span class="o">.</span><span class="na">path</span><span class="o">);</span> <i class="conum" data-value="3"></i><b>(3)</b>
@@ -6890,6 +6891,7 @@ by the following example.</p>
         <span class="c1">// File will be deleted automatically by @TempDir support</span>
     <span class="o">}</span>
 
+    <span class="nd">@SuppressWarnings</span><span class="o">({</span> <span class="s">"DataFlowIssue"</span><span class="o">,</span> <span class="s">"NullAway"</span> <span class="o">})</span>
     <span class="nd">@Test</span>
     <span class="kt">void</span> <span class="nf">test</span><span class="o">()</span> <span class="o">{</span>
         <span class="n">assertTrue</span><span class="o">(</span><span class="nc">Files</span><span class="o">.</span><span class="na">exists</span><span class="o">(</span><span class="n">textFile</span><span class="o">.</span><span class="na">path</span><span class="o">));</span> <i class="conum" data-value="2"></i><b>(2)</b>
@@ -11325,6 +11327,7 @@ important to note which extension APIs are implemented and for what reasons.</p>
 <span class="kn">import</span> <span class="nn">java.lang.reflect.Field</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.util.function.Predicate</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">org.jspecify.annotations.Nullable</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.BeforeAllCallback</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ExtensionContext</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.api.extension.ParameterContext</span><span class="o">;</span>
@@ -11374,7 +11377,7 @@ important to note which extension APIs are implemented and for what reasons.</p>
         <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">random</span><span class="o">.</span><span class="na">nextInt</span><span class="o">();</span>
     <span class="o">}</span>
 
-    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">injectFields</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">testClass</span><span class="o">,</span> <span class="nc">Object</span> <span class="n">testInstance</span><span class="o">,</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">injectFields</span><span class="o">(</span><span class="nc">Class</span><span class="o">&lt;?&gt;</span> <span class="n">testClass</span><span class="o">,</span> <span class="nd">@Nullable</span> <span class="nc">Object</span> <span class="n">testInstance</span><span class="o">,</span>
             <span class="nc">Predicate</span><span class="o">&lt;</span><span class="nc">Field</span><span class="o">&gt;</span> <span class="n">predicate</span><span class="o">)</span> <span class="o">{</span>
 
         <span class="n">predicate</span> <span class="o">=</span> <span class="n">predicate</span><span class="o">.</span><span class="na">and</span><span class="o">(</span><span class="n">field</span> <span class="o">-&gt;</span> <span class="n">isInteger</span><span class="o">(</span><span class="n">field</span><span class="o">.</span><span class="na">getType</span><span class="o">()));</span>
@@ -12436,12 +12439,12 @@ and <code>AfterTestExecutionCallback</code> in order to time and log the test ex
     <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">String</span> <span class="no">START_TIME</span> <span class="o">=</span> <span class="s">"start time"</span><span class="o">;</span>
 
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">beforeTestExecution</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">beforeTestExecution</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">getStore</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">put</span><span class="o">(</span><span class="no">START_TIME</span><span class="o">,</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
     <span class="o">}</span>
 
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterTestExecution</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">afterTestExecution</span><span class="o">(</span><span class="nc">ExtensionContext</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
         <span class="nc">Method</span> <span class="n">testMethod</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="na">getRequiredTestMethod</span><span class="o">();</span>
         <span class="kt">long</span> <span class="n">startTime</span> <span class="o">=</span> <span class="n">getStore</span><span class="o">(</span><span class="n">context</span><span class="o">).</span><span class="na">remove</span><span class="o">(</span><span class="no">START_TIME</span><span class="o">,</span> <span class="kt">long</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
         <span class="kt">long</span> <span class="n">duration</span> <span class="o">=</span> <span class="nc">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">-</span> <span class="n">startTime</span><span class="o">;</span>
@@ -12950,7 +12953,7 @@ classes and methods.</p>
 
         <span class="nc">ExtensionContext</span> <span class="n">rootContext</span> <span class="o">=</span> <span class="n">extensionContext</span><span class="o">.</span><span class="na">getRoot</span><span class="o">();</span>
         <span class="nc">ExtensionContext</span><span class="o">.</span><span class="na">Store</span> <span class="n">store</span> <span class="o">=</span> <span class="n">rootContext</span><span class="o">.</span><span class="na">getStore</span><span class="o">(</span><span class="nc">Namespace</span><span class="o">.</span><span class="na">GLOBAL</span><span class="o">);</span>
-        <span class="nc">String</span> <span class="n">key</span> <span class="o">=</span> <span class="nc">HttpServerResource</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">();</span>
+        <span class="nc">Class</span><span class="o">&lt;</span><span class="nc">HttpServerResource</span><span class="o">&gt;</span> <span class="n">key</span> <span class="o">=</span> <span class="nc">HttpServerResource</span><span class="o">.</span><span class="na">class</span><span class="o">;</span>
         <span class="nc">HttpServerResource</span> <span class="n">resource</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="na">getOrComputeIfAbsent</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">__</span> <span class="o">-&gt;</span> <span class="o">{</span>
             <span class="k">try</span> <span class="o">{</span>
                 <span class="nc">HttpServerResource</span> <span class="n">serverResource</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HttpServerResource</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
@@ -15287,6 +15290,7 @@ global store or creates a new one if it doesn&#8217;t exist:</p>
 <span class="kn">import</span> <span class="nn">java.io.UncheckedIOException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">java.net.ServerSocket</span><span class="o">;</span>
 
+<span class="kn">import</span> <span class="nn">org.jspecify.annotations.Nullable</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.engine.EngineDiscoveryRequest</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.engine.ExecutionRequest</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.junit.platform.engine.TestDescriptor</span><span class="o">;</span>
@@ -15940,7 +15944,7 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.12</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExtensionContextException(String, Throwable)</code> <em>(constructor)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExtensionContextException(@Nullable String, Throwable)</code> <em>(constructor)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
 </tr>
 <tr>
@@ -16120,7 +16124,7 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.10</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentConverter.&ZeroWidthSpace;convert(Object, FieldContext)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ArgumentConverter.&ZeroWidthSpace;convert(@Nullable Object, FieldContext)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.13</code></p></td>
 </tr>
 <tr>
@@ -16151,7 +16155,7 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.11</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Arguments.&ZeroWidthSpace;argumentSet(String, Object[])</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Arguments.&ZeroWidthSpace;argumentSet(String, @Nullable Object[])</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>5.11</code></p></td>
 </tr>
 <tr>
@@ -16208,6 +16212,29 @@ value of lower stability.</p>
 </tbody>
 </table>
 <h4 id="module-org-junit-platform-commons" class="discrete">Module org.junit.platform.commons</h4>
+<h5 id="package-org-junit-platform-commons-function" class="discrete">Package org.junit.platform.commons.function</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 99%;">
+<col style="width: 1%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Since</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try.&ZeroWidthSpace;getNonNull()</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Try.&ZeroWidthSpace;getNonNullOrThrow(Function&lt;? super @Nullable Exception, E&gt;)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+</tbody>
+</table>
 <h5 id="package-org-junit-platform-commons-support" class="discrete">Package org.junit.platform.commons.support</h5>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -16222,7 +16249,7 @@ value of lower stability.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationSupport.&ZeroWidthSpace;findAnnotation(Class&lt;?&gt;, Class&lt;A&gt;, List&lt;Class&lt;?&gt;&gt;)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationSupport.&ZeroWidthSpace;findAnnotation(@Nullable Class&lt;?&gt;, Class&lt;A&gt;, List&lt;Class&lt;?&gt;&gt;)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.12</code></p></td>
 </tr>
 <tr>
@@ -16423,7 +16450,7 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.11</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectClass(ClassLoader, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectClass(@Nullable ClassLoader, String)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
@@ -16435,19 +16462,19 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.9</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(@Nullable ClassLoader, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(@Nullable ClassLoader, String, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(@Nullable ClassLoader, String, String, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(Class&lt;?&gt;, String, Class&lt;?&gt;[])</code> <em>(method)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(ClassLoader, String)</code> <em>(method)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(ClassLoader, String, String)</code> <em>(method)</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectMethod(ClassLoader, String, String, String)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
@@ -16455,15 +16482,15 @@ value of lower stability.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedClass(ClassLoader, List&lt;String&gt;, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedClass(@Nullable ClassLoader, List&lt;String&gt;, String)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedMethod(ClassLoader, List&lt;String&gt;, String, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedMethod(@Nullable ClassLoader, List&lt;String&gt;, String, String)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedMethod(ClassLoader, List&lt;String&gt;, String, String, String)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>DiscoverySelectors.&ZeroWidthSpace;selectNestedMethod(@Nullable ClassLoader, List&lt;String&gt;, String, String, String)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.10</code></p></td>
 </tr>
 <tr>
@@ -16917,7 +16944,7 @@ since such APIs will likely be removed in an upcoming release.</p>
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationSupport.&ZeroWidthSpace;findAnnotation(Class&lt;?&gt;, Class&lt;A&gt;, SearchOption)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>AnnotationSupport.&ZeroWidthSpace;findAnnotation(@Nullable Class&lt;?&gt;, Class&lt;A&gt;, SearchOption)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.12</code></p></td>
 </tr>
 <tr>

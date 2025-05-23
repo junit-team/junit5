@@ -122,7 +122,7 @@ loadScripts(document, 'script');</script>
  <a href="../../../../../../org.junit.platform.engine/org/junit/platform/engine/TestTag.html" title="class in org.junit.platform.engine">tags</a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="ParseResult.html" title="interface in org.junit.platform.launcher.tagexpression">ParseResult</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#parseFrom(java.lang.String)" class="member-name-link">parseFrom</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;infixTagExpression)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#parseFrom(java.lang.String)" class="member-name-link">parseFrom</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;infixTagExpression)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Attempt to parse a <a href="TagExpression.html" title="interface in org.junit.platform.launcher.tagexpression"><code>TagExpression</code></a> from the supplied <em>tag
  expression string</em>.</div>
@@ -146,12 +146,13 @@ loadScripts(document, 'script');</script>
 <h3>parseFrom</h3>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#INTERNAL" title="class or interface in org.apiguardian.api" class="external-link">INTERNAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="1.1")
-</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ParseResult.html" title="interface in org.junit.platform.launcher.tagexpression">ParseResult</a></span>&nbsp;<span class="element-name">parseFrom</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;infixTagExpression)</span></div>
+</span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="ParseResult.html" title="interface in org.junit.platform.launcher.tagexpression">ParseResult</a></span>&nbsp;<span class="element-name">parseFrom</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;infixTagExpression)</span></div>
 <div class="block">Attempt to parse a <a href="TagExpression.html" title="interface in org.junit.platform.launcher.tagexpression"><code>TagExpression</code></a> from the supplied <em>tag
  expression string</em>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>infixTagExpression</code> - the tag expression string to parse; never <code>null</code>.</dd>
+<dd><code>infixTagExpression</code> - the tag expression string to parse; may be
+ <code>null</code>.</dd>
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">

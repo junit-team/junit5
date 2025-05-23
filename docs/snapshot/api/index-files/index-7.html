@@ -161,13 +161,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#get(java.lang.String)" class="member-name-link">get(String)</a> - Method in class org.junit.platform.engine.support.config.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" title="class in org.junit.platform.engine.support.config">PrefixedConfigurationParameters</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.html#get(java.lang.String,java.util.function.Function,E)" class="member-name-link">get(String, Function&lt;String, Optional&lt;String&gt;&gt;, E)</a> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.html" title="class in org.junit.jupiter.engine.config">EnumConfigurationParameterConverter</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html#get(java.lang.String,java.util.function.Function)" class="member-name-link">get(String, Function&lt;String, T&gt;)</a> - Method in interface org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/ConfigurationParameters.html" title="interface in org.junit.platform.engine">ConfigurationParameters</a></dt>
 <dd>
 <div class="block">Get and transform the configuration parameter stored under the specified
  <code>key</code> using the specified <code>transformer</code>.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.html#get(java.lang.String,java.util.function.Function,E)" class="member-name-link">get(String, Function&lt;String, Optional&lt;String&gt;&gt;, E)</a> - Method in class org.junit.jupiter.engine.config.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/config/EnumConfigurationParameterConverter.html" title="class in org.junit.jupiter.engine.config">EnumConfigurationParameterConverter</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html#get(java.lang.String,java.util.function.Function)" class="member-name-link">get(String, Function&lt;String, T&gt;)</a> - Method in class org.junit.platform.engine.support.config.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/config/PrefixedConfigurationParameters.html" title="class in org.junit.platform.engine.support.config">PrefixedConfigurationParameters</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html#get(N,java.lang.Object)" class="member-name-link">get(N, Object)</a> - Method in class org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a></dt>
@@ -1227,6 +1227,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the name of the nested class containing the selected method.</div>
 </dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/function/Try.html#getNonNull()" class="member-name-link">getNonNull()</a> - Method in class org.junit.platform.commons.function.<a href="../org.junit.platform.commons/org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, get the contained value; if this
+ <code>Try</code> is a failure, throw the contained exception.</div>
+</dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/function/Try.html#getNonNullOrThrow(java.util.function.Function)" class="member-name-link">getNonNullOrThrow(Function&lt;? super Exception, E&gt;)</a> - Method in class org.junit.platform.commons.function.<a href="../org.junit.platform.commons/org/junit/platform/commons/function/Try.html" title="class in org.junit.platform.commons.function">Try</a></dt>
+<dd>
+<div class="block">If this <code>Try</code> is a success, get the contained value; if this
+ <code>Try</code> is a failure, call the supplied <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link"><code>Function</code></a> with the
+ contained exception and throw the resulting <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link"><code>Exception</code></a>.</div>
+</dd>
 <dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/CollectionUtils.html#getOnlyElement(java.util.Collection)" class="member-name-link">getOnlyElement(Collection&lt;T&gt;)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/CollectionUtils.html" title="class in org.junit.platform.commons.util">CollectionUtils</a></dt>
 <dd>
 <div class="block">Get the only element of a collection of size 1.</div>
@@ -1242,13 +1253,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the value that is stored under the supplied <code>key</code>.</div>
 </dd>
-<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html#getOrComputeIfAbsent(K,java.util.function.Function)" class="member-name-link">getOrComputeIfAbsent(K, Function&lt;K, V&gt;)</a> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Store.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)" class="member-name-link">getOrComputeIfAbsent(K, Function&lt;K, V&gt;, Class&lt;V&gt;)</a> - Method in interface org.junit.jupiter.api.extension.<a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtensionContext.Store.html" title="interface in org.junit.jupiter.api.extension">ExtensionContext.Store</a></dt>
 <dd>
 <div class="block">Get the value of the specified required type that is stored under the
  supplied <code>key</code>.</div>
 </dd>
+<dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html#getOrComputeIfAbsent(K,java.util.function.Function)" class="member-name-link">getOrComputeIfAbsent(K, Function&lt;K, V&gt;)</a> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html#getOrComputeIfAbsent(K,java.util.function.Function,java.lang.Class)" class="member-name-link">getOrComputeIfAbsent(K, Function&lt;K, V&gt;, Class&lt;V&gt;)</a> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/NamespaceAwareStore.html" title="class in org.junit.jupiter.engine.execution">NamespaceAwareStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html#getOrComputeIfAbsent(N,K,java.util.function.Function)" class="member-name-link">getOrComputeIfAbsent(N, K, Function&lt;K, V&gt;)</a> - Method in class org.junit.platform.engine.support.store.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/store/NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a></dt>

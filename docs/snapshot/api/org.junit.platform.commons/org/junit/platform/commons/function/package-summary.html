@@ -73,7 +73,8 @@ loadScripts(document, 'script');</script>
 <h1 title="Package org.junit.platform.commons.function" class="title">Package org.junit.platform.commons.function</h1>
 </div>
 <hr>
-<div class="package-signature">package <span class="element-name">org.junit.platform.commons.function</span></div>
+<div class="package-signature"><span class="annotations">@NullMarked
+</span>package <span class="element-name">org.junit.platform.commons.function</span></div>
 <section class="package-description" id="package-description">
 <div class="block">Functional interfaces and support classes.</div>
 </section>
@@ -115,12 +116,12 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;V&gt;</div>
+<div class="col-first even-row-color class-summary class-summary-tab2"><a href="Try.html" title="class in org.junit.platform.commons.function">Try</a>&lt;V extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</div>
 <div class="col-last even-row-color class-summary class-summary-tab2">
 <div class="block">A container object which may either contain a nullable value in case of
  <em>success</em> or an exception in case of <em>failure</em>.</div>
 </div>
-<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="Try.Transformer.html" title="interface in org.junit.platform.commons.function">Try.Transformer</a>&lt;S,<wbr>T&gt;</div>
+<div class="col-first odd-row-color class-summary class-summary-tab1"><a href="Try.Transformer.html" title="interface in org.junit.platform.commons.function">Try.Transformer</a>&lt;S extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>,<wbr>T extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</div>
 <div class="col-last odd-row-color class-summary class-summary-tab1">
 <div class="block">A transformer for values of type <code>S</code> to type <code>T</code>.</div>
 </div>

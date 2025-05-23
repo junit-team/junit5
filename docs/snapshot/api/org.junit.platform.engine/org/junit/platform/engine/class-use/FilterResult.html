@@ -83,12 +83,12 @@ loadScripts(document, 'script');</script>
 <div class="block">Apply this filter to the supplied object.</div>
 </div>
 <div class="col-first odd-row-color"><code>static <a href="../FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">FilterResult.</span><code><a href="../FilterResult.html#excluded(java.lang.String)" class="member-name-link">excluded</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">FilterResult.</span><code><a href="../FilterResult.html#excluded(java.lang.String)" class="member-name-link">excluded</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Factory for creating <em>excluded</em> results.</div>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
-<div class="col-second even-row-color"><span class="type-name-label">FilterResult.</span><code><a href="../FilterResult.html#included(java.lang.String)" class="member-name-link">included</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">FilterResult.</span><code><a href="../FilterResult.html#included(java.lang.String)" class="member-name-link">included</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Factory for creating <em>included</em> results.</div>
 </div>
@@ -99,8 +99,8 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../FilterResult.html" title="class in org.junit.platform.engine">FilterResult</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">FilterResult.</span><code><a href="../FilterResult.html#includedIf(boolean,java.util.function.Supplier,java.util.function.Supplier)" class="member-name-link">includedIf</a><wbr>(boolean&nbsp;included,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;inclusionReasonSupplier,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;exclusionReasonSupplier)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Factory for creating filter results based on the condition given.</div>
 </div>

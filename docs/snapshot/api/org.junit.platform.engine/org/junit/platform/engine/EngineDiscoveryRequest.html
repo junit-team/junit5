@@ -186,7 +186,8 @@ loadScripts(document, 'script');</script>
  filtered by a particular type.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>selectorType</code> - the type of <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> to filter by</dd>
+<dd><code>selectorType</code> - the type of <a href="DiscoverySelector.html" title="interface in org.junit.platform.engine"><code>DiscoverySelector</code></a> to filter by;
+ never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>all selectors of this request that are instances of
  <code>selectorType</code>; never <code>null</code> but potentially empty</dd>
@@ -204,7 +205,8 @@ loadScripts(document, 'script');</script>
  of them have to include a resource for it to end up in the test plan.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>filterType</code> - the type of <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> to filter by</dd>
+<dd><code>filterType</code> - the type of <a href="DiscoveryFilter.html" title="interface in org.junit.platform.engine"><code>DiscoveryFilter</code></a> to filter by;
+ never <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>all filters of this request that are instances of
  <code>filterType</code>; never <code>null</code> but potentially empty</dd>

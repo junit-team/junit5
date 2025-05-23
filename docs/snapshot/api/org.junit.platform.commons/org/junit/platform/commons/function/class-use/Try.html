@@ -136,7 +136,7 @@ loadScripts(document, 'script');</script>
  new successful or failed <code>Try</code> depending on the action's outcome;
  if this <code>Try</code> is a success, do nothing.</div>
 </div>
-<div class="col-first even-row-color"><code>static &lt;V&gt;&nbsp;<a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;V&gt;</code></div>
+<div class="col-first even-row-color"><code>static &lt;V extends @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;<br><a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;V&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Try.</span><code><a href="../Try.html#success(V)" class="member-name-link">success</a><wbr>(V&nbsp;value)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Convert the supplied value into a succeeded <code>Try</code>.</div>
@@ -197,9 +197,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Try to load a class by its <em>primitive name</em> or <em>fully qualified
  name</em>, using the supplied <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ClassLoader.html" title="class or interface in java.lang" class="external-link"><code>ClassLoader</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ReflectionSupport.</span><code><a href="../../support/ReflectionSupport.html#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)" class="member-name-link">tryToReadFieldValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&nbsp;field,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;instance)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;instance)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Try to read the value of a potentially inaccessible field.</div>
 </div>
@@ -232,7 +232,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link">Method</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ReflectionUtils.</span><code><a href="../../util/ReflectionUtils.html#tryToGetMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">tryToGetMethod</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;clazz,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;...&nbsp;parameterTypes)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt; @Nullable ...&nbsp;parameterTypes)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Try to get the <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> in the specified class with the specified
  name and parameter types.</div>
@@ -267,14 +267,14 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Try to read the value of a potentially inaccessible or nonexistent field.</div>
 </div>
-<div class="col-first even-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-first even-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second even-row-color"><span class="type-name-label">ReflectionUtils.</span><code><a href="../../util/ReflectionUtils.html#tryToReadFieldValue(java.lang.reflect.Field)" class="member-name-link">tryToReadFieldValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&nbsp;field)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Try to read the value of a potentially inaccessible static field.</div>
 </div>
-<div class="col-first odd-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
+<div class="col-first odd-row-color"><code>static <a href="../Try.html" title="class in org.junit.platform.commons.function">Try</a><wbr>&lt;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">ReflectionUtils.</span><code><a href="../../util/ReflectionUtils.html#tryToReadFieldValue(java.lang.reflect.Field,java.lang.Object)" class="member-name-link">tryToReadFieldValue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Field.html" title="class or interface in java.lang.reflect" class="external-link">Field</a>&nbsp;field,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;instance)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;instance)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>

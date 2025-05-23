@@ -151,12 +151,12 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore)" class="member-name-link">NamespacedHierarchicalStore</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore)" class="member-name-link">NamespacedHierarchicalStore</a><wbr>(@Nullable <a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Create a new store with the supplied parent.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction)" class="member-name-link">NamespacedHierarchicalStore</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore,
- <a href="NamespacedHierarchicalStore.CloseAction.html" title="interface in org.junit.platform.engine.support.store">NamespacedHierarchicalStore.CloseAction</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;closeAction)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction)" class="member-name-link">NamespacedHierarchicalStore</a><wbr>(@Nullable <a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore,
+ @Nullable <a href="NamespacedHierarchicalStore.CloseAction.html" title="interface in org.junit.platform.engine.support.store">NamespacedHierarchicalStore.CloseAction</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;closeAction)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Create a new store with the supplied parent and close action.</div>
 </div>
@@ -180,14 +180,14 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
 <div class="block">If a <a href="NamespacedHierarchicalStore.CloseAction.html" title="interface in org.junit.platform.engine.support.store"><code>NamespacedHierarchicalStore.CloseAction</code></a> is configured, it will be called with all successfully
  stored values in reverse insertion order.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(N,java.lang.Object)" class="member-name-link">get</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;@Nullable T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get(N,java.lang.Object,java.lang.Class)" class="member-name-link">get</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</code></div>
@@ -196,19 +196,19 @@ implements <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base
  the parent store, if present, and cast it to the supplied required type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;K,<wbr>
-V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+V&gt;&nbsp;@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrComputeIfAbsent(N,K,java.util.function.Function)" class="member-name-link">getOrComputeIfAbsent</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  K&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>V&gt;&nbsp;defaultCreator)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>@Nullable V&gt;&nbsp;defaultCreator)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present, or call the supplied function to compute it.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;K,<wbr>
-V&gt;&nbsp;V</code></div>
+V&gt;&nbsp;@Nullable V</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOrComputeIfAbsent(N,K,java.util.function.Function,java.lang.Class)" class="member-name-link">getOrComputeIfAbsent</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  K&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>V&gt;&nbsp;defaultCreator,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>@Nullable V&gt;&nbsp;defaultCreator,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;V&gt;&nbsp;requiredType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the value stored for the supplied namespace and key in this store or
@@ -231,22 +231,22 @@ V&gt;&nbsp;V</code></div>
 <div class="block">Create a child store with this store as its parent and this store's close
  action.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#put(N,java.lang.Object,java.lang.Object)" class="member-name-link">put</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Put the supplied value for the supplied namespace and key into this
  store and return the previously associated value in this store.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(N,java.lang.Object)" class="member-name-link">remove</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove the value stored for the supplied namespace and key from this
  store.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;@Nullable T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#remove(N,java.lang.Object,java.lang.Class)" class="member-name-link">remove</a><wbr>(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</code></div>
@@ -274,7 +274,7 @@ V&gt;&nbsp;V</code></div>
 <li>
 <section class="detail" id="&lt;init&gt;(org.junit.platform.engine.support.store.NamespacedHierarchicalStore)">
 <h3>NamespacedHierarchicalStore</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespacedHierarchicalStore</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespacedHierarchicalStore</span><wbr><span class="parameters">(@Nullable <a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore)</span></div>
 <div class="block">Create a new store with the supplied parent.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -285,8 +285,8 @@ V&gt;&nbsp;V</code></div>
 <li>
 <section class="detail" id="&lt;init&gt;(org.junit.platform.engine.support.store.NamespacedHierarchicalStore,org.junit.platform.engine.support.store.NamespacedHierarchicalStore.CloseAction)">
 <h3>NamespacedHierarchicalStore</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespacedHierarchicalStore</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore,
- <a href="NamespacedHierarchicalStore.CloseAction.html" title="interface in org.junit.platform.engine.support.store">NamespacedHierarchicalStore.CloseAction</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;closeAction)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">NamespacedHierarchicalStore</span><wbr><span class="parameters">(@Nullable <a href="NamespacedHierarchicalStore.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStore</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;parentStore,
+ @Nullable <a href="NamespacedHierarchicalStore.CloseAction.html" title="interface in org.junit.platform.engine.support.store">NamespacedHierarchicalStore.CloseAction</a>&lt;<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&gt;&nbsp;closeAction)</span></div>
 <div class="block">Create a new store with the supplied parent and close action.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -376,7 +376,7 @@ V&gt;&nbsp;V</code></div>
 <li>
 <section class="detail" id="get(N,java.lang.Object)">
 <h3 id="get(java.lang.Object,java.lang.Object)">get</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</span></div>
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present.</div>
@@ -395,10 +395,10 @@ V&gt;&nbsp;V</code></div>
 <li>
 <section class="detail" id="get(N,java.lang.Object,java.lang.Class)">
 <h3 id="get(java.lang.Object,java.lang.Object,java.lang.Class)">get</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">get</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</span>
-          throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+                    throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present, and cast it to the supplied required type.</div>
 <dl class="notes">
@@ -418,9 +418,9 @@ V&gt;&nbsp;V</code></div>
 <section class="detail" id="getOrComputeIfAbsent(N,K,java.util.function.Function)">
 <h3 id="getOrComputeIfAbsent(java.lang.Object,java.lang.Object,java.util.function.Function)">getOrComputeIfAbsent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
-V&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">getOrComputeIfAbsent</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+V&gt;</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">getOrComputeIfAbsent</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  K&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>V&gt;&nbsp;defaultCreator)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>@Nullable V&gt;&nbsp;defaultCreator)</span></div>
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present, or call the supplied function to compute it.</div>
 <dl class="notes">
@@ -441,11 +441,11 @@ V&gt;</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/
 <section class="detail" id="getOrComputeIfAbsent(N,K,java.util.function.Function,java.lang.Class)">
 <h3 id="getOrComputeIfAbsent(java.lang.Object,java.lang.Object,java.util.function.Function,java.lang.Class)">getOrComputeIfAbsent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;K,<wbr>
-V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-name">getOrComputeIfAbsent</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+V&gt;</span>&nbsp;<span class="return-type">@Nullable V</span>&nbsp;<span class="element-name">getOrComputeIfAbsent</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  K&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>V&gt;&nbsp;defaultCreator,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;K,<wbr>@Nullable V&gt;&nbsp;defaultCreator,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;V&gt;&nbsp;requiredType)</span>
-                              throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+                                        throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
 <div class="block">Get the value stored for the supplied namespace and key in this store or
  the parent store, if present, or call the supplied function to compute it
  and, finally, cast it to the supplied required type.</div>
@@ -467,10 +467,10 @@ V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-n
 <li>
 <section class="detail" id="put(N,java.lang.Object,java.lang.Object)">
 <h3 id="put(java.lang.Object,java.lang.Object,java.lang.Object)">put</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">put</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">put</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span>
-           throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</span>
+                     throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
 <div class="block">Put the supplied value for the supplied namespace and key into this
  store and return the previously associated value in this store.
 
@@ -492,7 +492,7 @@ V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-n
 <li>
 <section class="detail" id="remove(N,java.lang.Object)">
 <h3 id="remove(java.lang.Object,java.lang.Object)">remove</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key)</span></div>
 <div class="block">Remove the value stored for the supplied namespace and key from this
  store.
@@ -514,10 +514,10 @@ V&gt;</span>&nbsp;<span class="return-type">V</span>&nbsp;<span class="element-n
 <li>
 <section class="detail" id="remove(N,java.lang.Object,java.lang.Class)">
 <h3 id="remove(java.lang.Object,java.lang.Object,java.lang.Class)">remove</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">@Nullable T</span>&nbsp;<span class="element-name">remove</span><wbr><span class="parameters">(<a href="NamespacedHierarchicalStore.html" title="type parameter in NamespacedHierarchicalStore">N</a>&nbsp;namespace,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;key,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;requiredType)</span>
-             throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
+                       throws <span class="exceptions"><a href="NamespacedHierarchicalStoreException.html" title="class in org.junit.platform.engine.support.store">NamespacedHierarchicalStoreException</a></span></div>
 <div class="block">Remove the value stored for the supplied namespace and key from this
  store and cast it to the supplied required type.
 

@@ -207,7 +207,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&gt;</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">NestedClassTestDescriptor.</span><code><a href="../../../../../../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html#getEnclosingTestClasses(org.junit.platform.engine.TestDescriptor)" class="member-name-link">getEnclosingTestClasses</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">NestedClassTestDescriptor.</span><code><a href="../../../../../../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/NestedClassTestDescriptor.html#getEnclosingTestClasses(org.junit.platform.engine.TestDescriptor)" class="member-name-link">getEnclosingTestClasses</a><wbr>(@Nullable <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>void</code></div>
 <div class="col-second odd-row-color"><span class="type-name-label">TestFactoryTestDescriptor.</span><code><a href="../../../../../../org.junit.jupiter.engine/org/junit/jupiter/engine/descriptor/TestFactoryTestDescriptor.html#nodeFinished(org.junit.jupiter.engine.execution.JupiterEngineExecutionContext,org.junit.platform.engine.TestDescriptor,org.junit.platform.engine.TestExecutionResult)" class="member-name-link">nodeFinished</a><wbr>(<a href="../../../../../../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a>&nbsp;context,
@@ -394,7 +394,7 @@ loadScripts(document, 'script');</script>
  </div>
 </div>
 <div class="col-first odd-row-color"><code>void</code></div>
-<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
+<div class="col-second odd-row-color"><span class="type-name-label">TestDescriptor.</span><code><a href="../TestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(@Nullable <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Set the <em>parent</em> of this descriptor.</div>
 </div>
@@ -504,7 +504,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><span class="type-name-label">AbstractTestDescriptor.</span><code><a href="../support/descriptor/AbstractTestDescriptor.html#removeChild(org.junit.platform.engine.TestDescriptor)" class="member-name-link">removeChild</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;child)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>final void</code></div>
-<div class="col-second even-row-color"><span class="type-name-label">AbstractTestDescriptor.</span><code><a href="../support/descriptor/AbstractTestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
+<div class="col-second even-row-color"><span class="type-name-label">AbstractTestDescriptor.</span><code><a href="../support/descriptor/AbstractTestDescriptor.html#setParent(org.junit.platform.engine.TestDescriptor)" class="member-name-link">setParent</a><wbr>(@Nullable <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;parent)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="caption"><span>Method parameters in <a href="../support/descriptor/package-summary.html">org.junit.platform.engine.support.descriptor</a> with type arguments of type <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a></span></div>
@@ -808,7 +808,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color"><code>static <a href="../../../../../../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine">Event</a></code></div>
 <div class="col-second even-row-color"><span class="type-name-label">Event.</span><code><a href="../../../../../../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped</a><wbr>(<a href="../TestDescriptor.html" title="interface in org.junit.platform.engine">TestDescriptor</a>&nbsp;testDescriptor,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;reason)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Create a <em>skipped</em> <code>Event</code> for the supplied
  <a href="../TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> and <code>reason</code>.</div>

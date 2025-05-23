@@ -442,7 +442,7 @@ loadScripts(document, 'script');</script>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html#event(org.assertj.core.api.Condition...)" class="member-name-link">event(Condition&lt;? super Event&gt;...)</a> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/EventConditions.html" title="class in org.junit.platform.testkit.engine">EventConditions</a></dt>
 <dd>
 <div class="block">Create a new <a href="https://javadoc.io/doc/org.assertj/assertj-core/3.27.3/org/assertj/core/api/Condition.html" title="class or interface in org.assertj.core.api" class="external-link"><code>Condition</code></a> that matches if and only if an
- <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches all of the supplied conditions.</div>
+ <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine"><code>Event</code></a> matches all the supplied conditions.</div>
 </dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" class="type-name-link" title="class in org.junit.platform.testkit.engine">Event</a> - Class in <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/package-summary.html">org.junit.platform.testkit.engine</a></dt>
 <dd>
@@ -841,15 +841,15 @@ loadScripts(document, 'script');</script>
 <div class="block"><code>Executions</code> is a facade that provides a fluent API for working with
  <a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Execution.html" title="class in org.junit.platform.testkit.engine">executions</a>.</div>
 </dd>
-<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped(TestDescriptor, String)</a> - Method in interface org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
-<dd>
-<div class="block">Must be called when the execution of a leaf or subtree of the test tree
- has been skipped.</div>
-</dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped(TestDescriptor, String)</a> - Static method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/Event.html" title="class in org.junit.platform.testkit.engine">Event</a></dt>
 <dd>
 <div class="block">Create a <em>skipped</em> <code>Event</code> for the supplied
  <a href="../org.junit.platform.engine/org/junit/platform/engine/TestDescriptor.html" title="interface in org.junit.platform.engine"><code>TestDescriptor</code></a> and <code>reason</code>.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped(TestDescriptor, String)</a> - Method in interface org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/EngineExecutionListener.html" title="interface in org.junit.platform.engine">EngineExecutionListener</a></dt>
+<dd>
+<div class="block">Must be called when the execution of a leaf or subtree of the test tree
+ has been skipped.</div>
 </dd>
 <dt><a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/ExecutionRecorder.html#executionSkipped(org.junit.platform.engine.TestDescriptor,java.lang.String)" class="member-name-link">executionSkipped(TestDescriptor, String)</a> - Method in class org.junit.platform.testkit.engine.<a href="../org.junit.platform.testkit/org/junit/platform/testkit/engine/ExecutionRecorder.html" title="class in org.junit.platform.testkit.engine">ExecutionRecorder</a></dt>
 <dd>

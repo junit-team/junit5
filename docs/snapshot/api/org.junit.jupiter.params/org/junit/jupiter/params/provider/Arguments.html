@@ -175,26 +175,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1"><code>static <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#arguments(java.lang.Object...)" class="member-name-link">arguments</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1"><code><a href="#arguments(java.lang.Object...)" class="member-name-link">arguments</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Factory method for creating an instance of <code>Arguments</code> based on
  the supplied <code>arguments</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="Arguments.ArgumentSet.html" title="class in org.junit.jupiter.params.provider">Arguments.ArgumentSet</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#argumentSet(java.lang.String,java.lang.Object...)" class="member-name-link">argumentSet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Factory method for creating an <a href="Arguments.ArgumentSet.html" title="class in org.junit.jupiter.params.provider"><code>Arguments.ArgumentSet</code></a> based on the supplied
  <code>name</code> and <code>arguments</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#get()" class="member-name-link">get</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Get the arguments used for an invocation of the
  <code>@ParameterizedTest</code> method.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1"><code>static <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#of(java.lang.Object...)" class="member-name-link">of</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1"><code><a href="#of(java.lang.Object...)" class="member-name-link">of</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1">
 <div class="block">Factory method for creating an instance of <code>Arguments</code> based on
  the supplied <code>arguments</code>.</div>
@@ -216,12 +216,12 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="get()">
 <h3>get</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]</span>&nbsp;<span class="element-name">get</span>()</div>
+<div class="member-signature"><span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>[]</span>&nbsp;<span class="element-name">get</span>()</div>
 <div class="block">Get the arguments used for an invocation of the
  <code>@ParameterizedTest</code> method.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the arguments; never <code>null</code></dd>
+<dd>the arguments; never <code>null</code> but may contain <code>null</code></dd>
 <dt>API Note:</dt>
 <dd>If you need a type-safe way to access some or all of the arguments,
  please read the <a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">class-level API note</a>.</dd>
@@ -231,13 +231,13 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="of(java.lang.Object...)">
 <h3>of</h3>
-<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></span>&nbsp;<span class="element-name">of</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
 <div class="block">Factory method for creating an instance of <code>Arguments</code> based on
  the supplied <code>arguments</code>.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>arguments</code> - the arguments to be used for an invocation of the test
- method; must not be <code>null</code></dd>
+ method; must not be <code>null</code> but may contain <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>an instance of <code>Arguments</code>; never <code>null</code></dd>
 <dt>See Also:</dt>
@@ -253,7 +253,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="arguments(java.lang.Object...)">
 <h3>arguments</h3>
-<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></span>&nbsp;<span class="element-name">arguments</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
+<div class="member-signature"><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="Arguments.html" title="interface in org.junit.jupiter.params.provider">Arguments</a></span>&nbsp;<span class="element-name">arguments</span><wbr><span class="parameters">(@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
 <div class="block">Factory method for creating an instance of <code>Arguments</code> based on
  the supplied <code>arguments</code>.
 
@@ -263,7 +263,7 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>arguments</code> - the arguments to be used for an invocation of the test
- method; must not be <code>null</code></dd>
+ method; must not be <code>null</code> but may contain <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>an instance of <code>Arguments</code>; never <code>null</code></dd>
 <dt>Since:</dt>
@@ -283,7 +283,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations"><a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html" title="class or interface in org.apiguardian.api" class="external-link">@API</a>(<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#status()" title="class or interface in org.apiguardian.api" class="external-link">status</a>=<a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.Status.html#EXPERIMENTAL" title="class or interface in org.apiguardian.api" class="external-link">EXPERIMENTAL</a>,
      <a href="https://apiguardian-team.github.io/apiguardian/docs/1.1.2/api/org/apiguardian/api/API.html#since()" title="class or interface in org.apiguardian.api" class="external-link">since</a>="5.11")
 </span><span class="modifiers">static</span>&nbsp;<span class="return-type"><a href="Arguments.ArgumentSet.html" title="class in org.junit.jupiter.params.provider">Arguments.ArgumentSet</a></span>&nbsp;<span class="element-name">argumentSet</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;arguments)</span></div>
 <div class="block">Factory method for creating an <a href="Arguments.ArgumentSet.html" title="class in org.junit.jupiter.params.provider"><code>Arguments.ArgumentSet</code></a> based on the supplied
  <code>name</code> and <code>arguments</code>.
 
@@ -298,7 +298,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>name</code> - the name of the argument set; must not be <code>null</code> or blank</dd>
 <dd><code>arguments</code> - the arguments to be used for an invocation of the test
- method; must not be <code>null</code></dd>
+ method; must not be <code>null</code> but may contain <code>null</code></dd>
 <dt>Returns:</dt>
 <dd>an <code>ArgumentSet</code>; never <code>null</code></dd>
 <dt>Since:</dt>

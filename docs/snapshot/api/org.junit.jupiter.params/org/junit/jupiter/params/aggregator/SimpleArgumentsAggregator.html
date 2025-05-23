@@ -144,20 +144,20 @@ implements <a href="ArgumentsAggregator.html" title="interface in org.junit.jupi
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract @Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,java.lang.Class,org.junit.jupiter.api.extension.AnnotatedElementContext,int)" class="member-name-link">aggregateArguments</a><wbr>(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;context,
  int&nbsp;parameterIndex)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)" class="member-name-link">aggregateArguments</a><wbr>(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Aggregate the arguments contained in the supplied <code>accessor</code> into a
  single object.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.params.support.FieldContext)" class="member-name-link">aggregateArguments</a><wbr>(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="../support/FieldContext.html" title="interface in org.junit.jupiter.params.support">FieldContext</a>&nbsp;context)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -198,9 +198,9 @@ implements <a href="ArgumentsAggregator.html" title="interface in org.junit.jupi
 <li>
 <section class="detail" id="aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)">
 <h3>aggregateArguments</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/ParameterContext.html" title="interface in org.junit.jupiter.api.extension">ParameterContext</a>&nbsp;context)</span>
-                          throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
+                                    throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ArgumentsAggregator.html#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.api.extension.ParameterContext)">ArgumentsAggregator</a></code></span></div>
 <div class="block">Aggregate the arguments contained in the supplied <code>accessor</code> into a
  single object.</div>
@@ -224,9 +224,9 @@ implements <a href="ArgumentsAggregator.html" title="interface in org.junit.jupi
 <li>
 <section class="detail" id="aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.params.support.FieldContext)">
 <h3>aggregateArguments</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="../support/FieldContext.html" title="interface in org.junit.jupiter.params.support">FieldContext</a>&nbsp;context)</span>
-                          throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
+                                    throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="ArgumentsAggregator.html#aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,org.junit.jupiter.params.support.FieldContext)">ArgumentsAggregator</a></code></span></div>
 <div class="block">Aggregate the arguments contained in the supplied <code>accessor</code> into a
  single object.</div>
@@ -250,11 +250,11 @@ implements <a href="ArgumentsAggregator.html" title="interface in org.junit.jupi
 <li>
 <section class="detail" id="aggregateArguments(org.junit.jupiter.params.aggregator.ArgumentsAccessor,java.lang.Class,org.junit.jupiter.api.extension.AnnotatedElementContext,int)">
 <h3>aggregateArguments</h3>
-<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
+<div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">@Nullable <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span>&nbsp;<span class="element-name">aggregateArguments</span><wbr><span class="parameters">(<a href="ArgumentsAccessor.html" title="interface in org.junit.jupiter.params.aggregator">ArgumentsAccessor</a>&nbsp;accessor,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;targetType,
  <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AnnotatedElementContext.html" title="interface in org.junit.jupiter.api.extension">AnnotatedElementContext</a>&nbsp;context,
  int&nbsp;parameterIndex)</span>
-                                      throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
+                                                throws <span class="exceptions"><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></span></div>
 <dl class="notes">
 <dt>Throws:</dt>
 <dd><code><a href="ArgumentsAggregationException.html" title="class in org.junit.jupiter.params.aggregator">ArgumentsAggregationException</a></code></dd>

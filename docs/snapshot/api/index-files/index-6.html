@@ -97,11 +97,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Specify the number of expected <em>failed</em> events.</div>
 </dd>
-<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.html#failed(java.lang.Throwable)" class="member-name-link">failed(Throwable)</a> - Static method in class org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.html" title="class in org.junit.platform.engine">SelectorResolutionResult</a></dt>
-<dd>
-<div class="block">Create a <code>SelectorResolutionResult</code> for a <em>failed</em>
- selector resolution.</div>
-</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/TestExecutionResult.html#failed(java.lang.Throwable)" class="member-name-link">failed(Throwable)</a> - Static method in class org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/TestExecutionResult.html" title="class in org.junit.platform.engine">TestExecutionResult</a></dt>
 <dd>
 <div class="block">Create a <code>TestExecutionResult</code> for a <em>failed</em> execution
@@ -111,6 +106,11 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a <code>EngineDiscoveryResult</code> for a <em>failed</em> test
  discovery.</div>
+</dd>
+<dt><a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.html#failed(java.lang.Throwable)" class="member-name-link">failed(Throwable)</a> - Static method in class org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.html" title="class in org.junit.platform.engine">SelectorResolutionResult</a></dt>
+<dd>
+<div class="block">Create a <code>SelectorResolutionResult</code> for a <em>failed</em>
+ selector resolution.</div>
 </dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.Status.html#FAILED" class="member-name-link">FAILED</a> - Enum constant in enum class org.junit.platform.engine.<a href="../org.junit.platform.engine/org/junit/platform/engine/SelectorResolutionResult.Status.html" title="enum class in org.junit.platform.engine">SelectorResolutionResult.Status</a></dt>
 <dd>
@@ -517,15 +517,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/DefaultTestInstances.html#findInstance(java.lang.Class)" class="member-name-link">findInstance(Class&lt;T&gt;)</a> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/DefaultTestInstances.html" title="class in org.junit.jupiter.engine.execution">DefaultTestInstances</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">findMethod(Class&lt;?&gt;, String, Class&lt;?&gt;...)</a> - Static method in class org.junit.platform.commons.support.<a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
-<dd>
-<div class="block">Find the first <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> of the supplied class or interface that
- meets the specified criteria, beginning with the specified class or
- interface and traversing up the type hierarchy until such a method is
- found or the type hierarchy is exhausted.</div>
-</dd>
-<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">findMethod(Class&lt;?&gt;, String, Class&lt;?&gt;...)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">findMethod(Class&lt;?&gt;, String, String)</a> - Static method in class org.junit.platform.commons.support.<a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
 <dd>
 <div class="block">Find the first <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> of the supplied class or interface that
@@ -534,6 +525,15 @@ loadScripts(document, 'script');</script>
  found or the type hierarchy is exhausted.</div>
 </dd>
 <dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.String)" class="member-name-link">findMethod(Class&lt;?&gt;, String, String)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">findMethod(Class&lt;?&gt;, String, Class&lt;?&gt;...)</a> - Static method in class org.junit.platform.commons.support.<a href="../org.junit.platform.commons/org/junit/platform/commons/support/ReflectionSupport.html" title="class in org.junit.platform.commons.support">ReflectionSupport</a></dt>
+<dd>
+<div class="block">Find the first <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/reflect/Method.html" title="class or interface in java.lang.reflect" class="external-link"><code>Method</code></a> of the supplied class or interface that
+ meets the specified criteria, beginning with the specified class or
+ interface and traversing up the type hierarchy until such a method is
+ found or the type hierarchy is exhausted.</div>
+</dd>
+<dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#findMethod(java.lang.Class,java.lang.String,java.lang.Class...)" class="member-name-link">findMethod(Class&lt;?&gt;, String, Class&lt;?&gt;...)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html#findMethods(java.lang.Class,java.util.function.Predicate)" class="member-name-link">findMethods(Class&lt;?&gt;, Predicate&lt;Method&gt;)</a> - Static method in class org.junit.platform.commons.util.<a href="../org.junit.platform.commons/org/junit/platform/commons/util/ReflectionUtils.html" title="class in org.junit.platform.commons.util">ReflectionUtils</a></dt>
 <dd>
