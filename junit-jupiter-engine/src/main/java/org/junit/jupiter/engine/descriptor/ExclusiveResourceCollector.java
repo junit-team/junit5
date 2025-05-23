@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.descriptor;
 
 import static org.junit.jupiter.api.parallel.ResourceLockTarget.SELF;
 import static org.junit.platform.commons.support.AnnotationSupport.findRepeatableAnnotations;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.reflect.AnnotatedElement;
 import java.util.Collection;
@@ -105,10 +104,14 @@ abstract class ExclusiveResourceCollector {
 		private List<ResourceLocksProvider> getProviders() {
 			if (this.providers == null) {
 				this.providers = annotations.stream() //
-						.flatMap(annotation -> Stream.of(annotation.providers()).map(ReflectionUtils::newInstance)) //
-						.collect(toUnmodifiableList());
+						.flatMap(annotation -> instantiate(annotation.providers())) //
+						.toList();
 			}
 			return providers;
+		}
+
+		private static Stream<ResourceLocksProvider> instantiate(Class<? extends ResourceLocksProvider>[] providers) {
+			return Stream.of(providers).map(ReflectionUtils::newInstance);
 		}
 
 		private static ExclusiveResource.LockMode toLockMode(ResourceAccessMode mode) {

@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.apiguardian.api.API.Status.INTERNAL;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 import static org.junit.platform.commons.util.ReflectionUtils.isInnerClass;
 
 import java.lang.annotation.Annotation;
@@ -454,7 +453,7 @@ public final class AnnotationUtils {
 		// @formatter:off
 		return Arrays.stream(clazz.getFields())
 				.filter(field -> fieldType.isAssignableFrom(field.getType()) && isAnnotated(field, annotationType))
-				.collect(toUnmodifiableList());
+				.toList();
 		// @formatter:on
 	}
 

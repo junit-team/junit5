@@ -11,7 +11,6 @@
 package org.junit.platform.suite.engine;
 
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotatedMethods;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -59,7 +58,7 @@ final class LifecycleMethodUtils {
 							.and(isNotPrivate(annotationType, issueReporter)) //
 							.and(hasNoParameters(annotationType, issueReporter)) //
 							.toPredicate()) //
-				.collect(toUnmodifiableList());
+				.toList();
 	}
 
 	private static DiscoveryIssueReporter.Condition<Method> isStatic(Class<? extends Annotation> annotationType,

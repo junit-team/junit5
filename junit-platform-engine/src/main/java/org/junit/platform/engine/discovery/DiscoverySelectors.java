@@ -13,7 +13,6 @@ package org.junit.platform.engine.discovery;
 import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
-import static org.junit.platform.commons.util.CollectionUtils.toUnmodifiableList;
 
 import java.io.File;
 import java.io.IOException;
@@ -262,7 +261,7 @@ public final class DiscoverySelectors {
 				.map(Path::toUri)
 				.map(ClasspathRootSelector::new)
 				// unmodifiable since selectClasspathRoots is a public, non-internal method
-				.collect(toUnmodifiableList());
+				.toList();
 		// @formatter:on
 	}
 
@@ -394,7 +393,7 @@ public final class DiscoverySelectors {
 		return moduleNames.stream()
 				.map(DiscoverySelectors::selectModule)
 				// unmodifiable since this is a public, non-internal method
-				.collect(toUnmodifiableList());
+				.toList();
 		// @formatter:on
 	}
 
