@@ -27,6 +27,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.platform.commons.PreconditionViolationException;
@@ -41,8 +42,9 @@ class DynamicTestTests {
 	private static final Executable nix = () -> {
 	};
 
-	private final List<String> assertedValues = new ArrayList<>();
+	private final List<@Nullable String> assertedValues = new ArrayList<>();
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromStreamPreconditions() {
 		ThrowingConsumer<Object> testExecutor = input -> {
@@ -57,6 +59,7 @@ class DynamicTestTests {
 			() -> DynamicTest.stream(Stream.empty(), displayNameGenerator, null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromIteratorPreconditions() {
 		ThrowingConsumer<Object> testExecutor = input -> {
@@ -71,6 +74,7 @@ class DynamicTestTests {
 			() -> DynamicTest.stream(emptyIterator(), displayNameGenerator, null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromStreamWithNamesPreconditions() {
 		ThrowingConsumer<Object> testExecutor = input -> {
@@ -81,6 +85,7 @@ class DynamicTestTests {
 		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(Stream.empty(), null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromIteratorWithNamesPreconditions() {
 		ThrowingConsumer<Object> testExecutor = input -> {
@@ -91,12 +96,14 @@ class DynamicTestTests {
 		assertThrows(PreconditionViolationException.class, () -> DynamicTest.stream(emptyIterator(), null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromStreamWithNamedExecutablesPreconditions() {
 		assertThrows(PreconditionViolationException.class,
 			() -> DynamicTest.stream((Stream<DummyNamedExecutableForTests>) null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void streamFromIteratorWithNamedExecutablesPreconditions() {
 		assertThrows(PreconditionViolationException.class,
@@ -170,7 +177,7 @@ class DynamicTestTests {
 		assertThat(assertedValues).containsExactly("foo", "bar");
 	}
 
-	private void throwingConsumer(String str) throws Throwable {
+	private void throwingConsumer(@Nullable String str) throws Throwable {
 		if ("baz".equals(str)) {
 			throw new Throwable("Baz!");
 		}

@@ -23,6 +23,7 @@ import static org.mockito.Mockito.verify;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
@@ -39,6 +40,8 @@ abstract class AbstractExecutableInvokerTests {
 	private static final String ENIGMA = "enigma";
 
 	protected final MethodSource instance = mock();
+
+	@Nullable
 	protected Method method;
 
 	protected final ExtensionContext extensionContext = mock();
@@ -84,7 +87,7 @@ abstract class AbstractExecutableInvokerTests {
 
 	private void testMethodWithASingleStringParameter() {
 		this.method = ReflectionSupport.findMethod(this.instance.getClass(), "singleStringParameter",
-			String.class).get();
+			String.class).orElseThrow();
 	}
 
 	private void register(ParameterResolver... resolvers) {
@@ -95,6 +98,6 @@ abstract class AbstractExecutableInvokerTests {
 
 	abstract void invokeMethod();
 
-	abstract <T> T invokeConstructor(Constructor<T> constructor, Object outerInstance);
+	abstract <T> T invokeConstructor(Constructor<T> constructor, @Nullable Object outerInstance);
 
 }

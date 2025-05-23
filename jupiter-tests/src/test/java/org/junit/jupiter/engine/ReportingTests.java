@@ -115,6 +115,7 @@ class ReportingTests extends AbstractJupiterTestEngineTests {
 				file -> Files.writeString(file, "succeedingTest"));
 		}
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void invalidReportData(TestReporter reporter) {
 

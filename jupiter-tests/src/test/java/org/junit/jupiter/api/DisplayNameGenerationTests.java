@@ -397,8 +397,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 	static class StackTestCase {
 
-		Stack<Object> stack;
-
 		@Test
 		void is_instantiated_using_its_noarg_constructor() {
 			new Stack<>();
@@ -406,6 +404,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 		@Nested
 		class A_new_stack {
+
+			Stack<Object> stack;
 
 			@BeforeEach
 			void createNewStack() {
@@ -464,8 +464,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@IndicativeSentencesGeneration(generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorTestCase {
 
-		Stack<Object> stack;
-
 		@Test
 		void is_instantiated_with_its_constructor() {
 			new Stack<>();
@@ -473,6 +471,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 		@Nested
 		class when_new {
+
+			Stack<Object> stack;
 
 			@BeforeEach
 			void create_with_new_stack() {
@@ -509,8 +509,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@IndicativeSentencesGeneration(separator = " >> ", generator = DisplayNameGenerator.ReplaceUnderscores.class)
 	static class IndicativeGeneratorWithCustomSeparatorTestCase {
 
-		Stack<Object> stack;
-
 		@Test
 		void is_instantiated_with_its_constructor() {
 			new Stack<>();
@@ -518,6 +516,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 
 		@Nested
 		class when_new {
+
+			Stack<Object> stack;
 
 			@BeforeEach
 			void create_with_new_stack() {
@@ -554,8 +554,6 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 	@IndicativeSentencesGeneration
 	static class IndicativeGeneratorWithCustomSentenceFragmentsTestCase {
 
-		Stack<Object> stack;
-
 		@SentenceFragment("is instantiated with its constructor")
 		@Test
 		void instantiateViaConstructor() {
@@ -565,6 +563,8 @@ class DisplayNameGenerationTests extends AbstractJupiterTestEngineTests {
 		@SentenceFragment("when new")
 		@Nested
 		class NewStackTestCase {
+
+			Stack<Object> stack;
 
 			@BeforeEach
 			void createNewStack() {

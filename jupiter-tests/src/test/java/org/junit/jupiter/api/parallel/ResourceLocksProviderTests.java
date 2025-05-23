@@ -11,6 +11,7 @@
 package org.junit.jupiter.api.parallel;
 
 import static java.util.Collections.emptySet;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -115,6 +117,7 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			private static boolean isProvideForNestedClassCalled = false;
 			private static boolean isProvideForNestedTestMethodCalled = false;
 
+			@Nullable
 			private Class<?> testClass;
 
 			@Override
@@ -128,7 +131,7 @@ class ResourceLocksProviderTests extends AbstractJupiterTestEngineTests {
 			@Override
 			public Set<Lock> provideForNestedClass(List<Class<?>> enclosingInstanceTypes, Class<?> testClass) {
 				isProvideForNestedClassCalled = true;
-				assertEquals(List.of(this.testClass), enclosingInstanceTypes);
+				assertEquals(List.of(requireNonNull(this.testClass)), enclosingInstanceTypes);
 				assertEquals(ClassLevelProviderTestCase.NestedClass.class, testClass);
 				return emptySet();
 			}

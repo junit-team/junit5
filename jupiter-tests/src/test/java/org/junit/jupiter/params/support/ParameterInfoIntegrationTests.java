@@ -11,6 +11,7 @@
 package org.junit.jupiter.params.support;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.Nested;
@@ -102,6 +103,7 @@ class ParameterInfoIntegrationTests extends AbstractJupiterTestEngineTests {
 
 		private static void assertParameterInfo(ExtensionContext context, String parameterName, int argumentValue) {
 			var parameterInfo = ParameterInfo.get(context);
+			assertNotNull(parameterInfo);
 			var declaration = parameterInfo.getDeclarations().get(0).orElseThrow();
 			assertEquals(parameterName, declaration.getParameterName().orElseThrow());
 			assertEquals(int.class, declaration.getParameterType());

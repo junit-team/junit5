@@ -31,6 +31,7 @@ class TestReporterParameterResolverTests {
 
 	TestReporterParameterResolver resolver = new TestReporterParameterResolver();
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void supports() {
 		Parameter parameter1 = findParameterOfMethod("methodWithTestReporterParameter", TestReporter.class);
@@ -49,7 +50,7 @@ class TestReporterParameterResolverTests {
 	}
 
 	private Parameter findParameterOfMethod(String methodName, Class<?>... parameterTypes) {
-		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).get();
+		Method method = ReflectionSupport.findMethod(Sample.class, methodName, parameterTypes).orElseThrow();
 		return method.getParameters()[0];
 	}
 

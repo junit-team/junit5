@@ -11,6 +11,7 @@
 package org.junit.jupiter.params;
 
 import static java.util.Comparator.comparing;
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,6 +57,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -944,11 +946,13 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test1() {
+			assertNotNull(value);
 			assertTrue(value.startsWith("minus"), "negative");
 		}
 
 		@Test
 		void test2() {
+			assertNotNull(value);
 			assertTrue(value.startsWith("minus"), "negative");
 		}
 	}
@@ -960,8 +964,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 		}
 
 		@Override
-		protected String convert(Integer source) throws ArgumentConversionException {
-			return switch (source) {
+		protected String convert(@Nullable Integer source) throws ArgumentConversionException {
+			return switch (requireNonNull(source)) {
 				case -1 -> "minus one";
 				case +1 -> "plus one";
 				default -> throw new IllegalArgumentException("Unsupported value: " + source);
@@ -976,12 +980,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test1() {
-			assertTrue(accessor.getInteger(0) < 0, "negative");
+			assertTrue(requireNonNull(accessor.getInteger(0)) < 0, "negative");
 		}
 
 		@Test
 		void test2() {
-			assertTrue(accessor.getInteger(0) < 0, "negative");
+			assertTrue(requireNonNull(accessor.getInteger(0)) < 0, "negative");
 		}
 
 	}
@@ -996,12 +1000,12 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		@Test
 		void test1() {
-			assertTrue(accessor.getInteger(0) < 0, "negative");
+			assertTrue(requireNonNull(accessor.getInteger(0)) < 0, "negative");
 		}
 
 		@Test
 		void test2() {
-			assertTrue(accessor.getInteger(0) < 0, "negative");
+			assertTrue(requireNonNull(accessor.getInteger(0)) < 0, "negative");
 		}
 	}
 
@@ -1056,7 +1060,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 				AnnotatedElementContext context, int parameterIndex) throws ArgumentsAggregationException {
 
 			assertThat(targetType).isEqualTo(int.class);
-			return accessor.getInteger(0) * 2;
+			return requireNonNull(accessor.getInteger(0)) * 2;
 		}
 	}
 
@@ -1713,6 +1717,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record ArgumentConversionPerInvocationConstructorInjectionTestCase(
 			@ConvertWith(Wrapper.Converter.class) Wrapper wrapper) {
 
+		@Nullable
 		static Wrapper instance;
 
 		@BeforeAll
@@ -1745,6 +1750,7 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	@ValueSource(ints = 1)
 	static class ArgumentConversionPerInvocationFieldInjectionTestCase {
 
+		@Nullable
 		static Wrapper instance;
 
 		@BeforeAll
@@ -1780,8 +1786,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 	record Wrapper(int value) {
 		static class Converter extends SimpleArgumentConverter {
 			@Override
-			protected Object convert(Object source, Class<?> targetType) {
-				return new Wrapper((Integer) source);
+			protected Object convert(@Nullable Object source, Class<?> targetType) {
+				return new Wrapper((Integer) requireNonNull(source));
 			}
 		}
 	}
@@ -1972,8 +1978,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 	static class AtomicIntegerConverter extends SimpleArgumentConverter {
 		@Override
-		protected Object convert(Object source, Class<?> targetType) {
-			return new AtomicInteger((Integer) source);
+		protected Object convert(@Nullable Object source, Class<?> targetType) {
+			return new AtomicInteger((Integer) requireNonNull(source));
 		}
 	}
 
@@ -2019,13 +2025,15 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		class Converter implements ArgumentConverter {
 			@Override
-			public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+			public @Nullable Object convert(@Nullable Object source, ParameterContext context)
+					throws ArgumentConversionException {
 				assertNotNull(context.getParameter().getAnnotation(CustomConversion.class));
 				return source;
 			}
 
 			@Override
-			public Object convert(Object source, FieldContext context) throws ArgumentConversionException {
+			public @Nullable Object convert(@Nullable Object source, FieldContext context)
+					throws ArgumentConversionException {
 				assertNotNull(context.getField().getAnnotation(CustomConversion.class));
 				return source;
 			}
@@ -2201,7 +2209,8 @@ public class ParameterizedClassIntegrationTests extends AbstractJupiterTestEngin
 
 		static class ToStringConverter extends SimpleArgumentConverter {
 			@Override
-			protected Object convert(Object source, Class<?> targetType) throws ArgumentConversionException {
+			protected @Nullable Object convert(@Nullable Object source, Class<?> targetType)
+					throws ArgumentConversionException {
 				return source == null ? null : String.valueOf(source);
 			}
 		}

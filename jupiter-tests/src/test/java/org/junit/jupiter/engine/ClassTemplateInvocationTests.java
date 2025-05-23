@@ -50,6 +50,7 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -1168,6 +1169,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 			}
 
 			@Override
+			@Nullable
 			public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 					throws ParameterResolutionException {
 				return extensionContext.getStore(Namespace.GLOBAL).get("someResource");
@@ -1431,6 +1433,7 @@ public class ClassTemplateInvocationTests extends AbstractJupiterTestEngineTests
 		}
 
 		@Override
+		@Nullable
 		public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext)
 				throws ParameterResolutionException {
 			return extensionContext.getStore(PreparingClassTemplateInvocationContextProvider.NAMESPACE).get("resource");

@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.core;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -62,6 +63,7 @@ import org.junit.platform.launcher.listeners.UnusedTestExecutionListener;
  */
 class LauncherFactoryTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void preconditions() {
 		assertThrows(PreconditionViolationException.class, () -> LauncherFactory.create(null));
@@ -328,7 +330,7 @@ class LauncherFactoryTests {
 				}
 			});
 
-			assertThat(result.get().getThrowable().orElseThrow()) //
+			assertThat(requireNonNull(result.get()).getThrowable().orElseThrow()) //
 					.hasRootCauseMessage("from execution") //
 					.hasStackTraceContaining(TestLauncherInterceptor1.class.getName() + ".intercept(") //
 					.hasStackTraceContaining(TestLauncherInterceptor2.class.getName() + ".intercept(");
@@ -577,6 +579,7 @@ class LauncherFactoryTests {
 					.getStore() //
 					.get(Namespace.GLOBAL, "sessionResource", CloseTrackingResource.class);
 
+			assertThat(sessionResource).isNotNull();
 			assertThat(sessionResource.isClosed()).isFalse();
 		}
 	}

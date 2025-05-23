@@ -12,6 +12,7 @@ package org.junit.jupiter.api.condition;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
@@ -27,6 +28,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,6 +55,7 @@ abstract class AbstractExecutionConditionTests {
 
 	private final ExtensionContext context = mock();
 
+	@Nullable
 	private ConditionEvaluationResult result;
 
 	@BeforeAll
@@ -84,18 +87,22 @@ abstract class AbstractExecutionConditionTests {
 	}
 
 	protected void assertEnabled() {
+		assertNotNull(this.result);
 		assertFalse(this.result.isDisabled(), "Should be enabled");
 	}
 
 	protected void assertDisabled() {
+		assertNotNull(this.result);
 		assertTrue(this.result.isDisabled(), "Should be disabled");
 	}
 
 	protected void assertReasonContains(String text) {
+		assertNotNull(this.result);
 		assertThat(this.result.getReason()).hasValueSatisfying(reason -> assertThat(reason).contains(text));
 	}
 
 	protected void assertCustomDisabledReasonIs(String text) {
+		assertNotNull(this.result);
 		if (this.result.isDisabled()) {
 			assertThat(this.result.getReason()).hasValueSatisfying(
 				reason -> assertThat(reason).contains(" ==> " + text));
@@ -103,11 +110,11 @@ abstract class AbstractExecutionConditionTests {
 	}
 
 	private Optional<AnnotatedElement> method(TestInfo testInfo) {
-		return method(getTestClass(), testInfo.getTestMethod().get().getName());
+		return method(getTestClass(), testInfo.getTestMethod().orElseThrow().getName());
 	}
 
 	private Optional<AnnotatedElement> method(Class<?> testClass, String methodName) {
-		return Optional.of(findMethod(testClass, methodName).get());
+		return Optional.of(findMethod(testClass, methodName).orElseThrow());
 	}
 
 }

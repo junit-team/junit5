@@ -23,6 +23,7 @@ import org.junit.platform.commons.PreconditionViolationException;
  */
 class PackageNameFilterTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void includePackageChecksPreconditions() {
 		assertThatThrownBy(() -> PackageNameFilter.includePackageNames((String[]) null)) //
@@ -74,6 +75,7 @@ class PackageNameFilterTests {
 					+ includedPackage2 + "'");
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void excludePackageChecksPreconditions() {
 		assertThatThrownBy(() -> PackageNameFilter.excludePackageNames((String[]) null)) //

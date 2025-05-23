@@ -34,6 +34,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.regex.Pattern;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
@@ -323,23 +324,24 @@ class OrderedMethodTests {
 				.containsSubsequence("test2()", "test4()");// removed item is re-added before ordered item
 	}
 
-	private EngineDiscoveryResults discoverTests(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
+	private EngineDiscoveryResults discoverTests(Class<?> testClass,
+			@Nullable Class<? extends MethodOrderer> defaultOrderer) {
 		return testKit(testClass, defaultOrderer, Severity.INFO).discover();
 	}
 
-	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer) {
+	private Events executeTestsInParallel(Class<?> testClass, @Nullable Class<? extends MethodOrderer> defaultOrderer) {
 		return executeTestsInParallel(testClass, defaultOrderer, Severity.INFO);
 	}
 
-	private Events executeTestsInParallel(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer,
+	private Events executeTestsInParallel(Class<?> testClass, @Nullable Class<? extends MethodOrderer> defaultOrderer,
 			Severity criticalSeverity) {
 		return testKit(testClass, defaultOrderer, criticalSeverity) //
 				.execute() //
 				.testEvents();
 	}
 
-	private static EngineTestKit.Builder testKit(Class<?> testClass, Class<? extends MethodOrderer> defaultOrderer,
-			Severity criticalSeverity) {
+	private static EngineTestKit.Builder testKit(Class<?> testClass,
+			@Nullable Class<? extends MethodOrderer> defaultOrderer, Severity criticalSeverity) {
 		var testKit = EngineTestKit.engine("junit-jupiter") //
 				.configurationParameter(PARALLEL_EXECUTION_ENABLED_PROPERTY_NAME, "true") //
 				.configurationParameter(DEFAULT_PARALLEL_EXECUTION_MODE, "concurrent") //
@@ -740,7 +742,7 @@ class OrderedMethodTests {
 			context.getMethodDescriptors().set(1, createMethodDescriptorImpersonator(method2));
 		}
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "DataFlowIssue", "NullAway" })
 		static <T> T createMethodDescriptorImpersonator(MethodDescriptor method) {
 			MethodDescriptor stub = new MethodDescriptor() {
 				@Override
@@ -760,12 +762,12 @@ class OrderedMethodTests {
 
 				@Override
 				public <A extends Annotation> Optional<A> findAnnotation(Class<A> annotationType) {
-					return null;
+					return Optional.empty();
 				}
 
 				@Override
 				public <A extends Annotation> List<A> findRepeatableAnnotations(Class<A> annotationType) {
-					return null;
+					return List.of();
 				}
 
 				@SuppressWarnings("EqualsWhichDoesntCheckParameterClass")

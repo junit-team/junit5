@@ -13,6 +13,8 @@ package org.junit.jupiter.api;
 import java.io.Serializable;
 import java.util.Objects;
 
+import org.apache.groovy.parser.antlr4.util.StringUtils;
+import org.jspecify.annotations.Nullable;
 import org.opentest4j.AssertionFailedError;
 import org.opentest4j.ValueWrapper;
 
@@ -27,7 +29,7 @@ class AssertionTestUtils {
 	}
 
 	static void assertEmptyMessage(Throwable ex) throws AssertionError {
-		if (!ex.getMessage().isEmpty()) {
+		if (!StringUtils.isEmpty(ex.getMessage())) {
 			throw new AssertionError("Exception message should be empty, but was [" + ex.getMessage() + "].");
 		}
 	}
@@ -39,35 +41,41 @@ class AssertionTestUtils {
 	}
 
 	static void assertMessageMatches(Throwable ex, String regex) throws AssertionError {
-		if (!ex.getMessage().matches(regex)) {
+		if (ex.getMessage() == null || !ex.getMessage().matches(regex)) {
 			throw new AssertionError("Exception message should match regular expression [" + regex + "], but was ["
 					+ ex.getMessage() + "].");
 		}
 	}
 
-	static void assertMessageStartsWith(Throwable ex, String msg) throws AssertionError {
-		if (!ex.getMessage().startsWith(msg)) {
+	static void assertMessageStartsWith(@Nullable Throwable ex, String msg) throws AssertionError {
+		if (ex == null) {
+			throw new AssertionError("Cause should not have been null");
+		}
+		if (ex.getMessage() == null || !ex.getMessage().startsWith(msg)) {
 			throw new AssertionError(
 				"Exception message should start with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
 	static void assertMessageEndsWith(Throwable ex, String msg) throws AssertionError {
-		if (!ex.getMessage().endsWith(msg)) {
+		if (ex.getMessage() == null || !ex.getMessage().endsWith(msg)) {
 			throw new AssertionError(
 				"Exception message should end with [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	static void assertMessageContains(Throwable ex, String msg) throws AssertionError {
-		if (!ex.getMessage().contains(msg)) {
+	static void assertMessageContains(@Nullable Throwable ex, String msg) throws AssertionError {
+		if (ex == null) {
+			throw new AssertionError("Cause should not have been null");
+		}
+		if (ex.getMessage() == null || !ex.getMessage().contains(msg)) {
 			throw new AssertionError(
 				"Exception message should contain [" + msg + "], but was [" + ex.getMessage() + "].");
 		}
 	}
 
-	static void assertExpectedAndActualValues(AssertionFailedError ex, Object expected, Object actual)
-			throws AssertionError {
+	static void assertExpectedAndActualValues(AssertionFailedError ex, @Nullable Object expected,
+			@Nullable Object actual) throws AssertionError {
 		if (!wrapsEqualValue(ex.getExpected(), expected)) {
 			throw new AssertionError("Expected value in AssertionFailedError should equal ["
 					+ ValueWrapper.create(expected) + "], but was [" + ex.getExpected() + "].");
@@ -78,7 +86,7 @@ class AssertionTestUtils {
 		}
 	}
 
-	static boolean wrapsEqualValue(ValueWrapper wrapper, Object value) {
+	static boolean wrapsEqualValue(ValueWrapper wrapper, @Nullable Object value) {
 		if (value == null || value instanceof Serializable) {
 			return Objects.equals(value, wrapper.getValue());
 		}

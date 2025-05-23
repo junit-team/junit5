@@ -41,6 +41,7 @@ import org.junit.platform.testkit.engine.NestedContainerEventConditionTests.ATes
  */
 class NestedContainerEventConditionTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void preconditions() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -42,8 +43,10 @@ class BeforeAndAfterEachTests extends AbstractJupiterTestEngineTests {
 	private static final List<String> callSequence = new ArrayList<>();
 	private static final List<String> beforeEachMethodCallSequence = new ArrayList<>();
 
+	@Nullable
 	private static Optional<Throwable> actualExceptionInAfterEachCallback;
 
+	@SuppressWarnings("OptionalAssignedToNull")
 	@BeforeEach
 	void resetCallSequence() {
 		callSequence.clear();

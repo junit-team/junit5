@@ -29,6 +29,7 @@ import static org.mockito.Mockito.when;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -168,7 +169,7 @@ class DefaultArgumentConverterTests {
 
 			var clazz = (Class<?>) convert(customTypeName, Class.class, testClassLoader);
 			assertThat(clazz).isNotEqualTo(Enigma.class);
-			assertThat(clazz).isEqualTo(customType);
+			assertThat(clazz).isNotNull().isEqualTo(customType);
 			assertThat(clazz.getClassLoader()).isSameAs(testClassLoader);
 
 			verify(underTest).convert(customTypeName, Class.class, testClassLoader);
@@ -177,7 +178,7 @@ class DefaultArgumentConverterTests {
 
 	// -------------------------------------------------------------------------
 
-	private void assertConverts(Object input, Class<?> targetClass, Object expectedOutput) {
+	private void assertConverts(@Nullable Object input, Class<?> targetClass, @Nullable Object expectedOutput) {
 		var result = convert(input, targetClass);
 
 		assertThat(result) //
@@ -187,11 +188,11 @@ class DefaultArgumentConverterTests {
 		verify(underTest, never()).convert(any(), any(), any(ClassLoader.class));
 	}
 
-	private Object convert(Object input, Class<?> targetClass) {
+	private @Nullable Object convert(@Nullable Object input, Class<?> targetClass) {
 		return convert(input, targetClass, ClassLoaderUtils.getClassLoader(getClass()));
 	}
 
-	private Object convert(Object input, Class<?> targetClass, ClassLoader classLoader) {
+	private @Nullable Object convert(@Nullable Object input, Class<?> targetClass, ClassLoader classLoader) {
 		return underTest.convert(input, targetClass, classLoader);
 	}
 

@@ -28,6 +28,7 @@ import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
@@ -519,6 +520,7 @@ class FieldArgumentsProviderTests {
 
 		// --- Invalid ---------------------------------------------------------
 
+		@Nullable
 		static List<String> nullList = null;
 
 		static Object object = -1;

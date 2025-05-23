@@ -30,6 +30,7 @@ import java.util.stream.Stream;
  * @since 5.0
  * @see ExtensionComposabilityTests
  */
+@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 // @formatter:off
 public class KitchenSinkExtension implements
 

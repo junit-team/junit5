@@ -57,6 +57,7 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		assertEqualsAndHashCode(MethodSource.from(method1), MethodSource.from(method1), MethodSource.from(method2));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void instantiatingWithNullNamesShouldThrowPreconditionViolationException() {
 		assertThrows(PreconditionViolationException.class, () -> MethodSource.from("foo", null));
@@ -75,11 +76,13 @@ class MethodSourceTests extends AbstractTestSourceTests {
 		assertThrows(PreconditionViolationException.class, () -> MethodSource.from("  ", "foo"));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void instantiationWithNullMethodShouldThrowPreconditionViolationException() {
 		assertThrows(PreconditionViolationException.class, () -> MethodSource.from(null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void instantiationWithNullClassOrMethodShouldThrowPreconditionViolationException() {
 		assertThrows(PreconditionViolationException.class,

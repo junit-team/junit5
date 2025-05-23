@@ -31,8 +31,10 @@ import org.junit.platform.commons.PreconditionViolationException;
  *
  * @since 1.0
  */
+@SuppressWarnings("ThrowableNotThrown")
 class ExceptionUtilsTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void throwAsUncheckedExceptionWithNullException() {
 		assertThrows(PreconditionViolationException.class, () -> throwAsUncheckedException(null));
@@ -48,6 +50,7 @@ class ExceptionUtilsTests {
 		assertThrows(RuntimeException.class, () -> throwAsUncheckedException(new NumberFormatException()));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void readStackTraceForNullThrowable() {
 		assertThrows(PreconditionViolationException.class, () -> readStackTrace(null));

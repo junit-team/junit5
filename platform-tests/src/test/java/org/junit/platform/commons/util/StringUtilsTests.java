@@ -27,6 +27,7 @@ import static org.junit.platform.commons.util.StringUtils.nullSafeToString;
 import static org.junit.platform.commons.util.StringUtils.replaceIsoControlCharacters;
 import static org.junit.platform.commons.util.StringUtils.replaceWhitespaceCharacters;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 
@@ -49,6 +50,7 @@ class StringUtilsTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void whitespace() {
 		// @formatter:off
@@ -72,6 +74,7 @@ class StringUtilsTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void controlCharacters() {
 		// @formatter:off
@@ -95,6 +98,7 @@ class StringUtilsTests {
 		// @formatter:on
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void replaceControlCharacters() {
 		assertNull(replaceIsoControlCharacters(null, ""));
@@ -108,6 +112,7 @@ class StringUtilsTests {
 		assertThrows(PreconditionViolationException.class, () -> replaceIsoControlCharacters("", null));
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void replaceWhitespaces() {
 		assertNull(replaceWhitespaceCharacters(null, ""));
@@ -172,6 +177,7 @@ class StringUtilsTests {
 			() -> "'%s' should not contain ISO control character".formatted(str));
 	}
 
+	@NullUnmarked
 	private static class ToStringReturnsNull {
 
 		@Override

@@ -15,13 +15,16 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
+
 final class IterableFactory {
 
-	static List<Object> listOf(Object... objects) {
+	@SuppressWarnings("NullableProblems")
+	static List<Object> listOf(@Nullable Object... objects) {
 		return Arrays.asList(objects);
 	}
 
-	static Set<Object> setOf(Object... objects) {
+	static Set<Object> setOf(@Nullable Object... objects) {
 		return new LinkedHashSet<>(listOf(objects));
 	}
 

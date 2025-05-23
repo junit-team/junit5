@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params.aggregator;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
@@ -35,6 +36,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.AnnotatedElementContext;
@@ -225,6 +228,7 @@ public class AggregatorIntegrationTests {
 
 	// -------------------------------------------------------------------------
 
+	@NullUnmarked
 	public static class Person {
 
 		final String firstName;
@@ -248,6 +252,7 @@ public class AggregatorIntegrationTests {
 		F, M
 	}
 
+	@NullUnmarked
 	static class Address {
 
 		final String street;
@@ -308,7 +313,7 @@ public class AggregatorIntegrationTests {
 			return new Address(
 				arguments.getString(startIndex + 0),
 				arguments.getString(startIndex + 1),
-				arguments.getInteger(startIndex + 2)
+				requireNonNull(arguments.getInteger(startIndex + 2))
 			);
 			// @formatter:on
 		}
@@ -332,7 +337,7 @@ public class AggregatorIntegrationTests {
 
 	static class NullAggregator extends SimpleArgumentsAggregator {
 		@Override
-		protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+		protected @Nullable Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
 				AnnotatedElementContext context, int parameterIndex) {
 			Preconditions.condition(!targetType.isPrimitive(), () -> "only supports reference types");
 			return null;
@@ -391,7 +396,8 @@ public class AggregatorIntegrationTests {
 		}
 
 		@Override
-		public Object convert(Object source, ParameterContext context) throws ArgumentConversionException {
+		public @Nullable Object convert(@Nullable Object source, ParameterContext context)
+				throws ArgumentConversionException {
 			return source;
 		}
 	}

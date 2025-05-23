@@ -19,6 +19,7 @@ import java.lang.annotation.Target;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -45,6 +46,7 @@ class TempDirectoryMetaAnnotationTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
+	@NullUnmarked
 	static class AnnotationOnFieldTestCase {
 
 		@CustomTempDir

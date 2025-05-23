@@ -29,6 +29,7 @@ import org.junit.platform.commons.test.TestClassLoader;
  */
 class ClassLoaderUtilsTests {
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void getClassLoaderPreconditions() {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
@@ -100,6 +101,7 @@ class ClassLoaderUtilsTests {
 		}
 	}
 
+	@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 	@Test
 	void getLocationFromNullFails() {
 		var exception = assertThrows(PreconditionViolationException.class, () -> ClassLoaderUtils.getLocation(null));

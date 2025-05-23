@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -42,10 +43,12 @@ import org.junit.platform.testkit.engine.EngineExecutionResults;
  */
 class BeforeAndAfterTestExecutionCallbackTests extends AbstractJupiterTestEngineTests {
 
-	private static List<String> callSequence = new ArrayList<>();
+	private static final List<String> callSequence = new ArrayList<>();
 
+	@Nullable
 	private static Optional<Throwable> actualExceptionInAfterTestExecution;
 
+	@SuppressWarnings("OptionalAssignedToNull")
 	@BeforeEach
 	void resetCallSequence() {
 		callSequence.clear();

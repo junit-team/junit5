@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ParameterContext;
@@ -47,6 +48,7 @@ class TypedArgumentConverterTests {
 		/**
 		 * @since 5.8
 		 */
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Test
 		void preconditions() {
 			assertThatExceptionOfType(PreconditionViolationException.class)//
@@ -67,7 +69,7 @@ class TypedArgumentConverterTests {
 			);
 		}
 
-		private void assertConverts(String input, int expected) {
+		private void assertConverts(@Nullable String input, int expected) {
 			assertThat(this.converter.convert(input)).isEqualTo(expected);
 		}
 
@@ -168,7 +170,7 @@ class TypedArgumentConverterTests {
 		}
 
 		@Override
-		protected Integer convert(String source) throws ArgumentConversionException {
+		protected Integer convert(@Nullable String source) throws ArgumentConversionException {
 			return (source != null ? source.length() : 0);
 		}
 	}

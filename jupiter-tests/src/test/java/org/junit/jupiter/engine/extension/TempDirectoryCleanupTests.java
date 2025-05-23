@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Nested;
@@ -53,6 +54,7 @@ import org.junit.platform.launcher.LauncherDiscoveryRequest;
 class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 
 	@Nested
+	@NullUnmarked
 	class TempDirFieldTests {
 
 		private static Path defaultFieldDir;
@@ -315,6 +317,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 	}
 
 	@Nested
+	@NullUnmarked
 	class TempDirParameterTests {
 
 		private static Path defaultParameterDir;
@@ -539,6 +542,7 @@ class TempDirectoryCleanupTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@SuppressWarnings("JUnitMalformedDeclaration")
+		@NullUnmarked
 		static class JunctionTestCase {
 			public static Path target;
 

@@ -37,6 +37,8 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Locale;
 
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -346,6 +348,7 @@ class ParameterizedInvocationNameFormatterTests {
 		return formatter.format(invocationIndex, EvaluatedArgumentSet.allOf(arguments));
 	}
 
+	@NullUnmarked
 	private static class ToStringReturnsNull {
 
 		@Override
@@ -386,7 +389,7 @@ class ParameterizedInvocationNameFormatterTests {
 
 		private static class CustomAggregator extends SimpleArgumentsAggregator {
 			@Override
-			protected Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
+			protected @Nullable Object aggregateArguments(ArgumentsAccessor accessor, Class<?> targetType,
 					AnnotatedElementContext context, int parameterIndex) {
 				return accessor.get(0);
 			}

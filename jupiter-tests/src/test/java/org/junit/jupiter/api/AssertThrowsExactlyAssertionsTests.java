@@ -87,6 +87,7 @@ class AssertThrowsExactlyAssertionsTests {
 		future.run();
 
 		ExecutionException exception = assertThrowsExactly(ExecutionException.class, future::get);
+		assertNotNull(exception.getCause());
 		assertEquals("boom", exception.getCause().getMessage());
 	}
 

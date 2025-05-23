@@ -10,6 +10,7 @@
 
 package org.junit.platform.launcher.listeners;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -44,6 +45,7 @@ import java.util.ServiceLoader;
 import java.util.stream.Stream;
 
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
@@ -214,6 +216,7 @@ class UniqueIdTrackingListenerIntegrationTests {
 				.build();
 		LauncherFactory.create().execute(request, new TestExecutionListener() {
 
+			@Nullable
 			private TestPlan testPlan;
 
 			@Override
@@ -227,7 +230,8 @@ class UniqueIdTrackingListenerIntegrationTests {
 					uniqueIds.add(testIdentifier.getUniqueId());
 				}
 				else {
-					this.testPlan.getChildren(testIdentifier).forEach(child -> executionSkipped(child, reason));
+					requireNonNull(this.testPlan).getChildren(testIdentifier).forEach(
+						child -> executionSkipped(child, reason));
 				}
 			}
 

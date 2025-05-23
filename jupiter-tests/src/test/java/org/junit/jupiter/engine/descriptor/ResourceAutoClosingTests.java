@@ -39,7 +39,7 @@ class ResourceAutoClosingTests {
 		AutoCloseableResource resource = new AutoCloseableResource();
 		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(true);
 
-		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(mock(), testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
 		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
 		store.put("resource", resource);
@@ -54,7 +54,7 @@ class ResourceAutoClosingTests {
 		AutoCloseableResource resource = new AutoCloseableResource();
 		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(false);
 
-		ExtensionContext extensionContext = new JupiterEngineExtensionContext(null, testDescriptor, configuration,
+		ExtensionContext extensionContext = new JupiterEngineExtensionContext(mock(), testDescriptor, configuration,
 			extensionRegistry, launcherStoreFacade);
 		ExtensionContext.Store store = extensionContext.getStore(ExtensionContext.Namespace.GLOBAL);
 		store.put("resource", resource);

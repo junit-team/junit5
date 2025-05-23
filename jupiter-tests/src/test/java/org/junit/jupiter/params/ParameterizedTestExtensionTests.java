@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.params.ParameterizedInvocationContextProvider.arguments;
 import static org.junit.jupiter.params.ParameterizedTestExtension.DECLARATION_CONTEXT_KEY;
+import static org.mockito.Mockito.mock;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.AnnotatedElement;
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExecutableInvoker;
@@ -47,6 +49,7 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
+import org.junit.platform.commons.support.AnnotationSupport;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.support.store.NamespacedHierarchicalStore;
 
@@ -133,7 +136,7 @@ class ParameterizedTestExtensionTests {
 			}
 		};
 
-		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, null, null));
+		var exception = assertThrows(FileNotFoundException.class, () -> arguments(failingProvider, mock(), mock()));
 		assertEquals("a message", exception.getMessage());
 	}
 
@@ -236,17 +239,17 @@ class ParameterizedTestExtensionTests {
 
 			@Override
 			public String getUniqueId() {
-				return null;
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
 			public String getDisplayName() {
-				return null;
+				return "display-name";
 			}
 
 			@Override
 			public Set<String> getTags() {
-				return null;
+				throw new UnsupportedOperationException();
 			}
 
 			@Override
@@ -312,7 +315,7 @@ class ParameterizedTestExtensionTests {
 					org.junit.platform.engine.support.store.Namespace.create(namespace.getParts()));
 				method //
 						.map(it -> new ParameterizedTestContext(testClass, it,
-							it.getAnnotation(ParameterizedTest.class))) //
+							AnnotationSupport.findAnnotation(it, ParameterizedTest.class).orElseThrow())) //
 						.ifPresent(ctx -> store.put(DECLARATION_CONTEXT_KEY, ctx));
 				return store;
 			}
@@ -331,12 +334,12 @@ class ParameterizedTestExtensionTests {
 			public ExecutableInvoker getExecutableInvoker() {
 				return new ExecutableInvoker() {
 					@Override
-					public Object invoke(Method method, Object target) {
-						return null;
+					public Object invoke(Method method, @Nullable Object target) {
+						throw new UnsupportedOperationException();
 					}
 
 					@Override
-					public <T> T invoke(Constructor<T> constructor, Object outerInstance) {
+					public <T> T invoke(Constructor<T> constructor, @Nullable Object outerInstance) {
 						return ReflectionUtils.newInstance(constructor);
 					}
 				};
@@ -414,6 +417,7 @@ class ParameterizedTestExtensionTests {
 
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
+		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
 		@Override
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
 				ExtensionContext context) {
@@ -456,7 +460,7 @@ class ParameterizedTestExtensionTests {
 		@Override
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
 				ExtensionContext context) {
-			return null;
+			throw new UnsupportedOperationException();
 		}
 	}
 

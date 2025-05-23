@@ -10,9 +10,9 @@
 
 package org.junit.platform.testkit.engine;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.platform.testkit.engine.EventConditions.engine;
 import static org.junit.platform.testkit.engine.EventConditions.event;
 import static org.junit.platform.testkit.engine.EventConditions.finishedSuccessfully;
@@ -171,7 +171,7 @@ class EventsTests {
 		);
 
 		var error = assertThrows(AssertionFailedError.class, willFail);
-		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
+		assertThat(error).hasMessageContaining("Conditions are not in the correct order.");
 	}
 
 	@Test
@@ -201,7 +201,7 @@ class EventsTests {
 		);
 
 		var error = assertThrows(AssertionFailedError.class, willFail);
-		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
+		assertThat(error).hasMessageContaining("Conditions are not in the correct order.");
 	}
 
 	@Test
@@ -266,7 +266,7 @@ class EventsTests {
 		);
 
 		var error = assertThrows(AssertionFailedError.class, willFail);
-		assertTrue(error.getMessage().contains("Conditions are not in the correct order."));
+		assertThat(error).hasMessageContaining("Conditions are not in the correct order.");
 	}
 
 	@Test
@@ -281,7 +281,7 @@ class EventsTests {
 			event(engine(), finishedSuccessfully()));
 
 		var error = assertThrows(AssertionError.class, willFail);
-		assertTrue(error.getMessage().endsWith("to be less than or equal to 4 but was 6"));
+		assertThat(error).hasMessageEndingWith("to be less than or equal to 4 but was 6");
 	}
 
 }

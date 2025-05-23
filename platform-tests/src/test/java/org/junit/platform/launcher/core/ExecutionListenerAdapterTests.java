@@ -16,6 +16,7 @@ import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.engine.TestDescriptor;
@@ -65,7 +66,10 @@ class ExecutionListenerAdapterTests {
 
 	static class MockTestExecutionListener implements TestExecutionListener {
 
+		@Nullable
 		public TestIdentifier testIdentifier;
+
+		@Nullable
 		public ReportEntry entry;
 
 		@Override

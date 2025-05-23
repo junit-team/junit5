@@ -29,6 +29,8 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import org.assertj.core.api.Condition;
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -221,7 +223,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 			instanceOf(PreconditionViolationException.class), message(expectedMessage(testClass, String.class))));
 	}
 
-	private String expectedMessage(Class<?> testClass, Class<?> valueType) {
+	private String expectedMessage(Class<?> testClass, @Nullable Class<?> valueType) {
 		return "Failed to register extension via @RegisterExtension field [" + field(testClass)
 				+ "]: field value's type [" + (valueType != null ? valueType.getName() : null) + "] must implement an ["
 				+ Extension.class.getName() + "] API.";
@@ -324,6 +326,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	@SuppressWarnings("JUnitMalformedDeclaration")
 	@ExtendWith(ExtensionInjector.class)
+	@NullUnmarked
 	static class InstanceLevelExtensionRegistrationWithInjectedExtensionTestCase {
 
 		@RegisterExtension
@@ -629,6 +632,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	}
 
+	@NullUnmarked
 	static class InstanceLevelExtensionRegistrationWithNullFieldTestCase extends AbstractTestCase {
 
 		@RegisterExtension
@@ -636,6 +640,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	}
 
+	@NullUnmarked
 	static class ClassLevelExtensionRegistrationWithNullFieldTestCase extends AbstractTestCase {
 
 		@RegisterExtension

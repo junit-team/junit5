@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jspecify.annotations.NullUnmarked;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -251,6 +252,7 @@ class TestCaseWithLifecyclePerClass {
 }
 
 @SuppressWarnings("JUnitMalformedDeclaration")
+@NullUnmarked
 class TestCaseWithInvalidLifecycleMethods {
 
 	@BeforeEach

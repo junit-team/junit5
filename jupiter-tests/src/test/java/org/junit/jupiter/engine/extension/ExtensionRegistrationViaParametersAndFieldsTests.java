@@ -40,6 +40,8 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NullUnmarked;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -596,6 +598,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
+	@NullUnmarked
 	static class MultipleExtendWithRegistrationsViaFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -623,6 +626,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	/**
 	 * The {@link MagicField.Extension} is registered via a static field.
 	 */
+	@NullUnmarked
 	static class StaticFieldTestCase {
 
 		@SuppressWarnings("unused")
@@ -648,6 +652,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	/**
 	 * The {@link MagicField.Extension} is registered via an instance field.
 	 */
+	@NullUnmarked
 	static class InstanceFieldTestCase {
 
 		@MagicField
@@ -667,6 +672,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 	 * The {@link MagicField.Extension} is registered via a static field and
 	 * an instance field.
 	 */
+	@NullUnmarked
 	@TestInstance(Lifecycle.PER_CLASS)
 	static class TestInstancePerClassFieldTestCase {
 
@@ -689,6 +695,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
+	@NullUnmarked
 	@TestInstance(Lifecycle.PER_METHOD)
 	static class AllInOneWithTestInstancePerMethodTestCase {
 
@@ -779,6 +786,7 @@ class ExtensionRegistrationViaParametersAndFieldsTests extends AbstractJupiterTe
 		}
 	}
 
+	@NullUnmarked
 	static class ProgrammaticTestInstancePostProcessorTestCase {
 
 		@RegisterExtension
@@ -954,7 +962,8 @@ class BaseFieldExtension<T extends Annotation> implements BeforeAllCallback, Tes
 			ModifierSupport::isNotStatic);
 	}
 
-	private void injectFields(String trigger, Class<?> testClass, Object instance, Predicate<Field> predicate) {
+	private void injectFields(String trigger, Class<?> testClass, @Nullable Object instance,
+			Predicate<Field> predicate) {
 		findAnnotatedFields(testClass, this.annotationType, predicate).forEach(field -> {
 			try {
 				makeAccessible(field).set(instance, trigger + " - " + field.getName());
