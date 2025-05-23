@@ -41,7 +41,6 @@ import org.junit.jupiter.engine.config.JupiterConfiguration;
 import org.junit.jupiter.engine.execution.ConditionEvaluator;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.extension.ExtensionRegistry;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.commons.util.UnrecoverableExceptions;
 import org.junit.platform.engine.DiscoveryIssue;
@@ -171,13 +170,10 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 	}
 
 	public static ExecutionMode toExecutionMode(org.junit.jupiter.api.parallel.ExecutionMode mode) {
-		switch (mode) {
-			case CONCURRENT:
-				return ExecutionMode.CONCURRENT;
-			case SAME_THREAD:
-				return ExecutionMode.SAME_THREAD;
-		}
-		throw new JUnitException("Unknown ExecutionMode: " + mode);
+		return switch (mode) {
+			case CONCURRENT -> ExecutionMode.CONCURRENT;
+			case SAME_THREAD -> ExecutionMode.SAME_THREAD;
+		};
 	}
 
 	@Override

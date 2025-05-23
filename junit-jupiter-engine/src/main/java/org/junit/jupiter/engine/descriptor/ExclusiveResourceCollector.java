@@ -26,7 +26,6 @@ import org.junit.jupiter.api.parallel.ResourceAccessMode;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.junit.jupiter.api.parallel.ResourceLockTarget;
 import org.junit.jupiter.api.parallel.ResourceLocksProvider;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.ReflectionUtils;
 import org.junit.platform.commons.util.StringUtils;
 import org.junit.platform.engine.support.hierarchical.ExclusiveResource;
@@ -113,13 +112,10 @@ abstract class ExclusiveResourceCollector {
 		}
 
 		private static ExclusiveResource.LockMode toLockMode(ResourceAccessMode mode) {
-			switch (mode) {
-				case READ:
-					return ExclusiveResource.LockMode.READ;
-				case READ_WRITE:
-					return ExclusiveResource.LockMode.READ_WRITE;
-			}
-			throw new JUnitException("Unknown ResourceAccessMode: " + mode);
+			return switch (mode) {
+				case READ -> ExclusiveResource.LockMode.READ;
+				case READ_WRITE -> ExclusiveResource.LockMode.READ_WRITE;
+			};
 		}
 	}
 }

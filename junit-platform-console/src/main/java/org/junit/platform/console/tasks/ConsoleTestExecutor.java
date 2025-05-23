@@ -180,21 +180,16 @@ public class ConsoleTestExecutor {
 	private Optional<DetailsPrintingListener> createDetailsPrintingListener(PrintWriter out) {
 		ColorPalette colorPalette = getColorPalette();
 		Theme theme = outputOptions.getTheme();
-		switch (outputOptions.getDetails()) {
-			case SUMMARY:
-				// summary listener is always created and registered
-				return Optional.empty();
-			case FLAT:
-				return Optional.of(new FlatPrintingListener(out, colorPalette));
-			case TREE:
-				return Optional.of(new TreePrintingListener(out, colorPalette, theme));
-			case VERBOSE:
-				return Optional.of(new VerboseTreePrintingListener(out, colorPalette, 16, theme));
-			case TESTFEED:
-				return Optional.of(new TestFeedPrintingListener(out, colorPalette));
-			default:
-				return Optional.empty();
-		}
+		return switch (outputOptions.getDetails()) {
+			case SUMMARY ->
+					// summary listener is always created and registered
+					Optional.empty();
+			case FLAT -> Optional.of(new FlatPrintingListener(out, colorPalette));
+			case TREE -> Optional.of(new TreePrintingListener(out, colorPalette, theme));
+			case VERBOSE -> Optional.of(new VerboseTreePrintingListener(out, colorPalette, 16, theme));
+			case TESTFEED -> Optional.of(new TestFeedPrintingListener(out, colorPalette));
+			case NONE -> Optional.empty();
+		};
 	}
 
 	private ColorPalette getColorPalette() {

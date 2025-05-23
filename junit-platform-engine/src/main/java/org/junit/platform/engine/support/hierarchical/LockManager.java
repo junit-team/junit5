@@ -71,14 +71,11 @@ class LockManager {
 	}
 
 	private ResourceLock toResourceLock(List<ExclusiveResource> resources) {
-		switch (resources.size()) {
-			case 0:
-				return NopLock.INSTANCE;
-			case 1:
-				return toSingleLock(getOnlyElement(resources));
-			default:
-				return new CompositeLock(resources, toLocks(resources));
-		}
+		return switch (resources.size()) {
+			case 0 -> NopLock.INSTANCE;
+			case 1 -> toSingleLock(getOnlyElement(resources));
+			default -> new CompositeLock(resources, toLocks(resources));
+		};
 	}
 
 	private SingleLock toSingleLock(ExclusiveResource resource) {

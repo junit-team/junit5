@@ -125,31 +125,29 @@ class ClassSelectorResolver implements SelectorResolver {
 	public Resolution resolve(UniqueIdSelector selector, Context context) {
 		UniqueId uniqueId = selector.getUniqueId();
 		UniqueId.Segment lastSegment = uniqueId.getLastSegment();
-		if (ClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveStandaloneClassUniqueId(context, lastSegment, __ -> true, this::newClassTestDescriptor);
-		}
-		if (ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveStandaloneClassUniqueId(context, lastSegment, this.predicates.isAnnotatedWithClassTemplate,
-				this::newClassTemplateTestDescriptor);
-		}
-		if (NestedClassTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveNestedClassUniqueId(context, uniqueId, __ -> true, this::newNestedClassTestDescriptor);
-		}
-		if (ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE.equals(lastSegment.getType())) {
-			return resolveNestedClassUniqueId(context, uniqueId, this.predicates.isAnnotatedWithClassTemplate,
-				this::newNestedClassTemplateTestDescriptor);
-		}
-		if (ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE.equals(lastSegment.getType())) {
-			Optional<ClassTemplateInvocationTestDescriptor> testDescriptor = context.addToParent(
-				() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
-					int index = Integer.parseInt(lastSegment.getValue().substring(1));
-					return Optional.of(newDummyClassTemplateInvocationTestDescriptor(parent, index));
-				});
-			return toInvocationMatch(testDescriptor) //
-					.map(Resolution::match) //
-					.orElse(unresolved());
-		}
-		return unresolved();
+		return switch (lastSegment.getType()) {
+			case ClassTestDescriptor.SEGMENT_TYPE -> //
+					resolveStandaloneClassUniqueId(context, lastSegment, __ -> true, this::newClassTestDescriptor);
+			case ClassTemplateTestDescriptor.STANDALONE_CLASS_SEGMENT_TYPE -> //
+					resolveStandaloneClassUniqueId(context, lastSegment, this.predicates.isAnnotatedWithClassTemplate,
+						this::newClassTemplateTestDescriptor);
+			case NestedClassTestDescriptor.SEGMENT_TYPE -> //
+					resolveNestedClassUniqueId(context, uniqueId, __ -> true, this::newNestedClassTestDescriptor);
+			case ClassTemplateTestDescriptor.NESTED_CLASS_SEGMENT_TYPE -> //
+					resolveNestedClassUniqueId(context, uniqueId, this.predicates.isAnnotatedWithClassTemplate,
+						this::newNestedClassTemplateTestDescriptor);
+			case ClassTemplateInvocationTestDescriptor.SEGMENT_TYPE -> {
+				Optional<ClassTemplateInvocationTestDescriptor> testDescriptor = context.addToParent(
+					() -> selectUniqueId(uniqueId.removeLastSegment()), parent -> {
+						int index = Integer.parseInt(lastSegment.getValue().substring(1));
+						return Optional.of(newDummyClassTemplateInvocationTestDescriptor(parent, index));
+					});
+				yield toInvocationMatch(testDescriptor) //
+						.map(Resolution::match) //
+						.orElse(unresolved());
+			}
+			default -> unresolved();
+		};
 	}
 
 	@Override

@@ -21,16 +21,11 @@ enum Style {
 	NONE, SUCCESSFUL, ABORTED, FAILED, SKIPPED, CONTAINER, TEST, DYNAMIC, REPORTED;
 
 	static Style valueOf(TestExecutionResult result) {
-		switch (result.getStatus()) {
-			case SUCCESSFUL:
-				return Style.SUCCESSFUL;
-			case ABORTED:
-				return Style.ABORTED;
-			case FAILED:
-				return Style.FAILED;
-			default:
-				return Style.NONE;
-		}
+		return switch (result.getStatus()) {
+			case SUCCESSFUL -> Style.SUCCESSFUL;
+			case ABORTED -> Style.ABORTED;
+			case FAILED -> Style.FAILED;
+		};
 	}
 
 	static Style valueOf(TestIdentifier testIdentifier) {

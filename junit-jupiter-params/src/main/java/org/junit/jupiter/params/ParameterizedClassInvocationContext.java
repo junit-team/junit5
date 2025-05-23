@@ -22,7 +22,6 @@ import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedClassContext.InjectionType;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.util.Preconditions;
 
 class ParameterizedClassInvocationContext extends ParameterizedInvocationContext<ParameterizedClassContext>
@@ -53,13 +52,10 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 
 	private Extension createParameterInjector() {
 		InjectionType injectionType = this.declarationContext.getInjectionType();
-		switch (injectionType) {
-			case CONSTRUCTOR:
-				return createExtensionForConstructorInjection();
-			case FIELDS:
-				return createExtensionForFieldInjection();
-		}
-		throw new JUnitException("Unsupported injection type: " + injectionType);
+		return switch (injectionType) {
+			case CONSTRUCTOR -> createExtensionForConstructorInjection();
+			case FIELDS -> createExtensionForFieldInjection();
+		};
 	}
 
 	private ClassTemplateConstructorParameterResolver createExtensionForConstructorInjection() {
@@ -72,15 +68,12 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 	private Extension createExtensionForFieldInjection() {
 		ResolverFacade resolverFacade = this.declarationContext.getResolverFacade();
 		TestInstance.Lifecycle lifecycle = this.declarationContext.getTestInstanceLifecycle();
-		switch (lifecycle) {
-			case PER_CLASS:
-				return new BeforeClassTemplateInvocationFieldInjector(resolverFacade, this.arguments,
-					this.invocationIndex, this.resolutionCache);
-			case PER_METHOD:
-				return new InstancePostProcessingClassTemplateFieldInjector(resolverFacade, this.arguments,
-					this.invocationIndex, this.resolutionCache);
-		}
-		throw new JUnitException("Unsupported lifecycle: " + lifecycle);
+		return switch (lifecycle) {
+			case PER_CLASS -> new BeforeClassTemplateInvocationFieldInjector(resolverFacade, this.arguments,
+				this.invocationIndex, this.resolutionCache);
+			case PER_METHOD -> new InstancePostProcessingClassTemplateFieldInjector(resolverFacade, this.arguments,
+				this.invocationIndex, this.resolutionCache);
+		};
 	}
 
 	private Stream<Extension> createLifecycleMethodInvokers() {
