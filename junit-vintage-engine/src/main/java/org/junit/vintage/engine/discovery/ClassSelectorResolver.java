@@ -56,7 +56,7 @@ class ClassSelectorResolver implements SelectorResolver {
 			String testClassName = lastSegment.getValue();
 			if (classFilter.match(testClassName)) {
 				Class<?> testClass = ReflectionSupport.tryToLoadClass(testClassName)//
-						.getOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
+						.getNonNullOrThrow(cause -> new JUnitException("Unknown class: " + testClassName, cause));
 				return resolveTestClassThatPassedNameFilter(testClass, context);
 			}
 		}

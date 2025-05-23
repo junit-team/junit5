@@ -14,6 +14,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.support.ParameterDeclarations;
 import org.junit.platform.commons.util.Preconditions;
@@ -24,7 +25,7 @@ import org.junit.platform.commons.util.Preconditions;
  */
 class NullArgumentsProvider implements ArgumentsProvider {
 
-	private static final Arguments nullArguments = arguments(new Object[] { null });
+	private static final Arguments nullArguments = arguments(new @Nullable Object[] { null });
 
 	@Override
 	public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context) {

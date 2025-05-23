@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.params;
 
+import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.DEFAULT_DISPLAY_NAME;
 import static org.junit.jupiter.params.ParameterizedInvocationConstants.DISPLAY_NAME_PLACEHOLDER;
 
@@ -50,7 +51,9 @@ public class ParameterizedInvocationNameFormatterBenchmarks {
 		var method = TestCase.class.getDeclaredMethod("parameterizedTest", int.class);
 		var formatter = new ParameterizedInvocationNameFormatter(
 			DISPLAY_NAME_PLACEHOLDER + " " + DEFAULT_DISPLAY_NAME + " ({0})", "displayName",
-			new ParameterizedTestContext(TestCase.class, method, method.getAnnotation(ParameterizedTest.class)), 512);
+			new ParameterizedTestContext(TestCase.class, method,
+				requireNonNull(method.getAnnotation(ParameterizedTest.class))),
+			512);
 		for (int i = 0; i < argumentsList.size(); i++) {
 			Arguments arguments = argumentsList.get(i);
 			blackhole.consume(formatter.format(i, EvaluatedArgumentSet.allOf(arguments)));

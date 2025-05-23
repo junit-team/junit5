@@ -57,10 +57,12 @@ class HierarchicalOutputDirectoryProvider implements OutputDirectoryProvider {
 
 	@Override
 	public synchronized Path getRootDirectory() {
-		if (rootDir == null) {
-			rootDir = rootDirSupplier.get();
+		var currentRootDir = rootDir;
+		if (currentRootDir == null) {
+			currentRootDir = rootDirSupplier.get();
+			rootDir = currentRootDir;
 		}
-		return rootDir;
+		return currentRootDir;
 	}
 
 	private static Path toSanitizedPath(Segment segment) {
