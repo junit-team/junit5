@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -211,6 +212,19 @@ class ReflectionUtilsTests {
 			assertFalse(isWideningConversion(float.class, int.class)); // narrowing
 			assertFalse(isWideningConversion(int.class, int.class)); // direct match
 			assertFalse(isWideningConversion(String.class, int.class)); // neither a primitive nor a wrapper
+		}
+
+		@Test
+		void getWrapperType() {
+			assertEquals(Boolean.class, ReflectionUtils.getWrapperType(boolean.class));
+			assertEquals(Byte.class, ReflectionUtils.getWrapperType(byte.class));
+			assertEquals(Character.class, ReflectionUtils.getWrapperType(char.class));
+			assertEquals(Short.class, ReflectionUtils.getWrapperType(short.class));
+			assertEquals(Integer.class, ReflectionUtils.getWrapperType(int.class));
+			assertEquals(Long.class, ReflectionUtils.getWrapperType(long.class));
+			assertEquals(Float.class, ReflectionUtils.getWrapperType(float.class));
+			assertEquals(Double.class, ReflectionUtils.getWrapperType(double.class));
+			assertNull(ReflectionUtils.getWrapperType(Object.class));
 		}
 
 		@Test

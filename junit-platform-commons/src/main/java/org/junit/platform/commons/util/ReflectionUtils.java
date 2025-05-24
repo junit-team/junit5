@@ -238,7 +238,7 @@ public final class ReflectionUtils {
 
 		classNameToTypeMap = Collections.unmodifiableMap(classNamesToTypes);
 
-		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(9);
+		Map<Class<?>, Class<?>> primitivesToWrappers = new IdentityHashMap<>(8);
 
 		primitivesToWrappers.put(boolean.class, Boolean.class);
 		primitivesToWrappers.put(byte.class, Byte.class);
@@ -564,7 +564,7 @@ public final class ReflectionUtils {
 	 *
 	 * @param type the primitive type for which to retrieve the wrapper type
 	 * @return the corresponding wrapper type or {@code null} if the
-	 * supplied type is {@code null} or not a primitive type
+	 * supplied type is not a primitive type
 	 */
 	public static @Nullable Class<?> getWrapperType(Class<?> type) {
 		return primitiveToWrapperMap.get(type);
