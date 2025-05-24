@@ -11,6 +11,7 @@
 package org.junit.platform.engine;
 
 import static java.util.Arrays.asList;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.commons.util.CollectionUtils.getOnlyElement;
 import static org.junit.platform.engine.CompositeFilter.alwaysIncluded;
@@ -94,6 +95,8 @@ public interface Filter<T> {
 	 * @param adaptee the filter to be adapted
 	 * @param converter the converter function to apply
 	 */
+	@API(status = DEPRECATED, since = "6.0")
+	@Deprecated(since = "6.0", forRemoval = true)
 	static <T, V> Filter<T> adaptFilter(Filter<V> adaptee, Function<T, V> converter) {
 		return input -> adaptee.apply(converter.apply(input));
 	}
