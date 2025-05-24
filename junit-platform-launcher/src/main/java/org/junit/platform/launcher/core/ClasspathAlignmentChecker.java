@@ -22,7 +22,6 @@ import java.util.function.Function;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.JUnitException;
-import org.junit.platform.commons.support.ReflectionSupport;
 import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
@@ -51,11 +50,7 @@ class ClasspathAlignmentChecker {
 
 	static Optional<JUnitException> check(LinkageError error) {
 		ClassLoader classLoader = ClassLoaderUtils.getClassLoader(ClasspathAlignmentChecker.class);
-		Function<String, Package> packageLookup = name -> ReflectionSupport.findMethod(ClassLoader.class,
-			"getDefinedPackage", String.class) //
-				.map(m -> (Package) ReflectionSupport.invokeMethod(m, classLoader, name)) //
-				.orElseGet(() -> getPackage(name));
-		return check(error, packageLookup);
+		return check(error, classLoader::getDefinedPackage);
 	}
 
 	// VisibleForTesting
