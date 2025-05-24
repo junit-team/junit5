@@ -16,40 +16,34 @@ import org.jspecify.annotations.Nullable;
  * Internal API for converting arguments of type {@link String} to a specified
  * target type.
  */
-interface StringToObjectConverter {
+abstract class StringToObjectConverter implements Converter {
+
+	@Override
+	public final boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+		return canConvert(targetType.getType());
+	}
 
 	/**
 	 * Determine if this converter can convert from a {@link String} to the
 	 * supplied target type (which is guaranteed to be a wrapper type for
 	 * primitives &mdash; for example, {@link Integer} instead of {@code int}).
 	 */
-	boolean canConvertTo(Class<?> targetType);
+	abstract boolean canConvert(@Nullable Class<?> targetType);
 
-	/**
-	 * Convert the supplied {@link String} to the supplied target type (which is
-	 * guaranteed to be a wrapper type for primitives &mdash; for example,
-	 * {@link Integer} instead of {@code int}).
-	 *
-	 * <p>This method will only be invoked in {@link #canConvertTo(Class)}
-	 * returned {@code true} for the same target type.
-	 */
-	@Nullable
-	Object convert(String source, Class<?> targetType) throws Exception;
-
-	/**
-	 * Convert the supplied {@link String} to the supplied target type (which is
-	 * guaranteed to be a wrapper type for primitives &mdash; for example,
-	 * {@link Integer} instead of {@code int}).
-	 *
-	 * <p>This method will only be invoked in {@link #canConvertTo(Class)}
-	 * returned {@code true} for the same target type.
-	 *
-	 * <p>The default implementation simply delegates to {@link #convert(String, Class)}.
-	 * Can be overridden by concrete implementations of this interface that need
-	 * access to the supplied {@link ClassLoader}.
-	 */
-	default @Nullable Object convert(String source, Class<?> targetType, ClassLoader classLoader) throws Exception {
-		return convert(source, targetType);
+	@Override
+	public final Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) {
+		return convert((String) source, targetType.getType(), classLoader);
 	}
+
+	/**
+	 * Convert the supplied {@link String} to the supplied target type (which is
+	 * guaranteed to be a wrapper type for primitives &mdash; for example,
+	 * {@link Integer} instead of {@code int}).
+	 *
+	 * <p>This method will only be invoked if {@link #canConvert(Class)}
+	 * returned {@code true} for the same target type.
+	 */
+	abstract Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader);
 
 }
