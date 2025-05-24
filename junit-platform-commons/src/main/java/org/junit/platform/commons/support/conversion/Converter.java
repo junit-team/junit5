@@ -13,6 +13,7 @@ package org.junit.platform.commons.support.conversion;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@code Converter} is an abstraction that allows an input object to
@@ -46,7 +47,7 @@ public interface Converter {
 	 * never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
-	boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+	boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
 
 	/**
 	 * Convert the supplied source object into an instance of the specified
@@ -64,7 +65,7 @@ public interface Converter {
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
-	Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType, ClassLoader classLoader)
-			throws ConversionException;
+	Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) throws ConversionException;
 
 }

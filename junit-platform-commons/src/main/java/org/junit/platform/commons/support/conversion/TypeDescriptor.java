@@ -14,8 +14,10 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
+import java.util.Objects;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ReflectionUtils;
 
@@ -27,13 +29,13 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = EXPERIMENTAL, since = "1.13")
 public final class TypeDescriptor {
 
-	private final Class<?> type;
+	private final @Nullable Class<?> type;
 
 	public static TypeDescriptor forClass(Class<?> clazz) {
 		return new TypeDescriptor(clazz);
 	}
 
-	public static TypeDescriptor forInstance(Object instance) {
+	public static TypeDescriptor forInstance(@Nullable Object instance) {
 		return new TypeDescriptor(instance != null ? instance.getClass() : null);
 	}
 
@@ -47,21 +49,28 @@ public final class TypeDescriptor {
 		return new TypeDescriptor(parameter.getType());
 	}
 
-	private TypeDescriptor(Class<?> type) {
+	private TypeDescriptor(@Nullable Class<?> type) {
 		this.type = type;
 	}
 
-	public Class<?> getType() {
+	public @Nullable Class<?> getType() {
 		return type;
 	}
 
-	public Class<?> getWrapperType() {
+	public @Nullable Class<?> getWrapperType() {
+		if (type == null) { // FIXME parameter of ReflectionUtils.getWrapperType should be @Nullable
+			return null;
+		}
 		Class<?> wrapperType = ReflectionUtils.getWrapperType(type);
 		return wrapperType != null ? wrapperType : type;
 	}
 
 	public boolean isPrimitive() {
-		return getType().isPrimitive();
+		return type != null && type.isPrimitive();
+	}
+
+	public String getTypeName() {
+		return type != null ? type.getName() : "null";
 	}
 
 	@Override
@@ -73,12 +82,12 @@ public final class TypeDescriptor {
 			return false;
 		}
 		TypeDescriptor that = (TypeDescriptor) o;
-		return this.type.equals(that.type);
+		return Objects.equals(this.type, that.type);
 	}
 
 	@Override
 	public int hashCode() {
-		return this.type.hashCode();
+		return Objects.hashCode(type);
 	}
 
 }

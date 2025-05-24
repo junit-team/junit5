@@ -19,7 +19,7 @@ import org.jspecify.annotations.Nullable;
 abstract class StringToObjectConverter implements Converter {
 
 	@Override
-	public final boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+	public final boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
 		return canConvert(targetType.getType());
 	}
 
@@ -28,10 +28,10 @@ abstract class StringToObjectConverter implements Converter {
 	 * supplied target type (which is guaranteed to be a wrapper type for
 	 * primitives &mdash; for example, {@link Integer} instead of {@code int}).
 	 */
-	abstract boolean canConvert(Class<?> targetType);
+	abstract boolean canConvert(@Nullable Class<?> targetType);
 
 	@Override
-	public final Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+	public final Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
 			ClassLoader classLoader) {
 		return convert((String) source, targetType.getType(), classLoader);
 	}
@@ -44,6 +44,6 @@ abstract class StringToObjectConverter implements Converter {
 	 * <p>This method will only be invoked if {@link #canConvert(Class)}
 	 * returned {@code true} for the same target type.
 	 */
-	abstract Object convert(String source, Class<?> targetType, ClassLoader classLoader);
+	abstract Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader);
 
 }

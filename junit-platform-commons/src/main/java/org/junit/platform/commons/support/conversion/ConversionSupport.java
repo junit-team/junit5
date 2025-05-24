@@ -54,7 +54,7 @@ public final class ConversionSupport {
 	 */
 	@Deprecated
 	@API(status = DEPRECATED, since = "5.13")
-	public static <T> T convert(String source, Class<T> targetType, ClassLoader classLoader) {
+	public static <T> @Nullable T convert(@Nullable String source, Class<T> targetType, ClassLoader classLoader) {
 		return convert(source, TypeDescriptor.forClass(targetType), getClassLoader(classLoader));
 	}
 
@@ -76,7 +76,8 @@ public final class ConversionSupport {
 	 */
 	@API(status = EXPERIMENTAL, since = "1.13")
 	@SuppressWarnings("unchecked")
-	public static <T> @Nullable T convert(@Nullable Object source, TypeDescriptor targetType, @Nullable ClassLoader classLoader) {
+	public static <T> @Nullable T convert(@Nullable Object source, TypeDescriptor targetType,
+			@Nullable ClassLoader classLoader) {
 		TypeDescriptor sourceType = TypeDescriptor.forInstance(source);
 		ClassLoader classLoaderToUse = getClassLoader(classLoader);
 		ServiceLoader<Converter> serviceLoader = ServiceLoader.load(Converter.class, classLoaderToUse);
@@ -87,12 +88,12 @@ public final class ConversionSupport {
 				.filter(candidate -> candidate.canConvert(source, sourceType, targetType)) //
 				.findFirst() //
 				.orElseThrow(() -> new ConversionException("No registered or built-in converter for source '" + source
-						+ "' and target type " + targetType.getType().getTypeName()));
+						+ "' and target type " + targetType.getTypeName()));
 
 		return (T) converter.convert(source, sourceType, targetType, classLoaderToUse);
 	}
 
-	private static ClassLoader getClassLoader(ClassLoader classLoader) {
+	private static ClassLoader getClassLoader(@Nullable ClassLoader classLoader) {
 		return classLoader != null ? classLoader : ClassLoaderUtils.getDefaultClassLoader();
 	}
 

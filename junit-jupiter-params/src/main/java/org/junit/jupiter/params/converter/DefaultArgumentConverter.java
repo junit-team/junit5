@@ -88,7 +88,8 @@ public class DefaultArgumentConverter implements ArgumentConverter {
 	}
 
 	@Override
-	public final @Nullable Object convert(@NullableObject source, FieldContext context) throws ArgumentConversionException {
+	public final @Nullable Object convert(@Nullable Object source, FieldContext context)
+			throws ArgumentConversionException {
 		ClassLoader classLoader = getClassLoader(context.getField().getDeclaringClass());
 		return convert(source, TypeDescriptor.forField(context.getField()), classLoader);
 	}
