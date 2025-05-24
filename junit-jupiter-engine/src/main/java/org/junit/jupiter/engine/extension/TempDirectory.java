@@ -553,9 +553,7 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 
 	}
 
-	private static class FieldContext implements AnnotatedElementContext {
-
-		private final Field field;
+	private record FieldContext(Field field) implements AnnotatedElementContext {
 
 		private FieldContext(Field field) {
 			this.field = Preconditions.notNull(field, "field must not be null");
@@ -578,15 +576,8 @@ class TempDirectory implements BeforeAllCallback, BeforeEachCallback, ParameterR
 	}
 
 	@SuppressWarnings("deprecation")
-	private static class FailureTracker implements Store.CloseableResource, AutoCloseable {
-
-		private final ExtensionContext context;
-		private final ExtensionContext parentContext;
-
-		private FailureTracker(ExtensionContext context, ExtensionContext parentContext) {
-			this.context = context;
-			this.parentContext = parentContext;
-		}
+	private record FailureTracker(ExtensionContext context, ExtensionContext parentContext)
+			implements Store.CloseableResource, AutoCloseable {
 
 		@Override
 		public void close() {

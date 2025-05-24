@@ -23,17 +23,12 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * @since 5.0
  */
-class DefaultParameterContext implements ParameterContext {
+record DefaultParameterContext(Parameter parameter, int index, Optional<Object> target) implements ParameterContext {
 
-	private final Parameter parameter;
-	private final int index;
-	private final Optional<Object> target;
-
-	DefaultParameterContext(Parameter parameter, int index, Optional<Object> target) {
+	DefaultParameterContext {
 		Preconditions.condition(index >= 0, "index must be greater than or equal to zero");
-		this.parameter = Preconditions.notNull(parameter, "parameter must not be null");
-		this.index = index;
-		this.target = Preconditions.notNull(target, "target must not be null");
+		Preconditions.notNull(parameter, "parameter must not be null");
+		Preconditions.notNull(target, "target must not be null");
 	}
 
 	@Override

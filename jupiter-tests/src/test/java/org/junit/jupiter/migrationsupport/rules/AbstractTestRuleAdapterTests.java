@@ -65,13 +65,7 @@ public class AbstractTestRuleAdapterTests {
 		}
 	}
 
-	private static class SimpleRuleAnnotatedMember implements TestRuleAnnotatedMember {
-
-		private final TestRule testRule;
-
-		SimpleRuleAnnotatedMember(TestRule testRule) {
-			this.testRule = testRule;
-		}
+	private record SimpleRuleAnnotatedMember(TestRule testRule) implements TestRuleAnnotatedMember {
 
 		@Override
 		public TestRule getTestRule() {

@@ -83,19 +83,8 @@ class AssertLinesMatch {
 		new LinesMatcher(expectedLines, actualLines, messageOrSupplier).assertLinesMatch();
 	}
 
-	private static class LinesMatcher {
-
-		private final List<String> expectedLines;
-		private final List<String> actualLines;
-
-		@Nullable
-		private final Object messageOrSupplier;
-
-		LinesMatcher(List<String> expectedLines, List<String> actualLines, @Nullable Object messageOrSupplier) {
-			this.expectedLines = expectedLines;
-			this.actualLines = actualLines;
-			this.messageOrSupplier = messageOrSupplier;
-		}
+	private record LinesMatcher(List<String> expectedLines, List<String> actualLines,
+			@Nullable Object messageOrSupplier) {
 
 		void assertLinesMatch() {
 			int expectedSize = expectedLines.size();

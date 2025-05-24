@@ -253,17 +253,7 @@ public class AggregatorIntegrationTests {
 	}
 
 	@NullUnmarked
-	static class Address {
-
-		final String street;
-		final String city;
-		final int zipCode;
-
-		Address(String street, String city, int zipCode) {
-			this.street = street;
-			this.city = city;
-			this.zipCode = zipCode;
-		}
+	record Address(String street, String city, int zipCode) {
 	}
 
 	@Retention(RetentionPolicy.RUNTIME)

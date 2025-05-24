@@ -81,12 +81,12 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 	@Override
 	public ResourceLock getResourceLock() {
-		return taskContext.getExecutionAdvisor().getResourceLock(testDescriptor);
+		return taskContext.executionAdvisor().getResourceLock(testDescriptor);
 	}
 
 	@Override
 	public ExecutionMode getExecutionMode() {
-		return taskContext.getExecutionAdvisor().getForcedExecutionMode(testDescriptor) //
+		return taskContext.executionAdvisor().getForcedExecutionMode(testDescriptor) //
 				.orElseGet(node::getExecutionMode);
 	}
 
@@ -102,7 +102,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	@Override
 	public void execute() {
 		try {
-			throwableCollector = taskContext.getThrowableCollectorFactory().create();
+			throwableCollector = taskContext.throwableCollectorFactory().create();
 			prepare();
 			if (throwableCollector.isEmpty()) {
 				checkWhetherSkipped();
@@ -148,7 +148,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 	}
 
 	private void executeRecursively() {
-		taskContext.getListener().executionStarted(testDescriptor);
+		taskContext.listener().executionStarted(testDescriptor);
 		started = true;
 
 		var throwableCollector = requiredThrowableCollector();
@@ -170,7 +170,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 					if (!children.isEmpty()) {
 						children.forEach(child -> child.setParentContext(context));
-						taskContext.getExecutorService().invokeAll(children);
+						taskContext.executorService().invokeAll(children);
 					}
 
 					throwableCollector.execute(dynamicTestExecutor::awaitFinished);
@@ -199,12 +199,12 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 				logger.debug(throwable,
 					() -> "Failed to invoke nodeSkipped() on Node %s".formatted(testDescriptor.getUniqueId()));
 			}
-			taskContext.getListener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
+			taskContext.listener().executionSkipped(testDescriptor, skipResult.getReason().orElse("<unknown>"));
 			return;
 		}
 		if (!started) {
 			// Call executionStarted first to comply with the contract of EngineExecutionListener.
-			taskContext.getListener().executionStarted(testDescriptor);
+			taskContext.listener().executionStarted(testDescriptor);
 		}
 		try {
 			node.nodeFinished(requiredContext(), testDescriptor, throwableCollector.toTestExecutionResult());
@@ -214,7 +214,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 			logger.debug(throwable,
 				() -> "Failed to invoke nodeFinished() on Node %s".formatted(testDescriptor.getUniqueId()));
 		}
-		taskContext.getListener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
+		taskContext.listener().executionFinished(testDescriptor, throwableCollector.toTestExecutionResult());
 		this.throwableCollector = null;
 	}
 
@@ -235,7 +235,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 
 		@Override
 		public void execute(TestDescriptor testDescriptor) {
-			execute(testDescriptor, taskContext.getListener());
+			execute(testDescriptor, taskContext.listener());
 		}
 
 		@Override
@@ -257,7 +257,7 @@ class NodeTestTask<C extends EngineExecutionContext> implements TestTask {
 					testDescriptor, () -> unfinishedTasks.remove(uniqueId));
 				nodeTestTask.setParentContext(context);
 				unfinishedTasks.put(uniqueId, DynamicTaskState.unscheduled());
-				Future<Void> future = taskContext.getExecutorService().submit(nodeTestTask);
+				Future<Void> future = taskContext.executorService().submit(nodeTestTask);
 				unfinishedTasks.computeIfPresent(uniqueId, (__, state) -> DynamicTaskState.scheduled(future));
 				return future;
 			}

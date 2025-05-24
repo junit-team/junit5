@@ -17,12 +17,10 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * @since 5.12
  */
-class DefaultPreInterruptContext implements PreInterruptContext {
-	private final Thread threadToInterrupt;
+record DefaultPreInterruptContext(Thread threadToInterrupt) implements PreInterruptContext {
 
-	DefaultPreInterruptContext(Thread threadToInterrupt) {
+	DefaultPreInterruptContext {
 		Preconditions.notNull(threadToInterrupt, "threadToInterrupt must not be null");
-		this.threadToInterrupt = threadToInterrupt;
 	}
 
 	@Override

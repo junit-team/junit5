@@ -197,29 +197,11 @@ class ParameterizedInvocationNameFormatter {
 				.collect(joining(", "));
 	}
 
-	private static class PlaceholderPosition {
-
-		final int index;
-		final String placeholder;
-
-		PlaceholderPosition(int index, String placeholder) {
-			this.index = index;
-			this.placeholder = placeholder;
-		}
-
+	private record PlaceholderPosition(int index, String placeholder) {
 	}
 
-	private static class ArgumentsContext {
-
-		private final int invocationIndex;
-		private final @Nullable Object[] consumedArguments;
-		private final Optional<String> argumentSetName;
-
-		ArgumentsContext(int invocationIndex, @Nullable Object[] consumedArguments, Optional<String> argumentSetName) {
-			this.invocationIndex = invocationIndex;
-			this.consumedArguments = consumedArguments;
-			this.argumentSetName = argumentSetName;
-		}
+	private record ArgumentsContext(int invocationIndex, @Nullable Object[] consumedArguments,
+			Optional<String> argumentSetName) {
 	}
 
 	@FunctionalInterface
@@ -231,13 +213,7 @@ class ParameterizedInvocationNameFormatter {
 
 	}
 
-	private static class ArgumentSetNameFormatter implements PartialFormatter {
-
-		private final String annotationName;
-
-		ArgumentSetNameFormatter(String annotationName) {
-			this.annotationName = annotationName;
-		}
+	private record ArgumentSetNameFormatter(String annotationName) implements PartialFormatter {
 
 		@Override
 		public void append(ArgumentsContext context, StringBuffer result) {

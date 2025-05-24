@@ -12,7 +12,6 @@ package org.junit.platform.engine.support.descriptor;
 
 import java.io.Serial;
 import java.net.URI;
-import java.util.Objects;
 
 import org.junit.platform.commons.util.Preconditions;
 import org.junit.platform.commons.util.ToStringBuilder;
@@ -22,37 +21,18 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 1.3
  */
-class DefaultUriSource implements UriSource {
+record DefaultUriSource(URI uri) implements UriSource {
 
 	@Serial
 	private static final long serialVersionUID = 1L;
 
-	private final URI uri;
-
-	DefaultUriSource(URI uri) {
-		this.uri = Preconditions.notNull(uri, "URI must not be null");
+	DefaultUriSource {
+		Preconditions.notNull(uri, "URI must not be null");
 	}
 
 	@Override
 	public URI getUri() {
 		return uri;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		DefaultUriSource that = (DefaultUriSource) o;
-		return Objects.equals(this.uri, that.uri);
-	}
-
-	@Override
-	public int hashCode() {
-		return this.uri.hashCode();
 	}
 
 	@Override

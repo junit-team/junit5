@@ -14,6 +14,7 @@ import static java.lang.String.join;
 import static java.util.Collections.synchronizedList;
 
 import java.io.PrintWriter;
+import java.io.Serial;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -282,17 +283,10 @@ class MutableTestExecutionSummary implements TestExecutionSummary {
 		return currentTrace.length - 1 - currentIndex;
 	}
 
-	private static class DefaultFailure implements Failure {
+	private record DefaultFailure(TestIdentifier testIdentifier, Throwable exception) implements Failure {
 
+		@Serial
 		private static final long serialVersionUID = 1L;
-
-		private final TestIdentifier testIdentifier;
-		private final Throwable exception;
-
-		DefaultFailure(TestIdentifier testIdentifier, Throwable exception) {
-			this.testIdentifier = testIdentifier;
-			this.exception = exception;
-		}
 
 		@Override
 		public TestIdentifier getTestIdentifier() {

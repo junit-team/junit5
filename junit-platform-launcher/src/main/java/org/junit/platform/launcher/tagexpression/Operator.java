@@ -45,9 +45,9 @@ class Operator {
 
 		return new Operator(representation, precedence, 1, associativity, (expressions, operatorToken) -> {
 			TokenWith<TagExpression> rhs = expressions.pop();
-			if (operatorToken.isLeftOf(rhs.token)) {
-				Token combinedToken = operatorToken.concatenate(rhs.token);
-				expressions.push(new TokenWith<>(combinedToken, unaryExpression.apply(rhs.element)));
+			if (operatorToken.isLeftOf(rhs.token())) {
+				Token combinedToken = operatorToken.concatenate(rhs.token());
+				expressions.push(new TokenWith<>(combinedToken, unaryExpression.apply(rhs.element())));
 				return success();
 			}
 			return missingRhsOperand(operatorToken, representation);
@@ -61,13 +61,13 @@ class Operator {
 		return new Operator(representation, precedence, 2, associativity, (expressions, operatorToken) -> {
 			TokenWith<TagExpression> rhs = expressions.pop();
 			TokenWith<TagExpression> lhs = expressions.pop();
-			Token lhsToken = lhs.token;
-			if (lhsToken.isLeftOf(operatorToken) && operatorToken.isLeftOf(rhs.token)) {
-				Token combinedToken = lhsToken.concatenate(operatorToken).concatenate(rhs.token);
-				expressions.push(new TokenWith<>(combinedToken, binaryExpression.apply(lhs.element, rhs.element)));
+			Token lhsToken = lhs.token();
+			if (lhsToken.isLeftOf(operatorToken) && operatorToken.isLeftOf(rhs.token())) {
+				Token combinedToken = lhsToken.concatenate(operatorToken).concatenate(rhs.token());
+				expressions.push(new TokenWith<>(combinedToken, binaryExpression.apply(lhs.element(), rhs.element())));
 				return success();
 			}
-			if (rhs.token.isLeftOf(operatorToken)) {
+			if (rhs.token().isLeftOf(operatorToken)) {
 				return missingRhsOperand(operatorToken, representation);
 			}
 			if (operatorToken.isLeftOf(lhsToken)) {
@@ -134,7 +134,8 @@ class Operator {
 			if (2 == mismatch) {
 				return "missing lhs and rhs operand";
 			}
-			return missingOneOperand(operatorToken.isLeftOf(requireNonNull(expressions.peek()).token) ? "lhs" : "rhs");
+			return missingOneOperand(
+				operatorToken.isLeftOf(requireNonNull(expressions.peek()).token()) ? "lhs" : "rhs");
 		}
 		return "missing operand";
 	}

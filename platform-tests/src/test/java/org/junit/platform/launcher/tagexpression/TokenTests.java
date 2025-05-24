@@ -43,8 +43,8 @@ class TokenTests {
 		var one = tokens.get(0);
 		var two = tokens.get(1);
 		var joined = one.concatenate(two);
-		assertThat(joined.rawString).isEqualTo(" ! foo");
-		assertThat(joined.startIndex).isEqualTo(0);
+		assertThat(joined.rawString()).isEqualTo(" ! foo");
+		assertThat(joined.startIndex()).isEqualTo(0);
 	}
 
 }

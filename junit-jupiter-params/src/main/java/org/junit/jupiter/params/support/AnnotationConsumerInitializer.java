@@ -84,7 +84,7 @@ public final class AnnotationConsumerInitializer {
 		int annotationIndex = annotationConsumingMethodSignatures.stream() //
 				.filter(signature -> signature.isMatchingWith(method)) //
 				.findFirst() //
-				.map(AnnotationConsumingMethodSignature::getAnnotationParameterIndex) //
+				.map(AnnotationConsumingMethodSignature::annotationParameterIndex) //
 				.orElse(0);
 
 		return (Class<? extends Annotation>) method.getParameterTypes()[annotationIndex];
@@ -100,26 +100,13 @@ public final class AnnotationConsumerInitializer {
 		}
 	}
 
-	private static class AnnotationConsumingMethodSignature {
-
-		private final String methodName;
-		private final int parameterCount;
-		private final int annotationParameterIndex;
-
-		AnnotationConsumingMethodSignature(String methodName, int parameterCount, int annotationParameterIndex) {
-			this.methodName = methodName;
-			this.parameterCount = parameterCount;
-			this.annotationParameterIndex = annotationParameterIndex;
-		}
+	private record AnnotationConsumingMethodSignature(String methodName, int parameterCount,
+			int annotationParameterIndex) {
 
 		boolean isMatchingWith(Method method) {
 			return method.getName().equals(methodName) //
 					&& method.getParameterCount() == parameterCount //
 					&& method.getParameterTypes()[annotationParameterIndex].isAnnotation();
-		}
-
-		int getAnnotationParameterIndex() {
-			return annotationParameterIndex;
 		}
 
 	}

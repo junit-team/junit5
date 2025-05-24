@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.extension;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.Timeout;
@@ -22,44 +21,16 @@ import org.junit.platform.commons.util.Preconditions;
 /**
  * @since 5.5
  */
-class TimeoutDuration {
+record TimeoutDuration(long value, TimeUnit unit) {
 
 	static TimeoutDuration from(Timeout timeout) {
 		return new TimeoutDuration(timeout.value(), timeout.unit());
 	}
 
-	private final long value;
-	private final TimeUnit unit;
-
 	TimeoutDuration(long value, TimeUnit unit) {
 		Preconditions.condition(value > 0, () -> "timeout duration must be a positive number: " + value);
 		this.value = value;
 		this.unit = Preconditions.notNull(unit, "timeout unit must not be null");
-	}
-
-	public long getValue() {
-		return value;
-	}
-
-	public TimeUnit getUnit() {
-		return unit;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		TimeoutDuration that = (TimeoutDuration) o;
-		return value == that.value && unit == that.unit;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(value, unit);
 	}
 
 	@Override

@@ -44,7 +44,7 @@ class SameThreadTimeoutInvocation<T extends @Nullable Object> implements Invocat
 	@Override
 	public T proceed() throws Throwable {
 		InterruptTask interruptTask = new InterruptTask(Thread.currentThread(), preInterruptCallback);
-		ScheduledFuture<?> future = executor.schedule(interruptTask, timeout.getValue(), timeout.getUnit());
+		ScheduledFuture<?> future = executor.schedule(interruptTask, timeout.value(), timeout.unit());
 		Throwable failure = null;
 		T result = null;
 		try {

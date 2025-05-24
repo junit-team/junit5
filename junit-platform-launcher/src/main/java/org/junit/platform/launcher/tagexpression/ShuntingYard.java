@@ -56,7 +56,7 @@ class ShuntingYard {
 		if (parseStatus.isError()) {
 			return ParseResults.error(requireNonNull(parseStatus.errorMessage));
 		}
-		return ParseResults.success(expressions.pop().element);
+		return ParseResults.success(expressions.pop().element());
 	}
 
 	private ParseStatus processTokens() {
@@ -97,11 +97,11 @@ class ShuntingYard {
 	private ParseStatus findMatchingLeftParenthesis(Token token) {
 		while (!operators.isEmpty()) {
 			TokenWith<Operator> tokenWithWithOperator = operators.pop();
-			Operator operator = tokenWithWithOperator.element;
+			Operator operator = tokenWithWithOperator.element();
 			if (LeftParenthesis.equals(operator)) {
 				return success();
 			}
-			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token);
+			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token());
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
@@ -113,8 +113,8 @@ class ShuntingYard {
 		while (currentOperator.hasLowerPrecedenceThan(previousOperator())
 				|| currentOperator.hasSamePrecedenceAs(previousOperator()) && currentOperator.isLeftAssociative()) {
 			TokenWith<Operator> tokenWithWithOperator = operators.pop();
-			ParseStatus parseStatus = tokenWithWithOperator.element.createAndAddExpressionTo(expressions,
-				tokenWithWithOperator.token);
+			ParseStatus parseStatus = tokenWithWithOperator.element().createAndAddExpressionTo(expressions,
+				tokenWithWithOperator.token());
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
@@ -124,7 +124,7 @@ class ShuntingYard {
 	}
 
 	private Operator previousOperator() {
-		return operators.peek().element;
+		return operators.peek().element();
 	}
 
 	private void pushExpressionAt(Token token, TagExpression tagExpression) {
@@ -138,11 +138,11 @@ class ShuntingYard {
 	private ParseStatus consumeRemainingOperators() {
 		while (!operators.isEmpty()) {
 			TokenWith<Operator> tokenWithWithOperator = operators.pop();
-			Operator operator = tokenWithWithOperator.element;
+			Operator operator = tokenWithWithOperator.element();
 			if (LeftParenthesis.equals(operator)) {
-				return missingClosingParenthesis(tokenWithWithOperator.token, operator.representation());
+				return missingClosingParenthesis(tokenWithWithOperator.token(), operator.representation());
 			}
-			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token);
+			ParseStatus parseStatus = operator.createAndAddExpressionTo(expressions, tokenWithWithOperator.token());
 			if (parseStatus.isError()) {
 				return parseStatus;
 			}
