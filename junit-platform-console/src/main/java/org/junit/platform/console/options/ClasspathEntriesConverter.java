@@ -14,7 +14,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import picocli.CommandLine;
@@ -23,7 +22,7 @@ class ClasspathEntriesConverter implements CommandLine.ITypeConverter<List<Path>
 
 	@Override
 	public List<Path> convert(String value) {
-		return Stream.of(value.split(File.pathSeparator)).map(Paths::get).collect(Collectors.toList());
+		return Stream.of(value.split(File.pathSeparator)).map(Paths::get).toList();
 	}
 
 }

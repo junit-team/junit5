@@ -13,7 +13,6 @@ package org.junit.vintage.engine.execution;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static java.util.stream.Stream.concat;
 import static org.junit.platform.engine.TestExecutionResult.failed;
@@ -198,7 +197,7 @@ class TestRun {
 				.stream()
 				.map(TestExecutionResult::getThrowable)
 				.map(Optional::orElseThrow)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 		MultipleFailuresError multipleFailuresError = new MultipleFailuresError("", failures);
 		failures.forEach(multipleFailuresError::addSuppressed);

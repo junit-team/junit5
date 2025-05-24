@@ -11,7 +11,6 @@
 package org.junit.platform.engine;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -88,7 +87,7 @@ class UniqueIdFormat implements Serializable {
 	 */
 	UniqueId parse(String source) throws JUnitException {
 		String[] parts = source.split(String.valueOf(this.segmentDelimiter));
-		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).collect(toList());
+		List<Segment> segments = Arrays.stream(parts).map(this::createSegment).toList();
 		return new UniqueId(this, segments);
 	}
 

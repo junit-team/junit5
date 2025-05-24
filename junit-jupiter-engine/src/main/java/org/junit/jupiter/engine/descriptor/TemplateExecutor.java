@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -81,7 +79,7 @@ abstract class TemplateExecutor<P extends Extension, C> {
 	private List<P> validateProviders(ExtensionContext extensionContext, ExtensionRegistry extensionRegistry) {
 		List<P> providers = extensionRegistry.stream(providerType) //
 				.filter(provider -> supports(provider, extensionContext)) //
-				.collect(toList());
+				.toList();
 		return Preconditions.notEmpty(providers, this::getNoRegisteredProviderErrorMessage);
 	}
 

@@ -27,7 +27,6 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -122,7 +121,7 @@ public class MutableExtensionRegistry implements ExtensionRegistry, ExtensionReg
 			List<String> excludeExtensionNames = excludedExtensions
 					.stream()
 					.map(Class::getName)
-					.collect(Collectors.toList());
+					.toList();
 			// @formatter:on
 			logger.config(() -> "Excluded auto-detected extensions due to configured includes/excludes: %s".formatted(
 				excludeExtensionNames));

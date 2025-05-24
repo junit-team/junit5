@@ -10,7 +10,6 @@
 
 package org.junit.platform.suite.commons;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
@@ -462,7 +461,7 @@ public final class SuiteLauncherDiscoveryRequestBuilder {
 		return toClassSelectors(suiteClass, annotation) //
 				.distinct() //
 				.peek(selector -> this.selectedClassNames.add(selector.getClassName())) //
-				.collect(toList());
+				.toList();
 	}
 
 	private static Stream<ClassSelector> toClassSelectors(Class<?> suiteClass, SelectClasses annotation) {

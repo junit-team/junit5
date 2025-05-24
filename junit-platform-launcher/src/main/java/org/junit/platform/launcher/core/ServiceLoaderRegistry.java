@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
@@ -58,7 +56,7 @@ class ServiceLoaderRegistry {
 			Function<List<T>, String> logMessageSupplier) {
 		ServiceLoader<T> serviceLoader = ServiceLoader.load(type, ClassLoaderUtils.getDefaultClassLoader());
 		Predicate<Class<? extends T>> providerPredicate = clazz -> classNameFilter.test(clazz.getName());
-		List<T> instances = ServiceLoaderUtils.filter(serviceLoader, providerPredicate).collect(toList());
+		List<T> instances = ServiceLoaderUtils.filter(serviceLoader, providerPredicate).toList();
 		getLogger().config(() -> logMessageSupplier.apply(instances));
 		return instances;
 	}

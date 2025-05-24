@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.descriptor;
 
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 import static org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.validateClassTemplateInvocationLifecycleMethodsAreDeclaredCorrectly;
@@ -108,9 +107,9 @@ public class ClassTemplateTestDescriptor extends ClassBasedTestDescriptor implem
 			copy.childrenPrototypes.add(newChild);
 		});
 		this.childrenPrototypesByIndex.forEach((index, oldChildren) -> {
-			List<TestDescriptor> newChildren = oldChildren.stream() //
+			List<? extends TestDescriptor> newChildren = oldChildren.stream() //
 					.map(oldChild -> ((JupiterTestDescriptor) oldChild).copyIncludingDescendants(uniqueIdTransformer)) //
-					.collect(toList());
+					.toList();
 			copy.childrenPrototypesByIndex.put(index, newChildren);
 		});
 		return copy;

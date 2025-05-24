@@ -12,7 +12,6 @@ package org.junit.jupiter.params.provider;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Spliterators.spliteratorUnknownSize;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.getHeaders;
 import static org.junit.jupiter.params.provider.CsvArgumentsProvider.handleCsvException;
@@ -63,7 +62,7 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 
 		Stream<Source> resources = Arrays.stream(csvFileSource.resources()).map(inputStreamProvider::classpathResource);
 		Stream<Source> files = Arrays.stream(csvFileSource.files()).map(inputStreamProvider::file);
-		List<Source> sources = Stream.concat(resources, files).collect(toList());
+		List<Source> sources = Stream.concat(resources, files).toList();
 
 		// @formatter:off
 		return Preconditions.notEmpty(sources, "Resources or files must not be empty")

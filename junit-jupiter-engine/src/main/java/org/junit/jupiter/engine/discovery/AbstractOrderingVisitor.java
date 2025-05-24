@@ -13,7 +13,6 @@ package org.junit.jupiter.engine.discovery;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -110,11 +109,11 @@ abstract class AbstractOrderingVisitor implements TestDescriptor.Visitor {
 
 			if (shouldNonMatchingDescriptorsComeBeforeOrderedOnes()) {
 				return Stream.concat(nonMatchingTestDescriptors, orderedTestDescriptors)//
-						.collect(toList());
+						.toList();
 			}
 			else {
 				return Stream.concat(orderedTestDescriptors, nonMatchingTestDescriptors)//
-						.collect(toList());
+						.toList();
 			}
 		});
 	}

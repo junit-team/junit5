@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.stream.Collectors.toList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -39,7 +37,7 @@ class CompositeTestExecutionListener implements TestExecutionListener {
 		this.eagerTestExecutionListeners = this.testExecutionListeners.stream() //
 				.filter(EagerTestExecutionListener.class::isInstance) //
 				.map(EagerTestExecutionListener.class::cast) //
-				.collect(toList());
+				.toList();
 	}
 
 	@Override

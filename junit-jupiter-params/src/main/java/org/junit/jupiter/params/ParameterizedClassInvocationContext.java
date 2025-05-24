@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.params;
 
-import static java.util.stream.Collectors.toList;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_METHOD;
 
 import java.util.List;
@@ -42,7 +41,7 @@ class ParameterizedClassInvocationContext extends ParameterizedInvocationContext
 	@Override
 	public List<Extension> getAdditionalExtensions() {
 		return Stream.concat(Stream.of(createParameterInjector()), createLifecycleMethodInvokers()) //
-				.collect(toList());
+				.toList();
 	}
 
 	@Override

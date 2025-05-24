@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
@@ -160,7 +159,7 @@ class DynamicTestTests {
 	}
 
 	private void assertStream(Stream<DynamicTest> stream) throws Throwable {
-		List<DynamicTest> dynamicTests = stream.collect(Collectors.toList());
+		List<DynamicTest> dynamicTests = stream.toList();
 
 		assertThat(dynamicTests).extracting(DynamicTest::getDisplayName).containsExactly("FOO", "BAR", "BAZ");
 

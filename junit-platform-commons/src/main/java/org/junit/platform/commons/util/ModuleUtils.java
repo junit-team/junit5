@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apiguardian.api.API;
@@ -229,7 +228,7 @@ public class ModuleUtils {
 							.filter(classFilter::match)
 							.map(this::loadClassUnchecked)
 							.filter(classFilter::match)
-							.collect(Collectors.toList());
+							.toList();
 					// @formatter:on
 				}
 			}
@@ -288,7 +287,7 @@ public class ModuleUtils {
 					return names.filter(name -> !name.endsWith(".class"))
 							.map(this::loadResourceUnchecked)
 							.filter(resourceFilter)
-							.collect(Collectors.toList());
+							.toList();
 					// @formatter:on
 				}
 			}

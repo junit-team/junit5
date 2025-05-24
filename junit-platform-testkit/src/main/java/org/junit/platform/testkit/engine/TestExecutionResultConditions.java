@@ -11,7 +11,6 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
@@ -63,7 +62,7 @@ public final class TestExecutionResultConditions {
 	public static Condition<TestExecutionResult> throwable(Condition<Throwable>... conditions) {
 		List<Condition<TestExecutionResult>> list = Arrays.stream(conditions)//
 				.map(TestExecutionResultConditions::throwable)//
-				.collect(toList());
+				.toList();
 
 		return Assertions.allOf(list);
 	}
@@ -81,7 +80,7 @@ public final class TestExecutionResultConditions {
 	public static Condition<Throwable> cause(Condition<Throwable>... conditions) {
 		List<Condition<Throwable>> list = Arrays.stream(conditions)//
 				.map(TestExecutionResultConditions::cause)//
-				.collect(toList());
+				.toList();
 
 		return Assertions.allOf(list);
 	}
@@ -101,7 +100,7 @@ public final class TestExecutionResultConditions {
 	public static Condition<Throwable> rootCause(Condition<Throwable>... conditions) {
 		List<Condition<Throwable>> list = Arrays.stream(conditions)//
 				.map(TestExecutionResultConditions::rootCause)//
-				.collect(toList());
+				.toList();
 
 		return Assertions.allOf(list);
 	}
@@ -119,7 +118,7 @@ public final class TestExecutionResultConditions {
 	public static Condition<Throwable> suppressed(int index, Condition<Throwable>... conditions) {
 		List<Condition<Throwable>> list = Arrays.stream(conditions)//
 				.map(condition -> suppressed(index, condition))//
-				.collect(toList());
+				.toList();
 
 		return Assertions.allOf(list);
 	}

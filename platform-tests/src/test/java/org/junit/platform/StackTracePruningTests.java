@@ -182,7 +182,7 @@ class StackTracePruningTests {
 	private static void assertStackTraceMatch(List<StackTraceElement> stackTrace, String expectedLines) {
 		List<String> stackStraceAsLines = stackTrace.stream() //
 				.map(StackTraceElement::toString) //
-				.collect(Collectors.toList());
+				.toList();
 		assertLinesMatch(expectedLines.lines().toList(), stackStraceAsLines);
 	}
 

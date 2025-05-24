@@ -19,7 +19,6 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -65,8 +64,8 @@ class AssertLinesMatch {
 			return;
 		}
 
-		List<String> expectedListOfStrings = expectedLines.collect(Collectors.toList());
-		List<String> actualListOfStrings = actualLines.collect(Collectors.toList());
+		List<String> expectedListOfStrings = expectedLines.toList();
+		List<String> actualListOfStrings = actualLines.toList();
 		assertLinesMatch(expectedListOfStrings, actualListOfStrings, messageOrSupplier);
 	}
 

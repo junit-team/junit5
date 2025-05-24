@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.util.Arrays;
@@ -124,7 +123,7 @@ public class ClassNamePatternFilterUtils {
 				.map(String::trim)
 				.map(ClassNamePatternFilterUtils::replaceRegExElements)
 				.map(Pattern::compile)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 	}
 

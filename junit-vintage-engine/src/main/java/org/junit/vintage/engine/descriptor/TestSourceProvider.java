@@ -12,7 +12,6 @@ package org.junit.vintage.engine.descriptor;
 
 import static java.util.Collections.synchronizedMap;
 import static java.util.function.Predicate.isEqual;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.support.HierarchyTraversalMode.TOP_DOWN;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethods;
@@ -77,14 +76,14 @@ public class TestSourceProvider {
 		List<Method> methods = methodsCache.computeIfAbsent(testClass,
 			clazz -> findMethods(clazz, m -> true, TOP_DOWN)).stream() //
 				.filter(where(Method::getName, isEqual(methodName))) //
-				.collect(toList());
+				.toList();
 		if (methods.isEmpty()) {
 			return null;
 		}
 		if (methods.size() == 1) {
 			return methods.get(0);
 		}
-		methods = methods.stream().filter(ModifierSupport::isPublic).collect(toList());
+		methods = methods.stream().filter(ModifierSupport::isPublic).toList();
 		if (methods.size() == 1) {
 			return methods.get(0);
 		}

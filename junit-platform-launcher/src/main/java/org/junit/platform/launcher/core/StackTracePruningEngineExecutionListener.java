@@ -13,7 +13,6 @@ package org.junit.platform.launcher.core;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.junit.platform.engine.EngineExecutionListener;
@@ -63,7 +62,7 @@ class StackTracePruningEngineExecutionListener extends DelegatingEngineExecution
 					}
 				}) //
 				.filter(Objects::nonNull) //
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 }

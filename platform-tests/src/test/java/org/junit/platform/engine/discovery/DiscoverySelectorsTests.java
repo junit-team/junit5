@@ -42,7 +42,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
@@ -441,7 +440,7 @@ class DiscoverySelectorsTests {
 		@Test
 		void selectModulesByNames() {
 			var selectors = selectModules(Set.of("a", "b"));
-			var names = selectors.stream().map(ModuleSelector::getModuleName).collect(Collectors.toList());
+			var names = selectors.stream().map(ModuleSelector::getModuleName).toList();
 			assertThat(names).containsExactlyInAnyOrder("b", "a");
 		}
 

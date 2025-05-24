@@ -11,7 +11,6 @@
 package org.junit.platform.reporting.legacy.xml;
 
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.junit.platform.engine.TestExecutionResult.Status.ABORTED;
 
 import java.time.Clock;
@@ -110,7 +109,7 @@ class XmlReportData {
 		return getAncestors(testIdentifier).stream() //
 				.map(this.finishedTests::get) //
 				.filter(Objects::nonNull) //
-				.collect(toList());
+				.toList();
 	}
 
 	List<ReportEntry> getReportEntries(TestIdentifier testIdentifier) {

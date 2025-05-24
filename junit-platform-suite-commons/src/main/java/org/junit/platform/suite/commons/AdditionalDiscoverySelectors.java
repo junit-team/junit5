@@ -41,7 +41,7 @@ class AdditionalDiscoverySelectors {
 		return uniqueStreamOf(uris)
 				.filter(StringUtils::isNotBlank)
 				.map(DiscoverySelectors::selectUri)
-				.collect(Collectors.toList());
+				.toList();
 		// @formatter:on
 	}
 
@@ -53,7 +53,7 @@ class AdditionalDiscoverySelectors {
 		return uniqueStreamOf(paths)
 				.filter(StringUtils::isNotBlank)
 				.map(DiscoverySelectors::selectDirectory)
-				.collect(Collectors.toList());
+				.toList();
 		// @formatter:on
 	}
 
@@ -64,7 +64,7 @@ class AdditionalDiscoverySelectors {
 		// @formatter:off
 		return uniqueStreamOf(packageNames)
 				.map(DiscoverySelectors::selectPackage)
-				.collect(Collectors.toList());
+				.toList();
 		// @formatter:on
 	}
 
@@ -113,9 +113,9 @@ class AdditionalDiscoverySelectors {
 		return DiscoverySelectors.selectClasspathResource(classpathResourceName, FilePosition.from(line, column));
 	}
 
-	static List<DiscoverySelector> parseIdentifiers(String[] identifiers) {
+	static List<? extends DiscoverySelector> parseIdentifiers(String[] identifiers) {
 		return DiscoverySelectors.parseAll(identifiers) //
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private static <T> Stream<T> uniqueStreamOf(T[] elements) {

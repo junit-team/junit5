@@ -11,7 +11,6 @@
 package org.junit.platform.testkit.engine;
 
 import static java.util.function.Predicate.isEqual;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -326,7 +325,7 @@ public final class EventConditions {
 	 */
 	public static Condition<Event> uniqueIdSubstrings(List<String> uniqueIdSubstrings) {
 		// The following worked with AssertJ 3.13.2
-		// return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).collect(toList()));
+		// return allOf(uniqueIdSubstrings.stream().map(EventConditions::uniqueIdSubstring).toList());
 
 		// Workaround for a regression in AssertJ 3.14.0 that loses the individual descriptions
 		// when multiple conditions are supplied as an Iterable instead of as an array.
@@ -336,8 +335,8 @@ public final class EventConditions {
 		// does not track all descriptions.
 		List<Condition<Event>> conditions = uniqueIdSubstrings.stream()//
 				.map(EventConditions::uniqueIdSubstring)//
-				.collect(toList());
-		List<Description> descriptions = conditions.stream().map(Condition::description).collect(toList());
+				.toList();
+		List<Description> descriptions = conditions.stream().map(Condition::description).toList();
 		return allOf(conditions).describedAs(new JoinDescription("all of :[", "]", descriptions));
 	}
 

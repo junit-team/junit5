@@ -13,7 +13,6 @@ package org.junit.platform.console.options;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.engine.discovery.ClassNameFilter.STANDARD_INCLUDE_PATTERN;
 
@@ -96,7 +95,7 @@ public class TestDiscoveryOptions {
 	}
 
 	public List<Path> getExistingAdditionalClasspathEntries() {
-		return this.additionalClasspathEntries.stream().filter(Files::exists).collect(toList());
+		return this.additionalClasspathEntries.stream().filter(Files::exists).toList();
 	}
 
 	public List<Path> getAdditionalClasspathEntries() {
