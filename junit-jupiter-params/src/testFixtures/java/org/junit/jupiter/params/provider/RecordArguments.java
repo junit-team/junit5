@@ -12,12 +12,13 @@ package org.junit.jupiter.params.provider;
 
 import java.util.Arrays;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.support.ReflectionSupport;
 
 public interface RecordArguments extends Arguments {
 
 	@Override
-	default Object[] get() {
+	default @Nullable Object[] get() {
 		return Arrays.stream(getClass().getRecordComponents()) //
 				.map(component -> ReflectionSupport.invokeMethod(component.getAccessor(), this)) //
 				.toArray();
