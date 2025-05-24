@@ -12686,7 +12686,7 @@ and implement a <code><a href="../api/org.junit.jupiter.api/org/junit/jupiter/ap
 <span class="kd">class</span> <span class="nc">ClassTemplateDemo</span> <span class="o">{</span>
 
     <span class="kd">static</span> <span class="kd">final</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">String</span><span class="o">&gt;</span> <span class="no">WELL_KNOWN_FRUITS</span>
-        <span class="o">=</span> <span class="n">unmodifiableList</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="s">"apple"</span><span class="o">,</span> <span class="s">"banana"</span><span class="o">,</span> <span class="s">"lemon"</span><span class="o">));</span>
+        <span class="o">=</span> <span class="nc">List</span><span class="o">.</span><span class="na">of</span><span class="o">(</span><span class="s">"apple"</span><span class="o">,</span> <span class="s">"banana"</span><span class="o">,</span> <span class="s">"lemon"</span><span class="o">);</span>
 
     <span class="kd">private</span> <span class="nc">String</span> <span class="n">fruit</span><span class="o">;</span>
 
@@ -16974,6 +16974,10 @@ since such APIs will likely be removed in an upcoming release.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExecutionRequest.&ZeroWidthSpace;create(TestDescriptor, EngineExecutionListener, ConfigurationParameters)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.11</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Filter.&ZeroWidthSpace;adaptFilter(Filter&lt;V&gt;, Function&lt;T, V&gt;)</code> <em>(method)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
 </tr>
 </tbody>
 </table>
