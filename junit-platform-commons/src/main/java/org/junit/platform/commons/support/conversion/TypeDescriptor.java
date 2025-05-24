@@ -29,14 +29,20 @@ import org.junit.platform.commons.util.ReflectionUtils;
 @API(status = EXPERIMENTAL, since = "1.13")
 public final class TypeDescriptor {
 
-	private final @Nullable Class<?> type;
+	/**
+	 * Internal marker for type descriptors created from a {@code null} value.
+	 */
+	private static final Class<?> NULL_TYPE = Void.class;
+
+	private final Class<?> type;
 
 	public static TypeDescriptor forClass(Class<?> clazz) {
+		Preconditions.condition(clazz != NULL_TYPE, () -> "clazz must not be " + NULL_TYPE);
 		return new TypeDescriptor(clazz);
 	}
 
 	public static TypeDescriptor forInstance(@Nullable Object instance) {
-		return new TypeDescriptor(instance != null ? instance.getClass() : null);
+		return new TypeDescriptor(instance != null ? instance.getClass() : NULL_TYPE);
 	}
 
 	public static TypeDescriptor forField(Field field) {
@@ -49,28 +55,25 @@ public final class TypeDescriptor {
 		return new TypeDescriptor(parameter.getType());
 	}
 
-	private TypeDescriptor(@Nullable Class<?> type) {
+	private TypeDescriptor(Class<?> type) {
 		this.type = type;
 	}
 
 	public @Nullable Class<?> getType() {
-		return type;
+		return type != NULL_TYPE ? type : null;
 	}
 
 	public @Nullable Class<?> getWrapperType() {
-		if (type == null) { // FIXME parameter of ReflectionUtils.getWrapperType should be @Nullable
-			return null;
-		}
 		Class<?> wrapperType = ReflectionUtils.getWrapperType(type);
-		return wrapperType != null ? wrapperType : type;
+		return wrapperType != null ? wrapperType : getType();
 	}
 
 	public boolean isPrimitive() {
-		return type != null && type.isPrimitive();
+		return type != NULL_TYPE && type.isPrimitive();
 	}
 
 	public String getTypeName() {
-		return type != null ? type.getName() : "null";
+		return type != NULL_TYPE ? type.getName() : "null";
 	}
 
 	@Override
