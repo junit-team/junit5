@@ -10,8 +10,6 @@
 
 package org.junit.platform.engine.support.hierarchical;
 
-import static java.util.Collections.unmodifiableList;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -31,7 +29,7 @@ class CompositeLock implements ResourceLock {
 
 	CompositeLock(List<ExclusiveResource> resources, List<Lock> locks) {
 		Preconditions.condition(resources.size() == locks.size(), "Resources and locks must have the same size");
-		this.resources = unmodifiableList(resources);
+		this.resources = List.copyOf(resources);
 		this.locks = Preconditions.notEmpty(locks, "Locks must not be empty");
 		this.exclusive = resources.stream().anyMatch(
 			resource -> resource.getLockMode() == ExclusiveResource.LockMode.READ_WRITE);

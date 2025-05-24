@@ -23,7 +23,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,7 +63,7 @@ public final class Events {
 		Preconditions.notNull(events, "Event list must not be null");
 		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
-		this.events = Collections.unmodifiableList(events);
+		this.events = List.copyOf(events);
 		this.category = category;
 	}
 

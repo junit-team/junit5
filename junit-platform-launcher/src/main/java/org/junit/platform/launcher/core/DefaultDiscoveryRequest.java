@@ -10,8 +10,6 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.unmodifiableList;
-
 import java.util.List;
 
 import org.junit.platform.commons.util.Preconditions;
@@ -57,10 +55,10 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 			List<DiscoveryFilter<?>> discoveryFilters, List<PostDiscoveryFilter> postDiscoveryFilters,
 			LauncherConfigurationParameters configurationParameters, LauncherDiscoveryListener discoveryListener,
 			OutputDirectoryProvider outputDirectoryProvider) {
-		this.selectors = selectors;
-		this.engineFilters = engineFilters;
-		this.discoveryFilters = discoveryFilters;
-		this.postDiscoveryFilters = postDiscoveryFilters;
+		this.selectors = List.copyOf(selectors);
+		this.engineFilters = List.copyOf(engineFilters);
+		this.discoveryFilters = List.copyOf(discoveryFilters);
+		this.postDiscoveryFilters = List.copyOf(postDiscoveryFilters);
 		this.configurationParameters = configurationParameters;
 		this.discoveryListener = discoveryListener;
 		this.outputDirectoryProvider = outputDirectoryProvider;
@@ -74,7 +72,7 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 
 	@Override
 	public List<EngineFilter> getEngineFilters() {
-		return unmodifiableList(this.engineFilters);
+		return this.engineFilters;
 	}
 
 	@Override
@@ -85,7 +83,7 @@ final class DefaultDiscoveryRequest implements LauncherDiscoveryRequest {
 
 	@Override
 	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
-		return unmodifiableList(this.postDiscoveryFilters);
+		return this.postDiscoveryFilters;
 	}
 
 	@Override

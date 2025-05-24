@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.engine.descriptor;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 
 import java.lang.reflect.AnnotatedElement;
@@ -126,16 +124,12 @@ final class DisplayNameUtils {
 			Class<?> testClass, JupiterConfiguration configuration,
 			BiFunction<DisplayNameGenerator, List<Class<?>>, String> generatorFunction) {
 		return () -> {
-			List<Class<?>> enclosingInstanceTypes = makeUnmodifiable(enclosingInstanceTypesSupplier.get());
+			List<Class<?>> enclosingInstanceTypes = List.copyOf(enclosingInstanceTypesSupplier.get());
 			return findDisplayNameGenerator(enclosingInstanceTypes, testClass) //
 					.map(it -> generatorFunction.apply(it, enclosingInstanceTypes)) //
 					.orElseGet(() -> generatorFunction.apply(configuration.getDefaultDisplayNameGenerator(),
 						enclosingInstanceTypes));
 		};
-	}
-
-	private static <T> List<T> makeUnmodifiable(List<T> list) {
-		return list.isEmpty() ? emptyList() : unmodifiableList(list);
 	}
 
 	private static Optional<DisplayNameGenerator> findDisplayNameGenerator(List<Class<?>> enclosingInstanceTypes,

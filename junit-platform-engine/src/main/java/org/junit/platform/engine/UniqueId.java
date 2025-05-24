@@ -10,8 +10,6 @@
 
 package org.junit.platform.engine;
 
-import static java.util.Collections.singletonList;
-import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.STABLE;
 
 import java.io.Serial;
@@ -97,7 +95,7 @@ public class UniqueId implements Cloneable, Serializable {
 	private transient SoftReference<String> toString;
 
 	private UniqueId(UniqueIdFormat uniqueIdFormat, Segment segment) {
-		this(uniqueIdFormat, singletonList(segment));
+		this(uniqueIdFormat, List.of(segment));
 	}
 
 	/**
@@ -109,7 +107,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 */
 	UniqueId(UniqueIdFormat uniqueIdFormat, List<Segment> segments) {
 		this.uniqueIdFormat = uniqueIdFormat;
-		this.segments = segments;
+		this.segments = List.copyOf(segments);
 	}
 
 	final Optional<Segment> getRoot() {
@@ -130,7 +128,7 @@ public class UniqueId implements Cloneable, Serializable {
 	 * {@code UniqueId}.
 	 */
 	public final List<Segment> getSegments() {
-		return unmodifiableList(this.segments);
+		return this.segments;
 	}
 
 	/**
@@ -218,7 +216,7 @@ public class UniqueId implements Cloneable, Serializable {
 	@API(status = STABLE, since = "1.5")
 	public UniqueId removeLastSegment() {
 		Preconditions.condition(this.segments.size() > 1, "Cannot remove last remaining segment");
-		return new UniqueId(uniqueIdFormat, new ArrayList<>(this.segments.subList(0, this.segments.size() - 1)));
+		return new UniqueId(uniqueIdFormat, List.copyOf(this.segments.subList(0, this.segments.size() - 1)));
 	}
 
 	/**
