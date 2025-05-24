@@ -443,7 +443,8 @@ public final class AnnotationSupport {
 	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = MAINTAINED, since = "1.4")
-	public static List<Object> findAnnotatedFieldValues(Object instance, Class<? extends Annotation> annotationType) {
+	public static List<@Nullable Object> findAnnotatedFieldValues(Object instance,
+			Class<? extends Annotation> annotationType) {
 		Preconditions.notNull(instance, "instance must not be null");
 
 		List<Field> fields = findAnnotatedFields(instance.getClass(), annotationType, ModifierSupport::isNotStatic,
@@ -475,7 +476,8 @@ public final class AnnotationSupport {
 	 * @see ReflectionSupport#tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = MAINTAINED, since = "1.4")
-	public static List<Object> findAnnotatedFieldValues(Class<?> clazz, Class<? extends Annotation> annotationType) {
+	public static List<@Nullable Object> findAnnotatedFieldValues(Class<?> clazz,
+			Class<? extends Annotation> annotationType) {
 
 		List<Field> fields = findAnnotatedFields(clazz, annotationType, ModifierSupport::isStatic,
 			HierarchyTraversalMode.TOP_DOWN);
@@ -510,8 +512,8 @@ public final class AnnotationSupport {
 	 */
 	@SuppressWarnings("unchecked")
 	@API(status = MAINTAINED, since = "1.4")
-	public static <T> List<T> findAnnotatedFieldValues(Object instance, Class<? extends Annotation> annotationType,
-			Class<T> fieldType) {
+	public static <T extends @Nullable Object> List<T> findAnnotatedFieldValues(Object instance,
+			Class<? extends Annotation> annotationType, Class<T> fieldType) {
 
 		Preconditions.notNull(instance, "instance must not be null");
 		Preconditions.notNull(fieldType, "fieldType must not be null");
@@ -552,8 +554,8 @@ public final class AnnotationSupport {
 	 */
 	@SuppressWarnings("unchecked")
 	@API(status = MAINTAINED, since = "1.4")
-	public static <T> List<T> findAnnotatedFieldValues(Class<?> clazz, Class<? extends Annotation> annotationType,
-			Class<T> fieldType) {
+	public static <T extends @Nullable Object> List<T> findAnnotatedFieldValues(Class<?> clazz,
+			Class<? extends Annotation> annotationType, Class<T> fieldType) {
 
 		Preconditions.notNull(fieldType, "fieldType must not be null");
 

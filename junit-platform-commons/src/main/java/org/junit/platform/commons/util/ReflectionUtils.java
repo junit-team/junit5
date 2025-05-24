@@ -626,7 +626,7 @@ public final class ReflectionUtils {
 	 * @see #tryToReadFieldValue(Field, Object)
 	 */
 	@API(status = INTERNAL, since = "1.4")
-	public static <T> Try<Object> tryToReadFieldValue(Class<T> clazz, String fieldName, T instance) {
+	public static <T> Try<Object> tryToReadFieldValue(Class<T> clazz, String fieldName, @Nullable T instance) {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notBlank(fieldName, "Field name must not be null or blank");
 
@@ -677,7 +677,7 @@ public final class ReflectionUtils {
 	 * @return an immutable list of the values of the specified fields; never
 	 * {@code null} but may be empty or contain {@code null} entries
 	 */
-	public static List<Object> readFieldValues(List<Field> fields, @Nullable Object instance) {
+	public static List<@Nullable Object> readFieldValues(List<Field> fields, @Nullable Object instance) {
 		return readFieldValues(fields, instance, field -> true);
 	}
 
@@ -694,7 +694,7 @@ public final class ReflectionUtils {
 	 * @return an immutable list of the values of the specified fields; never
 	 * {@code null} but may be empty or contain {@code null} entries
 	 */
-	public static List<Object> readFieldValues(List<Field> fields, @Nullable Object instance,
+	public static List<@Nullable Object> readFieldValues(List<Field> fields, @Nullable Object instance,
 			Predicate<Field> predicate) {
 		Preconditions.notNull(fields, "fields list must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
