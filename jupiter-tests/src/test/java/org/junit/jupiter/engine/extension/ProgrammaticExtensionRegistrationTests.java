@@ -466,13 +466,7 @@ class ProgrammaticExtensionRegistrationTests extends AbstractJupiterTestEngineTe
 
 	}
 
-	private static class CrystalBall implements ParameterResolver {
-
-		private final String wisdom;
-
-		public CrystalBall(String wisdom) {
-			this.wisdom = wisdom;
-		}
+	private record CrystalBall(String wisdom) implements ParameterResolver {
 
 		@Override
 		public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {

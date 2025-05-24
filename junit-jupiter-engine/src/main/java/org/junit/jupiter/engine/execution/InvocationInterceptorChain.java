@@ -91,17 +91,8 @@ public class InvocationInterceptorChain {
 
 	}
 
-	private static class InterceptedInvocation<T> implements Invocation<T> {
-
-		private final Invocation<T> invocation;
-		private final InterceptorCall<T> call;
-		private final InvocationInterceptor interceptor;
-
-		InterceptedInvocation(Invocation<T> invocation, InterceptorCall<T> call, InvocationInterceptor interceptor) {
-			this.invocation = invocation;
-			this.call = call;
-			this.interceptor = interceptor;
-		}
+	private record InterceptedInvocation<T>(Invocation<T> invocation, InterceptorCall<T> call,
+			InvocationInterceptor interceptor) implements Invocation<T> {
 
 		@Override
 		public T proceed() throws Throwable {

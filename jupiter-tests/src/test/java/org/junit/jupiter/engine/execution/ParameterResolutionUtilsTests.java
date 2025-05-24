@@ -346,15 +346,7 @@ class ParameterResolutionUtilsTests {
 		ArgumentRecordingParameterResolver.@Nullable Arguments supportsArguments;
 		ArgumentRecordingParameterResolver.@Nullable Arguments resolveArguments;
 
-		static class Arguments {
-
-			final ParameterContext parameterContext;
-			final ExtensionContext extensionContext;
-
-			Arguments(ParameterContext parameterContext, ExtensionContext extensionContext) {
-				this.parameterContext = parameterContext;
-				this.extensionContext = extensionContext;
-			}
+		record Arguments(ParameterContext parameterContext, ExtensionContext extensionContext) {
 		}
 
 		@Override

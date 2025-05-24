@@ -20,15 +20,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
  *
  * @since 5.3
  */
-class DefaultTestInstanceFactoryContext implements TestInstanceFactoryContext {
-
-	private final Class<?> testClass;
-	private final Optional<Object> outerInstance;
-
-	DefaultTestInstanceFactoryContext(Class<?> testClass, Optional<Object> outerInstance) {
-		this.testClass = testClass;
-		this.outerInstance = outerInstance;
-	}
+record DefaultTestInstanceFactoryContext(Class<?> testClass, Optional<Object> outerInstance)
+		implements TestInstanceFactoryContext {
 
 	@Override
 	public Class<?> getTestClass() {

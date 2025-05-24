@@ -45,8 +45,8 @@ class ParseStatus {
 	}
 
 	static ParseStatus missingOperatorBetween(TokenWith<TagExpression> lhs, TokenWith<TagExpression> rhs) {
-		String lhsString = "'" + lhs.element.toString() + "' at index " + format(lhs.token.lastCharacterIndex());
-		String rhsString = "'" + rhs.element.toString() + "' at index " + format(rhs.token.trimmedTokenStartIndex());
+		String lhsString = "'" + lhs.element() + "' at index " + format(lhs.token().lastCharacterIndex());
+		String rhsString = "'" + rhs.element() + "' at index " + format(rhs.token().trimmedTokenStartIndex());
 		return error("missing operator between " + lhsString + " and " + rhsString);
 	}
 

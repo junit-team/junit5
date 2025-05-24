@@ -18,15 +18,7 @@ import org.junit.jupiter.params.support.ParameterInfo;
 /**
  * @since 5.13
  */
-class DefaultParameterInfo implements ParameterInfo {
-
-	private final ParameterDeclarations declarations;
-	private final ArgumentsAccessor arguments;
-
-	DefaultParameterInfo(ParameterDeclarations declarations, ArgumentsAccessor arguments) {
-		this.declarations = declarations;
-		this.arguments = arguments;
-	}
+record DefaultParameterInfo(ParameterDeclarations declarations, ArgumentsAccessor arguments) implements ParameterInfo {
 
 	@Override
 	public ParameterDeclarations getDeclarations() {

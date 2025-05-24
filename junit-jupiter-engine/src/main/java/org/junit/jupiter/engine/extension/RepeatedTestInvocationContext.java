@@ -36,7 +36,7 @@ class RepeatedTestInvocationContext implements TestTemplateInvocationContext {
 
 	@Override
 	public String getDisplayName(int invocationIndex) {
-		return this.formatter.format(this.repetitionInfo.currentRepetition, this.repetitionInfo.totalRepetitions);
+		return this.formatter.format(this.repetitionInfo.currentRepetition(), this.repetitionInfo.totalRepetitions());
 	}
 
 	@Override

@@ -17,7 +17,6 @@ import static org.junit.platform.commons.util.ReflectionUtils.getWrapperType;
 import static org.junit.platform.commons.util.ReflectionUtils.isAssignableTo;
 
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -327,44 +326,16 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 		}
 	}
 
-	private static class CompositeKey<N> {
+	private record CompositeKey<N>(N namespace, Object key) {
 
-		private final N namespace;
-		private final Object key;
-
-		private CompositeKey(N namespace, Object key) {
-			this.namespace = Preconditions.notNull(namespace, "namespace must not be null");
-			this.key = Preconditions.notNull(key, "key must not be null");
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) {
-				return true;
-			}
-			if (o == null || getClass() != o.getClass()) {
-				return false;
-			}
-			CompositeKey<?> that = (CompositeKey<?>) o;
-			return this.namespace.equals(that.namespace) && this.key.equals(that.key);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(this.namespace, this.key);
+		CompositeKey {
+			Preconditions.notNull(namespace, "namespace must not be null");
+			Preconditions.notNull(key, "key must not be null");
 		}
 
 	}
 
-	private static class StoredValue {
-
-		private final int order;
-		private final Supplier<@Nullable Object> supplier;
-
-		StoredValue(int order, Supplier<@Nullable Object> supplier) {
-			this.order = order;
-			this.supplier = supplier;
-		}
+	private record StoredValue(int order, Supplier<@Nullable Object> supplier) {
 
 		private <N> @Nullable EvaluatedValue<N> evaluateSafely(CompositeKey<N> compositeKey) {
 			try {
@@ -386,22 +357,10 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 
 	}
 
-	private static class EvaluatedValue<N> {
+	private record EvaluatedValue<N>(CompositeKey<N> compositeKey, int order, @Nullable Object value) {
 
 		private static final Comparator<EvaluatedValue<?>> REVERSE_INSERT_ORDER = comparing(
 			(EvaluatedValue<?> it) -> it.order).reversed();
-
-		private final CompositeKey<N> compositeKey;
-		private final int order;
-
-		@Nullable
-		private final Object value;
-
-		private EvaluatedValue(CompositeKey<N> compositeKey, int order, @Nullable Object value) {
-			this.compositeKey = compositeKey;
-			this.order = order;
-			this.value = value;
-		}
 
 		private void close(CloseAction<N> closeAction) throws Throwable {
 			if (this.value != null) {
@@ -456,13 +415,7 @@ public final class NamespacedHierarchicalStore<N> implements AutoCloseable {
 			}
 		}
 
-		private static class Failure {
-
-			private final Throwable throwable;
-
-			public Failure(Throwable throwable) {
-				this.throwable = throwable;
-			}
+		private record Failure(Throwable throwable) {
 		}
 
 	}

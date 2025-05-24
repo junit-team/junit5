@@ -18,20 +18,8 @@ import org.junit.platform.commons.util.ToStringBuilder;
 /**
  * Default implementation of {@link RepetitionInfo}.
  */
-class DefaultRepetitionInfo implements RepetitionInfo {
-
-	final int currentRepetition;
-	final int totalRepetitions;
-	final AtomicInteger failureCount;
-	final int failureThreshold;
-
-	DefaultRepetitionInfo(int currentRepetition, int totalRepetitions, AtomicInteger failureCount,
-			int failureThreshold) {
-		this.currentRepetition = currentRepetition;
-		this.totalRepetitions = totalRepetitions;
-		this.failureCount = failureCount;
-		this.failureThreshold = failureThreshold;
-	}
+record DefaultRepetitionInfo(int currentRepetition, int totalRepetitions, AtomicInteger failureCount,
+		int failureThreshold) implements RepetitionInfo {
 
 	@Override
 	public int getCurrentRepetition() {

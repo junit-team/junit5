@@ -230,7 +230,9 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 		}
 	}
 
-	private static class DiscoveryIssueForwardingListener implements LauncherDiscoveryListener {
+	private record DiscoveryIssueForwardingListener(EngineDiscoveryListener discoveryListener,
+			BiFunction<UniqueId, DiscoveryIssue, DiscoveryIssue> issueTransformer)
+			implements LauncherDiscoveryListener {
 
 		private static final Predicate<Segment> SUITE_SEGMENTS = where(Segment::getType, isEqual(SEGMENT_TYPE));
 
@@ -254,15 +256,6 @@ final class SuiteTestDescriptor extends AbstractTestDescriptor {
 					}
 					return "[%s] %s (via @Suite %s).".formatted(engineId, message, suitePath);
 				}));
-		}
-
-		private final EngineDiscoveryListener discoveryListener;
-		private final BiFunction<UniqueId, DiscoveryIssue, DiscoveryIssue> issueTransformer;
-
-		private DiscoveryIssueForwardingListener(EngineDiscoveryListener discoveryListener,
-				BiFunction<UniqueId, DiscoveryIssue, DiscoveryIssue> issueTransformer) {
-			this.discoveryListener = discoveryListener;
-			this.issueTransformer = issueTransformer;
 		}
 
 		@Override

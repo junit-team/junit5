@@ -13,7 +13,6 @@ package org.junit.platform.commons.support;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
 import java.net.URI;
-import java.util.Objects;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.util.Preconditions;
@@ -29,14 +28,11 @@ import org.junit.platform.commons.util.ToStringBuilder;
  * @since 1.11
  */
 @API(status = INTERNAL, since = "1.12")
-public class DefaultResource implements Resource {
+public record DefaultResource(String name, URI uri) implements Resource {
 
-	private final String name;
-	private final URI uri;
-
-	public DefaultResource(String name, URI uri) {
-		this.name = Preconditions.notNull(name, "name must not be null");
-		this.uri = Preconditions.notNull(uri, "uri must not be null");
+	public DefaultResource {
+		Preconditions.notNull(name, "name must not be null");
+		Preconditions.notNull(uri, "uri must not be null");
 	}
 
 	@Override
@@ -47,21 +43,6 @@ public class DefaultResource implements Resource {
 	@Override
 	public URI getUri() {
 		return uri;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		DefaultResource that = (DefaultResource) o;
-		return name.equals(that.name) && uri.equals(that.uri);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, uri);
 	}
 
 	@Override

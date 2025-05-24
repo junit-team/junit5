@@ -478,16 +478,10 @@ class ResolverFacade {
 
 	}
 
-	private static class Converter implements Resolver {
-
-		private final ArgumentConverter argumentConverter;
+	private record Converter(ArgumentConverter argumentConverter) implements Resolver {
 
 		private static Converter createDefault(ExtensionContext context) {
 			return new Converter(new DefaultArgumentConverter(context));
-		}
-
-		Converter(ArgumentConverter argumentConverter) {
-			this.argumentConverter = argumentConverter;
 		}
 
 		@Override
@@ -515,7 +509,7 @@ class ResolverFacade {
 		}
 	}
 
-	private static class Aggregator implements Resolver {
+	private record Aggregator(ArgumentsAggregator argumentsAggregator) implements Resolver {
 
 		private static final Aggregator DEFAULT = new Aggregator(new SimpleArgumentsAggregator() {
 			@Override
@@ -524,12 +518,6 @@ class ResolverFacade {
 				return accessor;
 			}
 		});
-
-		private final ArgumentsAggregator argumentsAggregator;
-
-		Aggregator(ArgumentsAggregator argumentsAggregator) {
-			this.argumentsAggregator = argumentsAggregator;
-		}
 
 		@Override
 		public @Nullable Object resolve(ParameterContext parameterContext, int parameterIndex,
@@ -558,16 +546,9 @@ class ResolverFacade {
 		}
 	}
 
-	private static class DefaultParameterDeclarations implements ParameterDeclarations {
-
-		private final AnnotatedElement sourceElement;
-		private final NavigableMap<Integer, ? extends ResolvableParameterDeclaration> declarationsByIndex;
-
-		DefaultParameterDeclarations(AnnotatedElement sourceElement,
-				NavigableMap<Integer, ? extends ResolvableParameterDeclaration> declarationsByIndex) {
-			this.sourceElement = sourceElement;
-			this.declarationsByIndex = declarationsByIndex;
-		}
+	private record DefaultParameterDeclarations(AnnotatedElement sourceElement,
+			NavigableMap<Integer, ? extends ResolvableParameterDeclaration> declarationsByIndex)
+			implements ParameterDeclarations {
 
 		@Override
 		public AnnotatedElement getSourceElement() {
@@ -743,20 +724,10 @@ class ResolverFacade {
 		}
 	}
 
-	private static class DefaultArgumentSetLifecycleMethodParameterResolver
+	private record DefaultArgumentSetLifecycleMethodParameterResolver(ResolverFacade originalResolverFacade,
+			ResolverFacade lifecycleMethodResolverFacade,
+			Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping)
 			implements ArgumentSetLifecycleMethod.ParameterResolver {
-
-		private final ResolverFacade originalResolverFacade;
-		private final ResolverFacade lifecycleMethodResolverFacade;
-		private final Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping;
-
-		DefaultArgumentSetLifecycleMethodParameterResolver(ResolverFacade originalResolverFacade,
-				ResolverFacade lifecycleMethodResolverFacade,
-				Map<ParameterDeclaration, ResolvableParameterDeclaration> parameterDeclarationMapping) {
-			this.originalResolverFacade = originalResolverFacade;
-			this.lifecycleMethodResolverFacade = lifecycleMethodResolverFacade;
-			this.parameterDeclarationMapping = parameterDeclarationMapping;
-		}
 
 		@Override
 		public boolean supports(ParameterContext parameterContext) {

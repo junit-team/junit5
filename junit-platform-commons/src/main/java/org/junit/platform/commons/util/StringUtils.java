@@ -304,7 +304,7 @@ public final class StringUtils {
 	 * @see StringUtils#splitIntoTwo(String, String)
 	 */
 	@API(status = INTERNAL, since = "1.11")
-	public interface TwoPartSplitResult {
+	public sealed interface TwoPartSplitResult {
 
 		/**
 		 * Map the result of splitting a string into two parts or throw an exception.
@@ -331,13 +331,7 @@ public final class StringUtils {
 
 	}
 
-	private static final class OnePart implements TwoPartSplitResult {
-
-		private final String value;
-
-		OnePart(String value) {
-			this.value = value;
-		}
+	private record OnePart(String value) implements TwoPartSplitResult {
 
 		@Override
 		public <T> T map(Function<String, ? extends T> onePartMapper,
@@ -346,15 +340,7 @@ public final class StringUtils {
 		}
 	}
 
-	private static final class TwoParts implements TwoPartSplitResult {
-
-		private final String first;
-		private final String second;
-
-		TwoParts(String first, String second) {
-			this.first = first;
-			this.second = second;
-		}
+	private record TwoParts(String first, String second) implements TwoPartSplitResult {
 
 		@Override
 		public <T> T map(Function<String, ? extends T> onePartMapper,

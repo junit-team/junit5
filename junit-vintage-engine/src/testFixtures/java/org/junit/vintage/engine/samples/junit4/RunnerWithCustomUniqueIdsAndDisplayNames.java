@@ -53,28 +53,18 @@ public class RunnerWithCustomUniqueIdsAndDisplayNames extends BlockJUnit4ClassRu
 		return label == null ? fallback.get() : label.value();
 	}
 
-	private static class CustomUniqueId implements Serializable {
+	private record CustomUniqueId(String testName) implements Serializable {
 
 		@Serial
 		private static final long serialVersionUID = 1L;
 
-		private final String testName;
-
-		public CustomUniqueId(String testName) {
-			this.testName = testName;
-		}
-
 		@Override
 		public boolean equals(Object obj) {
-			if (obj instanceof CustomUniqueId that) {
-				return Objects.equals(this.testName, that.testName);
+			if (obj instanceof CustomUniqueId(String name)) {
+				return Objects.equals(this.testName, name);
 			}
 			return false;
 		}
 
-		@Override
-		public int hashCode() {
-			return testName.hashCode();
-		}
 	}
 }

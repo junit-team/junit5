@@ -13,15 +13,7 @@ package org.junit.platform.launcher.tagexpression;
 /**
  * @since 1.1
  */
-class Token {
-
-	final int startIndex;
-	final String rawString;
-
-	Token(int startIndex, String rawString) {
-		this.startIndex = startIndex;
-		this.rawString = rawString;
-	}
+record Token(int startIndex, String rawString) {
 
 	String string() {
 		return rawString.trim();

@@ -18,13 +18,7 @@ import org.junit.jupiter.api.function.Executable;
  *
  * @since 5.8
  */
-class DefaultDynamicTestInvocationContext implements DynamicTestInvocationContext {
-
-	private final Executable executable;
-
-	DefaultDynamicTestInvocationContext(Executable executable) {
-		this.executable = executable;
-	}
+record DefaultDynamicTestInvocationContext(Executable executable) implements DynamicTestInvocationContext {
 
 	@Override
 	public Executable getExecutable() {

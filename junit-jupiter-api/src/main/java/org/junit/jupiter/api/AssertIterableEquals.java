@@ -198,30 +198,7 @@ class AssertIterableEquals {
 				.buildAndThrow();
 	}
 
-	private final static class Pair {
-		private final Object left;
-		private final Object right;
-
-		public Pair(Object left, Object right) {
-			this.left = left;
-			this.right = right;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o)
-				return true;
-			if (o == null || getClass() != o.getClass())
-				return false;
-			Pair that = (Pair) o;
-			return Objects.equals(this.left, that.left) //
-					&& Objects.equals(this.right, that.right);
-		}
-
-		@Override
-		public int hashCode() {
-			return Objects.hash(left, right);
-		}
+	private record Pair(Object left, Object right) {
 	}
 
 	private enum Status {
