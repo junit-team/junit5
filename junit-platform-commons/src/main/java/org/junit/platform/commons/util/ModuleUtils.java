@@ -25,7 +25,6 @@ import java.lang.module.ResolvedModule;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -181,7 +180,7 @@ public class ModuleUtils {
 			classes.addAll(scanner.scan(reference));
 		}
 		logger.debug(() -> "Found " + classes.size() + " classes: " + classes);
-		return Collections.unmodifiableList(classes);
+		return List.copyOf(classes);
 	}
 
 	/**
@@ -197,7 +196,7 @@ public class ModuleUtils {
 			classes.addAll(scanner.scan(reference));
 		}
 		logger.debug(() -> "Found " + classes.size() + " classes: " + classes);
-		return Collections.unmodifiableList(classes);
+		return List.copyOf(classes);
 	}
 
 	/**

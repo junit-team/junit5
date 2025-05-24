@@ -10,12 +10,11 @@
 
 package org.junit.platform.launcher.core;
 
-import static java.util.Collections.emptyList;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.partitioningBy;
+import static java.util.stream.Collectors.toUnmodifiableList;
 import static org.junit.platform.commons.util.ExceptionUtils.readStackTrace;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -36,7 +35,7 @@ import org.junit.platform.engine.support.descriptor.MethodSource;
  */
 class DiscoveryIssueNotifier {
 
-	static final DiscoveryIssueNotifier NO_ISSUES = new DiscoveryIssueNotifier(emptyList(), emptyList(), emptyList());
+	static final DiscoveryIssueNotifier NO_ISSUES = new DiscoveryIssueNotifier(List.of(), List.of(), List.of());
 	private static final Logger logger = LoggerFactory.getLogger(DiscoveryIssueNotifier.class);
 
 	private final List<DiscoveryIssue> allIssues;
@@ -48,21 +47,22 @@ class DiscoveryIssueNotifier {
 		var issuesByCriticality = partitionByCriticality(criticalSeverity, issues);
 		List<DiscoveryIssue> criticalIssues = issuesByCriticality.get(true);
 		List<DiscoveryIssue> nonCriticalIssues = issuesByCriticality.get(false);
-		return new DiscoveryIssueNotifier(new ArrayList<>(issues), criticalIssues, nonCriticalIssues);
+		return new DiscoveryIssueNotifier(issues, criticalIssues, nonCriticalIssues);
 	}
 
 	private static Map<Boolean, List<DiscoveryIssue>> partitionByCriticality(Severity criticalSeverity,
 			List<DiscoveryIssue> issues) {
 		return issues.stream() //
 				.sorted(comparing(DiscoveryIssue::severity).reversed()) //
-				.collect(partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0));
+				.collect(
+					partitioningBy(issue -> issue.severity().compareTo(criticalSeverity) >= 0, toUnmodifiableList()));
 	}
 
 	private DiscoveryIssueNotifier(List<DiscoveryIssue> allIssues, List<DiscoveryIssue> criticalIssues,
 			List<DiscoveryIssue> nonCriticalIssues) {
-		this.allIssues = allIssues;
-		this.criticalIssues = criticalIssues;
-		this.nonCriticalIssues = nonCriticalIssues;
+		this.allIssues = List.copyOf(allIssues);
+		this.criticalIssues = List.copyOf(criticalIssues);
+		this.nonCriticalIssues = List.copyOf(nonCriticalIssues);
 	}
 
 	List<DiscoveryIssue> getAllIssues() {

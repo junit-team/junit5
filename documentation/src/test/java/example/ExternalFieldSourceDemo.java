@@ -10,8 +10,6 @@
 
 package example;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,6 +28,6 @@ class ExternalFieldSourceDemo {
 
 class FruitUtils {
 
-	public static final List<String> tropicalFruits = Collections.unmodifiableList(Arrays.asList("pineapple", "kiwi"));
+	public static final List<String> tropicalFruits = List.of("pineapple", "kiwi");
 
 }

@@ -703,8 +703,7 @@ public final class ReflectionUtils {
 		return fields.stream()
 				.filter(predicate)
 				.map(field ->
-					tryToReadFieldValue(field, instance)
-						.getOrThrow(ExceptionUtils::throwAsUncheckedException))
+					tryToReadFieldValue(field, instance).getOrThrow(ExceptionUtils::throwAsUncheckedException))
 				.toList();
 		// @formatter:on
 	}
@@ -1017,14 +1016,14 @@ public final class ReflectionUtils {
 	 * @since 1.1
 	 */
 	public static List<Class<?>> findAllClassesInClasspathRoot(URI root, ClassFilter classFilter) {
-		return Collections.unmodifiableList(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
+		return List.copyOf(classpathScanner.scanForClassesInClasspathRoot(root, classFilter));
 	}
 
 	/**
 	 * @since 1.11
 	 */
 	public static List<Resource> findAllResourcesInClasspathRoot(URI root, Predicate<Resource> resourceFilter) {
-		return Collections.unmodifiableList(classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter));
+		return List.copyOf(classpathScanner.scanForResourcesInClasspathRoot(root, resourceFilter));
 	}
 
 	/**
@@ -1063,15 +1062,14 @@ public final class ReflectionUtils {
 	 * @since 1.1
 	 */
 	public static List<Class<?>> findAllClassesInPackage(String basePackageName, ClassFilter classFilter) {
-		return Collections.unmodifiableList(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
+		return List.copyOf(classpathScanner.scanForClassesInPackage(basePackageName, classFilter));
 	}
 
 	/**
 	 * @since 1.11
 	 */
 	public static List<Resource> findAllResourcesInPackage(String basePackageName, Predicate<Resource> resourceFilter) {
-		return Collections.unmodifiableList(
-			classpathScanner.scanForResourcesInPackage(basePackageName, resourceFilter));
+		return List.copyOf(classpathScanner.scanForResourcesInPackage(basePackageName, resourceFilter));
 	}
 
 	/**
@@ -1112,14 +1110,14 @@ public final class ReflectionUtils {
 	 * @since 1.1.1
 	 */
 	public static List<Class<?>> findAllClassesInModule(String moduleName, ClassFilter classFilter) {
-		return Collections.unmodifiableList(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
+		return List.copyOf(ModuleUtils.findAllClassesInModule(moduleName, classFilter));
 	}
 
 	/**
 	 * @since 1.11
 	 */
 	public static List<Resource> findAllResourcesInModule(String moduleName, Predicate<Resource> resourceFilter) {
-		return Collections.unmodifiableList(ModuleUtils.findAllResourcesInModule(moduleName, resourceFilter));
+		return List.copyOf(ModuleUtils.findAllResourcesInModule(moduleName, resourceFilter));
 	}
 
 	/**

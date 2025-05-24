@@ -10,7 +10,6 @@
 
 package org.junit.platform.testkit.engine;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 
 import java.io.OutputStream;
@@ -18,7 +17,6 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +46,7 @@ public final class Executions {
 	private Executions(Stream<Execution> executions, String category) {
 		Preconditions.notNull(executions, "Execution stream must not be null");
 
-		this.executions = Collections.unmodifiableList(executions.collect(toList()));
+		this.executions = executions.toList();
 		this.category = category;
 	}
 
@@ -56,7 +54,7 @@ public final class Executions {
 		Preconditions.notNull(events, "Event list must not be null");
 		Preconditions.containsNoNullElements(events, "Event list must not contain null elements");
 
-		this.executions = Collections.unmodifiableList(createExecutions(events));
+		this.executions = List.copyOf(createExecutions(events));
 		this.category = category;
 	}
 

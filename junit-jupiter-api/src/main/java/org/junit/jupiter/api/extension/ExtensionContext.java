@@ -10,7 +10,6 @@
 
 package org.junit.jupiter.api.extension;
 
-import static java.util.Collections.unmodifiableList;
 import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
@@ -20,7 +19,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -770,13 +768,13 @@ public interface ExtensionContext {
 		public static Namespace create(Object... parts) {
 			Preconditions.notEmpty(parts, "parts array must not be null or empty");
 			Preconditions.containsNoNullElements(parts, "individual parts must not be null");
-			return new Namespace(new ArrayList<>(Arrays.asList(parts)));
+			return new Namespace(List.of(parts));
 		}
 
 		private final List<Object> parts;
 
 		private Namespace(List<Object> parts) {
-			this.parts = parts;
+			this.parts = List.copyOf(parts);
 		}
 
 		@Override
@@ -815,7 +813,7 @@ public interface ExtensionContext {
 
 		@API(status = INTERNAL, since = "5.13")
 		public List<Object> getParts() {
-			return unmodifiableList(parts);
+			return parts;
 		}
 	}
 
