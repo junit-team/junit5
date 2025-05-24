@@ -40,7 +40,6 @@ import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.spi.ToolProvider;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.fixtures.TrackLogRecords;
@@ -334,12 +333,12 @@ class DefaultClasspathScannerTests {
 			ReflectionUtils::tryToLoadClass);
 		{
 			var classes = classpathScanner.scanForClassesInPackage("foo", allClasses);
-			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			var classNames = classes.stream().map(Class::getName).toList();
 			assertThat(classNames).hasSize(2).contains("foo.Foo", "foo.bar.FooBar");
 		}
 		{
 			var classes = classpathScanner.scanForClassesInPackage("foo.bar", allClasses);
-			var classNames = classes.stream().map(Class::getName).collect(Collectors.toList());
+			var classNames = classes.stream().map(Class::getName).toList();
 			assertThat(classNames).hasSize(1).contains("foo.bar.FooBar");
 		}
 	}

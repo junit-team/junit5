@@ -12,7 +12,6 @@ package org.junit.platform.testkit.engine;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.platform.commons.util.Preconditions;
@@ -50,7 +49,7 @@ class Assertions {
 					}
 				}) //
 				.filter(Objects::nonNull) //
-				.collect(Collectors.toList());
+				.toList();
 
 		if (!failures.isEmpty()) {
 			MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading, failures);

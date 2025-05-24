@@ -11,7 +11,6 @@
 package org.junit.platform.launcher;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,7 +38,7 @@ abstract class AbstractMethodFilter implements MethodFilter {
 	AbstractMethodFilter(String... patterns) {
 		Preconditions.notEmpty(patterns, "patterns array must not be null or empty");
 		Preconditions.containsNoNullElements(patterns, "patterns array must not contain null elements");
-		this.patterns = Arrays.stream(patterns).map(Pattern::compile).collect(toList());
+		this.patterns = Arrays.stream(patterns).map(Pattern::compile).toList();
 		this.patternDescription = Arrays.stream(patterns).collect(joining("' OR '", "'", "'"));
 	}
 

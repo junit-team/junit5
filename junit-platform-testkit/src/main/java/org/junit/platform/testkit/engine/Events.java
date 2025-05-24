@@ -12,7 +12,6 @@ package org.junit.platform.testkit.engine;
 
 import static java.util.Collections.sort;
 import static java.util.function.Predicate.isEqual;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.MAINTAINED;
 import static org.junit.platform.commons.util.FunctionUtils.where;
@@ -58,7 +57,7 @@ public final class Events {
 	private final String category;
 
 	Events(Stream<Event> events, String category) {
-		this(Preconditions.notNull(events, "Event stream must not be null").collect(toList()), category);
+		this(Preconditions.notNull(events, "Event stream must not be null").toList(), category);
 	}
 
 	Events(List<Event> events, String category) {
@@ -447,7 +446,7 @@ public final class Events {
 				.map(condition -> findEvent(events, softly, condition))
 				.filter(Objects::nonNull)
 				.map(events::indexOf)
-				.collect(toList());
+				.toList();
 		// @formatter:on
 
 		if (isNotInIncreasingOrder(indices)) {

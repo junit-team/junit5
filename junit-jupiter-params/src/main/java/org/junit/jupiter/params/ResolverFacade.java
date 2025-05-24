@@ -13,7 +13,6 @@ package org.junit.jupiter.params;
 import static java.lang.System.lineSeparator;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
@@ -402,7 +401,7 @@ class ResolverFacade {
 
 	private static void validateIndexedParameterDeclarations(int index, List<FieldParameterDeclaration> declarations,
 			List<String> errors) {
-		List<Field> fields = declarations.stream().map(FieldParameterDeclaration::getField).collect(toList());
+		List<Field> fields = declarations.stream().map(FieldParameterDeclaration::getField).toList();
 		if (index < 0) {
 			declarations.stream() //
 					.map(

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
@@ -84,7 +83,7 @@ public class LauncherDiscoveryResult {
 	Collection<TestDescriptor> getEngineTestDescriptors() {
 		return this.testEngineResults.values().stream() //
 				.map(EngineResultInfo::getRootDescriptor) //
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	public LauncherDiscoveryResult withRetainedEngines(Predicate<? super TestDescriptor> predicate) {

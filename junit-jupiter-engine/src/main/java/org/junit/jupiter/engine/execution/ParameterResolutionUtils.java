@@ -11,7 +11,6 @@
 package org.junit.jupiter.engine.execution;
 
 import static java.util.stream.Collectors.joining;
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.getKotlinSuspendingFunctionParameters;
 import static org.junit.platform.commons.util.KotlinReflectionUtils.isKotlinSuspendingFunction;
@@ -132,7 +131,7 @@ public class ParameterResolutionUtils {
 			// @formatter:off
 			List<ParameterResolver> matchingResolvers = extensionRegistry.stream(ParameterResolver.class)
 					.filter(resolver -> resolver.supportsParameter(parameterContext, extensionContext.get(resolver)))
-					.collect(toList());
+					.toList();
 			// @formatter:on
 
 			if (matchingResolvers.isEmpty()) {

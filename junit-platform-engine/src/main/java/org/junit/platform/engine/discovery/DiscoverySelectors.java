@@ -10,7 +10,6 @@
 
 package org.junit.platform.engine.discovery;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
@@ -353,7 +352,7 @@ public final class DiscoverySelectors {
 	public static ClasspathResourceSelector selectClasspathResource(Set<Resource> classpathResources) {
 		Preconditions.notEmpty(classpathResources, "classpath resources must not be null or empty");
 		Preconditions.containsNoNullElements(classpathResources, "individual classpath resources must not be null");
-		List<String> resourceNames = classpathResources.stream().map(Resource::getName).distinct().collect(toList());
+		List<String> resourceNames = classpathResources.stream().map(Resource::getName).distinct().toList();
 		Preconditions.condition(resourceNames.size() == 1, "all classpath resources must have the same name");
 		Preconditions.notBlank(resourceNames.get(0), "classpath resource names must not be null or blank");
 		return new ClasspathResourceSelector(classpathResources);

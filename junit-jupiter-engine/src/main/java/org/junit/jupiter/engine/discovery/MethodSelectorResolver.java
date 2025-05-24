@@ -12,7 +12,6 @@ package org.junit.jupiter.engine.discovery;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.support.discovery.SelectorResolver.Resolution.matches;
@@ -105,7 +104,7 @@ class MethodSelectorResolver implements SelectorResolver {
 				"Possible configuration error: method [%s] resulted in multiple TestDescriptors %s. "
 						+ "This is typically the result of annotating a method with multiple competing annotations "
 						+ "such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.",
-				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).collect(toList()));
+				method.toGenericString(), testDescriptors.map(d -> d.getClass().getName()).toList());
 			issueReporter.reportIssue(
 				DiscoveryIssue.builder(Severity.WARNING, message).source(MethodSource.from(method)));
 		}

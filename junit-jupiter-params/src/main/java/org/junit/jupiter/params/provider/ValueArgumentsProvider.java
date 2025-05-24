@@ -10,8 +10,6 @@
 
 package org.junit.jupiter.params.provider;
 
-import static java.util.stream.Collectors.toList;
-
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +34,7 @@ class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSourc
 
 	private Object[] getArgumentsFromSource(ValueSource valueSource) {
 		// @formatter:off
-		List<Object> arrays =
+		List<?> arrays =
 			Stream.of(
 				valueSource.shorts(),
 				valueSource.bytes(),
@@ -50,7 +48,7 @@ class ValueArgumentsProvider extends AnnotationBasedArgumentsProvider<ValueSourc
 				valueSource.classes()
 			)
 			.filter(array -> Array.getLength(array) > 0)
-			.collect(toList());
+			.toList();
 		// @formatter:on
 
 		Preconditions.condition(arrays.size() == 1, () -> "Exactly one type of input must be provided in the @"

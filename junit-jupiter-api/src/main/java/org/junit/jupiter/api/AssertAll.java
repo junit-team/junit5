@@ -14,7 +14,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
@@ -75,7 +74,7 @@ class AssertAll {
 					}
 				}) //
 				.filter(Objects::nonNull) //
-				.collect(Collectors.toList());
+				.toList();
 
 		if (!failures.isEmpty()) {
 			MultipleFailuresError multipleFailuresError = new MultipleFailuresError(heading, failures);

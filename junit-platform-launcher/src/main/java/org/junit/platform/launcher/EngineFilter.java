@@ -10,7 +10,6 @@
 
 package org.junit.platform.launcher;
 
-import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
 import static org.junit.platform.engine.FilterResult.includedIf;
@@ -150,7 +149,7 @@ public class EngineFilter implements Filter<TestEngine> {
 		return engineIds.stream()
 				.map(id -> Preconditions.notBlank(id, "engine ID must not be null or blank").trim())
 				.distinct()
-				.collect(toList());
+				.toList();
 		// @formatter:on
 	}
 

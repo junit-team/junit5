@@ -10,7 +10,6 @@
 
 package org.junit.platform.commons.util;
 
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.StreamSupport.stream;
 
 import java.util.List;
@@ -29,7 +28,7 @@ class ClasspathScannerLoader {
 		ServiceLoader<ClasspathScanner> serviceLoader = ServiceLoader.load(ClasspathScanner.class,
 			ClassLoaderUtils.getDefaultClassLoader());
 
-		List<ClasspathScanner> classpathScanners = stream(serviceLoader.spliterator(), false).collect(toList());
+		List<ClasspathScanner> classpathScanners = stream(serviceLoader.spliterator(), false).toList();
 
 		if (classpathScanners.size() == 1) {
 			return classpathScanners.get(0);
