@@ -1977,7 +1977,7 @@ public final class ReflectionUtils {
 	 * {@linkplain InvocationTargetException#getTargetException() target
 	 * exception}; otherwise, this method returns the supplied {@code Throwable}.
 	 */
-	private static Throwable getUnderlyingCause(Throwable t) {
+	static Throwable getUnderlyingCause(Throwable t) {
 		if (t instanceof InvocationTargetException) {
 			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
 		}
