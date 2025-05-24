@@ -138,8 +138,7 @@ public abstract class JupiterTestDescriptor extends AbstractTestDescriptor
 			return executionMode.get();
 		}
 		Optional<TestDescriptor> parent = getParent();
-		while (parent.isPresent() && parent.get() instanceof JupiterTestDescriptor) {
-			JupiterTestDescriptor jupiterParent = (JupiterTestDescriptor) parent.get();
+		while (parent.isPresent() && parent.get() instanceof JupiterTestDescriptor jupiterParent) {
 			executionMode = jupiterParent.getExplicitExecutionMode();
 			if (executionMode.isPresent()) {
 				return executionMode.get();

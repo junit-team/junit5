@@ -138,8 +138,7 @@ class MethodSelectorResolver implements SelectorResolver {
 
 	@Override
 	public Resolution resolve(IterationSelector selector, Context context) {
-		if (selector.getParentSelector() instanceof MethodSelector) {
-			MethodSelector methodSelector = (MethodSelector) selector.getParentSelector();
+		if (selector.getParentSelector() instanceof MethodSelector methodSelector) {
 			return resolve(context, emptyList(), methodSelector.getJavaClass(), methodSelector::getJavaMethod,
 				(testDescriptor, childSelectorsSupplier) -> {
 					if (testDescriptor instanceof Filterable filterable) {
