@@ -155,10 +155,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 		@Nullable
 		String getValue(String key);
 
-		default int size() {
-			return 0;
-		}
-
 		Set<String> keySet();
 
 		static ParameterProvider explicit(Map<String, String> configParams) {
@@ -166,11 +162,6 @@ class LauncherConfigurationParameters implements ConfigurationParameters {
 				@Override
 				public @Nullable String getValue(String key) {
 					return configParams.get(key);
-				}
-
-				@Override
-				public int size() {
-					return configParams.size();
 				}
 
 				@Override
