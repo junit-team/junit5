@@ -57,7 +57,7 @@ class EmptyArgumentsProvider implements ArgumentsProvider {
 			return Stream.of(arguments(Collections.emptySet()));
 		}
 		if (List.class.equals(parameterType)) {
-			return Stream.of(arguments(Collections.emptyList()));
+			return Stream.of(Arguments.of((Object) Collections.emptyList()));
 		}
 		if (Set.class.equals(parameterType)) {
 			return Stream.of(arguments(Collections.emptySet()));

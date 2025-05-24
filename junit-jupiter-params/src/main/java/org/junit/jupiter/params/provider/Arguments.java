@@ -13,6 +13,10 @@ package org.junit.jupiter.params.provider;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.STABLE;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
@@ -170,6 +174,74 @@ public interface Arguments {
 			return getName();
 		}
 
+	}
+
+	/**
+	 * Factory method for creating an instance of {@code Arguments} based on
+	 * the supplied {@code arguments} as a {@link List}.
+	 *
+	 * @param arguments the arguments as a List to be used for an invocation
+	 * of the test method; must not be {@code null} but may contain {@code null}
+	 * @return an instance of {@code Arguments}; never {@code null}
+	 * @see #arguments(List)
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	static Arguments of(@Nullable List<@Nullable Object> arguments) {
+		if (arguments == null) {
+			return of((Object) null); // Properly wrap null
+		}
+		if (arguments.isEmpty()) {
+			// Must still return empty arguments array
+			return of(new Object[0]);
+		}
+		return () -> arguments.toArray(new Object[0]);
+	}
+
+	/**
+	 * Factory method for creating an instance of {@code Arguments} based on
+	 * the supplied {@code arguments} as a {@link List}.
+	 *
+	 * <p>This method is an <em>alias</em> for {@link Arguments#of} and is
+	 * intended to be used when statically imported &mdash; for example, via:
+	 * {@code import static org.junit.jupiter.params.provider.Arguments.arguments;}
+	 *
+	 * @param arguments the arguments as a List to be used for an invocation of the test
+	 * method; must not be {@code null} but may contain {@code null}
+	 * @return an instance of {@code Arguments}; never {@code null}
+	 * @since 6.0
+	 * @see #argumentSet(String, Object...)
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	static Arguments arguments(List<@Nullable Object> arguments) {
+		return of(arguments);
+	}
+
+	/**
+	 * Factory method for creating an {@link ArgumentSet} based on the supplied
+	 * {@code name} and {@code arguments} as a List.
+	 *
+	 * @param name the name of the argument set; must not be {@code null} or blank
+	 * @param arguments the arguments list to be used for an invocation of the test
+	 * method; must not be {@code null} but may contain {@code null}
+	 * @return an {@code ArgumentSet}; never {@code null}
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	static ArgumentSet argumentSet(String name, List<@Nullable Object> arguments) {
+		Preconditions.notBlank(name, "name must not be null or blank");
+		Preconditions.notNull(arguments, "arguments list must not be null");
+		return new ArgumentSet(name, arguments.toArray(new Object[0]));
+	}
+
+	/**
+	 * Convert the arguments to a mutable List.
+	 *
+	 * @return a mutable List of arguments; never {@code null} but may contain {@code null}
+	 * @since 6.0
+	 */
+	@API(status = EXPERIMENTAL, since = "6.0")
+	default List<@Nullable Object> toList() {
+		return new ArrayList<>(Arrays.asList(get()));
 	}
 
 }

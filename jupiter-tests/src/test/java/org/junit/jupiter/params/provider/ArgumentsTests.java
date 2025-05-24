@@ -15,7 +15,11 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.provider.Arguments.ArgumentSet;
 
 /**
  * Unit tests for {@link Arguments}.
@@ -56,4 +60,50 @@ class ArgumentsTests {
 		assertThat(arguments.get()).isSameAs(input);
 	}
 
+	@Test
+	void ofSupportsList() {
+		List<Object> input = Arrays.asList(1, "two", null, 3.0);
+		Arguments arguments = Arguments.of(input);
+
+		assertArrayEquals(new Object[] { 1, "two", null, 3.0 }, arguments.get());
+	}
+
+	@Test
+	void argumentsSupportsListAlias() {
+		List<Object> input = Arrays.asList("a", 2, null);
+		Arguments arguments = Arguments.arguments(input);
+
+		assertArrayEquals(new Object[] { "a", 2, null }, arguments.get());
+	}
+
+	@Test
+	void argumentSetSupportsList() {
+		List<Object> input = Arrays.asList("x", null, 42);
+		ArgumentSet argumentSet = Arguments.argumentSet("list-test", input);
+
+		assertArrayEquals(new Object[] { "x", null, 42 }, argumentSet.get());
+		assertThat(argumentSet.getName()).isEqualTo("list-test");
+	}
+
+	@Test
+	void toListReturnsMutableListOfArguments() {
+		Arguments arguments = Arguments.of(Arrays.asList("a", 2, null));
+
+		List<Object> result = arguments.toList();
+
+		assertThat(result).containsExactly("a", 2, null); // preserves content
+		result.add("extra"); // confirms mutability
+		assertThat(result).contains("extra");
+	}
+
+	@Test
+	void toListWorksOnEmptyArguments() {
+		Arguments arguments = Arguments.of(Arrays.asList());
+
+		List<Object> result = arguments.toList();
+
+		assertThat(result).isEmpty();
+		result.add("extra");
+		assertThat(result).containsExactly("extra");
+	}
 }
