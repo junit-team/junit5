@@ -63,7 +63,7 @@ class ArgumentsTests {
 	@Test
 	void ofSupportsList() {
 		List<Object> input = Arrays.asList(1, "two", null, 3.0);
-		Arguments arguments = Arguments.of(input);
+		Arguments arguments = Arguments.from(input);
 
 		assertArrayEquals(new Object[] { 1, "two", null, 3.0 }, arguments.get());
 	}
@@ -71,7 +71,7 @@ class ArgumentsTests {
 	@Test
 	void argumentsSupportsListAlias() {
 		List<Object> input = Arrays.asList("a", 2, null);
-		Arguments arguments = Arguments.arguments(input);
+		Arguments arguments = Arguments.argumentsFrom(input);
 
 		assertArrayEquals(new Object[] { "a", 2, null }, arguments.get());
 	}
@@ -79,7 +79,7 @@ class ArgumentsTests {
 	@Test
 	void argumentSetSupportsList() {
 		List<Object> input = Arrays.asList("x", null, 42);
-		ArgumentSet argumentSet = Arguments.argumentSet("list-test", input);
+		ArgumentSet argumentSet = Arguments.argumentSetFrom("list-test", input);
 
 		assertArrayEquals(new Object[] { "x", null, 42 }, argumentSet.get());
 		assertThat(argumentSet.getName()).isEqualTo("list-test");
@@ -87,7 +87,7 @@ class ArgumentsTests {
 
 	@Test
 	void toListReturnsMutableListOfArguments() {
-		Arguments arguments = Arguments.of(Arrays.asList("a", 2, null));
+		Arguments arguments = Arguments.from(Arrays.asList("a", 2, null));
 
 		List<Object> result = arguments.toList();
 
@@ -98,7 +98,7 @@ class ArgumentsTests {
 
 	@Test
 	void toListWorksOnEmptyArguments() {
-		Arguments arguments = Arguments.of(Arrays.asList());
+		Arguments arguments = Arguments.from(Arrays.asList());
 
 		List<Object> result = arguments.toList();
 
