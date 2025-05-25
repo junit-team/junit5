@@ -13,8 +13,8 @@ package org.junit.platform.commons.support.conversion;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 
 import org.apiguardian.api.API;
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
-import org.junit.platform.commons.util.ReflectionUtils;
 
 /**
  * {@code TypedConversionService} is an abstract base class for
@@ -26,7 +26,7 @@ import org.junit.platform.commons.util.ReflectionUtils;
  * @since 6.0
  */
 @API(status = EXPERIMENTAL, since = "6.0")
-public abstract class TypedConverter<S, T> implements Converter {
+public abstract class TypedConverter<S, T> implements Converter<S, T> {
 
 	private final Class<S> sourceType;
 	private final Class<T> targetType;
@@ -44,15 +44,15 @@ public abstract class TypedConverter<S, T> implements Converter {
 	}
 
 	@Override
-	public final boolean canConvert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-		return this.sourceType.isInstance(source)
-				&& ReflectionUtils.isAssignableTo(this.targetType, targetType.getType());
+	public final boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
+		// FIXME add test cases with subtypes
+		return this.sourceType == sourceType.getType() && this.targetType == targetType.getType();
 	}
 
 	@Override
-	public final Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+	public final @Nullable T convert(@Nullable S source, TypeDescriptor sourceType, TypeDescriptor targetType,
 			ClassLoader classLoader) {
-		return source == null ? convert(null) : convert(this.sourceType.cast(source));
+		return convert(source);
 	}
 
 	/**
@@ -64,6 +64,6 @@ public abstract class TypedConverter<S, T> implements Converter {
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
-	protected abstract T convert(S source) throws ConversionException;
+	protected abstract @Nullable T convert(@Nullable S source) throws ConversionException;
 
 }

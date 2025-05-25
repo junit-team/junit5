@@ -44,7 +44,7 @@ import org.junit.platform.commons.util.ClassLoaderUtils;
  * @since 6.0
  */
 @API(status = INTERNAL, since = "6.0")
-public class DefaultConverter implements Converter {
+public class DefaultConverter implements Converter<String, Object> {
 
 	static final DefaultConverter INSTANCE = new DefaultConverter();
 
@@ -64,23 +64,21 @@ public class DefaultConverter implements Converter {
 	}
 
 	/**
-	 * Determine if the supplied source object can be converted into an instance
+	 * Determine if the supplied source type can be converted into an instance
 	 * of the specified target type.
 	 *
-	 * @param source the source object to convert; may be {@code null} but only
-	 * if the target type is a reference type
 	 * @param sourceType the descriptor of the source type; never {@code null}
 	 * @param targetType the target type the source should be converted into;
 	 * never {@code null}
 	 * @return {@code true} if the supplied source can be converted
 	 */
 	@Override
-	public boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-		if (source == null) {
+	public boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
+		if (sourceType == TypeDescriptor.NONE) {
 			return !targetType.isPrimitive();
 		}
 
-		if (!(source instanceof String)) {
+		if (!(String.class.equals(sourceType.getType()))) {
 			return false;
 		}
 
@@ -93,7 +91,7 @@ public class DefaultConverter implements Converter {
 	}
 
 	/**
-	 * Convert the supplied source object into an instance of the specified
+	 * Convert the supplied source {@link String} into an instance of the specified
 	 * target type.
 	 * <p>If the target type is {@code String}, the source {@code String} will not
 	 * be modified.
@@ -126,10 +124,10 @@ public class DefaultConverter implements Converter {
 	 * If neither a single factory method nor a single constructor is found, the
 	 * convention-based conversion strategy will not apply.
 	 *
-	 * @param source the source object to convert; may be {@code null} but only
+	 * @param source the source {@link String} to convert; may be {@code null} but only
 	 * if the target type is a reference type
 	 * @param sourceType the descriptor of the source type; never {@code null}
-	 * @param targetType the target type the source should be converted into;
+	 * @param targetType the descriptor of the type the source should be converted into;
 	 * never {@code null}
 	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
@@ -137,8 +135,8 @@ public class DefaultConverter implements Converter {
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Override
-	public @Nullable Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
-			ClassLoader classLoader) {
+	public @Nullable Object convert(@Nullable String source, TypeDescriptor sourceType, TypeDescriptor targetType,
+			ClassLoader classLoader) throws ConversionException {
 		if (source == null) {
 			if (targetType.isPrimitive()) {
 				throw new ConversionException(
@@ -156,7 +154,7 @@ public class DefaultConverter implements Converter {
 			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
 		if (converter.isPresent()) {
 			try {
-				return converter.get().convert((String) source, targetTypeToUse, classLoader);
+				return converter.get().convert(source, targetTypeToUse, classLoader);
 			}
 			catch (Exception ex) {
 				if (ex instanceof ConversionException) {

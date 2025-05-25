@@ -34,26 +34,24 @@ import org.jspecify.annotations.Nullable;
  * @see TypedConverter
  */
 @API(status = EXPERIMENTAL, since = "6.0")
-public interface Converter {
+public interface Converter<S, T> {
 
 	/**
-	 * Determine if the supplied source object can be converted into an instance
+	 * Determine if the supplied source type can be converted into an instance
 	 * of the specified target type.
 	 *
-	 * @param source the source object to convert; may be {@code null} but only
-	 * if the target type is a reference type
 	 * @param sourceType the descriptor of the source type; never {@code null}
 	 * @param targetType the descriptor of the type the source should be converted into;
 	 * never {@code null}
-	 * @return {@code true} if the supplied source can be converted
+	 * @return {@code true} if the supplied source type can be converted
 	 */
-	boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType);
+	boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType);
 
 	/**
 	 * Convert the supplied source object into an instance of the specified
 	 * target type.
-	 * <p>This method will only be invoked if {@link #canConvert(Object, TypeDescriptor, TypeDescriptor)}
-	 * returned {@code true} for the same target type.
+	 * <p>This method will only be invoked if {@link #canConvert(TypeDescriptor, TypeDescriptor)}
+	 * returned {@code true} for the same type descriptors.
 	 *
 	 * @param source the source object to convert; may be {@code null} but only
 	 * if the target type is a reference type
@@ -66,7 +64,7 @@ public interface Converter {
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Nullable
-	Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
-			ClassLoader classLoader) throws ConversionException;
+	T convert(@Nullable S source, TypeDescriptor sourceType, TypeDescriptor targetType, ClassLoader classLoader)
+			throws ConversionException;
 
 }

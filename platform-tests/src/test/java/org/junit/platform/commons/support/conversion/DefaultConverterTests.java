@@ -330,7 +330,7 @@ class DefaultConverterTests {
 
 	// -------------------------------------------------------------------------
 
-	private void assertConverts(@Nullable Object input, Class<?> targetClass, @Nullable Object expectedOutput) {
+	private void assertConverts(@Nullable String input, Class<?> targetClass, @Nullable Object expectedOutput) {
 		TypeDescriptor typeDescriptor = TypeDescriptor.forClass(targetClass);
 
 		assertThat(canConvert(input, typeDescriptor)).isTrue();
@@ -342,15 +342,15 @@ class DefaultConverterTests {
 				.isEqualTo(expectedOutput);
 	}
 
-	private boolean canConvert(@Nullable Object input, TypeDescriptor targetClass) {
-		return DefaultConverter.INSTANCE.canConvert(input, TypeDescriptor.forInstance(input), targetClass);
+	private boolean canConvert(@Nullable String input, TypeDescriptor targetClass) {
+		return DefaultConverter.INSTANCE.canConvert(TypeDescriptor.forInstance(input), targetClass);
 	}
 
-	private @Nullable Object convert(@Nullable Object input, TypeDescriptor targetClass) {
+	private @Nullable Object convert(@Nullable String input, TypeDescriptor targetClass) {
 		return convert(input, targetClass, classLoader());
 	}
 
-	private @Nullable Object convert(@Nullable Object input, TypeDescriptor targetClass, ClassLoader classLoader) {
+	private @Nullable Object convert(@Nullable String input, TypeDescriptor targetClass, ClassLoader classLoader) {
 		return DefaultConverter.INSTANCE.convert(input, TypeDescriptor.forInstance(input), targetClass, classLoader);
 	}
 

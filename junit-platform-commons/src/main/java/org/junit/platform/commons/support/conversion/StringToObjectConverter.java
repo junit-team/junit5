@@ -16,10 +16,10 @@ import org.jspecify.annotations.Nullable;
  * Internal API for converting arguments of type {@link String} to a specified
  * target type.
  */
-abstract class StringToObjectConverter implements Converter {
+abstract class StringToObjectConverter implements Converter<String, Object> {
 
 	@Override
-	public final boolean canConvert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+	public final boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
 		return canConvert(targetType.getType());
 	}
 
@@ -31,9 +31,9 @@ abstract class StringToObjectConverter implements Converter {
 	abstract boolean canConvert(@Nullable Class<?> targetType);
 
 	@Override
-	public final Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType,
+	public final Object convert(@Nullable String source, TypeDescriptor sourceType, TypeDescriptor targetType,
 			ClassLoader classLoader) {
-		return convert((String) source, targetType.getType(), classLoader);
+		return convert(source, targetType.getType(), classLoader);
 	}
 
 	/**

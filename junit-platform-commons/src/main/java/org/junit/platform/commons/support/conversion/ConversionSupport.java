@@ -56,7 +56,7 @@ public final class ConversionSupport {
 	@API(status = DEPRECATED, since = "6.0")
 	public static <T> @Nullable T convert(@Nullable String source, Class<T> targetType,
 			@Nullable ClassLoader classLoader) {
-		return convert(source, TypeDescriptor.forClass(targetType), getClassLoader(classLoader));
+		return convert(source, TypeDescriptor.forClass(targetType), classLoader);
 	}
 
 	/**
@@ -76,27 +76,23 @@ public final class ConversionSupport {
 	 * @since 6.0
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> @Nullable T convert(@Nullable Object source, TypeDescriptor targetType,
 			@Nullable ClassLoader classLoader) {
 		TypeDescriptor sourceType = TypeDescriptor.forInstance(source);
-		ClassLoader classLoaderToUse = getClassLoader(classLoader);
+		ClassLoader classLoaderToUse = classLoader != null ? classLoader : ClassLoaderUtils.getDefaultClassLoader();
 		ServiceLoader<Converter> serviceLoader = ServiceLoader.load(Converter.class, classLoaderToUse);
 
 		Converter converter = Stream.concat( //
 			StreamSupport.stream(serviceLoader.spliterator(), false), //
 			Stream.of(DefaultConverter.INSTANCE)) //
-				.filter(candidate -> candidate.canConvert(source, sourceType, targetType)) //
+				.filter(candidate -> candidate.canConvert(sourceType, targetType)) //
 				.findFirst() //
 				.orElseThrow(() -> new ConversionException(
 					"No registered or built-in converter for source '%s' and target type %s".formatted( //
 						source, targetType.getTypeName())));
 
 		return (T) converter.convert(source, sourceType, targetType, classLoaderToUse);
-	}
-
-	private static ClassLoader getClassLoader(@Nullable ClassLoader classLoader) {
-		return classLoader != null ? classLoader : ClassLoaderUtils.getDefaultClassLoader();
 	}
 
 }
