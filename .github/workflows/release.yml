@@ -89,7 +89,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
+      - uses: sbt/setup-sbt@69a46ab4acd4316aa16e68d91a9249a98d7e78d5 # v1.1.8
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ inputs.releaseVersion }}
         working-directory: junit5-samples
@@ -234,7 +234,7 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-      - uses: sbt/setup-sbt@26ab4b0fa1c47fa62fc1f6e51823a658fb6c760c # v1.1.7
+      - uses: sbt/setup-sbt@69a46ab4acd4316aa16e68d91a9249a98d7e78d5 # v1.1.8
       - name: Update JUnit dependencies in samples
         run: java src/Updater.java ${{ inputs.releaseVersion }}
       - name: Build samples
