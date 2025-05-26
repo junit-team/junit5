@@ -77,7 +77,7 @@ All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the foll
 
 `./gradlew build`
 
-All modules can be _installed_ with the [Gradle Wrapper] in a local Maven repository for
+All modules can be _installed_ in a local Maven repository for consumption in other local
 consumption in other local projects via the following command:
 
 `./gradlew publishToMavenLocal`
