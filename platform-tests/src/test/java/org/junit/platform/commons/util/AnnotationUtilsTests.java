@@ -504,23 +504,6 @@ class AnnotationUtilsTests {
 				.containsExactly("interface", "interface-shadow");
 	}
 
-	@Test
-	void findAnnotatedFieldsForShadowedFieldsInLegacyMode() {
-		try {
-			ReflectionUtils.useLegacySearchSemantics = true;
-
-			assertThat(findShadowingAnnotatedFields(Annotation1.class))//
-					.containsExactly("super-shadow", "foo-shadow", "baz-shadow");
-			assertThat(findShadowingAnnotatedFields(Annotation2.class))//
-					.containsExactly("bar-shadow", "baz-shadow");
-			assertThat(findShadowingAnnotatedFields(Annotation3.class))//
-					.containsExactly("interface-shadow");
-		}
-		finally {
-			ReflectionUtils.useLegacySearchSemantics = false;
-		}
-	}
-
 	private List<String> findShadowingAnnotatedFields(Class<? extends Annotation> annotationType) {
 		var fields = findAnnotatedFields(ClassWithShadowedAnnotatedFields.class, annotationType, isStringField);
 		var values = ReflectionUtils.readFieldValues(fields, new ClassWithShadowedAnnotatedFields());

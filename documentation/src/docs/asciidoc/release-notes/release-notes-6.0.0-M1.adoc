@@ -70,6 +70,10 @@ repository on GitHub.
   - `EngineTestKit.execute(String, EngineDiscoveryRequest)`,
     `EngineTestKit.execute(TestEngine, EngineDiscoveryRequest)`, and
     `EngineTestKit.Builder.filters(...)` methods
+* Remove support for "legacy semantics" for field and method search that used to be
+  configurable via the `junit.platform.reflection.search.useLegacySemantics` system
+  property. JUnit now always adheres to standard Java semantics regarding whether a given
+  field or method is visible or overridden according to the rules of the Java language.
 
 [[release-notes-6.0.0-M1-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
