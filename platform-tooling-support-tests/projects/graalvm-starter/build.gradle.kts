@@ -47,6 +47,8 @@ val initializeAtBuildTime = mapOf(
 		"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
 		"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo",
 		"org.junit.platform.launcher.core.LauncherPhase",
+		"org.junit.platform.suite.engine.DiscoverySelectorResolver",
+		"org.junit.platform.suite.engine.SuiteTestDescriptor\$DiscoveryIssueForwardingListener",
 		"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods",
 	),
 	// These need to be added to native-build-tools
