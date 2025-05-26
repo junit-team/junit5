@@ -73,14 +73,12 @@ task outputs from previous CI builds.
 You need [JDK 21] to build JUnit. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
-All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command.
+All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command:
 
 `./gradlew build`
 
-## Installing in Local Maven Repository
-
 All modules can be _installed_ with the [Gradle Wrapper] in a local Maven repository for
-consumption in other projects via the following command.
+consumption in other local projects via the following command:
 
 `./gradlew publishToMavenLocal`
 
