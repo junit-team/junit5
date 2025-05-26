@@ -22,9 +22,9 @@ https://central.sonatype.org/consume/[Sonatype's documentation] for how to consu
 artifacts with a build tool of your choice.
 
 Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository]
-under {snapshot-repo}/org/junit/[/org/junit]. Note that consuming JUnit's snapshot
-artifacts need a different configuration:
-https://central.sonatype.org/publish/publish-portal-snapshots/#consuming-snapshot-releases-for-your-project
+under {snapshot-repo}/org/junit/[/org/junit]. Please refer to
+https://central.sonatype.org/publish/publish-portal-snapshots/#consuming-snapshot-releases-for-your-project[Sonatype's documentation]
+for instructions on how to consume them with a build tool of your choice.
 
 The sections below list all artifacts with their versions for the three groups:
 <<dependency-metadata-junit-platform, Platform>>,
