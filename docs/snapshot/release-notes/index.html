@@ -827,11 +827,14 @@ repository on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>The JUnit feature in GraalVM Native Build Tools has been rewritten to no longer require
-JUnit classes to be initialized at build time. Therefore, JUnit&#8217;s JARs no longer ship
-with <code>native-image.properties</code> files that contain <code>--initialize-at-build-time</code> options
-(introduced in 5.12.0). Please update to the most recent version of GraalVM Native Build
-Tools prior to upgrading to this version of JUnit.</p>
+<p>The JUnit feature in GraalVM Native Build Tools (NBT) has been rewritten to no longer
+require JUnit classes to be initialized at build time when running on JDK 22 and later.
+Therefore, JUnit&#8217;s JARs no longer ship with <code>native-image.properties</code> files that contain
+<code>--initialize-at-build-time</code> options (introduced in 5.12.0). Please update to the most
+recent version of GraalVM Native Build Tools prior to upgrading to this version of
+JUnit. Please refer to the
+<a href="https://github.com/junit-team/junit5/wiki/Upgrading-to-JUnit-5.13">Upgrade Instructions</a>
+in the wiki for details if you&#8217;re on NBT 0.10.x or earlier.</p>
 </li>
 </ul>
 </div>
