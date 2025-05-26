@@ -18,8 +18,8 @@ artifacts in the repositories were actually generated from this source code.
 === Dependency Metadata
 
 Artifacts for final releases and milestones are deployed to {Maven_Central}. Consult
-Sonatype's documentation for how to consume those artifacts with a build tool of your
-choice: https://central.sonatype.org/consume/
+https://central.sonatype.org/consume/[Sonatype's documentation] for how to consume those
+artifacts with a build tool of your choice.
 
 Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository]
 under {snapshot-repo}/org/junit/[/org/junit]. Note that consuming JUnit's snapshot
