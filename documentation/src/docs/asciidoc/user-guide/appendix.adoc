@@ -17,9 +17,14 @@ artifacts in the repositories were actually generated from this source code.
 [[dependency-metadata]]
 === Dependency Metadata
 
-Artifacts for final releases and milestones are deployed to {Maven_Central}, and snapshot
-artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository] under
-{snapshot-repo}/org/junit/[/org/junit].
+Artifacts for final releases and milestones are deployed to {Maven_Central}. Consult
+Sonatype's documentation for how to consume those artifacts with a build tool of your
+choice: https://central.sonatype.org/consume/
+
+Snapshot artifacts are deployed to Sonatype's {snapshot-repo}[snapshots repository]
+under {snapshot-repo}/org/junit/[/org/junit]. Note that consuming JUnit's snapshot
+artifacts need a different configuration:
+https://central.sonatype.org/publish/publish-portal-snapshots/#consuming-snapshot-releases-for-your-project
 
 The sections below list all artifacts with their versions for the three groups:
 <<dependency-metadata-junit-platform, Platform>>,

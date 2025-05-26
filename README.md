@@ -34,7 +34,7 @@ label are specifically targeted for community contributions.
 
 ## Getting Help
 
-Ask JUnit-related questions on [StackOverflow] or chat with the community on [Gitter].
+Ask JUnit-related questions on [StackOverflow] or use the Q&A category on [GitHub Discussions].
 
 ## Continuous Integration Builds
 
@@ -93,14 +93,11 @@ consumption in other projects via the following command.
 Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
-See also <https://repo1.maven.org/maven2/org/junit/> for releases and
-<https://central.sonatype.com/service/rest/repository/browse/maven-snapshots/org/junit/> for snapshots.
-
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
-[Gitter]: https://gitter.im/junit-team/junit5
+[GitHub Discussions]: https://github.com/junit-team/junit5/discussions/categories/q-a
 [Gradle toolchains]: https://docs.gradle.org/current/userguide/toolchains.html
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/
