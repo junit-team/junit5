@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
+
 import kotlin.Unit;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.reflect.KFunction;
@@ -63,7 +65,7 @@ class KotlinSuspendingFunctionUtils {
 		return Arrays.stream(method.getParameterTypes()).limit(parameterCount - 1).toArray(Class<?>[]::new);
 	}
 
-	static Object invoke(Method method, Object target, Object[] args) {
+	static @Nullable Object invoke(Method method, @Nullable Object target, @Nullable Object[] args) {
 		try {
 			return invoke(getKotlinFunction(method), target, args);
 		}
@@ -72,7 +74,8 @@ class KotlinSuspendingFunctionUtils {
 		}
 	}
 
-	private static <T> T invoke(KFunction<T> function, Object target, Object[] args) throws InterruptedException {
+	private static <T> @Nullable T invoke(KFunction<T> function, @Nullable Object target, @Nullable Object[] args)
+			throws InterruptedException {
 		if (!isAccessible(function)) {
 			setAccessible(function, true);
 		}
@@ -86,8 +89,9 @@ class KotlinSuspendingFunctionUtils {
 		});
 	}
 
-	private static Map<KParameter, Object> toArgumentMap(Object target, Object[] args, KFunction<?> function) {
-		Map<KParameter, Object> arguments = new HashMap<>(args.length + 1);
+	private static Map<KParameter, @Nullable Object> toArgumentMap(@Nullable Object target, @Nullable Object[] args,
+			KFunction<?> function) {
+		Map<KParameter, @Nullable Object> arguments = new HashMap<>(args.length + 1);
 		int index = 0;
 		for (KParameter parameter : function.getParameters()) {
 			switch (parameter.getKind()) {
