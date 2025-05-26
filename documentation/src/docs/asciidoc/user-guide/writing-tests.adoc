@@ -1595,7 +1595,7 @@ _Parameterized tests_ make it possible to run a test method multiple times with 
 arguments. They are declared just like regular `@Test` methods but use the
 `{ParameterizedTest}` annotation instead.
 
-_Parameterized classes_ make it possible to run _all_ tests in test class, including
+_Parameterized classes_ make it possible to run _all_ tests in a test class, including
 <<writing-tests-nested>>, multiple times with different arguments. They are declared just
 like regular test classes and may contain any supported test method type (including
 `@ParameterizedTest`) but annotated with the `{ParameterizedClass}` annotation.
