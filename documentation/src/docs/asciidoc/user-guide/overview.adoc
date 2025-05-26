@@ -47,7 +47,7 @@ has been compiled with previous versions of the JDK.
 [[overview-getting-help]]
 === Getting Help
 
-Ask JUnit 5 related questions on {StackOverflow} or chat with the community on {Gitter}.
+Ask JUnit 5 related questions on {StackOverflow} or use the {DiscussionsQA}.
 
 [[overview-getting-started]]
 === Getting Started
