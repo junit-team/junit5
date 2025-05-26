@@ -46,12 +46,12 @@ val initializeAtBuildTime = mapOf(
 		"org.junit.platform.launcher.core.DiscoveryIssueNotifier",
 		"org.junit.platform.launcher.core.HierarchicalOutputDirectoryProvider",
 		"org.junit.platform.launcher.core.LauncherDiscoveryResult\$EngineResultInfo",
+		"org.junit.platform.launcher.core.LauncherPhase",
 		"org.junit.platform.suite.engine.SuiteTestDescriptor\$LifecycleMethods",
 	),
 	// These need to be added to native-build-tools
 	"6.0" to listOf(
 		"org.junit.platform.commons.util.KotlinReflectionUtils",
-		"org.junit.platform.launcher.core.LauncherPhase",
 	)
 )
 
