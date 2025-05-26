@@ -3,7 +3,7 @@ ifdef::backend-pdf[]
 :javadoc-root:                               https://junit.org/junit5/docs/{docs-version}/api
 endif::[]
 // Snapshot Repository
-:snapshot-repo:                              https://central.sonatype.com/repository/maven-snapshots
+:snapshot-repo:                              https://central.sonatype.com/service/rest/repository/browse/maven-snapshots
 // Base Links
 :junit-team:                                 https://github.com/junit-team
 :junit5-repo:                                {junit-team}/junit5
@@ -238,7 +238,7 @@ endif::[]
 :API:                                        https://apiguardian-team.github.io/apiguardian/docs/current/api/[@API]
 :API_Guardian:                               https://github.com/apiguardian-team/apiguardian[@API Guardian]
 :AssertJ:                                    https://assertj.github.io/doc/[AssertJ]
-:Gitter:                                     https://gitter.im/junit-team/junit5[Gitter]
+:DiscussionsQA:                              https://github.com/junit-team/junit5/discussions/categories/q-a[Q&A category on GitHub Discussions]
 :Hamcrest:                                   https://hamcrest.org/JavaHamcrest/[Hamcrest]
 :Jimfs:                                      https://google.github.io/jimfs/[Jimfs]
 :Log4j:                                      https://logging.apache.org/log4j/2.x/[Log4j]
