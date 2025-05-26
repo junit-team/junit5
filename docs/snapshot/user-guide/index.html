@@ -13139,44 +13139,9 @@ traverse type hierarchies to locate matching fields and methods – for example,
 <code>AnnotationSupport.findAnnotatedFields(&#8230;&#8203;)</code>, <code>ReflectionSupport.findMethods(&#8230;&#8203;)</code>, etc.</p>
 </div>
 <div class="paragraph">
-<p>As of JUnit 5.11 (JUnit Platform 1.11), field and method search algorithms adhere to
-standard Java semantics regarding whether a given field or method is visible or overridden
-according to the rules of the Java language.</p>
-</div>
-<div class="paragraph">
-<p>Prior to JUnit 5.11, the field and method search algorithms applied what we now refer to
-as "legacy semantics". Legacy semantics consider fields and methods to be <em>hidden</em>,
-<em>shadowed</em>, or <em>superseded</em> by fields and methods in super types (superclasses or
-interfaces) based solely on the field&#8217;s name or the method&#8217;s signature, disregarding the
-actual Java language semantics for visibility and the rules that determine if one method
-overrides another method.</p>
-</div>
-<div class="paragraph">
-<p>Although the JUnit team recommends the use of the standard search semantics, developers
-may optionally revert to the legacy semantics via the
-<code>junit.platform.reflection.search.useLegacySemantics</code> JVM system property.</p>
-</div>
-<div class="paragraph">
-<p>For example, to enable legacy search semantics for fields and methods, you can start your
-JVM with the following system property.</p>
-</div>
-<div class="paragraph">
-<p><code>-Djunit.platform.reflection.search.useLegacySemantics=true</code></p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Due to the low-level nature of the feature, the
-<code>junit.platform.reflection.search.useLegacySemantics</code> flag can only be set via a JVM
-system property. It cannot be set via a <a href="#running-tests-config-params">configuration
-parameter</a>.
-</td>
-</tr>
-</table>
+<p>The field and method search algorithms adhere to standard Java semantics regarding whether
+a given field or method is visible or overridden according to the rules of the Java
+language.</p>
 </div>
 </div>
 </div>
