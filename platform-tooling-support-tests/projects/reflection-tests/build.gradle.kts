@@ -13,7 +13,7 @@ repositories {
 dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter:$jupiterVersion")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine:$jupiterVersion")
-	testRuntimeOnly("org.junit.platform:junit-platform-reporting:$platformVersion")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher:$platformVersion")
 }
 
 java {
@@ -31,13 +31,5 @@ tasks.test {
 
 	reports {
 		html.required = true
-	}
-
-	val outputDir = reports.junitXml.outputLocation
-	jvmArgumentProviders += CommandLineArgumentProvider {
-		listOf(
-			"-Djunit.platform.reporting.open.xml.enabled=true",
-			"-Djunit.platform.reporting.output.dir=${outputDir.get().asFile.absolutePath}"
-		)
 	}
 }
