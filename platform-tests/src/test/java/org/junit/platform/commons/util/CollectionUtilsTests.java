@@ -240,7 +240,7 @@ class CollectionUtilsTests {
 		}
 
 		@Test
-		@SuppressWarnings({ "unchecked" })
+		@SuppressWarnings({ "unchecked", "serial" })
 		void toStreamWithCollection() {
 			var collectionStreamClosed = new AtomicBoolean(false);
 			var input = new ArrayList<>(List.of("foo", "bar")) {
