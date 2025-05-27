@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -61,7 +62,7 @@ class ArgumentsTests {
 	}
 
 	@Test
-	void ofSupportsList() {
+	void fromSupportsList() {
 		List<Object> input = Arrays.asList(1, "two", null, 3.0);
 		Arguments arguments = Arguments.from(input);
 
@@ -69,7 +70,20 @@ class ArgumentsTests {
 	}
 
 	@Test
-	void argumentsSupportsListAlias() {
+	void fromSupportsListDefensiveCopy() {
+		List<Object> input = new ArrayList<>(Arrays.asList(1, "two", null, 3.0));
+		Arguments arguments = Arguments.from(input);
+
+		// Modify input
+		input.set(1, "changed");
+		input.add("new");
+
+		// Assert that arguments are unchanged
+		assertArrayEquals(new Object[] { 1, "two", null, 3.0 }, arguments.get());
+	}
+
+	@Test
+	void argumentsFromSupportsList() {
 		List<Object> input = Arrays.asList("a", 2, null);
 		Arguments arguments = Arguments.argumentsFrom(input);
 
@@ -87,7 +101,7 @@ class ArgumentsTests {
 
 	@Test
 	void toListReturnsMutableListOfArguments() {
-		Arguments arguments = Arguments.from(Arrays.asList("a", 2, null));
+		Arguments arguments = Arguments.of("a", 2, null);
 
 		List<Object> result = arguments.toList();
 
@@ -97,8 +111,20 @@ class ArgumentsTests {
 	}
 
 	@Test
+	void toListDoesNotAffectInternalArgumentsState() {
+		Arguments arguments = Arguments.of("a", 2, null);
+
+		List<Object> result = arguments.toList();
+		result.add("extra"); // mutate the returned list
+
+		// Confirm that internal state was not modified
+		List<Object> freshCopy = arguments.toList();
+		assertThat(freshCopy).containsExactly("a", 2, null);
+	}
+
+	@Test
 	void toListWorksOnEmptyArguments() {
-		Arguments arguments = Arguments.from(Arrays.asList());
+		Arguments arguments = Arguments.of();
 
 		List<Object> result = arguments.toList();
 
