@@ -17,8 +17,6 @@ import static org.mockito.Mockito.when;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -26,7 +24,6 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.engine.config.JupiterConfiguration;
-import org.junit.platform.commons.logging.LogRecordListener;
 
 /**
  * Unit tests for {@link DisplayNameUtils}.
@@ -180,18 +177,12 @@ class DisplayNameUtilsTests {
 		}
 	}
 
-	private LogRecord firstWarningLogRecord(LogRecordListener listener) throws AssertionError {
-		return listener.stream(DisplayNameUtils.class, Level.WARNING).findFirst().orElseThrow(
-			() -> new AssertionError("Failed to find warning log record"));
-	}
-
 	@DisplayName("my-test-case\t")
 	@DisplayNameGeneration(value = CustomDisplayNameGenerator.class)
 	static class MyTestCase {
 
 		void test1() {
 		}
-
 	}
 
 	@DisplayName("")
