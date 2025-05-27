@@ -105,7 +105,7 @@ gitPublish = { id = "org.ajoberstar.git-publish", version = "5.1.1" }
 jmh = { id = "me.champeau.jmh", version = "0.7.3" }
 jreleaser = { id = "org.jreleaser", version = "1.18.0" }
 # check if workaround in gradle.properties can be removed when updating
-kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.1.21" }
+kotlin = { id = "org.jetbrains.kotlin.jvm", version = "2.2.0-RC" }
 nullaway = { id = "net.ltgt.nullaway", version = "2.2.0" }
 openrewrite = { id = "org.openrewrite.rewrite", version = "7.6.2" }
 plantuml = { id = "io.freefair.plantuml", version = "8.13.1" }
