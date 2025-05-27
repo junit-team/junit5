@@ -36,7 +36,7 @@ checkstyle = { module = "com.puppycrawl.tools:checkstyle", version.ref = "checks
 classgraph = { module = "io.github.classgraph:classgraph", version = "4.8.179" }
 commons-io = { module = "commons-io:commons-io", version = "2.19.0" }
 errorProne-core = { module = "com.google.errorprone:error_prone_core", version = "2.38.0" }
-groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.26" }
+groovy4 = { module = "org.apache.groovy:groovy", version = "4.0.27" }
 groovy2-bom = { module = "org.codehaus.groovy:groovy-bom", version = "2.5.23" }
 hamcrest = { module = "org.hamcrest:hamcrest", version = "3.0" }
 jackson-dataformat-yaml = { module = "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml", version.ref = "jackson" }
