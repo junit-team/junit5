@@ -37,7 +37,7 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-junit-platform-bug-fixes]]
 ==== Bug Fixes
 
-* Fix support of `--uid`/`--select-unique-id` options in the console launcher.
+* ❓
 
 [[release-notes-6.0.0-M1-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
