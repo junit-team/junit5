@@ -11,6 +11,7 @@
 package org.junit.platform.engine.discovery;
 
 import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import static org.apiguardian.api.API.Status.INTERNAL;
 import static org.apiguardian.api.API.Status.STABLE;
@@ -101,7 +102,8 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the classes cannot be loaded.
 	 */
 	public List<Class<?>> getEnclosingClasses() {
-		return this.enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).toList();
+		// We do not use Stream#toList() due to an issue with the Eclipse compiler.
+		return this.enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).collect(toList());
 	}
 
 	/**
