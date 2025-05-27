@@ -231,8 +231,8 @@ class DiscoveryRequestCreatorTests {
 		assertThat(uriSelectors) //
 				.extracting(UniqueIdSelector::getUniqueId) //
 				.containsExactly( //
-					UniqueId.forEngine("a").append("1", "1"), //
-					UniqueId.forEngine("b").append("2", "2") //
+					UniqueId.parse("[engine:a]/[1:1]"), //, //
+					UniqueId.parse("[engine:b]/[2:2]") //
 				);
 	}
 
