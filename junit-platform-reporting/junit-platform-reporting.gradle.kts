@@ -13,10 +13,10 @@ dependencies {
 	api(platform(projects.junitBom))
 	api(projects.junitPlatformLauncher)
 
+	implementation(libs.openTestReporting.tooling.spi)
+
 	compileOnlyApi(libs.apiguardian)
 	compileOnly(libs.jspecify)
-
-	compileOnlyApi(libs.openTestReporting.tooling.spi)
 
 	shadowed(libs.openTestReporting.events)
 
