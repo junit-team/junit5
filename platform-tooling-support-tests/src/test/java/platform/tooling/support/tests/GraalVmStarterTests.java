@@ -50,7 +50,7 @@ class GraalVmStarterTests {
 					graalVmHome.orElseThrow(TestAbortedException::new).toString()).addArguments(
 						"-Dmaven.repo=" + MavenRepo.dir()) //
 				.addArguments("javaToolchains", "nativeTest", "--no-daemon", "--stacktrace", "--no-build-cache",
-					"--warning-mode=fail") //
+					"--warning-mode=fail", "--refresh-dependencies") //
 				.redirectOutput(outputFiles) //
 				.startAndWait();
 
