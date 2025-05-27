@@ -202,6 +202,7 @@ public class TestDiscoveryOptions {
 
 	public List<DiscoverySelector> getExplicitSelectors() {
 		List<DiscoverySelector> selectors = new ArrayList<>();
+		selectors.addAll(getSelectedUniqueIds());
 		selectors.addAll(getSelectedUris());
 		selectors.addAll(getSelectedFiles());
 		selectors.addAll(getSelectedDirectories());
