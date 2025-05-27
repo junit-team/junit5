@@ -22,6 +22,7 @@ import static org.junit.platform.engine.discovery.DiscoverySelectors.selectFile;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectIteration;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectMethod;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUniqueId;
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectUri;
 
 import java.io.File;
@@ -36,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.junit.platform.console.options.TestDiscoveryOptions;
 import org.junit.platform.engine.Filter;
+import org.junit.platform.engine.UniqueId;
 import org.junit.platform.engine.discovery.ClassNameFilter;
 import org.junit.platform.engine.discovery.ClassSelector;
 import org.junit.platform.engine.discovery.ClasspathResourceSelector;
@@ -46,6 +48,7 @@ import org.junit.platform.engine.discovery.IterationSelector;
 import org.junit.platform.engine.discovery.MethodSelector;
 import org.junit.platform.engine.discovery.PackageNameFilter;
 import org.junit.platform.engine.discovery.PackageSelector;
+import org.junit.platform.engine.discovery.UniqueIdSelector;
 import org.junit.platform.engine.discovery.UriSelector;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 
@@ -216,6 +219,21 @@ class DiscoveryRequestCreatorTests {
 		assertThat(engineFilters).hasSize(2);
 		assertThat(engineFilters.get(0).toString()).contains("includes", "[engine1, engine2, engine3]");
 		assertThat(engineFilters.get(1).toString()).contains("excludes", "[engine2]");
+	}
+
+	@Test
+	void propagatesUniqueIdSelectors() {
+		options.setSelectedUniqueId(List.of(selectUniqueId("[engine:a]/[1:1]"), selectUniqueId("[engine:b]/[2:2]")));
+
+		var request = convert();
+		var uriSelectors = request.getSelectorsByType(UniqueIdSelector.class);
+
+		assertThat(uriSelectors) //
+				.extracting(UniqueIdSelector::getUniqueId) //
+				.containsExactly( //
+					UniqueId.forEngine("a").append("1", "1"), //
+					UniqueId.forEngine("b").append("2", "2") //
+				);
 	}
 
 	@Test
