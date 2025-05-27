@@ -52,6 +52,7 @@ repository on GitHub.
   the `ConsoleLauncher`. Prior to this release, the created class loader was closed prior
   to JVM shutdown hooks being invoked, which caused hooks to fail with a
   `ClassNotFoundException` when loading classes during shutdown.
+* Fix support of `--uid` and `--select-unique-id` options in the console launcher.
 
 [[release-notes-5.13.0-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
