@@ -16,12 +16,12 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 
 	compileOnly(libs.openTestReporting.events)
+	compileOnly(libs.openTestReporting.tooling.spi)
 
 	shadowed(libs.picocli)
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
-	osgiVerification(libs.openTestReporting.tooling.spi)
 }
 
 tasks {
