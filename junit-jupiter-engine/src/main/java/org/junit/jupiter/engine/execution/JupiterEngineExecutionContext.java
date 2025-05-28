@@ -47,7 +47,7 @@ public class JupiterEngineExecutionContext implements EngineExecutionContext {
 
 	public void close() throws Exception {
 		ExtensionContext extensionContext = getExtensionContext();
-		if (extensionContext instanceof AutoCloseable closeable) {
+		if (extensionContext instanceof @SuppressWarnings("resource") AutoCloseable closeable) {
 			try {
 				closeable.close();
 			}

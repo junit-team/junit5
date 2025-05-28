@@ -147,7 +147,7 @@ class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandl
 		Object testInstance = context.getRequiredTestInstance();
 		Namespace namespace = Namespace.create(TestRuleSupport.class, context.getRequiredTestClass());
 		// @formatter:off
-		return new ArrayList<TestRuleAnnotatedMember>(requireNonNull(context.getStore(namespace)
+		return new ArrayList<>(requireNonNull(context.getStore(namespace)
 				.getOrComputeIfAbsent("rule-annotated-members", key -> findRuleAnnotatedMembers(testInstance), List.class)));
 		// @formatter:on
 	}
