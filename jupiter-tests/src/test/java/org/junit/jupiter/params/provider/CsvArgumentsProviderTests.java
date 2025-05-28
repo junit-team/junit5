@@ -30,12 +30,12 @@ import org.junit.platform.commons.PreconditionViolationException;
 class CsvArgumentsProviderTests {
 
 	@Test
-	void throwsExceptionForInvalidCsv() {
+	void throwsExceptionForEmptyLine() {
 		var annotation = csvSource("foo", "bar", "");
 
 		assertThatExceptionOfType(JUnitException.class)//
 				.isThrownBy(() -> provideArguments(annotation).toArray())//
-				.withMessage("Record at index 3 contains invalid CSV: \"\"");
+				.withMessage("CSV record at index 3 is empty");
 	}
 
 	@Test
@@ -133,7 +133,7 @@ class CsvArgumentsProviderTests {
 		var arguments = provideArguments(annotation);
 
 		assertThat(arguments).containsExactly(
-			new Object[][] { { "1", "a" }, { "2", " b" }, { "3", "c " }, { "4", " d " } });
+				new Object[][] { { "1", "a" }, { "2", " b" }, { "3", "c " }, { "4", " d " } });
 	}
 
 	@Test
@@ -364,7 +364,7 @@ class CsvArgumentsProviderTests {
 		});
 
 		assertThat(argumentsAsStrings).containsExactly(array("FRUIT = apple", "RANK = 1"),
-			array("FRUIT = banana", "RANK = 2"));
+				array("FRUIT = banana", "RANK = 2"));
 	}
 
 	@Test
@@ -378,7 +378,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(PreconditionViolationException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessage(
-					"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
+						"The number of columns (3) exceeds the number of supplied headers (2) in CSV record: [banana, 2, BOOM!]");
 	}
 
 	private Stream<Object[]> provideArguments(CsvSource annotation) {

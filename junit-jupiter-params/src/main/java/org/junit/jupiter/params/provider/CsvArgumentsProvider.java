@@ -62,7 +62,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		else {
 			for (int i = 0; i < csvSource.value().length; i++) {
 				if (csvSource.value()[i].isEmpty()) {
-					String message = String.format("Record at index %d contains empty CSV", i + 1);
+					String message = String.format("CSV record at index %d is empty", i + 1);
 					throw new PreconditionViolationException(message);
 				}
 			}
