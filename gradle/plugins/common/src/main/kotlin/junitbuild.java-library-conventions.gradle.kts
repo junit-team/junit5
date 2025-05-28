@@ -57,6 +57,11 @@ eclipse {
 				// Exclude Foo.java and FooBar.java in the modules-2500 folder.
 				it.excludes.add("**/Foo*.java")
 			}
+			if (project.name == "jupiter-tests" && it.path == "src/test/java") {
+				// Exclude test classes that depend on compiled Kotlin code.
+				it.excludes.add("**/AtypicalJvmMethodNameTests.java")
+				it.excludes.add("**/TestInstanceLifecycleKotlinTests.java")
+			}
 		}
 		entries.filterIsInstance<ProjectDependency>().forEach {
 			it.entryAttributes.remove("module")
