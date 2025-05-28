@@ -20,7 +20,7 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 	compileOnly(libs.jspecify)
 
-	shadowed(libs.univocity.parsers)
+	implementation(libs.fastcsv)
 
 	compileOnly(kotlin("stdlib"))
 
@@ -29,7 +29,6 @@ dependencies {
 }
 
 extraJavaModuleInfo {
-	automaticModule(libs.univocity.parsers, "univocity.parsers")
 	failOnMissingModuleInfo = false
 }
 
@@ -47,8 +46,8 @@ tasks {
 	}
 	compileJava {
 		options.compilerArgs.addAll(listOf(
-			"--add-modules", "univocity.parsers",
-			"--add-reads", "${javaModuleName}=univocity.parsers"
+			"--add-modules", "de.siegmar.fastcsv",
+			"--add-reads", "${javaModuleName}=de.siegmar.fastcsv"
 		))
 	}
 	compileJmhJava {
@@ -61,8 +60,8 @@ tasks {
 	}
 	javadoc {
 		(options as StandardJavadocDocletOptions).apply {
-			addStringOption("-add-modules", "univocity.parsers")
-			addStringOption("-add-reads", "${javaModuleName}=univocity.parsers")
+			addStringOption("-add-modules", "de.siegmar.fastcsv")
+			addStringOption("-add-reads", "${javaModuleName}=de.siegmar.fastcsv")
 		}
 	}
 }

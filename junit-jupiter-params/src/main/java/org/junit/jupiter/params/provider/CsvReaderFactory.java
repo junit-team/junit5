@@ -1,0 +1,156 @@
+/*
+ * Copyright 2015-2025 the original author or authors.
+ *
+ * All rights reserved. This program and the accompanying materials are
+ * made available under the terms of the Eclipse Public License v2.0 which
+ * accompanies this distribution and is available at
+ *
+ * https://www.eclipse.org/legal/epl-v20.html
+ */
+
+package org.junit.jupiter.params.provider;
+
+import static de.siegmar.fastcsv.reader.CommentStrategy.NONE;
+import static de.siegmar.fastcsv.reader.CommentStrategy.SKIP;
+
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.nio.charset.Charset;
+import java.util.Set;
+import java.util.UUID;
+
+import de.siegmar.fastcsv.reader.CsvCallbackHandler;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRecord;
+import de.siegmar.fastcsv.reader.CsvRecordHandler;
+import de.siegmar.fastcsv.reader.FieldModifier;
+import de.siegmar.fastcsv.reader.NamedCsvRecordHandler;
+
+import org.junit.platform.commons.util.Preconditions;
+
+/**
+ * @since 5.13
+ */
+class CsvReaderFactory {
+
+	private static final String DEFAULT_DELIMITER = ",";
+	private static final char EMPTY_CHAR = '\0';
+	private static final int MAX_FIELDS = 512;
+
+	static CsvReader<? extends CsvRecord> createReaderFor(CsvSource csvSource, String data) {
+		validateMaxCharsPerColumn(csvSource.maxCharsPerColumn());
+
+		String delimiter = selectDelimiter(csvSource, csvSource.delimiter(), csvSource.delimiterString());
+		// @formatter:off
+		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+				.fieldSeparator(delimiter)
+				.lenientWhitespacesAroundQuotes(true)
+				.quoteCharacter(csvSource.quoteCharacter())
+				.commentStrategy(csvSource.textBlock().isEmpty() ? NONE : SKIP);
+
+		CsvCallbackHandler<? extends CsvRecord> callbackHandler = createCallbackHandler(
+				csvSource.emptyValue(),
+				Set.of(csvSource.nullValues()),
+				csvSource.ignoreLeadingAndTrailingWhitespace(),
+				csvSource.maxCharsPerColumn(),
+				csvSource.useHeadersInDisplayName()
+		);
+		// @formatter:on
+		return builder.build(callbackHandler, data);
+	}
+
+	static CsvReader<? extends CsvRecord> createReaderFor(CsvFileSource csvFileSource, InputStream inputStream,
+			Charset charset) {
+
+		validateMaxCharsPerColumn(csvFileSource.maxCharsPerColumn());
+
+		String delimiter = selectDelimiter(csvFileSource, csvFileSource.delimiter(), csvFileSource.delimiterString());
+		// @formatter:off
+		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
+				.fieldSeparator(delimiter)
+				.lenientWhitespacesAroundQuotes(true)
+				.quoteCharacter(csvFileSource.quoteCharacter())
+				.commentStrategy(SKIP);
+
+		CsvCallbackHandler<? extends CsvRecord> callbackHandler = createCallbackHandler(
+				csvFileSource.emptyValue(),
+				Set.of(csvFileSource.nullValues()),
+				csvFileSource.ignoreLeadingAndTrailingWhitespace(),
+				csvFileSource.maxCharsPerColumn(),
+				csvFileSource.useHeadersInDisplayName()
+		);
+		// @formatter:on
+		return builder.build(callbackHandler, inputStream, charset);
+	}
+
+	private static void validateMaxCharsPerColumn(int maxCharsPerColumn) {
+		Preconditions.condition(maxCharsPerColumn > 0 || maxCharsPerColumn == -1,
+				() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
+	}
+
+	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
+		Preconditions.condition(delimiter == EMPTY_CHAR || delimiterString.isEmpty(),
+				() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
+
+		if (delimiter != EMPTY_CHAR) {
+			return String.valueOf(delimiter);
+		}
+		if (!delimiterString.isEmpty()) {
+			return delimiterString;
+		}
+		return DEFAULT_DELIMITER;
+	}
+
+	private static CsvCallbackHandler<? extends CsvRecord> createCallbackHandler(String emptyValue,
+			Set<String> nullValues, boolean ignoreLeadingAndTrailingWhitespaces, int maxCharsPerColumn,
+			boolean useHeadersInDisplayName) {
+
+		int maxFieldSize = maxCharsPerColumn == -1 ? Integer.MAX_VALUE : maxCharsPerColumn;
+		FieldModifier modifier = new DefaultFieldModifier(emptyValue, nullValues, ignoreLeadingAndTrailingWhitespaces);
+
+		// @formatter:off
+		if (useHeadersInDisplayName) {
+			return NamedCsvRecordHandler.builder()
+					.maxFields(MAX_FIELDS)
+					.maxFieldSize(maxFieldSize)
+					.maxRecordSize(Integer.MAX_VALUE)
+					.fieldModifier(modifier)
+					.build();
+		}
+		return CsvRecordHandler.builder()
+				.maxFields(MAX_FIELDS)
+				.maxFieldSize(maxFieldSize)
+				.maxRecordSize(Integer.MAX_VALUE)
+				.fieldModifier(modifier)
+				.build();
+		// @formatter:on
+	}
+
+	record DefaultFieldModifier(String emptyValue, Set<String> nullValues, boolean ignoreLeadingAndTrailingWhitespaces)
+			implements FieldModifier {
+		/**
+		 * Represents a {@code null} value and serves as a workaround
+		 * since FastCSV does not allow the modified field value to be {@code null}.
+		 * <p>
+		 * The marker is generated with a unique ID to ensure it cannot conflict with actual CSV content.
+		 */
+		static final String NULL_MARKER = String.format("<null marker with unique id: %s>", UUID.randomUUID());
+
+		@Override
+		public String modify(long unusedStartingLineNumber, int unusedFieldIdx, boolean quoted, String field) {
+			if (field.isEmpty() && quoted && !emptyValue.isEmpty()) {
+				return emptyValue;
+			}
+			if (field.isBlank() && !quoted) {
+				return NULL_MARKER;
+			}
+			String modifiedField = (ignoreLeadingAndTrailingWhitespaces && !quoted) ? field.strip() : field;
+			if (nullValues.contains(modifiedField)) {
+				return NULL_MARKER;
+			}
+			return modifiedField;
+		}
+
+	}
+
+}

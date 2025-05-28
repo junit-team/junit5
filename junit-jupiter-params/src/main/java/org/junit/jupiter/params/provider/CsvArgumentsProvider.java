@@ -10,19 +10,14 @@
 
 package org.junit.jupiter.params.provider;
 
-import static java.util.Objects.requireNonNull;
-import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
-
-import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
-import com.univocity.parsers.csv.CsvParser;
+import de.siegmar.fastcsv.reader.CsvReader;
+import de.siegmar.fastcsv.reader.CsvRecord;
+import de.siegmar.fastcsv.reader.NamedCsvRecord;
 
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Named;
@@ -42,72 +37,37 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvSource csvSource) {
-		Set<String> nullValues = Set.of(csvSource.nullValues());
-		CsvParser csvParser = createParserFor(csvSource);
-		final boolean textBlockDeclared = !csvSource.textBlock().isEmpty();
-		Preconditions.condition(csvSource.value().length > 0 ^ textBlockDeclared,
-			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-		return textBlockDeclared ? parseTextBlock(csvSource, csvParser, nullValues)
-				: parseValueArray(csvSource, csvParser, nullValues);
-	}
+		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
+				() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
-	private Stream<Arguments> parseTextBlock(CsvSource csvSource, CsvParser csvParser, Set<String> nullValues) {
-		String textBlock = csvSource.textBlock();
-		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
-		List<Arguments> argumentsList = new ArrayList<>();
+		List<Arguments> arguments = new ArrayList<>();
 
-		try {
-			List<@Nullable String[]> csvRecords = csvParser.parseAll(new StringReader(textBlock));
-			String[] headers = useHeadersInDisplayName ? getHeaders(csvParser) : null;
-
-			AtomicInteger index = new AtomicInteger(0);
-			for (var csvRecord : csvRecords) {
-				index.incrementAndGet();
-				Preconditions.notNull(csvRecord,
-					() -> "Record at index " + index + " contains invalid CSV: \"\"\"\n" + textBlock + "\n\"\"\"");
-				argumentsList.add(processCsvRecord(csvRecord, nullValues, useHeadersInDisplayName, headers));
+		try (CsvReader<? extends CsvRecord> reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {
+			for (CsvRecord record : reader) {
+				arguments.add(processCsvRecord(record, csvSource.useHeadersInDisplayName()));
 			}
 		}
 		catch (Throwable throwable) {
 			throw handleCsvException(throwable, csvSource);
 		}
 
-		return argumentsList.stream();
+		return arguments.stream();
 	}
 
-	private Stream<Arguments> parseValueArray(CsvSource csvSource, CsvParser csvParser, Set<String> nullValues) {
-		boolean useHeadersInDisplayName = csvSource.useHeadersInDisplayName();
-		List<Arguments> argumentsList = new ArrayList<>();
-
-		try {
-			String[] headers = null;
-			AtomicInteger index = new AtomicInteger(0);
-			for (String input : csvSource.value()) {
-				index.incrementAndGet();
-				String[] csvRecord = csvParser.parseLine(input + LINE_SEPARATOR);
-				// Lazily retrieve headers if necessary.
-				if (useHeadersInDisplayName && headers == null) {
-					headers = getHeaders(csvParser);
-					continue;
+	private static String getData(CsvSource csvSource) {
+		if (!csvSource.textBlock().isEmpty()) {
+			return csvSource.textBlock();
+		}
+		else {
+			for (int i = 0; i < csvSource.value().length; i++) {
+				if (csvSource.value()[i].isEmpty()) {
+					String message = String.format("Record at index %d contains empty CSV", i + 1);
+					throw new PreconditionViolationException(message);
 				}
-				Preconditions.notNull(csvRecord,
-					() -> "Record at index " + index + " contains invalid CSV: \"" + input + "\"");
-				argumentsList.add(processCsvRecord(csvRecord, nullValues, useHeadersInDisplayName, headers));
 			}
+			return String.join(LINE_SEPARATOR, csvSource.value());
 		}
-		catch (Throwable throwable) {
-			throw handleCsvException(throwable, csvSource);
-		}
-
-		return argumentsList.stream();
-	}
-
-	// Cannot get parsed headers until after parsing has started.
-	static String[] getHeaders(CsvParser csvParser) {
-		return Arrays.stream(csvParser.getContext().parsedHeaders())//
-				.map(String::trim)//
-				.toArray(String[]::new);
 	}
 
 	/**
@@ -115,36 +75,33 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	 * {@link Named} if necessary (for CSV header support), and returns the
 	 * CSV record wrapped in an {@link Arguments} instance.
 	 */
-	static Arguments processCsvRecord(@Nullable String[] csvRecord, Set<String> nullValues,
-			boolean useHeadersInDisplayName, String @Nullable [] headers) {
+	static Arguments processCsvRecord(CsvRecord record, boolean useHeadersInDisplayName) {
+		Preconditions.condition(!useHeadersInDisplayName || record.getFieldCount() <= getHeaders(record).size(),
+				() -> String.format( //
+						"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
+						record.getFieldCount(), getHeaders(record).size(), record.getFields())); //
 
-		// Nothing to process?
-		if (nullValues.isEmpty() && !useHeadersInDisplayName) {
-			return Arguments.of((Object[]) csvRecord);
-		}
+		@Nullable Object[] arguments = new Object[record.getFields().size()];
 
-		Preconditions.condition(!useHeadersInDisplayName || (csvRecord.length <= requireNonNull(headers).length),
-			() -> "The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s".formatted(
-				csvRecord.length, requireNonNull(headers).length, Arrays.toString(csvRecord)));
-
-		@Nullable
-		Object[] arguments = new Object[csvRecord.length];
-		for (int i = 0; i < csvRecord.length; i++) {
-			Object column = csvRecord[i];
-			if (column != null && nullValues.contains(column)) {
-				column = null;
-			}
+		for (int i = 0; i < record.getFields().size(); i++) {
+			String field = record.getFields().get(i);
+			Object argument = CsvReaderFactory.DefaultFieldModifier.NULL_MARKER.equals(field) ? null : field;
 			if (useHeadersInDisplayName) {
-				column = asNamed(requireNonNull(headers)[i] + " = " + column, column);
+				argument = asNamed(getHeaders(record).get(i) + " = " + argument, argument);
 			}
-			arguments[i] = column;
+			arguments[i] = argument;
 		}
+
 		return Arguments.of(arguments);
 	}
 
 	@SuppressWarnings("NullAway")
 	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {
 		return Named.of(name, column);
+	}
+
+	private static List<String> getHeaders(CsvRecord record) {
+		return ((NamedCsvRecord) record).getHeader();
 	}
 
 	/**
