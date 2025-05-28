@@ -2,6 +2,8 @@ import junitbuild.extensions.capitalized
 import junitbuild.extensions.dependencyProject
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.internal.os.OperatingSystem
+import org.gradle.plugins.ide.eclipse.model.Classpath
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 plugins {
 	id("junitbuild.java-library-conventions")
@@ -142,6 +144,15 @@ tasks {
 eclipse {
 	classpath {
 		plusConfigurations.add(dependencyProject(projects.junitPlatformConsole).configurations["shadowedClasspath"])
+	}
+	classpath.file.whenMerged {
+		this as Classpath
+		entries.filterIsInstance<SourceFolder>().forEach {
+			if (it.path == "src/test/resources") {
+				// Exclude Foo.java and FooBar.java in the modules-2500 folder.
+				it.excludes.add("**/Foo*.java")
+			}
+		}
 	}
 }
 

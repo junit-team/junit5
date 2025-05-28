@@ -1,4 +1,6 @@
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
+import org.gradle.plugins.ide.eclipse.model.Classpath
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 plugins {
 	id("junitbuild.code-generator")
@@ -38,6 +40,19 @@ tasks {
 	test_4_12 {
 		filter {
 			includeTestsMatching("org.junit.jupiter.migrationsupport.*")
+		}
+	}
+}
+
+eclipse {
+	classpath.file.whenMerged {
+		this as Classpath
+		entries.filterIsInstance<SourceFolder>().forEach {
+			if (it.path == "src/test/java") {
+				// Exclude test classes that depend on compiled Kotlin code.
+				it.excludes.add("**/AtypicalJvmMethodNameTests.java")
+				it.excludes.add("**/TestInstanceLifecycleKotlinTests.java")
+			}
 		}
 	}
 }
