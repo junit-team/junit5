@@ -13,7 +13,6 @@ package org.junit.platform.commons.util;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.isEqual;
 import static java.util.stream.Collectors.toCollection;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 import static org.apiguardian.api.API.Status.INTERNAL;
 
@@ -226,10 +225,9 @@ public class ModuleUtils {
 							.map(this::className)
 							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
-							.map(this::loadClassUnchecked)
+							.<Class<?>> map(this::loadClassUnchecked)
 							.filter(classFilter::match)
-							// We do not use Stream#toList() due to an issue with the Eclipse compiler.
-							.collect(toList());
+							.toList();
 					// @formatter:on
 				}
 			}
