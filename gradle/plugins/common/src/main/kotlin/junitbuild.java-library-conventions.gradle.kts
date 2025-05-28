@@ -1,4 +1,3 @@
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
@@ -54,6 +53,10 @@ eclipse {
 		entries.removeIf { it is ProjectDependency && it.path.equals("/code-generator-model") }
 		entries.filterIsInstance<SourceFolder>().forEach {
 			it.excludes.add("**/module-info.java")
+			if (project.name == "platform-tests" && it.path == "src/test/resources") {
+				// Exclude Foo.java and FooBar.java in the modules-2500 folder.
+				it.excludes.add("**/Foo*.java")
+			}
 		}
 		entries.filterIsInstance<ProjectDependency>().forEach {
 			it.entryAttributes.remove("module")
