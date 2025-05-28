@@ -233,20 +233,20 @@ class CsvArgumentsProviderTests {
 
 	@Test
 	void defaultEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource("'', null, , apple");
+		var annotation = csvSource("'', null, ,, apple");
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("", "null", null, null, "apple"));
 	}
 
 	@Test
 	void customEmptyValueAndDefaultNullValue() {
-		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, , apple").build();
+		var annotation = csvSource().emptyValue("EMPTY").lines("'', null, ,, apple").build();
 
 		var arguments = provideArguments(annotation);
 
-		assertThat(arguments).containsExactly(array("EMPTY", "null", null, "apple"));
+		assertThat(arguments).containsExactly(array("EMPTY", "null", null, null, "apple"));
 	}
 
 	@Test
