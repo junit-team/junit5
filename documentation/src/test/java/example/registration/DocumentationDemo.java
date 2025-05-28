@@ -12,6 +12,7 @@ package example.registration;
 
 import java.nio.file.Path;
 
+import org.jspecify.annotations.NullMarked;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -41,6 +42,7 @@ class DocumentationDemo {
 }
 //end::user_guide[]
 
+@NullMarked
 class DocumentationExtension implements AfterEachCallback {
 
 	@SuppressWarnings("unused")

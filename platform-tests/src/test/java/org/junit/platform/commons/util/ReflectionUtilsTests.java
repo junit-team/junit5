@@ -1666,41 +1666,6 @@ class ReflectionUtilsTests {
 		}
 
 		/**
-		 * In legacy mode, "static hiding" occurs.
-		 */
-		@Test
-		void findMethodsWithStaticHidingUsingHierarchyUpModeInLegacyMode() throws Exception {
-			try {
-				ReflectionUtils.useLegacySearchSemantics = true;
-
-				Class<?> ifc = StaticMethodHidingInterface.class;
-				Class<?> parent = StaticMethodHidingParent.class;
-				Class<?> child = StaticMethodHidingChild.class;
-
-				var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
-				var childMethod1 = child.getDeclaredMethod("method1", String.class);
-				var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
-				var childMethod5 = child.getDeclaredMethod("method5", Long.class);
-				var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
-				var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
-
-				assertThat(findMethods(child, methodContains1, BOTTOM_UP)).containsExactly(childMethod1);
-				assertThat(findMethods(child, methodContains2, BOTTOM_UP)).containsExactly(parentMethod2, ifcMethod2);
-				assertThat(findMethods(child, methodContains4, BOTTOM_UP)).containsExactly(childMethod4);
-				assertThat(findMethods(child, methodContains5, BOTTOM_UP)).containsExactly(childMethod5, parentMethod5);
-
-				var methods = findMethods(child, method -> true, BOTTOM_UP);
-				assertEquals(6, methods.size());
-				assertThat(methods.subList(0, 3)).containsOnly(childMethod1, childMethod4, childMethod5);
-				assertThat(methods.subList(3, 5)).containsOnly(parentMethod2, parentMethod5);
-				assertEquals(ifcMethod2, methods.get(5));
-			}
-			finally {
-				ReflectionUtils.useLegacySearchSemantics = false;
-			}
-		}
-
-		/**
 		 * In non-legacy mode, "static hiding" does not occur.
 		 */
 		@Test
@@ -1730,41 +1695,6 @@ class ReflectionUtilsTests {
 			assertThat(methods.subList(0, 2)).containsOnly(ifcMethod1, ifcMethod2);
 			assertThat(methods.subList(2, 6)).containsOnly(parentMethod1, parentMethod2, parentMethod4, parentMethod5);
 			assertThat(methods.subList(6, 9)).containsOnly(childMethod1, childMethod4, childMethod5);
-		}
-
-		/**
-		 * In legacy mode, "static hiding" occurs.
-		 */
-		@Test
-		void findMethodsWithStaticHidingUsingHierarchyDownModeInLegacyMode() throws Exception {
-			try {
-				ReflectionUtils.useLegacySearchSemantics = true;
-
-				Class<?> ifc = StaticMethodHidingInterface.class;
-				Class<?> parent = StaticMethodHidingParent.class;
-				Class<?> child = StaticMethodHidingChild.class;
-
-				var ifcMethod2 = ifc.getDeclaredMethod("method2", int.class, int.class);
-				var childMethod1 = child.getDeclaredMethod("method1", String.class);
-				var childMethod4 = child.getDeclaredMethod("method4", boolean.class);
-				var childMethod5 = child.getDeclaredMethod("method5", Long.class);
-				var parentMethod2 = parent.getDeclaredMethod("method2", int.class, int.class, int.class);
-				var parentMethod5 = parent.getDeclaredMethod("method5", String.class);
-
-				assertThat(findMethods(child, methodContains1, TOP_DOWN)).containsExactly(childMethod1);
-				assertThat(findMethods(child, methodContains2, TOP_DOWN)).containsExactly(ifcMethod2, parentMethod2);
-				assertThat(findMethods(child, methodContains4, TOP_DOWN)).containsExactly(childMethod4);
-				assertThat(findMethods(child, methodContains5, TOP_DOWN)).containsExactly(parentMethod5, childMethod5);
-
-				var methods = findMethods(child, method -> true, TOP_DOWN);
-				assertEquals(6, methods.size());
-				assertEquals(ifcMethod2, methods.getFirst());
-				assertThat(methods.subList(1, 3)).containsOnly(parentMethod2, parentMethod5);
-				assertThat(methods.subList(3, 6)).containsOnly(childMethod1, childMethod4, childMethod5);
-			}
-			finally {
-				ReflectionUtils.useLegacySearchSemantics = false;
-			}
 		}
 
 		@Test

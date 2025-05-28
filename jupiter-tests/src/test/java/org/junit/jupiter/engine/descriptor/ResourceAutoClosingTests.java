@@ -35,6 +35,7 @@ class ResourceAutoClosingTests {
 		NamespacedHierarchicalStoreProviders.dummyNamespacedHierarchicalStore());
 
 	@Test
+	@SuppressWarnings("resource")
 	void shouldCloseAutoCloseableWhenIsClosingStoredAutoCloseablesEnabledIsTrue() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
 		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(true);
@@ -50,6 +51,7 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void shouldNotCloseAutoCloseableWhenIsClosingStoredAutoCloseablesEnabledIsFalse() throws Exception {
 		AutoCloseableResource resource = new AutoCloseableResource();
 		when(configuration.isClosingStoredAutoCloseablesEnabled()).thenReturn(false);
@@ -65,6 +67,7 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void shouldLogWarningWhenResourceImplementsCloseableResourceButNotAutoCloseableAndConfigIsTrue(
 			@TrackLogRecords LogRecordListener listener) throws Exception {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();
@@ -84,6 +87,7 @@ class ResourceAutoClosingTests {
 	}
 
 	@Test
+	@SuppressWarnings("resource")
 	void shouldNotLogWarningWhenResourceImplementsCloseableResourceAndAutoCloseableAndConfigIsFalse(
 			@TrackLogRecords LogRecordListener listener) throws Exception {
 		ExecutionRecorder executionRecorder = new ExecutionRecorder();

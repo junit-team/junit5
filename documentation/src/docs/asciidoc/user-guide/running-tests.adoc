@@ -861,7 +861,7 @@ The following discovery selectors are provided out of the box:
 | `{NestedClassSelector}`       | `{DiscoverySelectors_selectNestedClass}`       | `{Select}("<identifier>")`  | `--select <identifier>`                          | `nested-class:com.acme.Foo/Bar`
 | `{NestedMethodSelector}`      | `{DiscoverySelectors_selectNestedMethod}`      | `{Select}("<identifier>")`  | `--select <identifier>`                          | `nested-method:com.acme.Foo/Bar#m`
 | `{PackageSelector}`           | `{DiscoverySelectors_selectPackage}`           | `{SelectPackages}`          | `--select-package com.acme.foo`                  | `package:com.acme.foo`
-| `{UniqueIdSelector}`          | `{DiscoverySelectors_selectUniqueId}`          | `{Select}("<identifier>")`  | `--select <identifier>`                          | `uid:...`
+| `{UniqueIdSelector}`          | `{DiscoverySelectors_selectUniqueId}`          | `{Select}("<identifier>")`  | `--select-unique-id <identifier>`                | `uid:[engine:Foo]/[segment:Bar]`
 | `{UriSelector}`               | `{DiscoverySelectors_selectUri}`               | `{SelectUris}`              | `--select-uri \file:///foo.txt`                  | `uri:file:///foo.txt`
 |===
 

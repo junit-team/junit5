@@ -1,6 +1,5 @@
 :testDir: ../../../../src/test/java
 :testResourcesDir: ../../../../src/test/resources
-:testRelease21Dir: ../../../../src/test/java21
 :kotlinTestDir: ../../../../src/test/kotlin
 
 [[writing-tests]]
@@ -282,7 +281,7 @@ following example.
 [source,java,indent=0]
 .A test class written as a Java record
 ----
-include::{testRelease21Dir}/example/MyFirstJUnitJupiterRecordTests.java[tags=user_guide]
+include::{testDir}/example/MyFirstJUnitJupiterRecordTests.java[tags=user_guide]
 ----
 
 Test and lifecycle methods may be written in Kotlin and may optionally use the `suspend`
@@ -1595,7 +1594,7 @@ _Parameterized tests_ make it possible to run a test method multiple times with 
 arguments. They are declared just like regular `@Test` methods but use the
 `{ParameterizedTest}` annotation instead.
 
-_Parameterized classes_ make it possible to run _all_ tests in test class, including
+_Parameterized classes_ make it possible to run _all_ tests in a test class, including
 <<writing-tests-nested>>, multiple times with different arguments. They are declared just
 like regular test classes and may contain any supported test method type (including
 `@ParameterizedTest`) but annotated with the `{ParameterizedClass}` annotation.
@@ -1719,7 +1718,7 @@ boilerplate code of declaring a test class constructor.
 
 [source,java,indent=0]
 ----
-include::{testRelease21Dir}/example/ParameterizedRecordDemo.java[tags=example]
+include::{testDir}/example/ParameterizedRecordDemo.java[tags=example]
 ----
 
 [[writing-tests-parameterized-tests-consuming-arguments-field-injection]]
@@ -2831,7 +2830,7 @@ by the following example.
 [source,java,indent=0]
 .Using parameterized class lifecycle methods
 ----
-include::{testRelease21Dir}/example/ParameterizedLifecycleDemo.java[tags=example]
+include::{testDir}/example/ParameterizedLifecycleDemo.java[tags=example]
 ----
 <1> Initialization of the argument _before_ each invocation of the parameterized class
 <2> Usage of the previously initialized argument in a test method
@@ -2962,7 +2961,7 @@ interface along with `Named` via the `NamedExecutable` base class.
 
 [source,java]
 ----
-include::{testRelease21Dir}/example/DynamicTestsNamedDemo.java[tags=user_guide]
+include::{testDir}/example/DynamicTestsNamedDemo.java[tags=user_guide]
 ----
 
 [[writing-tests-dynamic-tests-uri-test-source]]

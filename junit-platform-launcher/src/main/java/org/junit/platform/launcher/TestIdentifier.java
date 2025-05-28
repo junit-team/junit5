@@ -332,7 +332,7 @@ public final class TestIdentifier implements Serializable {
 		}
 
 		@SuppressWarnings("unchecked")
-		private SerializedForm(ObjectInputStream.GetField fields) throws IOException {
+		private SerializedForm(ObjectInputStream.GetField fields) throws IOException, ClassNotFoundException {
 			this.uniqueId = (String) fields.get("uniqueId", null);
 			this.parentId = (String) fields.get("parentId", null);
 			this.displayName = (String) fields.get("displayName", null);
@@ -354,7 +354,7 @@ public final class TestIdentifier implements Serializable {
 			s.writeFields();
 		}
 
-		static SerializedForm deserialize(ObjectInputStream s) throws ClassNotFoundException, IOException {
+		static SerializedForm deserialize(ObjectInputStream s) throws IOException, ClassNotFoundException {
 			ObjectInputStream.GetField fields = s.readFields();
 			return new SerializedForm(fields);
 		}

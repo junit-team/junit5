@@ -34,7 +34,7 @@ label are specifically targeted for community contributions.
 
 ## Getting Help
 
-Ask JUnit-related questions on [StackOverflow] or chat with the community on [Gitter].
+Ask JUnit-related questions on [StackOverflow] or use the Q&A category on [GitHub Discussions].
 
 ## Continuous Integration Builds
 
@@ -73,14 +73,12 @@ task outputs from previous CI builds.
 You need [JDK 21] to build JUnit. [Gradle toolchains] are used to detect and
 potentially download additional JDKs for compilation and test execution.
 
-All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command.
+All modules can be _built_ and _tested_ with the [Gradle Wrapper] using the following command:
 
 `./gradlew build`
 
-## Installing in Local Maven Repository
-
-All modules can be _installed_ with the [Gradle Wrapper] in a local Maven repository for
-consumption in other projects via the following command.
+All modules can be _installed_ in a local Maven repository for consumption in other local
+projects via the following command:
 
 `./gradlew publishToMavenLocal`
 
@@ -93,14 +91,11 @@ consumption in other projects via the following command.
 Consult the [Dependency Metadata] section of the [User Guide] for a list of all artifacts
 of the JUnit Platform, JUnit Jupiter, and JUnit Vintage.
 
-See also <https://repo1.maven.org/maven2/org/junit/> for releases and
-<https://central.sonatype.com/repository/maven-snapshots/org/junit/> for snapshots.
-
 
 [Codecov]: https://codecov.io/gh/junit-team/junit5
 [CONTRIBUTING.md]: https://github.com/junit-team/junit5/blob/HEAD/CONTRIBUTING.md
 [Dependency Metadata]: https://junit.org/junit5/docs/current/user-guide/#dependency-metadata
-[Gitter]: https://gitter.im/junit-team/junit5
+[GitHub Discussions]: https://github.com/junit-team/junit5/discussions/categories/q-a
 [Gradle toolchains]: https://docs.gradle.org/current/userguide/toolchains.html
 [Gradle Wrapper]: https://docs.gradle.org/current/userguide/gradle_wrapper.html#sec:using_wrapper
 [JaCoCo]: https://www.eclemma.org/jacoco/

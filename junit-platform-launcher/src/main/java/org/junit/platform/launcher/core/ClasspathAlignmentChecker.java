@@ -87,8 +87,4 @@ class ClasspathAlignmentChecker {
 		return Optional.empty();
 	}
 
-	@SuppressWarnings({ "deprecation", "RedundantSuppression" }) // only called when running on JDK 8
-	private static Package getPackage(String name) {
-		return Package.getPackage(name);
-	}
 }

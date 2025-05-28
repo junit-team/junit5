@@ -30,11 +30,14 @@ repository on GitHub.
 [[release-notes-5.13.0-overall-new-features-and-improvements]]
 ==== Deprecations and Breaking Changes
 
-* The JUnit feature in GraalVM Native Build Tools has been rewritten to no longer require
-  JUnit classes to be initialized at build time. Therefore, JUnit's JARs no longer ship
-  with `native-image.properties` files that contain `--initialize-at-build-time` options
-  (introduced in 5.12.0). Please update to the most recent version of GraalVM Native Build
-  Tools prior to upgrading to this version of JUnit.
+* The JUnit feature in GraalVM Native Build Tools (NBT) has been rewritten to no longer
+  require JUnit classes to be initialized at build time when running on JDK 22 and later.
+  Therefore, JUnit's JARs no longer ship with `native-image.properties` files that contain
+  `--initialize-at-build-time` options (introduced in 5.12.0). Please update to the most
+  recent version of GraalVM Native Build Tools prior to upgrading to this version of
+  JUnit. Please refer to the
+  https://github.com/junit-team/junit5/wiki/Upgrading-to-JUnit-5.13[Upgrade Instructions]
+  in the wiki for details if you're on NBT 0.10.x or earlier.
 
 
 [[release-notes-5.13.0-junit-platform]]
@@ -49,6 +52,7 @@ repository on GitHub.
   the `ConsoleLauncher`. Prior to this release, the created class loader was closed prior
   to JVM shutdown hooks being invoked, which caused hooks to fail with a
   `ClassNotFoundException` when loading classes during shutdown.
+* Fix support of `--uid` and `--select-unique-id` options in the console launcher.
 
 [[release-notes-5.13.0-junit-platform-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes

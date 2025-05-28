@@ -27,6 +27,7 @@ import org.junit.platform.commons.util.Preconditions;
 
 class StringToCommonJavaTypesConverter implements StringToObjectConverter {
 
+	@SuppressWarnings("deprecation")
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
 		// java.io and java.nio
 		File.class, File::new, //

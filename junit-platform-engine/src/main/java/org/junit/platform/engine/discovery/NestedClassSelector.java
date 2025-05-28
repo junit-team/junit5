@@ -101,7 +101,7 @@ public class NestedClassSelector implements DiscoverySelector {
 	 * {@link PreconditionViolationException} if the classes cannot be loaded.
 	 */
 	public List<Class<?>> getEnclosingClasses() {
-		return this.enclosingClassSelectors.stream().map(ClassSelector::getJavaClass).toList();
+		return this.enclosingClassSelectors.stream().<Class<?>> map(ClassSelector::getJavaClass).toList();
 	}
 
 	/**

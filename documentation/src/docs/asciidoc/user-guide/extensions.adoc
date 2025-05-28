@@ -995,30 +995,9 @@ Various methods in `AnnotationSupport` and `ReflectionSupport` use search algori
 traverse type hierarchies to locate matching fields and methods – for example,
 `AnnotationSupport.findAnnotatedFields(...)`, `ReflectionSupport.findMethods(...)`, etc.
 
-As of JUnit 5.11 (JUnit Platform 1.11), field and method search algorithms adhere to
-standard Java semantics regarding whether a given field or method is visible or overridden
-according to the rules of the Java language.
-
-Prior to JUnit 5.11, the field and method search algorithms applied what we now refer to
-as "legacy semantics". Legacy semantics consider fields and methods to be _hidden_,
-_shadowed_, or _superseded_ by fields and methods in super types (superclasses or
-interfaces) based solely on the field's name or the method's signature, disregarding the
-actual Java language semantics for visibility and the rules that determine if one method
-overrides another method.
-
-Although the JUnit team recommends the use of the standard search semantics, developers
-may optionally revert to the legacy semantics via the
-`junit.platform.reflection.search.useLegacySemantics` JVM system property.
-
-For example, to enable legacy search semantics for fields and methods, you can start your
-JVM with the following system property.
-
-`-Djunit.platform.reflection.search.useLegacySemantics=true`
-
-NOTE: Due to the low-level nature of the feature, the
-`junit.platform.reflection.search.useLegacySemantics` flag can only be set via a JVM
-system property. It cannot be set via a <<running-tests-config-params, configuration
-parameter>>.
+The field and method search algorithms adhere to standard Java semantics regarding whether
+a given field or method is visible or overridden according to the rules of the Java
+language.
 
 [[extensions-execution-order]]
 === Relative Execution Order of User Code and Extensions

@@ -225,7 +225,7 @@ public class ModuleUtils {
 							.map(this::className)
 							.filter(name -> !name.equals("module-info"))
 							.filter(classFilter::match)
-							.map(this::loadClassUnchecked)
+							.<Class<?>> map(this::loadClassUnchecked)
 							.filter(classFilter::match)
 							.toList();
 					// @formatter:on

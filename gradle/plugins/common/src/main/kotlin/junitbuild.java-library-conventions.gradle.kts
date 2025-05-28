@@ -4,6 +4,7 @@ import junitbuild.extensions.isSnapshot
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.Library
 import org.gradle.plugins.ide.eclipse.model.ProjectDependency
+import org.gradle.plugins.ide.eclipse.model.SourceFolder
 
 plugins {
 	`java-library`
@@ -51,6 +52,15 @@ eclipse {
 		// Java Template Engine (JTE) which is used to generate the JRE enum and
 		// dependent tests.
 		entries.removeIf { it is ProjectDependency && it.path.equals("/code-generator-model") }
+		entries.filterIsInstance<SourceFolder>().forEach {
+			it.excludes.add("**/module-info.java")
+		}
+		entries.filterIsInstance<ProjectDependency>().forEach {
+			it.entryAttributes.remove("module")
+		}
+		entries.filterIsInstance<Library>().forEach {
+			it.entryAttributes.remove("module")
+		}
 	}
 }
 
