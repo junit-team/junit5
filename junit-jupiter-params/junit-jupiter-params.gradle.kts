@@ -47,10 +47,6 @@ tasks {
 	}
 	shadowJar {
 		relocate("com.univocity", "org.junit.jupiter.params.shadow.com.univocity")
-		from(projectDir) {
-			include("LICENSE-univocity-parsers.md")
-			into("META-INF")
-		}
 	}
 	compileJava {
 		options.compilerArgs.addAll(listOf(
