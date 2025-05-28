@@ -382,6 +382,19 @@ public class ExtensionContextTests {
 			"Published path must be a directory: " + tempDir.resolve("OuterClass").resolve("test"));
 	}
 
+	@Test
+	void allowsPublishingToTheSameDirectoryTwice(@TempDir Path tempDir) {
+		var extensionContext = createExtensionContextForFilePublishing(tempDir);
+
+		extensionContext.publishDirectory("test",
+			dir -> Files.writeString(dir.resolve("nested1.txt"), "Nested content 1"));
+		extensionContext.publishDirectory("test",
+			dir -> Files.writeString(dir.resolve("nested2.txt"), "Nested content 2"));
+
+		assertThat(tempDir.resolve("OuterClass/test/nested1.txt")).hasContent("Nested content 1");
+		assertThat(tempDir.resolve("OuterClass/test/nested2.txt")).hasContent("Nested content 2");
+	}
+
 	private ExtensionContext createExtensionContextForFilePublishing(Path tempDir) {
 		return createExtensionContextForFilePublishing(tempDir, mock(EngineExecutionListener.class),
 			outerClassDescriptor(null));

@@ -188,6 +188,8 @@ to start reporting discovery issues.
   failures.
 * Add support for Kotlin `Sequence` to `@MethodSource`, `@FieldSource`, and
   `@TestFactory`.
+* Allow publishing files to an existing directory via `TestReporter` and
+  `ExtensionContext`, for example, when re-running a test class.
 
 
 [[release-notes-5.13.0-junit-vintage]]
