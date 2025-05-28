@@ -19,5 +19,4 @@ dependencies {
 	implementation(libs.plugins.openrewrite.markerCoordinates)
 	implementation(libs.plugins.shadow.markerCoordinates)
 	implementation(libs.plugins.spotless.markerCoordinates)
-	implementation(libs.plugins.versions.markerCoordinates)
 }

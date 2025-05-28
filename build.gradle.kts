@@ -4,7 +4,6 @@ plugins {
 	id("junitbuild.base-conventions")
 	id("junitbuild.build-metadata")
 	id("junitbuild.checkstyle-nohttp")
-	id("junitbuild.dependency-update-check")
 	id("junitbuild.jacoco-aggregation-conventions")
 	id("junitbuild.maven-central-publishing")
 	id("junitbuild.temp-maven-repo")
