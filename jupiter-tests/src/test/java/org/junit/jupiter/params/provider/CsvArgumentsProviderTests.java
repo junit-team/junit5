@@ -275,7 +275,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
 	}
 
 	@Test
@@ -294,7 +294,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.withRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
 	}
 
 	@Test

@@ -379,7 +379,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.hasRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
 	}
 
 	@Test
@@ -483,7 +483,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(ArrayIndexOutOfBoundsException.class);
+				.hasRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
 	}
 
 	@Test
