@@ -45,9 +45,6 @@ tasks {
 			""")
 		}
 	}
-	shadowJar {
-		relocate("com.univocity", "org.junit.jupiter.params.shadow.com.univocity")
-	}
 	compileJava {
 		options.compilerArgs.addAll(listOf(
 			"--add-modules", "univocity.parsers",
