@@ -159,7 +159,9 @@ abstract class AbstractExtensionContext<T extends TestDescriptor> implements Ext
 		Preconditions.notNull(action, "action must not be null");
 
 		ThrowingConsumer<Path> enhancedAction = path -> {
-			Files.createDirectory(path);
+			if (!Files.isDirectory(path)) {
+				Files.createDirectory(path);
+			}
 			action.accept(path);
 		};
 		publishFileEntry(name, enhancedAction, file -> {

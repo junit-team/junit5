@@ -420,7 +420,7 @@ public interface ExtensionContext {
 	 * and attach it to the current test or container.
 	 *
 	 * <p>The directory will be resolved and created in the report output directory
-	 * prior to invoking the supplied action.
+	 * prior to invoking the supplied action, if it doesn't already exist.
 	 *
 	 * @param name the name of the directory to be attached; never {@code null}
 	 * or blank and must not contain any path separators
