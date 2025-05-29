@@ -34,6 +34,8 @@ val extension = extensions.create<JavaLibraryExtension>("javaLibrary")
 
 eclipse {
 	jdt {
+		sourceCompatibility = JavaVersion.VERSION_21
+		targetCompatibility = JavaVersion.VERSION_21
 		file {
 			// Set properties for org.eclipse.jdt.core.prefs
 			withProperties {
