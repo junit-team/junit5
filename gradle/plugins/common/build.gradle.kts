@@ -14,7 +14,6 @@ dependencies {
 	implementation(libs.plugins.errorProne.markerCoordinates)
 	implementation(libs.plugins.foojayResolver.markerCoordinates)
 	implementation(libs.plugins.jmh.markerCoordinates)
-	implementation(libs.plugins.jreleaser.markerCoordinates)
 	implementation(libs.plugins.nullaway.markerCoordinates)
 	implementation(libs.plugins.openrewrite.markerCoordinates)
 	implementation(libs.plugins.shadow.markerCoordinates)
