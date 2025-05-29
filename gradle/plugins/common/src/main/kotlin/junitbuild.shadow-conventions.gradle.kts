@@ -44,6 +44,9 @@ idea {
 	}
 }
 
+val javaComponent = components["java"] as AdhocComponentWithVariants
+javaComponent.withVariantsFromConfiguration(configurations.shadowRuntimeElements.get()) { skip() }
+
 tasks {
 	javadoc {
 		classpath += shadowedClasspath.get()
