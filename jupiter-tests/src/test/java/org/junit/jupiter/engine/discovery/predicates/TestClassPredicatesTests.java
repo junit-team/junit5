@@ -11,8 +11,8 @@
 package org.junit.jupiter.engine.discovery.predicates;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -218,7 +218,11 @@ public class TestClassPredicatesTests {
 		 */
 		@Test
 		void recursiveHierarchies() {
-			assertThrows(JUnitException.class, () -> predicates.looksLikeIntendedTestClass(TestCases.OuterClass.class));
+			assertThatExceptionOfType(JUnitException.class)//
+					.isThrownBy(() -> predicates.looksLikeIntendedTestClass(TestCases.OuterClass.class))//
+					.withMessage("Detected cycle in inner class hierarchy between %s and %s",
+						TestCases.OuterClass.RecursiveInnerClass.class.getName(), TestCases.OuterClass.class.getName());
+
 			assertTrue(predicates.isValidStandaloneTestClass(TestCases.OuterClass.class));
 			assertThat(discoveryIssues).isEmpty();
 
@@ -404,6 +408,7 @@ public class TestClassPredicatesTests {
 			@SuppressWarnings("InnerClassMayBeStatic")
 			class RecursiveInnerClass extends OuterClass {
 			}
+
 		}
 
 		private static class NestedClassesTestCase {
