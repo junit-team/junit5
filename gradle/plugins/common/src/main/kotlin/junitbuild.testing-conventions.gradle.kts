@@ -1,8 +1,8 @@
 import com.gradle.develocity.agent.gradle.internal.test.PredictiveTestSelectionConfigurationInternal
 import com.gradle.develocity.agent.gradle.test.PredictiveTestSelectionMode
-import junitbuild.extensions.trackOperationSystemAsInput
-import junitbuild.extensions.dependencyFromLibs
 import junitbuild.extensions.bundleFromLibs
+import junitbuild.extensions.dependencyFromLibs
+import junitbuild.extensions.trackOperationSystemAsInput
 import org.gradle.api.tasks.PathSensitivity.RELATIVE
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
@@ -22,6 +22,10 @@ var javaAgentClasspath = configurations.resolvable("javaAgentClasspath") {
 var openTestReportingCli = configurations.dependencyScope("openTestReportingCli")
 var openTestReportingCliClasspath = configurations.resolvable("openTestReportingCliClasspath") {
 	extendsFrom(openTestReportingCli.get())
+	attributes {
+		// Avoid using the shadowed variant of junit-platform-reporting
+		attribute(Bundling.BUNDLING_ATTRIBUTE, objects.named(Bundling::class, Bundling.EXTERNAL))
+	}
 }
 
 val generateOpenTestHtmlReport by tasks.registering(JavaExec::class) {
