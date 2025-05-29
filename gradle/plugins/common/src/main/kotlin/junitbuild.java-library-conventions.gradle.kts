@@ -253,13 +253,13 @@ tasks {
 }
 
 afterEvaluate {
+	java {
+		// For Groovy and Shadow plugins
+		sourceCompatibility = extension.mainJavaVersion.get()
+		targetCompatibility = extension.mainJavaVersion.get()
+	}
 	pluginManager.withPlugin("groovy") {
-		tasks.named<GroovyCompile>("compileGroovy").configure {
-			// Groovy compiler does not support the --release flag.
-			sourceCompatibility = extension.mainJavaVersion.get().majorVersion
-			targetCompatibility = extension.mainJavaVersion.get().majorVersion
-		}
-		tasks.named<GroovyCompile>("compileTestGroovy").configure {
+		tasks.withType<GroovyCompile>().named { it.startsWith("compileTest") }.configureEach {
 			// Groovy compiler does not support the --release flag.
 			sourceCompatibility = extension.testJavaVersion.get().majorVersion
 			targetCompatibility = extension.testJavaVersion.get().majorVersion
