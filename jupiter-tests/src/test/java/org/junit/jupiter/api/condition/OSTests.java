@@ -19,6 +19,7 @@ import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class OSTests {
+
 	@ParameterizedTest
 	@NullAndEmptySource
 	@ValueSource(strings = { " ", "\t" })
@@ -76,4 +77,5 @@ class OSTests {
 			assertEquals(OS.WINDOWS, OS.parse(name));
 		}
 	}
+
 }
