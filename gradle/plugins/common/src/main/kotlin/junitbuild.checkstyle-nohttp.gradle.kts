@@ -16,6 +16,10 @@ configurations.checkstyle {
 			if (requested.group == "ch.qos.logback") {
 				useVersion(requiredVersionFromLibs("logback"))
 			}
+			// Workaround for CVE-2025-48734
+			if (requested.group == "commons-beanutils") {
+				useVersion("1.11.0")
+			}
 		}
 	}
 }
