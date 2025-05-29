@@ -55,4 +55,9 @@ eclipse {
 			}
 		}
 	}
+	project {
+		// Remove Groovy Nature, since we don't require a Groovy plugin for Eclipse
+		// in order for developers to work with the code base.
+		natures.removeAll { it == "org.eclipse.jdt.groovy.core.groovyNature" }
+	}
 }
