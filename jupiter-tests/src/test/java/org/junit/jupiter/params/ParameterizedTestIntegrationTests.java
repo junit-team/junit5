@@ -2667,8 +2667,9 @@ class ParameterizedTestIntegrationTests extends AbstractJupiterTestEngineTests {
 
 		static {
 			//noinspection ConstantValue
-			if (true)
+			if (true) {
 				throw new RuntimeException("boom");
+			}
 		}
 
 		private static Stream<String> getArguments() {

@@ -59,8 +59,9 @@ final class DefaultDiscoveryIssue implements DiscoveryIssue {
 
 	@Override
 	public boolean equals(Object o) {
-		if (o == null || getClass() != o.getClass())
+		if (o == null || getClass() != o.getClass()) {
 			return false;
+		}
 		DefaultDiscoveryIssue that = (DefaultDiscoveryIssue) o;
 		return this.severity == that.severity //
 				&& Objects.equals(this.message, that.message) //

@@ -111,8 +111,9 @@ class AbstractTestDescriptorTests implements TestDescriptorOrderChildrenTests {
 	@Test
 	void pruneLeaf() {
 		TestDescriptor.Visitor visitor = descriptor -> {
-			if (descriptor.getUniqueId().equals(UniqueId.root("leaf", "leaf1-1")))
+			if (descriptor.getUniqueId().equals(UniqueId.root("leaf", "leaf1-1"))) {
 				descriptor.removeFromHierarchy();
+			}
 		};
 		engineDescriptor.accept(visitor);
 
@@ -128,8 +129,9 @@ class AbstractTestDescriptorTests implements TestDescriptorOrderChildrenTests {
 	void pruneGroup() {
 		final var countVisited = new AtomicInteger();
 		TestDescriptor.Visitor visitor = descriptor -> {
-			if (descriptor.getUniqueId().equals(UniqueId.root("group", "group1")))
+			if (descriptor.getUniqueId().equals(UniqueId.root("group", "group1"))) {
 				descriptor.removeFromHierarchy();
+			}
 			countVisited.incrementAndGet();
 		};
 		engineDescriptor.accept(visitor);

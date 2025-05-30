@@ -70,8 +70,9 @@ public class ExternalResourceSupportForMixedMethodAndFieldRulesTests {
 	@AfterAll
 	static void afterMethodsOfAllRulesWereExecuted() {
 		// beforeEach methods of rules from methods are run before those from fields but in reverse order
-		if (!asList(initEvents.get(2), initEvents.get(3), initEvents.get(0), initEvents.get(1)).equals(afterEvents))
+		if (!asList(initEvents.get(2), initEvents.get(3), initEvents.get(0), initEvents.get(1)).equals(afterEvents)) {
 			fail();
+		}
 	}
 
 	static class MyExternalResource extends ExternalResource {

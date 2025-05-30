@@ -45,7 +45,7 @@ public abstract class AnnotationBasedArgumentConverter<A extends Annotation>
 	@Override
 	public final void accept(A annotation) {
 		this.annotation = Preconditions.notNull(annotation, "annotation must not be null");
-		;
+
 	}
 
 	@Override

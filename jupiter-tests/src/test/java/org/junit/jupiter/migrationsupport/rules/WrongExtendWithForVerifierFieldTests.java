@@ -39,8 +39,9 @@ public class WrongExtendWithForVerifierFieldTests {
 
 	@AfterAll
 	static void afterMethodOfRuleWasNotExecuted() {
-		if (afterOfRule1WasExecuted)
+		if (afterOfRule1WasExecuted) {
 			fail();
+		}
 	}
 
 }
