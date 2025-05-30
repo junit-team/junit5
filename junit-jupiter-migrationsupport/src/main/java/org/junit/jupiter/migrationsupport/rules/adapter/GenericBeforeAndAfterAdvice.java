@@ -10,14 +10,15 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 public interface GenericBeforeAndAfterAdvice {
 
 	default void before() {

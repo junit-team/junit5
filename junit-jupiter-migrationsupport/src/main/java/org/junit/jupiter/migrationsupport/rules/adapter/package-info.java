@@ -1,5 +1,6 @@
 /**
- * Simple wrappers for JUnit 4 rules to overcome visibility limitations of the JUnit 4 implementations.
+ * <em>Deprecated</em> wrappers for JUnit 4 rules to overcome visibility
+ * limitations of the JUnit 4 implementations.
  */
 
 @NullMarked

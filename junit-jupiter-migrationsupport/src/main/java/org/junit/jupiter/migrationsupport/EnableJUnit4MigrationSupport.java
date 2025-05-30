@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport;
 
-import static org.apiguardian.api.API.Status.STABLE;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -48,9 +48,11 @@ import org.junit.jupiter.migrationsupport.rules.VerifierSupport;
  * @see IgnoreCondition
  * @see EnableRuleMigrationSupport
  */
+@SuppressWarnings("removal")
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@API(status = STABLE, since = "5.7")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 @EnableRuleMigrationSupport
 @ExtendWith(IgnoreCondition.class)
 public @interface EnableJUnit4MigrationSupport {

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.junit.platform.commons.support.ReflectionSupport.findMethod;
 import static org.junit.platform.commons.support.ReflectionSupport.invokeMethod;
 
@@ -27,7 +27,9 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
+@SuppressWarnings("removal")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 public abstract class AbstractTestRuleAdapter implements GenericBeforeAndAfterAdvice {
 
 	private final TestRule target;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.adapter;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 import org.junit.jupiter.migrationsupport.rules.member.TestRuleAnnotatedMember;
@@ -19,7 +19,9 @@ import org.junit.rules.ExternalResource;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
+@SuppressWarnings("removal")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 public class ExternalResourceAdapter extends AbstractTestRuleAdapter {
 
 	public ExternalResourceAdapter(TestRuleAnnotatedMember annotatedMember) {

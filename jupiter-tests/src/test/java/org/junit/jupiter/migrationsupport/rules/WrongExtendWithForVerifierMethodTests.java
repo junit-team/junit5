@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.Verifier;
 
+@SuppressWarnings("removal")
 @ExtendWith(ExternalResourceSupport.class)
 public class WrongExtendWithForVerifierMethodTests {
 

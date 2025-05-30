@@ -43,6 +43,7 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
+@SuppressWarnings("removal")
 class TestRuleSupport implements BeforeEachCallback, TestExecutionExceptionHandler, AfterEachCallback {
 
 	private final Class<? extends TestRule> ruleType;

@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 
 import org.apiguardian.api.API;
 import org.junit.rules.TestRule;
@@ -18,7 +18,8 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.0")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 public interface TestRuleAnnotatedMember {
 
 	TestRule getTestRule();

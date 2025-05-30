@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.TestRule;
 
+@SuppressWarnings("removal")
 @ExtendWith(ExternalResourceSupport.class)
 class ExternalResourceSupportForDifferentDeclaredReturnTypesRulesTests {
 

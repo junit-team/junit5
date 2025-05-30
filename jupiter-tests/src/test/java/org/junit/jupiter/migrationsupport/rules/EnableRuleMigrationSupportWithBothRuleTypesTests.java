@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.rules.ExternalResource;
 import org.junit.rules.Verifier;
 
+@SuppressWarnings("removal")
 @EnableRuleMigrationSupport
 public class EnableRuleMigrationSupportWithBothRuleTypesTests {
 

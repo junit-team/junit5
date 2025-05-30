@@ -10,7 +10,7 @@
 
 package org.junit.jupiter.migrationsupport.rules.member;
 
-import static org.apiguardian.api.API.Status.INTERNAL;
+import static org.apiguardian.api.API.Status.DEPRECATED;
 import static org.junit.platform.commons.support.ReflectionSupport.makeAccessible;
 
 import java.lang.reflect.Field;
@@ -22,7 +22,8 @@ import org.junit.rules.TestRule;
 /**
  * @since 5.0
  */
-@API(status = INTERNAL, since = "5.1")
+@API(status = DEPRECATED, since = "6.0")
+@Deprecated(since = "6.0", forRemoval = true)
 public final class TestRuleAnnotatedField extends AbstractTestRuleAnnotatedMember {
 
 	public TestRuleAnnotatedField(Object testInstance, Field field) {
