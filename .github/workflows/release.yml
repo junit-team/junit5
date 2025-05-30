@@ -119,17 +119,30 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const openMilestones = await github.rest.issues.listMilestones({
+            const query = `
+                query ($owner: String!, $repo: String!, $title: String!) {
+                    repository(owner: $owner, name: $repo) {
+                        milestones(first: 100, query: $title) {
+                            nodes {
+                                title
+                                number
+                                openIssueCount
+                            }
+                        }
+                    }
+                }
+            `;
+            const {repository} = await github.graphql(query, {
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                state: 'open'
+                title: "${{ inputs.releaseVersion }}"
             });
-            const [milestone] = openMilestones.data.filter(x => x.title === "${{ inputs.releaseVersion }}")
+            const [milestone] = repository.milestones.nodes.filter(it => it.title === "${{ inputs.releaseVersion }}")
             if (!milestone) {
                 throw new Error('Milestone "${{ inputs.releaseVersion }}" not found');
             }
-            if (milestone.open_issues > 0) {
-                throw new Error(`Milestone "${{ inputs.releaseVersion }}" has ${milestone.open_issues} open issue(s)`);
+            if (milestone.openIssueCount > 0) {
+                throw new Error(`Milestone "${{ inputs.releaseVersion }}" has ${milestone.openIssueCount} open issue(s)`);
             }
             const requestBody = {
                 owner: context.repo.owner,
