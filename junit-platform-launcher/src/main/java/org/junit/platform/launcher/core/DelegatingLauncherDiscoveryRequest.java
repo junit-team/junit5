@@ -32,30 +32,37 @@ class DelegatingLauncherDiscoveryRequest implements LauncherDiscoveryRequest {
 		this.request = request;
 	}
 
+	@Override
 	public List<EngineFilter> getEngineFilters() {
 		return this.request.getEngineFilters();
 	}
 
+	@Override
 	public List<PostDiscoveryFilter> getPostDiscoveryFilters() {
 		return this.request.getPostDiscoveryFilters();
 	}
 
+	@Override
 	public LauncherDiscoveryListener getDiscoveryListener() {
 		return this.request.getDiscoveryListener();
 	}
 
+	@Override
 	public <T extends DiscoverySelector> List<T> getSelectorsByType(Class<T> selectorType) {
 		return this.request.getSelectorsByType(selectorType);
 	}
 
+	@Override
 	public <T extends DiscoveryFilter<?>> List<T> getFiltersByType(Class<T> filterType) {
 		return this.request.getFiltersByType(filterType);
 	}
 
+	@Override
 	public ConfigurationParameters getConfigurationParameters() {
 		return this.request.getConfigurationParameters();
 	}
 
+	@Override
 	public OutputDirectoryProvider getOutputDirectoryProvider() {
 		return this.request.getOutputDirectoryProvider();
 	}

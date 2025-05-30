@@ -51,6 +51,7 @@ public interface ExtensionContextSupplier {
 			this.legacyExtensionContext = legacyExtensionContext;
 		}
 
+		@Override
 		public ExtensionContext get(TestInstantiationAwareExtension extension) {
 			return isTestScoped(extension) ? currentExtensionContext : legacyExtensionContext;
 		}
