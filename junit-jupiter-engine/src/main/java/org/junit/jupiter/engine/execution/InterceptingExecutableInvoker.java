@@ -81,8 +81,8 @@ public class InterceptingExecutableInvoker {
 	public <T> T invoke(Method method, @Nullable Object target, ExtensionContext extensionContext,
 			ExtensionRegistry extensionRegistry, ReflectiveInterceptorCall<Method, T> interceptorCall) {
 
-		@SuppressWarnings("unchecked")
-		Optional<Object> optionalTarget = (target instanceof Optional ? (Optional<Object>) target
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		Optional<Object> optionalTarget = (target instanceof Optional optional ? optional
 				: Optional.ofNullable(target));
 		@Nullable
 		Object[] arguments = resolveParameters(method, optionalTarget, extensionContext, extensionRegistry);

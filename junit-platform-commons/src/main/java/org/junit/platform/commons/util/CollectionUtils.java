@@ -85,8 +85,8 @@ public final class CollectionUtils {
 	}
 
 	private static <T extends @Nullable Object> T firstElement(Collection<T> collection) {
-		return collection instanceof List //
-				? ((List<T>) collection).get(0) //
+		return collection instanceof List<T> list //
+				? list.get(0) //
 				: collection.iterator().next();
 	}
 

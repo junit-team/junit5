@@ -1930,8 +1930,8 @@ public final class ReflectionUtils {
 	 * exception}; otherwise, this method returns the supplied {@code Throwable}.
 	 */
 	static Throwable getUnderlyingCause(Throwable t) {
-		if (t instanceof InvocationTargetException) {
-			return getUnderlyingCause(((InvocationTargetException) t).getTargetException());
+		if (t instanceof InvocationTargetException ite) {
+			return getUnderlyingCause(ite.getTargetException());
 		}
 		return t;
 	}

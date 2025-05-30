@@ -89,9 +89,9 @@ public class NestedClassTestDescriptor extends ClassBasedTestDescriptor {
 
 	@API(status = INTERNAL, since = "5.12")
 	public static List<Class<?>> getEnclosingTestClasses(@Nullable TestDescriptor parent) {
-		if (parent instanceof TestClassAware parentClassDescriptor) {
-			List<Class<?>> result = new ArrayList<>(parentClassDescriptor.getEnclosingTestClasses());
-			result.add(parentClassDescriptor.getTestClass());
+		if (parent instanceof TestClassAware testClassAwareParent) {
+			List<Class<?>> result = new ArrayList<>(testClassAwareParent.getEnclosingTestClasses());
+			result.add(testClassAwareParent.getTestClass());
 			return result;
 		}
 		return emptyList();
