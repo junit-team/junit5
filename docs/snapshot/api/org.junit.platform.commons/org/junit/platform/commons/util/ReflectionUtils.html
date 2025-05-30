@@ -1587,7 +1587,13 @@ loadScripts(document, 'script');</script>
  supplied class, that conforms to the supplied predicate is present.
 
  <p>This method does <strong>not</strong> search for nested classes
- recursively.</div>
+ recursively.
+
+ <p>This method detects cycles in <em>inner</em> class hierarchies &mdash;
+ from the supplied class up to the outermost enclosing class &mdash; and
+ throws a <a href="../JUnitException.html" title="class in org.junit.platform.commons"><code>JUnitException</code></a> if such a cycle is detected. Cycles within
+ inner class hierarchies <em>below</em> the supplied class are not detected
+ by this method.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>clazz</code> - the class to be searched; never <code>null</code></dd>
