@@ -38,7 +38,7 @@ class ConsoleLauncherWrapperResult implements TestExecutionSummary {
 		this.err = err;
 		this.code = result.getExitCode();
 		this.summary = (TestExecutionSummary) result.getValue() //
-				.filter(it -> it instanceof TestExecutionSummary) //
+				.filter(TestExecutionSummary.class::isInstance) //
 				.orElse(null);
 	}
 

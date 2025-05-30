@@ -164,12 +164,12 @@ public class EngineDiscoveryOrchestrator {
 
 			if (engineIsExcluded) {
 				logger.debug(() -> "Test discovery for engine '%s' was skipped due to an EngineFilter%s.".formatted(
-					testEngine.getId(), phase.map(it -> " in %s phase".formatted(it)).orElse("")));
+					testEngine.getId(), phase.map(" in %s phase"::formatted).orElse("")));
 				continue;
 			}
 
 			logger.debug(() -> "Discovering tests%s in engine '%s'.".formatted(
-				phase.map(it -> " during Launcher %s phase".formatted(it)).orElse(""), testEngine.getId()));
+				phase.map(" during Launcher %s phase"::formatted).orElse(""), testEngine.getId()));
 
 			EngineResultInfo engineResult = discoverEngineRoot(testEngine, request, issueCollector, uniqueIdCreator);
 			testEngineDescriptors.put(testEngine, engineResult);

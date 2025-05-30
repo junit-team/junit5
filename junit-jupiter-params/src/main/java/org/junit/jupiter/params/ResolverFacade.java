@@ -414,7 +414,7 @@ class ResolverFacade {
 		}
 		fields.stream() //
 				.filter(ModifierSupport::isFinal) //
-				.map(field -> "@Parameter field [%s] must not be declared as final".formatted(field)) //
+				.map("@Parameter field [%s] must not be declared as final"::formatted) //
 				.forEach(errors::add);
 	}
 
