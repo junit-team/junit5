@@ -54,11 +54,6 @@ repository on GitHub.
   `ClassNotFoundException` when loading classes during shutdown.
 * Fix support of `--uid` and `--select-unique-id` options in the console launcher.
 
-[[release-notes-5.13.0-junit-platform-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
-
 [[release-notes-5.13.0-junit-platform-new-features-and-improvements]]
 ==== New Features and Improvements
 
@@ -115,11 +110,6 @@ to start reporting discovery issues.
 * `AutoCloseable` arguments returned by an `ArgumentsProvider` are now closed even if a
   failure happens prior to invoking the parameterized method.
 * Validate _all_ versions specified in `@EnabledOnJre` and `@DisabledOnJre` annotations.
-
-[[release-notes-5.13.0-junit-jupiter-deprecations-and-breaking-changes]]
-==== Deprecations and Breaking Changes
-
-* ❓
 
 [[release-notes-5.13.0-junit-jupiter-new-features-and-improvements]]
 ==== New Features and Improvements
