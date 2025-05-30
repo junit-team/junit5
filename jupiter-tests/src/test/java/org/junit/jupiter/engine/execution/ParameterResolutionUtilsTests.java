@@ -120,14 +120,11 @@ class ParameterResolutionUtilsTests {
 	void resolveMultipleArguments() {
 		testMethodWith("multipleParameters", String.class, Integer.class, Double.class);
 		register(ConfigurableParameterResolver.supportsAndResolvesTo(parameterContext -> {
-			switch (parameterContext.getIndex()) {
-				case 0:
-					return "0";
-				case 1:
-					return 1;
-				default:
-					return 2.0;
-			}
+			return switch (parameterContext.getIndex()) {
+				case 0 -> "0";
+				case 1 -> 1;
+				default -> 2.0;
+			};
 		}));
 
 		Object[] arguments = resolveMethodParameters();
