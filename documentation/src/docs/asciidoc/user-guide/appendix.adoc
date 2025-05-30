@@ -108,8 +108,8 @@ Please refer to the corresponding sections for <<running-tests-build-maven-bom, 
   `junit-jupiter-params`::
     Support for <<writing-tests-parameterized-tests>> in JUnit Jupiter.
   `junit-jupiter-migrationsupport`::
-    Support for migrating from JUnit 4 to JUnit Jupiter; only required for support for
-    JUnit 4's `@Ignore` annotation and for running selected JUnit 4 rules.
+    _Deprecated_ support for migrating from JUnit 4 to JUnit Jupiter; only required for
+    support for JUnit 4's `@Ignore` annotation and for running selected JUnit 4 rules.
 
 [[dependency-metadata-junit-vintage]]
 ==== JUnit Vintage
