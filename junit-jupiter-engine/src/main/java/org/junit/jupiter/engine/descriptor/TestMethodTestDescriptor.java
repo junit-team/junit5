@@ -285,15 +285,9 @@ public class TestMethodTestDescriptor extends MethodBasedTestDescriptor {
 
 		invokeTestWatchers(context, true, watcher -> {
 			switch (status) {
-				case SUCCESSFUL:
-					watcher.testSuccessful(extensionContext);
-					break;
-				case ABORTED:
-					watcher.testAborted(extensionContext, result.getThrowable().orElse(null));
-					break;
-				case FAILED:
-					watcher.testFailed(extensionContext, result.getThrowable().orElse(null));
-					break;
+				case SUCCESSFUL -> watcher.testSuccessful(extensionContext);
+				case ABORTED -> watcher.testAborted(extensionContext, result.getThrowable().orElse(null));
+				case FAILED -> watcher.testFailed(extensionContext, result.getThrowable().orElse(null));
 			}
 		});
 	}

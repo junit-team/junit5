@@ -40,10 +40,9 @@ class ArgumentCountValidator {
 	void validate(ExtensionContext extensionContext) {
 		ArgumentCountValidationMode argumentCountValidationMode = getArgumentCountValidationMode(extensionContext);
 		switch (argumentCountValidationMode) {
-			case DEFAULT:
-			case NONE:
-				return;
-			case STRICT:
+			case DEFAULT, NONE -> {
+			}
+			case STRICT -> {
 				int consumedCount = this.declarationContext.getResolverFacade().determineConsumedArgumentCount(
 					this.arguments);
 				int totalCount = this.arguments.getTotalLength();
@@ -53,10 +52,9 @@ class ArgumentCountValidator {
 						pluralize(consumedCount, "parameter", "parameters"), pluralize(totalCount, "was", "were"),
 						totalCount, pluralize(totalCount, "argument", "arguments"),
 						Arrays.toString(this.arguments.getAllPayloads())));
-				break;
-			default:
-				throw new ExtensionConfigurationException(
-					"Unsupported argument count validation mode: " + argumentCountValidationMode);
+			}
+			default -> throw new ExtensionConfigurationException(
+				"Unsupported argument count validation mode: " + argumentCountValidationMode);
 		}
 	}
 

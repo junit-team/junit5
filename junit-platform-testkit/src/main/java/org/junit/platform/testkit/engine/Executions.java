@@ -254,11 +254,8 @@ public final class Executions {
 
 		for (Event event : events) {
 			switch (event.getType()) {
-				case STARTED: {
-					executionStarts.put(event.getTestDescriptor(), event.getTimestamp());
-					break;
-				}
-				case SKIPPED: {
+				case STARTED -> executionStarts.put(event.getTestDescriptor(), event.getTimestamp());
+				case SKIPPED -> {
 					// Based on the Javadoc for EngineExecutionListener.executionSkipped(...),
 					// a skipped descriptor must never be reported as started or finished,
 					// but just in case a TestEngine does not adhere to that contract, we
@@ -271,9 +268,8 @@ public final class Executions {
 					Execution skippedEvent = Execution.skipped(event.getTestDescriptor(), timestamp, timestamp,
 						event.getRequiredPayload(String.class));
 					executions.add(skippedEvent);
-					break;
 				}
-				case FINISHED: {
+				case FINISHED -> {
 					Instant startInstant = executionStarts.remove(event.getTestDescriptor());
 					Instant endInstant = event.getTimestamp();
 
@@ -285,11 +281,9 @@ public final class Executions {
 							endInstant, event.getRequiredPayload(TestExecutionResult.class));
 						executions.add(finishedEvent);
 					}
-					break;
 				}
-				default: {
+				default -> {
 					// Ignore other events
-					break;
 				}
 			}
 		}

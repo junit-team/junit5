@@ -55,5 +55,6 @@ public enum ArgumentCountValidationMode {
 	 * <p>When there are more arguments provided than declared by the
 	 * parameterized class or method, this raises an error.
 	 */
-	STRICT,
+	STRICT
+
 }
