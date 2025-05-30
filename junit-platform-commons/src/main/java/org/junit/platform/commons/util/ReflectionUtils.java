@@ -1132,6 +1132,12 @@ public final class ReflectionUtils {
 	 * <p>This method does <strong>not</strong> search for nested classes
 	 * recursively.
 	 *
+	 * <p>This method detects cycles in <em>inner</em> class hierarchies &mdash;
+	 * from the supplied class up to the outermost enclosing class &mdash; and
+	 * throws a {@link JUnitException} if such a cycle is detected. Cycles within
+	 * inner class hierarchies <em>below</em> the supplied class are not detected
+	 * by this method.
+	 *
 	 * @param clazz the class to be searched; never {@code null}
 	 * @param predicate the predicate against which the list of nested classes is
 	 * checked; never {@code null}
