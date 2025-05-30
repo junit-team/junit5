@@ -256,6 +256,9 @@ include::{testDir}/example/ParameterizedMigrationDemo.java[tags=after]
 [[migrating-from-junit4-rule-support]]
 === Limited JUnit 4 Rule Support
 
+WARNING: _JUnit 4 rule support_ is deprecated for removal since version 6.0.0. Please
+migrate to the corresponding APIs and extensions provided by JUnit Jupiter.
+
 As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively. The
 JUnit team realizes, however, that many organizations, especially large ones, are likely
 to have large JUnit 4 code bases that make use of custom rules. To serve these
@@ -289,6 +292,9 @@ extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.
 
 [[migrating-from-junit4-ignore-annotation-support]]
 === JUnit 4 @Ignore Support
+
+WARNING: _JUnit 4 `@Ignore` support_ is deprecated for removal since version 6.0.0. Please
+use JUnit Jupiter's `@Disabled` annotation instead.
 
 In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
 `junit-jupiter-migrationsupport` module provides support for JUnit 4's `@Ignore`
