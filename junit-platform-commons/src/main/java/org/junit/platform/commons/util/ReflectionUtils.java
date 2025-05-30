@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -1142,17 +1143,9 @@ public final class ReflectionUtils {
 		Preconditions.notNull(clazz, "Class must not be null");
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
-		class Tracker implements Consumer<Class<?>> {
-			boolean foundNestedClass = false;
-			@Override
-			public void accept(Class<?> __) {
-				foundNestedClass = true;
-			}
-		}
-		Tracker tracker = new Tracker();
-
-		visitAllNestedClasses(clazz, predicate, tracker);
-		return tracker.foundNestedClass;
+		AtomicBoolean foundNestedClass = new AtomicBoolean(false);
+		visitAllNestedClasses(clazz, predicate, __ -> foundNestedClass.setPlain(true));
+		return foundNestedClass.getPlain();
 	}
 
 	/**
