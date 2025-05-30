@@ -1261,8 +1261,8 @@ public final class ReflectionUtils {
 		Preconditions.notNull(predicate, "Predicate must not be null");
 
 		AtomicBoolean foundNestedClass = new AtomicBoolean(false);
-		visitAllNestedClasses(clazz, predicate, __ -> foundNestedClass.setPlain(true));
-		return foundNestedClass.getPlain();
+		visitAllNestedClasses(clazz, predicate, __ -> foundNestedClass.set(true));
+		return foundNestedClass.get();
 	}
 
 	/**
