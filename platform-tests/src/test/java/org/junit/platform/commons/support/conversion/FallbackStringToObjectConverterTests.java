@@ -158,13 +158,7 @@ class FallbackStringToObjectConverterTests {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!(obj instanceof Book that)) {
-				return false;
-			}
-			return Objects.equals(this.title, that.title);
+			return (this == obj) || (obj instanceof Book that && Objects.equals(this.title, that.title));
 		}
 
 		@Override
@@ -184,13 +178,7 @@ class FallbackStringToObjectConverterTests {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!(obj instanceof Journal that)) {
-				return false;
-			}
-			return Objects.equals(this.title, that.title);
+			return (this == obj) || (obj instanceof Journal that && Objects.equals(this.title, that.title));
 		}
 
 		@Override
@@ -218,13 +206,7 @@ class FallbackStringToObjectConverterTests {
 
 		@Override
 		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (!(obj instanceof Newspaper that)) {
-				return false;
-			}
-			return Objects.equals(this.title, that.title);
+			return (this == obj) || (obj instanceof Newspaper that && Objects.equals(this.title, that.title));
 		}
 
 		@Override
