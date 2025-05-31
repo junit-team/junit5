@@ -472,12 +472,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#release-notes-6.0.0-M1">6.0.0-M1</a>
+<li><a href="#release-notes-5.13.1">5.13.1</a>
 <ul class="sectlevel2">
-<li><a href="#release-notes-6.0.0-M1-overall-improvements">Overall Improvements</a></li>
-<li><a href="#release-notes-6.0.0-M1-junit-platform">JUnit Platform</a></li>
-<li><a href="#release-notes-6.0.0-M1-junit-jupiter">JUnit Jupiter</a></li>
-<li><a href="#release-notes-6.0.0-M1-junit-vintage">JUnit Vintage</a></li>
+<li><a href="#release-notes-5.13.1-junit-platform">JUnit Platform</a></li>
+<li><a href="#release-notes-5.13.1-junit-jupiter">JUnit Jupiter</a></li>
+<li><a href="#release-notes-5.13.1-junit-vintage">JUnit Vintage</a></li>
 </ul>
 </li>
 <li><a href="#release-notes-5.13.0">5.13.0</a>
@@ -502,10 +501,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 reference documentation for programmers writing tests, extension authors, and engine
 authors as well as build tool and IDE vendors.</p>
 </div>
+<div class="paragraph">
+<p>include::/home/runner/work/junit5/junit5/documentation/src/docs/asciidoc/release-notes/release-notes-6.0.0-M1.adoc[</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="release-notes-6.0.0-M1"><a class="anchor" href="#release-notes-6.0.0-M1"></a>6.0.0-M1</h2>
+<h2 id="release-notes-5.13.1"><a class="anchor" href="#release-notes-5.13.1"></a>5.13.1</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Date of Release:</strong> ❓</p>
@@ -515,13 +517,13 @@ authors as well as build tool and IDE vendors.</p>
 </div>
 <div class="paragraph">
 <p>For a complete list of all <em>closed</em> issues and pull requests for this release, consult the
-<a href="https://github.com/junit-team/junit5/milestone/87?closed=1">6.0.0-M1</a> milestone page in the JUnit
-repository on GitHub.</p>
+<a href="https://github.com/junit-team/junit5/milestone/97?closed=1">5.13.1</a> milestone page in the JUnit repository
+on GitHub.</p>
 </div>
 <div class="sect2">
-<h3 id="release-notes-6.0.0-M1-overall-improvements"><a class="anchor" href="#release-notes-6.0.0-M1-overall-improvements"></a>Overall Improvements</h3>
+<h3 id="release-notes-5.13.1-junit-platform"><a class="anchor" href="#release-notes-5.13.1-junit-platform"></a>JUnit Platform</h3>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-overall-bug-fixes"><a class="anchor" href="#release-notes-6.0.0-M1-overall-bug-fixes"></a>Bug Fixes</h4>
+<h4 id="release-notes-5.13.1-junit-platform-bug-fixes"><a class="anchor" href="#release-notes-5.13.1-junit-platform-bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -531,37 +533,7 @@ repository on GitHub.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-overall-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-6.0.0-M1-overall-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Minimum required Java version is now 17.</p>
-</li>
-<li>
-<p>Minimum required Kotlin version is now 2.2.</p>
-</li>
-<li>
-<p>Platform, Jupiter, and Vintage artifacts now use the same version number.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="release-notes-6.0.0-M1-overall-new-features-and-improvements"><a class="anchor" href="#release-notes-6.0.0-M1-overall-new-features-and-improvements"></a>New Features and Improvements</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>All JUnit modules now use <a href="https://jspecify.dev/">JSpecify</a>'s nullability annotations to
-indicate which method parameters, return types, etc. can be <code>null</code>.</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="release-notes-6.0.0-M1-junit-platform"><a class="anchor" href="#release-notes-6.0.0-M1-junit-platform"></a>JUnit Platform</h3>
-<div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-platform-bug-fixes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-platform-bug-fixes"></a>Bug Fixes</h4>
+<h4 id="release-notes-5.13.1-junit-platform-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-5.13.1-junit-platform-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -571,97 +543,7 @@ indicate which method parameters, return types, etc. can be <code>null</code>.</
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-platform-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-platform-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Remove deprecated support for running the <code>ConsoleLauncher</code> without specifying a
-subcommand.</p>
-</li>
-<li>
-<p>Remove support for deprecated non-conventional <code>ConsoleLauncher</code> options such as
-<code>--h</code> (rather than <code>-h</code>) or <code>-help</code> (rather than <code>--help</code>).</p>
-</li>
-<li>
-<p>The <code>junit-platform-runner</code> module that provided the JUnit 4 based <code>JUnitPlatform</code>
-runner has been discontinued.</p>
-</li>
-<li>
-<p>Support for Maven Surefire/Failsafe versions less than 3.0.0 has been dropped.</p>
-</li>
-<li>
-<p>The following deprecated APIs have been removed:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>ReflectionSupport.loadClass(String)</code> method</p>
-</li>
-<li>
-<p><code>ReflectionUtils.readFieldValue(&#8230;&#8203;)</code> methods</p>
-</li>
-<li>
-<p><code>ReflectionUtils.getMethod(&#8230;&#8203;)</code> method</p>
-</li>
-<li>
-<p><code>BlacklistedExceptions</code> class</p>
-</li>
-<li>
-<p><code>PreconditionViolationException</code> class (from <code>org.junit.platform.commons.util</code>)</p>
-</li>
-<li>
-<p><code>ClasspathScanningSupport</code> class</p>
-</li>
-<li>
-<p><code>ConfigurationParameters.size()</code> method</p>
-</li>
-<li>
-<p><code>MethodSelector.getMethodParameterTypes()</code> method</p>
-</li>
-<li>
-<p><code>NestedMethodSelector.getMethodParameterTypes()</code> method</p>
-</li>
-<li>
-<p><code>ReportEntry()</code> constructor</p>
-</li>
-<li>
-<p><code>SingleTestExecutor</code> class</p>
-</li>
-<li>
-<p><code>LauncherDiscoveryRequestBuilder()</code> constructor</p>
-</li>
-<li>
-<p><code>LegacyReportingUtils</code> class</p>
-</li>
-<li>
-<p><code>TestPlan.add(TestIdentifier)</code>, <code>TestPlan.getChildren(String)</code>, and
-<code>TestPlan.getTestIdentifier(String)</code> methods</p>
-</li>
-<li>
-<p><code>TestPlan.add(TestIdentifier)</code> and <code>TestPlan.getChildren(String)</code> methods</p>
-</li>
-<li>
-<p><code>@UseTechnicalNames</code> annotation</p>
-</li>
-<li>
-<p><code>EngineTestKit.execute(String, EngineDiscoveryRequest)</code>,
-<code>EngineTestKit.execute(TestEngine, EngineDiscoveryRequest)</code>, and
-<code>EngineTestKit.Builder.filters(&#8230;&#8203;)</code> methods</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>Support for "legacy semantics" for field and method searches that used to be
-configurable via the <code>junit.platform.reflection.search.useLegacySemantics</code> system
-property has been removed. JUnit now always adheres to standard Java semantics regarding
-whether a given field or method is visible or overridden according to the rules of the
-Java language.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-platform-new-features-and-improvements"><a class="anchor" href="#release-notes-6.0.0-M1-junit-platform-new-features-and-improvements"></a>New Features and Improvements</h4>
+<h4 id="release-notes-5.13.1-junit-platform-new-features-and-improvements"><a class="anchor" href="#release-notes-5.13.1-junit-platform-new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -672,9 +554,9 @@ Java language.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-6.0.0-M1-junit-jupiter"><a class="anchor" href="#release-notes-6.0.0-M1-junit-jupiter"></a>JUnit Jupiter</h3>
+<h3 id="release-notes-5.13.1-junit-jupiter"><a class="anchor" href="#release-notes-5.13.1-junit-jupiter"></a>JUnit Jupiter</h3>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-jupiter-bug-fixes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-jupiter-bug-fixes"></a>Bug Fixes</h4>
+<h4 id="release-notes-5.13.1-junit-jupiter-bug-fixes"><a class="anchor" href="#release-notes-5.13.1-junit-jupiter-bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -684,65 +566,30 @@ Java language.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-jupiter-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-jupiter-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<h4 id="release-notes-5.13.1-junit-jupiter-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-5.13.1-junit-jupiter-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>The following deprecated APIs have been removed:</p>
-<div class="ulist">
-<ul>
-<li>
-<p><code>MethodOrderer.Alphanumeric</code> class</p>
-</li>
-<li>
-<p><code>InvocationInterceptor.interceptDynamicTest(Invocation, ExtensionContext)</code> method</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>The deprecated <code>junit.jupiter.tempdir.scope</code> configuration parameter is no longer
-supported.</p>
-</li>
-<li>
-<p>The <code>JRE</code> enum constants for <code>JAVA_8</code> to <code>JAVA_16</code> have been deprecated because they can
-no longer be used at runtime since <code>JAVA_17</code> is the new baseline. Please also manually
-update any values used with the <code>minVersion</code> and <code>maxVersion</code> attributes in
-<code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> or the <code>versions</code> attributes in
-<code>@EnabledOnJre</code> and <code>@DisabledOnJre</code> to ensure that you are no longer declaring version
-values less than 17.</p>
-</li>
-<li>
-<p><code>@EnabledForJreRange</code> and <code>@DisabledForJreRange</code> now use <code>JAVA_17</code> as their default
-<code>min</code> value.</p>
-</li>
-<li>
-<p>The contracts for the <code>Executable</code> parameters of Kotlin-specific <code>assertTimeout</code>
-functions were changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> to
-<code>callsInPlace(executable, AT_MOST_ONCE)</code> which might result in compilation errors.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements"><a class="anchor" href="#release-notes-6.0.0-M1-junit-jupiter-new-features-and-improvements"></a>New Features and Improvements</h4>
+<h4 id="release-notes-5.13.1-junit-jupiter-new-features-and-improvements"><a class="anchor" href="#release-notes-5.13.1-junit-jupiter-new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
-<p>Kotlin&#8217;s <code>suspend</code> modifier may now be applied to test and lifecycle methods.</p>
-</li>
-<li>
-<p>The <code>Arguments</code> interface for parameterized tests is now officially a
-<code>@FunctionalInterface</code>.</p>
+<p>❓</p>
 </li>
 </ul>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="release-notes-6.0.0-M1-junit-vintage"><a class="anchor" href="#release-notes-6.0.0-M1-junit-vintage"></a>JUnit Vintage</h3>
+<h3 id="release-notes-5.13.1-junit-vintage"><a class="anchor" href="#release-notes-5.13.1-junit-vintage"></a>JUnit Vintage</h3>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-vintage-bug-fixes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-vintage-bug-fixes"></a>Bug Fixes</h4>
+<h4 id="release-notes-5.13.1-junit-vintage-bug-fixes"><a class="anchor" href="#release-notes-5.13.1-junit-vintage-bug-fixes"></a>Bug Fixes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -752,7 +599,7 @@ functions were changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> 
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-vintage-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-6.0.0-M1-junit-vintage-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
+<h4 id="release-notes-5.13.1-junit-vintage-deprecations-and-breaking-changes"><a class="anchor" href="#release-notes-5.13.1-junit-vintage-deprecations-and-breaking-changes"></a>Deprecations and Breaking Changes</h4>
 <div class="ulist">
 <ul>
 <li>
@@ -762,7 +609,7 @@ functions were changed from <code>callsInPlace(executable, EXACTLY_ONCE)</code> 
 </div>
 </div>
 <div class="sect3">
-<h4 id="release-notes-6.0.0-M1-junit-vintage-new-features-and-improvements"><a class="anchor" href="#release-notes-6.0.0-M1-junit-vintage-new-features-and-improvements"></a>New Features and Improvements</h4>
+<h4 id="release-notes-5.13.1-junit-vintage-new-features-and-improvements"><a class="anchor" href="#release-notes-5.13.1-junit-vintage-new-features-and-improvements"></a>New Features and Improvements</h4>
 <div class="ulist">
 <ul>
 <li>
