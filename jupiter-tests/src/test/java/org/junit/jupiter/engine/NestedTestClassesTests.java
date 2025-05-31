@@ -30,12 +30,9 @@ import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
 import org.junit.jupiter.api.Named;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedClass;
 import org.junit.jupiter.engine.NestedTestClassesTests.OuterClass.NestedClass.RecursiveNestedSiblingClass;
@@ -73,8 +70,11 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		assertEquals(3, tests.started().count(), "# tests started");
 		assertEquals(2, tests.succeeded().count(), "# tests succeeded");
 		assertEquals(1, tests.failed().count(), "# tests failed");
-		assertThat(tests.started().map(it -> it.getTestDescriptor().getDisplayName())) //
-				.containsExactly("someTest()", "successful()", "failing()");
+
+		assertThat(tests.started().map(it -> it.getTestDescriptor().getDisplayName()).toList()) //
+				.containsExactlyInAnyOrder("someTest()", "successful()", "failing()") //
+				.containsSubsequence("someTest()", "successful()") //
+				.containsSubsequence("someTest()", "failing()");
 
 		Events containers = executionResults.containerEvents();
 		assertEquals(3, containers.started().count(), "# containers started");
@@ -248,15 +248,12 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		}
 
 		@Nested
-		@TestMethodOrder(OrderAnnotation.class)
 		class NestedTestCase {
 
-			@Order(1)
 			@Test
 			void successful() {
 			}
 
-			@Order(2)
 			@Test
 			void failing() {
 				Assertions.fail("Something went horribly wrong");
