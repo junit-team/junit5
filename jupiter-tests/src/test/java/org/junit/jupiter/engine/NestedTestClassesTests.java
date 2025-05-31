@@ -71,7 +71,7 @@ class NestedTestClassesTests extends AbstractJupiterTestEngineTests {
 		assertEquals(2, tests.succeeded().count(), "# tests succeeded");
 		assertEquals(1, tests.failed().count(), "# tests failed");
 
-		assertThat(tests.started().map(it -> it.getTestDescriptor().getDisplayName()).toList()) //
+		assertThat(tests.started().map(it -> it.getTestDescriptor().getDisplayName())) //
 				.containsExactlyInAnyOrder("someTest()", "successful()", "failing()") //
 				.containsSubsequence("someTest()", "successful()") //
 				.containsSubsequence("someTest()", "failing()");
