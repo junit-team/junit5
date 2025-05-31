@@ -15,9 +15,10 @@ import java.math.BigInteger;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToNumberConverter implements StringToObjectConverter {
+class StringToNumberConverter extends StringToObjectConverter {
 
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
 		Byte.class, Byte::decode, //
@@ -34,12 +35,12 @@ class StringToNumberConverter implements StringToObjectConverter {
 	);
 
 	@Override
-	public boolean canConvertTo(Class<?> targetType) {
+	public boolean canConvert(@Nullable Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(String source, Class<?> targetType) {
+	public Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader) {
 		Function<String, ?> converter = Preconditions.notNull(CONVERTERS.get(targetType),
 			() -> "No registered converter for %s".formatted(targetType.getName()));
 		return converter.apply(source.replace("_", ""));
