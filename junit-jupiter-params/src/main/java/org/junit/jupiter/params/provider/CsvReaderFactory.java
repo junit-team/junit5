@@ -37,10 +37,28 @@ class CsvReaderFactory {
 	private static final char EMPTY_CHAR = '\0';
 	private static final int MAX_FIELDS = 512;
 
-	static CsvReader<? extends CsvRecord> createReaderFor(CsvSource csvSource, String data) {
+	static void validate(CsvSource csvSource) {
 		validateMaxCharsPerColumn(csvSource.maxCharsPerColumn());
+		validateDelimiter(csvSource.delimiter(), csvSource.delimiterString(), csvSource);
+	}
 
-		String delimiter = selectDelimiter(csvSource, csvSource.delimiter(), csvSource.delimiterString());
+	static void validate(CsvFileSource csvFileSource) {
+		validateMaxCharsPerColumn(csvFileSource.maxCharsPerColumn());
+		validateDelimiter(csvFileSource.delimiter(), csvFileSource.delimiterString(), csvFileSource);
+	}
+
+	private static void validateMaxCharsPerColumn(int maxCharsPerColumn) {
+		Preconditions.condition(maxCharsPerColumn > 0 || maxCharsPerColumn == -1,
+				() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
+	}
+
+	private static void validateDelimiter(char delimiter, String delimiterString, Annotation annotation) {
+		Preconditions.condition(delimiter == EMPTY_CHAR || delimiterString.isEmpty(),
+				() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
+	}
+
+	static CsvReader<? extends CsvRecord> createReaderFor(CsvSource csvSource, String data) {
+		String delimiter = selectDelimiter(csvSource.delimiter(), csvSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
 				.fieldSeparator(delimiter)
@@ -62,9 +80,7 @@ class CsvReaderFactory {
 	static CsvReader<? extends CsvRecord> createReaderFor(CsvFileSource csvFileSource, InputStream inputStream,
 			Charset charset) {
 
-		validateMaxCharsPerColumn(csvFileSource.maxCharsPerColumn());
-
-		String delimiter = selectDelimiter(csvFileSource, csvFileSource.delimiter(), csvFileSource.delimiterString());
+		String delimiter = selectDelimiter(csvFileSource.delimiter(), csvFileSource.delimiterString());
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
 				.fieldSeparator(delimiter)
@@ -83,15 +99,7 @@ class CsvReaderFactory {
 		return builder.build(callbackHandler, inputStream, charset);
 	}
 
-	private static void validateMaxCharsPerColumn(int maxCharsPerColumn) {
-		Preconditions.condition(maxCharsPerColumn > 0 || maxCharsPerColumn == -1,
-				() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
-	}
-
-	private static String selectDelimiter(Annotation annotation, char delimiter, String delimiterString) {
-		Preconditions.condition(delimiter == EMPTY_CHAR || delimiterString.isEmpty(),
-				() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
-
+	private static String selectDelimiter(char delimiter, String delimiterString) {
 		if (delimiter != EMPTY_CHAR) {
 			return String.valueOf(delimiter);
 		}

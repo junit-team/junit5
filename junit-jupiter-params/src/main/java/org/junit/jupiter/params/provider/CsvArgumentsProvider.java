@@ -36,6 +36,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvSource csvSource) {
 
+		CsvReaderFactory.validate(csvSource);
+
 		List<Arguments> arguments = new ArrayList<>();
 
 		try (CsvReader<? extends CsvRecord> reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {

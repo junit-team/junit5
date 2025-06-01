@@ -51,6 +51,9 @@ class CsvFileArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvFileS
 			CsvFileSource csvFileSource) {
 
 		Charset charset = getCharsetFrom(csvFileSource);
+
+		CsvReaderFactory.validate(csvFileSource);
+
 		Stream<Source> resources = Arrays.stream(csvFileSource.resources()).map(inputStreamProvider::classpathResource);
 		Stream<Source> files = Arrays.stream(csvFileSource.files()).map(inputStreamProvider::file);
 		List<Source> sources = Stream.concat(resources, files).toList();
