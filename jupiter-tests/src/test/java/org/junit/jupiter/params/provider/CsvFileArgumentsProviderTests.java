@@ -44,7 +44,6 @@ class CsvFileArgumentsProviderTests {
 	void providesArgumentsForNewlineAndComma() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\n")//
 				.delimiter(',')//
 				.build();
 
@@ -57,7 +56,6 @@ class CsvFileArgumentsProviderTests {
 	void providesArgumentsForCarriageReturnAndSemicolon() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\r")//
 				.delimiter(';')//
 				.build();
 
@@ -386,7 +384,6 @@ class CsvFileArgumentsProviderTests {
 	void emptyValueIsAnEmptyWithCustomNullValueString() {
 		var annotation = csvFileSource()//
 				.resources("test.csv")//
-				.lineSeparator("\n")//
 				.delimiter(',')//
 				.nullValues("NIL")//
 				.build();
