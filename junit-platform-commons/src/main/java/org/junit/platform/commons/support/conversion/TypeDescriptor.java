@@ -15,6 +15,7 @@ import static org.apiguardian.api.API.Status.EXPERIMENTAL;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
@@ -68,9 +69,18 @@ public final class TypeDescriptor {
 		return this != NONE ? type : null;
 	}
 
-	public @Nullable Class<?> getWrapperType() {
-		Class<?> wrapperType = ReflectionUtils.getWrapperType(type);
-		return wrapperType != null ? wrapperType : getType();
+	/**
+	 * Get the wrapper type of this type descriptor, if available.
+	 *
+	 * <p>If this type descriptor represents a primitive type, this method
+	 * returns the corresponding wrapped type. Otherwise, this method returns
+	 * {@link Optional#empty() empty()}.
+	 *
+	 * @return an {@code Optional} containing the wrapper type; never
+	 * {@code null} but potentially empty
+	 */
+	public Optional<Class<?>> getWrapperType() {
+		return Optional.ofNullable(ReflectionUtils.getWrapperType(type));
 	}
 
 	public boolean isPrimitive() {

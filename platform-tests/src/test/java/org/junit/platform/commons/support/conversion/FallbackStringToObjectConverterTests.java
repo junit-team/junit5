@@ -123,15 +123,11 @@ class FallbackStringToObjectConverterTests {
 	private static void assertConverts(String input, Class<?> targetType, Object expectedOutput) throws Exception {
 		assertThat(converter.canConvert(targetType)).isTrue();
 
-		var result = converter.convert(input, targetType, classLoader());
+		var result = converter.convert(input, targetType);
 
 		assertThat(result) //
 				.describedAs(input + " --(" + targetType.getName() + ")--> " + expectedOutput) //
 				.isEqualTo(expectedOutput);
-	}
-
-	private static ClassLoader classLoader() {
-		return ClassLoaderUtils.getClassLoader(FallbackStringToObjectConverterTests.class);
 	}
 
 	static class Book {

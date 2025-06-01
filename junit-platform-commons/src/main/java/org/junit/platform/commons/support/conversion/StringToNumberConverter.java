@@ -18,9 +18,9 @@ import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToNumberConverter extends StringToObjectConverter {
+class StringToNumberConverter extends StringToWrapperTypeConverter<Number> {
 
-	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
+	private static final Map<Class<? extends Number>, Function<String, ? extends Number>> CONVERTERS = Map.of( //
 		Byte.class, Byte::decode, //
 		Short.class, Short::decode, //
 		Integer.class, Integer::decode, //
@@ -35,13 +35,14 @@ class StringToNumberConverter extends StringToObjectConverter {
 	);
 
 	@Override
-	public boolean canConvert(@Nullable Class<?> targetType) {
+	boolean canConvert(@Nullable Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader) {
-		Function<String, ?> converter = Preconditions.notNull(CONVERTERS.get(targetType),
+	@Nullable
+	Number convert(@Nullable String source, Class<?> targetType) throws ConversionException {
+		Function<String, ? extends Number> converter = Preconditions.notNull(CONVERTERS.get(targetType),
 			() -> "No registered converter for %s".formatted(targetType.getName()));
 		return converter.apply(source.replace("_", ""));
 	}

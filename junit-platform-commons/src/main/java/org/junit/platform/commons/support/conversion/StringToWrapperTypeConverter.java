@@ -14,13 +14,15 @@ import org.jspecify.annotations.Nullable;
 
 /**
  * Internal API for converting arguments of type {@link String} to a specified
- * target type.
+ * wrapper type.
  */
-abstract class StringToObjectConverter implements Converter<String, Object> {
+abstract class StringToWrapperTypeConverter<T> implements Converter<String, T> {
 
 	@Override
-	public final boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
-		return canConvert(targetType.getType());
+	public final boolean canConvert(ConversionContext context) {
+		Class<?> targetTypeToUse = context.targetType().getWrapperType() //
+				.orElseGet(() -> context.targetType().getType());
+		return canConvert(targetTypeToUse);
 	}
 
 	/**
@@ -28,12 +30,13 @@ abstract class StringToObjectConverter implements Converter<String, Object> {
 	 * supplied target type (which is guaranteed to be a wrapper type for
 	 * primitives &mdash; for example, {@link Integer} instead of {@code int}).
 	 */
-	abstract boolean canConvert(@Nullable Class<?> targetType);
+	abstract boolean canConvert(Class<?> targetType);
 
 	@Override
-	public final Object convert(@Nullable String source, TypeDescriptor sourceType, TypeDescriptor targetType,
-			ClassLoader classLoader) {
-		return convert(source, targetType.getType(), classLoader);
+	public final @Nullable T convert(@Nullable String source, ConversionContext context) throws ConversionException {
+		Class<?> targetTypeToUse = context.targetType().getWrapperType() //
+				.orElseGet(() -> context.targetType().getType());
+		return convert(source, targetTypeToUse);
 	}
 
 	/**
@@ -44,6 +47,6 @@ abstract class StringToObjectConverter implements Converter<String, Object> {
 	 * <p>This method will only be invoked if {@link #canConvert(Class)}
 	 * returned {@code true} for the same target type.
 	 */
-	abstract Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader);
+	abstract @Nullable T convert(@Nullable String source, Class<?> targetType) throws ConversionException;
 
 }

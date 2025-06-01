@@ -26,7 +26,7 @@ import java.util.function.Function;
 import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.util.Preconditions;
 
-class StringToCommonJavaTypesConverter extends StringToObjectConverter {
+class StringToCommonJavaTypesConverter extends StringToTargetTypeConverter<Object> {
 
 	@SuppressWarnings("deprecation")
 	private static final Map<Class<?>, Function<String, ?>> CONVERTERS = Map.of( //
@@ -44,12 +44,12 @@ class StringToCommonJavaTypesConverter extends StringToObjectConverter {
 	);
 
 	@Override
-	public boolean canConvert(@Nullable Class<?> targetType) {
+	boolean canConvert(@Nullable Class<?> targetType) {
 		return CONVERTERS.containsKey(targetType);
 	}
 
 	@Override
-	public Object convert(@Nullable String source, @Nullable Class<?> targetType, ClassLoader classLoader) {
+	Object convert(@Nullable String source, @Nullable Class<?> targetType) {
 		Function<String, ?> converter = Preconditions.notNull(CONVERTERS.get(targetType),
 			() -> "No registered converter for %s".formatted(targetType != null ? targetType.getName() : null));
 		return converter.apply(source);

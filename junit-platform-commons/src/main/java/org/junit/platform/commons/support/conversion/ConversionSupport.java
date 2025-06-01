@@ -19,7 +19,6 @@ import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
-import org.junit.platform.commons.util.ClassLoaderUtils;
 
 /**
  * {@code ConversionSupport} provides static utility methods for converting a
@@ -79,20 +78,19 @@ public final class ConversionSupport {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public static <T> @Nullable T convert(@Nullable Object source, TypeDescriptor targetType,
 			@Nullable ClassLoader classLoader) {
-		TypeDescriptor sourceType = TypeDescriptor.forInstance(source);
-		ClassLoader classLoaderToUse = classLoader != null ? classLoader : ClassLoaderUtils.getDefaultClassLoader();
-		ServiceLoader<Converter> serviceLoader = ServiceLoader.load(Converter.class, classLoaderToUse);
+		ConversionContext context = new ConversionContext(source, targetType, classLoader);
+		ServiceLoader<Converter> serviceLoader = ServiceLoader.load(Converter.class, context.classLoader());
 
 		Converter converter = Stream.concat( //
 			StreamSupport.stream(serviceLoader.spliterator(), false), //
 			Stream.of(DefaultConverter.INSTANCE)) //
-				.filter(candidate -> candidate.canConvert(sourceType, targetType)) //
+				.filter(candidate -> candidate.canConvert(context)) //
 				.findFirst() //
 				.orElseThrow(() -> new ConversionException(
 					"No registered or built-in converter for source '%s' and target type %s".formatted( //
 						source, targetType.getTypeName())));
 
-		return (T) converter.convert(source, sourceType, targetType, classLoaderToUse);
+		return (T) converter.convert(source, context);
 	}
 
 }

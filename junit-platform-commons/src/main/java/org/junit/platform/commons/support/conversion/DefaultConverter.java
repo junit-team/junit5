@@ -48,8 +48,7 @@ public class DefaultConverter implements Converter<String, Object> {
 
 	static final DefaultConverter INSTANCE = new DefaultConverter();
 
-	private static final List<StringToObjectConverter> stringToObjectConverters = List.of(
-		new StringToBooleanConverter(), //
+	private static final List<Converter<String, ?>> stringToObjectConverters = List.of(new StringToBooleanConverter(), //
 		new StringToCharacterConverter(), //
 		new StringToNumberConverter(), //
 		new StringToClassConverter(), //
@@ -64,30 +63,27 @@ public class DefaultConverter implements Converter<String, Object> {
 	}
 
 	/**
-	 * Determine if the supplied source type can be converted into an instance
-	 * of the specified target type.
+	 * Determine if the supplied conversion context is supported.
+	 * <p>FIXME add more content from {@link Converter#convert} about the conversion algorithm
 	 *
-	 * @param sourceType the descriptor of the source type; never {@code null}
-	 * @param targetType the target type the source should be converted into;
-	 * never {@code null}
-	 * @return {@code true} if the supplied source can be converted
+	 * @param context the context for the conversion; never {@code null}
+	 * @return {@code true} if the conversion is supported
 	 */
 	@Override
-	public boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
-		if (sourceType == TypeDescriptor.NONE) {
-			return !targetType.isPrimitive();
+	public boolean canConvert(ConversionContext context) {
+		if (context.sourceType() == TypeDescriptor.NONE) {
+			return !context.targetType().isPrimitive();
 		}
 
-		if (!(String.class.equals(sourceType.getType()))) {
+		if (!(String.class.equals(context.sourceType().getType()))) {
 			return false;
 		}
 
-		if (String.class.equals(targetType.getType())) {
+		if (String.class.equals(context.targetType().getType())) {
 			return true;
 		}
 
-		return stringToObjectConverters.stream().anyMatch(
-			candidate -> candidate.canConvert(targetType.getWrapperType()));
+		return stringToObjectConverters.stream().anyMatch(candidate -> candidate.canConvert(context));
 	}
 
 	/**
@@ -124,37 +120,32 @@ public class DefaultConverter implements Converter<String, Object> {
 	 * If neither a single factory method nor a single constructor is found, the
 	 * convention-based conversion strategy will not apply.
 	 *
-	 * @param source the source {@link String} to convert; may be {@code null} but only
-	 * if the target type is a reference type
-	 * @param sourceType the descriptor of the source type; never {@code null}
-	 * @param targetType the descriptor of the type the source should be converted into;
-	 * never {@code null}
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @param source the source {@link String} to convert; may be {@code null}
+	 * but only if the target type is a reference type
+	 * @param context the context for the conversion; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Override
-	public @Nullable Object convert(@Nullable String source, TypeDescriptor sourceType, TypeDescriptor targetType,
-			ClassLoader classLoader) throws ConversionException {
+	public @Nullable Object convert(@Nullable String source, ConversionContext context) throws ConversionException {
 		if (source == null) {
-			if (targetType.isPrimitive()) {
+			if (context.targetType().isPrimitive()) {
 				throw new ConversionException(
-					"Cannot convert null to primitive value of type " + targetType.getTypeName());
+					"Cannot convert null to primitive value of type " + context.targetType().getTypeName());
 			}
 			return null;
 		}
 
-		if (String.class.equals(targetType.getType())) {
+		if (String.class.equals(context.targetType().getType())) {
 			return source;
 		}
 
-		Class<?> targetTypeToUse = targetType.getWrapperType();
-		Optional<StringToObjectConverter> converter = stringToObjectConverters.stream().filter(
-			candidate -> candidate.canConvert(targetTypeToUse)).findFirst();
+		Optional<Converter<String, ?>> converter = stringToObjectConverters.stream().filter(
+			candidate -> candidate.canConvert(context)).findFirst();
 		if (converter.isPresent()) {
 			try {
-				return converter.get().convert(source, targetTypeToUse, classLoader);
+				return converter.get().convert(source, context);
 			}
 			catch (Exception ex) {
 				if (ex instanceof ConversionException) {
@@ -163,12 +154,13 @@ public class DefaultConverter implements Converter<String, Object> {
 				}
 				// else
 				throw new ConversionException(
-					"Failed to convert String \"%s\" to type %s".formatted(source, targetType.getTypeName()), ex);
+					"Failed to convert String \"%s\" to type %s".formatted(source, context.targetType().getTypeName()),
+					ex);
 			}
 		}
 
-		throw new ConversionException(
-			"No built-in converter for source type java.lang.String and target type " + targetType.getTypeName());
+		throw new ConversionException("No built-in converter for source type java.lang.String and target type "
+				+ context.targetType().getTypeName());
 	}
 
 }

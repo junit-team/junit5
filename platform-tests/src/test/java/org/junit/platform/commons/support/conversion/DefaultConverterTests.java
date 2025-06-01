@@ -343,7 +343,7 @@ class DefaultConverterTests {
 	}
 
 	private boolean canConvert(@Nullable String input, TypeDescriptor targetClass) {
-		return DefaultConverter.INSTANCE.canConvert(TypeDescriptor.forInstance(input), targetClass);
+		return DefaultConverter.INSTANCE.canConvert(new ConversionContext(input, targetClass, classLoader()));
 	}
 
 	private @Nullable Object convert(@Nullable String input, TypeDescriptor targetClass) {
@@ -351,7 +351,7 @@ class DefaultConverterTests {
 	}
 
 	private @Nullable Object convert(@Nullable String input, TypeDescriptor targetClass, ClassLoader classLoader) {
-		return DefaultConverter.INSTANCE.convert(input, TypeDescriptor.forInstance(input), targetClass, classLoader);
+		return DefaultConverter.INSTANCE.convert(input, new ConversionContext(input, targetClass, classLoader));
 	}
 
 	private static ClassLoader classLoader() {

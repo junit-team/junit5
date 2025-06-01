@@ -29,6 +29,9 @@ import org.jspecify.annotations.Nullable;
  * from a given source type into a given target type and does not need access to
  * the {@link ClassLoader} to perform the conversion.
  *
+ * @param <S>
+ * @param <T>
+ *
  * @since 6.0
  * @see ConversionSupport
  * @see TypedConverter
@@ -37,34 +40,26 @@ import org.jspecify.annotations.Nullable;
 public interface Converter<S, T> {
 
 	/**
-	 * Determine if the supplied source type can be converted into an instance
-	 * of the specified target type.
+	 * Determine if the supplied conversion context is supported.
 	 *
-	 * @param sourceType the descriptor of the source type; never {@code null}
-	 * @param targetType the descriptor of the type the source should be converted into;
-	 * never {@code null}
-	 * @return {@code true} if the supplied source type can be converted
+	 * @param context the context for the conversion; never {@code null}
+	 * @return {@code true} if the conversion is supported
 	 */
-	boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType);
+	boolean canConvert(ConversionContext context);
 
 	/**
-	 * Convert the supplied source object into an instance of the specified
-	 * target type.
-	 * <p>This method will only be invoked if {@link #canConvert(TypeDescriptor, TypeDescriptor)}
-	 * returned {@code true} for the same type descriptors.
+	 * Convert the supplied source object according to the supplied conversion context.
+	 * <p>This method will only be invoked if {@link #canConvert(ConversionContext)}
+	 * returned {@code true} for the same context.
 	 *
-	 * @param source the source object to convert; may be {@code null} but only
-	 * if the target type is a reference type
-	 * @param sourceType the descriptor of the source type; never {@code null}
-	 * @param targetType the descriptor of the type the source should be converted into;
-	 * never {@code null}
-	 * @param classLoader the {@code ClassLoader} to use; never {@code null}
+	 * @param source the source object to convert; may be {@code null}
+	 * but only if the target type is a reference type
+	 * @param context the context for the conversion; never {@code null}
 	 * @return the converted object; may be {@code null} but only if the target
 	 * type is a reference type
 	 * @throws ConversionException if an error occurs during the conversion
 	 */
 	@Nullable
-	T convert(@Nullable S source, TypeDescriptor sourceType, TypeDescriptor targetType, ClassLoader classLoader)
-			throws ConversionException;
+	T convert(@Nullable S source, ConversionContext context) throws ConversionException;
 
 }

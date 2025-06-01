@@ -44,14 +44,13 @@ public abstract class TypedConverter<S, T> implements Converter<S, T> {
 	}
 
 	@Override
-	public final boolean canConvert(TypeDescriptor sourceType, TypeDescriptor targetType) {
+	public final boolean canConvert(ConversionContext context) {
 		// FIXME add test cases with subtypes
-		return this.sourceType == sourceType.getType() && this.targetType == targetType.getType();
+		return this.sourceType == context.sourceType().getType() && this.targetType == context.targetType().getType();
 	}
 
 	@Override
-	public final @Nullable T convert(@Nullable S source, TypeDescriptor sourceType, TypeDescriptor targetType,
-			ClassLoader classLoader) {
+	public final @Nullable T convert(@Nullable S source, ConversionContext context) {
 		return convert(source);
 	}
 
