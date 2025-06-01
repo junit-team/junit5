@@ -54,7 +54,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
 	private static String getData(CsvSource csvSource) {
 		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
-				() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
+			() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
 
 		if (!csvSource.textBlock().isEmpty()) {
 			return csvSource.textBlock();
@@ -77,11 +77,12 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	 */
 	static Arguments processCsvRecord(CsvRecord record, boolean useHeadersInDisplayName) {
 		Preconditions.condition(!useHeadersInDisplayName || record.getFieldCount() <= getHeaders(record).size(),
-				() -> String.format( //
-						"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
-						record.getFieldCount(), getHeaders(record).size(), record.getFields())); //
+			() -> String.format( //
+				"The number of columns (%d) exceeds the number of supplied headers (%d) in CSV record: %s", //
+				record.getFieldCount(), getHeaders(record).size(), record.getFields())); //
 
-		@Nullable Object[] arguments = new Object[record.getFields().size()];
+		@Nullable
+		Object[] arguments = new Object[record.getFields().size()];
 
 		for (int i = 0; i < record.getFields().size(); i++) {
 			String field = record.getFields().get(i);

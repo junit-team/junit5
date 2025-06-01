@@ -49,12 +49,12 @@ class CsvReaderFactory {
 
 	private static void validateMaxCharsPerColumn(int maxCharsPerColumn) {
 		Preconditions.condition(maxCharsPerColumn > 0 || maxCharsPerColumn == -1,
-				() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
+			() -> "maxCharsPerColumn must be a positive number or -1: " + maxCharsPerColumn);
 	}
 
 	private static void validateDelimiter(char delimiter, String delimiterString, Annotation annotation) {
 		Preconditions.condition(delimiter == EMPTY_CHAR || delimiterString.isEmpty(),
-				() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
+			() -> "The delimiter and delimiterString attributes cannot be set simultaneously in " + annotation);
 	}
 
 	static CsvReader<? extends CsvRecord> createReaderFor(CsvSource csvSource, String data) {
