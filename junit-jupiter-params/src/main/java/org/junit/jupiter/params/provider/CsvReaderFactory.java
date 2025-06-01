@@ -29,7 +29,7 @@ import de.siegmar.fastcsv.reader.NamedCsvRecordHandler;
 import org.junit.platform.commons.util.Preconditions;
 
 /**
- * @since 5.13
+ * @since 6.0
  */
 class CsvReaderFactory {
 
