@@ -32,8 +32,6 @@ import org.junit.platform.commons.util.UnrecoverableExceptions;
  */
 class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 
-	private static final String LINE_SEPARATOR = "\n";
-
 	@Override
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvSource csvSource) {
@@ -66,7 +64,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 					throw new PreconditionViolationException(message);
 				}
 			}
-			return String.join(LINE_SEPARATOR, csvSource.value());
+			return String.join("\n", csvSource.value());
 		}
 	}
 
