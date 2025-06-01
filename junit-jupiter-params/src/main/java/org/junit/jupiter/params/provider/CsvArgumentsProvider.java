@@ -38,9 +38,6 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	protected Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters, ExtensionContext context,
 			CsvSource csvSource) {
 
-		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
-				() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
-
 		List<Arguments> arguments = new ArrayList<>();
 
 		try (CsvReader<? extends CsvRecord> reader = CsvReaderFactory.createReaderFor(csvSource, getData(csvSource))) {
@@ -56,6 +53,9 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 	}
 
 	private static String getData(CsvSource csvSource) {
+		Preconditions.condition(csvSource.value().length > 0 ^ !csvSource.textBlock().isEmpty(),
+				() -> "@CsvSource must be declared with either `value` or `textBlock` but not both");
+
 		if (!csvSource.textBlock().isEmpty()) {
 			return csvSource.textBlock();
 		}
