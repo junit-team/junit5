@@ -441,6 +441,7 @@ class LauncherFactoryTests {
 		return request()
 				.selectors(selectClass(JUnit4Example.class))
 				.selectors(selectClass(JUnit5Example.class))
+				.enableImplicitConfigurationParameters(false)
 				.build();
 		// @formatter:on
 	}
