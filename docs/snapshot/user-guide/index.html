@@ -8568,6 +8568,20 @@ plenty of time to migrate to JUnit Jupiter on their own schedule.</p>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-running"><a class="anchor" href="#migrating-from-junit4-running"></a>3.1. Running JUnit 4 Tests on the JUnit Platform</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+The JUnit Vintage engine is deprecated and should only be used temporarily while
+migrating tests to JUnit Jupiter or another testing framework with native JUnit Platform
+support.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Make sure that the <code>junit-vintage-engine</code> artifact is in your test runtime path. In that
 case JUnit 3 and JUnit 4 tests will automatically be picked up by the JUnit Platform
@@ -8972,6 +8986,19 @@ annotations.</p>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-rule-support"><a class="anchor" href="#migrating-from-junit4-rule-support"></a>3.4. Limited JUnit 4 Rule Support</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<em>JUnit 4 rule support</em> is deprecated for removal since version 6.0.0. Please
+migrate to the corresponding APIs and extensions provided by JUnit Jupiter.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>As stated above, JUnit Jupiter does not and will not support JUnit 4 rules natively. The
 JUnit team realizes, however, that many organizations, especially large ones, are likely
@@ -9019,6 +9046,19 @@ extension model of JUnit Jupiter instead of the rule-based model of JUnit 4.</p>
 </div>
 <div class="sect2">
 <h3 id="migrating-from-junit4-ignore-annotation-support"><a class="anchor" href="#migrating-from-junit4-ignore-annotation-support"></a>3.5. JUnit 4 @Ignore Support</h3>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<em>JUnit 4 <code>@Ignore</code> support</em> is deprecated for removal since version 6.0.0. Please
+use JUnit Jupiter&#8217;s <code>@Disabled</code> annotation instead.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>In order to provide a smooth migration path from JUnit 4 to JUnit Jupiter, the
 <code>junit-jupiter-migrationsupport</code> module provides support for JUnit 4&#8217;s <code>@Ignore</code>
@@ -9040,6 +9080,7 @@ automatically registers the <code>IgnoreCondition</code> along with
 <span class="kn">import</span> <span class="nn">org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport</span><span class="o">;</span>
 
 <span class="c1">// @ExtendWith(IgnoreCondition.class)</span>
+<span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">"removal"</span><span class="o">)</span>
 <span class="nd">@EnableJUnit4MigrationSupport</span>
 <span class="kd">class</span> <span class="nc">IgnoredTestsDemo</span> <span class="o">{</span>
 
@@ -16877,6 +16918,76 @@ since such APIs will likely be removed in an upcoming release.</p>
 </tr>
 </tbody>
 </table>
+<h4 id="module-org-junit-jupiter-migrationsupport" class="discrete">Module org.junit.jupiter.migrationsupport</h4>
+<h5 id="package-org-junit-jupiter-migrationsupport" class="discrete">Package org.junit.jupiter.migrationsupport</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 99%;">
+<col style="width: 1%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Since</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EnableJUnit4MigrationSupport</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+</tbody>
+</table>
+<h5 id="package-org-junit-jupiter-migrationsupport-conditions" class="discrete">Package org.junit.jupiter.migrationsupport.conditions</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 99%;">
+<col style="width: 1%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Since</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>IgnoreCondition</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+</tbody>
+</table>
+<h5 id="package-org-junit-jupiter-migrationsupport-rules" class="discrete">Package org.junit.jupiter.migrationsupport.rules</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 99%;">
+<col style="width: 1%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Since</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>@EnableRuleMigrationSupport</code> <em>(annotation)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExpectedExceptionSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ExternalResourceSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VerifierSupport</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+</tbody>
+</table>
 <h4 id="module-org-junit-jupiter-params-2" class="discrete">Module org.junit.jupiter.params</h4>
 <h5 id="package-org-junit-jupiter-params-provider-2" class="discrete">Package org.junit.jupiter.params.provider</h5>
 <table class="tableblock frame-all grid-all stretch">
@@ -16986,6 +17097,30 @@ since such APIs will likely be removed in an upcoming release.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>SuiteLauncherDiscoveryRequestBuilder.&ZeroWidthSpace;suite(Class&lt;?&gt;)</code> <em>(method)</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>1.11</code></p></td>
+</tr>
+</tbody>
+</table>
+<h4 id="module-org-junit-vintage-engine" class="discrete">Module org.junit.vintage.engine</h4>
+<h5 id="package-org-junit-vintage-engine" class="discrete">Package org.junit.vintage.engine</h5>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 99%;">
+<col style="width: 1%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Name</th>
+<th class="tableblock halign-left valign-top">Since</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Constants</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>VintageTestEngine</code> <em>(class)</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>6.0</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -17195,8 +17330,8 @@ simplified dependency management in build tools such as Gradle and Maven.</p>
 </dd>
 <dt class="hdlist1"><code>junit-jupiter-migrationsupport</code></dt>
 <dd>
-<p>Support for migrating from JUnit 4 to JUnit Jupiter; only required for support for
-JUnit 4&#8217;s <code>@Ignore</code> annotation and for running selected JUnit 4 rules.</p>
+<p><em>Deprecated</em> support for migrating from JUnit 4 to JUnit Jupiter; only required for
+support for JUnit 4&#8217;s <code>@Ignore</code> annotation and for running selected JUnit 4 rules.</p>
 </dd>
 </dl>
 </div>

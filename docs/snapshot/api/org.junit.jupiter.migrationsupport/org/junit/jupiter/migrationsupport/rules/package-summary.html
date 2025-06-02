@@ -76,7 +76,8 @@ loadScripts(document, 'script');</script>
 <div class="package-signature"><span class="annotations">@NullMarked
 </span>package <span class="element-name">org.junit.jupiter.migrationsupport.rules</span></div>
 <section class="package-description" id="package-description">
-<div class="block">Extensions which provide (limited) support for JUnit 4 rules within JUnit Jupiter.</div>
+<div class="block"><em>Deprecated</em> extensions which provide (limited) support for JUnit 4
+ rules within JUnit Jupiter.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -88,21 +89,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><a href="../package-summary.html">org.junit.jupiter.migrationsupport</a></div>
 <div class="col-last even-row-color">
-<div class="block">Support for migrating from JUnit 4 to JUnit Jupiter.</div>
+<div class="block"><em>Deprecated</em> support for migrating from JUnit 4 to JUnit Jupiter.</div>
 </div>
 <div class="col-first odd-row-color"><a href="adapter/package-summary.html">org.junit.jupiter.migrationsupport.rules.adapter</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Simple wrappers for JUnit 4 rules to overcome visibility limitations of the JUnit 4 implementations.</div>
+<div class="block"><em>Internal</em> wrappers for JUnit 4 rules to overcome visibility
+ limitations of the JUnit 4 implementations.</div>
 </div>
 <div class="col-first even-row-color"><a href="member/package-summary.html">org.junit.jupiter.migrationsupport.rules.member</a></div>
 <div class="col-last even-row-color">
-<div class="block">Abstractions for members which can be targets of JUnit 4 rule annotations.</div>
+<div class="block"><em>Internal</em> abstractions for members which can be targets of JUnit 4 rule annotations.</div>
 </div>
 <div class="col-first odd-row-color"><a href="../conditions/package-summary.html">org.junit.jupiter.migrationsupport.conditions</a></div>
 <div class="col-last odd-row-color">
-<div class="block">Extensions which provide support for conditional test execution features of
- JUnit 4 (e.g., the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/Ignore.html" title="class or interface in org.junit" class="external-link"><code>@Ignore</code></a> annotation) within JUnit
- Jupiter.</div>
+<div class="block"><em>Deprecated</em> extensions that provide support for conditional test
+ execution features of JUnit 4 (e.g., the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/Ignore.html" title="class or interface in org.junit" class="external-link"><code>@Ignore</code></a>
+ annotation) within JUnit Jupiter.</div>
 </div>
 </div>
 </div>
@@ -115,24 +117,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Class</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color class-summary class-summary-tab6"><a href="EnableRuleMigrationSupport.html" title="annotation interface in org.junit.jupiter.migrationsupport.rules">EnableRuleMigrationSupport</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab6">
-<div class="block">This class-level annotation enables native JUnit 4 rule support
- within JUnit Jupiter.</div>
+<div class="col-last even-row-color class-summary class-summary-tab6">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Please migrate to Jupiter extensions.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="ExpectedExceptionSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">ExpectedExceptionSupport</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">This <code>Extension</code> provides native support for the
- <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/ExpectedException.html" title="class or interface in org.junit.rules" class="external-link"><code>ExpectedException</code></a> rule from JUnit 4.</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Please use
+ <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable)"><code>Assertions.assertThrows(Class, Executable)</code></a>
+ instead.</div>
 </div>
 <div class="col-first even-row-color class-summary class-summary-tab2"><a href="ExternalResourceSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">ExternalResourceSupport</a></div>
-<div class="col-last even-row-color class-summary class-summary-tab2">
-<div class="block">This <code>Extension</code> provides native support for subclasses of
- the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/ExternalResource.html" title="class or interface in org.junit.rules" class="external-link"><code>ExternalResource</code></a> rule from JUnit 4.</div>
+<div class="col-last even-row-color class-summary class-summary-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Please use <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/AutoClose.html" title="annotation interface in org.junit.jupiter.api"><code>@AutoClose</code></a> instead.</div>
 </div>
 <div class="col-first odd-row-color class-summary class-summary-tab2"><a href="VerifierSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">VerifierSupport</a></div>
-<div class="col-last odd-row-color class-summary class-summary-tab2">
-<div class="block">This <code>Extension</code> provides native support for subclasses of
- the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/Verifier.html" title="class or interface in org.junit.rules" class="external-link"><code>Verifier</code></a> rule from JUnit 4.</div>
+<div class="col-last odd-row-color class-summary class-summary-tab2">Deprecated, for removal: This API element is subject to removal in a future version.
+<div class="deprecation-comment">Please implement <a href="../../../../../../org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a> instead.</div>
 </div>
 </div>
 </div>

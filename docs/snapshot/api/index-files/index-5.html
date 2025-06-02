@@ -151,8 +151,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html" class="type-name-link" title="annotation interface in org.junit.jupiter.migrationsupport">EnableJUnit4MigrationSupport</a> - Annotation Interface in <a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/package-summary.html">org.junit.jupiter.migrationsupport</a></dt>
 <dd>
-<div class="block"><code>EnableJUnit4MigrationSupport</code> is a class-level annotation that
- enables all JUnit 4 migration support within JUnit Jupiter.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Please migrate to Jupiter extensions and use
+ <a href="../org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html" title="annotation interface in org.junit.jupiter.api"><code>@Disabled</code></a> instead.</div>
+</div>
 </dd>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html#enableLauncherDiscoveryListenerAutoRegistration(boolean)" class="member-name-link">enableLauncherDiscoveryListenerAutoRegistration(boolean)</a> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
 <dd>
@@ -170,8 +172,9 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html" class="type-name-link" title="annotation interface in org.junit.jupiter.migrationsupport.rules">EnableRuleMigrationSupport</a> - Annotation Interface in <a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/package-summary.html">org.junit.jupiter.migrationsupport.rules</a></dt>
 <dd>
-<div class="block">This class-level annotation enables native JUnit 4 rule support
- within JUnit Jupiter.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Please migrate to Jupiter extensions.</div>
+</div>
 </dd>
 <dt><a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html#enableTestEngineAutoRegistration(boolean)" class="member-name-link">enableTestEngineAutoRegistration(boolean)</a> - Method in class org.junit.platform.launcher.core.<a href="../org.junit.platform.launcher/org/junit/platform/launcher/core/LauncherConfig.Builder.html" title="class in org.junit.platform.launcher.core">LauncherConfig.Builder</a></dt>
 <dd>
@@ -436,6 +439,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html#evaluateExecutionCondition(org.junit.jupiter.api.extension.ExtensionContext)" class="member-name-link">evaluateExecutionCondition(ExtensionContext)</a> - Method in class org.junit.jupiter.migrationsupport.conditions.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html" title="class in org.junit.jupiter.migrationsupport.conditions">IgnoreCondition</a></dt>
 <dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 <div class="block">Containers/tests are disabled if <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/Ignore.html" title="class or interface in org.junit" class="external-link"><code>@Ignore</code></a> is present on
  the test class or method.</div>
 </dd>
@@ -695,7 +699,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="../org.junit.platform.suite.engine/org/junit/platform/suite/engine/SuiteTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)" class="member-name-link">execute(ExecutionRequest)</a> - Method in class org.junit.platform.suite.engine.<a href="../org.junit.platform.suite.engine/org/junit/platform/suite/engine/SuiteTestEngine.html" title="class in org.junit.platform.suite.engine">SuiteTestEngine</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.vintage.engine/org/junit/vintage/engine/VintageTestEngine.html#execute(org.junit.platform.engine.ExecutionRequest)" class="member-name-link">execute(ExecutionRequest)</a> - Method in class org.junit.vintage.engine.<a href="../org.junit.vintage.engine/org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">VintageTestEngine</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html#execute(org.junit.platform.engine.support.hierarchical.ThrowableCollector.Executable)" class="member-name-link">execute(ThrowableCollector.Executable)</a> - Method in class org.junit.platform.engine.support.hierarchical.<a href="../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.html" title="class in org.junit.platform.engine.support.hierarchical">ThrowableCollector</a></dt>
 <dd>
 <div class="block">Execute the supplied <a href="../org.junit.platform.engine/org/junit/platform/engine/support/hierarchical/ThrowableCollector.Executable.html" title="interface in org.junit.platform.engine.support.hierarchical"><code>ThrowableCollector.Executable</code></a> and collect any <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link"><code>Throwable</code></a>
@@ -918,11 +924,16 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html" class="type-name-link" title="class in org.junit.jupiter.migrationsupport.rules">ExpectedExceptionSupport</a> - Class in <a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/package-summary.html">org.junit.jupiter.migrationsupport.rules</a></dt>
 <dd>
-<div class="block">This <code>Extension</code> provides native support for the
- <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/ExpectedException.html" title="class or interface in org.junit.rules" class="external-link"><code>ExpectedException</code></a> rule from JUnit 4.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Please use
+ <a href="../org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable)"><code>Assertions.assertThrows(Class, Executable)</code></a>
+ instead.</div>
+</div>
 </dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html#%3Cinit%3E()" class="member-name-link">ExpectedExceptionSupport()</a> - Constructor for class org.junit.jupiter.migrationsupport.rules.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">ExpectedExceptionSupport</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html#extend()" class="member-name-link">extend()</a> - Method in class org.junit.jupiter.engine.execution.<a href="../org.junit.jupiter.engine/org/junit/jupiter/engine/execution/JupiterEngineExecutionContext.html" title="class in org.junit.jupiter.engine.execution">JupiterEngineExecutionContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/ExtendWith.html" class="type-name-link" title="annotation interface in org.junit.jupiter.api.extension">ExtendWith</a> - Annotation Interface in <a href="../org.junit.jupiter.api/org/junit/jupiter/api/extension/package-summary.html">org.junit.jupiter.api.extension</a></dt>
@@ -1040,11 +1051,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.html" class="type-name-link" title="class in org.junit.jupiter.migrationsupport.rules">ExternalResourceSupport</a> - Class in <a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/package-summary.html">org.junit.jupiter.migrationsupport.rules</a></dt>
 <dd>
-<div class="block">This <code>Extension</code> provides native support for subclasses of
- the <a href="https://junit.org/junit4/javadoc/4.13.2/org/junit/rules/ExternalResource.html" title="class or interface in org.junit.rules" class="external-link"><code>ExternalResource</code></a> rule from JUnit 4.</div>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated, for removal: This API element is subject to removal in a future version.</span>
+<div class="deprecation-comment">Please use <a href="../org.junit.jupiter.api/org/junit/jupiter/api/AutoClose.html" title="annotation interface in org.junit.jupiter.api"><code>@AutoClose</code></a> instead.</div>
+</div>
 </dd>
 <dt><a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.html#%3Cinit%3E()" class="member-name-link">ExternalResourceSupport()</a> - Constructor for class org.junit.jupiter.migrationsupport.rules.<a href="../org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">ExternalResourceSupport</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
+&nbsp;</dd>
 </dl>
 <a href="index-1.html">A</a>&nbsp;<a href="index-2.html">B</a>&nbsp;<a href="index-3.html">C</a>&nbsp;<a href="index-4.html">D</a>&nbsp;<a href="index-5.html">E</a>&nbsp;<a href="index-6.html">F</a>&nbsp;<a href="index-7.html">G</a>&nbsp;<a href="index-8.html">H</a>&nbsp;<a href="index-9.html">I</a>&nbsp;<a href="index-10.html">J</a>&nbsp;<a href="index-11.html">K</a>&nbsp;<a href="index-12.html">L</a>&nbsp;<a href="index-13.html">M</a>&nbsp;<a href="index-14.html">N</a>&nbsp;<a href="index-15.html">O</a>&nbsp;<a href="index-16.html">P</a>&nbsp;<a href="index-17.html">Q</a>&nbsp;<a href="index-18.html">R</a>&nbsp;<a href="index-19.html">S</a>&nbsp;<a href="index-20.html">T</a>&nbsp;<a href="index-21.html">U</a>&nbsp;<a href="index-22.html">V</a>&nbsp;<a href="index-23.html">W</a>&nbsp;<br><a href="../allclasses-index.html">All&nbsp;Classes&nbsp;and&nbsp;Interfaces</a><span class="vertical-separator">|</span><a href="../allpackages-index.html">All&nbsp;Packages</a><span class="vertical-separator">|</span><a href="../constant-values.html">Constant&nbsp;Field&nbsp;Values</a><span class="vertical-separator">|</span><a href="../serialized-form.html">Serialized&nbsp;Form</a></main>
 </div>

@@ -58,7 +58,9 @@ loadScripts(document, 'script');</script>
 <ul class="contents-list">
 <li id="contents-for-removal"><a href="#for-removal">Terminally Deprecated</a></li>
 <li id="contents-interface"><a href="#interface">Interfaces</a></li>
+<li id="contents-class"><a href="#class">Classes</a></li>
 <li id="contents-enum-class"><a href="#enum-class">Enum Classes</a></li>
+<li id="contents-annotation-interface"><a href="#annotation-interface">Annotation Interfaces</a></li>
 <li id="contents-field"><a href="#field">Fields</a></li>
 <li id="contents-method"><a href="#method">Methods</a></li>
 <li id="contents-constructor"><a href="#constructor">Constructors</a></li>
@@ -108,6 +110,33 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">No longer supported at runtime; please use <a href="org.junit.jupiter.api/org/junit/jupiter/api/condition/JRE.html#JAVA_17"><code>JRE.JAVA_17</code></a> or later</div>
 </div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html" title="class in org.junit.jupiter.migrationsupport.conditions">org.junit.jupiter.migrationsupport.conditions.IgnoreCondition</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please use <a href="org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html" title="annotation interface in org.junit.jupiter.api"><code>@Disabled</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html" title="annotation interface in org.junit.jupiter.migrationsupport">org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please migrate to Jupiter extensions and use
+ <a href="org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html" title="annotation interface in org.junit.jupiter.api"><code>@Disabled</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html" title="annotation interface in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please migrate to Jupiter extensions.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.ExpectedExceptionSupport</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please use
+ <a href="org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable)"><code>Assertions.assertThrows(Class, Executable)</code></a>
+ instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please use <a href="org.junit.jupiter.api/org/junit/jupiter/api/AutoClose.html" title="annotation interface in org.junit.jupiter.api"><code>@AutoClose</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/VerifierSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.VerifierSupport</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please implement <a href="org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a> instead.</div>
+</div>
 <div class="col-summary-item-name odd-row-color"><a href="org.junit.platform.engine/org/junit/platform/engine/Filter.html#adaptFilter(org.junit.platform.engine.Filter,java.util.function.Function)">org.junit.platform.engine.Filter.adaptFilter<wbr>(Filter&lt;V&gt;, Function&lt;T, V&gt;)</a></div>
 <div class="col-last odd-row-color"></div>
 </div>
@@ -131,6 +160,45 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="block-list">
 <li>
+<div id="class">
+<div class="caption"><span>Deprecated Classes</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/conditions/IgnoreCondition.html" title="class in org.junit.jupiter.migrationsupport.conditions">org.junit.jupiter.migrationsupport.conditions.IgnoreCondition</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please use <a href="org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html" title="annotation interface in org.junit.jupiter.api"><code>@Disabled</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExpectedExceptionSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.ExpectedExceptionSupport</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please use
+ <a href="org.junit.jupiter.api/org/junit/jupiter/api/Assertions.html#assertThrows(java.lang.Class,org.junit.jupiter.api.function.Executable)"><code>Assertions.assertThrows(Class, Executable)</code></a>
+ instead.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/ExternalResourceSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.ExternalResourceSupport</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please use <a href="org.junit.jupiter.api/org/junit/jupiter/api/AutoClose.html" title="annotation interface in org.junit.jupiter.api"><code>@AutoClose</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/VerifierSupport.html" title="class in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.VerifierSupport</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please implement <a href="org.junit.jupiter.api/org/junit/jupiter/api/extension/AfterTestExecutionCallback.html" title="interface in org.junit.jupiter.api.extension"><code>AfterTestExecutionCallback</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.vintage.engine/org/junit/vintage/engine/Constants.html" title="class in org.junit.vintage.engine">org.junit.vintage.engine.Constants</a></div>
+<div class="col-last even-row-color">
+<div class="block">Should only be used temporarily while migrating tests to JUnit
+ Jupiter or another testing framework with native JUnit Platform support</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.vintage.engine/org/junit/vintage/engine/VintageTestEngine.html" title="class in org.junit.vintage.engine">org.junit.vintage.engine.VintageTestEngine</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Should only be used temporarily while migrating tests to JUnit
+ Jupiter or another testing framework with native JUnit Platform support</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
 <div id="enum-class">
 <div class="caption"><span>Deprecated Enum Classes</span></div>
 <div class="summary-table two-column-summary">
@@ -139,6 +207,26 @@ loadScripts(document, 'script');</script>
 <div class="col-summary-item-name even-row-color"><a href="org.junit.platform.commons/org/junit/platform/commons/support/SearchOption.html" title="enum class in org.junit.platform.commons.support">org.junit.platform.commons.support.SearchOption</a></div>
 <div class="col-last even-row-color">
 <div class="block">because there is only a single non-deprecated search option left</div>
+</div>
+</div>
+</div>
+</li>
+</ul>
+<ul class="block-list">
+<li>
+<div id="annotation-interface">
+<div class="caption"><span>Deprecated Annotation Interfaces</span></div>
+<div class="summary-table two-column-summary">
+<div class="table-header col-first">Annotation Interface</div>
+<div class="table-header col-last">Description</div>
+<div class="col-summary-item-name even-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/EnableJUnit4MigrationSupport.html" title="annotation interface in org.junit.jupiter.migrationsupport">org.junit.jupiter.migrationsupport.EnableJUnit4MigrationSupport</a></div>
+<div class="col-last even-row-color">
+<div class="block">Please migrate to Jupiter extensions and use
+ <a href="org.junit.jupiter.api/org/junit/jupiter/api/Disabled.html" title="annotation interface in org.junit.jupiter.api"><code>@Disabled</code></a> instead.</div>
+</div>
+<div class="col-summary-item-name odd-row-color"><a href="org.junit.jupiter.migrationsupport/org/junit/jupiter/migrationsupport/rules/EnableRuleMigrationSupport.html" title="annotation interface in org.junit.jupiter.migrationsupport.rules">org.junit.jupiter.migrationsupport.rules.EnableRuleMigrationSupport</a></div>
+<div class="col-last odd-row-color">
+<div class="block">Please migrate to Jupiter extensions.</div>
 </div>
 </div>
 </div>
