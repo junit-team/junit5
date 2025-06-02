@@ -17,6 +17,8 @@ import static org.mockito.Mockito.mock;
 
 import java.util.stream.Stream;
 
+import de.siegmar.fastcsv.reader.CsvParseException;
+
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -275,7 +277,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
@@ -294,7 +296,7 @@ class CsvArgumentsProviderTests {
 		assertThatExceptionOfType(CsvParsingException.class)//
 				.isThrownBy(() -> provideArguments(annotation).findAny())//
 				.withMessageStartingWith("Failed to parse CSV input configured via Mock for CsvSource")//
-				.withRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
+				.withRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test

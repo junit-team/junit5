@@ -26,6 +26,8 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
+import de.siegmar.fastcsv.reader.CsvParseException;
+
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -377,7 +379,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
+				.hasRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
@@ -480,7 +482,7 @@ class CsvFileArgumentsProviderTests {
 
 		assertThat(exception)//
 				.hasMessageStartingWith("Failed to parse CSV input configured via Mock for CsvFileSource")//
-				.hasRootCauseInstanceOf(de.siegmar.fastcsv.reader.CsvParseException.class);
+				.hasRootCauseInstanceOf(CsvParseException.class);
 	}
 
 	@Test
