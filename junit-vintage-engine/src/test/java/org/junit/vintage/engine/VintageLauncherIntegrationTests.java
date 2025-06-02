@@ -280,7 +280,9 @@ class VintageLauncherIntegrationTests {
 	}
 
 	private LauncherDiscoveryRequest toRequest(LauncherDiscoveryRequestBuilder requestBuilder) {
-		return requestBuilder.filters(includeEngines(ENGINE_ID)).build();
+		return requestBuilder.filters(includeEngines(ENGINE_ID)) //
+				.enableImplicitConfigurationParameters(false) //
+				.build();
 	}
 
 }

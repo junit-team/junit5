@@ -132,7 +132,11 @@ repository on GitHub.
 [[release-notes-6.0.0-M1-junit-vintage-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
 
-* ❓
+* The JUnit Vintage engine is now deprecated and will report an INFO level discovery issue
+  when it finds at least one JUnit 4 test class. For now, the intent of the deprecation is
+  not to signal removal in the next major version but to clarify the intended purpose of
+  the engine. It should only be used temporarily while migrating tests to JUnit Jupiter or
+  another testing framework with native JUnit Platform support.
 
 [[release-notes-6.0.0-M1-junit-vintage-new-features-and-improvements]]
 ==== New Features and Improvements
