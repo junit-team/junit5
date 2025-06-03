@@ -8,7 +8,6 @@ plugins {
 	id("junitbuild.shadow-conventions")
 	id("junitbuild.jmh-conventions")
 	`java-test-fixtures`
-	alias(libs.plugins.extraJavaModuleInfo)
 }
 
 description = "JUnit Jupiter Params"
@@ -26,10 +25,6 @@ dependencies {
 
 	osgiVerification(projects.junitJupiterEngine)
 	osgiVerification(projects.junitPlatformLauncher)
-}
-
-extraJavaModuleInfo {
-	failOnMissingModuleInfo = false
 }
 
 tasks {
