@@ -62,7 +62,9 @@ class CsvReaderFactory {
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
 				.fieldSeparator(delimiter)
-				.lenientWhitespacesAroundQuotes(true)
+				.trimWhitespacesAroundQuotes(true)
+				.allowExtraFields(true)
+				.allowMissingFields(true)
 				.quoteCharacter(csvSource.quoteCharacter())
 				.commentStrategy(csvSource.textBlock().isEmpty() ? NONE : SKIP);
 
@@ -84,7 +86,9 @@ class CsvReaderFactory {
 		// @formatter:off
 		CsvReader.CsvReaderBuilder builder = CsvReader.builder()
 				.fieldSeparator(delimiter)
-				.lenientWhitespacesAroundQuotes(true)
+				.trimWhitespacesAroundQuotes(true)
+				.allowExtraFields(true)
+				.allowMissingFields(true)
 				.quoteCharacter(csvFileSource.quoteCharacter())
 				.commentStrategy(SKIP);
 
