@@ -17,12 +17,11 @@ import static org.mockito.Mockito.mock;
 
 import java.util.stream.Stream;
 
-import de.siegmar.fastcsv.reader.CsvParseException;
-
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.shadow.de.siegmar.fastcsv.reader.CsvParseException;
 import org.junit.platform.commons.JUnitException;
 import org.junit.platform.commons.PreconditionViolationException;
 

@@ -59,8 +59,6 @@ class ModularUserGuideTests {
 			  // Byte Buddy is used by AssertJ's soft assertions which are used by the Engine Test Kit
 			  requires net.bytebuddy;
 
-			  requires de.siegmar.fastcsv;
-
 			  requires java.desktop;
 			  requires java.logging;
 			  requires java.scripting;
@@ -96,7 +94,6 @@ class ModularUserGuideTests {
 		ThirdPartyJars.copy(lib, "org.opentest4j.reporting", "open-test-reporting-tooling-spi");
 		ThirdPartyJars.copy(lib, "com.google.jimfs", "jimfs");
 		ThirdPartyJars.copy(lib, "com.google.guava", "guava");
-		ThirdPartyJars.copy(lib, "siegmar", "fastcsv");
 		loadAllJUnitModules(lib);
 		args.add("--module-path");
 		args.add(lib.toString());
@@ -138,7 +135,6 @@ class ModularUserGuideTests {
 					temp.resolve("lib").toString() //
 				)) //
 				.addArguments("--add-modules", "documentation") //
-				.addArguments("--add-reads", "org.junit.jupiter.params=de.siegmar.fastcsv") //
 				.addArguments("--patch-module", "documentation=" + projectDir.resolve("src/test/resources")) //
 				.addArguments("--module", "org.junit.platform.console") //
 				.addArguments("execute") //
@@ -174,7 +170,6 @@ class ModularUserGuideTests {
 			"lib/apiguardian-api-.+\\.jar", //
 			"lib/assertj-core-.+\\.jar", //
 			"lib/byte-buddy-.+", //
-			"lib/fastcsv-.+\\.jar", //
 			"lib/guava-.+\\.jar", //
 			"lib/hamcrest-.+\\.jar", //
 			"lib/jimfs-.+\\.jar", //

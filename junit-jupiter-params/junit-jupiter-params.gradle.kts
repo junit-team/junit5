@@ -20,7 +20,7 @@ dependencies {
 	compileOnlyApi(libs.apiguardian)
 	compileOnly(libs.jspecify)
 
-	implementation(libs.fastcsv)
+	shadowed(libs.fastcsv)
 
 	compileOnly(kotlin("stdlib"))
 
@@ -42,6 +42,13 @@ tasks {
 						filter:='(&(org.junit.platform.engine=junit-jupiter)(version>=${'$'}{version_cleanup;$version})(!(version>=${'$'}{versionmask;+;${'$'}{version_cleanup;$version}})))';\
 						effective:=active
 			""")
+		}
+	}
+	shadowJar {
+		relocate("de.siegmar.fastcsv", "org.junit.jupiter.params.shadow.de.siegmar.fastcsv")
+		from(projectDir) {
+			include("LICENSE-fastcsv.md")
+			into("META-INF")
 		}
 	}
 	compileJava {

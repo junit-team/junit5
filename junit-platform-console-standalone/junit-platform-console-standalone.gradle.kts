@@ -44,6 +44,10 @@ tasks {
 			include("LICENSE-picocli.md")
 			into("META-INF")
 		}
+		from(dependencyProject(project.projects.junitJupiterParams).projectDir) {
+			include("LICENSE-fastcsv.md")
+			into("META-INF")
+		}
 		from(shadowedArtifactsFile) {
 			into("META-INF")
 		}

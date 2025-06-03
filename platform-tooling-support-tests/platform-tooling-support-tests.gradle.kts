@@ -64,7 +64,6 @@ dependencies {
 	thirdPartyJars(libs.opentest4j)
 	thirdPartyJars(libs.openTestReporting.tooling.spi)
 	thirdPartyJars(libs.jimfs)
-	thirdPartyJars(libs.fastcsv)
 
 	antJars(platform(projects.junitBom))
 	antJars(libs.bundles.ant)
