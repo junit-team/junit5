@@ -38,6 +38,7 @@ public class MethodReflectionUtils {
 				: method.getGenericReturnType();
 	}
 
+	@SuppressWarnings("NullAway")
 	public static @Nullable Object invoke(Method method, @Nullable Object target, @Nullable Object[] arguments) {
 		if (isKotlinSuspendingFunction(method)) {
 			return invokeKotlinSuspendingFunction(method, target, arguments);

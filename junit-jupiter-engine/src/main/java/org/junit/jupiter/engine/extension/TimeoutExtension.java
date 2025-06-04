@@ -103,7 +103,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	@Override
-	public <T> T interceptTestFactoryMethod(Invocation<T> invocation,
+	public <T> @Nullable T interceptTestFactoryMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
 		return interceptTestableMethod(invocation, invocationContext, extensionContext,
@@ -145,7 +145,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return AnnotationSupport.findAnnotation(element, Timeout.class).map(Timeout::threadMode);
 	}
 
-	private <T> T interceptTestableMethod(Invocation<T> invocation,
+	private <T> @Nullable T interceptTestableMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
 
@@ -154,7 +154,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
 	}
 
-	private <T> T intercept(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
+	private <T> @Nullable T intercept(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
 			ExtensionContext extensionContext, @Nullable TimeoutDuration explicitTimeout,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
 

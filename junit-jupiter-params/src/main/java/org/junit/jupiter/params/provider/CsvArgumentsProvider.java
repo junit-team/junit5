@@ -13,6 +13,7 @@ package org.junit.jupiter.params.provider;
 import static java.util.Objects.requireNonNull;
 import static org.junit.jupiter.params.provider.CsvParserFactory.createParserFor;
 
+import java.io.Reader;
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
-			List<@Nullable String[]> csvRecords = csvParser.parseAll(new StringReader(textBlock));
+			List<@Nullable String[]> csvRecords = parseAll(csvParser, new StringReader(textBlock));
 			String[] headers = useHeadersInDisplayName ? getHeaders(csvParser) : null;
 
 			AtomicInteger index = new AtomicInteger(0);
@@ -74,6 +75,11 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		}
 
 		return argumentsList.stream();
+	}
+
+	@SuppressWarnings("NullAway")
+	private static List<@Nullable String[]> parseAll(CsvParser csvParser, Reader reader) {
+		return csvParser.parseAll(reader);
 	}
 
 	private Stream<Arguments> parseValueArray(CsvSource csvSource, CsvParser csvParser, Set<String> nullValues) {

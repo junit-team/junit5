@@ -71,7 +71,6 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 		return context;
 	}
 
-	@SuppressWarnings("NullAway")
 	private InvocationInterceptor.Invocation<Void> toInvocation() {
 		return () -> {
 			requiredDynamicTest().getExecutable().execute();

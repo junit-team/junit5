@@ -98,6 +98,6 @@ abstract class AbstractExecutableInvokerTests {
 
 	abstract void invokeMethod();
 
-	abstract <T> T invokeConstructor(Constructor<T> constructor, @Nullable Object outerInstance);
+	abstract <T> @Nullable T invokeConstructor(Constructor<T> constructor, @Nullable Object outerInstance);
 
 }

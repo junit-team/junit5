@@ -409,8 +409,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 			ExtensionContextSupplier extensionContext) {
 
 		Constructor<?> constructor = ReflectionUtils.getDeclaredConstructor(getTestClass());
-		return executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
-			InvocationInterceptor::interceptTestClassConstructor);
+		return requireNonNull(executableInvoker.invoke(constructor, outerInstance, extensionContext, registry,
+			InvocationInterceptor::interceptTestClassConstructor));
 	}
 
 	private void invokeTestInstancePreConstructCallbacks(TestInstanceFactoryContext factoryContext,

@@ -10,6 +10,7 @@
 
 package org.junit.jupiter.engine.extension;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Function.identity;
 import static java.util.function.Predicate.isEqual;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -305,7 +307,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			assertEquals(testClass, invocationContext.getTargetClass());
 			assertEquals(testClass.getDeclaredConstructor(TestReporter.class), invocationContext.getExecutable());
 			assertThat(invocationContext.getArguments()).hasSize(1).hasOnlyElementsOfType(TestReporter.class);
-			return reportAndProceed(invocation, extensionContext, InvocationType.CONSTRUCTOR);
+			return requireNonNull(reportAndProceed(invocation, extensionContext, InvocationType.CONSTRUCTOR));
 		}
 
 		@Override
@@ -352,7 +354,7 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			assertEquals(testClass.getDeclaredMethod("testFactory", TestReporter.class),
 				invocationContext.getExecutable());
 			assertThat(invocationContext.getArguments()).hasSize(1).hasOnlyElementsOfType(TestReporter.class);
-			return reportAndProceed(invocation, extensionContext, InvocationType.TEST_FACTORY_METHOD);
+			return requireNonNull(reportAndProceed(invocation, extensionContext, InvocationType.TEST_FACTORY_METHOD));
 		}
 
 		@Override
@@ -390,8 +392,8 @@ class InvocationInterceptorTests extends AbstractJupiterTestEngineTests {
 			reportAndProceed(invocation, extensionContext, InvocationType.AFTER_ALL);
 		}
 
-		private <T> T reportAndProceed(Invocation<T> invocation, ExtensionContext extensionContext, InvocationType type)
-				throws Throwable {
+		private <T> @Nullable T reportAndProceed(Invocation<T> invocation, ExtensionContext extensionContext,
+				InvocationType type) throws Throwable {
 			extensionContext.publishReportEntry(type.name(), "before:" + name);
 			try {
 				return invocation.proceed();

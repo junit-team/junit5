@@ -30,6 +30,7 @@ enum LauncherPhase {
 
 	private static final Logger logger = LoggerFactory.getLogger(LauncherPhase.class);
 
+	@SuppressWarnings("NullAway")
 	static Optional<LauncherPhase> getDiscoveryIssueFailurePhase(ConfigurationParameters configurationParameters) {
 		return configurationParameters.get(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, value -> {
 			try {

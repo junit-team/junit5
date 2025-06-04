@@ -78,7 +78,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @return the result of the invocation; never {@code null}
 	 * @throws Throwable in case of failure
 	 */
-	default <T> T interceptTestClassConstructor(Invocation<T> invocation,
+	default <T> @Nullable T interceptTestClassConstructor(Invocation<T> invocation,
 			ReflectiveInvocationContext<Constructor<T>> invocationContext, ExtensionContext extensionContext)
 			throws Throwable {
 		return invocation.proceed();
@@ -94,7 +94,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptBeforeAllMethod(Invocation<@Nullable Void> invocation,
+	default void interceptBeforeAllMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
@@ -109,7 +109,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptBeforeEachMethod(Invocation<@Nullable Void> invocation,
+	default void interceptBeforeEachMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
@@ -124,8 +124,8 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptTestMethod(Invocation<@Nullable Void> invocation,
-			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
+	default void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
+			ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
 
@@ -143,7 +143,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @return the result of the invocation; potentially {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default <T extends @Nullable Object> T interceptTestFactoryMethod(Invocation<T> invocation,
+	default <T> @Nullable T interceptTestFactoryMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		return invocation.proceed();
 	}
@@ -158,7 +158,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptTestTemplateMethod(Invocation<@Nullable Void> invocation,
+	default void interceptTestTemplateMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
@@ -174,8 +174,8 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @throws Throwable in case of failures
 	 */
 	@API(status = STABLE, since = "5.11")
-	default void interceptDynamicTest(Invocation<@Nullable Void> invocation,
-			DynamicTestInvocationContext invocationContext, ExtensionContext extensionContext) throws Throwable {
+	default void interceptDynamicTest(Invocation<Void> invocation, DynamicTestInvocationContext invocationContext,
+			ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
 
@@ -189,7 +189,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptAfterEachMethod(Invocation<@Nullable Void> invocation,
+	default void interceptAfterEachMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
@@ -204,7 +204,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @param extensionContext the current extension context; never {@code null}
 	 * @throws Throwable in case of failures
 	 */
-	default void interceptAfterAllMethod(Invocation<@Nullable Void> invocation,
+	default void interceptAfterAllMethod(Invocation<Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 		invocation.proceed();
 	}
@@ -218,7 +218,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 	 * @since 5.5
 	 */
 	@API(status = STABLE, since = "5.10")
-	interface Invocation<T extends @Nullable Object> {
+	interface Invocation<T> {
 
 		/**
 		 * Proceed with this invocation.
@@ -226,6 +226,7 @@ public interface InvocationInterceptor extends TestInstantiationAwareExtension {
 		 * @return the result of this invocation; potentially {@code null}.
 		 * @throws Throwable in case the invocation failed
 		 */
+		@Nullable
 		T proceed() throws Throwable;
 
 		/**

@@ -60,7 +60,7 @@ public class TestFactoryTestDescriptor extends TestMethodTestDescriptor implemen
 	public static final String DYNAMIC_TEST_SEGMENT_TYPE = "dynamic-test";
 
 	@SuppressWarnings("NullAway")
-	private static final ReflectiveInterceptorCall<Method, @Nullable Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
+	private static final ReflectiveInterceptorCall<Method, Object> interceptorCall = InvocationInterceptor::interceptTestFactoryMethod;
 	private static final InterceptingExecutableInvoker executableInvoker = new InterceptingExecutableInvoker();
 
 	private final DynamicDescendantFilter dynamicDescendantFilter;

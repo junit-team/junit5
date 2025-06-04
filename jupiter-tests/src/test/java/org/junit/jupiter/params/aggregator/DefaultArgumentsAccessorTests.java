@@ -167,6 +167,7 @@ class DefaultArgumentsAccessorTests {
 		assertEquals(5, defaultArgumentsAccessor(1, 'a', 'b', 'c', 'd', 'e').size());
 	}
 
+	@SuppressWarnings("NullAway")
 	private static DefaultArgumentsAccessor defaultArgumentsAccessor(int invocationIndex,
 			@Nullable Object... arguments) {
 		var context = mock(ExtensionContext.class);

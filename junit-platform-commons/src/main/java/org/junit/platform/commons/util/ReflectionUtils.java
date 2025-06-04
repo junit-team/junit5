@@ -637,6 +637,7 @@ public final class ReflectionUtils {
 	 * @see #tryToReadFieldValue(Class, String, Object)
 	 */
 	@API(status = INTERNAL, since = "1.4")
+	@SuppressWarnings("NullAway")
 	public static Try<@Nullable Object> tryToReadFieldValue(Field field, @Nullable Object instance) {
 		Preconditions.notNull(field, "Field must not be null");
 		Preconditions.condition((instance != null || isStatic(field)),
@@ -681,7 +682,7 @@ public final class ReflectionUtils {
 		// @formatter:off
 		return fields.stream()
 				.filter(predicate)
-				.map(field ->
+				.<@Nullable Object>map(field ->
 					tryToReadFieldValue(field, instance).getOrThrow(ExceptionUtils::throwAsUncheckedException))
 				.toList();
 		// @formatter:on

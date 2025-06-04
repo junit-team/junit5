@@ -37,6 +37,7 @@ class SeparateThreadTimeoutInvocation<T extends @Nullable Object> implements Inv
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public T proceed() throws Throwable {
 		return assertTimeoutPreemptively(timeout.toDuration(), delegate::proceed, descriptionSupplier,
 			(__, messageSupplier, cause, testThread) -> {

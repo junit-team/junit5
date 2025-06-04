@@ -63,6 +63,7 @@ class ParameterResolutionUtilsTests {
 		register(new StringParameterResolver());
 
 		Class<ConstructorInjectionTestCase> topLevelClass = ConstructorInjectionTestCase.class;
+		@Nullable
 		Object[] arguments = resolveConstructorParameters(topLevelClass, null);
 
 		assertThat(arguments).containsExactly(ENIGMA);
@@ -76,6 +77,7 @@ class ParameterResolutionUtilsTests {
 		ConstructorInjectionTestCase outer = ReflectionSupport.newInstance(outerClass, "str");
 
 		Class<ConstructorInjectionTestCase.NestedTestCase> innerClass = ConstructorInjectionTestCase.NestedTestCase.class;
+		@Nullable
 		Object[] arguments = resolveConstructorParameters(innerClass, outer);
 
 		assertThat(arguments).containsExactly(outer, 42);
@@ -101,7 +103,7 @@ class ParameterResolutionUtilsTests {
 		testMethodWithNoParameters();
 		throwDuringParameterResolution(new RuntimeException("boom!"));
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).isEmpty();
 	}
@@ -111,7 +113,7 @@ class ParameterResolutionUtilsTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("argument");
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).containsExactly("argument");
 	}
@@ -127,7 +129,7 @@ class ParameterResolutionUtilsTests {
 			};
 		}));
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).containsExactly("0", 1, 2.0);
 	}
@@ -138,7 +140,7 @@ class ParameterResolutionUtilsTests {
 		thereIsAParameterResolverThatDoesNotSupportThisParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo("something");
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).containsExactly("something");
 	}
@@ -167,7 +169,7 @@ class ParameterResolutionUtilsTests {
 		testMethodWithASinglePrimitiveIntParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(42);
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).containsExactly(42);
 	}
@@ -177,7 +179,7 @@ class ParameterResolutionUtilsTests {
 		testMethodWithASingleStringParameter();
 		thereIsAParameterResolverThatResolvesTheParameterTo(null);
 
-		Object[] arguments = resolveMethodParameters();
+		var arguments = resolveMethodParameters();
 
 		assertThat(arguments).hasSize(1);
 		assertNull(arguments[0]);

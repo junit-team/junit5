@@ -39,12 +39,14 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public @Nullable Object get(Object key) {
 		Preconditions.notNull(key, "key must not be null");
 		return accessStore(() -> this.valuesStore.get(this.namespace, key));
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public <T> @Nullable T get(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");
@@ -52,6 +54,7 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public <K, V> @Nullable Object getOrComputeIfAbsent(K key, Function<K, V> defaultCreator) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
@@ -59,6 +62,7 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public <K, V> @Nullable V getOrComputeIfAbsent(K key, Function<K, V> defaultCreator, Class<V> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(defaultCreator, "defaultCreator function must not be null");
@@ -68,18 +72,21 @@ public class NamespaceAwareStore implements Store {
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public void put(Object key, @Nullable Object value) {
 		Preconditions.notNull(key, "key must not be null");
 		accessStore(() -> this.valuesStore.put(this.namespace, key, value));
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public @Nullable Object remove(Object key) {
 		Preconditions.notNull(key, "key must not be null");
 		return accessStore(() -> this.valuesStore.remove(this.namespace, key));
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public <T> @Nullable T remove(Object key, Class<T> requiredType) {
 		Preconditions.notNull(key, "key must not be null");
 		Preconditions.notNull(requiredType, "requiredType must not be null");

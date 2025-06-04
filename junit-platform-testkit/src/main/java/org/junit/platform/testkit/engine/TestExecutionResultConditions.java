@@ -46,6 +46,7 @@ public final class TestExecutionResultConditions {
 	 * {@link TestExecutionResult}'s {@linkplain TestExecutionResult#getStatus()
 	 * status} is equal to the supplied {@link Status Status}.
 	 */
+	@SuppressWarnings("NullAway")
 	public static Condition<TestExecutionResult> status(Status expectedStatus) {
 		return new Condition<>(where(TestExecutionResult::getStatus, isEqual(expectedStatus)), "status is %s",
 			expectedStatus);
@@ -137,6 +138,7 @@ public final class TestExecutionResultConditions {
 	 * {@link Throwable}'s {@linkplain Throwable#getMessage() message} is equal
 	 * to the supplied {@link String}.
 	 */
+	@SuppressWarnings("NullAway")
 	public static Condition<Throwable> message(String expectedMessage) {
 		return new Condition<>(where(Throwable::getMessage, isEqual(expectedMessage)), "message is '%s'",
 			expectedMessage);
@@ -147,10 +149,12 @@ public final class TestExecutionResultConditions {
 	 * {@link Throwable}'s {@linkplain Throwable#getMessage() message} matches
 	 * the supplied {@link Predicate}.
 	 */
+	@SuppressWarnings("NullAway")
 	public static Condition<Throwable> message(Predicate<String> expectedMessagePredicate) {
 		return new Condition<>(where(Throwable::getMessage, expectedMessagePredicate), "message matches predicate");
 	}
 
+	@SuppressWarnings("NullAway")
 	private static Condition<TestExecutionResult> throwable(Condition<? super Throwable> condition) {
 		return new Condition<>(
 			where(TestExecutionResult::getThrowable,

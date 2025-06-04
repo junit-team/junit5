@@ -16,6 +16,8 @@ import static org.apiguardian.api.API.Status.STABLE;
 
 import java.math.BigDecimal;
 import java.util.Locale;
+import java.util.concurrent.ForkJoinPool;
+import java.util.function.Predicate;
 
 import org.apiguardian.api.API;
 import org.junit.platform.commons.JUnitException;
@@ -47,11 +49,11 @@ public enum DefaultParallelExecutionConfigurationStrategy implements ParallelExe
 			int maxPoolSize = configurationParameters.get(CONFIG_FIXED_MAX_POOL_SIZE_PROPERTY_NAME,
 				Integer::valueOf).orElse(parallelism + 256);
 
-			boolean saturate = configurationParameters.get(CONFIG_FIXED_SATURATE_PROPERTY_NAME,
-				Boolean::valueOf).orElse(true);
+			boolean saturate = configurationParameters.getBoolean(CONFIG_FIXED_SATURATE_PROPERTY_NAME).orElse(true);
 
+			Predicate<ForkJoinPool> forkJoinPoolPredicate = __ -> saturate;
 			return new DefaultParallelExecutionConfiguration(parallelism, parallelism, maxPoolSize, parallelism,
-				KEEP_ALIVE_SECONDS, __ -> saturate);
+				KEEP_ALIVE_SECONDS, forkJoinPoolPredicate);
 		}
 	},
 

@@ -55,7 +55,7 @@ public abstract class Try<V extends @Nullable Object> {
 	 * @see #success(Object)
 	 * @see #failure(Exception)
 	 */
-	public static <V> Try<V> call(Callable<V> action) {
+	public static <V extends @Nullable Object> Try<V> call(Callable<V> action) {
 		checkNotNull(action, "action");
 		return Try.of(() -> success(action.call()));
 	}
@@ -164,8 +164,7 @@ public abstract class Try<V extends @Nullable Object> {
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
 	public final @NonNull V getNonNull() throws Exception {
-		var value = get();
-		return checkNotNull(value, "value");
+		return checkNotNull(get(), "value");
 	}
 
 	/**
@@ -193,7 +192,7 @@ public abstract class Try<V extends @Nullable Object> {
 	 */
 	@API(status = EXPERIMENTAL, since = "6.0")
 	public final <E extends Exception> @NonNull V getNonNullOrThrow(
-			Function<? super @Nullable Exception, E> exceptionTransformer) throws E {
+			Function<@Nullable Exception, E> exceptionTransformer) throws E {
 		var value = getOrThrow(exceptionTransformer);
 		if (value == null) {
 			throw exceptionTransformer.apply(null);

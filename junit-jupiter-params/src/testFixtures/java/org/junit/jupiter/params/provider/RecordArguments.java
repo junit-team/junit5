@@ -18,6 +18,7 @@ import org.junit.platform.commons.support.ReflectionSupport;
 public interface RecordArguments extends Arguments {
 
 	@Override
+	@SuppressWarnings("NullAway")
 	default @Nullable Object[] get() {
 		return Arrays.stream(getClass().getRecordComponents()) //
 				.map(component -> ReflectionSupport.invokeMethod(component.getAccessor(), this)) //

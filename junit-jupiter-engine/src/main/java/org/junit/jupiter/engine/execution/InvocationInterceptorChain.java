@@ -30,7 +30,8 @@ import org.junit.platform.commons.util.ExceptionUtils;
 @API(status = INTERNAL, since = "5.5")
 public class InvocationInterceptorChain {
 
-	public <T> T invoke(Invocation<T> invocation, ExtensionRegistry extensionRegistry, InterceptorCall<T> call) {
+	public <T> @Nullable T invoke(Invocation<T> invocation, ExtensionRegistry extensionRegistry,
+			InterceptorCall<T> call) {
 		List<InvocationInterceptor> interceptors = extensionRegistry.getExtensions(InvocationInterceptor.class);
 		if (interceptors.isEmpty()) {
 			return proceed(invocation);
@@ -38,7 +39,7 @@ public class InvocationInterceptorChain {
 		return chainAndInvoke(invocation, call, interceptors);
 	}
 
-	private <T> T chainAndInvoke(Invocation<T> invocation, InterceptorCall<T> call,
+	private <T> @Nullable T chainAndInvoke(Invocation<T> invocation, InterceptorCall<T> call,
 			List<InvocationInterceptor> interceptors) {
 
 		ValidatingInvocation<T> validatingInvocation = new ValidatingInvocation<>(invocation, interceptors);
@@ -60,7 +61,7 @@ public class InvocationInterceptorChain {
 		return result;
 	}
 
-	private <T> T proceed(Invocation<T> invocation) {
+	private <T> @Nullable T proceed(Invocation<T> invocation) {
 		try {
 			return invocation.proceed();
 		}
@@ -70,12 +71,13 @@ public class InvocationInterceptorChain {
 	}
 
 	@FunctionalInterface
-	public interface InterceptorCall<T extends @Nullable Object> {
+	public interface InterceptorCall<T> {
 
+		@Nullable
 		T apply(InvocationInterceptor interceptor, Invocation<T> invocation) throws Throwable;
 
 		@SuppressWarnings("NullAway")
-		static InterceptorCall<@Nullable Void> ofVoid(VoidInterceptorCall call) {
+		static InterceptorCall<Void> ofVoid(VoidInterceptorCall call) {
 			return ((interceptorChain, invocation) -> {
 				call.apply(interceptorChain, invocation);
 				return null;
@@ -87,7 +89,7 @@ public class InvocationInterceptorChain {
 	@FunctionalInterface
 	public interface VoidInterceptorCall {
 
-		void apply(InvocationInterceptor interceptor, Invocation<@Nullable Void> invocation) throws Throwable;
+		void apply(InvocationInterceptor interceptor, Invocation<Void> invocation) throws Throwable;
 
 	}
 
@@ -95,7 +97,7 @@ public class InvocationInterceptorChain {
 			InvocationInterceptor interceptor) implements Invocation<T> {
 
 		@Override
-		public T proceed() throws Throwable {
+		public @Nullable T proceed() throws Throwable {
 			return call.apply(interceptor, invocation);
 		}
 
@@ -119,7 +121,7 @@ public class InvocationInterceptorChain {
 		}
 
 		@Override
-		public T proceed() throws Throwable {
+		public @Nullable T proceed() throws Throwable {
 			markInvokedOrSkipped();
 			return delegate.proceed();
 		}
