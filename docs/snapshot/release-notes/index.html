@@ -560,7 +560,13 @@ on GitHub.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>❓</p>
+<p>The 5.13.0 release introduced a regression regarding the execution order in test classes
+containing both test methods and <code>@Nested</code> test classes. When classpath scanning was
+used during test discovery&#8201;&#8212;&#8201;for example, when resolving a package selector for a
+<code>@Suite</code> class&#8201;&#8212;&#8201;test methods in <code>@Nested</code> classes were executed <em>before</em> test methods
+in their enclosing class. This undesired change in behavior has now been reverted so
+that tests in <code>@Nested</code> test classes are always executed <em>after</em> tests in enclosing test
+classes again.</p>
 </li>
 </ul>
 </div>
