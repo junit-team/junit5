@@ -14,6 +14,7 @@ import static java.util.Comparator.comparing;
 import static org.junit.platform.commons.support.AnnotationSupport.findAnnotation;
 import static org.junit.platform.commons.support.AnnotationSupport.isAnnotated;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -98,7 +99,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 			DefaultMethodDescriptor::new, //
 			descriptorWrapperOrderer);
 
-		if (methodOrderer.isEmpty()) {
+		if (!methodOrderer.isPresent()) {
 			// If there is an orderer, this is ensured by the call above
 			classBasedTestDescriptor.orderChildren(methodsBeforeNestedClassesOrderer);
 		}
@@ -143,7 +144,7 @@ class MethodOrderingVisitor extends AbstractOrderingVisitor {
 	}
 
 	private static UnaryOperator<List<TestDescriptor>> createMethodsBeforeNestedClassesOrderer() {
-		var methodsFirst = comparing(MethodBasedTestDescriptor.class::isInstance).reversed();
+		Comparator<Object> methodsFirst = comparing(MethodBasedTestDescriptor.class::isInstance).reversed();
 		return children -> {
 			children.sort(methodsFirst);
 			return children;
