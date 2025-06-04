@@ -36,7 +36,7 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 		this.enabledReason = enabledReason;
 		this.disabledReason = disabledReason;
 		this.customDisabledReason = customDisabledReason;
-		this.annotationName = annotationType.getSimpleName()
+		this.annotationName = annotationType.getSimpleName();
 	}
 
 	@Override
