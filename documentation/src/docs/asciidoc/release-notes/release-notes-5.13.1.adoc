@@ -35,7 +35,13 @@ on GitHub.
 [[release-notes-5.13.1-junit-jupiter-bug-fixes]]
 ==== Bug Fixes
 
-* ❓
+* The 5.13.0 release introduced a regression regarding the execution order in test classes
+  containing both test methods and `@Nested` test classes. When classpath scanning was
+  used during test discovery -- for example, when resolving a package selector for a
+  `@Suite` class -- test methods in `@Nested` classes were executed _before_ test methods
+  in their enclosing class. This undesired change in behavior has now been reverted so
+  that tests in `@Nested` test classes are always executed _after_ tests in enclosing test
+  classes again.
 
 [[release-notes-5.13.1-junit-jupiter-deprecations-and-breaking-changes]]
 ==== Deprecations and Breaking Changes
