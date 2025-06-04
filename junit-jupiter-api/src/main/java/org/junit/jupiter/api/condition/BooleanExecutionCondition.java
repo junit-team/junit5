@@ -27,6 +27,7 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 	private final String enabledReason;
 	private final String disabledReason;
 	private final Function<A, String> customDisabledReason;
+	private final String annotationName;
 
 	BooleanExecutionCondition(Class<A> annotationType, String enabledReason, String disabledReason,
 			Function<A, String> customDisabledReason) {
@@ -35,6 +36,7 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 		this.enabledReason = enabledReason;
 		this.disabledReason = disabledReason;
 		this.customDisabledReason = customDisabledReason;
+		this.annotationName = annotationType.getSimpleName()
 	}
 
 	@Override
@@ -43,13 +45,11 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 				.map(annotation -> isEnabled(annotation) ? enabled(this.enabledReason)
 						: disabled(this.disabledReason, this.customDisabledReason.apply(annotation))) //
 				.orElseGet(this::enabledByDefault);
-	}
-
+	
 	abstract boolean isEnabled(A annotation);
 
 	private ConditionEvaluationResult enabledByDefault() {
-		String reason = "@%s is not present".formatted(this.annotationType.getSimpleName());
+		String reason = "@%s is not present".formatted(this.annotationName);
 		return enabled(reason);
 	}
-
 }
