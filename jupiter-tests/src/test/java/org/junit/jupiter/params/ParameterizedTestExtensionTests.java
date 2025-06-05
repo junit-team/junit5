@@ -417,11 +417,11 @@ class ParameterizedTestExtensionTests {
 
 	class NonStaticArgumentsProvider implements ArgumentsProvider {
 
-		@SuppressWarnings({ "DataFlowIssue", "NullAway" })
+		@SuppressWarnings("DataFlowIssue")
 		@Override
 		public Stream<? extends Arguments> provideArguments(ParameterDeclarations parameters,
 				ExtensionContext context) {
-			return null;
+			throw new UnsupportedOperationException();
 		}
 	}
 

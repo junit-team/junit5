@@ -142,7 +142,7 @@ final class ExtensionUtils {
 	private static Extension readAndValidateExtensionFromField(Field field, @Nullable Object instance,
 			List<Class<? extends Extension>> declarativeExtensionTypes) {
 		Object value = tryToReadFieldValue(field, instance) //
-				.getOrThrow(e -> new PreconditionViolationException(
+				.getNonNullOrThrow(e -> new PreconditionViolationException(
 					"Failed to read @RegisterExtension field [%s]".formatted(field), e));
 
 		Preconditions.condition(value instanceof Extension,

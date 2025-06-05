@@ -32,6 +32,7 @@ public class SameThreadHierarchicalTestExecutorService implements HierarchicalTe
 	}
 
 	@Override
+	@SuppressWarnings("NullAway")
 	public Future<@Nullable Void> submit(TestTask testTask) {
 		testTask.execute();
 		return completedFuture(null);

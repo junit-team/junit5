@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.PreconditionViolationException;
 import org.opentest4j.AssertionFailedError;
 
@@ -273,7 +274,7 @@ class AssertLinesMatchAssertionsTests {
 		@Test
 		void stringSupplierWithMultiLineMessage() {
 			var message = "XXX\nYYY";
-			Supplier<String> supplier = () -> message;
+			Supplier<@Nullable String> supplier = () -> message;
 			var expected = List.of("a", "b", "c");
 			var actual = List.of("a", "d", "c");
 			var error = assertThrows(AssertionFailedError.class, () -> assertLinesMatch(expected, actual, supplier));

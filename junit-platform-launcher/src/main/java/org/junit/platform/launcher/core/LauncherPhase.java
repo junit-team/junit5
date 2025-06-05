@@ -14,7 +14,9 @@ import static org.junit.platform.launcher.LauncherConstants.DISCOVERY_ISSUE_FAIL
 
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.platform.commons.logging.Logger;
 import org.junit.platform.commons.logging.LoggerFactory;
 import org.junit.platform.engine.ConfigurationParameters;
@@ -31,7 +33,7 @@ enum LauncherPhase {
 	private static final Logger logger = LoggerFactory.getLogger(LauncherPhase.class);
 
 	static Optional<LauncherPhase> getDiscoveryIssueFailurePhase(ConfigurationParameters configurationParameters) {
-		return configurationParameters.get(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, value -> {
+		Function<String, @Nullable LauncherPhase> stringLauncherPhaseFunction = value -> {
 			try {
 				return LauncherPhase.valueOf(value.toUpperCase(Locale.ROOT));
 			}
@@ -41,7 +43,8 @@ enum LauncherPhase {
 						value, DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME));
 				return null;
 			}
-		});
+		};
+		return configurationParameters.get(DISCOVERY_ISSUE_FAILURE_PHASE_PROPERTY_NAME, stringLauncherPhaseFunction);
 	}
 
 	@Override

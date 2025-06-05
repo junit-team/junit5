@@ -58,7 +58,7 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		List<Arguments> argumentsList = new ArrayList<>();
 
 		try {
-			List<@Nullable String[]> csvRecords = csvParser.parseAll(new StringReader(textBlock));
+			List<@Nullable String[]> csvRecords = parseAll(csvParser, textBlock);
 			String[] headers = useHeadersInDisplayName ? getHeaders(csvParser) : null;
 
 			AtomicInteger index = new AtomicInteger(0);
@@ -74,6 +74,11 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		}
 
 		return argumentsList.stream();
+	}
+
+	@SuppressWarnings("NullAway")
+	private static List<@Nullable String[]> parseAll(CsvParser csvParser, String textBlock) {
+		return csvParser.parseAll(new StringReader(textBlock));
 	}
 
 	private Stream<Arguments> parseValueArray(CsvSource csvSource, CsvParser csvParser, Set<String> nullValues) {
@@ -142,9 +147,8 @@ class CsvArgumentsProvider extends AnnotationBasedArgumentsProvider<CsvSource> {
 		return Arguments.of(arguments);
 	}
 
-	@SuppressWarnings("NullAway")
 	private static Named<@Nullable Object> asNamed(String name, @Nullable Object column) {
-		return Named.of(name, column);
+		return Named.<@Nullable Object> of(name, column);
 	}
 
 	/**
