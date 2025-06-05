@@ -22,8 +22,6 @@ jobs:
       fail-fast: false
       matrix:
         jdk:
-        - version: 24
-          type: ga
         - version: 25
           type: ea
     name: "OpenJDK ${{ matrix.jdk.version }} (${{ matrix.jdk.release || matrix.jdk.type }})"
@@ -71,7 +69,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk: [ 21 ]
+        jdk: [ 24 ]
     name: "OpenJ9 ${{ matrix.jdk }}"
     runs-on: ubuntu-latest
     steps:

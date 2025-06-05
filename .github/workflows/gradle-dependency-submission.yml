@@ -22,7 +22,7 @@ jobs:
       uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
       with:
         distribution: temurin
-        java-version: 21
+        java-version: 24
         check-latest: true
     - name: Generate and submit dependency graph
       uses: gradle/actions/dependency-submission@8379f6a1328ee0e06e2bb424dadb7b159856a326 # v4.4.0
