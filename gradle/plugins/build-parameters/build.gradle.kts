@@ -4,6 +4,11 @@ plugins {
 
 group = "junitbuild"
 
+java {
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
 buildParameters {
 	pluginId("junitbuild.build-parameters")
 	bool("ci") {

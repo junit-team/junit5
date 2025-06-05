@@ -5,7 +5,7 @@ plugins {
 }
 
 project.pluginManager.withPlugin("java") {
-	val defaultLanguageVersion = JavaLanguageVersion.of(21)
+	val defaultLanguageVersion = JavaLanguageVersion.of(24)
 	val javaLanguageVersion = buildParameters.javaToolchain.version.map { JavaLanguageVersion.of(it) }.getOrElse(defaultLanguageVersion)
 	val jvmImplementation = buildParameters.javaToolchain.implementation.map {
 		when(it) {
