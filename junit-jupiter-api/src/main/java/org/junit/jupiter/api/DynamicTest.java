@@ -24,6 +24,8 @@ import java.util.stream.StreamSupport;
 
 import org.apiguardian.api.API;
 import org.jspecify.annotations.Nullable;
+import org.junit.jupiter.api.extension.ConditionEvaluationResult;
+import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.api.function.ThrowingConsumer;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -320,6 +322,10 @@ public class DynamicTest extends DynamicNode {
 		Configuration source(@Nullable URI testSourceUri);
 
 		@Override
+		Configuration executionCondition(
+				Function<? super ExtensionContext, ? extends ConditionEvaluationResult> condition);
+
+		@Override
 		Configuration executionMode(ExecutionMode executionMode);
 
 		@Override
@@ -341,6 +347,13 @@ public class DynamicTest extends DynamicNode {
 		@Override
 		public Configuration source(@Nullable URI testSourceUri) {
 			super.source(testSourceUri);
+			return this;
+		}
+
+		@Override
+		public Configuration executionCondition(
+				Function<? super ExtensionContext, ? extends ConditionEvaluationResult> condition) {
+			super.executionCondition(condition);
 			return this;
 		}
 
