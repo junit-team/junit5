@@ -22,6 +22,7 @@ tasks.withType<JavaCompile>().configureEach {
 		disableAllChecks = true
 		nullaway {
 			enable()
+			isJSpecifyMode = true
 		}
 	}
 }
