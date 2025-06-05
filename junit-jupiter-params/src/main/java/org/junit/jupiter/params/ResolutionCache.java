@@ -36,7 +36,7 @@ interface ResolutionCache {
 		private final Map<ParameterDeclaration, Object> cache = new ConcurrentHashMap<>();
 
 		@Override
-		public Object resolve(ParameterDeclaration declaration, Supplier<Object> resolver) {
+		public @Nullable Object resolve(ParameterDeclaration declaration, Supplier<@Nullable Object> resolver) {
 			return cache.computeIfAbsent(declaration, __ -> resolver.get());
 		}
 	}

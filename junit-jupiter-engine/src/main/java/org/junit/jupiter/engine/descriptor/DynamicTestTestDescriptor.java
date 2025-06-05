@@ -65,14 +65,14 @@ class DynamicTestTestDescriptor extends DynamicNodeTestDescriptor {
 			requiredDynamicTest().getExecutable());
 		ExtensionContext extensionContext = context.getExtensionContext();
 		ExtensionRegistry extensionRegistry = context.getExtensionRegistry();
-		interceptorChain.invoke(toInvocation(), extensionRegistry, InterceptorCall.ofVoid(
-			(interceptor, wrappedInvocation) -> interceptor.interceptDynamicTest(wrappedInvocation,
-				dynamicTestInvocationContext, extensionContext)));
+		interceptorChain.<@Nullable Void> invoke(toInvocation(), extensionRegistry, InterceptorCall.ofVoid((
+				InvocationInterceptor interceptor,
+				InvocationInterceptor.Invocation<@Nullable Void> wrappedInvocation) -> interceptor.interceptDynamicTest(
+					wrappedInvocation, dynamicTestInvocationContext, extensionContext)));
 		return context;
 	}
 
-	@SuppressWarnings("NullAway")
-	private InvocationInterceptor.Invocation<Void> toInvocation() {
+	private InvocationInterceptor.Invocation<@Nullable Void> toInvocation() {
 		return () -> {
 			requiredDynamicTest().getExecutable().execute();
 			return null;
