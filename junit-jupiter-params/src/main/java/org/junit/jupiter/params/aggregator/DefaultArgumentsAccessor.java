@@ -53,10 +53,12 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	private DefaultArgumentsAccessor(BiFunction<@Nullable Object, Class<?>, @Nullable Object> converter,
 			int invocationIndex, @Nullable Object... arguments) {
+		Preconditions.notNull(converter, "Converter must not be null");
 		Preconditions.condition(invocationIndex >= 1, () -> "Invocation index must be >= 1");
-		this.converter = Preconditions.notNull(converter, "Converter must not be null");
+		Preconditions.notNull(arguments, "Arguments array must not be null");
+		this.converter = converter;
 		this.invocationIndex = invocationIndex;
-		this.arguments = Preconditions.notNull(arguments, "Arguments array must not be null");
+		this.arguments = arguments;
 	}
 
 	@Override
@@ -140,7 +142,7 @@ public class DefaultArgumentsAccessor implements ArgumentsAccessor {
 
 	@Override
 	public List<@Nullable Object> toList() {
-		return Collections.unmodifiableList(Arrays.asList(this.arguments));
+		return Collections.<@Nullable Object> unmodifiableList(Arrays.asList(this.arguments));
 	}
 
 	@Override

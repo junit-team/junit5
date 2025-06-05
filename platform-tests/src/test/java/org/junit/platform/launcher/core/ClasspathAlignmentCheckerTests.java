@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.PackageInfo;
 
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 
 class ClasspathAlignmentCheckerTests {
@@ -36,7 +37,7 @@ class ClasspathAlignmentCheckerTests {
 	void wrapsLinkageErrorForUnalignedClasspath() {
 		var cause = new LinkageError();
 		AtomicInteger counter = new AtomicInteger();
-		Function<String, Package> packageLookup = name -> {
+		Function<String, @Nullable Package> packageLookup = name -> {
 			var pkg = mock(Package.class);
 			when(pkg.getName()).thenReturn(name);
 			when(pkg.getImplementationVersion()).thenReturn(counter.incrementAndGet() + ".0.0");

@@ -26,13 +26,14 @@ import org.jspecify.annotations.Nullable;
 public class ConcurrencyTestingUtils {
 
 	public static void executeConcurrently(int threads, Runnable action) throws Exception {
-		executeConcurrently(threads, () -> {
+		ConcurrencyTestingUtils.<@Nullable Object> executeConcurrently(threads, () -> {
 			action.run();
 			return null;
 		});
 	}
 
-	public static <T> List<T> executeConcurrently(int threads, Callable<@Nullable T> action) throws Exception {
+	public static <T extends @Nullable Object> List<T> executeConcurrently(int threads, Callable<T> action)
+			throws Exception {
 		ExecutorService executorService = Executors.newFixedThreadPool(threads);
 		try {
 			CountDownLatch latch = new CountDownLatch(threads);

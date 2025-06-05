@@ -71,7 +71,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	@Override
-	public void interceptBeforeAllMethod(Invocation<Void> invocation,
+	public void interceptBeforeAllMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
@@ -79,7 +79,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	@Override
-	public void interceptBeforeEachMethod(Invocation<Void> invocation,
+	public void interceptBeforeEachMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
 		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
@@ -87,52 +87,53 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 	}
 
 	@Override
-	public void interceptTestMethod(Invocation<Void> invocation, ReflectiveInvocationContext<Method> invocationContext,
-			ExtensionContext extensionContext) throws Throwable {
+	public void interceptTestMethod(Invocation<@Nullable Void> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		interceptTestableMethod(invocation, invocationContext, extensionContext,
+		this.<@Nullable Void> interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestMethodTimeout);
 	}
 
 	@Override
-	public void interceptTestTemplateMethod(Invocation<Void> invocation,
+	public void interceptTestTemplateMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		interceptTestableMethod(invocation, invocationContext, extensionContext,
+		this.<@Nullable Void> interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestTemplateMethodTimeout);
 	}
 
 	@Override
-	public <T> T interceptTestFactoryMethod(Invocation<T> invocation,
+	public <T extends @Nullable Object> T interceptTestFactoryMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		return interceptTestableMethod(invocation, invocationContext, extensionContext,
+		return this.<T> interceptTestableMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultTestFactoryMethodTimeout);
 	}
 
 	@Override
-	public void interceptAfterEachMethod(Invocation<Void> invocation,
+	public void interceptAfterEachMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
+		this.<@Nullable Void> interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterEachMethodTimeout);
 	}
 
 	@Override
-	public void interceptAfterAllMethod(Invocation<Void> invocation,
+	public void interceptAfterAllMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext) throws Throwable {
 
-		interceptLifecycleMethod(invocation, invocationContext, extensionContext,
+		this.<@Nullable Void> interceptLifecycleMethod(invocation, invocationContext, extensionContext,
 			TimeoutConfiguration::getDefaultAfterAllMethodTimeout);
 	}
 
-	private void interceptLifecycleMethod(Invocation<Void> invocation,
+	private void interceptLifecycleMethod(Invocation<@Nullable Void> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
 
 		TimeoutDuration timeout = readTimeoutFromAnnotation(Optional.of(invocationContext.getExecutable())).orElse(
 			null);
-		intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
+		this.<@Nullable Void> intercept(invocation, invocationContext, extensionContext, timeout,
+			defaultTimeoutProvider);
 	}
 
 	@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -145,7 +146,7 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return AnnotationSupport.findAnnotation(element, Timeout.class).map(Timeout::threadMode);
 	}
 
-	private <T> T interceptTestableMethod(Invocation<T> invocation,
+	private <T extends @Nullable Object> T interceptTestableMethod(Invocation<T> invocation,
 			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
 			TimeoutProvider defaultTimeoutProvider) throws Throwable {
 
@@ -154,9 +155,9 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 		return intercept(invocation, invocationContext, extensionContext, timeout, defaultTimeoutProvider);
 	}
 
-	private <T> T intercept(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
-			ExtensionContext extensionContext, @Nullable TimeoutDuration explicitTimeout,
-			TimeoutProvider defaultTimeoutProvider) throws Throwable {
+	private <T extends @Nullable Object> T intercept(Invocation<T> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
+			@Nullable TimeoutDuration explicitTimeout, TimeoutProvider defaultTimeoutProvider) throws Throwable {
 
 		TimeoutDuration timeout = explicitTimeout == null ? getDefaultTimeout(extensionContext, defaultTimeoutProvider)
 				: explicitTimeout;
@@ -175,8 +176,9 @@ class TimeoutExtension implements BeforeAllCallback, BeforeEachCallback, Invocat
 			key -> new TimeoutConfiguration(root), TimeoutConfiguration.class));
 	}
 
-	private <T> Invocation<T> decorate(Invocation<T> invocation, ReflectiveInvocationContext<Method> invocationContext,
-			ExtensionContext extensionContext, @Nullable TimeoutDuration timeout) {
+	private <T extends @Nullable Object> Invocation<T> decorate(Invocation<T> invocation,
+			ReflectiveInvocationContext<Method> invocationContext, ExtensionContext extensionContext,
+			@Nullable TimeoutDuration timeout) {
 
 		if (timeout == null || isTimeoutDisabled(extensionContext)) {
 			return invocation;

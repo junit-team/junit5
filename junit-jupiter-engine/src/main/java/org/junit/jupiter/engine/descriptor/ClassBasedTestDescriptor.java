@@ -61,7 +61,6 @@ import org.junit.jupiter.engine.execution.BeforeEachMethodAdapter;
 import org.junit.jupiter.engine.execution.DefaultTestInstances;
 import org.junit.jupiter.engine.execution.ExtensionContextSupplier;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker;
-import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall;
 import org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.ReflectiveInterceptorCall.VoidMethodInterceptorCall;
 import org.junit.jupiter.engine.execution.JupiterEngineExecutionContext;
 import org.junit.jupiter.engine.execution.TestInstancesProvider;
@@ -448,8 +447,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		for (Method method : requireLifecycleMethods().beforeAll) {
 			throwableCollector.execute(() -> {
 				try {
-					executableInvoker.invoke(method, testInstance, extensionContext, registry,
-						ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptBeforeAllMethod));
+					executableInvoker.invokeVoid(method, testInstance, extensionContext, registry,
+						InvocationInterceptor::interceptBeforeAllMethod);
 				}
 				catch (Throwable throwable) {
 					invokeBeforeAllMethodExecutionExceptionHandlers(registry, extensionContext, throwable);
@@ -476,8 +475,8 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 
 		requireLifecycleMethods().afterAll.forEach(method -> throwableCollector.execute(() -> {
 			try {
-				executableInvoker.invoke(method, testInstance, extensionContext, registry,
-					ReflectiveInterceptorCall.ofVoidMethod(InvocationInterceptor::interceptAfterAllMethod));
+				executableInvoker.invokeVoid(method, testInstance, extensionContext, registry,
+					InvocationInterceptor::interceptAfterAllMethod);
 			}
 			catch (Throwable throwable) {
 				invokeAfterAllMethodExecutionExceptionHandlers(registry, extensionContext, throwable);
@@ -549,8 +548,7 @@ public abstract class ClassBasedTestDescriptor extends JupiterTestDescriptor
 		Object target = testInstances.findInstance(getTestClass()).orElseThrow(
 			() -> new JUnitException("Failed to find instance for method: " + method.toGenericString()));
 
-		executableInvoker.invoke(method, target, context, registry,
-			ReflectiveInterceptorCall.ofVoidMethod(interceptorCall));
+		executableInvoker.invokeVoid(method, target, context, registry, interceptorCall);
 	}
 
 	private LifecycleMethods requireLifecycleMethods() {
