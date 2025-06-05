@@ -29,7 +29,7 @@ jobs:
       with:
         distribution: graalvm-community
         version: 'latest'
-        java-version: '21'
+        java-version: '24'
         github-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Build
       uses: ./.github/actions/main-build
