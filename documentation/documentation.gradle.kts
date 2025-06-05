@@ -165,7 +165,7 @@ tasks {
 		args.addAll("--config=junit.platform.reporting.open.xml.enabled=true")
 		args.addAll("--config=junit.platform.output.capture.stdout=true")
 		args.addAll("--config=junit.platform.output.capture.stderr=true")
-		args.addAll("--config=junit.platform.discovery.issue.severity.critical=warn")
+		args.addAll("--config=junit.platform.discovery.issue.severity.critical=warning")
 		outputs.dir(consoleLauncherTestReportsDir)
 		argumentProviders.add(CommandLineArgumentProvider {
 			listOf(
@@ -202,7 +202,7 @@ tasks {
 		(options as JUnitPlatformOptions).apply {
 			includeEngines("junit-vintage")
 			includeTags("timeout")
-			systemProperty("junit.platform.discovery.issue.severity.critical", "warn")
+			systemProperty("junit.platform.discovery.issue.severity.critical", "warning")
 		}
 	}
 
