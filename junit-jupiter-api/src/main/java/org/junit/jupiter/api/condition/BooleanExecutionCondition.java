@@ -52,4 +52,5 @@ abstract class BooleanExecutionCondition<A extends Annotation> implements Execut
 		String reason = "@%s is not present".formatted(this.annotationName);
 		return enabled(reason);
 	}
+	
 }
