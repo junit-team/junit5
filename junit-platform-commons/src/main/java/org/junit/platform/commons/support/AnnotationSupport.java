@@ -450,7 +450,9 @@ public final class AnnotationSupport {
 		List<Field> fields = findAnnotatedFields(instance.getClass(), annotationType, ModifierSupport::isNotStatic,
 			HierarchyTraversalMode.TOP_DOWN);
 
-		return ReflectionUtils.readFieldValues(fields, instance);
+		@SuppressWarnings("unchecked")
+		List<@Nullable Object> result = (List<@Nullable Object>) ReflectionUtils.readFieldValues(fields, instance);
+		return result;
 	}
 
 	/**
@@ -482,7 +484,9 @@ public final class AnnotationSupport {
 		List<Field> fields = findAnnotatedFields(clazz, annotationType, ModifierSupport::isStatic,
 			HierarchyTraversalMode.TOP_DOWN);
 
-		return ReflectionUtils.readFieldValues(fields, null);
+		@SuppressWarnings("unchecked")
+		List<@Nullable Object> result = (List<@Nullable Object>) ReflectionUtils.readFieldValues(fields, null);
+		return result;
 	}
 
 	/**

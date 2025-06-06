@@ -60,6 +60,7 @@ import java.util.logging.LogRecord;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import org.assertj.core.api.Assertions;
 import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -1952,7 +1953,8 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, new ClassWithFields());
 
-			assertThat(values).containsExactly("enigma", 3.14, "text", 2.5, null, 42, "constant", 99);
+			Assertions.<Object> assertThat(values).containsExactly("enigma", 3.14, "text", 2.5, null, 42, "constant",
+				99);
 		}
 
 		@Test
@@ -1961,7 +1963,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, null);
 
-			assertThat(values).containsExactly(2.5, "constant", 99);
+			Assertions.<Object> assertThat(values).containsExactly(2.5, "constant", 99);
 		}
 
 		/**
@@ -1972,15 +1974,15 @@ class ReflectionUtilsTests {
 		void readFieldValuesFromInterfacesAndClassesInTypeHierarchy() {
 			var fields = findFields(InterfaceWithField.class, ReflectionUtils::isStatic, TOP_DOWN);
 			var values = readFieldValues(fields, null);
-			assertThat(values).containsOnly("ifc");
+			Assertions.<Object> assertThat(values).containsOnly("ifc");
 
 			fields = findFields(SuperclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
 			values = readFieldValues(fields, null);
-			assertThat(values).containsExactly("ifc", "super");
+			Assertions.<Object> assertThat(values).containsExactly("ifc", "super");
 
 			fields = findFields(SubclassWithFieldAndFieldFromInterface.class, ReflectionUtils::isStatic, TOP_DOWN);
 			values = readFieldValues(fields, null);
-			assertThat(values).containsExactly("ifc", "super", "sub");
+			Assertions.<Object> assertThat(values).containsExactly("ifc", "super", "sub");
 		}
 
 		@Test
@@ -1989,7 +1991,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, new ClassWithFields(), isA(String.class));
 
-			assertThat(values).containsExactly("enigma", "text", null, "constant");
+			Assertions.<Object> assertThat(values).containsExactly("enigma", "text", null, "constant");
 		}
 
 		@Test
@@ -1998,7 +2000,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, null, isA(String.class));
 
-			assertThat(values).containsExactly("constant");
+			Assertions.<Object> assertThat(values).containsExactly("constant");
 		}
 
 		@Test
@@ -2007,7 +2009,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, new ClassWithFields(), isA(int.class));
 
-			assertThat(values).containsExactly(42);
+			Assertions.<Object> assertThat(values).containsExactly(42);
 		}
 
 		@Test
@@ -2016,7 +2018,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, null, isA(Integer.class));
 
-			assertThat(values).containsExactly(99);
+			Assertions.<Object> assertThat(values).containsExactly(99);
 		}
 
 		@Test
@@ -2025,7 +2027,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, new ClassWithFields(), isA(double.class));
 
-			assertThat(values).containsExactly(3.14);
+			Assertions.<Object> assertThat(values).containsExactly(3.14);
 		}
 
 		@Test
@@ -2034,7 +2036,7 @@ class ReflectionUtilsTests {
 
 			var values = readFieldValues(fields, null, isA(Double.class));
 
-			assertThat(values).containsExactly(2.5);
+			Assertions.<Object> assertThat(values).containsExactly(2.5);
 		}
 
 		private static Predicate<Field> isA(Class<?> type) {
